@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml;
+package org.apache.commons.scxml;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -32,26 +32,26 @@ import java.util.StringTokenizer;
 
 import org.apache.commons.logging.LogFactory;
 
-import org.apache.taglibs.rdc.scxml.model.Action;
-import org.apache.taglibs.rdc.scxml.model.Assign;
-import org.apache.taglibs.rdc.scxml.model.Cancel;
-import org.apache.taglibs.rdc.scxml.model.Else;
-import org.apache.taglibs.rdc.scxml.model.ElseIf;
-import org.apache.taglibs.rdc.scxml.model.Exit;
-import org.apache.taglibs.rdc.scxml.model.History;
-import org.apache.taglibs.rdc.scxml.model.If;
-import org.apache.taglibs.rdc.scxml.model.Initial;
-import org.apache.taglibs.rdc.scxml.model.Log;
-import org.apache.taglibs.rdc.scxml.model.ModelException;
-import org.apache.taglibs.rdc.scxml.model.OnEntry;
-import org.apache.taglibs.rdc.scxml.model.OnExit;
-import org.apache.taglibs.rdc.scxml.model.Parallel;
-import org.apache.taglibs.rdc.scxml.model.SCXML;
-import org.apache.taglibs.rdc.scxml.model.Send;
-import org.apache.taglibs.rdc.scxml.model.State;
-import org.apache.taglibs.rdc.scxml.model.Transition;
-import org.apache.taglibs.rdc.scxml.model.TransitionTarget;
-import org.apache.taglibs.rdc.scxml.model.Var;
+import org.apache.commons.scxml.model.Action;
+import org.apache.commons.scxml.model.Assign;
+import org.apache.commons.scxml.model.Cancel;
+import org.apache.commons.scxml.model.Else;
+import org.apache.commons.scxml.model.ElseIf;
+import org.apache.commons.scxml.model.Exit;
+import org.apache.commons.scxml.model.History;
+import org.apache.commons.scxml.model.If;
+import org.apache.commons.scxml.model.Initial;
+import org.apache.commons.scxml.model.Log;
+import org.apache.commons.scxml.model.ModelException;
+import org.apache.commons.scxml.model.OnEntry;
+import org.apache.commons.scxml.model.OnExit;
+import org.apache.commons.scxml.model.Parallel;
+import org.apache.commons.scxml.model.SCXML;
+import org.apache.commons.scxml.model.Send;
+import org.apache.commons.scxml.model.State;
+import org.apache.commons.scxml.model.Transition;
+import org.apache.commons.scxml.model.TransitionTarget;
+import org.apache.commons.scxml.model.Var;
 
 /**
  * This class encapsulates a particular SCXML semantics, that is a particular
@@ -73,8 +73,6 @@ import org.apache.taglibs.rdc.scxml.model.Var;
  * implementation aligns mostly with W3C SCXML July 5 public draft (that is,
  * UML 1.5) however, certain aspects are taken from STATEMATE.
  * 
- * @author Jaroslav Gergic
- * @author Rahul Akolkar
  * 
  *  
  */

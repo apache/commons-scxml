@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml.env;
+package org.apache.commons.scxml.env;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -24,12 +24,12 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.taglibs.rdc.scxml.ErrorReporter;
-import org.apache.taglibs.rdc.scxml.SCXMLListener;
-import org.apache.taglibs.rdc.scxml.model.SCXML;
-import org.apache.taglibs.rdc.scxml.model.State;
-import org.apache.taglibs.rdc.scxml.model.Transition;
-import org.apache.taglibs.rdc.scxml.model.TransitionTarget;
+import org.apache.commons.scxml.ErrorReporter;
+import org.apache.commons.scxml.SCXMLListener;
+import org.apache.commons.scxml.model.SCXML;
+import org.apache.commons.scxml.model.State;
+import org.apache.commons.scxml.model.Transition;
+import org.apache.commons.scxml.model.TransitionTarget;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -37,7 +37,6 @@ import org.xml.sax.SAXParseException;
 /**
  * A simple logger connected to Jakarta Commons Logging.
  * 
- * @author Jaroslav Gergic
  */
 public class Tracer implements ErrorReporter, SCXMLListener, ErrorHandler {
 
@@ -50,7 +49,7 @@ public class Tracer implements ErrorReporter, SCXMLListener, ErrorHandler {
     }
 
     /**
-     * @see org.apache.taglibs.rdc.scxml.ErrorReporter#onError(java.lang.String, java.lang.String, java.lang.Object)
+     * @see org.apache.commons.scxml.ErrorReporter#onError(java.lang.String, java.lang.String, java.lang.Object)
      */
     public void onError(String errCode, String errDetail, Object errCtx) {
         //Note: the if-then-else below is based on the actual usage
@@ -118,21 +117,21 @@ public class Tracer implements ErrorReporter, SCXMLListener, ErrorHandler {
     }
 
     /**
-     * @see org.apache.taglibs.rdc.scxml.SCXMLListener#onEntry(org.apache.taglibs.rdc.scxml.model.TransitionTarget)
+     * @see org.apache.commons.scxml.SCXMLListener#onEntry(org.apache.commons.scxml.model.TransitionTarget)
      */
     public void onEntry(TransitionTarget state) {
         log.info(Tracer.getTTPath(state));
     }
 
     /**
-     * @see org.apache.taglibs.rdc.scxml.SCXMLListener#onExit(org.apache.taglibs.rdc.scxml.model.TransitionTarget)
+     * @see org.apache.commons.scxml.SCXMLListener#onExit(org.apache.commons.scxml.model.TransitionTarget)
      */
     public void onExit(TransitionTarget state) {
         log.info(Tracer.getTTPath(state));
     }
 
     /**
-     * @see org.apache.taglibs.rdc.scxml.SCXMLListener#onTransition(org.apache.taglibs.rdc.scxml.model.TransitionTarget, org.apache.taglibs.rdc.scxml.model.TransitionTarget, org.apache.taglibs.rdc.scxml.model.Transition)
+     * @see org.apache.commons.scxml.SCXMLListener#onTransition(org.apache.commons.scxml.model.TransitionTarget, org.apache.commons.scxml.model.TransitionTarget, org.apache.commons.scxml.model.Transition)
      */
     public void onTransition(TransitionTarget from, TransitionTarget to,
             Transition transition) {

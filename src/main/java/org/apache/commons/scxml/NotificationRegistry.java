@@ -15,22 +15,20 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml;
+package org.apache.commons.scxml;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import org.apache.taglibs.rdc.scxml.model.Transition;
-import org.apache.taglibs.rdc.scxml.model.TransitionTarget;
+import org.apache.commons.scxml.model.Transition;
+import org.apache.commons.scxml.model.TransitionTarget;
 
 /**
  * The registry where SCXML listeners are recorded for Observable
  * objects. The registry performs book keeping functions and notifies
  * all listeners of the events of interest.
  * 
- * @author Jaroslav Gergic
- * @author Rahul Akolkar
  */
 public class NotificationRegistry {
     

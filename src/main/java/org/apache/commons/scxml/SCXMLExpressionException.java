@@ -15,14 +15,12 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml;
+package org.apache.commons.scxml;
 
 /**
  * Exception thrown when a malformed expression is encountered during
  * evaluation of an expression in a SCXML document.
  * 
- * @author Jaroslav Gergic
- * @author Rahul Akolkar
  */
 public class SCXMLExpressionException extends Exception {
 

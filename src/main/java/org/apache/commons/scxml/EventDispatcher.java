@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml;
+package org.apache.commons.scxml;
 
 import java.util.Map;
 
@@ -25,8 +25,6 @@ import java.util.Map;
  * other external systems using an Event I/O Processor or to raise 
  * events in the current SCXML session.
  * 
- * @author Jaroslav Gergic
- * @author Rahul Akolkar
  */
 public interface EventDispatcher {
     

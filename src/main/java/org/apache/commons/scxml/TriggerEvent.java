@@ -15,14 +15,12 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml;
+package org.apache.commons.scxml;
 
 /**
  * A class representing an event. Specific event types have been
  * defined in reference to SCXML.
  * 
- * @author Jaroslav Gergic
- * @author Rahul Akolkar
  */
 public class TriggerEvent {
     

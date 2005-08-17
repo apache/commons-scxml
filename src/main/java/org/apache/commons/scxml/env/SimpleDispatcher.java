@@ -15,18 +15,17 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml.env;
+package org.apache.commons.scxml.env;
 
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.taglibs.rdc.scxml.EventDispatcher;
+import org.apache.commons.scxml.EventDispatcher;
 
 /**
  * Trivial EventDispatcher implementation. No remote eventing.
  * 
- * @author Jaroslav Gergic
  */
 public class SimpleDispatcher implements EventDispatcher {
     
@@ -39,7 +38,7 @@ public class SimpleDispatcher implements EventDispatcher {
     }
 
     /**
-     * @see org.apache.taglibs.rdc.scxml.EventDispatcher#cancel(java.lang.String)
+     * @see org.apache.commons.scxml.EventDispatcher#cancel(java.lang.String)
      */
     public void cancel(String sendId) {
         if(log.isInfoEnabled()) {
@@ -48,7 +47,7 @@ public class SimpleDispatcher implements EventDispatcher {
     }
 
     /**
-     * @see org.apache.taglibs.rdc.scxml.EventDispatcher#send(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.Map, java.lang.Object, long)
+     * @see org.apache.commons.scxml.EventDispatcher#send(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.Map, java.lang.Object, long)
      */
     public void send(String sendId, String target, String targetType,
             String event, Map params, Object hints, long delay) {

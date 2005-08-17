@@ -15,18 +15,15 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml;
+package org.apache.commons.scxml;
 
 import java.util.Iterator;
 
 /**
  * A Context or &quot;scope&quot; for storing variables; usually tied to
  * a SCXML root or State object
- * 
- * @author Jaroslav Gergic
- * @author Rahul Akolkar
  *
-*/
+ */
 public interface Context {
     /**
      * Assigns a new value to an existing variable or creates a new one.

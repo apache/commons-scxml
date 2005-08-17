@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml.model;
+package org.apache.commons.scxml.model;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,8 +24,6 @@ import java.util.Set;
  * The class in this SCXML object model that corresponds to the
  * &lt;history&gt; SCXML pseudo state element.
  * 
- * @author Rahul Akolkar
- * @author Jaroslav Gergic
  */
 public class History extends TransitionTarget {
     

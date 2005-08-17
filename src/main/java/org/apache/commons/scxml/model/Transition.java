@@ -15,11 +15,11 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml.model;
+package org.apache.commons.scxml.model;
 
-import org.apache.taglibs.rdc.scxml.NotificationRegistry;
-import org.apache.taglibs.rdc.scxml.Observable;
-import org.apache.taglibs.rdc.scxml.SCXMLListener;
+import org.apache.commons.scxml.NotificationRegistry;
+import org.apache.commons.scxml.Observable;
+import org.apache.commons.scxml.SCXMLListener;
 
 /**
  * The class in this SCXML object model that corresponds to the
@@ -27,8 +27,6 @@ import org.apache.taglibs.rdc.scxml.SCXMLListener;
  * by &quot;events&quot; and conditionalized via 
  * &quot;guard-conditions&quot;.
  * 
- * @author Rahul Akolkar
- * @author Jaroslav Gergic
  */
 public class Transition extends Executable implements Observable {
     

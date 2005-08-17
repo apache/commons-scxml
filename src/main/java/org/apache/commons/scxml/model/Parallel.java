@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml.model;
+package org.apache.commons.scxml.model;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -28,8 +28,6 @@ import java.util.Set;
  * complex, that is, one with either &lt;state&gt; or &lt;parallel&gt;
  * children.
  * 
- * @author Rahul Akolkar
- * @author Jaroslav Gergic
  */
 public class Parallel extends TransitionTarget {
     

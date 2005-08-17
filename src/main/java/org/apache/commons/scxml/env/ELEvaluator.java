@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml.env;
+package org.apache.commons.scxml.env;
 
 import java.lang.reflect.Method;
 import java.util.Iterator;
@@ -30,15 +30,14 @@ import javax.servlet.jsp.el.VariableResolver;
 import org.apache.commons.el.ExpressionEvaluatorImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.taglibs.rdc.scxml.Context;
-import org.apache.taglibs.rdc.scxml.Evaluator;
-import org.apache.taglibs.rdc.scxml.SCXMLExpressionException;
-import org.apache.taglibs.rdc.scxml.model.TransitionTarget;
+import org.apache.commons.scxml.Context;
+import org.apache.commons.scxml.Evaluator;
+import org.apache.commons.scxml.SCXMLExpressionException;
+import org.apache.commons.scxml.model.TransitionTarget;
 
 /**
  * EL engine interface for SCXML Interpreter.
  * 
- * @author Jaroslav Gergic
  */
 public class ELEvaluator implements Evaluator {
 
@@ -63,7 +62,7 @@ public class ELEvaluator implements Evaluator {
      * @param expr expression
      * @return a result of the evaluation
      * @throws SCXMLExpressionException
-     * @see org.apache.taglibs.rdc.scxml.Evaluator#eval(org.apache.taglibs.rdc.scxml.Context, java.lang.String)
+     * @see org.apache.commons.scxml.Evaluator#eval(org.apache.commons.scxml.Context, java.lang.String)
      */
     public Object eval(Context ctx, String expr) 
     throws SCXMLExpressionException {
@@ -90,7 +89,7 @@ public class ELEvaluator implements Evaluator {
      * 
      * @param parent parent context
      * @return new child context
-     * @see org.apache.taglibs.rdc.scxml.Evaluator#newContext(org.apache.taglibs.rdc.scxml.Context)
+     * @see org.apache.commons.scxml.Evaluator#newContext(org.apache.commons.scxml.Context)
      */
     public Context newContext(Context parent) {
         //for now, we do not support nested variable contexts
@@ -103,7 +102,7 @@ public class ELEvaluator implements Evaluator {
     }
 
     /**
-     * @see org.apache.taglibs.rdc.scxml.Evaluator#evalCond(org.apache.taglibs.rdc.scxml.Context, java.lang.String)
+     * @see org.apache.commons.scxml.Evaluator#evalCond(org.apache.commons.scxml.Context, java.lang.String)
      */
     public Boolean evalCond(Context ctx, String expr) 
     throws SCXMLExpressionException {

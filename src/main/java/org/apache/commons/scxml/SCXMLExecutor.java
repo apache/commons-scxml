@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml;
+package org.apache.commons.scxml;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,17 +23,16 @@ import java.util.Iterator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.taglibs.rdc.scxml.model.ModelException;
-import org.apache.taglibs.rdc.scxml.model.SCXML;
-import org.apache.taglibs.rdc.scxml.model.State;
-import org.apache.taglibs.rdc.scxml.model.TransitionTarget;
+import org.apache.commons.scxml.model.ModelException;
+import org.apache.commons.scxml.model.SCXML;
+import org.apache.commons.scxml.model.State;
+import org.apache.commons.scxml.model.TransitionTarget;
 
 /**
  * The SCXML &quot;engine&quot; that executes SCXML documents. The 
  * particular semantics used by this engine for executing the SCXML are 
  * encapsulated in SCXMLSemantics.
  * 
- * @author Jaroslav Gergic
  * @see SCXMLSemantics
  */
 public class SCXMLExecutor {

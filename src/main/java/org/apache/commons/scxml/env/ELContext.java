@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml.env;
+package org.apache.commons.scxml.env;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -25,13 +25,11 @@ import javax.servlet.jsp.el.VariableResolver;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.taglibs.rdc.scxml.Context;
+import org.apache.commons.scxml.Context;
 
 /** 
  * EL Context for SCXML interpreter.
  * 
- * @author Jaroslav Gergic
- * @author Rahul Akolkar
  */
 public class ELContext implements Context , VariableResolver {
     
@@ -61,7 +59,7 @@ public class ELContext implements Context , VariableResolver {
      * The method searches the chain of parent Contexts for variable 
      * existence.
      * 
-     * @see org.apache.taglibs.rdc.scxml.Context#set(java.lang.String, java.lang.Object)
+     * @see org.apache.commons.scxml.Context#set(java.lang.String, java.lang.Object)
      */
     public void set(String name, Object value) {
         if(vars.containsKey(name)) { //first try to override local
@@ -76,7 +74,7 @@ public class ELContext implements Context , VariableResolver {
     /**
      * Get the value of this variable; delegating to parent
      * 
-     * @see org.apache.taglibs.rdc.scxml.Context#get(java.lang.String)
+     * @see org.apache.commons.scxml.Context#get(java.lang.String)
      */
     public Object get(String name) {
         if(vars.containsKey(name)) {
@@ -91,7 +89,7 @@ public class ELContext implements Context , VariableResolver {
     /**
      * Check if this variable exists, delegating to parent
      * 
-     * @see org.apache.taglibs.rdc.scxml.Context#has(java.lang.String)
+     * @see org.apache.commons.scxml.Context#has(java.lang.String)
      */
     public boolean has(String name) {
         if(vars.containsKey(name)) {
@@ -106,7 +104,7 @@ public class ELContext implements Context , VariableResolver {
     /**
      * Get an Iterator over all variables in this Context
      * 
-     * @see org.apache.taglibs.rdc.scxml.Context#iterator()
+     * @see org.apache.commons.scxml.Context#iterator()
      */
     public Iterator iterator() {
         return vars.entrySet().iterator();
@@ -115,7 +113,7 @@ public class ELContext implements Context , VariableResolver {
     /**
      * Clear this Context
      * 
-     * @see org.apache.taglibs.rdc.scxml.Context#reset()
+     * @see org.apache.commons.scxml.Context#reset()
      */
     public void reset() {
         vars.clear();
@@ -124,7 +122,7 @@ public class ELContext implements Context , VariableResolver {
     /**
      * Get the parent Context, may be null
      * 
-     * @see org.apache.taglibs.rdc.scxml.Context#getParent()
+     * @see org.apache.commons.scxml.Context#getParent()
      */
     public Context getParent() {
         return parent;
@@ -135,7 +133,7 @@ public class ELContext implements Context , VariableResolver {
      * The method allows to shaddow a variable of the same name up the 
      * Context chain.
      * 
-     * @see org.apache.taglibs.rdc.scxml.Context#setLocal(java.lang.String, java.lang.Object)
+     * @see org.apache.commons.scxml.Context#setLocal(java.lang.String, java.lang.Object)
      */
     public void setLocal(String name, Object value) {
         vars.put(name, value);

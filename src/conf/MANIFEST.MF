@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.5.3 
+Package: org.apache.commons.scxml
+Extension-Name: commons-scxml
+Specification-Title: Commons SCXML Engine
+Specification-Vendor: The Apache Software Foundation
+Implementation-Title: org.apache.commons.scxml
+Implementation-Vendor: The Apache Software Foundation
+Implementation-Version: 1.0-SNAPSHOT
+

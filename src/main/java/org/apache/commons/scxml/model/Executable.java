@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml.model;
+package org.apache.commons.scxml.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +24,6 @@ import java.util.List;
  * An abstract base class for containers of executable elements in SCXML,
  * such as &lt;onentry&gt; and &lt;onexit&gt;. 
  * 
- * @author Rahul Akolkar
- * @author Jaroslav Gergic
  */
 public abstract class Executable {
 

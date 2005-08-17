@@ -15,15 +15,13 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml.model;
+package org.apache.commons.scxml.model;
 
 /**
  * Exception that is thrown when the SCXML model supplied to the
  * executor has a fatal flaw that prevents the executor from
  * further interpreting the the model. 
  * 
- * @author Jaroslav Gergic
- * @author Rahul Akolkar
  */
 public class ModelException extends Exception {
 

@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml.model;
+package org.apache.commons.scxml.model;
 
 /**
  * The class in this SCXML object model that corresponds to the
@@ -23,8 +23,6 @@ package org.apache.taglibs.rdc.scxml.model;
  * holding executable content to be run upon exiting the parent
  * State or Parallel.
  * 
- * @author Rahul Akolkar
- * @author Jaroslav Gergic
  */
 public class OnExit extends Executable {
     

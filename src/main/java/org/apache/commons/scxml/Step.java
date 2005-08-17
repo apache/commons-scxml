@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml;
+package org.apache.commons.scxml;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,8 +24,6 @@ import java.util.List;
 /**
  * A logical unit of progression in the execution of a SCXML model.
  * 
- * @author Jaroslav Gergic
- * @author Rahul Akolkar
  */
 class Step {
     

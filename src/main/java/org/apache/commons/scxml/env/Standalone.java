@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml.env;
+package org.apache.commons.scxml.env;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -24,20 +24,19 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.StringTokenizer;
 
-import org.apache.taglibs.rdc.scxml.Context;
-import org.apache.taglibs.rdc.scxml.Evaluator;
-import org.apache.taglibs.rdc.scxml.EventDispatcher;
-import org.apache.taglibs.rdc.scxml.SCXMLDigester;
-import org.apache.taglibs.rdc.scxml.SCXMLExecutor;
-import org.apache.taglibs.rdc.scxml.TriggerEvent;
-import org.apache.taglibs.rdc.scxml.model.ModelException;
-import org.apache.taglibs.rdc.scxml.model.SCXML;
+import org.apache.commons.scxml.Context;
+import org.apache.commons.scxml.Evaluator;
+import org.apache.commons.scxml.EventDispatcher;
+import org.apache.commons.scxml.SCXMLDigester;
+import org.apache.commons.scxml.SCXMLExecutor;
+import org.apache.commons.scxml.TriggerEvent;
+import org.apache.commons.scxml.model.ModelException;
+import org.apache.commons.scxml.model.SCXML;
 
 /**
  * Standalone SCXML Interpreter.
  * Useful for command-line testing and debugging.
  * 
- * @author Jaroslav Gergic
  */
 public class Standalone {
 

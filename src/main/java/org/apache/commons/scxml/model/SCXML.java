@@ -15,13 +15,13 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml.model;
+package org.apache.commons.scxml.model;
 
-import org.apache.taglibs.rdc.scxml.Context;
-import org.apache.taglibs.rdc.scxml.NotificationRegistry;
-import org.apache.taglibs.rdc.scxml.Observable;
-import org.apache.taglibs.rdc.scxml.SCXMLHelper;
-import org.apache.taglibs.rdc.scxml.SCXMLListener;
+import org.apache.commons.scxml.Context;
+import org.apache.commons.scxml.NotificationRegistry;
+import org.apache.commons.scxml.Observable;
+import org.apache.commons.scxml.SCXMLHelper;
+import org.apache.commons.scxml.SCXMLListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,8 +33,6 @@ import java.util.Map;
  * the SCXMLExecutor may access and the query state of the host 
  * environment.
  * 
- * @author Rahul Akolkar
- * @author Jaroslav Gergic
  */
 public class SCXML implements Observable {
 

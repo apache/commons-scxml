@@ -15,14 +15,12 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml;
+package org.apache.commons.scxml;
 
 /**
  * Interface for a component that may be used by the SCXML engines
  * to resolve context sensitive paths.
  * 
- * @author Jaroslav Gergic
- * @author Rahul Akolkar
  */
 public interface PathResolver {
 

@@ -15,18 +15,16 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml.model;
+package org.apache.commons.scxml.model;
 
-import org.apache.taglibs.rdc.scxml.NotificationRegistry;
-import org.apache.taglibs.rdc.scxml.Observable;
-import org.apache.taglibs.rdc.scxml.SCXMLListener;
+import org.apache.commons.scxml.NotificationRegistry;
+import org.apache.commons.scxml.Observable;
+import org.apache.commons.scxml.SCXMLListener;
 
 /**
  * An abstract base class for elements in SCXML that can serve as a
  * &lt;target&gt; for a &lt;transition&gt;, such as State or Parallel.
  * 
- * @author Rahul Akolkar
- * @author Jaroslav Gergic
  */
 public abstract class TransitionTarget implements Observable {
     

@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml;
+package org.apache.commons.scxml;
 
 import java.util.HashSet;
 import java.util.IdentityHashMap;
@@ -23,11 +23,11 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.taglibs.rdc.scxml.model.Parallel;
-import org.apache.taglibs.rdc.scxml.model.Path;
-import org.apache.taglibs.rdc.scxml.model.State;
-import org.apache.taglibs.rdc.scxml.model.Transition;
-import org.apache.taglibs.rdc.scxml.model.TransitionTarget;
+import org.apache.commons.scxml.model.Parallel;
+import org.apache.commons.scxml.model.Path;
+import org.apache.commons.scxml.model.State;
+import org.apache.commons.scxml.model.Transition;
+import org.apache.commons.scxml.model.TransitionTarget;
 
 /**
  * Helper class, all methods static final.

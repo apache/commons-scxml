@@ -15,17 +15,16 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml;
+package org.apache.commons.scxml;
 
 import java.util.Comparator;
 
-import org.apache.taglibs.rdc.scxml.model.TransitionTarget;
+import org.apache.commons.scxml.model.TransitionTarget;
 
 
 /**
  * A comparator for TransitionTarget instances
  * 
- * @author Jaroslav Gergic
  */
 class TransitionTargetComparator implements Comparator {
 

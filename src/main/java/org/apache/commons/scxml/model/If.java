@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml.model;
+package org.apache.commons.scxml.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +27,6 @@ import java.util.List;
  * appear within an &lt;if&gt; as immediate children, and serve to partition 
  * the elements within an &lt;if&gt;. 
  * 
- * @author Rahul Akolkar
- * @author Jaroslav Gergic
  */
 public class If extends Action {
     

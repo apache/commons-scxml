@@ -15,15 +15,13 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml;
+package org.apache.commons.scxml;
 
 /**
  * Interface that allows an entity within an SCXML document to have
  * listeners attached to itself so they may be informed of events within
  * this entity's realm.   
  * 
- * @author Jaroslav Gergic
- * @author Rahul Akolkar
  */
 public interface Observable {
     

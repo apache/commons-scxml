@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml.env;
+package org.apache.commons.scxml.env;
 
 import java.util.Iterator;
 
@@ -27,7 +27,6 @@ import javax.servlet.jsp.el.VariableResolver;
  * EL Context for root SCXML element. Wrapper around the host JSP context.
  * Must treat variables in the host JSP environments as read-only.
  * 
- * @author Rahul Akolkar
  */
 public final class RootContext extends ELContext {
     
@@ -50,7 +49,7 @@ public final class RootContext extends ELContext {
      * Get the value of the given variable in this Context
      * 
      * @return The value (or null)
-     * @see org.apache.taglibs.rdc.scxml.Context#get(java.lang.String)
+     * @see org.apache.commons.scxml.Context#get(java.lang.String)
      */
     public Object get(String name) {
         Object value = super.get(name);
@@ -67,7 +66,7 @@ public final class RootContext extends ELContext {
     /** 
      * Get the Iterator
      * 
-     * @see org.apache.taglibs.rdc.scxml.Context#iterator()
+     * @see org.apache.commons.scxml.Context#iterator()
      */
     public Iterator iterator() {
         // The reason why this method body exists is to emphasize that

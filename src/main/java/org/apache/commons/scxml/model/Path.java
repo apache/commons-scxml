@@ -15,20 +15,19 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml.model;
+package org.apache.commons.scxml.model;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.taglibs.rdc.scxml.SCXMLHelper;
+import org.apache.commons.scxml.SCXMLHelper;
 
 /**
  * A helper class for this SCXML implementation that represents the
  * location of an entity in the SCXML document.
  * 
- * @author Jaroslav Gergic 
  */
 public class Path {
 

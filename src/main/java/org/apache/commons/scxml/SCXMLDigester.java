@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml;
+package org.apache.commons.scxml;
 
 import java.net.URL;
 import java.text.MessageFormat;
@@ -32,27 +32,27 @@ import org.apache.commons.digester.SetNextRule;
 import org.apache.commons.digester.SetPropertiesRule;
 import org.apache.commons.logging.LogFactory;
 
-import org.apache.taglibs.rdc.scxml.env.URLResolver;
-import org.apache.taglibs.rdc.scxml.model.Action;
-import org.apache.taglibs.rdc.scxml.model.Assign;
-import org.apache.taglibs.rdc.scxml.model.Cancel;
-import org.apache.taglibs.rdc.scxml.model.Else;
-import org.apache.taglibs.rdc.scxml.model.ElseIf;
-import org.apache.taglibs.rdc.scxml.model.Executable;
-import org.apache.taglibs.rdc.scxml.model.Exit;
-import org.apache.taglibs.rdc.scxml.model.History;
-import org.apache.taglibs.rdc.scxml.model.If;
-import org.apache.taglibs.rdc.scxml.model.Initial;
-import org.apache.taglibs.rdc.scxml.model.Log;
-import org.apache.taglibs.rdc.scxml.model.OnEntry;
-import org.apache.taglibs.rdc.scxml.model.OnExit;
-import org.apache.taglibs.rdc.scxml.model.Parallel;
-import org.apache.taglibs.rdc.scxml.model.SCXML;
-import org.apache.taglibs.rdc.scxml.model.Send;
-import org.apache.taglibs.rdc.scxml.model.State;
-import org.apache.taglibs.rdc.scxml.model.Transition;
-import org.apache.taglibs.rdc.scxml.model.TransitionTarget;
-import org.apache.taglibs.rdc.scxml.model.Var;
+import org.apache.commons.scxml.env.URLResolver;
+import org.apache.commons.scxml.model.Action;
+import org.apache.commons.scxml.model.Assign;
+import org.apache.commons.scxml.model.Cancel;
+import org.apache.commons.scxml.model.Else;
+import org.apache.commons.scxml.model.ElseIf;
+import org.apache.commons.scxml.model.Executable;
+import org.apache.commons.scxml.model.Exit;
+import org.apache.commons.scxml.model.History;
+import org.apache.commons.scxml.model.If;
+import org.apache.commons.scxml.model.Initial;
+import org.apache.commons.scxml.model.Log;
+import org.apache.commons.scxml.model.OnEntry;
+import org.apache.commons.scxml.model.OnExit;
+import org.apache.commons.scxml.model.Parallel;
+import org.apache.commons.scxml.model.SCXML;
+import org.apache.commons.scxml.model.Send;
+import org.apache.commons.scxml.model.State;
+import org.apache.commons.scxml.model.Transition;
+import org.apache.commons.scxml.model.TransitionTarget;
+import org.apache.commons.scxml.model.Var;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.ErrorHandler;
@@ -62,8 +62,6 @@ import org.xml.sax.ErrorHandler;
  * a) Digest a SCXML file placed in a web application context <br>
  * b) Obtain a Digester instance configured with rules for SCXML digestion <br>
  * c) Serialize an SCXML object (primarily for debugging) <br>
- * 
- * @author Rahul Akolkar
  */
 public class SCXMLDigester {
 
@@ -809,7 +807,6 @@ public class SCXMLDigester {
      * 1) Updation of the SCXML object's global targets Map <br>
      * 2) Obtaining a handle to the SCXML object's NotificationRegistry <br>
      * 
-     * @author Rahul Akolkar
      */
     public static class UpdateModelRule extends Rule {
 
@@ -835,7 +832,6 @@ public class SCXMLDigester {
     /**
      * Custom digestion rule for setting Executable parent of Action elements
      * 
-     * @author Rahul Akolkar
      */
     public static class SetExecutableParentRule extends Rule {
 
@@ -859,7 +855,6 @@ public class SCXMLDigester {
      * Custom digestion rule for external sources, that is, the src attribute of
      * the &lt;state&gt; element
      * 
-     * @author Rahul Akolkar
      */
     public static class DigestSrcAttributeRule extends Rule {
 

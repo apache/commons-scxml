@@ -15,18 +15,17 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml.env;
+package org.apache.commons.scxml.env;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.taglibs.rdc.scxml.PathResolver;
+import org.apache.commons.scxml.PathResolver;
 
 /**
  * A PathResolver implementation that resolves against a base URL.
  *  
- * @see org.apache.taglibs.rdc.scxml.PathResolver
- * @author Jaroslav Gergic
+ * @see org.apache.commons.scxml.PathResolver
  */
 public class URLResolver implements PathResolver {
     
@@ -41,7 +40,7 @@ public class URLResolver implements PathResolver {
     
     /**
      * Uses URL(URL, String) constructor to combine URL's
-     * @see org.apache.taglibs.rdc.scxml.PathResolver#resolvePath(java.lang.String)
+     * @see org.apache.commons.scxml.PathResolver#resolvePath(java.lang.String)
      */
     public String resolvePath(String ctxPath) {
         URL combined;
@@ -55,7 +54,7 @@ public class URLResolver implements PathResolver {
     }
     
     /**
-     * @see org.apache.taglibs.rdc.scxml.PathResolver#getResolver(java.lang.String)
+     * @see org.apache.commons.scxml.PathResolver#getResolver(java.lang.String)
      */
     public PathResolver getResolver(String ctxPath) {
         URL combined;

@@ -15,14 +15,12 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml.model;
+package org.apache.commons.scxml.model;
 
 /**
  * An abstract base class for executable elements in SCXML,
  * such as &lt;assign&gt;, &lt;log&gt; etc. 
  * 
- * @author Rahul Akolkar
- * @author Jaroslav Gergic
  */
 public abstract class Action {
     

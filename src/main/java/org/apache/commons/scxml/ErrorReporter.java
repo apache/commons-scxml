@@ -15,15 +15,13 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml;
+package org.apache.commons.scxml;
 
 /**
  * An interface for reporting SCXML errors to the host environment,
  * containing the definition of commonly occuring errors while executing
  * SCXML documents.
  * 
- * @author Jaroslav Gergic
- * @author Rahul Akolkar
  */
 public interface ErrorReporter {
 
@@ -41,8 +39,8 @@ public interface ErrorReporter {
     /**
      * Missing initial state for a composite state or for the smxml root.
      * 
-     * @see org.apache.taglibs.rdc.scxml.model.SCXML#getInitialState()
-     * @see org.apache.taglibs.rdc.scxml.model.State#getInitial()
+     * @see org.apache.commons.scxml.model.SCXML#getInitialState()
+     * @see org.apache.commons.scxml.model.State#getInitial()
      */
     public static final String NO_INITIAL = "NO_INITIAL";
     

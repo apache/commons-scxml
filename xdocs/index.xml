@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Copyright 2003-2004 The Apache Software Foundation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<document>
+
+ <properties>
+  <title>Commons SCXML</title>
+  <author email="commons-dev@jakarta.apache.org">Commons Documentation Team</author>
+ </properties>
+
+ <body>
+
+ <section name="Commons SCXML">
+
+  <p>
+  The World Wide Web Consortium (W3C) Voice Browser Working Group recently
+  announced the publication of the first 
+  <a href="http://www.w3.org/TR/2005/WD-scxml-20050705/">Working Draft of State 
+  Chart XML (SCXML)</a>.
+  SCXML provides a generic state-machine based execution environment based on CCXML
+  and Harel State Tables. SCXML is a candidate for the control language within 
+  multiple markup languages coming out of the W3C (see Working Draft for details).
+  <em>Commons SCXML</em> is a reference implementation of SCXML; aimed at creating
+  and maintaining an SCXML engine, capable of executing a state machine defined 
+  using a SCXML document, while abstracting out the environment interfaces.
+  </p>
+
+  <subsection name="Status">
+   <p>
+    <ul>
+     <li>This code is in the commons <i>sandbox</i></li>
+     <li>The code is unreleased</li>
+     <li>Methods and classes can and will appear and disappear without warning</li>
+     <li>If you like the code and want to push it towards a release, join the mailing list!</li>
+    </ul>   
+   </p>
+  </subsection>
+
+ </section>
+
+
+ <section name="Documentation">
+  <p>
+  The <a href="apidocs/index.html">Javadoc</a> of the latest nightly.
+  </p>
+ </section>
+
+
+ <section name="Releases">
+  <p>
+  This is a <i>sandbox</i> component, headed for a (first) 1.0 release.
+  </p>
+ </section>
+
+ </body>
+
+</document>

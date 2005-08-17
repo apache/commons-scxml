@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml;
+package org.apache.commons.scxml;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,13 +23,11 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.Collection;
 
-import org.apache.taglibs.rdc.scxml.model.State;
+import org.apache.commons.scxml.model.State;
 
 /**
  * The encapsulation of the current state of a state machine.
  * 
- * @author Jaroslav Gergic
- * @author Rahul Akolkar
  */
 public class Status {
     

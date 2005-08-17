@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml.model;
+package org.apache.commons.scxml.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +24,6 @@ import java.util.List;
  * The class in this SCXML object model that corresponds to the
  * &lt;send&gt; SCXML element.
  * 
- * @author Rahul Akolkar
- * @author Jaroslav Gergic
  */
 public class Send extends Action {
     

@@ -15,14 +15,12 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml.model;
+package org.apache.commons.scxml.model;
 
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;elseif&gt; SCXML element.
  * 
- * @author Rahul Akolkar
- * @author Jaroslav Gergic
  */
 public class ElseIf extends Action {
     

@@ -15,15 +15,14 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml;
+package org.apache.commons.scxml;
 
-import org.apache.taglibs.rdc.scxml.model.Transition;
-import org.apache.taglibs.rdc.scxml.model.TransitionTarget;
+import org.apache.commons.scxml.model.Transition;
+import org.apache.commons.scxml.model.TransitionTarget;
 
 /**
  * Listener interface for Observable entities in the SCXML model.
  * 
- * @author Jaroslav Gergic
  */
 public interface SCXMLListener {
     

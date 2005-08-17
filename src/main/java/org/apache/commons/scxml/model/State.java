@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml.model;
+package org.apache.commons.scxml.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,14 +23,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.taglibs.rdc.scxml.Context;
+import org.apache.commons.scxml.Context;
 
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;state&gt; SCXML element.
  * 
- * @author Rahul Akolkar
- * @author Jaroslav Gergic
  */
 public class State extends TransitionTarget {
 

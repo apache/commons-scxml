@@ -1,0 +1,75 @@
+<!--
+   Copyright 2002-2004 The Apache Software Foundation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<html>
+<head>
+<title>Proposal for SCXML Package</title>
+</head>
+<body bgcolor="white">
+
+<div align="center">
+<h1>Proposal for <em>SCXML</em> Package</h1>
+</div>
+
+<h2>[I] Rationale:</h2>
+
+<p>The World Wide Web Consortium (W3C) Voice Browser Working Group recently announced the publication of the first Working Draft of State Chart XML (SCXML) [1]. SCXML provides a generic state-machine based execution environment based on CCXML and Harel State Tables. SCXML is a candidate for the control language within multiple markup languages coming out of the W3C (see Working Draft for details). There are potential use cases for SCXML within Apache projects. The availability of an SCXML engine as a Jakarta Commons library will be of much benefit. </p>
+<p>No such library exists in Jakarta Commons (or anywhere else, AFAIK, under ASF license). </p>
+
+<h2>[II] Scope:</h2>
+
+<p>The package shall create and maintain an SCXML engine, capable of executing a state machine defined using a SCXML document, while abstracting out the environment interfaces. The codebase will be in Java, distributed under the ASF license. </p>
+
+<h2>[III] Dependencies:</h2>
+
+<p>The SCXML codebase has the following dependencies: </p>
+<p>a) Commons Digester </p>
+<p>b) Commons Logging </p>
+<p>Expression evaluation in SCXML documents is environment specific, the expression evaluator and context of evaluation is envisioned to be "pluggable", and the project possibly producing a commons-scxml-core.jar and adapters for various environments. The existing code provides an example for the servlet/JSP environment using: </p>
+<p>c) Commons EL </p>
+<p>The minimum JDK version shall be 1.4 </p>
+
+<h2>[IV] Code Provenance:</h2>
+
+<p>The authors of this original work are Jaroslav Gergic and Rahul Akolkar, and the code was contributed to Jakarta Taglibs, as part of the RDC Taglib [2]. The code is already distributed under the Apache license, in the RDC nightlies. </p>
+<p>Source is available for viewing [3] </p>
+<p>Javadoc is available as part of the RDC Javadoc [4] </p>
+
+<h2>[V] Naming, Resources and Conventions:</h2>
+
+<p>The base name for the proposed package will be: </p>
+<p>org.apache.commons.scxml </p>
+<p>The project will use the Jakarta Commons user and dev mailing lists, will create a component repository named "scxml" (lower case) in SVN under commons-sandbox and will be listed as "SCXML" (upper case) in the component list under the Jakarta-Commons Bugzilla entry. Sun Java conventions shall be used for coding style. </p>
+
+<h2>[VI] Committer Interest:</h2>
+
+<p>The following Apache committers have expressed interest in the creation of this Commons Sandbox component [5]: </p>
+<p>A ) Martin Cooper </p>
+<p>B ) Rahul Akolkar </p>
+<p>The RDC Taglib will have a dependency on Commons SCXML, so we have at least one immediate user project within Apache. The RDC Taglib is one of the active tag libraries in Jakarta Taglibs, with a 1.0 release cut couple of weeks ago [6]. The SCXML code is under development [7], and was not part of the 1.0 release. </p>
+<p>-Rahul Akolkar </p>
+
+<h2>Reference Links:</h2>
+
+<p>[1] <a href="http://www.w3.org/TR/2005/WD-scxml-20050705/">W3C SCXML Working Draft</a> </p>
+<p>[2] <a href="http://jakarta.apache.org/taglibs/doc/rdc-doc/intro.html">Reusable Dialog Components (RDC) Taglib </a> </p>
+<p>[3] <a href="http://svn.apache.org/repos/asf/jakarta/taglibs/proper/rdc/trunk/src/org/apache/taglibs/rdc/scxml/">SCXML codebase, direct</a> (now obsolete)</p>
+<p>[4] <a href="http://jakarta.apache.org/taglibs/doc/rdc-doc/javadoc/index.html">SCXML Javadoc</a> (now obsolete)</p>
+<p>[5] <a href="http://mail-archives.apache.org/mod_mbox/jakarta-taglibs-dev/200508.mbox/%3c16d6c62005080408143d2361c5@mail.gmail.com%3e">The thread on taglibs-dev that initiated this proposal</a> </p>
+<p>[6] <a href="http://jakarta.apache.org/site/news/news-2005-q3.html#20050726.1">RDC Taglib 1.0 release news item</a> </p>
+<p>[7] <a href="http://jakarta.apache.org/taglibs/doc/rdc-doc/changes.html">Status of SCXML codebase (from RDC Taglib revision history), see revision posting on 07/29/05</a> </p>
+
+</body>
+</html>

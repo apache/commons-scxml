@@ -15,17 +15,16 @@
  *  limitations under the License.
  *
  */
-package org.apache.taglibs.rdc.scxml.env;
+package org.apache.commons.scxml.env;
 
 import javax.servlet.ServletContext;
 
-import org.apache.taglibs.rdc.scxml.PathResolver;
+import org.apache.commons.scxml.PathResolver;
 
 /**
  * A wrapper around ServletContext that implements PathResolver
  * 
- * @see org.apache.taglibs.rdc.scxml.PathResolver
- * @author Jaroslav Gergic
+ * @see org.apache.commons.scxml.PathResolver
  */
 public class ServletContextResolver implements PathResolver {
     
@@ -43,7 +42,7 @@ public class ServletContextResolver implements PathResolver {
      * 
      * @param ctxPath context sensitive path, can be a relative URL
      * @return resolved path (an absolute URL) or <code>null</code>
-     * @see org.apache.taglibs.rdc.scxml.PathResolver#resolvePath(java.lang.String)
+     * @see org.apache.commons.scxml.PathResolver#resolvePath(java.lang.String)
      */
     public String resolvePath(String ctxPath) {
         return ctx.getRealPath(ctxPath);
@@ -54,7 +53,7 @@ public class ServletContextResolver implements PathResolver {
      * 
      * @param ctxPath context sensitive path, can be a relative URL
      * @return returns a new resolver rooted at ctxPath
-     * @see org.apache.taglibs.rdc.scxml.PathResolver#getResolver(java.lang.String)
+     * @see org.apache.commons.scxml.PathResolver#getResolver(java.lang.String)
      */
     public PathResolver getResolver(String ctxPath) {
         return this;
