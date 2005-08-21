@@ -1,6 +1,6 @@
 /*
- *    
- *   Copyright 2004 The Apache Software Foundation.
+ *
+ *   Copyright 2005 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,28 +29,31 @@ import org.apache.commons.scxml.model.State;
 import org.apache.commons.scxml.model.TransitionTarget;
 
 /**
- * The SCXML &quot;engine&quot; that executes SCXML documents. The 
- * particular semantics used by this engine for executing the SCXML are 
+ * The SCXML &quot;engine&quot; that executes SCXML documents. The
+ * particular semantics used by this engine for executing the SCXML are
  * encapsulated in SCXMLSemantics.
- * 
+ *
  * @see SCXMLSemantics
  */
 public class SCXMLExecutor {
-    
-    private static Log log = LogFactory.getLog(SCXMLExecutor.class);
-    
+
     /**
-     * The stateMachine being executed
+     * The Logger for the SCXMLExecutor.
+     */
+    private static Log log = LogFactory.getLog(SCXMLExecutor.class);
+
+    /**
+     * The stateMachine being executed.
      */
     private SCXML stateMachine;
 
     /**
-     * The evaluator for expressions
+     * The evaluator for expressions.
      */
     private Evaluator evaluator;
 
     /**
-     * The current status of the stateMachine
+     * The current status of the stateMachine.
      */
     private Status currentStatus;
 
@@ -60,33 +63,33 @@ public class SCXMLExecutor {
     private EventDispatcher eventdispatcher;
 
     /**
-     * The environment specific error reporter
+     * The environment specific error reporter.
      */
     private ErrorReporter errorReporter = null;
-    
-    /** 
-     * Run-to-completion
+
+    /**
+     * Run-to-completion.
      */
     private boolean superStep = true;
-    
-    /** 
-     *  Interpretation semantics 
+
+    /**
+     *  Interpretation semantics.
      *  (not configurable without re-compilation for now,
      *   since we have one implementation anyway)
      */
     private SCXMLSemantics semantics = new SCXMLSemantics();
-    
+
     /**
-     * The worker method. Re-evaluates current status whenever any events
-     * are triggered.
-     * 
+     * The worker method.
+     * Re-evaluates current status whenever any events are triggered.
+     *
      * @param evts
      *            an array of external events which triggered during the last
      *            time quantum
-     * @throws ModelException in case there is a fatal SCXML object 
-     *  model problem.
+     * @throws ModelException in case there is a fatal SCXML object
+     *            model problem.
      */
-    public void triggerEvents(TriggerEvent evts[])
+    public void triggerEvents(final TriggerEvent[] evts)
             throws ModelException {
         ArrayList evs = new ArrayList(Arrays.asList(evts));
         do {
@@ -111,67 +114,67 @@ public class SCXMLExecutor {
             // AssignCurrentStatus
             updateStatus(step);
             // ***Cleanup external events if superStep
-            if(superStep) {
+            if (superStep) {
                 evs.clear();
             }
         } while(superStep && currentStatus.getEvents().size() > 0);
         logState();
     }
 
-    public SCXMLExecutor() throws ModelException {
-        this(null, null, null);
-    }
-
     /**
-     * Constructor
-     * 
-     * @param stateMachine The stateMachine to execute
-     * @param evaluator The expression evaluator
+     * Constructor.
+     *
+     * @param expEvaluator The expression evaluator
      * @param evtDisp The event dispatcher
      * @param errRep The error reporter
-     * @throws ModelException in case there is a fatal SCXML object 
-     *  model problem.
      */
-    public SCXMLExecutor(Evaluator evaluator, EventDispatcher evtDisp,
-            ErrorReporter errRep) throws ModelException {
-        this.evaluator = evaluator;
+    public SCXMLExecutor(final Evaluator expEvaluator,
+            final EventDispatcher evtDisp, final ErrorReporter errRep) {
+        this.evaluator = expEvaluator;
         this.eventdispatcher = evtDisp;
         this.errorReporter = errRep;
         this.currentStatus = null;
         this.stateMachine = null;
     }
-    
+
+    /**
+     * Convenience constructor.
+     */
+    public SCXMLExecutor() {
+        this(null, null, null);
+    }
+
     /**
      * Clear all state and begin from &quot;initialstate&quot; indicated
      * on root SCXML element.
-     * 
-     * @throws ModelException in case there is a fatal SCXML object 
-     *  model problem. 
+     *
+     * @throws ModelException in case there is a fatal SCXML object
+     *         model problem.
      */
     public void reset() throws ModelException {
         // Reset all variable contexts
         stateMachine.getRootContext().reset();
         // all states and parallels, only states have var. contexts
-        for (Iterator i = stateMachine.getTargets().values().iterator(); 
+        for (Iterator i = stateMachine.getTargets().values().iterator();
                 i.hasNext();) {
-            TransitionTarget tt = (TransitionTarget)i.next();
-            if(tt instanceof State) {
-                ((State)tt).getContext().reset();
+            TransitionTarget tt = (TransitionTarget) i.next();
+            if (tt instanceof State) {
+                ((State) tt).getContext().reset();
             }
         }
         // CreateEmptyStatus
         currentStatus = new Status();
         Step step = new Step(null, currentStatus);
         // DetermineInitialStates
-        semantics.determineInitialStates(stateMachine, 
-                step.getAfterStatus().getStates(), 
+        semantics.determineInitialStates(stateMachine,
+                step.getAfterStatus().getStates(),
                 step.getEntryList(), errorReporter);
         // ExecuteActions
         semantics.executeActions(step, this, errorReporter);
         // AssignCurrentStatus
         updateStatus(step);
         // Execute Immediate Transitions
-        if(superStep && currentStatus.getEvents().size() > 0) {
+        if (superStep && currentStatus.getEvents().size() > 0) {
             this.triggerEvents(new TriggerEvent[0]);
         } else {
             logState();
@@ -179,8 +182,8 @@ public class SCXMLExecutor {
     }
 
     /**
-     * Get the current status
-     * 
+     * Get the current status.
+     *
      * @return The current Status
      */
     public Status getCurrentStatus() {
@@ -188,114 +191,121 @@ public class SCXMLExecutor {
     }
 
     /**
-     * Get the expression evaluator
-     * 
+     * Get the expression evaluator.
+     *
      * @return Returns the evaluator.
      */
     public Evaluator getEvaluator() {
         return evaluator;
     }
-    
+
     /**
      * @param evaluator The evaluator to set.
      */
-    public void setEvaluator(Evaluator evaluator) {
+    public void setEvaluator(final Evaluator evaluator) {
         this.evaluator = evaluator;
     }
-    
+
     /**
-     * Get the state machine that is being executed
-     * 
+     * Get the state machine that is being executed.
+     *
      * @return Returns the stateMachine.
      */
     public SCXML getStateMachine() {
         return stateMachine;
     }
-    
+
     /**
-     * Set the state machine to be executed
-     * 
+     * Set the state machine to be executed.
+     *
      * @param stateMachine The stateMachine to set.
      * @throws ModelException in case there is a fatal SCXML object
      *  model problem.
      */
-    public void setStateMachine(SCXML statemachine) throws ModelException {
+    public void setStateMachine(final SCXML stateMachine)
+            throws ModelException {
         // NormalizeStateMachine
-        SCXML sm = semantics.normalizeStateMachine(statemachine,
+        SCXML sm = semantics.normalizeStateMachine(stateMachine,
                 errorReporter);
         // StoreStateMachine
         this.stateMachine = sm;
         // reset
         this.reset();
     }
-    
+
     /**
-     * Get the environment specific error reporter
-     * 
+     * Get the environment specific error reporter.
+     *
      * @return Returns the errorReporter.
      */
     public ErrorReporter getErrorReporter() {
         return errorReporter;
     }
-    
+
     /**
-     * Set the environment specific error reporter
-     * 
+     * Set the environment specific error reporter.
+     *
      * @param errorReporter The errorReporter to set.
      */
-    public void setErrorReporter(ErrorReporter errorReporter) {
+    public void setErrorReporter(final ErrorReporter errorReporter) {
         this.errorReporter = errorReporter;
     }
-    
+
     /**
-     * Get the event dispatcher
-     * 
+     * Get the event dispatcher.
+     *
      * @return Returns the eventdispatcher.
      */
     public EventDispatcher getEventdispatcher() {
         return eventdispatcher;
     }
-    
+
     /**
-     * Set the event dispatcher
-     * 
+     * Set the event dispatcher.
+     *
      * @param eventdispatcher The eventdispatcher to set.
      */
-    public void setEventdispatcher(EventDispatcher eventdispatcher) {
+    public void setEventdispatcher(final EventDispatcher eventdispatcher) {
         this.eventdispatcher = eventdispatcher;
     }
-    
+
     /**
-     * Use &quot;super-step&quot;, default is <code>true</code> 
-     * (that is, run-to-completion is default)
+     * Use &quot;super-step&quot;, default is <code>true</code>
+     * (that is, run-to-completion is default).
+     *
      * @return Returns the superStep property.
      * @see #setSuperStep(boolean)
      */
     public boolean isSuperStep() {
         return superStep;
     }
-    
+
     /**
-     * Set the super step
+     * Set the super step.
+     *
      * @param superStep
-     * if true, the internal derived events are also processed (run-to-completion); 
+     * if true, the internal derived events are also processed
+     *    (run-to-completion);
      * if false, the internal derived events are stored in the
      * CurrentStatus property and processed within the next
-     * triggerEvents() invocation, also the immediate (empty event) transitions 
+     * triggerEvents() invocation, also the immediate (empty event) transitions
      * are deferred until the next step
       */
-    public void setSuperStep(boolean superStep) {
+    public void setSuperStep(final boolean superStep) {
         this.superStep = superStep;
     }
-    
+
+    /**
+     * Log the current set of active states.
+     */
     private void logState() {
-        if(log.isInfoEnabled()) {
+        if (log.isInfoEnabled()) {
             Iterator si = currentStatus.getStates().iterator();
             StringBuffer sb = new StringBuffer("Current States: [");
-            while(si.hasNext()) {
-                State s = (State)si.next();
+            while (si.hasNext()) {
+                State s = (State) si.next();
                 sb.append(s.getId());
-                if(si.hasNext()) {
+                if (si.hasNext()) {
                     sb.append(", ");
                 }
             }
@@ -305,11 +315,11 @@ public class SCXMLExecutor {
     }
 
     /**
-     * @param step
+     * @param step The most recent Step
      */
-    private void updateStatus(Step step) {
+    private void updateStatus(final Step step) {
         this.currentStatus = step.getAfterStatus();
         stateMachine.getRootContext().setLocal("_ALL_STATES",
-                SCXMLHelper.getAncestorClosure(currentStatus.getStates(), null));
+            SCXMLHelper.getAncestorClosure(currentStatus.getStates(), null));
     }
 }

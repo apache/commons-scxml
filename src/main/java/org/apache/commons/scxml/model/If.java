@@ -1,6 +1,6 @@
 /*
- *    
- *   Copyright 2004 The Apache Software Foundation.
+ *
+ *   Copyright 2005 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,14 +22,14 @@ import java.util.List;
 
 /**
  * The class in this SCXML object model that corresponds to the
- * &lt;if&gt; SCXML element, which serves as a container for conditionally 
- * executed elements. &lt;else&gt; and &lt;elseif&gt; can optionally 
- * appear within an &lt;if&gt; as immediate children, and serve to partition 
- * the elements within an &lt;if&gt;. 
- * 
+ * &lt;if&gt; SCXML element, which serves as a container for conditionally
+ * executed elements. &lt;else&gt; and &lt;elseif&gt; can optionally
+ * appear within an &lt;if&gt; as immediate children, and serve to partition
+ * the elements within an &lt;if&gt;.
+ *
  */
 public class If extends Action {
-    
+
     /**
      * An conditional expression which can be evaluated to true or false.
      */
@@ -40,52 +40,53 @@ public class If extends Action {
      * Action) that are contained in this &lt;if&gt; element.
      */
     private List actions;
-    
+
     /**
-     * Constructor
+     * Constructor.
      */
     public If() {
         super();
         this.actions = new ArrayList();
     }
-    
+
     /**
-     * Get the executable actions contained in this &lt;if&gt;
-     * 
+     * Get the executable actions contained in this &lt;if&gt;.
+     *
      * @return Returns the actions.
      */
-    public List getActions() {
+    public final List getActions() {
         return actions;
     }
 
     /**
      * Add an Action to the list of executable actions contained in
-     * this &lt;if&gt;
-     * 
+     * this &lt;if&gt;.
+     *
      * @param action The action to add.
      */
-    public void addAction(Action action) {
+    public final void addAction(final Action action) {
         if (action != null) {
             this.actions.add(action);
         }
     }
-    
+
     /**
-     * Get the conditional expression
-     * 
+     * Get the conditional expression.
+     *
      * @return Returns the cond.
      */
-    public String getCond() {
+    public final String getCond() {
         return cond;
     }
-    
+
     /**
-     * Set the conditional expression
-     * 
+     * Set the conditional expression.
+     *
      * @param cond The cond to set.
      */
-    public void setCond(String cond) {
+    public final void setCond(final String cond) {
         this.cond = cond;
     }
-    
+
 }
+

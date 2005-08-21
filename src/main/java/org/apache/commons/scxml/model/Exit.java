@@ -1,6 +1,6 @@
 /*
- *    
- *   Copyright 2004 The Apache Software Foundation.
+ *
+ *   Copyright 2005 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,63 +19,64 @@ package org.apache.commons.scxml.model;
 
 /**
  * The class in this SCXML object model that corresponds to the
- * &lt;exit&gt; SCXML element, which is a shorthand notation for 
+ * &lt;exit&gt; SCXML element, which is a shorthand notation for
  * an empty anonymous final state.
- * 
+ *
  */
 public class Exit extends Action {
 
     /**
-     * The optional expression 
+     * The optional expression.
      */
     private String expr;
-    
+
     /**
-     * The optional namelist
+     * The optional namelist.
      */
     private String namelist;
-    
+
     /**
-     * Constructor
+     * Constructor.
      */
     public Exit() {
         super();
     }
-    
+
     /**
-     * Get the expression
-     * 
-     * @return Returns the expr.
+     * Get the expression.
+     *
+     * @return String Returns the expr.
      */
-    public String getExpr() {
+    public final String getExpr() {
         return expr;
     }
-    
+
     /**
-     * Set the expression
-     * 
+     * Set the expression.
+     *
      * @param expr The expr to set.
      */
-    public void setExpr(String expr) {
+    public final void setExpr(final String expr) {
         this.expr = expr;
     }
-    
+
     /**
-     * Get the namelist
-     * 
-     * @return Returns the namelist.
+     * Get the namelist.
+     *
+     * @return String Returns the namelist.
      */
-    public String getNamelist() {
+    public final String getNamelist() {
         return namelist;
     }
-    
+
     /**
-     * Set the namelist
-     * 
+     * Set the namelist.
+     *
      * @param namelist The namelist to set.
      */
-    public void setNamelist(String namelist) {
+    public final void setNamelist(final String namelist) {
         this.namelist = namelist;
     }
-    
+
 }
+

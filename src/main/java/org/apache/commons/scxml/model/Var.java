@@ -1,6 +1,6 @@
 /*
- *    
- *   Copyright 2004 The Apache Software Foundation.
+ *
+ *   Copyright 2005 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,63 +20,64 @@ package org.apache.commons.scxml.model;
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;var&gt; SCXML element.
- * 
+ *
  */
 public class Var extends Action {
-    
+
     /**
-     * The name of the variable to be created
+     * The name of the variable to be created.
      */
     private String name;
 
     /**
-     * The expression that evaluates to the initial value of the variable
+     * The expression that evaluates to the initial value of the variable.
      */
     private String expr;
-    
+
     /**
-     * Constructor
+     * Constructor.
      */
     public Var() {
         super();
     }
-    
+
     /**
-     * Get the expression that evaluates to the initial value 
-     * of the variable
-     * 
-     * @return Returns the expr.
+     * Get the expression that evaluates to the initial value
+     * of the variable.
+     *
+     * @return String Returns the expr.
      */
-    public String getExpr() {
+    public final String getExpr() {
         return expr;
     }
-    
+
     /**
-     * Set the expression that evaluates to the initial value 
-     * of the variable
-     * 
+     * Set the expression that evaluates to the initial value
+     * of the variable.
+     *
      * @param expr The expr to set.
      */
-    public void setExpr(String expr) {
+    public final void setExpr(final String expr) {
         this.expr = expr;
     }
-    
+
     /**
      * Get the name of the (new) variable.
-     * 
-     * @return Returns the name.
+     *
+     * @return String Returns the name.
      */
-    public String getName() {
+    public final String getName() {
         return name;
     }
-    
+
     /**
      * Set the name of the (new) variable.
-     * 
+     *
      * @param name The name to set.
      */
-    public void setName(String name) {
+    public final void setName(final String name) {
         this.name = name;
     }
-    
+
 }
+

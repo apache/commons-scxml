@@ -1,6 +1,6 @@
 /*
- *    
- *   Copyright 2004 The Apache Software Foundation.
+ *
+ *   Copyright 2005 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,13 +20,13 @@ package org.apache.commons.scxml.model;
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;assign&gt; SCXML element.
- * 
+ *
  */
-public class Assign extends Action {
-    
+public final class Assign extends Action {
+
     /**
-     * Left hand side expression evaluating to a previously 
-     * defined variable
+     * Left hand side expression evaluating to a previously
+     * defined variable.
      */
     private String name;
 
@@ -34,48 +34,49 @@ public class Assign extends Action {
      * Expression evaluating to the new value of the variable.
      */
     private String expr;
-    
+
     /**
-     * Constructor
+     * Constructor.
      */
     public Assign() {
         super();
     }
-    
+
     /**
-     * Get the expr that will evaluate to the new value
-     * 
+     * Get the expr that will evaluate to the new value.
+     *
      * @return Returns the expr.
      */
     public String getExpr() {
         return expr;
     }
-    
+
     /**
-     * Set the expr that will evaluate to the new value
-     * 
+     * Set the expr that will evaluate to the new value.
+     *
      * @param expr The expr to set.
      */
-    public void setExpr(String expr) {
+    public void setExpr(final String expr) {
         this.expr = expr;
     }
-    
+
     /**
-     * Get the variable to be assigned a new value
-     * 
+     * Get the variable to be assigned a new value.
+     *
      * @return Returns the name.
      */
     public String getName() {
         return name;
     }
-    
+
     /**
-     * Get the variable to be assigned a new value
-     * 
+     * Get the variable to be assigned a new value.
+     *
      * @param name The name to set.
      */
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
-    
+
 }
+

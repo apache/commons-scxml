@@ -1,6 +1,6 @@
 /*
- *    
- *   Copyright 2004 The Apache Software Foundation.
+ *
+ *   Copyright 2005 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,12 +23,12 @@ import java.util.List;
 
 /**
  * A logical unit of progression in the execution of a SCXML model.
- * 
+ *
  */
 class Step {
-    
+
     /**
-     * Constructor
+     * Constructor.
       */
     public Step() {
         this.externalEvents = new ArrayList();
@@ -38,19 +38,19 @@ class Step {
         this.entryList = new ArrayList();
         this.transitList = new ArrayList();
     }
-    
+
     /**
-     * @param externalEvents The external events received in this 
+     * @param externalEvents The external events received in this
      *     unit of progression
      * @param beforeStatus The before status
      */
-    public Step(Collection externalEvents, Status beforeStatus) {
-        if(externalEvents != null) {
+    public Step(final Collection externalEvents, final Status beforeStatus) {
+        if (externalEvents != null) {
             this.externalEvents = externalEvents;
         } else {
             this.externalEvents = new ArrayList();
         }
-        if(beforeStatus != null) {
+        if (beforeStatus != null) {
             this.beforeStatus = beforeStatus;
         } else {
             this.beforeStatus = new Status();
@@ -60,91 +60,92 @@ class Step {
         this.entryList = new ArrayList();
         this.transitList = new ArrayList();
     }
-    
+
     /**
-     * The external events in this step
+     * The external events in this step.
      */
     private Collection externalEvents;
 
     /**
-     * The status before this step
+     * The status before this step.
      */
     private Status beforeStatus;
 
     /**
-     * The status after this step
+     * The status after this step.
      */
     private Status afterStatus;
 
     /**
-     * The list of TransitionTargets that were exited during this step
+     * The list of TransitionTargets that were exited during this step.
      */
     private List exitList;
 
     /**
-     * The list of TransitionTargets that were entered during this step
+     * The list of TransitionTargets that were entered during this step.
      */
     private List entryList;
 
     /**
-     * The list of Transitions taken during this step
+     * The list of Transitions taken during this step.
      */
     private List transitList;
-    
+
     /**
      * @return Returns the afterStatus.
      */
     public Status getAfterStatus() {
         return afterStatus;
     }
-    
+
     /**
      * @param afterStatus The afterStatus to set.
      */
-    public void setAfterStatus(Status afterStatus) {
+    public void setAfterStatus(final Status afterStatus) {
         this.afterStatus = afterStatus;
     }
-    
+
     /**
      * @return Returns the beforeStatus.
      */
     public Status getBeforeStatus() {
         return beforeStatus;
     }
-    
+
     /**
      * @param beforeStatus The beforeStatus to set.
      */
-    public void setBeforeStatus(Status beforeStatus) {
+    public void setBeforeStatus(final Status beforeStatus) {
         this.beforeStatus = beforeStatus;
     }
-    
+
     /**
      * @return Returns the entryList.
      */
     public List getEntryList() {
         return entryList;
     }
-    
+
     /**
      * @return Returns the exitList.
      */
     public List getExitList() {
         return exitList;
     }
-    
+
     /**
      * @return Returns the externalEvents.
      */
     public Collection getExternalEvents() {
         return externalEvents;
     }
-    
+
     /**
      * @return Returns the transitList.
      */
     public List getTransitList() {
         return transitList;
-    }    
+    }
 
 }
+

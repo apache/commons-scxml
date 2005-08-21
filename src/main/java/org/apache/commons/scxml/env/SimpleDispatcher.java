@@ -1,6 +1,6 @@
 /*
- *    
- *   Copyright 2004 The Apache Software Foundation.
+ *
+ *   Copyright 2005 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,35 +24,39 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml.EventDispatcher;
 
 /**
- * Trivial EventDispatcher implementation. No remote eventing.
- * 
+ * Trivial EventDispatcher implementation.
+ * No remote eventing.
+ *
  */
-public class SimpleDispatcher implements EventDispatcher {
-    
+public final class SimpleDispatcher implements EventDispatcher {
+
+     /** Implementation independent log category. */
      private static Log log = LogFactory.getLog(EventDispatcher.class);
 
     /**
-     *  Constructor
+     *  Constructor.
      */
     public SimpleDispatcher() {
+        super();
     }
 
     /**
-     * @see org.apache.commons.scxml.EventDispatcher#cancel(java.lang.String)
+     * @see EventDispatcher#cancel(String)
      */
-    public void cancel(String sendId) {
-        if(log.isInfoEnabled()) {
+    public void cancel(final String sendId) {
+        if (log.isInfoEnabled()) {
             log.info("cancel( sendId: " + sendId + ")");
         }
     }
 
     /**
-     * @see org.apache.commons.scxml.EventDispatcher#send(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.Map, java.lang.Object, long)
+     * @see EventDispatcher#send(String,String,String,String,Map,Object,long)
      */
-    public void send(String sendId, String target, String targetType,
-            String event, Map params, Object hints, long delay) {
-        if(log.isInfoEnabled()) {
-            StringBuffer buf = new StringBuffer(32);
+    public void send(final String sendId, final String target,
+            final String targetType, final String event, final Map params,
+            final Object hints, final long delay) {
+        if (log.isInfoEnabled()) {
+            StringBuffer buf = new StringBuffer();
             buf.append("send ( sendId: ").append(sendId);
             buf.append(", target: ").append(target);
             buf.append(", targetType: ").append(targetType);
@@ -67,3 +71,4 @@ public class SimpleDispatcher implements EventDispatcher {
     }
 
 }
+

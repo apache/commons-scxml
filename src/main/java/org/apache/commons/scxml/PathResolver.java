@@ -1,6 +1,6 @@
 /*
- *    
- *   Copyright 2004 The Apache Software Foundation.
+ *
+ *   Copyright 2005 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,24 +20,25 @@ package org.apache.commons.scxml;
 /**
  * Interface for a component that may be used by the SCXML engines
  * to resolve context sensitive paths.
- * 
+ *
  */
 public interface PathResolver {
 
     /**
      * Resolve this context sensitive path to an absolute URL.
-     * 
+     *
      * @param ctxPath Context sensitive path, can be a relative URL
      * @return Resolved path (an absolute URL) or <code>null</code>
      */
-    public String resolvePath(String ctxPath);
-    
+    String resolvePath(String ctxPath);
+
     /**
      * Get a PathResolver rooted at this context sensitive path.
-     * 
+     *
      * @param ctxPath Context sensitive path, can be a relative URL
      * @return Returns a new resolver rooted at ctxPath
      */
-    public PathResolver getResolver(String ctxPath);
+    PathResolver getResolver(String ctxPath);
 
 }
+

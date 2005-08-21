@@ -1,6 +1,6 @@
 /*
- *    
- *   Copyright 2004 The Apache Software Foundation.
+ *
+ *   Copyright 2005 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@ import java.util.List;
 
 /**
  * An abstract base class for containers of executable elements in SCXML,
- * such as &lt;onentry&gt; and &lt;onexit&gt;. 
- * 
+ * such as &lt;onentry&gt; and &lt;onexit&gt;.
+ *
  */
 public abstract class Executable {
 
@@ -32,57 +32,58 @@ public abstract class Executable {
      * Action) that are contained in this Executable.
      */
     private List actions;
-    
+
     /**
-     * The parent container, for traceability
+     * The parent container, for traceability.
      */
-    protected TransitionTarget parent;
-    
+    private TransitionTarget parent;
+
     /**
-     * Constructor
+     * Constructor.
      */
     public Executable() {
         super();
         this.actions = new ArrayList();
     }
-    
+
     /**
-     * Get the executable actions contained in this Executable
-     * 
+     * Get the executable actions contained in this Executable.
+     *
      * @return Returns the actions.
      */
-    public List getActions() {
+    public final List getActions() {
         return actions;
     }
-    
+
     /**
      * Add an Action to the list of executable actions contained in
-     * this Executable
-     * 
+     * this Executable.
+     *
      * @param action The action to add.
      */
-    public void addAction(Action action) {
+    public final void addAction(final Action action) {
         if (action != null) {
             this.actions.add(action);
         }
     }
-    
+
     /**
-     * Get the TransitionTarget parent
-     * 
+     * Get the TransitionTarget parent.
+     *
      * @return Returns the parent.
      */
-    public TransitionTarget getParent() {
+    public final TransitionTarget getParent() {
         return parent;
     }
-    
+
     /**
-     * Set the TransitionTarget parent
-     * 
+     * Set the TransitionTarget parent.
+     *
      * @param parent The parent to set.
      */
-    public void setParent(TransitionTarget parent) {
+    public final void setParent(final TransitionTarget parent) {
         this.parent = parent;
     }
-    
+
 }
+

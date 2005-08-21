@@ -1,6 +1,6 @@
 /*
- *    
- *   Copyright 2004 The Apache Software Foundation.
+ *
+ *   Copyright 2005 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,10 +27,10 @@ import org.apache.commons.scxml.model.State;
 
 /**
  * The encapsulation of the current state of a state machine.
- * 
+ *
  */
 public class Status {
-    
+
     /**
      * The states that are currently active.
      */
@@ -43,22 +43,22 @@ public class Status {
 
     /**
      * Have we reached a final configuration for this state machine.
-     * 
-     * True - if all the states are final and there are not events 
+     *
+     * True - if all the states are final and there are not events
      * pending from the last step. False - otherwise.
-     * 
+     *
      * @return Whether a final configuration has been reached.
      */
     public boolean isFinal() {
         boolean rslt = true;
-        for (Iterator i = states.iterator(); i.hasNext(); ) {
-            State s = (State)i.next();
+        for (Iterator i = states.iterator(); i.hasNext();) {
+            State s = (State) i.next();
             if (!s.getIsFinal()) {
                 rslt = false;
                 break;
             }
             //the status is final only iff these are top-level states
-            if(s.getParent() != null) {
+            if (s.getParent() != null) {
                 rslt = false;
                 break;
             }
@@ -70,7 +70,7 @@ public class Status {
     }
 
     /**
-     * Constructor
+     * Constructor.
      */
     public Status() {
         states = new HashSet();
@@ -79,7 +79,7 @@ public class Status {
 
     /**
      * Get the states configuration (leaf only).
-     * 
+     *
      * @return Returns the states configuration - simple (leaf) states only.
      */
     public Set getStates() {
@@ -88,7 +88,7 @@ public class Status {
 
     /**
      * Get the events that are currently queued.
-     * 
+     *
      * @return The events that are currently queued.
      */
     public Collection getEvents() {
@@ -96,13 +96,14 @@ public class Status {
     }
 
     /**
-     * Get the complete states configuration
-     * 
+     * Get the complete states configuration.
+     *
      * @return complete states configuration including simple states and their
      *         complex ancestors up to the root.
      */
     public Set getAllStates() {
         return SCXMLHelper.getAncestorClosure(states, null);
     }
-    
+
 }
+

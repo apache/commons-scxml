@@ -1,6 +1,6 @@
 /*
- *    
- *   Copyright 2004 The Apache Software Foundation.
+ *
+ *   Copyright 2005 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -37,64 +37,68 @@ import org.apache.commons.scxml.model.TransitionTarget;
 
 /**
  * EL engine interface for SCXML Interpreter.
- * 
+ *
  */
 public class ELEvaluator implements Evaluator {
 
-    //let's make the log category implementation independent
+    /** Implementation independent log category. */
     private static Log log = LogFactory.getLog(Evaluator.class);
+    /** Function Mapper for SCXML expressions. */
     private FunctionMapper fm = new FunctWrapper();
+    /** Pattern for recognizing the SCXML In() special predicate. */
     private static Pattern inFct = Pattern.compile("In\\(");
 
-    ExpressionEvaluator ee = null;
+    /** The expression evaluator implementation for the JSP/EL environment. */
+    private ExpressionEvaluator ee = null;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public ELEvaluator() {
         ee = new ExpressionEvaluatorImpl();
     }
 
     /**
-     * Evaluate an expression
-     * 
+     * Evaluate an expression.
+     *
      * @param ctx variable context
      * @param expr expression
      * @return a result of the evaluation
-     * @throws SCXMLExpressionException
-     * @see org.apache.commons.scxml.Evaluator#eval(org.apache.commons.scxml.Context, java.lang.String)
+     * @throws SCXMLExpressionException For a malformed expression
+     * @see Evaluator#eval(Context, String)
      */
-    public Object eval(Context ctx, String expr) 
+    public Object eval(final Context ctx, final String expr)
     throws SCXMLExpressionException {
         VariableResolver vr = null;
-        if(ctx instanceof VariableResolver) {
-            vr = (VariableResolver)ctx;
+        if (ctx instanceof VariableResolver) {
+            vr = (VariableResolver) ctx;
         } else {
             vr = new CtxWrapper(ctx);
         }
         try {
-            expr = inFct.matcher(expr).replaceAll("In(_ALL_STATES, ");
-            Object rslt = ee.evaluate(expr, Object.class, vr, fm);
-            if(log.isTraceEnabled()) {
-                log.trace(expr + " = " + String.valueOf(rslt));                
+            String evalExpr = inFct.matcher(expr).
+                replaceAll("In(_ALL_STATES, ");
+            Object rslt = ee.evaluate(evalExpr, Object.class, vr, fm);
+            if (log.isTraceEnabled()) {
+                log.trace(expr + " = " + String.valueOf(rslt));
             }
-            return rslt; 
+            return rslt;
         } catch (ELException e) {
             throw new SCXMLExpressionException(e);
-        } 
+        }
     }
 
     /**
      * Create a new child context.
-     * 
+     *
      * @param parent parent context
      * @return new child context
-     * @see org.apache.commons.scxml.Evaluator#newContext(org.apache.commons.scxml.Context)
+     * @see Evaluator#newContext(Context)
      */
-    public Context newContext(Context parent) {
+    public Context newContext(final Context parent) {
         //for now, we do not support nested variable contexts
         //world is flat ;)
-        if(parent != null) {
+        if (parent != null) {
             return parent;
         } else {
             return new ELContext(null);
@@ -102,39 +106,47 @@ public class ELEvaluator implements Evaluator {
     }
 
     /**
-     * @see org.apache.commons.scxml.Evaluator#evalCond(org.apache.commons.scxml.Context, java.lang.String)
+     * @see Evaluator#evalCond(Context, String)
      */
-    public Boolean evalCond(Context ctx, String expr) 
+    public Boolean evalCond(final Context ctx, final String expr)
     throws SCXMLExpressionException {
         VariableResolver vr = null;
-        if(ctx instanceof VariableResolver) {
-            vr = (VariableResolver)ctx;
+        if (ctx instanceof VariableResolver) {
+            vr = (VariableResolver) ctx;
         } else {
             vr = new CtxWrapper(ctx);
         }
         try {
-            expr = inFct.matcher(expr).replaceAll("In(_ALL_STATES, ");
-            Boolean rslt = (Boolean) ee.evaluate(expr, Boolean.class, vr, fm);
-            if(log.isDebugEnabled()) {
-                log.debug(expr + " = " + String.valueOf(rslt));                
+            String evalExpr = inFct.matcher(expr).
+                replaceAll("In(_ALL_STATES, ");
+            Boolean rslt = (Boolean) ee.evaluate(evalExpr, Boolean.class,
+                vr, fm);
+            if (log.isDebugEnabled()) {
+                log.debug(expr + " = " + String.valueOf(rslt));
             }
             return rslt;
         } catch (ELException e) {
             throw new SCXMLExpressionException(e);
-        } 
+        }
     }
-    
+
     /**
-     * A Context wrapper that implements VariableResolver
+     * A Context wrapper that implements VariableResolver.
      */
     class CtxWrapper implements VariableResolver {
-        Context ctx = null;
-        CtxWrapper(Context ctx) {
+        /** Context to be wrapped. */
+        private Context ctx = null;
+        /**
+         * Constructor.
+         * @param ctx The Context to be wrapped.
+         */
+        CtxWrapper(final Context ctx) {
             this.ctx = ctx;
         }
-        public Object resolveVariable(String pName) throws ELException {
+        /** @see VariableResolver#resolveVariable(String) */
+        public Object resolveVariable(final String pName) throws ELException {
             Object rslt = ctx.get(pName);
-            if(rslt == null) {
+            if (rslt == null) {
                 throw new ELException("Variable " + pName + "does not exist!");
             }
             return rslt;
@@ -142,18 +154,17 @@ public class ELEvaluator implements Evaluator {
     }
 
     /**
-     * A simple function mapper for SCXML defined functions
+     * A simple function mapper for SCXML defined functions.
      */
     class FunctWrapper implements FunctionMapper {
 
         /**
-         * @see javax.servlet.jsp.el.FunctionMapper#resolveFunction(java.lang.String, java.lang.String)
+         * @see FunctionMapper#resolveFunction(String, String)
          */
-        public Method resolveFunction(String prefix, String localName) {
-            if(localName.equals("In")) {
-                Class attrs[] = new Class[2];
-                attrs[0] = Set.class;
-                attrs[1] = String.class;
+        public Method resolveFunction(final String prefix,
+                final String localName) {
+            if (localName.equals("In")) {
+                Class[] attrs = new Class[] {Set.class, String.class};
                 try {
                     return ELEvaluator.class.getMethod("isMember", attrs);
                 } catch (SecurityException e) {
@@ -161,7 +172,7 @@ public class ELEvaluator implements Evaluator {
                 } catch (NoSuchMethodException e) {
                     log.error("resolving isMember(Set, String)", e);
                 }
-            } 
+            }
             return null;
         }
     }
@@ -169,16 +180,16 @@ public class ELEvaluator implements Evaluator {
     /**
      * Does this state belong to the Set of these States.
      * Simple ID based comparator
-     * 
+     *
      * @param allStates The Set of State objects to look in
      * @param state The State to compare with
      * @return Whether this State belongs to this Set
      */
-    public static final boolean isMember(Set allStates, String state) {
-        Iterator i = allStates.iterator();
-        while(i.hasNext()) {
-            TransitionTarget tt = (TransitionTarget)i.next();
-            if(state.equals(tt.getId())) {
+    public static final boolean isMember(final Set allStates,
+            final String state) {
+        for (Iterator i = allStates.iterator(); i.hasNext();) {
+            TransitionTarget tt = (TransitionTarget) i.next();
+            if (state.equals(tt.getId())) {
                 return true;
             }
         }
@@ -186,3 +197,4 @@ public class ELEvaluator implements Evaluator {
     }
 
 }
+

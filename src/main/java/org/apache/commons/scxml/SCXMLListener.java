@@ -1,6 +1,6 @@
 /*
- *    
- *   Copyright 2004 The Apache Software Foundation.
+ *
+ *   Copyright 2005 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,32 +22,33 @@ import org.apache.commons.scxml.model.TransitionTarget;
 
 /**
  * Listener interface for Observable entities in the SCXML model.
- * 
+ *
  */
 public interface SCXMLListener {
-    
+
     /**
-     * Handle the entry into a TransitionTarget
-     * 
+     * Handle the entry into a TransitionTarget.
+     *
      * @param state The TransitionTarget entered
      */
-    public void onEntry(TransitionTarget state);
+    void onEntry(TransitionTarget state);
 
     /**
-     * Handle the exit out of a TransitionTarget
-     * 
+     * Handle the exit out of a TransitionTarget.
+     *
      * @param state The TransitionTarget exited
      */
-    public void onExit(TransitionTarget state);
+    void onExit(TransitionTarget state);
 
     /**
-     * Handle the transition
-     * 
+     * Handle the transition.
+     *
      * @param from The source TransitionTarget
      * @param to The destination TransitionTarget
      * @param transition The Transition taken
      */
-    public void onTransition(TransitionTarget from, TransitionTarget to,
+    void onTransition(TransitionTarget from, TransitionTarget to,
             Transition transition);
 
 }
+

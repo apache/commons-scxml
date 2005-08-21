@@ -1,6 +1,6 @@
 /*
- *    
- *   Copyright 2004 The Apache Software Foundation.
+ *
+ *   Copyright 2005 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package org.apache.commons.scxml.env;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.servlet.jsp.el.ELException;
 import javax.servlet.jsp.el.VariableResolver;
@@ -27,20 +28,21 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml.Context;
 
-/** 
+/**
  * EL Context for SCXML interpreter.
- * 
+ *
  */
 public class ELContext implements Context , VariableResolver {
-    
-    //let's make the log category implementation independent
+
+    /** Implementation independent log category. */
     protected static Log log = LogFactory.getLog(Context.class);
-    
+    /** The parent Context to this Context. */
     protected Context parent = null;
-    protected HashMap vars = new HashMap();
-    
+    /** The Map of variables and their values in this Context. */
+    protected Map vars = new HashMap();
+
     /**
-     * Constructor
+     * Constructor.
      *
      */
     public ELContext() {
@@ -48,23 +50,27 @@ public class ELContext implements Context , VariableResolver {
     }
 
     /**
-     * @param parent a parent ELContext, can be null 
+     * Constructor.
+     *
+     * @param parent a parent ELContext, can be null
      */
-    public ELContext(Context parent) {
+    public ELContext(final Context parent) {
         this.parent = parent;
     }
 
     /**
      * Assigns a new value to an existing variable or creates a new one.
-     * The method searches the chain of parent Contexts for variable 
+     * The method searches the chain of parent Contexts for variable
      * existence.
-     * 
-     * @see org.apache.commons.scxml.Context#set(java.lang.String, java.lang.Object)
+     *
+     * @param name The variable name
+     * @param value The variable value
+     * @see org.apache.commons.scxml.Context#set(String, Object)
      */
-    public void set(String name, Object value) {
-        if(vars.containsKey(name)) { //first try to override local
+    public void set(final String name, final Object value) {
+        if (vars.containsKey(name)) { //first try to override local
             setLocal(name, value);
-        } else if(parent != null && parent.has(name)) { //then check for global
+        } else if (parent != null && parent.has(name)) { //then check for global
             parent.set(name, value);
         } else { //otherwise create a new local variable
             setLocal(name, value);
@@ -72,14 +78,16 @@ public class ELContext implements Context , VariableResolver {
     }
 
     /**
-     * Get the value of this variable; delegating to parent
-     * 
+     * Get the value of this variable; delegating to parent.
+     *
+     * @param name The variable name
+     * @return Object The variable value
      * @see org.apache.commons.scxml.Context#get(java.lang.String)
      */
-    public Object get(String name) {
-        if(vars.containsKey(name)) {
+    public Object get(final String name) {
+        if (vars.containsKey(name)) {
             return vars.get(name);
-        } else if(parent != null) {
+        } else if (parent != null) {
             return parent.get(name);
         } else {
             return null;
@@ -87,23 +95,25 @@ public class ELContext implements Context , VariableResolver {
     }
 
     /**
-     * Check if this variable exists, delegating to parent
-     * 
+     * Check if this variable exists, delegating to parent.
+     *
+     * @param name The variable name
+     * @return boolean true if this variable exists
      * @see org.apache.commons.scxml.Context#has(java.lang.String)
      */
-    public boolean has(String name) {
-        if(vars.containsKey(name)) {
+    public boolean has(final String name) {
+        if (vars.containsKey(name)) {
             return true;
-        } else if(parent != null && parent.has(name)) {
+        } else if (parent != null && parent.has(name)) {
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     /**
-     * Get an Iterator over all variables in this Context
-     * 
+     * Get an Iterator over all variables in this Context.
+     *
+     * @return Iterator The Iterator over all variables in this Context
      * @see org.apache.commons.scxml.Context#iterator()
      */
     public Iterator iterator() {
@@ -111,8 +121,8 @@ public class ELContext implements Context , VariableResolver {
     }
 
     /**
-     * Clear this Context
-     * 
+     * Clear this Context.
+     *
      * @see org.apache.commons.scxml.Context#reset()
      */
     public void reset() {
@@ -120,8 +130,9 @@ public class ELContext implements Context , VariableResolver {
     }
 
     /**
-     * Get the parent Context, may be null
-     * 
+     * Get the parent Context, may be null.
+     *
+     * @return Context The parent Context
      * @see org.apache.commons.scxml.Context#getParent()
      */
     public Context getParent() {
@@ -130,26 +141,33 @@ public class ELContext implements Context , VariableResolver {
 
     /**
      * Assigns a new value to an existing variable or creates a new one.
-     * The method allows to shaddow a variable of the same name up the 
+     * The method allows to shaddow a variable of the same name up the
      * Context chain.
-     * 
-     * @see org.apache.commons.scxml.Context#setLocal(java.lang.String, java.lang.Object)
+     *
+     * @param name The variable name
+     * @param value The variable value
+     * @see org.apache.commons.scxml.Context#setLocal(String, Object)
      */
-    public void setLocal(String name, Object value) {
+    public void setLocal(final String name, final Object value) {
         vars.put(name, value);
-        if(log.isDebugEnabled() && !name.equals("_ALL_STATES")) {
+        if (log.isDebugEnabled() && !name.equals("_ALL_STATES")) {
             log.debug(name + " = " + String.valueOf(value));
         }
     }
 
     /**
-     * Resolves the specified variable. Returns null if the variable is 
-     * not found. 
-     * 
-     * @see javax.servlet.jsp.el.VariableResolver#resolveVariable(java.lang.String)
+     * Resolves the specified variable. Returns null if the variable is
+     * not found.
+     *
+     * @param pName The variable to resolve
+     * @return Object The value of the variable, or null, if it does not
+     *                exist
+     * @throws ELException While resolving the variable
+     * @see javax.servlet.jsp.el.VariableResolver#resolveVariable(String)
      */
-    public Object resolveVariable(String pName) throws ELException {
+    public Object resolveVariable(final String pName) throws ELException {
         return get(pName);
     }
 
 }
+

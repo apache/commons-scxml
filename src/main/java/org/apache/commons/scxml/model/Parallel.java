@@ -1,6 +1,6 @@
 /*
- *    
- *   Copyright 2004 The Apache Software Foundation.
+ *
+ *   Copyright 2005 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,47 +22,47 @@ import java.util.Set;
 
 /**
  * The class in this SCXML object model that corresponds to the
- * &lt;parallel&gt; SCXML element, which is a wrapper element to 
- * encapsulate parallel state machines. For the &lt;parallel&gt; element 
- * to be useful, each of its &lt;state&gt; substates must itself be  
+ * &lt;parallel&gt; SCXML element, which is a wrapper element to
+ * encapsulate parallel state machines. For the &lt;parallel&gt; element
+ * to be useful, each of its &lt;state&gt; substates must itself be
  * complex, that is, one with either &lt;state&gt; or &lt;parallel&gt;
  * children.
- * 
+ *
  */
 public class Parallel extends TransitionTarget {
-    
+
     /**
      * The set of parallel state machines contained in this &lt;parallel&gt;.
      */
     private Set states;
-    
+
     /**
-     * Constructor
+     * Constructor.
      */
     public Parallel() {
         this.states = new HashSet();
     }
-    
+
     /**
      * Get the set of parallel state machines contained in this Parallel.
-     * 
+     *
      * @return Returns the state.
      */
-    public Set getStates() {
+    public final Set getStates() {
         return states;
     }
-    
+
     /**
-     * Add a State to the list of parallel state machines contained 
+     * Add a State to the list of parallel state machines contained
      * in this Parallel.
-     * 
+     *
      * @param state The state to add.
      */
-    public void addState(State state) {
+    public final void addState(final State state) {
         if (state != null) {
             this.states.add(state);
         }
     }
-    
+
 }
 

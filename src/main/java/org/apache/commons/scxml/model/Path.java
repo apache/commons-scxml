@@ -1,6 +1,6 @@
 /*
- *    
- *   Copyright 2004 The Apache Software Foundation.
+ *
+ *   Copyright 2005 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,20 +26,44 @@ import org.apache.commons.scxml.SCXMLHelper;
 
 /**
  * A helper class for this SCXML implementation that represents the
- * location of an entity in the SCXML document.
- * 
+ * path taken to transition from one TransitionTarget to another in
+ * the SCXML document.
+ *
+ * The Path consists of the &quot;up segment&quot; that traces up to
+ * the least common ancestor and a &quot;down segment&quot; that traces
+ * down to the target of the Transition.
+ *
  */
 public class Path {
 
+    /**
+     * The list of TransitionTargets in the &quot;up segment&quot;.
+     */
     private List upSeg = new ArrayList();
 
+    /**
+     * The list of TransitionTargets in the &quot;down segment&quot;.
+     */
     private List downSeg = new ArrayList();
 
+    /**
+     * &quot;Lowest&quot; state which is not being exited nor entered by
+     * the transition.
+     */
     private State scope = null;
 
+    /**
+     * Whether the path crosses region border(s).
+     */
     private boolean crossRegion = false;
 
-    Path(TransitionTarget source, TransitionTarget target) {
+    /**
+     * Constructor.
+     *
+     * @param source The source TransitionTarget
+     * @param target The target TransitionTarget
+     */
+    Path(final TransitionTarget source, final TransitionTarget target) {
         if (target == null) {
             //a local "stay" transition
             scope = (State) source;
@@ -85,15 +109,15 @@ public class Path {
      * @return true when the path crosses a region border(s)
      * @see State#isRegion()
      */
-    public boolean isCrossRegion() {
+    public final boolean isCrossRegion() {
         return crossRegion;
     }
 
     /**
-     * @return a list of exited regions sorted bottom-up; no order defined for
-     *         siblings
+     * @return List a list of exited regions sorted bottom-up;
+     *         no order defined for siblings
      */
-    public List getRegionsExited() {
+    public final List getRegionsExited() {
         LinkedList ll = new LinkedList();
         for (Iterator i = upSeg.iterator(); i.hasNext();) {
             Object o = i.next();
@@ -108,10 +132,10 @@ public class Path {
     }
 
     /**
-     * @return a list of entered regions sorted top-down; no order defined for
-     *         siblings
+     * @return List a list of entered regions sorted top-down; no order
+     *         defined for siblings
      */
-    public List getRegionsEntered() {
+    public final List getRegionsEntered() {
         LinkedList ll = new LinkedList();
         for (Iterator i = downSeg.iterator(); i.hasNext();) {
             Object o = i.next();
@@ -126,25 +150,25 @@ public class Path {
     }
 
     /**
-     * @return scope of the transition path, null means global transition (SCXML
-     *         document level) Scope is the least state which is not being
-     *         exited nor entered by the transition.
+     * @return State scope of the transition path, null means global transition
+     *         (SCXML document level) Scope is the least state which is not
+     *         being exited nor entered by the transition.
      */
-    public State getScope() {
+    public final State getScope() {
         return scope;
     }
 
     /**
-     * @return upward segment of the path up to the scope
+     * @return List upward segment of the path up to the scope
      */
-    public List getUpwardSegment() {
+    public final List getUpwardSegment() {
         return upSeg;
     }
 
     /**
-     * @return downward segment from the scope to the target
+     * @return List downward segment from the scope to the target
      */
-    public List getDownwardSegment() {
+    public final List getDownwardSegment() {
         return downSeg;
     }
 }

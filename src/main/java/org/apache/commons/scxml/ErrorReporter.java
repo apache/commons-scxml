@@ -1,6 +1,6 @@
 /*
- *    
- *   Copyright 2004 The Apache Software Foundation.
+ *
+ *   Copyright 2005 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,63 +21,65 @@ package org.apache.commons.scxml;
  * An interface for reporting SCXML errors to the host environment,
  * containing the definition of commonly occuring errors while executing
  * SCXML documents.
- * 
+ *
  */
 public interface ErrorReporter {
 
     /**
+     * Handler for reporting an error.
+     *
      * @param errCode
      *            one of the ErrorReporter's constants
      * @param errDetail
      *            human readable description
      * @param errCtx
-     *            typically an SCXML element which caused an error, 
+     *            typically an SCXML element which caused an error,
      *            may be accompanied by additional information
      */
-    public void onError(String errCode, String errDetail, Object errCtx);
+    void onError(String errCode, String errDetail, Object errCtx);
 
     /**
      * Missing initial state for a composite state or for the smxml root.
-     * 
+     *
      * @see org.apache.commons.scxml.model.SCXML#getInitialState()
      * @see org.apache.commons.scxml.model.State#getInitial()
      */
-    public static final String NO_INITIAL = "NO_INITIAL";
-    
-    /**
-     * An initial state for a composite state whose Transition does not
-     * Map to a descendant of the composite state.
-     * 
-     */
-    public static final String ILLEGAL_INITIAL = "ILLEGAL_INITIAL";
+    String NO_INITIAL = "NO_INITIAL";
 
     /**
-     * Unknown action - unsupported executable content. List of supported
+     * An initial state for a composite state whose Transition does not.
+     * Map to a descendant of the composite state.
+     *
+     */
+    String ILLEGAL_INITIAL = "ILLEGAL_INITIAL";
+
+    /**
+     * Unknown action - unsupported executable content. List of supported.
      * actions: assign, cancel, elseif, else, if, log, send, var
      */
-    public static final String UNKNOWN_ACTION = "UNKNOWN_ACTION";
-    
+    String UNKNOWN_ACTION = "UNKNOWN_ACTION";
+
     /**
      * Illegal state machine configuration.
-     * Either a parallel exists which does not have all its AND sub-states 
-     * active or there are multiple enabled OR states on the same level.  
+     * Either a parallel exists which does not have all its AND sub-states
+     * active or there are multiple enabled OR states on the same level.
      */
-    public static final String ILLEGAL_CONFIG = "ILLEGAL_CONFIG";
-    
+    String ILLEGAL_CONFIG = "ILLEGAL_CONFIG";
+
     /**
      * Non-deterministic situation has occured - there are more than
      * one enabled transitions in conflict.
      */
-    public static final String NON_DETERMINISTIC = "NON_DETERMINISTIC";
-    
+    String NON_DETERMINISTIC = "NON_DETERMINISTIC";
+
     /**
-     * A variable reffered to by assign@name is undefined.
+     * A variable referred to by assign name attribute is undefined.
      */
-    public static final String UNDEFINED_VARIABLE = "UNDEFINED_VARIABLE";
-    
+    String UNDEFINED_VARIABLE = "UNDEFINED_VARIABLE";
+
     /**
-     * An expression language error. 
+     * An expression language error.
      */
-    public static final String EXPRESSION_ERROR = "EXPRESSION_ERROR";
-    
+    String EXPRESSION_ERROR = "EXPRESSION_ERROR";
+
 }

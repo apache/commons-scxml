@@ -1,6 +1,6 @@
 /*
- *    
- *   Copyright 2004 The Apache Software Foundation.
+ *
+ *   Copyright 2005 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,170 +23,171 @@ import java.util.List;
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;send&gt; SCXML element.
- * 
+ *
  */
 public class Send extends Action {
-    
+
     /**
-     * The ID of the send message
+     * The ID of the send message.
      */
     private String sendId;
-    
+
     /**
-     * An expression returning the target location of the event
+     * An expression returning the target location of the event.
      */
     private String target;
 
     /**
-     * The type of the Event I/O Processor that the event
+     * The type of the Event I/O Processor that the event.
      * should be dispatched to
      */
     private String targetType;
 
     /**
-     * The event is dispatched after the delay interval elapses
+     * The event is dispatched after the delay interval elapses.
      */
     private String delay;
 
     /**
-     * The data containing information which may be used by the 
-     * implementing platform to configure the event processor
+     * The data containing information which may be used by the
+     * implementing platform to configure the event processor.
      */
     private String hints;
 
     /**
-     * The namelist to the sent
+     * The namelist to the sent.
      */
     private String namelist;
 
     /**
-     * The list of external nodes associated with this &lt;send&gt; element
+     * The list of external nodes associated with this &lt;send&gt; element.
      */
     private List externalNodes;
 
     /**
-     * The type of event being generated
+     * The type of event being generated.
      */
     private String event;
-    
+
     /**
-     * Constructor
+     * Constructor.
      */
     public Send() {
         super();
         this.externalNodes = new ArrayList();
     }
-    
+
     /**
      * @return Returns the delay.
      */
-    public String getDelay() {
+    public final String getDelay() {
         return delay;
     }
-    
+
     /**
      * @param delay The delay to set.
      */
-    public void setDelay(String delay) {
+    public final void setDelay(final String delay) {
         this.delay = delay;
     }
-    
+
     /**
-     * @return Returns the externalnode.
+     * @return List Returns the list of externalnodes.
      */
-    public List getExternalNodes() {
+    public final List getExternalNodes() {
         return externalNodes;
     }
-    
+
     /**
-     * @param externalnode The externalnode to set.
+     * @param externalNodes The externalnode to set.
      */
-    public void setExternalNodes(List externalNodes) {
+    public final void setExternalNodes(final List externalNodes) {
         this.externalNodes = externalNodes;
     }
-    
+
     /**
-     * @return Returns the hints.
+     * @return String Returns the hints.
      */
-    public String getHints() {
+    public final String getHints() {
         return hints;
     }
-    
+
     /**
      * @param hints The hints to set.
      */
-    public void setHints(String hints) {
+    public final void setHints(final String hints) {
         this.hints = hints;
     }
-    
+
     /**
-     * @return Returns the namelist.
+     * @return String Returns the namelist.
      */
-    public String getNamelist() {
+    public final String getNamelist() {
         return namelist;
     }
-    
+
     /**
      * @param namelist The namelist to set.
      */
-    public void setNamelist(String namelist) {
+    public final void setNamelist(final String namelist) {
         this.namelist = namelist;
     }
-    
+
     /**
-     * @return Returns the sendId.
+     * @return String Returns the sendId.
      */
-    public String getSendId() {
+    public final String getSendId() {
         return sendId;
     }
-    
+
     /**
      * @param sendId The sendId to set.
      */
-    public void setSendId(String sendId) {
+    public final void setSendId(final String sendId) {
         this.sendId = sendId;
     }
-    
+
     /**
-     * @return Returns the target.
+     * @return String Returns the target.
      */
-    public String getTarget() {
+    public final String getTarget() {
         return target;
     }
-    
+
     /**
      * @param target The target to set.
      */
-    public void setTarget(String target) {
+    public final void setTarget(final String target) {
         this.target = target;
     }
-    
+
     /**
-     * @return Returns the targetType.
+     * @return String Returns the targetType.
      */
-    public String getTargetType() {
+    public final String getTargetType() {
         return targetType;
     }
-    
+
     /**
      * @param targetType The targetType to set.
      */
-    public void setTargetType(String targetType) {
+    public final void setTargetType(final String targetType) {
         this.targetType = targetType;
     }
 
     /**
      * @param event The event to set.
      */
-    public void setEvent(String event) {
+    public final void setEvent(final String event) {
         this.event = event;
     }
 
     /**
-     * @return Returns the event.
+     * @return String Returns the event.
      */
-    public String getEvent() {
+    public final String getEvent() {
         return event;
     }
-    
+
 }
+

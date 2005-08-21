@@ -1,6 +1,6 @@
 /*
- *    
- *   Copyright 2004 The Apache Software Foundation.
+ *
+ *   Copyright 2005 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,25 +37,28 @@ import org.xml.sax.SAXParseException;
 
 /**
  * A simple logger connected to Jakarta Commons Logging.
- * 
+ *
  */
 public class Tracer implements ErrorReporter, SCXMLListener, ErrorHandler {
 
+    /** A Logger for the Tracer. */
     private static Log log = LogFactory.getLog(Tracer.class);
-    
+
     /**
-     * Constructor
+     * Constructor.
      */
     public Tracer() {
+        super();
     }
 
     /**
-     * @see org.apache.commons.scxml.ErrorReporter#onError(java.lang.String, java.lang.String, java.lang.Object)
+     * @see ErrorReporter#onError(String, String, Object)
      */
-    public void onError(String errCode, String errDetail, Object errCtx) {
+    public void onError(final String errorCode, final String errDetail,
+            final Object errCtx) {
         //Note: the if-then-else below is based on the actual usage
         // (codebase search), it has to be kept up-to-date as the code changes
-        errCode = errCode.intern();
+        String errCode = errorCode.intern();
         StringBuffer msg = new StringBuffer();
         msg.append(errCode).append(" (");
         msg.append(errDetail).append("): ");
@@ -65,7 +69,7 @@ public class Tracer implements ErrorReporter, SCXMLListener, ErrorHandler {
             } else if (errCtx instanceof State) {
                 //determineInitialStates
                 //determineTargetStates
-                msg.append("State " + Tracer.getTTPath((State)errCtx));
+                msg.append("State " + Tracer.getTTPath((State) errCtx));
             }
         } else if (errCode == ErrorReporter.UNKNOWN_ACTION) {
             //executeActionList
@@ -73,12 +77,11 @@ public class Tracer implements ErrorReporter, SCXMLListener, ErrorHandler {
         } else if (errCode == ErrorReporter.NON_DETERMINISTIC) {
             //filterTransitionSet
             msg.append(" [");
-            if(errCtx instanceof HashSet) {
-                Iterator i = ((HashSet)errCtx).iterator();
-                while(i.hasNext()) {
-                    Transition t = (Transition)i.next();
+            if (errCtx instanceof HashSet) {
+                for (Iterator i = ((Set) errCtx).iterator(); i.hasNext();) {
+                    Transition t = (Transition) i.next();
                     msg.append(transToString(t.getParent(), t.getTarget(), t));
-                    if(i.hasNext()) {
+                    if (i.hasNext()) {
                         msg.append(", ");
                     }
                 }
@@ -87,26 +90,25 @@ public class Tracer implements ErrorReporter, SCXMLListener, ErrorHandler {
         } else if (errCode == ErrorReporter.ILLEGAL_CONFIG) {
             //isLegalConfig
             if (errCtx instanceof Map.Entry) {
-                TransitionTarget tt = (TransitionTarget)(((Map.Entry)errCtx).getKey());
-                HashSet vals = (HashSet)(((Map.Entry)errCtx).getValue());
+                TransitionTarget tt = (TransitionTarget)
+                    (((Map.Entry) errCtx).getKey());
+                Set vals = (Set) (((Map.Entry) errCtx).getValue());
                 msg.append(Tracer.getTTPath(tt) + " : [");
-                Iterator i = vals.iterator();
-                while(i.hasNext()) {
-                    TransitionTarget tx = (TransitionTarget)i.next();
+                for (Iterator i = vals.iterator(); i.hasNext();) {
+                    TransitionTarget tx = (TransitionTarget) i.next();
                     msg.append(Tracer.getTTPath(tx));
-                    if(i.hasNext()) {
+                    if (i.hasNext()) {
                         msg.append(", ");
                     }
                 }
                 msg.append(']');
-            } else if (errCtx instanceof HashSet) {
-                HashSet vals = (HashSet)(errCtx);
+            } else if (errCtx instanceof Set) {
+                Set vals = (Set) errCtx;
                 msg.append("<SCXML> : [");
-                Iterator i = vals.iterator();
-                while(i.hasNext()) {
-                    TransitionTarget tx = (TransitionTarget)i.next();
+                for (Iterator i = vals.iterator(); i.hasNext();) {
+                    TransitionTarget tx = (TransitionTarget) i.next();
                     msg.append(Tracer.getTTPath(tx));
-                    if(i.hasNext()) {
+                    if (i.hasNext()) {
                         msg.append(", ");
                     }
                 }
@@ -117,29 +119,37 @@ public class Tracer implements ErrorReporter, SCXMLListener, ErrorHandler {
     }
 
     /**
-     * @see org.apache.commons.scxml.SCXMLListener#onEntry(org.apache.commons.scxml.model.TransitionTarget)
+     * @see SCXMLListener#onEntry(TransitionTarget)
      */
-    public void onEntry(TransitionTarget state) {
+    public void onEntry(final TransitionTarget state) {
         log.info(Tracer.getTTPath(state));
     }
 
     /**
-     * @see org.apache.commons.scxml.SCXMLListener#onExit(org.apache.commons.scxml.model.TransitionTarget)
+     * @see SCXMLListener#onExit(TransitionTarget)
      */
-    public void onExit(TransitionTarget state) {
+    public void onExit(final TransitionTarget state) {
         log.info(Tracer.getTTPath(state));
     }
 
     /**
-     * @see org.apache.commons.scxml.SCXMLListener#onTransition(org.apache.commons.scxml.model.TransitionTarget, org.apache.commons.scxml.model.TransitionTarget, org.apache.commons.scxml.model.Transition)
+* @see SCXMLListener#onTransition(TransitionTarget,TransitionTarget,Transition)
      */
-    public void onTransition(TransitionTarget from, TransitionTarget to,
-            Transition transition) {
+    public void onTransition(final TransitionTarget from,
+            final TransitionTarget to, final Transition transition) {
         log.info(transToString(from, to, transition));
     }
-    
-    private static final String transToString(TransitionTarget from,
-            TransitionTarget to, Transition transition) {
+
+    /**
+     * Create a human readable log view of this transition.
+     *
+     * @param from The source TransitionTarget
+     * @param to The destination TransitionTarget
+     * @param transition The Transition that is taken
+     * @return String The human readable log entry
+     */
+    private static String transToString(final TransitionTarget from,
+            final TransitionTarget to, final Transition transition) {
         StringBuffer buf = new StringBuffer("transition (");
         buf.append("event = ").append(transition.getEvent());
         buf.append(", cond = ").append(transition.getCond());
@@ -152,37 +162,47 @@ public class Tracer implements ErrorReporter, SCXMLListener, ErrorHandler {
     /**
      * @see org.xml.sax.ErrorHandler#warning(org.xml.sax.SAXParseException)
      */
-    public void warning(SAXParseException exception) throws SAXException {
+    public void warning(final SAXParseException exception)
+    throws SAXException {
         log.warn(exception.getMessage(), exception);
     }
 
     /**
      * @see org.xml.sax.ErrorHandler#error(org.xml.sax.SAXParseException)
      */
-    public void error(SAXParseException exception) throws SAXException {
+    public void error(final SAXParseException exception)
+    throws SAXException {
         log.error(exception.getMessage(), exception);
     }
 
     /**
      * @see org.xml.sax.ErrorHandler#fatalError(org.xml.sax.SAXParseException)
      */
-    public void fatalError(SAXParseException exception) throws SAXException {
+    public void fatalError(final SAXParseException exception)
+    throws SAXException {
         log.fatal(exception.getMessage(), exception);
     }
 
-    private static final String getTTPath(TransitionTarget tt) {
-        if(tt.getParent() == null) {
+    /**
+     * Write out this TransitionTarget location in a XPath style format.
+     *
+     * @param tt The TransitionTarget whose &quot;path&quot; is to needed
+     * @return String The XPath style location of the TransitionTarget within
+     *                the SCXML document
+     */
+    private static String getTTPath(final TransitionTarget tt) {
+        TransitionTarget parent = tt.getParent();
+        if (parent == null) {
             return "/" + tt.getId();
         } else {
             LinkedList ll = new LinkedList();
-            while(tt != null) {
-                ll.addFirst(tt);
-                tt = tt.getParent();
+            while (parent != null) {
+                ll.addFirst(parent);
+                parent = parent.getParent();
             }
-            Iterator i = ll.iterator();
             StringBuffer names = new StringBuffer();
-            while(i.hasNext()) {
-                TransitionTarget tmp = (TransitionTarget)i.next();
+            for (Iterator i = ll.iterator(); i.hasNext();) {
+                TransitionTarget tmp = (TransitionTarget) i.next();
                 names.append('/').append(tmp.getId());
             }
             return names.toString();
@@ -190,3 +210,4 @@ public class Tracer implements ErrorReporter, SCXMLListener, ErrorHandler {
     }
 
 }
+

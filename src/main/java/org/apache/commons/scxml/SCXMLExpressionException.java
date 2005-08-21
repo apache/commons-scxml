@@ -1,6 +1,6 @@
 /*
- *    
- *   Copyright 2004 The Apache Software Foundation.
+ *
+ *   Copyright 2005 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ package org.apache.commons.scxml;
 /**
  * Exception thrown when a malformed expression is encountered during
  * evaluation of an expression in a SCXML document.
- * 
+ *
  */
 public class SCXMLExpressionException extends Exception {
 
@@ -33,27 +33,29 @@ public class SCXMLExpressionException extends Exception {
 
     /**
      * @see java.lang.Exception#Exception(java.lang.String)
-     * @param message
+     * @param message The error message
      */
-    public SCXMLExpressionException(String message) {
+    public SCXMLExpressionException(final String message) {
         super(message);
     }
 
     /**
      * @see java.lang.Exception#Exception(java.lang.Throwable)
-     * @param cause
+     * @param cause The cause
      */
-    public SCXMLExpressionException(Throwable cause) {
+    public SCXMLExpressionException(final Throwable cause) {
         super(cause);
     }
-    
+
     /**
-     * @see java.lang.Exception#Exception(java.lang.String, java.lang.Throwable)
-     * @param message
-     * @param cause
+     * @see java.lang.Exception#Exception(String, Throwable)
+     * @param message The error message
+     * @param cause The cause
      */
-    public SCXMLExpressionException(String message, Throwable cause) {
+    public SCXMLExpressionException(final String message,
+            final Throwable cause) {
         super(message, cause);
     }
 
 }
+

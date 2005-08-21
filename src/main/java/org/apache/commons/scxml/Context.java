@@ -1,6 +1,6 @@
 /*
- *    
- *   Copyright 2004 The Apache Software Foundation.
+ *
+ *   Copyright 2005 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,65 +21,64 @@ import java.util.Iterator;
 
 /**
  * A Context or &quot;scope&quot; for storing variables; usually tied to
- * a SCXML root or State object
- *
+ * a SCXML root or State object.
  */
 public interface Context {
     /**
      * Assigns a new value to an existing variable or creates a new one.
-     * The method searches the chain of parent Contexts for variable 
+     * The method searches the chain of parent Contexts for variable
      * existence.
-     * 
+     *
      * @param name The variable name
      * @param value The variable value
      */
-    public void set(String name, Object value);
+    void set(String name, Object value);
 
     /**
      * Assigns a new value to an existing variable or creates a new one.
-     * The method allows to shaddow a variable of the same name up the 
+     * The method allows to shaddow a variable of the same name up the
      * Context chain.
-     * 
+     *
      * @param name The variable name
      * @param value The variable value
      */
-    public void setLocal(String name, Object value);
+    void setLocal(String name, Object value);
 
     /**
-     * Get the value of this variable; delegating to parent
-     * 
+     * Get the value of this variable; delegating to parent.
+     *
      * @param name The name of the variable
      * @return The value (or null)
      */
-    public Object get(String name);
+    Object get(String name);
 
     /**
-     * Check if this variable exists, delegating to parent
-     * 
+     * Check if this variable exists, delegating to parent.
+     *
      * @param name The name of the variable
      * @return Whether a variable with the name exists in this Context
      */
-    public boolean has(String name);
+    boolean has(String name);
 
     /**
-     * Get an Iterator over all variables in this Context
-     * 
+     * Get an Iterator over all variables in this Context.
+     *
      * @return Local entries iterator (Map.Entry)
      * To get parent entries, call getParent().iterator().
      * @see #getParent()
      */
-    public Iterator iterator();
+    Iterator iterator();
 
     /**
-     * Clear this Context
+     * Clear this Context.
      */
-    public void reset();
+    void reset();
 
     /**
-     * Get the parent Context, may be null
-     * 
+     * Get the parent Context, may be null.
+     *
      * @return The parent Context in a chained Context environment
      */
-    public Context getParent();
+    Context getParent();
 
 }

@@ -1,6 +1,6 @@
 /*
- *    
- *   Copyright 2004 The Apache Software Foundation.
+ *
+ *   Copyright 2005 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,17 +20,17 @@ package org.apache.commons.scxml.model;
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;cancel&gt; SCXML element.
- * 
+ *
  */
-public class Cancel extends Action {
-    
+public final class Cancel extends Action {
+
     /**
-     * Constructor
+     * Constructor.
      */
     public Cancel() {
         super();
     }
-    
+
     /**
      * The ID of the send message that should be cancelled.
      */
@@ -38,20 +38,21 @@ public class Cancel extends Action {
 
     /**
      * Get the ID of the send message that should be cancelled.
-     * 
+     *
      * @return Returns the sendId.
      */
     public String getSendId() {
         return sendId;
     }
-    
+
     /**
      * Set the ID of the send message that should be cancelled.
-     * 
+     *
      * @param sendId The sendId to set.
      */
-    public void setSendId(String sendId) {
+    public void setSendId(final String sendId) {
         this.sendId = sendId;
-    }    
-    
+    }
+
 }
+

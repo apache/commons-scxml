@@ -1,6 +1,6 @@
 /*
- *    
- *   Copyright 2004 The Apache Software Foundation.
+ *
+ *   Copyright 2005 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,38 +20,39 @@ package org.apache.commons.scxml.model;
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;elseif&gt; SCXML element.
- * 
+ *
  */
 public class ElseIf extends Action {
-    
+
     /**
      * An conditional expression which can be evaluated to true or false.
      */
     private String cond;
-    
+
     /**
-     * Constructor
+     * Constructor.
      */
     public ElseIf() {
         super();
     }
-    
+
     /**
-     * Get the conditional expression
-     * 
+     * Get the conditional expression.
+     *
      * @return Returns the cond.
      */
-    public String getCond() {
+    public final String getCond() {
         return cond;
     }
-    
+
     /**
-     * Set the conditional expression
-     * 
+     * Set the conditional expression.
+     *
      * @param cond The cond to set.
      */
-    public void setCond(String cond) {
+    public final void setCond(final String cond) {
         this.cond = cond;
     }
-    
+
 }
+

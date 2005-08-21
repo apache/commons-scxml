@@ -1,6 +1,6 @@
 /*
- *    
- *   Copyright 2004 The Apache Software Foundation.
+ *
+ *   Copyright 2005 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,47 +19,48 @@ package org.apache.commons.scxml.model;
 
 /**
  * An abstract base class for executable elements in SCXML,
- * such as &lt;assign&gt;, &lt;log&gt; etc. 
- * 
+ * such as &lt;assign&gt;, &lt;log&gt; etc.
+ *
  */
 public abstract class Action {
-    
+
     /**
-     * Link to its parent or container
+     * Link to its parent or container.
      */
     private Executable parent;
-    
+
     /**
-     * Constructor
+     * Constructor.
      */
     public Action() {
         super();
     }
-    
+
     /**
-     * Get the Executable parent
-     * 
+     * Get the Executable parent.
+     *
      * @return Returns the parent.
      */
-    public Executable getParent() {
+    public final Executable getParent() {
         return parent;
     }
-    
+
     /**
-     * Set the Executable parent
-     * 
+     * Set the Executable parent.
+     *
      * @param parent The parent to set.
      */
-    public void setParent(Executable parent) {
+    public final void setParent(final Executable parent) {
         this.parent = parent;
     }
 
     /**
-     * Return the parent state
-     * 
+     * Return the parent state.
+     *
      * @return The parent State
+     * @throws ModelException For an unknown TransitionTarget subclass
      */
-    public State getParentState() throws ModelException {
+    public final State getParentState() throws ModelException {
         TransitionTarget tt = parent.getParent();
         if (tt instanceof State) {
             State st = (State) tt;
@@ -73,3 +74,4 @@ public abstract class Action {
         }
     }
 }
+

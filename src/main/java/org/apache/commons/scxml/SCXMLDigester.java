@@ -1,6 +1,6 @@
 /*
- *    
- *   Copyright 2004 The Apache Software Foundation.
+ *
+ *   Copyright 2005 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -58,24 +58,20 @@ import org.xml.sax.Attributes;
 import org.xml.sax.ErrorHandler;
 
 /**
- * The SCXMLDigester can be used to: <br>
+ * The SCXMLDigester provides the ability to digest a SCXML document into the
+ * Java object model provided in the model package.
+ * <br>
+ * The SCXMLDigester can be used for:
  * a) Digest a SCXML file placed in a web application context <br>
  * b) Obtain a Digester instance configured with rules for SCXML digestion <br>
  * c) Serialize an SCXML object (primarily for debugging) <br>
  */
 public class SCXMLDigester {
 
-    private static final String ERR_PARSE_FAIL = "<!-- Error parsing " +
-        "SCXML document for group: \"{0}\", with message: \"{1}\" -->\n";
-
-    // Logging
-    private static org.apache.commons.logging.Log log = LogFactory
-            .getLog(SCXMLDigester.class);
-
-    //-- PUBLIC METHODS --//
+    //---------------------- PUBLIC METHODS ----------------------//
     /**
      * API for standalone usage where the SCXML document is a URL.
-     * 
+     *
      * @param scxmlURL
      *            a canonical absolute URL to parse (relative URLs within the
      *            top level document are to be resovled against this URL).
@@ -90,14 +86,15 @@ public class SCXMLDigester {
      *            scripting engine)
      *
      * @return SCXML The SCXML object corresponding to the file argument
-     * 
+     *
      * @see Context
      * @see ErrorHandler
      * @see Evaluator
      * @see PathResolver
      */
-    public static SCXML digest(URL scxmlURL, ErrorHandler errHandler,
-            Context evalCtx, Evaluator evalEngine) {
+    public static SCXML digest(final URL scxmlURL,
+            final ErrorHandler errHandler, final Context evalCtx,
+            final Evaluator evalEngine) {
 
         SCXML scxml = null;
         Digester scxmlDigester = SCXMLDigester
@@ -107,9 +104,10 @@ public class SCXMLDigester {
         try {
             scxml = (SCXML) scxmlDigester.parse(scxmlURL.toString());
         } catch (Exception e) {
-            MessageFormat msgFormat = new MessageFormat(ERR_PARSE_FAIL);
-            String errMsg = msgFormat.format(new Object[] {scxmlURL.toString(),
-                    e.getMessage()});
+            MessageFormat msgFormat = new MessageFormat(ERR_DOC_PARSE_FAIL);
+            String errMsg = msgFormat.format(new Object[] {
+                scxmlURL.toString(), e.getMessage()
+            });
             log.error(errMsg, e);
         }
 
@@ -124,12 +122,12 @@ public class SCXMLDigester {
     /**
      * API for standalone usage where the SCXML document is a URI.
      * A PathResolver must be provided.
-     * 
+     *
      * @param pathResolver
      *            The PathResolver for this context
-     * @param documentRealPath 
+     * @param documentRealPath
      *            The String pointing to the absolute (real) path of the
-     *               SCXML config 
+     *               SCXML config
      * @param errHandler
      *            The SAX ErrorHandler
      * @param evalCtx
@@ -139,28 +137,29 @@ public class SCXMLDigester {
      *            the scripting/expression language engine for creating local
      *            state-level variable contexts (if supported by a given
      *            scripting engine)
-     * 
+     *
      * @return SCXML The SCXML object corresponding to the file argument
-     * 
+     *
      * @see Context
      * @see ErrorHandler
      * @see Evaluator
      * @see PathResolver
      */
-    public static SCXML digest(String documentRealPath, 
-            ErrorHandler errHandler, Context evalCtx, Evaluator evalEngine,
-            PathResolver pr) {
+    public static SCXML digest(final String documentRealPath,
+            final ErrorHandler errHandler, final Context evalCtx,
+            final Evaluator evalEngine, final PathResolver pathResolver) {
 
         SCXML scxml = null;
-        Digester scxmlDigester = SCXMLDigester.newInstance(null, pr);
+        Digester scxmlDigester = SCXMLDigester.newInstance(null, pathResolver);
         scxmlDigester.setErrorHandler(errHandler);
 
         try {
             scxml = (SCXML) scxmlDigester.parse(documentRealPath);
         } catch (Exception e) {
-            MessageFormat msgFormat = new MessageFormat(ERR_PARSE_FAIL);
-            String errMsg = msgFormat.format(new Object[] { documentRealPath,
-                e.getMessage()});
+            MessageFormat msgFormat = new MessageFormat(ERR_DOC_PARSE_FAIL);
+            String errMsg = msgFormat.format(new Object[] {
+                documentRealPath, e.getMessage()
+            });
             log.error(errMsg, e);
         }
 
@@ -173,13 +172,13 @@ public class SCXMLDigester {
     }
 
     /**
-     * Serialize this SCXML object (primarily for debugging)
-     * 
+     * Serialize this SCXML object (primarily for debugging).
+     *
      * @param scxml
      *            The SCXML to be serialized
      * @return String The serialized SCXML
      */
-    public static String serializeSCXML(SCXML scxml) {
+    public static String serializeSCXML(final SCXML scxml) {
         StringBuffer b = new StringBuffer("<scxml xmlns=\"").append(
                 scxml.getXmlns()).append("\" version=\"").append(
                 scxml.getVersion()).append("\" initialstate=\"").append(
@@ -193,86 +192,174 @@ public class SCXMLDigester {
         return b.toString();
     }
 
-    //-- PRIVATE CONSTANTS --//
+    //---------------------- PRIVATE CONSTANTS ----------------------//
     //// Patterns to get the digestion going
+    /** Root &lt;scxml&gt; element. */
     private static final String XP_SM = "scxml";
 
+    /** &lt;state&gt; children of root &lt;scxml&gt; element. */
     private static final String XP_SM_ST = "scxml/state";
 
     //// Universal matches
     // State
+    /** &lt;state&gt; children of &lt;state&gt; elements. */
     private static final String XP_ST_ST = "!*/state/state";
 
+    /** &lt;state&gt; children of &lt;parallel&gt; elements. */
     private static final String XP_PAR_ST = "!*/parallel/state";
 
+    /** &lt;state&gt; children of transition &lt;target&gt; elements. */
     private static final String XP_TR_TAR_ST = "!*/transition/target/state";
 
     //private static final String XP_ST_TAR_ST = "!*/state/target/state";
 
     // Parallel
+    /** &lt;parallel&gt; child of &lt;state&gt; elements. */
     private static final String XP_ST_PAR = "!*/state/parallel";
 
     // If
+    /** &lt;if&gt; element. */
     private static final String XP_IF = "!*/if";
 
     //// Path Fragments
     // Onentries and Onexits
+    /** &lt;onentry&gt; child element. */
     private static final String XP_ONEN = "/onentry";
 
+    /** &lt;onexit&gt; child element. */
     private static final String XP_ONEX = "/onexit";
 
     // Initial
+    /** &lt;initial&gt; child element. */
     private static final String XP_INI = "/initial";
-    
+
     // History
+    /** &lt;history&gt; child element. */
     private static final String XP_HIST = "/history";
 
     // Transition, target and exit
+    /** &lt;transition&gt; child element. */
     private static final String XP_TR = "/transition";
 
+    /** &lt;target&gt; child element. */
     private static final String XP_TAR = "/target";
 
+    /** &lt;state&gt; child element. */
     private static final String XP_ST = "/state";
 
+    /** &lt;exit&gt; child element. */
     private static final String XP_EXT = "/exit";
 
     // Actions
+    /** &lt;var&gt; child element. */
     private static final String XP_VAR = "/var";
 
+    /** &lt;assign&gt; child element. */
     private static final String XP_ASN = "/assign";
 
+    /** &lt;log&gt; child element. */
     private static final String XP_LOG = "/log";
 
+    /** &lt;send&gt; child element. */
     private static final String XP_SND = "/send";
 
+    /** &lt;cancel&gt; child element. */
     private static final String XP_CAN = "/cancel";
 
+    /** &lt;elseif&gt; child element. */
     private static final String XP_EIF = "/elseif";
 
+    /** &lt;else&gt; child element. */
     private static final String XP_ELS = "/else";
 
     //// Other constants
+    /** The indent to be used while serializing an SCXML object. */
     private static final String INDENT = " ";
 
-    //-- PRIVATE UTILITY METHODS --//
-    /*
-     * Get a SCXML digester instance
-     * 
+    /**
+     * Logger for SCXMLDigester.
+     */
+    private static org.apache.commons.logging.Log log = LogFactory
+            .getLog(SCXMLDigester.class);
+
+    // Error messages
+    /**
+     * Parsing SCXML document has failed.
+     * This message may be rendered hence wrapped in a comment.
+     */
+    private static final String ERR_DOC_PARSE_FAIL = "<!-- Error parsing "
+        + "SCXML document for group: \"{0}\", with message: \"{1}\" -->\n";
+
+    /**
+     * Error message when SCXML document specifies an illegal initial state.
+     */
+    private static final String ERR_SCXML_NO_INIT = "No SCXML child state "
+        + "with ID \"{0}\" found; illegal initialstate for SCXML document";
+
+    /**
+     * Error message when a state element specifies an initial state which
+     * cannot be found.
+     */
+    private static final String ERR_STATE_NO_INIT = "No initial element "
+        + "available for \"{0}\"";
+
+    /**
+     * Error message when a state element specifies an initial state which
+     * is not a direct descendent.
+     */
+    private static final String ERR_STATE_BAD_INIT = "Initial state "
+        + "null or not a descendant of \"{0}\"";
+
+    /**
+     * Error message when a referenced history state cannot be found.
+     */
+    private static final String ERR_STATE_NO_HIST = "Referenced history state "
+        + "null for \"{0}\"";
+
+    /**
+     * Error message when a shallow history state is not a child state.
+     */
+    private static final String ERR_STATE_BAD_SHALLOW_HIST = "History state"
+        + " for shallow history is not child for \"{0}\"";
+
+    /**
+     * Error message when a deep history state is not a descendent state.
+     */
+    private static final String ERR_STATE_BAD_DEEP_HIST = "History state"
+        + " for deep history is not descendant for \"{0}\"";
+
+    //---------------------- PRIVATE UTILITY METHODS ----------------------//
+    /**
+     * Get a SCXML digester instance.
+     *
+     * @param scxml The parent SCXML document if there is one (in case of
+     *              state templates for examples), null otherwise
+     * @param pr The PathResolver
      * @return Digester A newly configured SCXML digester instance
      */
-    private static Digester newInstance(SCXML scxml, PathResolver sc) {
+    private static Digester newInstance(final SCXML scxml,
+            final PathResolver pr) {
 
         Digester digester = new Digester();
         //Uncomment next line after SCXML DTD is available
         //digester.setValidating(true);
-        digester.setRules(initRules(scxml, sc));
+        digester.setRules(initRules(scxml, pr));
         return digester;
     }
 
     /*
-     * Private utility functions for configuring digester rule base for SCXML
+     * Private utility functions for configuring digester rule base for SCXML.
      */
-    private static ExtendedBaseRules initRules(SCXML scxml, PathResolver sc) {
+    /**
+     * Initialize the Digester rules for the current document.
+     *
+     * @param scxml The parent SCXML document (or null)
+     * @param pr The PathResolver
+     * @return ExtendedBaseRules The Digester rules configured for the
+     *                           current document
+     */
+    private static ExtendedBaseRules initRules(final SCXML scxml,
+            final PathResolver pr) {
 
         ExtendedBaseRules scxmlRules = new ExtendedBaseRules();
 
@@ -282,20 +369,17 @@ public class SCXMLDigester {
 
         //// States
         // Level one states
-        addStateRules(XP_SM_ST, scxmlRules, scxml, sc, 0);
+        addStateRules(XP_SM_ST, scxmlRules, scxml, pr, 0);
         scxmlRules.add(XP_SM_ST, new SetNextRule("addState"));
         // Nested states
-        addStateRules(XP_ST_ST, scxmlRules, scxml, sc, 1);
+        addStateRules(XP_ST_ST, scxmlRules, scxml, pr, 1);
         scxmlRules.add(XP_ST_ST, new SetNextRule("addChild"));
-        // Initial states (no longer needed due to addition of Initial)
-        //addStateRules(XP_ST_TAR_ST, scxmlRules, scxml, sc, 1);
-        //scxmlRules.add(XP_ST_TAR_ST, new SetNextRule("addChild"));
-        //scxmlRules.add(XP_ST_TAR_ST, new SetNextRule("setInitial"));
+
         // Parallel states
-        addStateRules(XP_PAR_ST, scxmlRules, scxml, sc, 1);
+        addStateRules(XP_PAR_ST, scxmlRules, scxml, pr, 1);
         scxmlRules.add(XP_PAR_ST, new SetNextRule("addState"));
         // Target states
-        addStateRules(XP_TR_TAR_ST, scxmlRules, scxml, sc, 2);
+        addStateRules(XP_TR_TAR_ST, scxmlRules, scxml, pr, 2);
         scxmlRules.add(XP_TR_TAR_ST, new SetNextRule("setTarget"));
 
         //// Parallels
@@ -308,22 +392,40 @@ public class SCXMLDigester {
 
     }
 
-    private static void addStateRules(String xp, ExtendedBaseRules scxmlRules,
-            SCXML scxml, PathResolver sc, int parent) {
+    /**
+     * Add Digester rules for all &lt;state&gt; elements.
+     *
+     * @param xp The Digester style XPath expression of the parent
+     *           XML element
+     * @param scxmlRules The rule set to be used for digestion
+     * @param scxml The parent SCXML document (or null)
+     * @param pr The PathResolver
+     * @param parent The distance between this state and its parent
+     *               state on the Digester stack
+     */
+    private static void addStateRules(final String xp,
+            final ExtendedBaseRules scxmlRules, final SCXML scxml,
+            final PathResolver pr, final int parent) {
         scxmlRules.add(xp, new ObjectCreateRule(State.class));
-        addStatePropertiesRules(xp, scxmlRules, sc);
-        //scxmlRules.add(xp + XP_TAR, new SetPropertiesRule());
-        //scxmlRules.add(xp + XP_INI_TR_TAR, new SetPropertiesRule());
-        addInitialRule(xp + XP_INI, scxmlRules, sc, scxml);
-        addHistoryRules(xp + XP_HIST, scxmlRules, sc, scxml);
+        addStatePropertiesRules(xp, scxmlRules, pr);
+        addInitialRule(xp + XP_INI, scxmlRules, pr, scxml);
+        addHistoryRules(xp + XP_HIST, scxmlRules, pr, scxml);
         addParentRule(xp, scxmlRules, parent);
         addTransitionRules(xp + XP_TR, scxmlRules, "addTransition");
         addHandlerRules(xp, scxmlRules);
         scxmlRules.add(xp, new UpdateModelRule(scxml));
     }
 
-    private static void addParallelRules(String xp,
-            ExtendedBaseRules scxmlRules, SCXML scxml) {
+    /**
+     * Add Digester rules for all &lt;parallel&gt; elements.
+     *
+     * @param xp The Digester style XPath expression of the parent
+     *           XML element
+     * @param scxmlRules The rule set to be used for digestion
+     * @param scxml The parent SCXML document (or null)
+     */
+    private static void addParallelRules(final String xp,
+            final ExtendedBaseRules scxmlRules, final SCXML scxml) {
         addSimpleRulesTuple(xp, scxmlRules, Parallel.class, null, null,
                 "setParallel");
         addHandlerRules(xp, scxmlRules);
@@ -331,51 +433,96 @@ public class SCXMLDigester {
         scxmlRules.add(xp, new UpdateModelRule(scxml));
     }
 
-    private static void addStatePropertiesRules(String xp,
-            ExtendedBaseRules scxmlRules, PathResolver sc) {
-        scxmlRules.add(xp, new SetPropertiesRule(
-                new String[] { "id", "final" },
-                new String[] { "id", "isFinal" }));
-        scxmlRules.add(xp, new DigestSrcAttributeRule(sc));
+    /**
+     * Add Digester rules for all &lt;state&gt; element attributes.
+     *
+     * @param xp The Digester style XPath expression of the parent
+     *           XML element
+     * @param scxmlRules The rule set to be used for digestion
+     * @param pr The PathResolver
+     */
+    private static void addStatePropertiesRules(final String xp,
+            final ExtendedBaseRules scxmlRules, final PathResolver pr) {
+        scxmlRules.add(xp, new SetPropertiesRule(new String[] {"id", "final"},
+            new String[] {"id", "isFinal"}));
+        scxmlRules.add(xp, new DigestSrcAttributeRule(pr));
     }
 
-    private static void addInitialRule(String xp,
-            ExtendedBaseRules scxmlRules, PathResolver sc, SCXML scxml) {
+    /**
+     * Add Digester rules for all &lt;initial&gt; elements.
+     *
+     * @param xp The Digester style XPath expression of the parent
+     *           XML element
+     * @param scxmlRules The rule set to be used for digestion
+     * @param pr The PathResolver
+     * @param scxml The parent SCXML document (or null)
+     */
+    private static void addInitialRule(final String xp,
+            final ExtendedBaseRules scxmlRules, final PathResolver pr,
+            final SCXML scxml) {
         scxmlRules.add(xp, new ObjectCreateRule(Initial.class));
-        addPseudoStatePropertiesRules(xp, scxmlRules, sc);
+        addPseudoStatePropertiesRules(xp, scxmlRules, pr);
         scxmlRules.add(xp, new UpdateModelRule(scxml));
         addTransitionRules(xp + XP_TR, scxmlRules, "setTransition");
         scxmlRules.add(xp, new SetNextRule("setInitial"));
     }
-    
-    private static void addHistoryRules(String xp,
-            ExtendedBaseRules scxmlRules, PathResolver sc, SCXML scxml) {
+
+    /**
+     * Add Digester rules for all &lt;history&gt; elements.
+     *
+     * @param xp The Digester style XPath expression of the parent
+     *           XML element
+     * @param scxmlRules The rule set to be used for digestion
+     * @param pr The PathResolver
+     * @param scxml The parent SCXML document (or null)
+     */
+    private static void addHistoryRules(final String xp,
+            final ExtendedBaseRules scxmlRules, final PathResolver pr,
+            final SCXML scxml) {
         scxmlRules.add(xp, new ObjectCreateRule(History.class));
-        addPseudoStatePropertiesRules(xp, scxmlRules, sc);
+        addPseudoStatePropertiesRules(xp, scxmlRules, pr);
         scxmlRules.add(xp, new UpdateModelRule(scxml));
-        scxmlRules.add(xp, new SetPropertiesRule(
-                new String[] { "type" }, new String[] { "type" }));
+        scxmlRules.add(xp, new SetPropertiesRule(new String[] {"type"},
+            new String[] {"type"}));
         addTransitionRules(xp + XP_TR, scxmlRules, "setTransition");
         scxmlRules.add(xp, new SetNextRule("addHistory"));
     }
-    
-    private static void addPseudoStatePropertiesRules(String xp,
-            ExtendedBaseRules scxmlRules, PathResolver sc) {
-        scxmlRules.add(xp, new SetPropertiesRule(
-            new String[] { "id" }, new String[] { "id" }));
-        scxmlRules.add(xp, new DigestSrcAttributeRule(sc));
+
+    /**
+     * Add Digester rules for all pseudo state (initial, history) element
+     * attributes.
+     *
+     * @param xp The Digester style XPath expression of the parent
+     *           XML element
+     * @param scxmlRules The rule set to be used for digestion
+     * @param pr The PathResolver
+     */
+    private static void addPseudoStatePropertiesRules(final String xp,
+            final ExtendedBaseRules scxmlRules, final PathResolver pr) {
+        scxmlRules.add(xp, new SetPropertiesRule(new String[] {"id"},
+            new String[] {"id"}));
+        scxmlRules.add(xp, new DigestSrcAttributeRule(pr));
         addParentRule(xp, scxmlRules, 1);
     }
-    
-    private static void addParentRule(String xp, ExtendedBaseRules scxmlRules,
-            final int parent) {
+
+    /**
+     * Add Digester rule for all setting parent state.
+     *
+     * @param xp The Digester style XPath expression of the parent
+     *           XML element
+     * @param scxmlRules The rule set to be used for digestion
+     * @param parent The distance between this state and its parent
+     *               state on the Digester stack
+     */
+    private static void addParentRule(final String xp,
+            final ExtendedBaseRules scxmlRules, final int parent) {
         if (parent < 1) {
             return;
         }
         scxmlRules.add(xp, new Rule() {
             // A generic version of setTopRule
-            public void body(String namespace, String name, String text)
-                    throws Exception {
+            public void body(final String namespace, final String name,
+                    final String text) throws Exception {
                 TransitionTarget t = (TransitionTarget) getDigester().peek();
                 TransitionTarget p = (TransitionTarget) getDigester().peek(
                         parent);
@@ -385,14 +532,23 @@ public class SCXMLDigester {
         });
     }
 
-    private static void addTransitionRules(String xp,
-            ExtendedBaseRules scxmlRules, String setNextMethod) {
+    /**
+     * Add Digester rules for all &lt;transition&gt; elements.
+     *
+     * @param xp The Digester style XPath expression of the parent
+     *           XML element
+     * @param scxmlRules The rule set to be used for digestion
+     * @param setNextMethod The method name for adding this transition
+     *             to its parent (defined by the SCXML Java object model).
+     */
+    private static void addTransitionRules(final String xp,
+            final ExtendedBaseRules scxmlRules, final String setNextMethod) {
         scxmlRules.add(xp, new ObjectCreateRule(Transition.class));
         scxmlRules.add(xp, new SetPropertiesRule());
         scxmlRules.add(xp + XP_TAR, new SetPropertiesRule());
         addActionRules(xp, scxmlRules);
         scxmlRules.add(xp + XP_EXT, new Rule() {
-            public void end(String namespace, String name) {
+            public void end(final String namespace, final String name) {
                 Transition t = (Transition) getDigester().peek(1);
                 State exitState = new State();
                 exitState.setIsFinal(true);
@@ -402,7 +558,16 @@ public class SCXMLDigester {
         scxmlRules.add(xp, new SetNextRule(setNextMethod));
     }
 
-    private static void addHandlerRules(String xp, ExtendedBaseRules scxmlRules) {
+    /**
+     * Add Digester rules for all &lt;onentry&gt; and &lt;onexit&gt;
+     * elements.
+     *
+     * @param xp The Digester style XPath expression of the parent
+     *           XML element
+     * @param scxmlRules The rule set to be used for digestion
+     */
+    private static void addHandlerRules(final String xp,
+            final ExtendedBaseRules scxmlRules) {
         scxmlRules.add(xp + XP_ONEN, new ObjectCreateRule(OnEntry.class));
         addActionRules(xp + XP_ONEN, scxmlRules);
         scxmlRules.add(xp + XP_ONEN, new SetNextRule("setOnEntry"));
@@ -411,7 +576,15 @@ public class SCXMLDigester {
         scxmlRules.add(xp + XP_ONEX, new SetNextRule("setOnExit"));
     }
 
-    private static void addActionRules(String xp, ExtendedBaseRules scxmlRules) {
+    /**
+     * Add Digester rules for all actions (&quot;executable&quot; elements).
+     *
+     * @param xp The Digester style XPath expression of the parent
+     *           XML element
+     * @param scxmlRules The rule set to be used for digestion
+     */
+    private static void addActionRules(final String xp,
+            final ExtendedBaseRules scxmlRules) {
         addActionRulesTuple(xp + XP_ASN, scxmlRules, Assign.class);
         addActionRulesTuple(xp + XP_VAR, scxmlRules, Var.class);
         addActionRulesTuple(xp + XP_LOG, scxmlRules, Log.class);
@@ -420,22 +593,52 @@ public class SCXMLDigester {
         addActionRulesTuple(xp + XP_EXT, scxmlRules, Exit.class);
     }
 
-    private static void addIfRules(String xp, ExtendedBaseRules scxmlRules) {
+    /**
+     * Add Digester rules for all &lt;if&gt; elements.
+     *
+     * @param xp The Digester style XPath expression of the parent
+     *           XML element
+     * @param scxmlRules The rule set to be used for digestion
+     */
+    private static void addIfRules(final String xp,
+            final ExtendedBaseRules scxmlRules) {
         addActionRulesTuple(xp, scxmlRules, If.class);
         addActionRules(xp, scxmlRules);
         addActionRulesTuple(xp + XP_EIF, scxmlRules, ElseIf.class);
         addActionRulesTuple(xp + XP_ELS, scxmlRules, Else.class);
     }
 
-    private static void addActionRulesTuple(String xp,
-            ExtendedBaseRules scxmlRules, Class klass) {
+    /**
+     * Add Digester rules that are common across all actions elements.
+     *
+     * @param xp The Digester style XPath expression of the parent
+     *           XML element
+     * @param scxmlRules The rule set to be used for digestion
+     * @param klass The class in the Java object model to be instantiated
+     *              in the ObjectCreateRule for this action
+     */
+    private static void addActionRulesTuple(final String xp,
+            final ExtendedBaseRules scxmlRules, final Class klass) {
         addSimpleRulesTuple(xp, scxmlRules, klass, null, null, "addAction");
         scxmlRules.add(xp, new SetExecutableParentRule());
     }
 
-    private static void addSimpleRulesTuple(String xp,
-            ExtendedBaseRules scxmlRules, Class klass, String[] args,
-            String[] props, String addMethod) {
+    /**
+     * Add the run of the mill Digester rules for any element.
+     *
+     * @param xp The Digester style XPath expression of the parent
+     *           XML element
+     * @param scxmlRules The rule set to be used for digestion
+     * @param klass The class in the Java object model to be instantiated
+     *              in the ObjectCreateRule for this action
+     * @param args The attributes to be mapped into the object model
+     * @param props The properties that args get mapped to
+     * @param addMethod The method that the SetNextRule should call
+     */
+    private static void addSimpleRulesTuple(final String xp,
+            final ExtendedBaseRules scxmlRules, final Class klass,
+            final String[] args, final String[] props,
+            final String addMethod) {
         scxmlRules.add(xp, new ObjectCreateRule(klass));
         if (args == null) {
             scxmlRules.add(xp, new SetPropertiesRule());
@@ -446,10 +649,18 @@ public class SCXMLDigester {
     }
 
     /*
-     * Post-processing methods to make the SCXML object Executor-ready.
+     * Post-processing methods to make the SCXML object SCXMLExecutor ready.
      */
-    private static void updateSCXML(SCXML scxml, Context evalCtx,
-            Evaluator evalEngine) {
+     /**
+      * Update the SCXML object model (part of post-digestion processing).
+      *
+      * @param scxml The SCXML object (output from Digester)
+      * @param evalCtx The root evaluation context (from the host environment
+      *                of the SCXML document)
+      * @param evalEngine The expression evaluator
+      */
+    private static void updateSCXML(final SCXML scxml, final Context evalCtx,
+            final Evaluator evalEngine) {
         // Watch case, slightly unfortunate naming ;-)
         String initialstate = scxml.getInitialstate();
         //we have to use getTargets() here since the initialState can be
@@ -458,9 +669,7 @@ public class SCXMLDigester {
         State initialState = (State) scxml.getTargets().get(initialstate);
         if (initialState == null) {
             // Where do we, where do we go?
-            System.err.println("ERROR: SCXMLDigester - No SCXML child state "
-                    + "with ID \"" + initialstate
-                    + "\" found i.e. no initialstate" + " for SCXML ;-)");
+            logModelError(ERR_SCXML_NO_INIT, new Object[] {initialstate});
         }
         scxml.setInitialState(initialState);
         scxml.setRootContext(evalCtx);
@@ -473,8 +682,17 @@ public class SCXMLDigester {
         }
     }
 
-    private static void updateState(State s, Map targets, Context evalCtx,
-            Evaluator evalEngine) {
+    /**
+      * Update this State object (part of post-digestion processing).
+      * Also checks for any errors in the document.
+      *
+      * @param s The State object
+      * @param targets The global Map of all transition targets
+      * @param evalCtx The evaluation context for this State
+      * @param evalEngine The expression evaluator
+      */
+    private static void updateState(final State s, final Map targets,
+            final Context evalCtx, final Evaluator evalEngine) {
         //setup local variable context
         Context localCtx = null;
         if (s.getParent() == null) {
@@ -497,21 +715,22 @@ public class SCXMLDigester {
         //initialize next / inital
         Initial ini = s.getInitial();
         Map c = s.getChildren();
+        String badState = "anonymous state";
+        if (!SCXMLHelper.isStringEmpty(s.getId())) {
+            badState = "state with ID " + s.getId();
+        }
         if (!c.isEmpty()) {
             if (ini == null) {
-                System.err.println("WARNING: SCXMLDigester - Initial "
-                    + "null for " + (SCXMLHelper.isStringEmpty(s.getId()) ? 
-                    "anonymous state" : s.getId()));
+                logModelError(ERR_STATE_NO_INIT, new Object[] {badState});
             }
             Transition initialTransition = ini.getTransition();
             updateTransition(initialTransition, targets);
             TransitionTarget initialState = initialTransition.getTarget();
             // we have to allow for an indirect descendant initial (targets)
             //check that initialState is a descendant of s
-            if (initialState == null || !SCXMLHelper.isDescendant(initialState, s)) {
-                System.err.println("WARNING: SCXMLDigester - Initial state "
-                    + "null or not descendant for " + (SCXMLHelper.
-                    isStringEmpty(s.getId()) ? "anonymous state" : s.getId()));
+            if (initialState == null
+                    || !SCXMLHelper.isDescendant(initialState, s)) {
+                logModelError(ERR_STATE_BAD_INIT, new Object[] {badState});
             }
         }
         List histories = s.getHistory();
@@ -520,23 +739,19 @@ public class SCXMLDigester {
             History h = (History) histIter.next();
             Transition historyTransition = h.getTransition();
             updateTransition(historyTransition, targets);
-            State historyState = (State)historyTransition.getTarget();
+            State historyState = (State) historyTransition.getTarget();
             if (historyState == null) {
-                System.err.println("WARNING: SCXMLDigester - History state "
-                    + "null " + (SCXMLHelper.isStringEmpty(s.getId()) ? 
-                    "anonymous state" : s.getId()));
+                logModelError(ERR_STATE_NO_HIST, new Object[] {badState});
             }
             if (!h.isDeep()) {
                 if (!c.containsValue(historyState)) {
-                    System.err.println("WARNING: SCXMLDigester - History state "
-                        + "for shallow history is not child for " + (SCXMLHelper.
-                        isStringEmpty(s.getId()) ? "anonymous state" : s.getId()));                    
+                    logModelError(ERR_STATE_BAD_SHALLOW_HIST, new Object[] {
+                        badState });
                 }
             } else {
                 if (!SCXMLHelper.isDescendant(historyState, s)) {
-                    System.err.println("WARNING: SCXMLDigester - History state "
-                        + "for deep history is not descendant for " + (SCXMLHelper.
-                        isStringEmpty(s.getId()) ? "anonymous state" : s.getId()));
+                    logModelError(ERR_STATE_BAD_DEEP_HIST, new Object[] {
+                        badState });
                 }
             }
         }
@@ -565,15 +780,30 @@ public class SCXMLDigester {
         }
     }
 
-    private static void updateParallel(Parallel p, Map targets,
-            Context evalCtx, Evaluator evalEngine) {
+    /**
+      * Update this Parallel object (part of post-digestion processing).
+      *
+      * @param p The Parallel object
+      * @param targets The global Map of all transition targets
+      * @param evalCtx The evaluation context for this State
+      * @param evalEngine The expression evaluator
+      */
+    private static void updateParallel(final Parallel p, final Map targets,
+            final Context evalCtx, final Evaluator evalEngine) {
         Iterator i = p.getStates().iterator();
         while (i.hasNext()) {
             updateState((State) i.next(), targets, evalCtx, evalEngine);
         }
     }
 
-    private static void updateTransition(Transition t, Map targets) {
+    /**
+      * Update this Transition object (part of post-digestion processing).
+      *
+      * @param t The Transition object
+      * @param targets The global Map of all transition targets
+      */
+    private static void updateTransition(final Transition t,
+            final Map targets) {
         String next = t.getNext();
         TransitionTarget tt = t.getTarget();
         if (tt == null) {
@@ -587,10 +817,31 @@ public class SCXMLDigester {
         }
     }
 
+    /**
+      * Log an error discovered in post-digestion processing.
+      *
+      * @param errType The type of error
+      * @param msgArgs The arguments for formatting the error message
+      */
+    private static void logModelError(final String errType,
+            final Object[] msgArgs) {
+        MessageFormat msgFormat = new MessageFormat(errType);
+        String errMsg = msgFormat.format(msgArgs);
+        log.error(errMsg);
+    }
+
     /*
-     * Private SCXML object serialization utility functions
+     * Private SCXML object serialization utility functions.
      */
-    private static void serializeState(StringBuffer b, State s, String indent) {
+    /**
+     * Serialize this State object.
+     *
+     * @param b The buffer to append the serialization to
+     * @param s The State to serialize
+     * @param indent The indent for this XML element
+     */
+    private static void serializeState(final StringBuffer b,
+            final State s, final String indent) {
         b.append(indent).append("<state");
         serializeTransitionTargetAttributes(b, s);
         boolean f = s.getIsFinal();
@@ -631,8 +882,15 @@ public class SCXMLDigester {
         b.append(indent).append("</state>\n");
     }
 
-    private static void serializeParallel(StringBuffer b, Parallel p,
-            String indent) {
+    /**
+     * Serialize this Parallel object.
+     *
+     * @param b The buffer to append the serialization to
+     * @param p The Parallel to serialize
+     * @param indent The indent for this XML element
+     */
+    private static void serializeParallel(final StringBuffer b,
+            final Parallel p, final String indent) {
         b.append(indent).append("<parallel");
         serializeTransitionTargetAttributes(b, p);
         b.append(">\n");
@@ -645,24 +903,38 @@ public class SCXMLDigester {
         serializeOnExit(b, (TransitionTarget) p, indent + INDENT);
         b.append(indent).append("</parallel>\n");
     }
-    
-    private static void serializeInitial(StringBuffer b, Initial i,
-            String indent) {
+
+    /**
+     * Serialize this Initial object.
+     *
+     * @param b The buffer to append the serialization to
+     * @param i The Initial to serialize
+     * @param indent The indent for this XML element
+     */
+    private static void serializeInitial(final StringBuffer b, final Initial i,
+            final String indent) {
         b.append(indent).append("<initial");
         serializeTransitionTargetAttributes(b, i);
         b.append(">\n");
         serializeTransition(b, i.getTransition(), indent + INDENT);
         b.append(indent).append("</initial>\n");
     }
-    
-    private static void serializeHistory(StringBuffer b, List l,
-            String indent) {
+
+    /**
+     * Serialize the History.
+     *
+     * @param b The buffer to append the serialization to
+     * @param l The List of History objects to serialize
+     * @param indent The indent for this XML element
+     */
+    private static void serializeHistory(final StringBuffer b, final List l,
+            final String indent) {
         if (l.size() > 0) {
             for (int i = 0; i < l.size(); i++) {
                 History h = (History) l.get(i);
                 b.append(indent).append("<history");
                 serializeTransitionTargetAttributes(b, h);
-                 if(h.isDeep()) {
+                 if (h.isDeep()) {
                      b.append(" type=\"deep\"");
                  } else {
                      b.append(" type=\"shallow\"");
@@ -674,8 +946,14 @@ public class SCXMLDigester {
         }
     }
 
-    private static void serializeTransitionTargetAttributes(StringBuffer b,
-            TransitionTarget t) {
+    /**
+     * Serialize properties of TransitionTarget which are element attributes.
+     *
+     * @param b The buffer to append the serialization to
+     * @param t The TransitionTarget
+     */
+    private static void serializeTransitionTargetAttributes(
+            final StringBuffer b, final TransitionTarget t) {
         String id = t.getId();
         if (id != null) {
             b.append(" id=\"" + id + "\"");
@@ -689,8 +967,15 @@ public class SCXMLDigester {
         }
     }
 
-    private static void serializeTransition(StringBuffer b, Transition t,
-            String indent) {
+    /**
+     * Serialize this Transition object.
+     *
+     * @param b The buffer to append the serialization to
+     * @param t The Transition to serialize
+     * @param indent The indent for this XML element
+     */
+    private static void serializeTransition(final StringBuffer b,
+            final Transition t, final String indent) {
         b.append(indent).append("<transition event=\"").append(t.getEvent())
                 .append("\" cond=\"").append(t.getCond()).append("\">\n");
         boolean exit = serializeActions(b, t.getActions(), indent + INDENT);
@@ -700,8 +985,16 @@ public class SCXMLDigester {
         b.append(indent).append("</transition>\n");
     }
 
-    private static void serializeTarget(StringBuffer b, Transition t,
-            String indent) {
+    /**
+     * Serialize this Transition's Target.
+     *
+     *
+     * @param b The buffer to append the serialization to
+     * @param t The Transition whose Target needs to be serialized
+     * @param indent The indent for this XML element
+     */
+    private static void serializeTarget(final StringBuffer b,
+            final Transition t, final String indent) {
         b.append(indent).append("<target");
         String n = t.getNext();
         if (n != null) {
@@ -716,8 +1009,15 @@ public class SCXMLDigester {
         b.append(indent).append("</target>\n");
     }
 
-    private static void serializeOnEntry(StringBuffer b, TransitionTarget t,
-            String indent) {
+    /**
+     * Serialize this OnEntry object.
+     *
+     * @param b The buffer to append the serialization to
+     * @param t The TransitionTarget whose OnEntry is to be serialized
+     * @param indent The indent for this XML element
+     */
+    private static void serializeOnEntry(final StringBuffer b,
+            final TransitionTarget t, final String indent) {
         OnEntry e = t.getOnEntry();
         if (e != null && e.getActions().size() > 0) {
             b.append(indent).append("<onentry>\n");
@@ -726,8 +1026,15 @@ public class SCXMLDigester {
         }
     }
 
-    private static void serializeOnExit(StringBuffer b, TransitionTarget t,
-            String indent) {
+    /**
+     * Serialize this OnExit object.
+     *
+     * @param b The buffer to append the serialization to
+     * @param t The TransitionTarget whose OnExit is to be serialized
+     * @param indent The indent for this XML element
+     */
+    private static void serializeOnExit(final StringBuffer b,
+            final TransitionTarget t, final String indent) {
         OnExit x = t.getOnExit();
         if (x != null && x.getActions().size() > 0) {
             b.append(indent).append("<onexit>\n");
@@ -736,8 +1043,16 @@ public class SCXMLDigester {
         }
     }
 
-    private static boolean serializeActions(StringBuffer b, List l,
-            String indent) {
+    /**
+     * Serialize this List of actions.
+     *
+     * @param b The buffer to append the serialization to
+     * @param l The List of actions to serialize
+     * @param indent The indent for this XML element
+     * @return boolean true if the list of actions contains an &lt;exit/&gt;
+     */
+    private static boolean serializeActions(final StringBuffer b, final List l,
+            final String indent) {
         if (l == null) {
             return false;
         }
@@ -780,8 +1095,8 @@ public class SCXMLDigester {
                 b.append("/>\n");
                 exit = true;
             } else if (a instanceof If) {
-                If IF = (If) a;
-                serializeIf(b, IF, indent);
+                If iff = (If) a;
+                serializeIf(b, iff, indent);
             } else if (a instanceof Else) {
                 Else el = (Else) a;
                 b.append(indent).append("<else/>\n");
@@ -794,30 +1109,56 @@ public class SCXMLDigester {
         return exit;
     }
 
-    private static void serializeIf(StringBuffer b, If IF, String indent) {
-        b.append(indent).append("<if cond=\"").append(IF.getCond()).append(
+    /**
+     * Serialize this If object.
+     *
+     * @param b The buffer to append the serialization to
+     * @param iff The If object to serialize
+     * @param indent The indent for this XML element
+     */
+    private static void serializeIf(final StringBuffer b,
+            final If iff, final String indent) {
+        b.append(indent).append("<if cond=\"").append(iff.getCond()).append(
                 "\">\n");
-        serializeActions(b, IF.getActions(), indent + INDENT);
+        serializeActions(b, iff.getActions(), indent + INDENT);
         b.append(indent).append("</if>\n");
     }
 
     /**
-     * Custom digestion rule for establishing necessary associations within the
-     * SCXML object, which include: <br>
+     * Discourage instantiation since this is a utility class.
+     */
+    private SCXMLDigester() {
+        super();
+    }
+
+    /**
+     * Custom digestion rule for establishing necessary associations of this
+     * TransitionTarget with the root SCXML object.
+     * These include: <br>
      * 1) Updation of the SCXML object's global targets Map <br>
      * 2) Obtaining a handle to the SCXML object's NotificationRegistry <br>
-     * 
+     *
      */
     public static class UpdateModelRule extends Rule {
 
+        /**
+         * The root SCXML object.
+         */
         private SCXML scxml;
 
-        public UpdateModelRule(SCXML scxml) {
+        /**
+         * Constructor.
+         * @param scxml The root SCXML object
+         */
+        public UpdateModelRule(final SCXML scxml) {
             super();
             this.scxml = scxml;
         }
 
-        public void end(String namespace, String name) {
+        /**
+         * @see Rule#end(String, String)
+         */
+        public final void end(final String namespace, final String name) {
             if (scxml == null) {
                 scxml = (SCXML) getDigester()
                         .peek(getDigester().getCount() - 1);
@@ -830,16 +1171,22 @@ public class SCXMLDigester {
     }
 
     /**
-     * Custom digestion rule for setting Executable parent of Action elements
-     * 
+     * Custom digestion rule for setting Executable parent of Action elements.
+     *
      */
     public static class SetExecutableParentRule extends Rule {
 
+        /**
+         * Constructor.
+         */
         public SetExecutableParentRule() {
             super();
         }
 
-        public void end(String namespace, String name) {
+        /**
+         * @see Rule#end(String, String)
+         */
+        public final void end(final String namespace, final String name) {
             Action child = (Action) getDigester().peek();
             for (int i = 1; i < getDigester().getCount() - 1; i++) {
                 Object ancestor = (Object) getDigester().peek(i);
@@ -853,19 +1200,33 @@ public class SCXMLDigester {
 
     /**
      * Custom digestion rule for external sources, that is, the src attribute of
-     * the &lt;state&gt; element
-     * 
+     * the &lt;state&gt; element.
+     *
      */
     public static class DigestSrcAttributeRule extends Rule {
 
-        private PathResolver ctx;
+        /**
+         * The PathResolver used to resolve the src attribute to the
+         * SCXML document it points to.
+         * @see PathResolver
+         */
+        private PathResolver pr;
 
-        public DigestSrcAttributeRule(PathResolver sc) {
+        /**
+         * Constructor.
+         * @param pr The PathResolver
+         * @see PathResolver
+         */
+        public DigestSrcAttributeRule(final PathResolver pr) {
             super();
-            this.ctx = sc;
+            this.pr = pr;
         }
 
-        public void begin(String namespace, String name, Attributes attributes) {
+        /**
+         * @see Rule#begin(String, String, Attributes)
+         */
+        public final void begin(final String namespace, final String name,
+                final Attributes attributes) {
             String src = attributes.getValue("src");
             if (SCXMLHelper.isStringEmpty(src)) {
                 return;
@@ -873,9 +1234,15 @@ public class SCXMLDigester {
             Digester digester = getDigester();
             SCXML scxml = (SCXML) digester.peek(digester.getCount() - 1);
             // 1) Digest the external SCXML file
-            Digester externalSrcDigester = newInstance(scxml, ctx.getResolver(src));
+            Digester externalSrcDigester = newInstance(scxml,
+                pr.getResolver(src));
             SCXML externalSCXML = null;
-            String path = ctx == null ? src : ctx.resolvePath(src);
+            String path = null;
+            if (pr == null) {
+                path = src;
+            } else {
+                path = pr.resolvePath(src);
+            }
 
             try {
                 externalSCXML = (SCXML) externalSrcDigester.parse(path);
@@ -901,3 +1268,4 @@ public class SCXMLDigester {
         }
     }
 }
+

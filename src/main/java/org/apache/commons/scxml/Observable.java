@@ -1,6 +1,6 @@
 /*
- *    
- *   Copyright 2004 The Apache Software Foundation.
+ *
+ *   Copyright 2005 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,25 +20,26 @@ package org.apache.commons.scxml;
 /**
  * Interface that allows an entity within an SCXML document to have
  * listeners attached to itself so they may be informed of events within
- * this entity's realm.   
- * 
+ * this entity's realm.
+ *
  */
 public interface Observable {
-    
+
     /**
      * Add this SCXMLListener to the list of listeners associated
-     * with this SCXML model entity
-     * 
+     * with this SCXML model entity.
+     *
      * @param lst The listener to be added
      */
-    public void addListener(SCXMLListener lst);
+    void addListener(SCXMLListener lst);
 
     /**
      * Remove this SCXMLListener from the list of listeners associated
      * with this SCXML model entity.
-     * 
+     *
      * @param lst The listener to be removed
      */
-    public void removeListener(SCXMLListener lst);
+    void removeListener(SCXMLListener lst);
 
 }
+

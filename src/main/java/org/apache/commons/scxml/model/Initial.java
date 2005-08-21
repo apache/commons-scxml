@@ -1,6 +1,6 @@
 /*
- *    
- *   Copyright 2004 The Apache Software Foundation.
+ *
+ *   Copyright 2005 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,40 +20,41 @@ package org.apache.commons.scxml.model;
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;initial&gt; SCXML pseudo state element.
- * 
+ *
  */
 public class Initial extends TransitionTarget {
-    
+
     /**
-     * Constructor
+     * A conditionless transition that is always enabled and will be taken
+     * as soon as the state is entered. The target of the transition must
+     * be a descendant of the parent state of initial.
+     */
+    private Transition transition;
+
+    /**
+     * Constructor.
      */
     public Initial() {
         super();
     }
-    
+
     /**
-     * A conditionless transition that is always enabled and will be taken 
-     * as soon as the state is entered. The target of the transition must 
-     * be a descendant of the parent state of initial.
-     */
-    private Transition transition;
-    
-    /**
-     * Get the initial transition
-     * 
+     * Get the initial transition.
+     *
      * @return Returns the transition.
      */
-    public Transition getTransition() {
+    public final Transition getTransition() {
         return transition;
     }
-    
+
     /**
-     * Set the initial transition
-     * 
+     * Set the initial transition.
+     *
      * @param transition The transition to set.
      */
-    public void setTransition(Transition transition) {
+    public final void setTransition(final Transition transition) {
         this.transition = transition;
     }
-    
+
 }
+
