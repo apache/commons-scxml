@@ -175,14 +175,18 @@ public class State extends TransitionTarget {
     }
 
     /**
-     * Get the map of all outgoing transitions from this state, which
-     * will be fired on the given event.
+     * Get the list of all outgoing transitions from this state, that
+     * will be candidates for being fired on the given event.
      *
      * @param event The event
-     * @return Transition Returns the transition for given event
+     * @return List Returns the candidate transitions for given event
      */
-    public final Transition getTransition(final String event) {
-        return (Transition) transitions.get(event);
+    public final List getTransitionsList(final String event) {
+        Object candidateTransitions = transitions.get(event);
+        if (candidateTransitions == null) {
+            return null;
+        }
+        return (List) candidateTransitions;
     }
 
     /**
