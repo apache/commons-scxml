@@ -124,9 +124,32 @@ public class TriggerEvent {
                      || (payload != null && payload.equals(te2.payload)))) {
                 return true;
             }
-            return false;
         }
         return false;
+    }
+
+    /**
+     * Returns a string representation of this TriggerEvent object.
+     *
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        StringBuffer buf = new StringBuffer("TriggerEvent{name=");
+        buf.append(name).append(",type=").append(type);
+        if (payload != null) {
+            buf.append(",payload=").append(payload.toString());
+        }
+        buf.append("}");
+        return String.valueOf(buf);
+    }
+
+    /**
+     * Returns the hash code for this TriggerEvent object.
+     *
+     * @see java.lang.Object#hashCode()
+     */
+    public int hashCode() {
+        return String.valueOf(this).hashCode();
     }
 
 }
