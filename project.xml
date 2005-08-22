@@ -16,18 +16,21 @@
 -->
 <project>
   <extend>../commons-build/sandbox-project.xml</extend>
+  <id>commons-scxml</id>
   <groupId>org.apache.commons</groupId>
-  <artifactId>commons-scxml</artifactId>
   <currentVersion>1.0-SNAPSHOT</currentVersion>
   <name>Commons SCXML</name>
 
   <inceptionYear>2005</inceptionYear>
-  <shortDescription>Commons SCXML Engine</shortDescription>
-  <description>A Reference Implementation of State Chart XML</description>
+  <shortDescription>Jakarta Commons SCXML</shortDescription>
+  <description>A Reference Implementation of State Chart XML Engine</description>
 
   <logo>/images/scxml-logo-white.png</logo>
   <package>org.apache.commons.scxml</package>
   <url>http://jakarta.apache.org/commons/sandbox/scxml/</url>
+
+  <siteAddress>cvs.apache.org</siteAddress>
+  <siteDirectory>/www/jakarta.apache.org/commons/sandbox/scxml/</siteDirectory>
 
   <developers>
     <developer>
@@ -39,7 +42,6 @@
     <developer>
       <name>Martin Cooper</name>
       <id>martinc</id>
-      <email>martinc AT apache.org</email>
       <organization>Apache Software Foundation</organization>
     </developer>
   </developers>
@@ -109,12 +111,12 @@
   </build>
 
   <reports>
-     <report>maven-changelog-plugin</report>
+     <!--report>maven-changelog-plugin</report-->
      <report>maven-changes-plugin</report>
      <!--report>maven-checkstyle-plugin</report-->
      <!--report>maven-clover-plugin</report-->
-     <report>maven-developer-activity-plugin</report>
-     <report>maven-file-activity-plugin</report>
+     <!--report>maven-developer-activity-plugin</report-->
+     <!--report>maven-file-activity-plugin</report-->
      <report>maven-javadoc-plugin</report>
      <!--report>maven-jellydoc-plugin</report-->
      <report>maven-junit-report-plugin</report>
