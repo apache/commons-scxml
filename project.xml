@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright 2002-2004 The Apache Software Foundation
+   Copyright 2005 The Apache Software Foundation
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -59,8 +59,12 @@
     </dependency>
     <dependency> 
       <id>commons-digester</id> 
-      <version>1.5</version> 
-    </dependency> 
+      <version>1.7</version> 
+    </dependency>
+    <dependency> 
+      <id>commons-beanutils</id> 
+      <version>1.7.0</version> 
+    </dependency>
     <dependency> 
       <id>commons-el</id> 
       <version>1.0</version> 
@@ -105,9 +109,17 @@
     <unitTestSourceDirectory>src/test/java</unitTestSourceDirectory>
     <unitTest>
       <includes>
-        <include>**/*Test.java</include>
+        <include>org/apache/commons/scxml/AllSCXMLTestSuite.java</include>
       </includes>
     </unitTest>
+    <resources>
+      <resource>
+        <directory>${pom.build.unitTestSourceDirectory}</directory>
+        <includes>
+          <include>**/*.xml</include>
+        </includes>
+      </resource>
+    </resources>
   </build>
 
   <reports>

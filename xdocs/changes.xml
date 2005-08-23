@@ -31,6 +31,18 @@
       </ul>
     </section>
 
+    <release version="pre-beta-1.0-SNAPSHOT-003" date="08-23-2005" description="Test framework check-in">
+      <action dev="rahul" type="add">
+        Added JUnit Test Framework.
+      </action>
+      <action dev="rahul" type="fix">
+        Upgraded Digester version in project dependencies to 1.7.
+      </action>
+      <action dev="rahul" type="add">
+        Added BeanUtils 1.7.0 dependency as needed by Digester.
+      </action>
+    </release>
+
     <release version="pre-beta-1.0-SNAPSHOT-002" date="08-20-2005" description="Checkstyle errors fix">
       <action dev="rahul" type="fix">
         Corrected year of inception in License.
