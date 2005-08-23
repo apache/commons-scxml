@@ -31,11 +31,11 @@
   announced the publication of the first 
   <a href="http://www.w3.org/TR/2005/WD-scxml-20050705/">Working Draft of State 
   Chart XML (SCXML)</a>.
-  SCXML provides a generic state-machine based execution environment based on CCXML
-  and Harel State Tables. SCXML is a candidate for the control language within 
+  SCXML provides a generic state-machine based execution environment based on Harel
+  State Tables. SCXML is a candidate for the control language within 
   multiple markup languages coming out of the W3C (see Working Draft for details).
-  <em>Commons SCXML</em> is a reference implementation of SCXML; aimed at creating
-  and maintaining an SCXML engine, capable of executing a state machine defined 
+  <em>Commons SCXML</em> is a reference implementation of SCXML aimed at creating
+  and maintaining an SCXML engine capable of executing a state machine defined 
   using a SCXML document, while abstracting out the environment interfaces.
   </p>
 
@@ -55,7 +55,11 @@
 
  <section name="Documentation">
   <p>
-  The <a href="apidocs/index.html">Javadoc</a> of the latest nightly.
+    <ul>
+      <li>The latest <a href="apidocs/index.html">Javadoc</a>.</li>
+      <li>The latest <a href="xref/index.html">source</a>.</li>
+      <li>The <a href="http://wiki.apache.org/jakarta-commons/SCXML">wiki</a>.</li>
+    </ul>
   </p>
  </section>
 
