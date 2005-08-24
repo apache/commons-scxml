@@ -17,65 +17,142 @@
 <scxml xmlns="http://www.w3.org/2005/01/SCXML"
        version="1.0"
        initialstate="ten">
-  
-  <state id="ten">
-    <transition event="ten.done">
-      <target next="twenty"/>
-    </transition>
-  </state>
 
-  <state id="twenty">
-
-    <initial>
-      <transition>
-        <target next="twenty_one"/>
-      </transition>
-    </initial>
-
-    <onentry>
-      <log expr="In twenty" label="entry001" />
-    </onentry>
-
-    <state id="twenty_one">
-      <transition event="twenty_one.done">
-        <target next="twenty_two"/>
-      </transition>  
+    <!-- Start with a simple state -->
+    <state id="ten">
+        <transition event="ten.done">
+            <target next="twenty"/>
+        </transition>
     </state>
 
-    <state id="twenty_two">
-      <transition event="twenty_two.done">
-        <target next="thirty"/>
-      </transition>
+    <!-- Follow up with a composite state -->
+    <state id="twenty">
+
+        <initial>
+            <transition>
+                <target next="twenty_one"/>
+            </transition>
+        </initial>
+
+        <onentry>
+            <log expr="In twenty" />
+        </onentry>
+
+        <state id="twenty_one">
+            <transition event="twenty_one.done">
+                <target next="twenty_two"/>
+            </transition>
+        </state>
+
+        <state id="twenty_two">
+            <transition event="twenty_two.done">
+                <target next="thirty"/>
+            </transition>
+        </state>
+
     </state>
 
-  </state>
+    <!-- Finally, try an orthogonal state -->
+    <state id="thirty">
 
-  <state id="thirty">
+        <parallel id="thirties_parallel">
 
-    <parallel>
+            <!-- The first (of three) regions in thirties_parallel -->
+            <state id="thirty_one">
 
-      <state id="thirty_one">
-        <onentry>
-          <log expr="Entering thirty_one" label="entry002" />
-        </onentry>        
-      </state>
+                <initial>
+                    <transition>
+                        <target next="thirty_one_child_one"/>
+                    </transition>
+                </initial>
+                <onentry>
+                    <log expr="Entering thirty_one" />
+                </onentry>
+                <transition event="thirty_one.done">
+                    <target next="forty"/>
+                </transition>
 
-      <state id="thirty_two">
-        <onentry>
-          <log expr="Entering thirty_two" label="entry003" />
-        </onentry>
-      </state>
+                <state id="thirty_one_child_one">
+                    <onexit>
+                        <log expr="Exiting thirty_one_child_one" />
+                    </onexit>
+                    <transition event="thirty_one_child_one.done">
+                        <target next="thirty_one_child_two"/>
+                    </transition>
+                </state>
 
-      <state id="thirty_three">
-        <onentry>
-          <log expr="Entering thirty_three" label="entry004" />
-        </onentry>
-      </state>
+                <state id="thirty_one_child_two">
+                    <onexit>
+                        <log expr="Exiting thirty_one_child_two" />
+                    </onexit>
+                </state>
 
-    </parallel>
+            </state>
 
-  </state>
+            <!-- The second (of three) regions in thirties_parallel -->
+            <state id="thirty_two">
 
-  <state id="forty" final="true" />
+                <initial>
+                    <transition>
+                        <target next="thirty_two_child_one"/>
+                    </transition>
+                </initial>
+                <onentry>
+                    <log expr="Entering thirty_one" />
+                </onentry>
+
+                <state id="thirty_two_child_one">
+                    <onexit>
+                        <log expr="Exiting thirty_two_child_one" />
+                    </onexit>
+                    <transition event="thirty_two_child_one.done">
+                        <target next="thirty_two_child_two"/>
+                    </transition>
+                </state>
+
+                <state id="thirty_two_child_two">
+                    <onexit>
+                        <log expr="Exiting thirty_two_child_two" />
+                    </onexit>
+                </state>
+
+            </state>
+
+            <!-- The third (of three) regions in thirties_parallel -->
+            <state id="thirty_three">
+
+                <initial>
+                    <transition>
+                        <target next="thirty_three_child_one"/>
+                    </transition>
+                </initial>
+                <onentry>
+                    <log expr="Entering thirty_three" />
+                </onentry>
+
+                <state id="thirty_three_child_one">
+                    <onexit>
+                        <log expr="Exiting thirty_three_child_one" />
+                    </onexit>
+                    <transition event="thirty_three_child_one.done">
+                        <target next="thirty_three_child_two"/>
+                    </transition>
+                </state>
+
+                <state id="thirty_three_child_two">
+                    <onexit>
+                        <log expr="Exiting thirty_three_child_two" />
+                    </onexit>
+                </state>
+
+            </state>
+
+        </parallel>
+
+    </state>
+
+    <!-- Declare victory -->
+    <state id="forty" final="true" />
 
 </scxml>
+

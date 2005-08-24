@@ -35,7 +35,7 @@
        event="croak" namelist="drink eat" hints="h2o bzz"
        delay="1000" />
       <cancel sendId="send12345"/>
-      <log expr="leaving" />
+      <log expr="leaving" label="entry001" />
       <exit expr="later" namelist="freddy" />
     </onentry>
   </state>
