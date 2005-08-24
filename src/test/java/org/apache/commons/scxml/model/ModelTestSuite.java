@@ -47,6 +47,7 @@ public class ModelTestSuite extends TestCase {
     public static Test suite() {
         TestSuite suite = new TestSuite();
         suite.setName("Commons-SCXML-model Tests");
+        suite.addTest(ActionsTest.suite());
         return suite;
     }
 }

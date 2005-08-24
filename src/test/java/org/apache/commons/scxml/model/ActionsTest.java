@@ -1,0 +1,93 @@
+/*
+ * Copyright 2005 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.commons.scxml.model;
+
+import java.net.URL;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+import junit.textui.TestRunner;
+
+import org.apache.commons.scxml.env.ELEvaluator;
+import org.apache.commons.scxml.env.ELContext;
+import org.apache.commons.scxml.SCXMLExecutor;
+import org.apache.commons.scxml.SCXMLTestHelper;
+/**
+ * Unit tests {@link org.apache.commons.scxml.model.Assign}.
+ * Unit tests {@link org.apache.commons.scxml.model.Cancel}.
+ * Unit tests {@link org.apache.commons.scxml.model.Else}.
+ * Unit tests {@link org.apache.commons.scxml.model.Elseif}.
+ * Unit tests {@link org.apache.commons.scxml.model.Exit}.
+ * Unit tests {@link org.apache.commons.scxml.model.If}.
+ * Unit tests {@link org.apache.commons.scxml.model.Log}.
+ * Unit tests {@link org.apache.commons.scxml.model.Send}.
+ * Unit tests {@link org.apache.commons.scxml.model.Var}.
+ */
+public class ActionsTest extends TestCase {
+    /**
+     * Construct a new instance of ActionsTest with
+     * the specified name
+     */
+    public ActionsTest(String name) {
+        super(name);
+    }
+
+    public static Test suite() {
+        TestSuite suite = new TestSuite(ActionsTest.class);
+        suite.setName("SCXML Model Actions Tests");
+        return suite;
+    }
+
+    // Test data
+    private URL actionsSample;
+    private ELEvaluator evaluator;
+    private ELContext ctx;
+    private SCXMLExecutor exec;
+
+    /**
+     * Set up instance variables required by this test case.
+     */
+    public void setUp() {
+        actionsSample = this.getClass().getClassLoader().
+            getResource("org/apache/commons/scxml/model/actions-test.xml");
+        evaluator = new ELEvaluator();
+        ctx = new ELContext();
+    }
+
+    /**
+     * Tear down instance variables required by this test case.
+     */
+    public void tearDown() {
+        actionsSample = null;
+        evaluator = null;
+        ctx = null;
+        exec = null;
+    }
+
+    /**
+     * Test the implementation
+     */
+    public void testModelActions() {
+        exec = SCXMLTestHelper.getExecutor(actionsSample, ctx, evaluator);
+        assertEquals((String) ctx.get("foo"), "foobar");
+    }
+
+     public static void main(String args[]) {
+        TestRunner.run(suite());
+    }
+}
+

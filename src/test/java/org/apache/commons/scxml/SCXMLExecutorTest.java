@@ -16,17 +16,14 @@
 package org.apache.commons.scxml;
 
 import java.net.URL;
+import java.util.Set;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import org.apache.commons.scxml.env.ELEvaluator;
-import org.apache.commons.scxml.env.ELContext;
-import org.apache.commons.scxml.env.SimpleDispatcher;
-import org.apache.commons.scxml.env.Tracer;
-import org.apache.commons.scxml.model.SCXML;
+import org.apache.commons.scxml.model.State;
 /**
  * Unit tests {@link org.apache.commons.scxml.SCXMLExecutor}.
  */
@@ -46,13 +43,8 @@ public class SCXMLExecutorTest extends TestCase {
     }
 
     // Test data
-    private URL microwave01, microwave02;
-    private Evaluator evaluator;
-    private Context ctx;
-    private SCXML scxml;
+    private URL microwave01, microwave02, transitions01;
     private SCXMLExecutor exec;
-    private EventDispatcher ed;
-    private Tracer trc;
 
     /**
      * Set up instance variables required by this test case.
@@ -62,54 +54,58 @@ public class SCXMLExecutorTest extends TestCase {
             getResource("org/apache/commons/scxml/microwave-01.xml");
         microwave02 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/microwave-02.xml");
+        transitions01 = this.getClass().getClassLoader().
+            getResource("org/apache/commons/scxml/transitions-01.xml");
     }
 
     /**
      * Tear down instance variables required by this test case.
      */
     public void tearDown() {
-        microwave01 = microwave02 = null;
-        evaluator = null;
-        ctx = null;
-        scxml = null;
-        exec = null;
-        ed = null;
-        trc = null;
+        microwave01 = microwave02 = transitions01 = null;
     }
 
     /**
      * Test the implementation
      */
-    public void testSCXMLExecutor() {
-        exec = getExecutor(microwave01);
-        assertNotNull(exec);
-        exec = getExecutor(microwave02);
+    public void testSCXMLExecutorMicrowave01Sample() {
+        exec = SCXMLTestHelper.getExecutor(microwave01);
         assertNotNull(exec);
     }
 
-    private SCXMLExecutor getExecutor(final URL url) {
-        assertNotNull(url);
-        evaluator = new ELEvaluator();
-        ctx = new ELContext();
-        try {
-            scxml = SCXMLDigester.digest(url,
-                null, ctx, evaluator);
-        } catch (Exception e) {
-            fail();
-        }
-        assertNotNull(scxml);
-        ed = new SimpleDispatcher();
-        trc = new Tracer();
-        try {
-            exec = new SCXMLExecutor(evaluator, ed, trc);
-            scxml.addListener(trc);
-            exec.setSuperStep(true);
-            exec.setStateMachine(scxml);
-        } catch (Exception e) {
-            fail();
-        }
+    public void testSCXMLExecutorMicrowave02Sample() {
+        exec = SCXMLTestHelper.getExecutor(microwave02);
         assertNotNull(exec);
-        return exec;
+    }
+
+    public void testSCXMLExecutorTransitions01Sample() {
+        exec = SCXMLTestHelper.getExecutor(transitions01);
+        assertNotNull(exec);
+        try {
+            Set currentStates = fireEvent("ten.done");
+            assertTrue(currentStates.size() == 1);
+            assertEquals("twenty_one", ((State)currentStates.iterator().
+                next()).getId());
+            currentStates = fireEvent("twenty_one.done");
+            assertTrue(currentStates.size() == 1);
+            assertEquals("twenty_two", ((State)currentStates.iterator().
+                next()).getId());
+            currentStates = fireEvent("twenty_two.done");
+            assertTrue(exec.getCurrentStatus().getStates().size() == 3);
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    private Set fireEvent(String name) {
+        TriggerEvent[] evts = {new TriggerEvent(name,
+                TriggerEvent.SIGNAL_EVENT, null)};
+        try {
+            exec.triggerEvents(evts);
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+        return exec.getCurrentStatus().getStates();
     }
 
     public static void main(String args[]) {

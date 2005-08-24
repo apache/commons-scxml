@@ -22,8 +22,6 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import org.apache.commons.scxml.env.ELEvaluator;
-import org.apache.commons.scxml.env.ELContext;
 import org.apache.commons.scxml.model.SCXML;
 /**
  * Unit tests {@link org.apache.commons.scxml.SCXMLDigester}.
@@ -44,9 +42,7 @@ public class SCXMLDigesterTest extends TestCase {
     }
 
     // Test data
-    private URL microwave01, microwave02;
-    private Evaluator evaluator;
-    private Context ctx;
+    private URL microwave01, microwave02, transitions01;
     private SCXML scxml;
     private String scxmlAsString;
 
@@ -58,15 +54,15 @@ public class SCXMLDigesterTest extends TestCase {
             getResource("org/apache/commons/scxml/microwave-01.xml");
         microwave02 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/microwave-02.xml");
+        transitions01 = this.getClass().getClassLoader().
+            getResource("org/apache/commons/scxml/transitions-01.xml");
     }
 
     /**
      * Tear down instance variables required by this test case.
      */
     public void tearDown() {
-        microwave01 = microwave02 = null;
-        evaluator = null;
-        ctx = null;
+        microwave01 = microwave02 = transitions01 = null;
         scxml = null;
         scxmlAsString = null;
     }
@@ -74,25 +70,19 @@ public class SCXMLDigesterTest extends TestCase {
     /**
      * Test the implementation
      */
-    public void testSCXMLDigester() {
-        scxml = digest(microwave01);
-        scxmlAsString = serialize(scxml);
-        scxml = digest(microwave02);
+    public void testSCXMLDigesterMicrowave01Sample() {
+        scxml = SCXMLTestHelper.digest(microwave01);
         scxmlAsString = serialize(scxml);
     }
 
-    private SCXML digest(final URL url) {
-        assertNotNull(url);
-        evaluator = new ELEvaluator();
-        ctx = new ELContext();
-        try {
-            scxml = SCXMLDigester.digest(url,
-                null, ctx, evaluator);
-        } catch (Exception e) {
-            fail();
-        }
-        assertNotNull(scxml);
-        return scxml;
+    public void testSCXMLDigesterMicrowave02Sample() {
+        scxml = SCXMLTestHelper.digest(microwave02);
+        scxmlAsString = serialize(scxml);
+    }
+
+    public void testSCXMLDigesterTransitions01Sample() {
+        scxml = SCXMLTestHelper.digest(transitions01);
+        scxmlAsString = serialize(scxml);
     }
 
     private String serialize(final SCXML scxml) {

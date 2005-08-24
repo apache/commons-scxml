@@ -47,6 +47,8 @@ public class EnvTestSuite extends TestCase {
     public static Test suite() {
         TestSuite suite = new TestSuite();
         suite.setName("Commons-SCXML-env Tests");
+        suite.addTest(RootContextTest.suite());
         return suite;
     }
 }
+

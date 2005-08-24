@@ -109,17 +109,19 @@
     <unitTestSourceDirectory>src/test/java</unitTestSourceDirectory>
     <unitTest>
       <includes>
-        <include>org/apache/commons/scxml/AllSCXMLTestSuite.java</include>
+        <include>org/apache/commons/scxml/env/EnvTestSuite.java</include>
+        <include>org/apache/commons/scxml/model/ModelTestSuite.java</include>
+        <include>org/apache/commons/scxml/SCXMLTestSuite.java</include>
       </includes>
+      <resources>
+        <resource>
+          <directory>${pom.build.unitTestSourceDirectory}</directory>
+          <includes>
+            <include>**/*.xml</include>
+          </includes>
+        </resource>
+      </resources>
     </unitTest>
-    <resources>
-      <resource>
-        <directory>${pom.build.unitTestSourceDirectory}</directory>
-        <includes>
-          <include>**/*.xml</include>
-        </includes>
-      </resource>
-    </resources>
   </build>
 
   <reports>
