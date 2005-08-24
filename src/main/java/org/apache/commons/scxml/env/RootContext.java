@@ -66,6 +66,29 @@ public final class RootContext extends ELContext {
     }
 
     /**
+     * Does the given variable exist in this Context.
+     *
+     * @param name The name of the variable
+     * @return boolean true if the variable exists
+     * @see org.apache.commons.scxml.Context#has(java.lang.String)
+     */
+    public boolean has(final String name) {
+        boolean exists = super.has(name);
+        Object value = null;
+        if (!exists) {
+            try {
+                value = vr.resolveVariable(name);
+            } catch (ELException ele) {
+                log.error(ele.getMessage(), ele);
+            }
+            if (value != null) {
+                exists = true;
+            }
+        }
+        return exists;
+    }
+
+    /**
      * Get the Iterator.
      *
      * @see org.apache.commons.scxml.Context#iterator()
