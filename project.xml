@@ -106,6 +106,15 @@
 
   <build>
     <sourceDirectory>src/main/java</sourceDirectory>
+    <resources>
+      <resource>
+        <targetPath>META-INF</targetPath>
+        <includes>
+          <include>NOTICE.txt</include>
+          <include>LICENSE.txt</include>
+        </includes>
+      </resource>
+    </resources>
     <unitTestSourceDirectory>src/test/java</unitTestSourceDirectory>
     <unitTest>
       <includes>
