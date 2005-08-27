@@ -60,13 +60,16 @@ public class Transition extends Executable implements Observable {
      * The path for this transition.
      * @see Path
      */
-    private Path path = null;
+    private Path path;
 
     /**
      * Constructor.
      */
     public Transition() {
         super();
+        this.target = null;
+        this.notifReg = null;
+        this.path = null;
     }
 
     /**

@@ -66,6 +66,8 @@ public abstract class TransitionTarget implements Observable {
         onEntry.setParent(this);
         onExit = new OnExit();   //empty defaults
         onExit.setParent(this);
+        parent = null;
+        notifReg = null;
     }
 
     /**

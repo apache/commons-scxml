@@ -34,6 +34,7 @@ public abstract class Action {
      */
     public Action() {
         super();
+        this.parent = null;
     }
 
     /**
