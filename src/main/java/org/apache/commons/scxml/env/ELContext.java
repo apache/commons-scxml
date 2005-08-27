@@ -35,7 +35,7 @@ import org.apache.commons.scxml.Context;
 public class ELContext implements Context , VariableResolver {
 
     /** Implementation independent log category. */
-    protected static Log log = LogFactory.getLog(Context.class);
+    protected static final Log LOG = LogFactory.getLog(Context.class);
     /** The parent Context to this Context. */
     protected Context parent = null;
     /** The Map of variables and their values in this Context. */
@@ -150,8 +150,8 @@ public class ELContext implements Context , VariableResolver {
      */
     public void setLocal(final String name, final Object value) {
         vars.put(name, value);
-        if (log.isDebugEnabled() && !name.equals("_ALL_STATES")) {
-            log.debug(name + " = " + String.valueOf(value));
+        if (LOG.isDebugEnabled() && !name.equals("_ALL_STATES")) {
+            LOG.debug(name + " = " + String.valueOf(value));
         }
     }
 

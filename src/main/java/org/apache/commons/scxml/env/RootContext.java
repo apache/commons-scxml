@@ -40,7 +40,7 @@ public final class RootContext extends ELContext {
     public RootContext(final JspContext ctx) {
         super();
         if (ctx == null) {
-            log.error("Host JSP Context cannot be null");
+            LOG.error("Host JSP Context cannot be null");
         }
         // only retain the VariableResolver
         this.vr = ctx.getVariableResolver();
@@ -59,7 +59,7 @@ public final class RootContext extends ELContext {
             try {
                 value = vr.resolveVariable(name);
             } catch (ELException ele) {
-                log.error(ele.getMessage(), ele);
+                LOG.error(ele.getMessage(), ele);
             }
         }
         return value;
@@ -79,7 +79,7 @@ public final class RootContext extends ELContext {
             try {
                 value = vr.resolveVariable(name);
             } catch (ELException ele) {
-                log.error(ele.getMessage(), ele);
+                LOG.error(ele.getMessage(), ele);
             }
             if (value != null) {
                 exists = true;
