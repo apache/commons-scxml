@@ -32,6 +32,10 @@ public final class RootContext extends ELContext {
 
     /** Host JSP's VariableResolver. */
     private VariableResolver vr;
+    /** Bark if JSP Context is null */
+    private static final String ERR_HOST_JSP_CTX_NULL =
+        "Host JSP Context cannot be null";
+
     /**
      * Constructor.
      *
@@ -40,10 +44,12 @@ public final class RootContext extends ELContext {
     public RootContext(final JspContext ctx) {
         super();
         if (ctx == null) {
-            LOG.error("Host JSP Context cannot be null");
+            LOG.error(ERR_HOST_JSP_CTX_NULL);
+            throw new IllegalArgumentException(ERR_HOST_JSP_CTX_NULL);
+        } else {
+          // only retain the VariableResolver
+          this.vr = ctx.getVariableResolver();
         }
-        // only retain the VariableResolver
-        this.vr = ctx.getVariableResolver();
     }
 
     /**
