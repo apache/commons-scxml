@@ -133,7 +133,7 @@ public class ELEvaluator implements Evaluator {
     /**
      * A Context wrapper that implements VariableResolver.
      */
-    class CtxWrapper implements VariableResolver {
+    static class CtxWrapper implements VariableResolver {
         /** Context to be wrapped. */
         private Context ctx = null;
         /**
@@ -156,7 +156,7 @@ public class ELEvaluator implements Evaluator {
     /**
      * A simple function mapper for SCXML defined functions.
      */
-    class FunctWrapper implements FunctionMapper {
+    static class FunctWrapper implements FunctionMapper {
 
         /**
          * @see FunctionMapper#resolveFunction(String, String)
