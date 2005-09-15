@@ -32,7 +32,7 @@ public final class RootContext extends ELContext {
 
     /** Host JSP's VariableResolver. */
     private VariableResolver vr;
-    /** Bark if JSP Context is null */
+    /** Bark if JSP Context is null. */
     private static final String ERR_HOST_JSP_CTX_NULL =
         "Host JSP Context cannot be null";
 

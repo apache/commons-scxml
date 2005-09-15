@@ -227,6 +227,18 @@ public final class SCXMLHelper {
         Path p = t.getPath();
         //the easy part
         allStates.addAll(p.getUpwardSegment());
+        TransitionTarget source = t.getParent();
+        for (Iterator act = currentStates.iterator(); act.hasNext();) {
+            TransitionTarget a = (TransitionTarget) act.next();
+            if (isDescendant(a, source)) {
+                boolean added = false;
+                added = allStates.add(a);
+                while (added && a != source) {
+                    a = a.getParent();
+                    added = allStates.add(a);
+                }
+            }
+        }
         if (p.isCrossRegion()) {
             for (Iterator regions = p.getRegionsExited().iterator();
                     regions.hasNext();) {

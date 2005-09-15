@@ -127,5 +127,16 @@ public class History extends TransitionTarget {
         return false;
     }
 
+    /**
+     * Resets the history state.
+     *
+     * @see org.apache.commons.scxml.SCXMLExecutor#reset()
+     */
+    public final void reset() {
+        if (lastConfiguration != null) {
+            lastConfiguration.clear();
+        }
+    }
+
 }
 

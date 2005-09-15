@@ -23,6 +23,7 @@ import java.util.Iterator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.scxml.model.History;
 import org.apache.commons.scxml.model.ModelException;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.State;
@@ -100,13 +101,8 @@ public class SCXMLExecutor {
                     errorReporter);
             // FilterTransitionSet
             semantics.filterTransitionsSet(step, evaluator, errorReporter);
-            // SeedTargetSet
-            semantics.seedTargetSet(step, errorReporter);
-            // DetermineTargetStates
-            semantics.determineTargetStates(
-                    step.getAfterStatus().getStates(), errorReporter);
-            // BuildOnExitOnEntryLists
-            semantics.buildOnExitOnEntryLists(step, errorReporter);
+            // FollowTransitions
+            semantics.followTransitions(step, errorReporter);
             // UpdateHistoryStates
             semantics.updateHistoryStates(step, errorReporter);
             // ExecuteActions
@@ -160,6 +156,8 @@ public class SCXMLExecutor {
             TransitionTarget tt = (TransitionTarget) i.next();
             if (tt instanceof State) {
                 ((State) tt).getContext().reset();
+            } else if (tt instanceof History) {
+                ((History) tt).reset();
             }
         }
         // CreateEmptyStatus

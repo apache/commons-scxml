@@ -195,15 +195,16 @@ public class Tracer implements ErrorReporter, SCXMLListener, ErrorHandler {
         if (parent == null) {
             return "/" + tt.getId();
         } else {
-            LinkedList ll = new LinkedList();
+            LinkedList pathElements = new LinkedList();
+            pathElements.addFirst(tt);
             while (parent != null) {
-                ll.addFirst(parent);
+                pathElements.addFirst(parent);
                 parent = parent.getParent();
             }
             StringBuffer names = new StringBuffer();
-            for (Iterator i = ll.iterator(); i.hasNext();) {
-                TransitionTarget tmp = (TransitionTarget) i.next();
-                names.append('/').append(tmp.getId());
+            for (Iterator i = pathElements.iterator(); i.hasNext();) {
+                TransitionTarget pathElement = (TransitionTarget) i.next();
+                names.append('/').append(pathElement.getId());
             }
             return names.toString();
         }

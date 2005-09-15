@@ -46,6 +46,7 @@ import org.apache.commons.scxml.model.ModelException;
 import org.apache.commons.scxml.model.OnEntry;
 import org.apache.commons.scxml.model.OnExit;
 import org.apache.commons.scxml.model.Parallel;
+import org.apache.commons.scxml.model.Path;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.Send;
 import org.apache.commons.scxml.model.State;
@@ -79,13 +80,14 @@ public class SCXMLSemantics {
     /**
      * SCXML Logger for the application.
      */
-    protected static org.apache.commons.logging.Log appLog = LogFactory
+    protected static final org.apache.commons.logging.Log APP_LOG = LogFactory
             .getLog("scxml.app.log");
 
     /**
      * The TransitionTarget comparator.
      */
-    protected TransitionTargetComparator ttc = new TransitionTargetComparator();
+    protected TransitionTargetComparator ttc =
+        new TransitionTargetComparator();
 
     /**
      * @param input
@@ -226,7 +228,7 @@ public class SCXMLSemantics {
             } else if (a instanceof Log) {
                 Log lg = (Log) a;
                 Object exprRslt = eval.eval(ctx, lg.getExpr());
-                appLog.info(lg.getLabel() + ": " + String.valueOf(exprRslt));
+                APP_LOG.info(lg.getLabel() + ": " + String.valueOf(exprRslt));
             } else if (a instanceof Send) {
                 Send snd = (Send) a;
                 Object hints = null;
@@ -529,37 +531,52 @@ public class SCXMLSemantics {
     }
 
     /**
-     * @param step
-     *            transitional step
+     * Populate the target set.
+     * <ul>
+     * <li>take targets of selected transitions</li>
+     * <li>take exited regions into account and make sure every active
+     * parallel region has all siblings active
+     * [that is, explicitly visit or sibling regions in case of newly visited
+     * (revisited) orthogonal states]</li>
+     * </ul>
+     * @param residual [in]
+     * @param transitList [in]
      * @param errRep
      *            ErrorReporter callback [inout]
+     * @return Set The target set
      */
-    public void seedTargetSet(final Step step, final ErrorReporter errRep) {
-        Set sources = step.getBeforeStatus().getStates();
-        Set targets = step.getAfterStatus().getStates();
-        List transitions = step.getTransitList();
-        /* populate the target set by taking targets of selected transitions */
-        for (Iterator i = transitions.iterator(); i.hasNext();) {
+    public Set seedTargetSet(final Set residual, final List transitList,
+            final ErrorReporter errRep) {
+        Set seedSet = new HashSet();
+        Set regions = new HashSet();
+        for (Iterator i = transitList.iterator(); i.hasNext();) {
             Transition t = (Transition) i.next();
-            targets.add(t.getRuntimeTarget());
-        }
-        /* retain the source states, which are not affected by the
-           transitions */
-        for (Iterator i = sources.iterator(); i.hasNext();) {
-            State s = (State) i.next();
-            boolean retain = true;
-            for (Iterator j = transitions.iterator(); j.hasNext();) {
-                Transition t = (Transition) j.next();
-                State ts = (State) t.getParent();
-                if (s == ts || SCXMLHelper.isDescendant(s, ts)) {
-                    retain = false;
-                    break;
+            //iterate over transitions and add target states
+            if (t.getTarget() != null) {
+                seedSet.add(t.getTarget());
+            }
+            //build a set of all entered regions
+            Path p = t.getPath();
+            if (p.isCrossRegion()) {
+                List regs = p.getRegionsEntered();
+                for (Iterator j = regs.iterator(); j.hasNext();) {
+                    State region = (State) j.next();
+                    regions.addAll(((Parallel) region.getParent()).
+                        getStates());
                 }
             }
-            if (retain) {
-                targets.add(s);
-            }
         }
+        //check whether all active regions have their siblings active too
+        Set allStates = new HashSet(residual);
+        allStates.addAll(seedSet);
+        allStates = SCXMLHelper.getAncestorClosure(allStates, null);
+        regions.removeAll(allStates);
+        //iterate over inactive regions and visit them implicitly using initial
+        for (Iterator i = regions.iterator(); i.hasNext();) {
+            State reg = (State) i.next();
+            seedSet.add(reg);
+        }
+        return seedSet;
     }
 
     /**
@@ -568,7 +585,7 @@ public class SCXMLSemantics {
      * @param errRep
      *            ErrorReporter callback [inout]
      * @throws ModelException On illegal configuration
-     * @see #seedTargetSet(Step, ErrorReporter)
+     * @see #seedTargetSet(Set, List, ErrorReporter)
      */
     public void determineTargetStates(final Set states,
             final ErrorReporter errRep) throws ModelException {
@@ -592,24 +609,32 @@ public class SCXMLSemantics {
                     if (ini == null) {
                         errRep.onError(ErrorReporter.NO_INITIAL,
                             "Initial pseudostate is missing!", st);
-                    }
-                    // If we are here, transition target must be a State
-                    // or History
-                    TransitionTarget init = ini.getTransition().getTarget();
-                    if (init == null
-                        ||
-                        !(init instanceof State || init instanceof History)) {
-                        errRep.onError(ErrorReporter.ILLEGAL_INITIAL,
-                            "Initial does not point to a State or a History!",
-                            st);
                     } else {
-                        wrkSet.addLast(init);
+                        // If we are here, transition target must be a State
+                        // or History
+                        Transition initialTransition = ini.getTransition();
+                        if (initialTransition == null) {
+                            errRep.onError(ErrorReporter.ILLEGAL_INITIAL,
+                                "Initial transition is null!", st);
+                        } else {
+                            TransitionTarget init = initialTransition.
+                                getTarget();
+                            if (init == null
+                                ||
+                                !(init instanceof State
+                                  || init instanceof History)) {
+                                errRep.onError(ErrorReporter.ILLEGAL_INITIAL,
+                                "Initial not pointing to a State or History!",
+                                st);
+                            } else {
+                                wrkSet.addLast(init);
+                            }
+                        }
                     }
                 }
             } else if (tt instanceof Parallel) {
                 Parallel prl = (Parallel) tt;
-                Iterator i = prl.getStates().iterator();
-                while (i.hasNext()) {
+                for (Iterator i = prl.getStates().iterator(); i.hasNext();) {
                     //fork
                     wrkSet.addLast(i.next());
                 }
@@ -625,60 +650,11 @@ public class SCXMLSemantics {
                         + tt.getClass().getName());
             }
         }
-        if (!SCXMLHelper.isLegalConfig(states, errRep)) {
-            throw new ModelException("Illegal state machine configuration!");
-        }
     }
 
     /**
-     * @param step
-     *            [inout]
-     * @param errRep
-     *            ErrorReporter callback [inout]
-     */
-    public void buildOnExitOnEntryLists(final Step step,
-            final ErrorReporter errRep) {
-        //set of exited states
-        Set onExit = SCXMLHelper.getAncestorClosure(step.getBeforeStatus()
-                .getStates(), null);
-        Set onExit2 = new HashSet(onExit);
-        //set of entered states
-        Set onEntry = SCXMLHelper.getAncestorClosure(step.getAfterStatus()
-                .getStates(), null);
-        //remove common sub-set
-        onExit.removeAll(onEntry);
-        onEntry.removeAll(onExit2);
-        //explicitly add self-transitions
-        for (Iterator i = step.getTransitList().iterator(); i.hasNext();) {
-            Transition t = (Transition) i.next();
-            if (t.getParent() == t.getTarget()) {
-                onExit.add(t.getParent());
-                onEntry.add(t.getTarget());
-            }
-        }
-        // sort onEntry and onExit according state hierarchy
-        Object[] oex = onExit.toArray();
-        onExit.clear();
-        Object[] oen = onEntry.toArray();
-        onEntry.clear();
-        Arrays.sort(oex, getTTComparator());
-        Arrays.sort(oen, getTTComparator());
-        step.getExitList().addAll(Arrays.asList(oex));
-        // we need to impose reverse order for the onEntry list
-        List entering = Arrays.asList(oen);
-        Collections.reverse(entering);
-        step.getEntryList().addAll(entering);
-        // reset 'done' flag
-        for (Iterator reset = entering.iterator(); reset.hasNext();) {
-            Object o = reset.next();
-            if (o instanceof State) {
-                ((State) o).setDone(false);
-            }
-        }
-    }
-
-    /**
-     * Go over the exit list and update history information for relevant states.
+     * Go over the exit list and update history information for
+     * relevant states.
      *
      * @param step
      *            [inout]
@@ -695,8 +671,8 @@ public class SCXMLSemantics {
                 if (s.hasHistory()) {
                     Set shallow = null;
                     Set deep = null;
-                    Iterator j = s.getHistory().iterator();
-                    while (j.hasNext()) {
+                    for (Iterator j = s.getHistory().iterator();
+                            j.hasNext();) {
                         History h = (History) j.next();
                         if (h.isDeep()) {
                             if (deep == null) {
@@ -756,6 +732,70 @@ public class SCXMLSemantics {
                 }
             }
             return false;
+        }
+    }
+
+    /**
+     * Follow the candidate transitions for this execution Step, and update the
+     * lists of entered and exited states accordingly.
+     *
+     * @param step The current Step
+     * @param errorReporter The ErrorReporter for the current environment
+     *
+     * @throws ModelException
+     *             in case there is a fatal SCXML object model problem.
+     */
+    public void followTransitions(final Step step,
+            final ErrorReporter errorReporter) throws ModelException {
+        Set currentStates = step.getBeforeStatus().getStates();
+        List transitions = step.getTransitList();
+        // DetermineExitedStates (currentStates, transitList) -> exitedStates
+        Set exitedStates = new HashSet();
+        for (Iterator i = transitions.iterator(); i.hasNext();) {
+            Transition t = (Transition) i.next();
+            Set ext = SCXMLHelper.getStatesExited(t, currentStates);
+            exitedStates.addAll(ext);
+        }
+        // compute residual states - these are preserved from the previous step
+        Set residual = new HashSet(currentStates);
+        residual.removeAll(exitedStates);
+        // SeedTargetSet (residual, transitList) -> seedSet
+        Set seedSet = seedTargetSet(residual, transitions, errorReporter);
+        // DetermineTargetStates (initialTargetSet) -> targetSet
+        Set targetSet = step.getAfterStatus().getStates();
+        targetSet.addAll(seedSet); //copy to preserve seedSet
+        determineTargetStates(targetSet, errorReporter);
+        // BuildOnEntryList (targetSet, seedSet) -> entryList
+        Set entered = SCXMLHelper.getAncestorClosure(targetSet, seedSet);
+        seedSet.clear();
+        for (Iterator i = transitions.iterator(); i.hasNext();) {
+            Transition t = (Transition) i.next();
+            entered.addAll(t.getPath().getDownwardSegment());
+        }
+        // Chech whether the computed state config is legal
+        targetSet.addAll(residual);
+        residual.clear();
+        if (!SCXMLHelper.isLegalConfig(targetSet, errorReporter)) {
+            throw new ModelException("Illegal state machine configuration!");
+        }
+        // sort onEntry and onExit according state hierarchy
+        Object[] oex = exitedStates.toArray();
+        exitedStates.clear();
+        Object[] oen = entered.toArray();
+        entered.clear();
+        Arrays.sort(oex, getTTComparator());
+        Arrays.sort(oen, getTTComparator());
+        step.getExitList().addAll(Arrays.asList(oex));
+        // we need to impose reverse order for the onEntry list
+        List entering = Arrays.asList(oen);
+        Collections.reverse(entering);
+        step.getEntryList().addAll(entering);
+        // reset 'done' flag
+        for (Iterator reset = entering.iterator(); reset.hasNext();) {
+            Object o = reset.next();
+            if (o instanceof State) {
+                ((State) o).setDone(false);
+            }
         }
     }
 
