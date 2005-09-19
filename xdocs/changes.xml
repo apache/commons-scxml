@@ -31,6 +31,54 @@
       </ul>
     </section>
 
+    <release version="beta-1.0-SNAPSHOT-001" date="09-15-2005" description="SCXML WD section 3.4 update">
+      <action dev="jaroslav" type="update">
+        Now handling outgoing transitions from a Parallel (Section 3.4 SCXML WD)
+      </action>
+      <action dev="rahul" type="fix">
+        Minor Javadoc tweaks
+      </action>
+      <action dev="rahul" type="update">
+        "Microwave" test samples reset timer on leaving "cooking" state so state machines can be re-run
+        many times (without a "reset")
+      </action>
+    </release>
+
+    <release version="pre-beta-1.0-SNAPSHOT-007" date="09-08-2005" description="New logo">
+      <action dev="rahul" type="update">
+        Updated Commons SCXML logo.
+      </action>
+    </release>
+
+    <release version="pre-beta-1.0-SNAPSHOT-006" date="08-27-2005" description="Checkstyle and Findbugs update">
+      <action dev="rahul" type="update">
+        Use a customized set of checkstyle rules. These are the Sun checks with three changes as discussed on the dev list:
+        <ol>
+          <li>Use a regexp header check for ASL</li>
+          <li>Disable 'hide a field' check (lot of noise from setters)</li>
+          <li>Disable 'method design for extension' check</li>
+        </ol>
+      </action>
+      <action dev="rahul" type="fix">
+        Six minor code changes based on FindBugs reports.
+      </action>
+    </release>
+
+    <release version="pre-beta-1.0-SNAPSHOT-005" date="08-25-2005" description="Switch to new ant build file">
+      <action dev="rahul" type="update">
+        Switch to new ant build file that will work better for the Commons nightlies.
+      </action>
+    </release>
+
+    <release version="pre-beta-1.0-SNAPSHOT-004" date="08-24-2005" description="RootContext fix">
+      <action dev="rahul" type="fix">
+        RootContext (used in the JSP environment) should override ELContext#has(String) method.
+      </action>
+      <action dev="rahul" type="update">
+        Enhanced couple of samples used by the test cases.
+      </action>
+    </release>
+
     <release version="pre-beta-1.0-SNAPSHOT-003" date="08-23-2005" description="Test framework check-in">
       <action dev="rahul" type="add">
         Added JUnit Test Framework.
