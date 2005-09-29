@@ -17,8 +17,6 @@ package org.apache.commons.scxml.env;
 
 import java.net.URL;
 
-import java.util.HashMap;
-import java.util.Map;
 import javax.servlet.jsp.JspContext;
 
 import junit.framework.Test;
@@ -26,7 +24,6 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import org.apache.commons.scxml.env.ELEvaluator;
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
 

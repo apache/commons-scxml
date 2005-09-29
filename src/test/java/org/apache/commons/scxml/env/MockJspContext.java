@@ -15,20 +15,14 @@
  */
 package org.apache.commons.scxml.env;
 
-import java.net.URL;
-
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-import javax.servlet.jsp.el.ExpressionEvaluator;
-import javax.servlet.jsp.el.VariableResolver;
+
 import javax.servlet.jsp.JspContext;
 import javax.servlet.jsp.JspWriter;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+import javax.servlet.jsp.el.ExpressionEvaluator;
+import javax.servlet.jsp.el.VariableResolver;
 
 /**
  * A placeholder for a JspContext, to run tests against.
