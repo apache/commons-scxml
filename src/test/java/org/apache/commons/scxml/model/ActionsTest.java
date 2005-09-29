@@ -22,8 +22,8 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import org.apache.commons.scxml.env.ELEvaluator;
-import org.apache.commons.scxml.env.ELContext;
+import org.apache.commons.scxml.env.jsp.ELEvaluator;
+import org.apache.commons.scxml.env.jsp.ELContext;
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
 /**

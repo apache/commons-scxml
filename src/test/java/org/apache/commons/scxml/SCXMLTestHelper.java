@@ -19,8 +19,8 @@ import java.net.URL;
 
 import junit.framework.Assert;
 
-import org.apache.commons.scxml.env.ELEvaluator;
-import org.apache.commons.scxml.env.ELContext;
+import org.apache.commons.scxml.env.jsp.ELEvaluator;
+import org.apache.commons.scxml.env.jsp.ELContext;
 import org.apache.commons.scxml.env.SimpleDispatcher;
 import org.apache.commons.scxml.env.Tracer;
 import org.apache.commons.scxml.model.SCXML;
