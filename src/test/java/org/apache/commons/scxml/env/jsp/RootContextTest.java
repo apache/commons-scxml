@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.scxml.env;
+package org.apache.commons.scxml.env.jsp;
 
 import java.net.URL;
 
@@ -57,7 +57,7 @@ public class RootContextTest extends TestCase {
      */
     public void setUp() {
         rootCtxSample = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml/env/jsp-rootctx-test.xml");
+            getResource("org/apache/commons/scxml/env/jsp/jsp-rootctx-test.xml");
         evaluator = new ELEvaluator();
         jspCtx = new MockJspContext();
         jspCtx.setAttribute("foo", "1");

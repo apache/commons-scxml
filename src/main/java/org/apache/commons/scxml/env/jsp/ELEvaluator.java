@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.commons.scxml.env;
+package org.apache.commons.scxml.env.jsp;
 
 import java.lang.reflect.Method;
 import java.util.Iterator;

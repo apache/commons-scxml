@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.scxml.env;
+package org.apache.commons.scxml.env.jsp;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -25,12 +25,12 @@ import junit.textui.TestRunner;
  * Test suite for SCXML env package.
  *
  */
-public class EnvTestSuite extends TestCase {
+public class EnvJspTestSuite extends TestCase {
     
     /**
      * Construct a new instance.
      */
-    public EnvTestSuite(String name) {
+    public EnvJspTestSuite(String name) {
         super(name);
     }
 
@@ -46,7 +46,8 @@ public class EnvTestSuite extends TestCase {
      */
     public static Test suite() {
         TestSuite suite = new TestSuite();
-        suite.setName("Commons-SCXML-env Tests");
+        suite.setName("Commons-SCXML JSP Env Tests");
+        suite.addTest(RootContextTest.suite());
         return suite;
     }
 }

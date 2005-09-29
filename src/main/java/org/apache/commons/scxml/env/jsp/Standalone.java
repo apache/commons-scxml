@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.commons.scxml.env;
+package org.apache.commons.scxml.env.jsp;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -30,6 +30,8 @@ import org.apache.commons.scxml.EventDispatcher;
 import org.apache.commons.scxml.SCXMLDigester;
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.TriggerEvent;
+import org.apache.commons.scxml.env.SimpleDispatcher;
+import org.apache.commons.scxml.env.Tracer;
 import org.apache.commons.scxml.model.ModelException;
 import org.apache.commons.scxml.model.SCXML;
 
