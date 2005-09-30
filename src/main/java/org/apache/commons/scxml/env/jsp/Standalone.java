@@ -29,6 +29,7 @@ import org.apache.commons.scxml.Evaluator;
 import org.apache.commons.scxml.EventDispatcher;
 import org.apache.commons.scxml.SCXMLDigester;
 import org.apache.commons.scxml.SCXMLExecutor;
+import org.apache.commons.scxml.SCXMLHelper;
 import org.apache.commons.scxml.TriggerEvent;
 import org.apache.commons.scxml.env.SimpleDispatcher;
 import org.apache.commons.scxml.env.Tracer;
@@ -36,8 +37,20 @@ import org.apache.commons.scxml.model.ModelException;
 import org.apache.commons.scxml.model.SCXML;
 
 /**
- * Standalone SCXML Interpreter.
- * Useful for command-line testing and debugging.
+ * Standalone SCXML interpreter, useful for command-line testing and
+ * debugging.
+ *
+ * <p><b>USAGE:</b></p>
+ * <p><code>java org.apache.commons.scxml.env.jsp.Standalone url</code></p>
+ * <p>or</p>
+ * <p><code>java org.apache.commons.scxml.env.jsp.Standalone filename</code>
+ * </p>
+ *
+ * <p><b>RUNNING:</b></p>
+ * <p>Enter a space-separated list of "events"</p>
+ * <p>To quit, enter "quit"</p>
+ * <p>To populate a variable in the current context, type "name=value"</p>
+ * <p>To reset state machine, enter "reset"</p>
  *
  */
 public final class Standalone {
@@ -77,15 +90,32 @@ public final class Standalone {
             while ((event = br.readLine()) != null) {
                 event = event.trim();
                 if (event.equalsIgnoreCase("help") || event.equals("?")) {
-                    System.out.println("enter a space-separated list of "
+                    System.out.println("Enter a space-separated list of "
                         + "events");
-                    System.out.println("to quit, enter \"quit\"");
-                    System.out.println("to reset state machine, enter "
+                    System.out.println("To populate a variable in the "
+                        + "current context, type \"name=value\"");
+                    System.out.println("To quit, enter \"quit\"");
+                    System.out.println("To reset state machine, enter "
                         + "\"reset\"");
                 } else if (event.equalsIgnoreCase("quit")) {
                     break;
                 } else if (event.equalsIgnoreCase("reset")) {
                     exec.reset();
+                } else if (event.indexOf('=') != -1) {
+                    int marker = event.indexOf('=');
+                    String name = event.substring(0, marker);
+                    String value = event.substring(marker + 1);
+                    rootCtx.setLocal(name, value);
+                    System.out.println("Set variable " + name + " to " +
+                        value);
+                } else if (SCXMLHelper.isStringEmpty(event)
+                           || event.equalsIgnoreCase("null")) {
+                    TriggerEvent[] evts = { new TriggerEvent(null,
+                    TriggerEvent.SIGNAL_EVENT, null) };
+                        exec.triggerEvents(evts);
+                    if (exec.getCurrentStatus().isFinal()) {
+                        System.out.println("A final configuration reached.");
+                    }
                 } else {
                     StringTokenizer st = new StringTokenizer(event);
                     int tkns = st.countTokens();

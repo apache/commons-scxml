@@ -727,8 +727,9 @@ public class SCXMLSemantics {
             Iterator i = eventOccurrences.iterator();
             while (i.hasNext()) {
                 String evt = (String) i.next();
-                if (evt.equals(transEvent) || evt.startsWith(transEventDot)) {
-                    return true;
+                if (evt == null || evt.equals(transEvent) //null for Standalone
+                    || evt.startsWith(transEventDot)) {
+                        return true;
                 }
             }
             return false;
