@@ -31,6 +31,21 @@
       </ul>
     </section>
 
+    <release version="beta-1.0-SNAPSHOT-002" date="09-29-2005" description="Distributing the env package">
+      <action dev="rahul" type="update">
+        The scxml.env package has a new child jsp package, to distribute the current
+        contents of the env package such that each supported environment can get its own
+        package in the source.
+      </action>
+      <action dev="rahul" type="update">
+        Enhanced the Standalone testing functionality to enable:
+        <ol>
+          <li>Value change events on the current Context.</li>
+          <li>Dummy events to re-evaluate conditionals on event-less transitions.</li>
+        </ol>
+      </action>
+    </release>
+
     <release version="beta-1.0-SNAPSHOT-001" date="09-15-2005" description="SCXML WD section 3.4 update">
       <action dev="jaroslav" type="update">
         Now handling outgoing transitions from a Parallel (Section 3.4 SCXML WD)
