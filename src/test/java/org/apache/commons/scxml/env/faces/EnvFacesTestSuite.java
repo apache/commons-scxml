@@ -13,29 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.scxml;
+package org.apache.commons.scxml.env.faces;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import org.apache.commons.scxml.env.EnvTestSuite;
-import org.apache.commons.scxml.env.jsp.EnvJspTestSuite;
-import org.apache.commons.scxml.env.faces.EnvFacesTestSuite;
-import org.apache.commons.scxml.model.ModelTestSuite;
 
 /**
- * Test suite for [SCXML].
+ * Test suite for SCXML Faces Environment package.
  *
- * Organization adapted from test suite for [lang].
  */
-public class AllSCXMLTestSuite extends TestCase {
+public class EnvFacesTestSuite extends TestCase {
     
     /**
      * Construct a new instance.
      */
-    public AllSCXMLTestSuite(String name) {
+    public EnvFacesTestSuite(String name) {
         super(name);
     }
 
@@ -51,12 +46,8 @@ public class AllSCXMLTestSuite extends TestCase {
      */
     public static Test suite() {
         TestSuite suite = new TestSuite();
-        suite.setName("Commons-SCXML (all) Tests");
-        suite.addTest(SCXMLTestSuite.suite());
-        suite.addTest(EnvTestSuite.suite());
-        suite.addTest(EnvJspTestSuite.suite());
-        suite.addTest(EnvFacesTestSuite.suite());
-        suite.addTest(ModelTestSuite.suite());
+        suite.setName("Commons-SCXML Faces Environment Tests");
         return suite;
     }
 }
+
