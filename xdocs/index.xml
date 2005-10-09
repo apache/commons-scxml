@@ -29,7 +29,7 @@
   <p>
   The World Wide Web Consortium (W3C) Voice Browser Working Group recently
   announced the publication of the first 
-  <a href="http://www.w3.org/TR/2005/WD-scxml-20050705/">Working Draft of State 
+  <a href="http://www.w3.org/TR/scxml/">Working Draft of State 
   Chart XML (SCXML)</a>.
   SCXML provides a generic state-machine based execution environment based on Harel
   State Tables. SCXML is a candidate for the control language within 
