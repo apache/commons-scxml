@@ -42,9 +42,9 @@ import org.apache.commons.scxml.model.TransitionTarget;
 public class ELEvaluator implements Evaluator {
 
     /** Implementation independent log category. */
-    private static Log log = LogFactory.getLog(Evaluator.class);
+    protected static Log log = LogFactory.getLog(Evaluator.class);
     /** Function Mapper for SCXML expressions. */
-    private FunctionMapper fm = new FunctWrapper();
+    protected FunctionMapper fm = new FunctWrapper();
     /** Pattern for recognizing the SCXML In() special predicate. */
     private static Pattern inFct = Pattern.compile("In\\(");
 
@@ -147,7 +147,7 @@ public class ELEvaluator implements Evaluator {
         public Object resolveVariable(final String pName) throws ELException {
             Object rslt = ctx.get(pName);
             if (rslt == null) {
-                throw new ELException("Variable " + pName + "does not exist!");
+                log.info("Variable \"" + pName + "\" does not exist!");
             }
             return rslt;
         }
