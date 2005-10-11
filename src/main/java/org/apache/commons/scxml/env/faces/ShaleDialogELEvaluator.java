@@ -113,20 +113,6 @@ public class ShaleDialogELEvaluator extends ELEvaluator {
     }
 
     /**
-     * Evaluate a boolean expression.
-     *
-     * @param ctx variable context
-     * @param expr expression
-     * @return Boolean The result of the evaluation
-     * @throws SCXMLExpressionException For a malformed expression
-     * @see Evaluator#evalCond(Context, String)
-     */
-    public Boolean evalCond(final Context ctx, final String expr)
-    throws SCXMLExpressionException {
-        return super.evalCond(ctx, expr);
-    }
-
-    /**
      * Invoke method binding expression for Shale <code>ActionState</code>.
      * Shale requires return type to be a <code>java.lang.String</code>.
      *
