@@ -12,17 +12,9 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-lib.repo=/my/libs
-
-#Servlet 2.4
-servlet.jar=${lib.repo}/servlet.jar
-#JSP 2.0
-jsp-api.jar=${lib.repo}/jsp-api.jar
-#Digester 1.5
-commons-digester.jar=${lib.repo}/commons-digester.jar
-#EL 1.0
-commons-el.jar=${lib.repo}/commons-el.jar
-#Logging 1.0.4
-commons-logging.jar=${lib.repo}/commons-logging.jar
-#JUnit 3.7
-junit.jar=${lib.repo}/junit.jar
+#   The ant script is mostly self-sufficient as it fetches the 
+#   dependencies it needs.
+#
+#   Commons SCXML dependency information is here:
+#
+#   http://jakarta.apache.org/commons/sandbox/scxml/dependencies.html
