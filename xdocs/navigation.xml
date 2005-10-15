@@ -27,6 +27,9 @@
         <item     name="SCXML in RDC group container"  
                   href="/usecases/scxml-in-rdc-group.html" />
 
+        <item     name="SCXML in Shale dialogs"        
+                  href="/usecases/scxml-in-shale-dialogs.html" />
+
       </item>
 
     </menu>
