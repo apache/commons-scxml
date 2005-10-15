@@ -18,6 +18,20 @@
 <project name="Commons SCXML">
   <title>Commons SCXML</title>
   <body>
+    <menu         name="Commons SCXML Resources">
+
+      <item       name="Usecases"                      
+                  href="/usecases.html"
+              collapse="true">
+
+        <item     name="SCXML in RDC group container"  
+                  href="/usecases/scxml-in-rdc-group.html" />
+
+      </item>
+
+    </menu>
+
     &common-menus;
+
   </body>
 </project>
