@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Copyright 2003-2004 The Apache Software Foundation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<document>
+
+ <properties>
+  <title>Commons SCXML API notes</title>
+  <author email="commons-dev@jakarta.apache.org">Commons Documentation Team</author>
+ </properties>
+
+ <body>
+
+ <section name="Commons SCXML API notes">
+
+  <p>This is a collection of notes about the Commons SCXML API, a scratch pad of
+  sorts, aimed at noting down usages for the frequently needed bits of Commons
+  SCXML and some interesting (to some of us) side-effects.
+  </p>
+
+  <subsection name="Core">
+   <p>Contains notes about the core Commons SCXML APIs.</p>
+   <p>The first set of notes walks through the most common usage pattern,
+   end-to-end.</p>
+   <ul>
+    <li><a href="api-notes/core-digester.html">Digester</a> - Digesting SCXML
+    into the Commons SCXML Java object model.</li>
+    <li><a href="api-notes/core-engine.html">Executor</a> - Instantiating
+    an SCXML executor (engine).</li>
+    <li><a href="api-notes/core-events.html">Triggering events</a> - Executing
+    the event driven state machine.</li>
+   </ul>
+  </subsection>
+
+  <subsection name="Testing">
+   <p>Contains notes about trying Commons SCXML and testing SCXML documents.</p>
+   <ul>
+    <li><a href="api-notes/testing-standalone.html">Standalone</a> - Rev'ing the
+    engine.</li>
+   </ul>
+  </subsection>
+
+  <subsection name="Side-effects">
+   <p>Contains notes about interesting non-primary uses for Commons SCXML.</p>
+   <ul>
+    <li><a href="api-notes/side-effect-el.html">EL</a> - Trying Commons EL outside
+    a servlet container.</li>
+   </ul>
+  </subsection>
+
+ </section>
+
+ </body>
+
+</document>

@@ -32,6 +32,27 @@
 
       </item>
 
+      <item       name="API notes"
+                  href="/api-notes.html"
+              collapse="true">
+
+        <item     name="SCXML Digester"  
+                  href="/api-notes/core-digester.html" />
+
+        <item     name="SCXML Engine"  
+                  href="/api-notes/core-engine.html" />
+
+        <item     name="Triggering Events"  
+                  href="/api-notes/core-events.html" />
+
+        <item     name="Standalone Testing"  
+                  href="/api-notes/testing-standalone.html" />
+
+        <item     name="Side Effect - EL"  
+                  href="/api-notes/side-effect-el.html" />
+
+      </item>
+
     </menu>
 
     &common-menus;
