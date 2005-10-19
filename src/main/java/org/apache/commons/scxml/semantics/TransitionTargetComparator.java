@@ -15,10 +15,11 @@
  *  limitations under the License.
  *
  */
-package org.apache.commons.scxml;
+package org.apache.commons.scxml.semantics;
 
 import java.util.Comparator;
 
+import org.apache.commons.scxml.SCXMLHelper;
 import org.apache.commons.scxml.model.TransitionTarget;
 
 
