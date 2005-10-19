@@ -25,7 +25,7 @@ import java.util.List;
  * A logical unit of progression in the execution of a SCXML model.
  *
  */
-class Step {
+public class Step {
 
     /**
      * Constructor.

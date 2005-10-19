@@ -28,11 +28,15 @@ import org.apache.commons.scxml.model.ModelException;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.State;
 import org.apache.commons.scxml.model.TransitionTarget;
+import org.apache.commons.scxml.semantics.SCXMLSemanticsImpl;
 
 /**
- * The SCXML &quot;engine&quot; that executes SCXML documents. The
+ * <p>The SCXML &quot;engine&quot; that executes SCXML documents. The
  * particular semantics used by this engine for executing the SCXML are
- * encapsulated in SCXMLSemantics.
+ * encapsulated in the SCXMLSemantics implementation that it uses.</p>
+ *
+ * <p>The default implementation is
+ * <code>org.apache.commons.scxml.semantics.SCXMLSemanticsImpl</code></p>
  *
  * @see SCXMLSemantics
  */
@@ -75,10 +79,8 @@ public class SCXMLExecutor {
 
     /**
      *  Interpretation semantics.
-     *  (not configurable without re-compilation for now,
-     *   since we have one implementation anyway)
      */
-    private SCXMLSemantics semantics = new SCXMLSemantics();
+    private SCXMLSemantics semantics;
 
     /**
      * The worker method.
@@ -106,7 +108,8 @@ public class SCXMLExecutor {
             // UpdateHistoryStates
             semantics.updateHistoryStates(step, errorReporter);
             // ExecuteActions
-            semantics.executeActions(step, this, errorReporter);
+            semantics.executeActions(step, stateMachine, evaluator,
+                    eventdispatcher, errorReporter);
             // AssignCurrentStatus
             updateStatus(step);
             // ***Cleanup external events if superStep
@@ -126,19 +129,39 @@ public class SCXMLExecutor {
      */
     public SCXMLExecutor(final Evaluator expEvaluator,
             final EventDispatcher evtDisp, final ErrorReporter errRep) {
-        this.evaluator = expEvaluator;
-        this.eventdispatcher = evtDisp;
-        this.errorReporter = errRep;
-        this.currentStatus = null;
-        this.stateMachine = null;
-    }
+        this(expEvaluator, evtDisp, errRep, null);    }
 
     /**
      * Convenience constructor.
      */
     public SCXMLExecutor() {
-        this(null, null, null);
+        this(null, null, null, null);
     }
+    
+    /**
+     * Constructor.
+     *
+     * @param expEvaluator The expression evaluator
+     * @param evtDisp The event dispatcher
+     * @param errRep The error reporter
+     */
+    public SCXMLExecutor(final Evaluator expEvaluator,
+            final EventDispatcher evtDisp, final ErrorReporter errRep,
+            final SCXMLSemanticsImpl semantics) {
+        this.evaluator = expEvaluator;
+        this.eventdispatcher = evtDisp;
+        this.errorReporter = errRep;
+        this.currentStatus = null;
+        this.stateMachine = null;
+        if (semantics == null) {
+            // Use default semantics, if none provided
+            this.semantics = new SCXMLSemanticsImpl();
+        } else {
+            this.semantics = semantics;
+        }
+        this.currentStatus = null;
+        this.stateMachine = null;
+    }    
 
     /**
      * Clear all state and begin from &quot;initialstate&quot; indicated
@@ -168,7 +191,8 @@ public class SCXMLExecutor {
                 step.getAfterStatus().getStates(),
                 step.getEntryList(), errorReporter);
         // ExecuteActions
-        semantics.executeActions(step, this, errorReporter);
+        semantics.executeActions(step, stateMachine, evaluator, 
+                eventdispatcher, errorReporter);
         // AssignCurrentStatus
         updateStatus(step);
         // Execute Immediate Transitions
