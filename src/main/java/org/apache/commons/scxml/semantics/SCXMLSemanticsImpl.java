@@ -800,7 +800,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * TransitionTargetComparator factory method.
      * @return Comparator The TransitionTarget comparator
      */
-    protected final Comparator getTTComparator() {
+    protected Comparator getTTComparator() {
         return targetComparator;
     }
 
