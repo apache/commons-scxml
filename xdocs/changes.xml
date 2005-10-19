@@ -31,6 +31,71 @@
       </ul>
     </section>
 
+    <release version="beta-1.0-SNAPSHOT-007" date="10-18-2005" description="Pluggable Semantics + UML diagrams">
+      <action dev="rahul" type="update">
+       Decouple SCXML engine from the SCXML execution semantics; make SCXML semantics pluggable.
+      </action>
+      <action dev="rahul" type="add">
+       Added UML state machine diagrams to the usecases section of the website.
+      </action>
+    </release>
+
+    <release version="beta-1.0-SNAPSHOT-006" date="10-14-2005" description="Website and documentation">
+      <action dev="rahul" type="add">
+       Added documentation on usecases to website:
+       <ol>
+        <li>Usecase 1: To configure instances of the RDC group container.</li>
+        <li>Usecase 2: To describe Shale dialogs.</li>
+       </ol>
+      </action>
+      <action dev="rahul" type="add">
+       Added API notes to website:
+       <ol>
+        <li>SCXML digester</li>
+        <li>SCXML engine</li>
+        <li>Firing events on an SCXML engine</li>
+        <li>Standalone testing</li>
+        <li>Fun with EL</li>
+       </ol>       
+      </action>
+      <action dev="rahul" type="add">
+       Updated dependency information to indicate purpose of dependency (core, test, usecases etc.).
+      </action>
+      <action dev="rahul" type="add">
+       Added Commons look and feel (navigation bar) to website.
+      </action>
+    </release>
+
+    <release version="beta-1.0-SNAPSHOT-005" date="10-10-2005" description="Shale dialogs usecase">
+      <action dev="rahul" type="add">
+       Added second usecase for Commons SCXML (within ASF projects).
+       Demonstrated the use of SCXML documents for describing Shale dialogs.
+      </action>
+    </release>
+
+    <release version="beta-1.0-SNAPSHOT-004" date="10-09-2005" description="Exploring JSF-based usecases">
+      <action dev="rahul" type="add">
+       Add a faces package for JSF-based environments (env.faces)
+      </action>
+      <action dev="rahul" type="update">
+       Updated ant build file to include MyFaces dependency (usecases only).
+      </action>
+    </release>
+
+    <release version="beta-1.0-SNAPSHOT-003" date="10-08-2005" description="Out of the box interfaces impls">
+      <action dev="rahul" type="add">
+       <ol>
+        <li>Added simple loggers that implement ErrorHandler, ErrorReporter
+        and SCXMLListener.</li>
+        <li>Added a SimpleContext that wraps a variables (name->value) Map.</li>
+       </ol>
+      </action>
+      <action dev="rahul" type="fix">
+       VariableResolver#resolveVariable() should return null if variable is
+       not found instead of throwing an exception (in ELEvaluator.java)
+      </action>
+    </release>
+
     <release version="beta-1.0-SNAPSHOT-002" date="09-29-2005" description="Distributing the env package">
       <action dev="rahul" type="update">
         The scxml.env package has a new child jsp package, to distribute the current
