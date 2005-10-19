@@ -130,6 +130,8 @@
           </include>
           <include name="org/apache/commons/scxml/model/ModelTestSuite.java">
           </include>
+          <include name="org/apache/commons/scxml/semantics/SemanticsTestSuite.java">
+          </include>
         </fileset>
       </batchtest>
     </junit>
