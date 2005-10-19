@@ -50,12 +50,21 @@
     </ul>
    </subsection>
 
-   <subsection name="Example">
-    <p>To illustrate the use of the SCXML strategy for &lt;rdc:group&gt;,
-    consider a simple air travel information speech dialog, which prompts
-    the user for the trip type (one way or round trip), and collect either
-    one travel date or two depending on the answer.</p>
+  </section>
 
+  <section name="Example">
+   <p>To illustrate the use of the SCXML strategy for &lt;rdc:group&gt;,
+   consider a simple air travel information speech dialog, which prompts
+   the user for the trip type (one way or round trip), and collect either
+   one travel date or two depending on the answer.</p>
+
+   <subsection name="UML Diagram">
+    <p>Here is the
+    <a href="rdc-group/travel-info.jpg">UML state machine diagram</a>
+    that represents this SCXML-based travel information speech dialog.</p>
+   </subsection>
+
+   <subsection name="Code">
     <p>That gives us the following JSP snippet, if named variable
     <code>today</code> contains the <i>MMddyyyy</i> string for the
     current date:</p>

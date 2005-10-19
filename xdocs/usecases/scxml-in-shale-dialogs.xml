@@ -52,7 +52,9 @@
     </ul>
    </subsection>
 
-   <subsection name="Proof of concept">
+  </section>
+
+  <section name="Proof of concept">
     <p>There are two war files below, the first one uses SCXML
     documents to describe the Shale dialogs, and the second
     one is the Shale source distro as-is, built locally
@@ -74,9 +76,17 @@
      nightly build)</li>
     </ul>
     </p>
-  </subsection>
+   
+   <subsection name="UML Diagrams">
+    <p>Here are the UML state machine diagrams for the two dialogs in
+    the usecases examples:</p>
+    <ul>
+     <li><a href="shale-dialogs/log-on-dialog.jpg">Log on dialog</a></li>
+     <li><a href="shale-dialogs/edit-profile-dialog.jpg">Edit Profile dialog</a></li>
+    </ul>
+   </subsection>
 
-  <subsection name="Building">
+   <subsection name="Building">
    <p>For the proof of concept, we delegate the SCXML documents based
    Shale Dialog Management to a 
    &quot;<code>SCXMLDialogNavigationHandler</code>&quot;, instead of
