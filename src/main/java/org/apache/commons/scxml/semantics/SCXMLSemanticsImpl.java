@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.commons.scxml;
+package org.apache.commons.scxml.semantics;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -31,7 +31,16 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.apache.commons.logging.LogFactory;
-
+import org.apache.commons.scxml.Context;
+import org.apache.commons.scxml.ErrorReporter;
+import org.apache.commons.scxml.Evaluator;
+import org.apache.commons.scxml.EventDispatcher;
+import org.apache.commons.scxml.NotificationRegistry;
+import org.apache.commons.scxml.SCXMLExpressionException;
+import org.apache.commons.scxml.SCXMLHelper;
+import org.apache.commons.scxml.SCXMLSemantics;
+import org.apache.commons.scxml.Step;
+import org.apache.commons.scxml.TriggerEvent;
 import org.apache.commons.scxml.model.Action;
 import org.apache.commons.scxml.model.Assign;
 import org.apache.commons.scxml.model.Cancel;
@@ -55,27 +64,14 @@ import org.apache.commons.scxml.model.TransitionTarget;
 import org.apache.commons.scxml.model.Var;
 
 /**
- * This class encapsulates a particular SCXML semantics, that is a particular
- * semantic interpretation of Harel Statecharts. The possible semantic
- * interpretations are for example:
- * <ul>
- * <li>STATEMATE
- * <li>RHAPSODY
- * <li>ROOMCharts
- * <li>UML 1.5
- * <li>UML 2.0
- * </ul>
- * The purpose of this class is to separate the interpretation algorithm from
- * the SCXMLExecutor and make it therefore pluggable. Semantics agnostic utility
- * functions and common operators as defined in UML can be found in the
- * SCXMLHelper or attached directly to the SCXML model elements.
+ * <p>This class encapsulates a particular SCXML semantics, that is, a
+ * particular semantic interpretation of Harel Statecharts, which aligns
+ * mostly with W3C SCXML July 5 public draft (that is, UML 1.5). However,
+ * certain aspects are taken from STATEMATE.</p>
  *
- * Specific semantics can be created by subclassing SCXMLSemantics, the current
- * implementation aligns mostly with W3C SCXML July 5 public draft (that is,
- * UML 1.5) however, certain aspects are taken from STATEMATE.
- *
+ * <p>Specific semantics can be created by subclassing this class.</p>
  */
-public class SCXMLSemantics {
+public class SCXMLSemanticsImpl implements SCXMLSemantics {
 
     /**
      * SCXML Logger for the application.
@@ -86,7 +82,7 @@ public class SCXMLSemantics {
     /**
      * The TransitionTarget comparator.
      */
-    protected TransitionTargetComparator ttc =
+    private TransitionTargetComparator targetComparator =
         new TransitionTargetComparator();
 
     /**
@@ -159,13 +155,12 @@ public class SCXMLSemantics {
      * @see Evaluator
      */
     public void executeActionList(final List actions,
-            final Collection derivedEvents, final SCXMLExecutor exec,
-            final ErrorReporter errRep)
+            final Collection derivedEvents, final Evaluator eval,
+            final EventDispatcher evtDispatcher, final ErrorReporter errRep)
             throws ModelException, SCXMLExpressionException {
         // NOTE: "if" statement is a container - we may need to call this method
         // recursively and pass a sub-list of actions embedded in a particular
         // "if"
-        Evaluator eval = exec.getEvaluator();
         for (Iterator i = actions.iterator(); i.hasNext();) {
             Action a = (Action) i.next();
             State parentState = a.getParentState();
@@ -187,7 +182,7 @@ public class SCXMLSemantics {
                 }
             } else if (a instanceof Cancel) {
                 Cancel cncl = (Cancel) a;
-                exec.getEventdispatcher().cancel(cncl.getSendId());
+                evtDispatcher.cancel(cncl.getSendId());
             } else if (a instanceof Exit) {
                 // Ignore; Exit instance holds other information that might
                 // be needed, and is not transformed at parse time.
@@ -222,7 +217,8 @@ public class SCXMLSemantics {
                     }
                 }
                 if (!todoList.isEmpty()) {
-                    executeActionList(todoList, derivedEvents, exec, errRep);
+                    executeActionList(todoList, derivedEvents, eval,
+                        evtDispatcher, errRep);
                 }
                 todoList.clear();
             } else if (a instanceof Log) {
@@ -251,7 +247,7 @@ public class SCXMLSemantics {
                         params.put(varName, varObj);
                     }
                 }
-                exec.getEventdispatcher().send(snd.getSendId(),
+                evtDispatcher.send(snd.getSendId(),
                         snd.getTarget(), snd.getTargetType(), snd.getEvent(),
                         params, hints, Long.parseLong(snd.getDelay()));
             } else if (a instanceof Var) {
@@ -282,24 +278,24 @@ public class SCXMLSemantics {
      * @throws ModelException
      *             in case there is a fatal SCXML object model problem.
      */
-    public void executeActions(final Step step, final SCXMLExecutor exec,
+    public void executeActions(final Step step, final SCXML stateMachine,
+            final Evaluator eval, final EventDispatcher evtDispatcher,
             final ErrorReporter errRep) throws ModelException {
-        SCXML sm = exec.getStateMachine();
-        NotificationRegistry nr = sm.getNotificationRegistry();
+        NotificationRegistry nr = stateMachine.getNotificationRegistry();
         Collection internalEvents = step.getAfterStatus().getEvents();
         // ExecutePhaseActions / OnExit
         for (Iterator i = step.getExitList().iterator(); i.hasNext();) {
             TransitionTarget tt = (TransitionTarget) i.next();
             OnExit oe = tt.getOnExit();
             try {
-                executeActionList(oe.getActions(), internalEvents, exec,
-                    errRep);
+                executeActionList(oe.getActions(), internalEvents, eval,
+                    evtDispatcher, errRep);
             } catch (SCXMLExpressionException e) {
                 errRep.onError(ErrorReporter.EXPRESSION_ERROR, e.getMessage(),
                         oe);
             }
             nr.fireOnExit(tt, tt);
-            nr.fireOnExit(sm, tt);
+            nr.fireOnExit(stateMachine, tt);
             TriggerEvent te = new TriggerEvent(tt.getId() + ".exit",
                     TriggerEvent.CHANGE_EVENT);
             internalEvents.add(te);
@@ -308,28 +304,28 @@ public class SCXMLSemantics {
         for (Iterator i = step.getTransitList().iterator(); i.hasNext();) {
             Transition t = (Transition) i.next();
             try {
-                executeActionList(t.getActions(), internalEvents, exec,
-                    errRep);
+                executeActionList(t.getActions(), internalEvents, eval,
+                    evtDispatcher, errRep);
             } catch (SCXMLExpressionException e) {
                 errRep.onError(ErrorReporter.EXPRESSION_ERROR, e.getMessage(),
                         t);
             }
             nr.fireOnTransition(t, t.getParent(), t.getRuntimeTarget(), t);
-            nr.fireOnTransition(sm, t.getParent(), t.getRuntimeTarget(), t);
+            nr.fireOnTransition(stateMachine, t.getParent(), t.getRuntimeTarget(), t);
         }
         // ExecutePhaseActions / OnEntry
         for (Iterator i = step.getEntryList().iterator(); i.hasNext();) {
             TransitionTarget tt = (TransitionTarget) i.next();
             OnEntry oe = tt.getOnEntry();
             try {
-                executeActionList(oe.getActions(), internalEvents, exec,
-                    errRep);
+                executeActionList(oe.getActions(), internalEvents, eval,
+                    evtDispatcher, errRep);
             } catch (SCXMLExpressionException e) {
                 errRep.onError(ErrorReporter.EXPRESSION_ERROR, e.getMessage(),
                         oe);
             }
             nr.fireOnEntry(tt, tt);
-            nr.fireOnEntry(sm, tt);
+            nr.fireOnEntry(stateMachine, tt);
             TriggerEvent te = new TriggerEvent(tt.getId() + ".entry",
                     TriggerEvent.CHANGE_EVENT);
             internalEvents.add(te);
@@ -804,8 +800,8 @@ public class SCXMLSemantics {
      * TransitionTargetComparator factory method.
      * @return Comparator The TransitionTarget comparator
      */
-    final Comparator getTTComparator() {
-        return ttc;
+    protected final Comparator getTTComparator() {
+        return targetComparator;
     }
 
 }
