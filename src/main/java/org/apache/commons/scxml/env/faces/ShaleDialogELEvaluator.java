@@ -61,13 +61,13 @@ public class ShaleDialogELEvaluator extends ELEvaluator {
     /**
      * Shale ActionState method parameters.
      *
-     * @see org.apache.shale.dialog.faces.DialogNavigationHandler.PARAMETERS
+     * see: org.apache.shale.dialog.faces.DialogNavigationHandler.PARAMETERS
      */
     private static final Object[] PARAMETERS = new Object[0];
     /**
      * Shale ActionState method signature.
      *
-     * @see org.apache.shale.dialog.faces.DialogNavigationHandler.SIGNATURE
+     * see: org.apache.shale.dialog.faces.DialogNavigationHandler.SIGNATURE
      */
     private static final Class[] SIGNATURE = new Class[0];
 
