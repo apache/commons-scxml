@@ -41,7 +41,7 @@ public class Send extends Action {
      * The type of the Event I/O Processor that the event.
      * should be dispatched to
      */
-    private String targetType;
+    private String targettype;
 
     /**
      * The event is dispatched after the delay interval elapses.
@@ -162,17 +162,17 @@ public class Send extends Action {
     }
 
     /**
-     * @return String Returns the targetType.
+     * @return String Returns the targettype.
      */
-    public final String getTargetType() {
-        return targetType;
+    public final String getTargettype() {
+        return targettype;
     }
 
     /**
-     * @param targetType The targetType to set.
+     * @param targettype The targettype to set.
      */
-    public final void setTargetType(final String targetType) {
-        this.targetType = targetType;
+    public final void setTargettype(final String targettype) {
+        this.targettype = targettype;
     }
 
     /**

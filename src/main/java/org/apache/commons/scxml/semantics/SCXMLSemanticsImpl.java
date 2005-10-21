@@ -250,7 +250,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                     }
                 }
                 evtDispatcher.send(snd.getSendid(),
-                        snd.getTarget(), snd.getTargetType(), snd.getEvent(),
+                        snd.getTarget(), snd.getTargettype(), snd.getEvent(),
                         params, hints, Long.parseLong(snd.getDelay()));
             } else if (a instanceof Var) {
                 Var vr = (Var) a;

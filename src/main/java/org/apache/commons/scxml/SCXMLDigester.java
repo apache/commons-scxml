@@ -58,15 +58,15 @@ import org.xml.sax.Attributes;
 import org.xml.sax.ErrorHandler;
 
 /**
- * The SCXMLDigester provides the ability to digest a SCXML document into the
- * Java object model provided in the model package.
- * <br>
- * The SCXMLDigester can be used for:
- * a) Digest a SCXML file placed in a web application context <br>
- * b) Obtain a Digester instance configured with rules for SCXML digestion <br>
- * c) Serialize an SCXML object (primarily for debugging) <br>
+ * <p>The SCXMLDigester provides the ability to digest a SCXML document into
+ * the Java object model provided in the model package.</p>
+ * <p>The SCXMLDigester can be used for:</p>
+ * <ol>
+ *  <li>Digest a SCXML file into the Commons SCXML Java object model.</li>
+ *  <li>Serialize an SCXML object (primarily for debugging).</li>
+ * </ol>
  */
-public class SCXMLDigester {
+public final class SCXMLDigester {
 
     //---------------------- PUBLIC METHODS ----------------------//
     /**
@@ -665,7 +665,9 @@ public class SCXMLDigester {
         String initialstate = scxml.getInitialstate();
         //we have to use getTargets() here since the initialState can be
         //an indirect descendant
-        //TODO: better type check, now ClassCastException happens for Parallel
+        // Concern marked by one of the code reviewers: better type check,
+        //            now ClassCastException happens for Parallel
+        // Response: initial should be a State, for Parallel, it is implicit
         State initialState = (State) scxml.getTargets().get(initialstate);
         if (initialState == null) {
             // Where do we, where do we go?
@@ -708,10 +710,9 @@ public class SCXMLDigester {
         }
         s.setContext(localCtx);
         //ensure both onEntry and onExit have parent
-        //TODO: add this rather as a Digester rule for OnEntry/OnExit
+        //could add next two lines as a Digester rule for OnEntry/OnExit
         s.getOnEntry().setParent(s);
         s.getOnExit().setParent(s);
-        //ENDTODO
         //initialize next / inital
         Initial ini = s.getInitial();
         Map c = s.getChildren();
@@ -761,10 +762,9 @@ public class SCXMLDigester {
             Iterator j = ((List) t.get(i.next())).iterator();
             while (j.hasNext()) {
                 Transition trn = (Transition) j.next();
-                // TODO: add this rather as a Digester rule for Transition
+                //could add next two lines as a Digester rule for Transition
                 trn.setNotificationRegistry(s.getNotificationRegistry());
                 trn.setParent(s);
-                // ENDTODO
                 updateTransition(trn, targets);
             }
         }
@@ -809,8 +809,8 @@ public class SCXMLDigester {
         if (tt == null) {
             tt = (TransitionTarget) targets.get(next);
             if (tt == null) {
-                // TODO: Move Digester warnings to errors
-                System.err.println("WARNING: SCXMLDigester - Transition "
+                // Could move Digester warnings to errors
+                log.warn("WARNING: SCXMLDigester - Transition "
                         + "target \"" + next + "\" not found");
             }
             t.setTarget(tt);
@@ -1060,7 +1060,6 @@ public class SCXMLDigester {
         Iterator i = l.iterator();
         while (i.hasNext()) {
             Action a = (Action) i.next();
-            // TODO - Serialize action attrs, bodies; Priority: Very low ;-)
             if (a instanceof Var) {
                 Var v = (Var) a;
                 b.append(indent).append("<var name=\"").append(v.getName())
@@ -1069,16 +1068,22 @@ public class SCXMLDigester {
             } else if (a instanceof Assign) {
                 Assign asn = (Assign) a;
                 b.append(indent).append("<assign name=\"")
-                        .append(asn.getName()).append("\" expr=\"").append(
-                                asn.getExpr()).append("\"/>\n");
+                        .append(asn.getName()).append("\" expr=\"")
+                        .append(asn.getExpr()).append("\"/>\n");
             } else if (a instanceof Send) {
                 Send s = (Send) a;
-                b.append(indent).append("<send sendid=\"").
-                    append(s.getSendid()).append("\"/>\n");
+                b.append(indent).append("<send sendid=\"")
+                    .append(s.getSendid()).append("\" target=\"")
+                    .append(s.getTarget()).append("\" targetType=\"")
+                    .append(s.getTargettype()).append("\" namelist=\"")
+                    .append(s.getNamelist()).append("\" delay=\"")
+                    .append(s.getDelay()).append("\" events=\"")
+                    .append(s.getEvent()).append("\" hints=\"")
+                    .append(s.getHints()).append("\"/>\n");
             } else if (a instanceof Cancel) {
                 Cancel c = (Cancel) a;
-                b.append(indent).append("<cancel sendid=\"").
-                    append(c.getSendid()).append("\"/>\n");
+                b.append(indent).append("<cancel sendid=\"")
+                    .append(c.getSendid()).append("\"/>\n");
             } else if (a instanceof Log) {
                 Log lg = (Log) a;
                 b.append(indent).append("<log expr=\"").append(lg.getExpr())
