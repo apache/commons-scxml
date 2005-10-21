@@ -51,7 +51,7 @@ public class TriggerEventTest extends TestCase {
     public void setUp() {
         payloadData = new HashMap();
         payloadData.put("property1", "value1");
-        payload1 = (Object) payloadData;
+        payload1 = payloadData;
         payload2 = new Object();
         te1 = new TriggerEvent("name1", TriggerEvent.CHANGE_EVENT, payload1);
         te2 = new TriggerEvent("name1", TriggerEvent.CHANGE_EVENT, payload1);

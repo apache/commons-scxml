@@ -46,6 +46,9 @@ import org.apache.commons.scxml.model.SCXML;
 public interface SCXMLSemantics {
 
     /**
+     * Optional post processing immediately following Digester. May be used
+     * for removing pseudo-states etc.
+     *
      * @param input
      *            SCXML state machine
      * @return normalized SCXML state machine, pseudo states are removed, etc.
@@ -55,14 +58,16 @@ public interface SCXMLSemantics {
     SCXML normalizeStateMachine(final SCXML input, final ErrorReporter errRep);
 
     /**
+     * Determining the initial state(s) for this state machine.
+     *
      * @param input
-     *            SCXML state machine [in]
+     *            SCXML state machine
      * @param states
-     *            a set of States to populate [out]
+     *            a set of States to populate
      * @param entryList
-     *            a list of States and Parallels to enter [out]
+     *            a list of States and Parallels to enter
      * @param errRep
-     *            ErrorReporter callback [inout]
+     *            ErrorReporter callback
      * @throws ModelException
      *             in case there is a fatal SCXML object model problem.
      */
@@ -71,15 +76,19 @@ public interface SCXMLSemantics {
     throws ModelException;
 
     /**
-     * Exectutes all OnExit/Transition/OnEntry transitional actions.
+     * Executes all OnExit/Transition/OnEntry transitional actions.
      *
      * @param step
-     *            [inout] provides EntryList, TransitList, ExitList gets
+     *            provides EntryList, TransitList, ExitList gets
      *            updated its AfterStatus/Events
-     * @param exec
-     *            [inout] execution environment - SCXMLExecutor instance
+     * @param stateMachine
+     *            state machine - SCXML instance
+     * @param eval
+     *            the expression evaluator - Evaluator instance
+     * @param evtDispatcher
+     *            the event dispatcher - EventDispatcher instance
      * @param errRep
-     *            [out[ error reporter
+     *            error reporter
      * @throws ModelException
      *             in case there is a fatal SCXML object model problem.
      */
@@ -89,24 +98,28 @@ public interface SCXMLSemantics {
     throws ModelException;
 
     /**
+     * Enumerate all the reachable transitions.
+     *
      * @param stateMachine
-     *            a SM to traverse [in]
+     *            a state machine to traverse
      * @param step
      *            with current status and list of transitions to populate
-     *            [inout]
      * @param errRep
-     *            ErrorReporter callback [inout]
+     *            ErrorReporter callback
      */
     void enumerateReachableTransitions(final SCXML stateMachine,
             final Step step, final ErrorReporter errRep);
 
     /**
+     * Filter the transitions set, eliminate those whose guard conditions
+     * are not satisfied.
+     *
      * @param step
-     *            [inout]
+     *            with current status
      * @param evaluator
      *            guard condition evaluator
      * @param errRep
-     *            ErrorReporter callback [inout]
+     *            ErrorReporter callback
      */
     void filterTransitionsSet(final Step step, final Evaluator evaluator,
             final ErrorReporter errRep);
@@ -129,11 +142,10 @@ public interface SCXMLSemantics {
      * relevant states.
      *
      * @param step
-     *            [inout]
+     *            The current Step
      * @param errRep
-     *            ErrorReporter callback [inout]
+     *            ErrorReporter callback
      */
     void updateHistoryStates(final Step step, final ErrorReporter errRep);
 
 }
-

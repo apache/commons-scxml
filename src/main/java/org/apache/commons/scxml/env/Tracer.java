@@ -17,9 +17,6 @@
  */
 package org.apache.commons.scxml.env;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import org.apache.commons.scxml.ErrorReporter;
 import org.apache.commons.scxml.SCXMLListener;
 import org.apache.commons.scxml.model.Transition;
@@ -35,15 +32,12 @@ import org.xml.sax.SAXParseException;
  */
 public class Tracer implements ErrorHandler, ErrorReporter, SCXMLListener {
 
-    /** A Logger for the Tracer. */
-    private static Log log = LogFactory.getLog(Tracer.class);
-
     /** ErrorHandler delegate. */
-    ErrorHandler errHandler;
+    private ErrorHandler errHandler;
     /** ErrorReporter delegate. */
-    ErrorReporter errReporter;
+    private ErrorReporter errReporter;
     /** SCXMLListener delegate. */
-    SCXMLListener scxmlListener;
+    private SCXMLListener scxmlListener;
 
     /**
      * Constructor.

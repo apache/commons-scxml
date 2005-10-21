@@ -857,7 +857,7 @@ public class SCXMLDigester {
         if (h != null) {
             serializeHistory(b, h, indent + INDENT);
         }
-        serializeOnEntry(b, (TransitionTarget) s, indent + INDENT);
+        serializeOnEntry(b, s, indent + INDENT);
         Map t = s.getTransitions();
         Iterator i = t.keySet().iterator();
         while (i.hasNext()) {
@@ -878,7 +878,7 @@ public class SCXMLDigester {
                 serializeState(b, cs, indent + INDENT);
             }
         }
-        serializeOnExit(b, (TransitionTarget) s, indent + INDENT);
+        serializeOnExit(b, s, indent + INDENT);
         b.append(indent).append("</state>\n");
     }
 
@@ -894,13 +894,13 @@ public class SCXMLDigester {
         b.append(indent).append("<parallel");
         serializeTransitionTargetAttributes(b, p);
         b.append(">\n");
-        serializeOnEntry(b, (TransitionTarget) p, indent + INDENT);
+        serializeOnEntry(b, p, indent + INDENT);
         Set s = p.getStates();
         Iterator i = s.iterator();
         while (i.hasNext()) {
             serializeState(b, (State) i.next(), indent + INDENT);
         }
-        serializeOnExit(b, (TransitionTarget) p, indent + INDENT);
+        serializeOnExit(b, p, indent + INDENT);
         b.append(indent).append("</parallel>\n");
     }
 
@@ -1073,10 +1073,12 @@ public class SCXMLDigester {
                                 asn.getExpr()).append("\"/>\n");
             } else if (a instanceof Send) {
                 Send s = (Send) a;
-                b.append(indent).append("<send/>\n");
+                b.append(indent).append("<send sendid=\"").
+                    append(s.getSendid()).append("\"/>\n");
             } else if (a instanceof Cancel) {
                 Cancel c = (Cancel) a;
-                b.append(indent).append("<cancel/>\n");
+                b.append(indent).append("<cancel sendid=\"").
+                    append(c.getSendid()).append("\"/>\n");
             } else if (a instanceof Log) {
                 Log lg = (Log) a;
                 b.append(indent).append("<log expr=\"").append(lg.getExpr())
@@ -1098,7 +1100,6 @@ public class SCXMLDigester {
                 If iff = (If) a;
                 serializeIf(b, iff, indent);
             } else if (a instanceof Else) {
-                Else el = (Else) a;
                 b.append(indent).append("<else/>\n");
             } else if (a instanceof ElseIf) {
                 ElseIf eif = (ElseIf) a;
@@ -1189,7 +1190,7 @@ public class SCXMLDigester {
         public final void end(final String namespace, final String name) {
             Action child = (Action) getDigester().peek();
             for (int i = 1; i < getDigester().getCount() - 1; i++) {
-                Object ancestor = (Object) getDigester().peek(i);
+                Object ancestor = getDigester().peek(i);
                 if (ancestor instanceof Executable) {
                     child.setParent((Executable) ancestor);
                     return;

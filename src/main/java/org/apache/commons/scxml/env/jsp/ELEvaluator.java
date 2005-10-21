@@ -42,9 +42,9 @@ import org.apache.commons.scxml.model.TransitionTarget;
 public class ELEvaluator implements Evaluator {
 
     /** Implementation independent log category. */
-    protected static Log log = LogFactory.getLog(Evaluator.class);
+    protected static final Log LOG = LogFactory.getLog(Evaluator.class);
     /** Function Mapper for SCXML expressions. */
-    protected FunctionMapper fm = new FunctWrapper();
+    private FunctionMapper functionMapper = new FunctWrapper();
     /** Pattern for recognizing the SCXML In() special predicate. */
     private static Pattern inFct = Pattern.compile("In\\(");
 
@@ -78,9 +78,10 @@ public class ELEvaluator implements Evaluator {
         try {
             String evalExpr = inFct.matcher(expr).
                 replaceAll("In(_ALL_STATES, ");
-            Object rslt = ee.evaluate(evalExpr, Object.class, vr, fm);
-            if (log.isTraceEnabled()) {
-                log.trace(expr + " = " + String.valueOf(rslt));
+            Object rslt = ee.evaluate(evalExpr, Object.class, vr,
+                functionMapper);
+            if (LOG.isTraceEnabled()) {
+                LOG.trace(expr + " = " + String.valueOf(rslt));
             }
             return rslt;
         } catch (ELException e) {
@@ -120,9 +121,9 @@ public class ELEvaluator implements Evaluator {
             String evalExpr = inFct.matcher(expr).
                 replaceAll("In(_ALL_STATES, ");
             Boolean rslt = (Boolean) ee.evaluate(evalExpr, Boolean.class,
-                vr, fm);
-            if (log.isDebugEnabled()) {
-                log.debug(expr + " = " + String.valueOf(rslt));
+                vr, functionMapper);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(expr + " = " + String.valueOf(rslt));
             }
             return rslt;
         } catch (ELException e) {
@@ -147,7 +148,7 @@ public class ELEvaluator implements Evaluator {
         public Object resolveVariable(final String pName) throws ELException {
             Object rslt = ctx.get(pName);
             if (rslt == null) {
-                log.info("Variable \"" + pName + "\" does not exist!");
+                LOG.info("Variable \"" + pName + "\" does not exist!");
             }
             return rslt;
         }
@@ -168,9 +169,9 @@ public class ELEvaluator implements Evaluator {
                 try {
                     return ELEvaluator.class.getMethod("isMember", attrs);
                 } catch (SecurityException e) {
-                    log.error("resolving isMember(Set, String)", e);
+                    LOG.error("resolving isMember(Set, String)", e);
                 } catch (NoSuchMethodException e) {
-                    log.error("resolving isMember(Set, String)", e);
+                    LOG.error("resolving isMember(Set, String)", e);
                 }
             }
             return null;
@@ -194,6 +195,15 @@ public class ELEvaluator implements Evaluator {
             }
         }
         return false;
+    }
+
+    /**
+     * Get the FunctionMapper.
+     *
+     * @return functionMapper The FunctionMapper
+     */
+    protected FunctionMapper getFunctionMapper() {
+        return functionMapper;
     }
 
 }

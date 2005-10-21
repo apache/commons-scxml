@@ -81,7 +81,7 @@ public final class SCXMLHelper {
      */
     public static Set getAncestorClosure(final Set states,
             final Set upperBounds) {
-        Set closure = new HashSet((int) (states.size() * 2));
+        Set closure = new HashSet(states.size() * 2);
         for (Iterator i = states.iterator(); i.hasNext();) {
             TransitionTarget tt = (TransitionTarget) i.next();
             closure.add(tt);

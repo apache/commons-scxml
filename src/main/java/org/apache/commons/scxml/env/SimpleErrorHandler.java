@@ -47,7 +47,7 @@ public class SimpleErrorHandler implements ErrorHandler {
     /**
      * @see ErrorHandler#error(SAXParseException)
      */
-    public void error(SAXParseException exception) {
+    public void error(final SAXParseException exception) {
         if (log.isErrorEnabled()) {
             log.error(MSG_PREFIX + exception.getMessage() + MSG_POSTFIX,
                 exception);
@@ -57,7 +57,7 @@ public class SimpleErrorHandler implements ErrorHandler {
     /**
      * @see ErrorHandler#fatalError(SAXParseException)
      */
-    public void fatalError(SAXParseException exception) {
+    public void fatalError(final SAXParseException exception) {
         if (log.isFatalEnabled()) {
             log.fatal(MSG_PREFIX + exception.getMessage() + MSG_POSTFIX,
                 exception);
@@ -67,7 +67,7 @@ public class SimpleErrorHandler implements ErrorHandler {
     /**
      * @see ErrorHandler#warning(SAXParseException)
      */
-    public void warning(SAXParseException exception) {
+    public void warning(final SAXParseException exception) {
         if (log.isWarnEnabled()) {
             log.warn(MSG_PREFIX + exception.getMessage() + MSG_POSTFIX,
                 exception);

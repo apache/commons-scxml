@@ -34,24 +34,24 @@ public final class Cancel extends Action {
     /**
      * The ID of the send message that should be cancelled.
      */
-    private String sendId;
+    private String sendid;
 
     /**
      * Get the ID of the send message that should be cancelled.
      *
-     * @return Returns the sendId.
+     * @return Returns the sendid.
      */
-    public String getSendId() {
-        return sendId;
+    public String getSendid() {
+        return sendid;
     }
 
     /**
      * Set the ID of the send message that should be cancelled.
      *
-     * @param sendId The sendId to set.
+     * @param sendid The sendid to set.
      */
-    public void setSendId(final String sendId) {
-        this.sendId = sendId;
+    public void setSendid(final String sendid) {
+        this.sendid = sendid;
     }
 
 }

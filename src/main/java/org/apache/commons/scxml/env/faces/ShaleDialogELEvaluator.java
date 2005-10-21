@@ -26,7 +26,6 @@ import javax.faces.el.MethodNotFoundException;
 import javax.faces.el.ReferenceSyntaxException;
 
 import org.apache.commons.scxml.Context;
-import org.apache.commons.scxml.Evaluator;
 import org.apache.commons.scxml.SCXMLExpressionException;
 import org.apache.commons.scxml.env.jsp.ELEvaluator;
 
@@ -84,6 +83,7 @@ public class ShaleDialogELEvaluator extends ELEvaluator {
      */
     public ShaleDialogELEvaluator() {
         super();
+        this.context = null;
     }
 
     /**
@@ -102,7 +102,7 @@ public class ShaleDialogELEvaluator extends ELEvaluator {
      * @param expr expression
      * @return Object The result of the evaluation
      * @throws SCXMLExpressionException For a malformed expression
-     * @see Evaluator#eval(Context, String)
+     * @see ELEvaluator#eval(Context, String)
      */
     public Object eval(final Context ctx, final String expr)
     throws SCXMLExpressionException {

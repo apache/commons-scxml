@@ -27,7 +27,7 @@ import org.apache.commons.scxml.model.TransitionTarget;
  * Helper methods for Commons SCXML logging.
  *
  */
-public class LogUtils {
+public final class LogUtils {
 
     /**
      * Create a human readable log view of this transition.
@@ -75,5 +75,11 @@ public class LogUtils {
         }
     }
 
-}
+    /**
+     * Discourage instantiation since this is a utility class.
+     */
+    private LogUtils() {
+        super();
+    }
 
+}

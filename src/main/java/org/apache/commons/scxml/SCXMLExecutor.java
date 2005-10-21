@@ -137,17 +137,18 @@ public class SCXMLExecutor {
     public SCXMLExecutor() {
         this(null, null, null, null);
     }
-    
+
     /**
      * Constructor.
      *
      * @param expEvaluator The expression evaluator
      * @param evtDisp The event dispatcher
      * @param errRep The error reporter
+     * @param semantics The SCXML semantics
      */
     public SCXMLExecutor(final Evaluator expEvaluator,
             final EventDispatcher evtDisp, final ErrorReporter errRep,
-            final SCXMLSemanticsImpl semantics) {
+            final SCXMLSemantics semantics) {
         this.evaluator = expEvaluator;
         this.eventdispatcher = evtDisp;
         this.errorReporter = errRep;
@@ -161,7 +162,7 @@ public class SCXMLExecutor {
         }
         this.currentStatus = null;
         this.stateMachine = null;
-    }    
+    }
 
     /**
      * Clear all state and begin from &quot;initialstate&quot; indicated
@@ -191,7 +192,7 @@ public class SCXMLExecutor {
                 step.getAfterStatus().getStates(),
                 step.getEntryList(), errorReporter);
         // ExecuteActions
-        semantics.executeActions(step, stateMachine, evaluator, 
+        semantics.executeActions(step, stateMachine, evaluator,
                 eventdispatcher, errorReporter);
         // AssignCurrentStatus
         updateStatus(step);

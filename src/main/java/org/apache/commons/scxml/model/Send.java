@@ -30,7 +30,7 @@ public class Send extends Action {
     /**
      * The ID of the send message.
      */
-    private String sendId;
+    private String sendid;
 
     /**
      * An expression returning the target location of the event.
@@ -134,17 +134,17 @@ public class Send extends Action {
     }
 
     /**
-     * @return String Returns the sendId.
+     * @return String Returns the sendid.
      */
-    public final String getSendId() {
-        return sendId;
+    public final String getSendid() {
+        return sendid;
     }
 
     /**
-     * @param sendId The sendId to set.
+     * @param sendid The sendid to set.
      */
-    public final void setSendId(final String sendId) {
-        this.sendId = sendId;
+    public final void setSendid(final String sendid) {
+        this.sendid = sendid;
     }
 
     /**

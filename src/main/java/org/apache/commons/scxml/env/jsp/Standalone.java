@@ -106,13 +106,13 @@ public final class Standalone {
                     String name = event.substring(0, marker);
                     String value = event.substring(marker + 1);
                     rootCtx.setLocal(name, value);
-                    System.out.println("Set variable " + name + " to " +
-                        value);
+                    System.out.println("Set variable " + name + " to "
+                        + value);
                 } else if (SCXMLHelper.isStringEmpty(event)
                            || event.equalsIgnoreCase("null")) {
-                    TriggerEvent[] evts = { new TriggerEvent(null,
-                    TriggerEvent.SIGNAL_EVENT, null) };
-                        exec.triggerEvents(evts);
+                    TriggerEvent[] evts = {new TriggerEvent(null,
+                        TriggerEvent.SIGNAL_EVENT, null)};
+                    exec.triggerEvents(evts);
                     if (exec.getCurrentStatus().isFinal()) {
                         System.out.println("A final configuration reached.");
                     }

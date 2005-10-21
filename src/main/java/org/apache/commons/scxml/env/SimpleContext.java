@@ -34,9 +34,9 @@ public class SimpleContext implements Context {
     /** Implementation independent log category. */
     protected static final Log LOG = LogFactory.getLog(Context.class);
     /** The parent Context to this Context. */
-    protected Context parent;
+    private Context parent;
     /** The Map of variables and their values in this Context. */
-    protected Map vars;
+    private Map vars;
 
     /**
      * Constructor.
@@ -71,8 +71,11 @@ public class SimpleContext implements Context {
      */
     public SimpleContext(final Context parent, final Map initialVars) {
         this.parent = parent;
-        this.vars =
-            (initialVars == null) ? new HashMap() : initialVars;
+        if (initialVars == null) {
+            this.vars = new HashMap();
+        } else {
+            this.vars = initialVars;
+        }
     }
 
     /**
@@ -170,6 +173,15 @@ public class SimpleContext implements Context {
         if (LOG.isDebugEnabled() && !name.equals("_ALL_STATES")) {
             LOG.debug(name + " = " + String.valueOf(value));
         }
+    }
+
+    /**
+     * Get the variables map.
+     *
+     * @return Returns the vars.
+     */
+    protected Map getVars() {
+        return vars;
     }
 
 }
