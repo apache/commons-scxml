@@ -14,7 +14,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<scxml xmlns="http://www.w3.org/2005/01/SCXML" version="1.0"  
+<scxml xmlns="http://www.w3.org/2005/07/SCXML" version="1.0"  
        initialstate="oven"> 
 
   <!--  trivial microwave oven example -->
@@ -49,9 +49,9 @@
             <if cond="${empty cook_time}">
               <!-- default setting -->
               <var name="cook_time" expr="${5}"/>
-              <!-- timer variable -->
-              <var name="timer" expr="${0}"/>
             </if>
+            <!-- timer variable -->
+            <var name="timer" expr="${0}"/>
           </onentry>
           
           <transition event="turn_off">
@@ -77,11 +77,6 @@
               <target next="cooking"/>
             </transition>
           </state>
-
-          <onexit>
-            <!-- reset timer -->
-            <assign name="timer" expr="${0}"/>
-          </onexit>
         </state>
       </state>
 

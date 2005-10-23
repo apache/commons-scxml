@@ -84,15 +84,15 @@ public final class SCXMLHelper {
         Set closure = new HashSet(states.size() * 2);
         for (Iterator i = states.iterator(); i.hasNext();) {
             TransitionTarget tt = (TransitionTarget) i.next();
-            closure.add(tt);
-            while ((tt = tt.getParent()) != null) {
+            while (tt != null) {
+                if (!closure.add(tt)) {
+                    //tt is already a part of the closure
+                    break;
+                }
                 if (upperBounds != null && upperBounds.contains(tt)) {
                     break;
                 }
-                if (!closure.add(tt)) {
-                    //parent is already a part of the closure
-                    break;
-                }
+                tt = tt.getParent();
             }
         }
         return closure;

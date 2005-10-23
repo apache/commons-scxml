@@ -39,7 +39,7 @@ public class SCXML implements Observable {
     /**
      * The SCXML XMLNS.
      */
-    public static final String XMLNS = "http://www.w3.org/2005/01/SCXML";
+    public static final String XMLNS = "http://www.w3.org/2005/07/SCXML";
 
     /**
      * The xmlns attribute on the root &lt;smxml&gt; element.
