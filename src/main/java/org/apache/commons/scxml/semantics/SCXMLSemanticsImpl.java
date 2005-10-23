@@ -775,8 +775,12 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
         for (Iterator i = transitions.iterator(); i.hasNext();) {
             Transition t = (Transition) i.next();
             entered.addAll(t.getPath().getDownwardSegment());
+            // If target is a History pseudo state, remove from entered list
+            if (t.getRuntimeTarget() instanceof History) {
+                entered.remove(t.getRuntimeTarget());
+            }
         }
-        // Chech whether the computed state config is legal
+        // Check whether the computed state config is legal
         targetSet.addAll(residual);
         residual.clear();
         if (!SCXMLHelper.isLegalConfig(targetSet, errorReporter)) {
