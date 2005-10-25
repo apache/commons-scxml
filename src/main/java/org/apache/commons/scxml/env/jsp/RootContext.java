@@ -31,7 +31,7 @@ import javax.servlet.jsp.el.VariableResolver;
 public final class RootContext extends ELContext {
 
     /** Host JSP's VariableResolver. */
-    private VariableResolver vr;
+    private VariableResolver variableResolver;
     /** Bark if JSP Context is null. */
     private static final String ERR_HOST_JSP_CTX_NULL =
         "Host JSP Context cannot be null";
@@ -48,7 +48,7 @@ public final class RootContext extends ELContext {
             throw new IllegalArgumentException(ERR_HOST_JSP_CTX_NULL);
         } else {
           // only retain the VariableResolver
-          this.vr = ctx.getVariableResolver();
+          this.variableResolver = ctx.getVariableResolver();
         }
     }
 
@@ -63,7 +63,7 @@ public final class RootContext extends ELContext {
         Object value = super.get(name);
         if (value == null) {
             try {
-                value = vr.resolveVariable(name);
+                value = variableResolver.resolveVariable(name);
             } catch (ELException ele) {
                 LOG.error(ele.getMessage(), ele);
             }
@@ -83,7 +83,7 @@ public final class RootContext extends ELContext {
         Object value = null;
         if (!exists) {
             try {
-                value = vr.resolveVariable(name);
+                value = variableResolver.resolveVariable(name);
             } catch (ELException ele) {
                 LOG.error(ele.getMessage(), ele);
             }
@@ -103,6 +103,24 @@ public final class RootContext extends ELContext {
         // The reason why this method body exists is to emphasize that
         // read-only (JSP) variables are not included in the Iterator
         return super.iterator();
+    }
+
+    /**
+     * Get the VariableResolver associated with this root context.
+     *
+     * @return Returns the variableResolver.
+     */
+    public VariableResolver getVariableResolver() {
+        return variableResolver;
+    }
+
+    /**
+     * Set the VariableResolver associated with this root context.
+     *
+     * @param variableResolver The variableResolver to set.
+     */
+    public void setVariableResolver(final VariableResolver variableResolver) {
+        this.variableResolver = variableResolver;
     }
 
 }
