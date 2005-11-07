@@ -39,7 +39,8 @@
    numbers for the Commons dependencies.</i>
    </p>
 
-   <p>So that amounts to:</p>
+   <p>So that amounts to (use the correct local paths and filenames to the
+   <code>jar</code> files and the SCXML document, without the line breaks):</p>
 
    <pre>
    java -classpath
@@ -53,10 +54,9 @@
    microwave01.xml
    </pre>
 
-   <p>with the correct local paths to the <code>jar</code> files and the XML
-   (SCXML) document (and without the line breaks). You could set up something
-   more elegant (a script, an ant task etc.), but that is what it boils down 
-   to. If the document is a well-formed SCXML document, you will be able to 
+   <p>You could set up something more elegant (a script, an ant task etc.),
+   but that is what it boils down to.
+   If the document is a well-formed SCXML document, you will be able to 
    type ? or help at the console and you can follow the directions thereafter 
    (to simulate events, set variable values, reset the state machine or quit).
    </p>
