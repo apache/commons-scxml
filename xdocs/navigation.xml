@@ -20,6 +20,9 @@
   <body>
     <menu         name="Commons SCXML Resources">
 
+      <item       name="Building"                      
+                  href="/building.html" />
+
       <item       name="Usecases"                      
                   href="/usecases.html"
               collapse="true">
