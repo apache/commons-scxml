@@ -79,6 +79,21 @@
   </p>
  </section>
 
+ <section name="Support">
+  <p>
+   The <a href="mail-lists.html">commons mailing lists</a> act as the main support forum.
+   The user list is suitable for most library usage queries.
+   The dev list is intended for the development discussion.
+   Please remember that the lists are shared between all commons components,
+   so prefix your email by [SCXML].
+  </p>
+  <p>
+   Issues may be reported via <a href="issue-tracking.html">ASF Bugzilla</a>.
+   Please remember that Bugzilla is shared between all commons components,
+   so prefix your issue by [SCXML].
+  </p>
+ </section>
+
  </body>
 
 </document>
