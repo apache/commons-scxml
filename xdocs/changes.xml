@@ -31,6 +31,12 @@
       </ul>
     </section>
 
+    <release version="beta-1.0-SNAPSHOT-008" date="11-17-2005" description="Site update">
+      <action dev="rahul" type="update">
+       Site overhaul according to recent discussions on the commons-dev mailing list.
+      </action>
+    </release>
+
     <release version="beta-1.0-SNAPSHOT-007" date="10-18-2005" description="Pluggable Semantics + UML diagrams">
       <action dev="rahul" type="update">
        Decouple SCXML engine from the SCXML execution semantics; make SCXML semantics pluggable.
