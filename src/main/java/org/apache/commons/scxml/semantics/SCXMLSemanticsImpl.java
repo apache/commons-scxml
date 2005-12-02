@@ -249,9 +249,19 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                         params.put(varName, varObj);
                     }
                 }
+                String delay = snd.getDelay();
+                long wait = 0L;
+                if (delay != null && delay.length() > 0) {
+                    try {
+                        wait = Long.parseLong(delay.trim());
+                    } catch (NumberFormatException nfe) {
+                        APP_LOG.warn("Could not parse delay for <send>, "
+                            + "it will be treated as immediate", nfe);
+                    }
+                }
                 evtDispatcher.send(snd.getSendid(),
                         snd.getTarget(), snd.getTargettype(), snd.getEvent(),
-                        params, hints, Long.parseLong(snd.getDelay()));
+                        params, hints, wait);
             } else if (a instanceof Var) {
                 Var vr = (Var) a;
                 String varName = vr.getName();
