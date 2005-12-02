@@ -56,6 +56,7 @@ import org.apache.commons.scxml.model.Var;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
 
 /**
  * <p>The SCXMLDigester provides the ability to digest a SCXML document into
@@ -70,7 +71,7 @@ public final class SCXMLDigester {
 
     //---------------------- PUBLIC METHODS ----------------------//
     /**
-     * API for standalone usage where the SCXML document is a URL.
+     * <p>API for standalone usage where the SCXML document is a URL.</p>
      *
      * @param scxmlURL
      *            a canonical absolute URL to parse (relative URLs within the
@@ -120,14 +121,14 @@ public final class SCXMLDigester {
     }
 
     /**
-     * API for standalone usage where the SCXML document is a URI.
-     * A PathResolver must be provided.
+     * <p>API for standalone usage where the SCXML document is a URI.
+     * A PathResolver must be provided.</p>
      *
      * @param pathResolver
      *            The PathResolver for this context
      * @param documentRealPath
      *            The String pointing to the absolute (real) path of the
-     *               SCXML config
+     *            SCXML document
      * @param errHandler
      *            The SAX ErrorHandler
      * @param evalCtx
@@ -161,6 +162,57 @@ public final class SCXMLDigester {
                 documentRealPath, e.getMessage()
             });
             log.error(errMsg, e);
+        }
+
+        if (scxml != null) {
+            updateSCXML(scxml, evalCtx, evalEngine);
+        }
+
+        return scxml;
+
+    }
+
+    /**
+     * <p>API for standalone usage where the SCXML document is an
+     * InputSource. This method may be used when the SCXML document is
+     * packaged in a Java archive, or part of a compound document
+     * where the SCXML root is available as a
+     * <code>org.w3c.dom.Element</code> or via a <code>java.io.Reader</code>.
+     * </p>
+     *
+     * <p><em>Note:</em> Since there is no path resolution, the SCXML document
+     * must not have external state sources.</p>
+     *
+     * @param documentInputSource
+     *            The InputSource for the SCXML document
+     * @param errHandler
+     *            The SAX ErrorHandler
+     * @param evalCtx
+     *            the document-level variable context for guard condition
+     *            evaluation
+     * @param evalEngine
+     *            the scripting/expression language engine for creating local
+     *            state-level variable contexts (if supported by a given
+     *            scripting engine)
+     *
+     * @return SCXML The SCXML object corresponding to the file argument
+     *
+     * @see Context
+     * @see ErrorHandler
+     * @see Evaluator
+     */
+    public static SCXML digest(final InputSource documentInputSource,
+            final ErrorHandler errHandler, final Context evalCtx,
+            final Evaluator evalEngine) {
+
+        Digester scxmlDigester = SCXMLDigester.newInstance(null, null);
+        scxmlDigester.setErrorHandler(errHandler);
+
+        SCXML scxml = null;
+        try {
+            scxml = (SCXML) scxmlDigester.parse(documentInputSource);
+        } catch (Exception e) {
+            log.error("Could not parse SCXML", e);
         }
 
         if (scxml != null) {
