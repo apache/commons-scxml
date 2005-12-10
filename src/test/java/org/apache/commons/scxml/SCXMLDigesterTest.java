@@ -16,6 +16,7 @@
 package org.apache.commons.scxml;
 
 import java.net.URL;
+import java.util.List;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -23,6 +24,9 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.apache.commons.scxml.model.SCXML;
+import org.apache.commons.scxml.model.Send;
+import org.apache.commons.scxml.model.State;
+import org.apache.commons.scxml.model.Transition;
 /**
  * Unit tests {@link org.apache.commons.scxml.SCXMLDigester}.
  */
@@ -42,7 +46,7 @@ public class SCXMLDigesterTest extends TestCase {
     }
 
     // Test data
-    private URL microwave01, microwave02, transitions01;
+    private URL microwave01, microwave02, transitions01, send01;
     private SCXML scxml;
     private String scxmlAsString;
 
@@ -56,13 +60,15 @@ public class SCXMLDigesterTest extends TestCase {
             getResource("org/apache/commons/scxml/microwave-02.xml");
         transitions01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/transitions-01.xml");
+        send01 = this.getClass().getClassLoader().
+            getResource("org/apache/commons/scxml/send-01.xml");
     }
 
     /**
      * Tear down instance variables required by this test case.
      */
     public void tearDown() {
-        microwave01 = microwave02 = transitions01 = null;
+        microwave01 = microwave02 = transitions01 = send01 = null;
         scxml = null;
         scxmlAsString = null;
     }
@@ -83,6 +89,28 @@ public class SCXMLDigesterTest extends TestCase {
     public void testSCXMLDigesterTransitions01Sample() {
         scxml = SCXMLTestHelper.digest(transitions01);
         scxmlAsString = serialize(scxml);
+    }
+
+    public void testSCXMLDigesterSend01Sample() {
+        // Digest
+        scxml = SCXMLTestHelper.digest(send01);
+        State ten = scxml.getInitialState();
+        assertEquals("ten", ten.getId());
+        List ten_done = ten.getTransitionsList("ten.done");
+        assertEquals(1, ten_done.size());
+        Transition ten2twenty = (Transition) ten_done.get(0);
+        List actions = ten2twenty.getActions();
+        assertEquals(1, actions.size());
+        Send send = (Send) actions.get(0);
+        assertEquals("send1", send.getSendid());
+        // Serialize
+        scxmlAsString = serialize(scxml);
+        assertNotNull(scxmlAsString);
+        String expectedFoo2Serialization =
+            "<foo xmlns=\"http://my.test.namespace\" id=\"foo2\">"
+            + "<prompt xmlns=\"http://foo.bar.com/vxml3\">This is just"
+            + " an example.</prompt></foo>";
+        assertFalse(scxmlAsString.indexOf(expectedFoo2Serialization) == -1);
     }
 
     private String serialize(final SCXML scxml) {

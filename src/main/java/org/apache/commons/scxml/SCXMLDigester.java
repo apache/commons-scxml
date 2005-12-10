@@ -17,6 +17,8 @@
  */
 package org.apache.commons.scxml;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Iterator;
@@ -24,8 +26,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.commons.digester.Digester;
 import org.apache.commons.digester.ExtendedBaseRules;
+import org.apache.commons.digester.NodeCreateRule;
 import org.apache.commons.digester.ObjectCreateRule;
 import org.apache.commons.digester.Rule;
 import org.apache.commons.digester.SetNextRule;
@@ -53,6 +58,11 @@ import org.apache.commons.scxml.model.State;
 import org.apache.commons.scxml.model.Transition;
 import org.apache.commons.scxml.model.TransitionTarget;
 import org.apache.commons.scxml.model.Var;
+
+import org.apache.xml.serialize.XMLSerializer;
+
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.ErrorHandler;
@@ -340,7 +350,7 @@ public final class SCXMLDigester {
      * This message may be rendered hence wrapped in a comment.
      */
     private static final String ERR_DOC_PARSE_FAIL = "<!-- Error parsing "
-        + "SCXML document for group: \"{0}\", with message: \"{1}\" -->\n";
+        + "SCXML document: \"{0}\", with message: \"{1}\" -->\n";
 
     /**
      * Error message when SCXML document specifies an illegal initial state.
@@ -393,6 +403,7 @@ public final class SCXMLDigester {
             final PathResolver pr) {
 
         Digester digester = new Digester();
+        digester.setNamespaceAware(true);
         //Uncomment next line after SCXML DTD is available
         //digester.setValidating(true);
         digester.setRules(initRules(scxml, pr));
@@ -640,9 +651,29 @@ public final class SCXMLDigester {
         addActionRulesTuple(xp + XP_ASN, scxmlRules, Assign.class);
         addActionRulesTuple(xp + XP_VAR, scxmlRules, Var.class);
         addActionRulesTuple(xp + XP_LOG, scxmlRules, Log.class);
-        addActionRulesTuple(xp + XP_SND, scxmlRules, Send.class);
+        addSendRulesTuple(xp + XP_SND, scxmlRules);
         addActionRulesTuple(xp + XP_CAN, scxmlRules, Cancel.class);
         addActionRulesTuple(xp + XP_EXT, scxmlRules, Exit.class);
+    }
+
+    /**
+     * Add Digester rules that are specific to the &lt;send&gt; action
+     * element.
+     *
+     * @param xp The Digester style XPath expression of &lt;send&gt; element
+     * @param scxmlRules The rule set to be used for digestion
+     * @param klass The class in the Java object model to be instantiated
+     *              in the ObjectCreateRule for this action
+     */
+    private static void addSendRulesTuple(final String xp,
+            final ExtendedBaseRules scxmlRules) {
+        addActionRulesTuple(xp, scxmlRules, Send.class);
+        try {
+            scxmlRules.add(xp, new ParseSendRule());
+        } catch (ParserConfigurationException pce) {
+            log.error("Error parsing <send> element content",
+                pce);
+        }
     }
 
     /**
@@ -1123,15 +1154,7 @@ public final class SCXMLDigester {
                         .append(asn.getName()).append("\" expr=\"")
                         .append(asn.getExpr()).append("\"/>\n");
             } else if (a instanceof Send) {
-                Send s = (Send) a;
-                b.append(indent).append("<send sendid=\"")
-                    .append(s.getSendid()).append("\" target=\"")
-                    .append(s.getTarget()).append("\" targetType=\"")
-                    .append(s.getTargettype()).append("\" namelist=\"")
-                    .append(s.getNamelist()).append("\" delay=\"")
-                    .append(s.getDelay()).append("\" events=\"")
-                    .append(s.getEvent()).append("\" hints=\"")
-                    .append(s.getHints()).append("\"/>\n");
+                serializeSend(b, (Send) a, indent);
             } else if (a instanceof Cancel) {
                 Cancel c = (Cancel) a;
                 b.append(indent).append("<cancel sendid=\"")
@@ -1165,6 +1188,31 @@ public final class SCXMLDigester {
             }
         }
         return exit;
+    }
+
+    /**
+     * Serialize this Send object.
+     *
+     * @param b The buffer to append the serialization to
+     * @param send The Send object to serialize
+     * @param indent The indent for this XML element
+     */
+    private static void serializeSend(final StringBuffer b,
+            final Send send, final String indent) {
+        b.append(indent).append("<send sendid=\"")
+            .append(send.getSendid()).append("\" target=\"")
+            .append(send.getTarget()).append("\" targetType=\"")
+            .append(send.getTargettype()).append("\" namelist=\"")
+            .append(send.getNamelist()).append("\" delay=\"")
+            .append(send.getDelay()).append("\" events=\"")
+            .append(send.getEvent()).append("\" hints=\"")
+            .append(send.getHints()).append("\">\n");
+        try {
+            b.append(send.getBodyContent());
+        } catch (IOException ioe) {
+            log.error("Failed to serialize external nodes for <send>", ioe);
+        }
+        b.append(indent).append("</send>\n");
     }
 
     /**
@@ -1252,6 +1300,31 @@ public final class SCXMLDigester {
                     child.setParent((Executable) ancestor);
                     return;
                 }
+            }
+        }
+    }
+
+    /**
+     * Custom digestion rule for setting Executable parent of Action elements.
+     *
+     */
+    public static class ParseSendRule extends NodeCreateRule {
+        /**
+         * Constructor
+         * @throws ParserConfigurationException
+         */
+        public ParseSendRule() throws ParserConfigurationException {
+            super();
+        }
+        /**
+         * @see Rule#end(String, String)
+         */
+        public final void end(final String namespace, final String name) {
+            Element sendElement = (Element) getDigester().pop();
+            NodeList childNodes = sendElement.getChildNodes();
+            Send send = (Send) getDigester().peek();
+            for (int i = 0; i < childNodes.getLength(); i++) {
+                send.getExternalNodes().add(childNodes.item(i));
             }
         }
     }

@@ -17,8 +17,14 @@
  */
 package org.apache.commons.scxml.model;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.xml.serialize.OutputFormat;
+import org.apache.xml.serialize.XMLSerializer;
+import org.w3c.dom.Element;
 
 /**
  * The class in this SCXML object model that corresponds to the
@@ -68,6 +74,15 @@ public class Send extends Action {
      * The type of event being generated.
      */
     private String event;
+
+    /**
+     * OutputFormat used to serialize external nodes.
+     */
+    private static final OutputFormat format;
+    static {
+        format = new OutputFormat();
+        format.setOmitXMLDeclaration(true);
+    }
 
     /**
      * Constructor.
@@ -187,6 +202,23 @@ public class Send extends Action {
      */
     public final String getEvent() {
         return event;
+    }
+
+    /**
+     * Return serialized external nodes.
+     *
+     * @throws IOException Serialization failed
+     */
+    public final String getBodyContent() throws IOException {
+        StringBuffer buf = new StringBuffer();
+        for (int i = 0; i < externalNodes.size(); i++) {
+            StringWriter out = new StringWriter();
+            XMLSerializer output = new XMLSerializer(out, format);
+            output.setNamespaces(true);
+            output.serialize((Element) externalNodes.get(i));
+            buf.append(out.toString()).append("\n");
+        }
+        return buf.toString();
     }
 
 }
