@@ -18,7 +18,6 @@
 package org.apache.commons.scxml;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Iterator;
@@ -58,8 +57,6 @@ import org.apache.commons.scxml.model.State;
 import org.apache.commons.scxml.model.Transition;
 import org.apache.commons.scxml.model.TransitionTarget;
 import org.apache.commons.scxml.model.Var;
-
-import org.apache.xml.serialize.XMLSerializer;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
