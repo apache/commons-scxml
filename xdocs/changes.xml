@@ -26,36 +26,45 @@
 
     <section name="About this document">
       <ul>
-        <li>Entries labelled SNAPSHOT are NOT official releases.</li>
         <li>Commons SCXML has had no official releases.</li>
+        <li>To help towards a release, join us on the
+            <a href="mail-lists.html">commons-dev mailing list</a>.</li>
       </ul>
     </section>
 
-    <release version="beta-1.0-SNAPSHOT-008" date="11-17-2005" description="Site update">
-      <action dev="rahul" type="update">
-       Site overhaul according to recent discussions on the commons-dev mailing list.
-      </action>
-    </release>
+    <release version="1.0" date="Pending"
+     description="Project nearing promotion vote to Commons Proper">
 
-    <release version="beta-1.0-SNAPSHOT-007" date="10-18-2005" description="Pluggable Semantics + UML diagrams">
-      <action dev="rahul" type="update">
-       Decouple SCXML engine from the SCXML execution semantics; make SCXML semantics pluggable.
-      </action>
       <action dev="rahul" type="add">
-       Added UML state machine diagrams to the usecases section of the website.
+       [12-10-2005] Make digester namespace aware, and capture arbitrary namespace
+       children of SCXML &lt;send&gt; element.
       </action>
-    </release>
 
-    <release version="beta-1.0-SNAPSHOT-006" date="10-14-2005" description="Website and documentation">
+      <action dev="rahul" type="update">
+       [11-17-2005] Site overhaul according to recent discussions on the
+       commons-dev mailing list.
+      </action>
+
+      <action dev="rahul" type="update">
+       [10-18-2005] Decouple SCXML engine from the SCXML execution semantics;
+       make SCXML semantics pluggable.
+      </action>
+
       <action dev="rahul" type="add">
-       Added documentation on usecases to website:
+       [10-18-2005] Added UML state machine diagrams to the usecases section
+       of the website.
+      </action>
+
+      <action dev="rahul" type="add">
+       [10-14-2005] Added documentation on usecases to website:
        <ol>
         <li>Usecase 1: To configure instances of the RDC group container.</li>
         <li>Usecase 2: To describe Shale dialogs.</li>
        </ol>
       </action>
+
       <action dev="rahul" type="add">
-       Added API notes to website:
+       [10-14-2005] Added API notes to website:
        <ol>
         <li>SCXML digester</li>
         <li>SCXML engine</li>
@@ -64,138 +73,137 @@
         <li>Fun with EL</li>
        </ol>       
       </action>
-      <action dev="rahul" type="add">
-       Updated dependency information to indicate purpose of dependency (core, test, usecases etc.).
-      </action>
-      <action dev="rahul" type="add">
-       Added Commons look and feel (navigation bar) to website.
-      </action>
-    </release>
 
-    <release version="beta-1.0-SNAPSHOT-005" date="10-10-2005" description="Shale dialogs usecase">
       <action dev="rahul" type="add">
-       Added second usecase for Commons SCXML (within ASF projects).
+       [10-14-2005] Updated dependency information to indicate purpose of
+       dependency (core, test, usecases etc.).
+      </action>
+
+      <action dev="rahul" type="add">
+       [10-14-2005] Added Commons look and feel (navigation bar) to website.
+      </action>
+ 
+      <action dev="rahul" type="add">
+       [10-10-2005] Added second usecase for Commons SCXML (within ASF projects).
        Demonstrated the use of SCXML documents for describing Shale dialogs.
       </action>
-    </release>
 
-    <release version="beta-1.0-SNAPSHOT-004" date="10-09-2005" description="Exploring JSF-based usecases">
       <action dev="rahul" type="add">
-       Add a faces package for JSF-based environments (env.faces)
+       [10-09-2005] Add a faces package for JSF-based environments (env.faces)
       </action>
+
       <action dev="rahul" type="update">
-       Updated ant build file to include MyFaces dependency (usecases only).
+       [10-09-2005] Updated ant build file to include MyFaces dependency
+       (usecases only).
       </action>
-    </release>
 
-    <release version="beta-1.0-SNAPSHOT-003" date="10-08-2005" description="Out of the box interfaces impls">
       <action dev="rahul" type="add">
+       [10-08-2005] Out of the box "simple" interface implementations.
        <ol>
         <li>Added simple loggers that implement ErrorHandler, ErrorReporter
         and SCXMLListener.</li>
-        <li>Added a SimpleContext that wraps a variables (name->value) Map.</li>
+        <li>Added a SimpleContext that wraps a variables (name to value) Map.</li>
        </ol>
       </action>
-      <action dev="rahul" type="fix">
-       VariableResolver#resolveVariable() should return null if variable is
-       not found instead of throwing an exception (in ELEvaluator.java)
-      </action>
-    </release>
 
-    <release version="beta-1.0-SNAPSHOT-002" date="09-29-2005" description="Distributing the env package">
-      <action dev="rahul" type="update">
-        The scxml.env package has a new child jsp package, to distribute the current
-        contents of the env package such that each supported environment can get its own
-        package in the source.
+      <action dev="rahul" type="fix">
+       [10-08-2005] VariableResolver#resolveVariable() should return null if variable
+       is not found instead of throwing an exception (in ELEvaluator.java)
       </action>
+
       <action dev="rahul" type="update">
-        Enhanced the Standalone testing functionality to enable:
+        [09-29-2005] The scxml.env package has a new child jsp package, to distribute
+        the current contents of the env package such that each supported environment
+        can get its own package in the source.
+      </action>
+
+      <action dev="rahul" type="update">
+        [09-29-2005] Enhanced the Standalone testing functionality to enable:
         <ol>
           <li>Value change events on the current Context.</li>
           <li>Dummy events to re-evaluate conditionals on event-less transitions.</li>
         </ol>
       </action>
-    </release>
 
-    <release version="beta-1.0-SNAPSHOT-001" date="09-15-2005" description="SCXML WD section 3.4 update">
-      <action dev="jaroslav" type="update">
-        Now handling outgoing transitions from a Parallel (Section 3.4 SCXML WD)
+      <action dev="rahul" type="update" due-to="Jaroslav Gergic">
+        [09-15-2005] Now handling outgoing transitions from a Parallel 
+        (Section 3.4 SCXML WD).
       </action>
+
       <action dev="rahul" type="fix">
-        Minor Javadoc tweaks
+        [09-15-2005] Minor Javadoc tweaks.
       </action>
-      <action dev="rahul" type="update">
-        "Microwave" test samples reset timer on leaving "cooking" state so state machines can be re-run
-        many times (without a "reset")
-      </action>
-    </release>
 
-    <release version="pre-beta-1.0-SNAPSHOT-007" date="09-08-2005" description="New logo">
       <action dev="rahul" type="update">
-        Updated Commons SCXML logo.
+        [09-15-2005] "Microwave" test samples reset timer on leaving "cooking"
+        state so state machines can be re-run many times (without a "reset")
       </action>
-    </release>
 
-    <release version="pre-beta-1.0-SNAPSHOT-006" date="08-27-2005" description="Checkstyle and Findbugs update">
       <action dev="rahul" type="update">
-        Use a customized set of checkstyle rules. These are the Sun checks with three changes as discussed on the dev list:
+        [09-08-2005] Updated Commons SCXML logo.
+      </action>
+
+      <action dev="rahul" type="update">
+        [08-27-2005] Use a customized set of checkstyle rules. These are the Sun checks
+        with three changes as discussed on the dev list:
         <ol>
           <li>Use a regexp header check for ASL</li>
           <li>Disable 'hide a field' check (lot of noise from setters)</li>
           <li>Disable 'method design for extension' check</li>
         </ol>
       </action>
-      <action dev="rahul" type="fix">
-        Six minor code changes based on FindBugs reports.
-      </action>
-    </release>
 
-    <release version="pre-beta-1.0-SNAPSHOT-005" date="08-25-2005" description="Switch to new ant build file">
+      <action dev="rahul" type="fix">
+        [08-27-2005] Six minor code changes based on FindBugs reports.
+      </action>
+
       <action dev="rahul" type="update">
-        Switch to new ant build file that will work better for the Commons nightlies.
+        [08-25-2005] Switch to new ant build file that will work better for the
+        Commons nightlies.
       </action>
-    </release>
 
-    <release version="pre-beta-1.0-SNAPSHOT-004" date="08-24-2005" description="RootContext fix">
       <action dev="rahul" type="fix">
-        RootContext (used in the JSP environment) should override ELContext#has(String) method.
+        [08-24-2005] RootContext (used in the JSP environment) should override 
+        ELContext#has(String) method.
       </action>
+
       <action dev="rahul" type="update">
-        Enhanced couple of samples used by the test cases.
+        [08-24-2005] Enhanced couple of samples used by the test cases.
       </action>
-    </release>
 
-    <release version="pre-beta-1.0-SNAPSHOT-003" date="08-23-2005" description="Test framework check-in">
       <action dev="rahul" type="add">
-        Added JUnit Test Framework.
+        [08-23-2005] Added JUnit Test Framework.
       </action>
-      <action dev="rahul" type="fix">
-        Upgraded Digester version in project dependencies to 1.7.
-      </action>
-      <action dev="rahul" type="add">
-        Added BeanUtils 1.7.0 dependency as needed by Digester.
-      </action>
-    </release>
 
-    <release version="pre-beta-1.0-SNAPSHOT-002" date="08-20-2005" description="Checkstyle errors fix">
       <action dev="rahul" type="fix">
-        Corrected year of inception in License.
+        [08-23-2005] Upgraded Digester version in project dependencies to 1.7.
       </action>
-      <action dev="rahul" type="fix">
-        Corrected some 1500+ checkstyle errors.
-      </action>
-      <action dev="rahul" type="add">
-        This changes document added.
-      </action>
-    </release>
 
-    <release version="pre-beta-1.0-SNAPSHOT-001" date="08-17-2005" description="Initial check-in">
       <action dev="rahul" type="add">
-        Initial SCXML codebase copied from the RDC Taglib codebase (part of Jakarta Taglibs Proper).
+        [08-23-2005] Added BeanUtils 1.7.0 dependency as needed by Digester.
       </action>
+
+      <action dev="rahul" type="fix">
+        [08-20-2005] Corrected year of inception in License.
+      </action>
+
+      <action dev="rahul" type="fix">
+        [08-20-2005] Corrected some 1500+ checkstyle errors.
+      </action>
+
       <action dev="rahul" type="add">
-        Initial build artifacts, STATUS and PROPOSAL documents.
+        [08-20-2005] This changes document added.
       </action>
+
+      <action dev="rahul" type="add">
+        [08-17-2005] Initial SCXML codebase copied from the RDC Taglib codebase
+        (part of Jakarta Taglibs Proper).
+      </action>
+
+      <action dev="rahul" type="add">
+        [08-17-2005] Initial build artifacts, STATUS and PROPOSAL documents.
+      </action>
+
     </release>
 
   </body>
