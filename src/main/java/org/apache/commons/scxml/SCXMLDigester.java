@@ -659,8 +659,6 @@ public final class SCXMLDigester {
      *
      * @param xp The Digester style XPath expression of &lt;send&gt; element
      * @param scxmlRules The rule set to be used for digestion
-     * @param klass The class in the Java object model to be instantiated
-     *              in the ObjectCreateRule for this action
      */
     private static void addSendRulesTuple(final String xp,
             final ExtendedBaseRules scxmlRules) {
@@ -1204,11 +1202,13 @@ public final class SCXMLDigester {
             .append(send.getDelay()).append("\" events=\"")
             .append(send.getEvent()).append("\" hints=\"")
             .append(send.getHints()).append("\">\n");
+        /* TODO - Serialize body content
         try {
             b.append(send.getBodyContent());
         } catch (IOException ioe) {
             log.error("Failed to serialize external nodes for <send>", ioe);
         }
+        */
         b.append(indent).append("</send>\n");
     }
 
