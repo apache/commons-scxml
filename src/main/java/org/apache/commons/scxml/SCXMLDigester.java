@@ -17,7 +17,7 @@
  */
 package org.apache.commons.scxml;
 
-import java.io.IOException;
+//import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Iterator;
@@ -1307,8 +1307,8 @@ public final class SCXMLDigester {
      */
     public static class ParseSendRule extends NodeCreateRule {
         /**
-         * Constructor
-         * @throws ParserConfigurationException
+         * Constructor.
+         * @throws ParserConfigurationException A JAXP configuration error
          */
         public ParseSendRule() throws ParserConfigurationException {
             super();
