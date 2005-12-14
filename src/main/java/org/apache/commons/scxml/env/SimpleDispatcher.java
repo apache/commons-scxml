@@ -17,6 +17,7 @@
  */
 package org.apache.commons.scxml.env;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -50,11 +51,11 @@ public final class SimpleDispatcher implements EventDispatcher {
     }
 
     /**
-     * @see EventDispatcher#send(String,String,String,String,Map,Object,long)
+    @see EventDispatcher#send(String,String,String,String,Map,Object,long,List)
      */
     public void send(final String sendId, final String target,
             final String targetType, final String event, final Map params,
-            final Object hints, final long delay) {
+            final Object hints, final long delay, final List externalNodes) {
         if (log.isInfoEnabled()) {
             StringBuffer buf = new StringBuffer();
             buf.append("send ( sendId: ").append(sendId);

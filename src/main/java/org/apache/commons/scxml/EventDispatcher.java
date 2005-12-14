@@ -17,6 +17,7 @@
  */
 package org.apache.commons.scxml;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,9 +49,12 @@ public interface EventDispatcher {
      * @param hints The data containing information which may be
      *  used by the implementing platform to configure the event processor
      * @param delay The event is dispatched after the delay interval elapses
+     * @param externalNodes The list of external nodes associated with
+     *  the &lt;send&gt; element.
      */
     void send(String sendId, String target, String targetType,
-            String event, Map params, Object hints, long delay);
+            String event, Map params, Object hints, long delay,
+            List externalNodes);
 
 }
 

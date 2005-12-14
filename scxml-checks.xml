@@ -128,7 +128,7 @@
         <module name="FileLength"/>
         <module name="LineLength"/>
         <module name="MethodLength"/>
-        <module name="ParameterNumber"/>
+        <!--module name="ParameterNumber"/-->
 
 
         <!-- Checks for whitespace                               -->
