@@ -62,8 +62,8 @@ public final class SimpleDispatcher implements EventDispatcher {
             buf.append(", target: ").append(target);
             buf.append(", targetType: ").append(targetType);
             buf.append(", event: ").append(event);
-            buf.append(", params: ").append(String.valueOf(params.toString()));
-            buf.append(", hints: ").append(String.valueOf(hints.toString()));
+            buf.append(", params: ").append(String.valueOf(params));
+            buf.append(", hints: ").append(String.valueOf(hints));
             buf.append(", delay: ").append(delay);
             buf.append(')');
             log.info(buf.toString());
