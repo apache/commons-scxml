@@ -34,8 +34,8 @@
   SCXML provides a generic state-machine based execution environment based on Harel
   State Tables. SCXML is a candidate for the control language within 
   multiple markup languages coming out of the W3C (see Working Draft for details).
-  <em>Commons SCXML</em> is a reference implementation of SCXML aimed at creating
-  and maintaining an SCXML engine capable of executing a state machine defined 
+  <em>Commons SCXML</em> is an implementation aimed at creating
+  and maintaining a Java SCXML engine capable of executing a state machine defined 
   using a SCXML document, while abstracting out the environment interfaces.
   </p>
   <p>

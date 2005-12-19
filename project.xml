@@ -24,7 +24,7 @@
 
   <inceptionYear>2005</inceptionYear>
   <shortDescription>Jakarta Commons SCXML</shortDescription>
-  <description>A Reference Implementation of State Chart XML Engine</description>
+  <description>A Java Implementation of a State Chart XML Engine</description>
 
   <logo>/images/scxml-logo-white.png</logo>
   <url>http://jakarta.apache.org/commons/sandbox/${pom.artifactId.substring(8)}/</url>
