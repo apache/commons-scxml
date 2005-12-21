@@ -35,6 +35,7 @@ import org.apache.commons.scxml.env.SimpleDispatcher;
 import org.apache.commons.scxml.env.Tracer;
 import org.apache.commons.scxml.model.ModelException;
 import org.apache.commons.scxml.model.SCXML;
+import org.xml.sax.SAXException;
 
 /**
  * Standalone SCXML interpreter, useful for command-line testing and
@@ -133,6 +134,8 @@ public final class Standalone {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ModelException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
             e.printStackTrace();
         }
 

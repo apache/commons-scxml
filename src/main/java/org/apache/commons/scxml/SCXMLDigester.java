@@ -17,7 +17,7 @@
  */
 package org.apache.commons.scxml;
 
-//import java.io.IOException;
+import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Iterator;
@@ -64,6 +64,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.Attributes;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * <p>The SCXMLDigester provides the ability to digest a SCXML document into
@@ -71,6 +72,8 @@ import org.xml.sax.InputSource;
  * <p>The SCXMLDigester can be used for:</p>
  * <ol>
  *  <li>Digest a SCXML file into the Commons SCXML Java object model.</li>
+ *  <li>Obtain a SCXML Digester for further customization of the default
+ *      ruleset.</li>
  *  <li>Serialize an SCXML object (primarily for debugging).</li>
  * </ol>
  */
@@ -95,6 +98,9 @@ public final class SCXMLDigester {
      *
      * @return SCXML The SCXML object corresponding to the file argument
      *
+     * @throws IOException Underlying Digester parsing threw an IOException
+     * @throws SAXException Underlying Digester parsing threw a SAXException
+     *
      * @see Context
      * @see ErrorHandler
      * @see Evaluator
@@ -102,7 +108,8 @@ public final class SCXMLDigester {
      */
     public static SCXML digest(final URL scxmlURL,
             final ErrorHandler errHandler, final Context evalCtx,
-            final Evaluator evalEngine) {
+            final Evaluator evalEngine)
+    throws IOException, SAXException {
 
         SCXML scxml = null;
         Digester scxmlDigester = SCXMLDigester
@@ -111,12 +118,15 @@ public final class SCXMLDigester {
 
         try {
             scxml = (SCXML) scxmlDigester.parse(scxmlURL.toString());
-        } catch (Exception e) {
+        } catch (RuntimeException rte) {
+            // Intercept runtime exceptions, only to log them with a
+            // sensible error message about failure in document parsing
             MessageFormat msgFormat = new MessageFormat(ERR_DOC_PARSE_FAIL);
             String errMsg = msgFormat.format(new Object[] {
-                scxmlURL.toString(), e.getMessage()
+                String.valueOf(scxmlURL), rte.getMessage()
             });
-            log.error(errMsg, e);
+            log.error(errMsg, rte);
+            throw rte;
         }
 
         if (scxml != null) {
@@ -148,6 +158,9 @@ public final class SCXMLDigester {
      *
      * @return SCXML The SCXML object corresponding to the file argument
      *
+     * @throws IOException Underlying Digester parsing threw an IOException
+     * @throws SAXException Underlying Digester parsing threw a SAXException
+     *
      * @see Context
      * @see ErrorHandler
      * @see Evaluator
@@ -155,7 +168,8 @@ public final class SCXMLDigester {
      */
     public static SCXML digest(final String documentRealPath,
             final ErrorHandler errHandler, final Context evalCtx,
-            final Evaluator evalEngine, final PathResolver pathResolver) {
+            final Evaluator evalEngine, final PathResolver pathResolver)
+    throws IOException, SAXException {
 
         SCXML scxml = null;
         Digester scxmlDigester = SCXMLDigester.newInstance(null, pathResolver);
@@ -163,12 +177,15 @@ public final class SCXMLDigester {
 
         try {
             scxml = (SCXML) scxmlDigester.parse(documentRealPath);
-        } catch (Exception e) {
+        } catch (RuntimeException rte) {
+            // Intercept runtime exceptions, only to log them with a
+            // sensible error message about failure in document parsing
             MessageFormat msgFormat = new MessageFormat(ERR_DOC_PARSE_FAIL);
             String errMsg = msgFormat.format(new Object[] {
-                documentRealPath, e.getMessage()
+                documentRealPath, rte.getMessage()
             });
-            log.error(errMsg, e);
+            log.error(errMsg, rte);
+            throw rte;
         }
 
         if (scxml != null) {
@@ -204,13 +221,17 @@ public final class SCXMLDigester {
      *
      * @return SCXML The SCXML object corresponding to the file argument
      *
+     * @throws IOException Underlying Digester parsing threw an IOException
+     * @throws SAXException Underlying Digester parsing threw a SAXException
+     *
      * @see Context
      * @see ErrorHandler
      * @see Evaluator
      */
     public static SCXML digest(final InputSource documentInputSource,
             final ErrorHandler errHandler, final Context evalCtx,
-            final Evaluator evalEngine) {
+            final Evaluator evalEngine)
+    throws IOException, SAXException {
 
         Digester scxmlDigester = SCXMLDigester.newInstance(null, null);
         scxmlDigester.setErrorHandler(errHandler);
@@ -218,8 +239,11 @@ public final class SCXMLDigester {
         SCXML scxml = null;
         try {
             scxml = (SCXML) scxmlDigester.parse(documentInputSource);
-        } catch (Exception e) {
-            log.error("Could not parse SCXML", e);
+        }  catch (RuntimeException rte) {
+            // Intercept runtime exceptions, only to log them with a
+            // sensible error message about failure in document parsing
+            log.error("Could not parse SCXML InputSource", rte);
+            throw rte;
         }
 
         if (scxml != null) {
@@ -228,6 +252,63 @@ public final class SCXMLDigester {
 
         return scxml;
 
+    }
+
+    /**
+     * <p>Obtain a SCXML digester instance for further customization.</p>
+     * <p><b>API Note:</b> Use the digest() convenience methods if you do not
+     * need a custom digester.</p>
+     *
+     * @param scxml The parent SCXML document if there is one (in case of
+     *              state templates for examples), null otherwise
+     * @param pr The PathResolver, may be null for standalone documents
+     * @return Digester A newly configured SCXML digester instance
+     */
+    public static Digester newInstance(final SCXML scxml,
+            final PathResolver pr) {
+
+        Digester digester = new Digester();
+        digester.setNamespaceAware(true);
+        //Uncomment next line after SCXML DTD is available
+        //digester.setValidating(true);
+        digester.setRules(initRules(scxml, pr));
+        return digester;
+    }
+
+     /**
+      * <p>Update the SCXML object model and make it SCXMLExecutor ready.
+      * This is part of post-digester processing, and sets up the necessary
+      * object references throughtout the SCXML object model for the parsed
+      * document.</p>
+      *
+      * @param scxml The SCXML object (output from Digester)
+      * @param evalCtx The root evaluation context (from the host environment
+      *                of the SCXML document)
+      * @param evalEngine The expression evaluator
+      */
+    public static void updateSCXML(final SCXML scxml, final Context evalCtx,
+            final Evaluator evalEngine) {
+        // Watch case, slightly unfortunate naming ;-)
+        String initialstate = scxml.getInitialstate();
+        //we have to use getTargets() here since the initialState can be
+        //an indirect descendant
+        // Concern marked by one of the code reviewers: better type check,
+        //            now ClassCastException happens for Parallel
+        // Response: initial should be a State, for Parallel, it is implicit
+        State initialState = (State) scxml.getTargets().get(initialstate);
+        if (initialState == null) {
+            // Where do we, where do we go?
+            logModelError(ERR_SCXML_NO_INIT, new Object[] {initialstate});
+        }
+        scxml.setInitialState(initialState);
+        scxml.setRootContext(evalCtx);
+        Map targets = scxml.getTargets();
+        Map states = scxml.getStates();
+        Iterator i = states.keySet().iterator();
+        while (i.hasNext()) {
+            updateState((State) states.get(i.next()), targets, evalCtx,
+                    evalEngine);
+        }
     }
 
     /**
@@ -388,25 +469,6 @@ public final class SCXMLDigester {
         + " for deep history is not descendant for \"{0}\"";
 
     //---------------------- PRIVATE UTILITY METHODS ----------------------//
-    /**
-     * Get a SCXML digester instance.
-     *
-     * @param scxml The parent SCXML document if there is one (in case of
-     *              state templates for examples), null otherwise
-     * @param pr The PathResolver
-     * @return Digester A newly configured SCXML digester instance
-     */
-    private static Digester newInstance(final SCXML scxml,
-            final PathResolver pr) {
-
-        Digester digester = new Digester();
-        digester.setNamespaceAware(true);
-        //Uncomment next line after SCXML DTD is available
-        //digester.setValidating(true);
-        digester.setRules(initRules(scxml, pr));
-        return digester;
-    }
-
     /*
      * Private utility functions for configuring digester rule base for SCXML.
      */
@@ -729,39 +791,6 @@ public final class SCXMLDigester {
     /*
      * Post-processing methods to make the SCXML object SCXMLExecutor ready.
      */
-     /**
-      * Update the SCXML object model (part of post-digestion processing).
-      *
-      * @param scxml The SCXML object (output from Digester)
-      * @param evalCtx The root evaluation context (from the host environment
-      *                of the SCXML document)
-      * @param evalEngine The expression evaluator
-      */
-    private static void updateSCXML(final SCXML scxml, final Context evalCtx,
-            final Evaluator evalEngine) {
-        // Watch case, slightly unfortunate naming ;-)
-        String initialstate = scxml.getInitialstate();
-        //we have to use getTargets() here since the initialState can be
-        //an indirect descendant
-        // Concern marked by one of the code reviewers: better type check,
-        //            now ClassCastException happens for Parallel
-        // Response: initial should be a State, for Parallel, it is implicit
-        State initialState = (State) scxml.getTargets().get(initialstate);
-        if (initialState == null) {
-            // Where do we, where do we go?
-            logModelError(ERR_SCXML_NO_INIT, new Object[] {initialstate});
-        }
-        scxml.setInitialState(initialState);
-        scxml.setRootContext(evalCtx);
-        Map targets = scxml.getTargets();
-        Map states = scxml.getStates();
-        Iterator i = states.keySet().iterator();
-        while (i.hasNext()) {
-            updateState((State) states.get(i.next()), targets, evalCtx,
-                    evalEngine);
-        }
-    }
-
     /**
       * Update this State object (part of post-digestion processing).
       * Also checks for any errors in the document.
