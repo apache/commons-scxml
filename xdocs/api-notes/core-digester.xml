@@ -35,15 +35,26 @@
      <p>The primary convenience method exposed by the <code>SCXMLDigester</code>
      is:</p>
      <pre>
+        //import java.io.IOException;
         //import java.net.URL;
         //import org.apache.commons.scxml.Context;
         //import org.apache.commons.scxml.Evaluator;
         //import org.apache.commons.scxml.SCXMLDigester;
         //import org.apache.commons.scxml.model.SCXML;
         //import org.xml.sax.ErrorHandler;
+        //import org.xml.sax.SAXException;
 
-        SCXML scxml = SCXMLDigester.digest(&lt;URL&gt;, &lt;ErroHandler&gt;,
+        SCXML scxml = null;
+
+        try {
+          scxml = SCXMLDigester.digest(&lt;URL&gt;, &lt;ErroHandler&gt;,
                                     &lt;Context&gt;, &lt;Evaluator&gt;);
+        } catch (IOException ioe) {
+          // IOException while parsing
+        } catch (SAXException se) {
+          // SAXException while parsing
+        }
+          
 
         if (scxml == null) {
           // Digestion failed
