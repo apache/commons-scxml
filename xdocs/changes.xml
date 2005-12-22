@@ -35,6 +35,17 @@
     <release version="1.0" date="Pending"
      description="Project nearing promotion vote to Commons Proper">
 
+      <action dev="rahul" type="update">
+       [12-21-2005] SCXML digester instances are now available for further
+       customization of the default digester ruleset.
+      </action>
+
+      <action dev="rahul" type="update">
+       [12-21-2005] The static digest() methods of the SCXMLDigester class
+       now throw the same exceptions as the underlying ones from
+       Digester#parse().
+      </action>
+
       <action dev="rahul" type="add">
        [12-10-2005] Make digester namespace aware, and capture arbitrary namespace
        children of SCXML &lt;send&gt; element.
