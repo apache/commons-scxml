@@ -116,7 +116,7 @@ public class SCXMLDigesterTest extends TestCase {
     }
 
     private String serialize(final SCXML scxml) {
-        scxmlAsString = SCXMLDigester.serializeSCXML(scxml);
+        scxmlAsString = SCXMLSerializer.serialize(scxml);
         assertNotNull(scxmlAsString);
         return scxmlAsString;
     }

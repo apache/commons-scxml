@@ -30,6 +30,7 @@ import org.apache.commons.scxml.EventDispatcher;
 import org.apache.commons.scxml.SCXMLDigester;
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLHelper;
+import org.apache.commons.scxml.SCXMLSerializer;
 import org.apache.commons.scxml.TriggerEvent;
 import org.apache.commons.scxml.env.SimpleDispatcher;
 import org.apache.commons.scxml.env.Tracer;
@@ -80,7 +81,7 @@ public final class Standalone {
                         + " can not be parsed!");
                 System.exit(-1);
             }
-            System.err.println(SCXMLDigester.serializeSCXML(doc));
+            System.out.println(SCXMLSerializer.serialize(doc));
             SCXMLExecutor exec = new SCXMLExecutor(engine, ed, trc);
             doc.addListener(trc);
             exec.setSuperStep(true);
