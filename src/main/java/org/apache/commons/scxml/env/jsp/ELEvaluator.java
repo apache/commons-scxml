@@ -1,6 +1,6 @@
 /*
  *
- *   Copyright 2005 The Apache Software Foundation.
+ *   Copyright 2005-2006 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@
 package org.apache.commons.scxml.env.jsp;
 
 import java.lang.reflect.Method;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -30,13 +29,14 @@ import javax.servlet.jsp.el.VariableResolver;
 import org.apache.commons.el.ExpressionEvaluatorImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.scxml.Builtin;
 import org.apache.commons.scxml.Context;
 import org.apache.commons.scxml.Evaluator;
 import org.apache.commons.scxml.SCXMLExpressionException;
-import org.apache.commons.scxml.model.TransitionTarget;
 
 /**
- * EL engine interface for SCXML Interpreter.
+ * Evaluator implementation enabling use of EL expressions in
+ * SCXML documents.
  *
  */
 public class ELEvaluator implements Evaluator {
@@ -44,7 +44,7 @@ public class ELEvaluator implements Evaluator {
     /** Implementation independent log category. */
     protected static final Log LOG = LogFactory.getLog(Evaluator.class);
     /** Function Mapper for SCXML expressions. */
-    private FunctionMapper functionMapper = new FunctWrapper();
+    private FunctionMapper functionMapper = new BuiltinFunctionWrapper();
     /** Pattern for recognizing the SCXML In() special predicate. */
     private static Pattern inFct = Pattern.compile("In\\(");
 
@@ -73,7 +73,7 @@ public class ELEvaluator implements Evaluator {
         if (ctx instanceof VariableResolver) {
             vr = (VariableResolver) ctx;
         } else {
-            vr = new CtxWrapper(ctx);
+            vr = new ContextWrapper(ctx);
         }
         try {
             String evalExpr = inFct.matcher(expr).
@@ -115,7 +115,7 @@ public class ELEvaluator implements Evaluator {
         if (ctx instanceof VariableResolver) {
             vr = (VariableResolver) ctx;
         } else {
-            vr = new CtxWrapper(ctx);
+            vr = new ContextWrapper(ctx);
         }
         try {
             String evalExpr = inFct.matcher(expr).
@@ -134,14 +134,14 @@ public class ELEvaluator implements Evaluator {
     /**
      * A Context wrapper that implements VariableResolver.
      */
-    static class CtxWrapper implements VariableResolver {
+    static class ContextWrapper implements VariableResolver {
         /** Context to be wrapped. */
         private Context ctx = null;
         /**
          * Constructor.
          * @param ctx The Context to be wrapped.
          */
-        CtxWrapper(final Context ctx) {
+        ContextWrapper(final Context ctx) {
             this.ctx = ctx;
         }
         /** @see VariableResolver#resolveVariable(String) */
@@ -157,7 +157,7 @@ public class ELEvaluator implements Evaluator {
     /**
      * A simple function mapper for SCXML defined functions.
      */
-    static class FunctWrapper implements FunctionMapper {
+    static class BuiltinFunctionWrapper implements FunctionMapper {
 
         /**
          * @see FunctionMapper#resolveFunction(String, String)
@@ -167,7 +167,7 @@ public class ELEvaluator implements Evaluator {
             if (localName.equals("In")) {
                 Class[] attrs = new Class[] {Set.class, String.class};
                 try {
-                    return ELEvaluator.class.getMethod("isMember", attrs);
+                    return Builtin.class.getMethod("isMember", attrs);
                 } catch (SecurityException e) {
                     LOG.error("resolving isMember(Set, String)", e);
                 } catch (NoSuchMethodException e) {
@@ -176,25 +176,6 @@ public class ELEvaluator implements Evaluator {
             }
             return null;
         }
-    }
-
-    /**
-     * Does this state belong to the Set of these States.
-     * Simple ID based comparator
-     *
-     * @param allStates The Set of State objects to look in
-     * @param state The State to compare with
-     * @return Whether this State belongs to this Set
-     */
-    public static final boolean isMember(final Set allStates,
-            final String state) {
-        for (Iterator i = allStates.iterator(); i.hasNext();) {
-            TransitionTarget tt = (TransitionTarget) i.next();
-            if (state.equals(tt.getId())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**

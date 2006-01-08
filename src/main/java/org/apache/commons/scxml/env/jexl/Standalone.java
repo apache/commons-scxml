@@ -1,6 +1,6 @@
 /*
  *
- *   Copyright 2005-2006 The Apache Software Foundation.
+ *   Copyright 2006 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,19 +15,19 @@
  *  limitations under the License.
  *
  */
-package org.apache.commons.scxml.env.jsp;
+package org.apache.commons.scxml.env.jexl;
 
 import org.apache.commons.scxml.Evaluator;
 import org.apache.commons.scxml.env.StandaloneUtils;
 
 /**
  * Standalone SCXML interpreter, useful for command-line testing and
- * debugging, where expressions are JSP 2.0 EL expressions.
+ * debugging, where expressions are JEXL expressions.
  *
  * <p>USAGE:</p>
- * <p><code>java org.apache.commons.scxml.env.jsp.Standalone url</code></p>
+ * <p><code>java org.apache.commons.scxml.env.jexl.Standalone url</code></p>
  * <p>or</p>
- * <p><code>java org.apache.commons.scxml.env.jsp.Standalone filename</code>
+ * <p><code>java org.apache.commons.scxml.env.jexl.Standalone filename</code>
  * </p>
  *
  * <p>RUNNING:</p>
@@ -53,7 +53,7 @@ public final class Standalone {
                     + "<url|filename>");
             System.exit(-1);
         }
-        Evaluator evaluator = new ELEvaluator();
+        Evaluator evaluator = new JexlEvaluator();
         StandaloneUtils.execute(args[0], evaluator);
     }
 

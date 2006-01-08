@@ -1,6 +1,6 @@
 /*
  *
- *   Copyright 2005 The Apache Software Foundation.
+ *   Copyright 2005-2006 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -173,6 +173,15 @@ public class SimpleContext implements Context {
         if (LOG.isDebugEnabled() && !name.equals("_ALL_STATES")) {
             LOG.debug(name + " = " + String.valueOf(value));
         }
+    }
+
+    /**
+     * Set the variables map.
+     *
+     * @param vars The new Map of variables.
+     */
+    protected void setVars(final Map vars) {
+        this.vars = vars;
     }
 
     /**

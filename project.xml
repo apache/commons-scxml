@@ -136,6 +136,15 @@
         <scope>provided</scope>
       </properties>
     </dependency>
+    <dependency> 
+      <groupId>commons-jexl</groupId>
+      <artifactId>commons-jexl</artifactId>
+      <version>1.0</version> 
+      <properties>
+        <comment>&lt;b&gt;Usecases&lt;/b&gt;
+        (JEXL environments)</comment>
+      </properties>
+    </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId> 
@@ -184,6 +193,7 @@
       <includes>
         <include>org/apache/commons/scxml/SCXMLTestSuite.java</include>
         <include>org/apache/commons/scxml/env/EnvTestSuite.java</include>
+        <include>org/apache/commons/scxml/env/jexl/EnvJexlTestSuite.java</include>
         <include>org/apache/commons/scxml/env/jsp/EnvJspTestSuite.java</include>
         <include>org/apache/commons/scxml/env/faces/EnvFacesTestSuite.java</include>
         <include>org/apache/commons/scxml/model/ModelTestSuite.java</include>
