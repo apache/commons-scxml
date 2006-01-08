@@ -55,9 +55,9 @@ public class SCXMLDigesterTest extends TestCase {
      */
     public void setUp() {
         microwave01 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml/microwave-01.xml");
+            getResource("org/apache/commons/scxml/env/jsp/microwave-01.xml");
         microwave02 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml/microwave-02.xml");
+            getResource("org/apache/commons/scxml/env/jsp/microwave-02.xml");
         transitions01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/transitions-01.xml");
         send01 = this.getClass().getClassLoader().
