@@ -25,7 +25,8 @@
              xmlns:v3="http://foo.bar.com/vxml3"
              xmlns:test="http://my.test.namespace">
                 <v3:form id="Confirm">
-                    <v3:grammar type="boolean" />
+                    <v3:grammar type="application/srgs+xml"
+                                src="/grammars/boolean.grxml"/>
                     <v3:block>
                         <v3:prompt>Say yes or no.</v3:prompt>
                     </v3:block>
