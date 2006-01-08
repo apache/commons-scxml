@@ -20,12 +20,18 @@
   <body>
     <menu         name="Commons SCXML Resources">
 
+      <item       name="Overview"
+                  href="/index.html"/>
+
+      <item       name="Javadoc"
+                  href="apidocs/index.html"/>
+
       <item       name="Building"                      
                   href="/building.html" />
 
       <item       name="Usecases"                      
                   href="/usecases.html"
-              collapse="true">
+                  collapse="true">
 
         <item     name="SCXML in RDC group container"  
                   href="/usecases/scxml-in-rdc-group.html" />
@@ -37,7 +43,7 @@
 
       <item       name="API notes"
                   href="/api-notes.html"
-              collapse="true">
+                  collapse="true">
 
         <item     name="SCXML Digester"  
                   href="/api-notes/core-digester.html" />
@@ -55,6 +61,15 @@
                   href="/api-notes/side-effect-el.html" />
 
       </item>
+
+      <item       name="Mailing lists"
+                  href="/mail-lists.html"/>
+
+      <item       name="Team"
+                  href="/team-list.html"/>
+
+      <item       name="SVN repository"
+                  href="http://svn.apache.org/viewcvs/jakarta/commons/sandbox/scxml/trunk/"/>
 
     </menu>
 
