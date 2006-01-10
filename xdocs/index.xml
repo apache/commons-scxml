@@ -94,6 +94,16 @@
   </p>
  </section>
 
+ <section name="Who is using it?">
+  <p>
+   Projects that use Commons SCXML:
+   <ul>
+    <li><a href="http://jakarta.apache.org/taglibs/doc/rdc-doc/intro.html">Reusable Dialog Components (RDC)</a>
+        tag library</li>
+   </ul>
+  </p>
+ </section>
+
  </body>
 
 </document>
