@@ -36,6 +36,23 @@
      description="Project nearing promotion vote to Commons Proper">
 
       <action dev="rahul" type="update">
+       [01-11-2006] Various website and documentation improvements.
+      </action>
+
+      <action dev="rahul" type="update">
+       [01-08-2006] Improve dependencies webpage by providing URLs for each.
+       Improve navigation by providing "quick links".
+      </action>
+
+      <action dev="rahul" type="add">
+       [01-08-2006] Added JEXL support for SCXML documents.
+      </action>
+
+      <action dev="rahul" type="update">
+       [01-07-2006] SCXML serialization bits available in a utility class.
+      </action>
+
+      <action dev="rahul" type="update">
        [12-21-2005] SCXML digester instances are now available for further
        customization of the default digester ruleset.
       </action>
