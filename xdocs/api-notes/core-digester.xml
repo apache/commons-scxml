@@ -68,9 +68,12 @@
      attributes of <code>State</code> SCXML elements.</p>
 
      <p>Commons SCXML provides convenience implementations of most of the
-     interfaces such as <code>Context</code>, <code>ErrorHandler</code>,
-     and an implementation of <code>Evaluator</code> for the JSP 2.0 EL,
-     that uses Commons EL.</p>
+     interfaces such as <code>ErrorHandler</code>. The SCXML specification
+     allows implementations to support multiple expression languages so SCXML
+     documents can be used in varying environments. The <code>Context</code>
+     and <code>Evaluator</code> interfaces serve as adapters to the
+     particular expression language APIs. Commons SCXML currently supports
+     JEXL and JSP 2.0 EL expressions.</p>
 
      <p>The SCXMLDigester exposes another convenience method which can handle
      a SCXML document specified using its &quot;real path&quot; on the local
