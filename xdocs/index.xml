@@ -27,10 +27,9 @@
  <section name="Commons SCXML">
 
   <p>
-  The World Wide Web Consortium (W3C) Voice Browser Working Group recently
-  announced the publication of the first 
-  <a href="http://www.w3.org/TR/scxml/">Working Draft of State 
-  Chart XML (SCXML)</a>.
+  The first <a href="http://www.w3.org/TR/scxml/">Working Draft of State 
+  Chart XML (SCXML)</a> was published by the World Wide Web Consortium (W3C)
+  Voice Browser Working Group in July 2005.
   SCXML provides a generic state-machine based execution environment based on Harel
   State Tables. SCXML is a candidate for the control language within 
   multiple markup languages coming out of the W3C (see Working Draft for details).
