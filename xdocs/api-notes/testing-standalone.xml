@@ -26,33 +26,63 @@
 
   <section name="Commons SCXML - Standalone testing, trying out samples">
 
-   <p>The SCXML distribution provides a utility class 
-   <code>org.apache.commons.scxml.env.jsp.Standalone</code> which provides
-   a mock environment allowing users to try out samples. The core dependencies
-   for Commons SCXML are Commons Digester (which introduces a transitive 
-   dependency on Commons BeanUtils, at the least) and Commons Logging. In 
-   addition, an environment specific expression language is used in SCXML 
-   documents. The Standalone class anticipates expressions in the JSP 2.0 
-   Expression Language, and hence requires commons-el.jar and jsp-api.jar. 
-   View the <a href="../dependencies.html">dependencies</a> page for the
+   <p>The SCXML distribution provides utility classes that offer a mock
+   command line environments allowing users to try out samples. The core
+   dependencies for Commons SCXML are Commons Digester (which introduces a
+   transitive dependency on Commons BeanUtils, at the least) and Commons
+   Logging.</p>
+
+   <p>View the <a href="../dependencies.html">dependencies</a> page for the
    recommended version numbers. <i>It may be possible to use lower version
-   numbers for the Commons dependencies.</i>
-   </p>
+   numbers for the Commons dependencies.</i></p>
 
-   <p>So that amounts to (use the correct local paths and filenames to the
-   <code>jar</code> files and the SCXML document, without the line breaks):</p>
+   <p>An environment specific expression language is used in SCXML
+   documents. Commons SCXML currently supports the use of JEXL or JSP 2.0 EL
+   in SCXML documents.</p>
 
-   <pre>
-   java -classpath
+   <subsection name="Using JEXL in SCXML documents">
 
-   commons-digester-1.7.jar;commons-beanutils-1.7.0.jar;
-   commons-logging-1.0.4.jar;commons-scxml-1.0-SNAPSHOT.jar;
-   commons-el-1.0.jar;jsp-api-2.0.jar
+    <p>The JEXL Standalone class anticipates expressions in JEXL and hence
+    requires commons-jexl.jar.</p>
 
-   org.apache.commons.scxml.env.jsp.Standalone 
+    <p>So that amounts to (use the correct local paths and filenames to the
+    <code>jar</code> files and the SCXML document, without the line breaks):</p>
 
-   microwave01.xml
-   </pre>
+    <pre>
+    java -classpath
+
+    commons-digester-1.7.jar;commons-beanutils-1.7.0.jar;
+    commons-logging-1.0.4.jar;commons-scxml-1.0-SNAPSHOT.jar;
+    commons-jexl-1.0.jar
+
+    <a href="../xref/org/apache/commons/scxml/env/jexl/Standalone.html">org.apache.commons.scxml.env.jexl.Standalone</a>
+
+    <a href="http://svn.apache.org/repos/asf/jakarta/commons/sandbox/scxml/trunk/src/test/java/org/apache/commons/scxml/env/jexl/microwave-01.xml">microwave01.xml</a>
+    </pre>
+
+   </subsection>
+
+   <subsection name="Using JSP 2.0 EL in SCXML documents">
+
+    <p>The JSP Standalone class anticipates expressions in the JSP 2.0 
+    Expression Language, and hence requires commons-el.jar and jsp-api.jar.</p>
+
+    <p>So that amounts to (use the correct local paths and filenames to the
+    <code>jar</code> files and the SCXML document, without the line breaks):</p>
+
+    <pre>
+    java -classpath
+
+    commons-digester-1.7.jar;commons-beanutils-1.7.0.jar;
+    commons-logging-1.0.4.jar;commons-scxml-1.0-SNAPSHOT.jar;
+    commons-el-1.0.jar;jsp-api-2.0.jar
+
+    <a href="../xref/org/apache/commons/scxml/env/jsp/Standalone.html">org.apache.commons.scxml.env.jsp.Standalone</a> 
+
+    <a href="http://svn.apache.org/repos/asf/jakarta/commons/sandbox/scxml/trunk/src/test/java/org/apache/commons/scxml/env/jsp/microwave-01.xml">microwave01.xml</a>
+    </pre>
+
+   </subsection>
 
    <p>You could set up something more elegant (a script, an ant task etc.),
    but that is what it boils down to.
@@ -63,7 +93,7 @@
 
    <p>A few examples are available as part of the 
    <a href="http://svn.apache.org/repos/asf/jakarta/commons/sandbox/scxml/trunk/src/test/java/org/apache/commons/scxml/">
-   Commons SCXML test suite</a>.</p>
+   Commons SCXML test suite</a> (look in env.jexl and env.jsp child packages as well).</p>
 
   </section> 
 
