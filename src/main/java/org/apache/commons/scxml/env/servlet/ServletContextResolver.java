@@ -1,6 +1,6 @@
 /*
  *
- *   Copyright 2005 The Apache Software Foundation.
+ *   Copyright 2005-2006 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.commons.scxml.env;
+package org.apache.commons.scxml.env.servlet;
 
 import javax.servlet.ServletContext;
 
