@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 The Apache Software Foundation.
+ * Copyright 2005-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
+import org.apache.commons.scxml.io.SCXMLSerializer;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.Send;
 import org.apache.commons.scxml.model.State;

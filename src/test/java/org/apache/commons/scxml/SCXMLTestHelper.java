@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 The Apache Software Foundation.
+ * Copyright 2005-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import org.apache.commons.scxml.env.jsp.ELEvaluator;
 import org.apache.commons.scxml.env.jsp.ELContext;
 import org.apache.commons.scxml.env.SimpleDispatcher;
 import org.apache.commons.scxml.env.Tracer;
+import org.apache.commons.scxml.io.SCXMLDigester;
 import org.apache.commons.scxml.model.SCXML;
 
 import org.xml.sax.ErrorHandler;
