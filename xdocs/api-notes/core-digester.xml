@@ -39,7 +39,7 @@
         //import java.net.URL;
         //import org.apache.commons.scxml.Context;
         //import org.apache.commons.scxml.Evaluator;
-        //import org.apache.commons.scxml.SCXMLDigester;
+        //import org.apache.commons.scxml.io.SCXMLDigester;
         //import org.apache.commons.scxml.model.SCXML;
         //import org.xml.sax.ErrorHandler;
         //import org.xml.sax.SAXException;
