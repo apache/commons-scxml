@@ -36,6 +36,20 @@
      description="Project nearing promotion vote to Commons Proper">
 
       <action dev="rahul" type="update">
+       [01-22-2006] Package reorganization. Mostly out of discussions on
+       the dev list, three new packages were introduced:
+        <ol>
+          <li>A "test" package for the command line testing utility
+              classes</li>
+          <li>An "io" package for classes related to reading and writing
+              SCXML documents</li>
+          <li>A "servlet" environment package for the classes that
+              depend on the servlet API for Commons SCXML usecases in
+              servlet containers.</li>
+        </ol>
+      </action>
+
+      <action dev="rahul" type="update">
        [01-11-2006] Various website and documentation improvements.
       </action>
 
