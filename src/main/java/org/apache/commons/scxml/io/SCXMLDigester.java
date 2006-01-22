@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.commons.scxml;
+package org.apache.commons.scxml.io;
 
 import java.io.IOException;
 import java.net.URL;
@@ -35,6 +35,11 @@ import org.apache.commons.digester.SetNextRule;
 import org.apache.commons.digester.SetPropertiesRule;
 import org.apache.commons.logging.LogFactory;
 
+import org.apache.commons.scxml.Context;
+import org.apache.commons.scxml.Evaluator;
+import org.apache.commons.scxml.NotificationRegistry;
+import org.apache.commons.scxml.PathResolver;
+import org.apache.commons.scxml.SCXMLHelper;
 import org.apache.commons.scxml.env.URLResolver;
 import org.apache.commons.scxml.model.Action;
 import org.apache.commons.scxml.model.Assign;

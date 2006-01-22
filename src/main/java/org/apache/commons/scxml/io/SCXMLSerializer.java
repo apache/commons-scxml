@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.commons.scxml;
+package org.apache.commons.scxml.io;
 
 import java.util.Iterator;
 import java.util.List;
