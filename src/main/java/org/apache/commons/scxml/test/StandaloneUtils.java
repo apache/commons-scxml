@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.commons.scxml.env;
+package org.apache.commons.scxml.test;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -27,11 +27,13 @@ import java.util.StringTokenizer;
 import org.apache.commons.scxml.Context;
 import org.apache.commons.scxml.Evaluator;
 import org.apache.commons.scxml.EventDispatcher;
-import org.apache.commons.scxml.SCXMLDigester;
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLHelper;
-import org.apache.commons.scxml.SCXMLSerializer;
 import org.apache.commons.scxml.TriggerEvent;
+import org.apache.commons.scxml.env.SimpleDispatcher;
+import org.apache.commons.scxml.env.Tracer;
+import org.apache.commons.scxml.io.SCXMLDigester;
+import org.apache.commons.scxml.io.SCXMLSerializer;
 import org.apache.commons.scxml.model.ModelException;
 import org.apache.commons.scxml.model.SCXML;
 import org.xml.sax.SAXException;

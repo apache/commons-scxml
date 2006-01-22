@@ -15,19 +15,21 @@
  *  limitations under the License.
  *
  */
-package org.apache.commons.scxml.env.jsp;
+package org.apache.commons.scxml.test;
 
 import org.apache.commons.scxml.Evaluator;
-import org.apache.commons.scxml.env.StandaloneUtils;
+import org.apache.commons.scxml.env.jsp.ELEvaluator;
 
 /**
  * Standalone SCXML interpreter, useful for command-line testing and
  * debugging, where expressions are JSP 2.0 EL expressions.
  *
  * <p>USAGE:</p>
- * <p><code>java org.apache.commons.scxml.env.jsp.Standalone url</code></p>
+ * <p><code>java org.apache.commons.scxml.test.StandaloneElExpressions
+ *          url</code></p>
  * <p>or</p>
- * <p><code>java org.apache.commons.scxml.env.jsp.Standalone filename</code>
+ * <p><code>java org.apache.commons.scxml.test.StandaloneElExpressions
+ *          filename</code>
  * </p>
  *
  * <p>RUNNING:</p>
@@ -40,7 +42,7 @@ import org.apache.commons.scxml.env.StandaloneUtils;
  * </ul>
  *
  */
-public final class Standalone {
+public final class StandaloneElExpressions {
 
     /**
      * Launcher.
@@ -49,7 +51,8 @@ public final class Standalone {
      */
     public static void main(final String[] args) {
         if (args.length < 1) {
-            System.out.println("USAGE: java " + Standalone.class.getName()
+            System.out.println("USAGE: java "
+                    + StandaloneElExpressions.class.getName()
                     + "<url|filename>");
             System.exit(-1);
         }
@@ -60,7 +63,7 @@ public final class Standalone {
     /**
      * Discourage instantiation since this is a utility class.
      */
-    private Standalone() {
+    private StandaloneElExpressions() {
         super();
     }
 
