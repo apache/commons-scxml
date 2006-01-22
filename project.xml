@@ -202,11 +202,14 @@
       <includes>
         <include>org/apache/commons/scxml/SCXMLTestSuite.java</include>
         <include>org/apache/commons/scxml/env/EnvTestSuite.java</include>
+        <include>org/apache/commons/scxml/env/faces/EnvFacesTestSuite.java</include>
         <include>org/apache/commons/scxml/env/jexl/EnvJexlTestSuite.java</include>
         <include>org/apache/commons/scxml/env/jsp/EnvJspTestSuite.java</include>
-        <include>org/apache/commons/scxml/env/faces/EnvFacesTestSuite.java</include>
+        <include>org/apache/commons/scxml/env/servlet/EnvServletTestSuite.java</include>
+        <include>org/apache/commons/scxml/io/IOTestSuite.java</include>
         <include>org/apache/commons/scxml/model/ModelTestSuite.java</include>
         <include>org/apache/commons/scxml/semantics/SemanticsTestSuite.java</include>
+        <include>org/apache/commons/scxml/test/TestingTestSuite.java</include>
       </includes>
       <resources>
         <resource>
