@@ -1,0 +1,84 @@
+<!--
+   Copyright 2006 The Apache Software Foundation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+$Id$
+
+                     COMMONS SCXML
+                 STATELESS_MODEL BRANCH
+
+                    -- PURPOSE --
+
+To decouple the execution context for the Commons SCXML Java object model.
+
+                    -- STATUS --
+
+Under active development.
+
+                    -- DETAILS --
+
+A clean summary of the issue this branch attempts to work on was posted
+by Tim O'Brien to the commons-dev mailing list.
+
+<TIM-QUOTE>
+
+2. Decouple Execution Context from the SCXML Model
+
+Right now, the Context passed into the class that parses the XML and
+creates the SCXML object is the global execution context.  You pass in
+a JexlContext when you are parsing the SCXML model, it is assigned to
+all of the State objects.
+
+So, bear with me, assume I have a SCXML document that represents the
+valid states of a stopwatch (ready, running, paused, stopped).  The
+SCXML models the watch in a way similar to the microwave sample in the
+Working Draft, it uses a reference to a "timer" variable.  To do this
+with the current implementation of SCXML, I would need to do the
+following twice (assuming a JexlContext):
+
+ a. Create a JexlContext
+ b. Populate the JexlContext with the appropriate variables
+ c. Call SCXMLDigester passing in the JexlEvaluator and the JexlContext
+    I want to execute this state machine with
+ d. Create an instance of SCXMLExecutor, pass it the SCXML from step c.
+
+For each watch I need to model in this application, the implementation
+forces me to parse that SCXML document with Digester every time I want
+to model a separate StopWatch.  In the application I'm interested in
+using this in, hundreds of documents in a content management system are
+going to be modeled as individual state machines, I would hate to have
+to parse an SCXML file for each individual document.
+
+* Alternative: Provide a mechanism that allows you to clone an SCXML
+  instance so that you can create a separate SCXMLExecutor that can model
+  the same statemachine with an isolated Context.
+
+* Better Alternative: States do not "have" a context.  Take the context
+  property off of the State and change executeActionList in
+  SCXMLSemanticsImpl to get the Context from the Executor. Likewise,
+  Transitions do not have a "notificationRegistry", take that property off
+  of a transition and just have the SCXMLSemanticsImpl get the
+ notificationRegistry from the Executor.
+
+I don't think this is a terribly difficult idea, and decoupling the
+description of the FSM from the execution state, would also make it much
+easier to persist either one.
+
+</TIM-QUOTE>
+
+                  -- CHOSEN APPROACH --
+
+We always go for the best approach around here, so we will go for the
+"Better Alternative" listed in the details section.
+
