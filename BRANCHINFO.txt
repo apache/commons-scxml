@@ -1,0 +1,62 @@
+<!--
+   Copyright 2006 The Apache Software Foundation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+$Id$
+
+                     COMMONS SCXML
+                   BETWIXT_IO BRANCH
+
+                    -- PURPOSE --
+
+To set up the Commons SCXML IO using betwixt.
+
+                    -- STATUS --
+
+Under active development.
+
+                    -- DETAILS --
+
+Tim O'Brien suggested on the commons-dev mailing list that Commons SCXML
+might be better served using betwixt rather than raw digester.
+
+<TIM-QUOTE>
+
+1. SCXMLSerializer
+
+Right now the code to serialize an SCXML object is a Visitor pattern
+that constructs XML using a series of StringBuffers.  The code to read
+this XML document alrady uses a straightforward set of Digester rules
+and the project already depends on commons-digester.
+
+*Alternative: Add a dependency to commons-betwixt, map the model package
+to XML.  Instead of writing Digester rules for reading and constructing
+Strings for writing, use the betwixt mapping files as a single point of
+translation.
+
+The current SCXMLDigester isn't trivial by any means, but I think it would
+be easy to implement the external source rule.  The current SCXMLDigester
+plays two roles, first it sets up the Digester rules and "Digests" the XML,
+but it also does a bit of post-processing in updateSCXML.  I think the
+component would be well served to separate everything that has to do with
+serialization to/from XML into a separate package and to move some of this
+postProcess that happens in updateSCXML somewhere else.
+
+
+</TIM-QUOTE>
+
+                  -- CHOSEN APPROACH --
+
+Let us attempt to set up a betwixt mapping for Commons SCXML IO.
+
