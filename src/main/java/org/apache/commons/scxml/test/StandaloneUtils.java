@@ -77,8 +77,7 @@ public final class StandaloneUtils {
             Context rootCtx = evaluator.newContext(null);
             EventDispatcher ed = new SimpleDispatcher();
             Tracer trc = new Tracer();
-            SCXML doc = SCXMLDigester.digest(new URL(documentURI), trc,
-                rootCtx, evaluator);
+            SCXML doc = SCXMLDigester.digest(new URL(documentURI), trc);
             if (doc == null) {
                 System.err.println("The SCXML document " + uri
                         + " can not be parsed!");
@@ -86,9 +85,11 @@ public final class StandaloneUtils {
             }
             System.out.println(SCXMLSerializer.serialize(doc));
             SCXMLExecutor exec = new SCXMLExecutor(evaluator, ed, trc);
-            doc.addListener(trc);
+            exec.addListener(doc, trc);
             exec.setSuperStep(true);
+            exec.setRootContext(rootCtx);
             exec.setStateMachine(doc);
+            exec.go();
             BufferedReader br = new BufferedReader(new
                 InputStreamReader(System.in));
             String event = null;
