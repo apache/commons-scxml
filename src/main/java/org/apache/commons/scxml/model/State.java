@@ -1,6 +1,6 @@
 /*
  *
- *   Copyright 2005 The Apache Software Foundation.
+ *   Copyright 2005-2006 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,19 +23,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.scxml.Context;
-
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;state&gt; SCXML element.
  *
  */
 public class State extends TransitionTarget {
-
-    /**
-     * The Context in which any expressions will be evaluated.
-     */
-    private Context context;
 
     /**
      * The Map containing immediate children of this State, keyed by
@@ -87,25 +80,6 @@ public class State extends TransitionTarget {
         this.children = new HashMap();
         this.transitions = new HashMap();
         this.history = new ArrayList();
-    }
-
-    /**
-     * Get the Context.
-     *
-     * @return Context Returns the context.
-     */
-    public final Context getContext() {
-        return context;
-    }
-
-    /**
-     * Set the Context.
-     *
-     * @param context
-     *            The context to set.
-     */
-    public final void setContext(final Context context) {
-        this.context = context;
     }
 
     /**

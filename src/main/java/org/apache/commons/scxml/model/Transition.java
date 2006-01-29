@@ -1,6 +1,6 @@
 /*
  *
- *   Copyright 2005 The Apache Software Foundation.
+ *   Copyright 2005-2006 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,10 +17,6 @@
  */
 package org.apache.commons.scxml.model;
 
-import org.apache.commons.scxml.NotificationRegistry;
-import org.apache.commons.scxml.Observable;
-import org.apache.commons.scxml.SCXMLListener;
-
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;transition&gt; SCXML element. Transition rules are triggered
@@ -28,7 +24,7 @@ import org.apache.commons.scxml.SCXMLListener;
  * &quot;guard-conditions&quot;.
  *
  */
-public class Transition extends Executable implements Observable {
+public class Transition extends Executable {
 
     /**
      * Property that specifies the trigger for this transition.
@@ -52,11 +48,6 @@ public class Transition extends Executable implements Observable {
     private String next;
 
     /**
-     * The notification registry.
-     */
-    private NotificationRegistry notifReg;
-
-    /**
      * The path for this transition.
      * @see Path
      */
@@ -68,26 +59,7 @@ public class Transition extends Executable implements Observable {
     public Transition() {
         super();
         this.target = null;
-        this.notifReg = null;
         this.path = null;
-    }
-
-    /**
-     * Register a listener to this document root.
-     *
-     * @param lst The SCXMLListener to add
-     */
-    public final void addListener(final SCXMLListener lst) {
-        notifReg.addListener(this, lst);
-    }
-
-    /**
-     * Deregister a listener from this document root.
-     *
-     * @param lst The SCXMLListener to remove
-     */
-    public final void removeListener(final SCXMLListener lst) {
-        notifReg.removeListener(this, lst);
     }
 
     /**
@@ -185,25 +157,6 @@ public class Transition extends Executable implements Observable {
      */
     public final void setNext(final String next) {
         this.next = next;
-    }
-
-    /**
-     * Supply this Transition object a handle to the notification
-     * registry. Called by the Digester after instantiation.
-     *
-     * @param reg The notification registry
-     */
-    public final void setNotificationRegistry(final NotificationRegistry reg) {
-        notifReg = reg;
-    }
-
-    /**
-     * Get the notification registry.
-     *
-     * @return NotificationRegistry The notification registry.
-     */
-    public final NotificationRegistry getNotificationRegistry() {
-        return notifReg;
     }
 
     /**
