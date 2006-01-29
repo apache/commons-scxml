@@ -19,10 +19,10 @@ import java.net.URL;
 
 import junit.framework.Assert;
 
-import org.apache.commons.scxml.env.jsp.ELEvaluator;
-import org.apache.commons.scxml.env.jsp.ELContext;
 import org.apache.commons.scxml.env.SimpleDispatcher;
 import org.apache.commons.scxml.env.Tracer;
+import org.apache.commons.scxml.env.jexl.JexlContext;
+import org.apache.commons.scxml.env.jexl.JexlEvaluator;
 import org.apache.commons.scxml.io.SCXMLDigester;
 import org.apache.commons.scxml.model.SCXML;
 
@@ -33,25 +33,15 @@ import org.xml.sax.ErrorHandler;
 public class SCXMLTestHelper {
 
     public static SCXML digest(final URL url) {
-        Evaluator evaluator = new ELEvaluator();
-        Context ctx = new ELContext();
-        return digest(url, null, ctx, evaluator);
+        return digest(url, null);
     }
 
-    public static SCXML digest(final URL url, final Context ctx,
-            final Evaluator evaluator) {
-        return digest(url, null, ctx, evaluator);
-    }
-
-    public static SCXML digest(final URL url, final ErrorHandler errHandler,
-            final Context ctx, final Evaluator evaluator) {
+    public static SCXML digest(final URL url, final ErrorHandler errHandler) {
         Assert.assertNotNull(url);
-        Assert.assertNotNull(ctx);
         // SAX ErrorHandler may be null
-        Assert.assertNotNull(evaluator);
         SCXML scxml = null;
         try {
-            scxml = SCXMLDigester.digest(url, errHandler, ctx, evaluator);
+            scxml = SCXMLDigester.digest(url, errHandler);
         } catch (Exception e) {
             Assert.fail(e.getMessage());
         }
@@ -60,43 +50,54 @@ public class SCXMLTestHelper {
     }
 
     public static SCXMLExecutor getExecutor(final URL url) {
-        Evaluator evaluator = new ELEvaluator();
-        Context ctx = new ELContext();
-        SCXML scxml = digest(url, null, ctx, evaluator);
-        return getExecutor(evaluator, scxml);
-    }
-
-    public static SCXMLExecutor getExecutor(final URL url, final Context ctx,
-            final Evaluator evaluator) {
-        SCXML scxml = digest(url, null, ctx, evaluator);
+        SCXML scxml = digest(url, null);
+        Evaluator evaluator = new JexlEvaluator();
         return getExecutor(evaluator, scxml);
     }
 
     public static SCXMLExecutor getExecutor(final URL url,
-            final ErrorHandler errHandler,final Context ctx,
             final Evaluator evaluator) {
-        SCXML scxml = digest(url, errHandler, ctx, evaluator);
+        SCXML scxml = digest(url, null);
+        return getExecutor(evaluator, scxml);
+    }
+
+    public static SCXMLExecutor getExecutor(final URL url,
+            final ErrorHandler errHandler) {
+        SCXML scxml = digest(url, errHandler);
+        Evaluator evaluator = new JexlEvaluator();
         return getExecutor(evaluator, scxml);
     }
 
     public static SCXMLExecutor getExecutor(Evaluator evaluator, SCXML scxml) {
         EventDispatcher ed = new SimpleDispatcher();
         Tracer trc = new Tracer();
-        return getExecutor(evaluator, scxml, ed, trc);
+        Context context = new JexlContext();
+        return getExecutor(context, evaluator, scxml, ed, trc);
     }
 
-    public static SCXMLExecutor getExecutor(Evaluator evaluator, SCXML scxml,
-            EventDispatcher ed, Tracer trc) {
+    public static SCXMLExecutor getExecutor(final URL url, final Context ctx,
+            final Evaluator evaluator) {
+        SCXML scxml = digest(url, null);
+        EventDispatcher ed = new SimpleDispatcher();
+        Tracer trc = new Tracer();
+        return getExecutor(ctx, evaluator, scxml, ed, trc);
+    }
+
+    public static SCXMLExecutor getExecutor(Context context,
+            Evaluator evaluator, SCXML scxml, EventDispatcher ed, Tracer trc) {
         Assert.assertNotNull(evaluator);
+        Assert.assertNotNull(context);
         Assert.assertNotNull(scxml);
         Assert.assertNotNull(ed);
         Assert.assertNotNull(trc);
         SCXMLExecutor exec = null;
         try {
             exec = new SCXMLExecutor(evaluator, ed, trc);
-            scxml.addListener(trc);
+            exec.addListener(scxml, trc);
+            exec.setRootContext(context);
             exec.setSuperStep(true);
             exec.setStateMachine(scxml);
+            exec.go();
         } catch (Exception e) {
             Assert.fail(e.getMessage());
         }
