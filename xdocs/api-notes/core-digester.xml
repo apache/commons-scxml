@@ -45,7 +45,7 @@
         SCXML scxml = null;
 
         try {
-          scxml = SCXMLDigester.digest(&lt;URL&gt;, &lt;ErroHandler&gt;);
+          scxml = SCXMLDigester.digest(&lt;URL&gt;, &lt;ErrorHandler&gt;);
         } catch (IOException ioe) {
           // IOException while parsing
         } catch (SAXException se) {
@@ -76,7 +76,7 @@
      so the document must be a standalone document.</p>
 
      <p>The <code>SCXMLDigester</code> Javadoc is available
-     <a href="../apidocs/org/apache/commons/scxml/SCXMLDigester.html">
+     <a href="../apidocs/org/apache/commons/scxml/io/SCXMLDigester.html">
      here</a>.
      </p>
     </subsection>
