@@ -83,7 +83,7 @@
      method is also available, primarily for debugging.</p>
 
      <p>The <code>SCXMLDigester</code> Javadoc is available
-     <a href="../apidocs/org/apache/commons/scxml/SCXMLDigester.html">
+     <a href="../apidocs/org/apache/commons/scxml/io/SCXMLDigester.html">
      here</a>.
      </p>
     </subsection>
