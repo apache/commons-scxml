@@ -71,6 +71,9 @@
       <item       name="SVN repository"
                   href="http://svn.apache.org/viewcvs/jakarta/commons/sandbox/scxml/trunk/"/>
 
+      <item       name="Nightly snapshots"
+                  href="http://cvs.apache.org/builds/jakarta-commons/nightly/commons-scxml/"/>
+
     </menu>
 
     &common-menus;
