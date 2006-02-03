@@ -50,6 +50,7 @@ public class SCXMLTestSuite extends TestCase {
         suite.addTest(SCXMLExecutorTest.suite());
         suite.addTest(TestBuiltin.suite());
         suite.addTest(TestSCXMLHelper.suite());
+        suite.addTest(TestStatus.suite());
         suite.addTest(TriggerEventTest.suite());
         return suite;
     }

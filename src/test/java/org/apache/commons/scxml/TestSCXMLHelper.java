@@ -1,4 +1,5 @@
-/* Copyright 2005 The Apache Software Foundation.
+/*
+ * Copyright 2005-2006 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +18,7 @@ package org.apache.commons.scxml;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.scxml.env.MockErrorReporter;
 import org.apache.commons.scxml.env.SimpleErrorReporter;
 import org.apache.commons.scxml.model.Parallel;
 import org.apache.commons.scxml.model.State;
@@ -131,14 +133,12 @@ public class TestSCXMLHelper extends TestCase {
         assertTrue(SCXMLHelper.isLegalConfig(states, new SimpleErrorReporter()));
     }
     
-    /*
-     * Not able to test the return values on ErrorReporter.
-     */
     public void testIsLegalConfigInvalidParallel() {
         Set states = new HashSet();
         Parallel parallel = new Parallel();
 
         Parallel parent = new Parallel();
+        parent.setId("4");
 
         State state1 = new State();
         state1.setId("1");
@@ -152,9 +152,120 @@ public class TestSCXMLHelper extends TestCase {
         
         states.add(parallel);
         
-        SimpleErrorReporter errorReporter = new SimpleErrorReporter();
+        MockErrorReporter errorReporter = new MockErrorReporter();
         
         assertFalse(SCXMLHelper.isLegalConfig(states, errorReporter));
+        assertEquals(ErrorReporter.ILLEGAL_CONFIG, errorReporter.getErrCode());
+        assertEquals("Not all AND states active for parallel 4", errorReporter.getErrDetail());
+    }
+    
+    public void testIsLegalConfigMultipleTopLevel() {
+        Set states = new HashSet();
+
+        State state1 = new State();
+        state1.setId("1");
+        State state2 = new State();
+        state2.setId("2");
+        
+        states.add(state1);
+        states.add(state2);
+        
+        MockErrorReporter errorReporter = new MockErrorReporter();
+        
+        assertTrue(SCXMLHelper.isLegalConfig(states, errorReporter));
+        assertEquals(ErrorReporter.ILLEGAL_CONFIG, errorReporter.getErrCode());
+        assertEquals("Multiple top-level OR states active!", errorReporter.getErrDetail());
+    }
+    
+    public void testIsLegalConfigMultipleStatesActive() {
+        Set states = new HashSet();
+
+        State state1 = new State();
+        state1.setId("1");
+        
+        State state2 = new State();
+        state2.setId("2");
+
+        State parent = new State();
+        parent.setId("parentid");
+        
+        state2.setParent(parent);
+        state1.setParent(parent);
+
+        states.add(state1);
+        states.add(state2);
+        
+        MockErrorReporter errorReporter = new MockErrorReporter();
+        
+        assertFalse(SCXMLHelper.isLegalConfig(states, errorReporter));
+        assertEquals(ErrorReporter.ILLEGAL_CONFIG, errorReporter.getErrCode());
+        assertEquals("Multiple OR states active for state parentid", errorReporter.getErrDetail());
+    }
+    
+    public void testGetLCASameTarget() {
+        TransitionTarget target = new State();
+        target.setId("1");
+        
+        TransitionTarget returnValue = SCXMLHelper.getLCA(target, target);
+        
+        assertEquals("1", returnValue.getId());
     }
 
+    public void testGetLCAIsDescendant() {
+        TransitionTarget target = new State();
+        target.setId("1");
+
+        TransitionTarget parent = new State();
+        parent.setId("2");
+
+        target.setParent(parent);
+        
+        TransitionTarget returnValue = SCXMLHelper.getLCA(target, parent);
+        
+        assertEquals("2", returnValue.getId());
+    }
+    
+    public void testGetLCAIsDescendantReverse() {
+        TransitionTarget target = new State();
+        target.setId("1");
+
+        TransitionTarget parent = new State();
+        parent.setId("2");
+
+        parent.setParent(target); // reversed
+        
+        TransitionTarget returnValue = SCXMLHelper.getLCA(target, parent);
+        
+        assertEquals("1", returnValue.getId());
+    }
+
+    public void testGetLCANull() {
+        TransitionTarget target = new State();
+        target.setId("1");
+
+        TransitionTarget notParent = new State();
+        notParent.setId("2");
+
+        TransitionTarget returnValue = SCXMLHelper.getLCA(target, notParent);
+        
+        assertNull(returnValue);
+    }
+
+    public void testGetLCADistantAncestor() {
+        TransitionTarget target1 = new State();
+        target1.setId("1");
+
+        TransitionTarget target2 = new State();
+        target2.setId("2");
+
+        TransitionTarget parent = new State();
+        parent.setId("3");
+
+        target1.setParent(parent);
+        target2.setParent(parent);
+        
+        TransitionTarget returnValue = SCXMLHelper.getLCA(target1, target2);
+        
+        assertEquals("3", returnValue.getId());
+    }
 }
