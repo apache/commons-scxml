@@ -25,6 +25,7 @@ import org.apache.commons.scxml.env.jexl.JexlContext;
 import org.apache.commons.scxml.env.jexl.JexlEvaluator;
 import org.apache.commons.scxml.io.SCXMLDigester;
 import org.apache.commons.scxml.model.SCXML;
+import org.apache.commons.scxml.model.TransitionTarget;
 
 import org.xml.sax.ErrorHandler;
 /**
@@ -103,6 +104,25 @@ public class SCXMLTestHelper {
         }
         Assert.assertNotNull(exec);
         return exec;
+    }
+
+    public static TransitionTarget lookupTransitionTarget(SCXMLExecutor exec,
+            String id) {
+        return (TransitionTarget) exec.getStateMachine().getTargets().get(id);
+    }
+
+    public static Context lookupContext(SCXMLExecutor exec,
+            TransitionTarget tt) {
+        return exec.getSCInstance().lookupContext(tt);
+    }
+
+    public static Context lookupContext(SCXMLExecutor exec,
+            String id) {
+        TransitionTarget tt = lookupTransitionTarget(exec, id);
+        if (tt == null) {
+            return null;
+        }
+        return exec.getSCInstance().lookupContext(tt);
     }
 
     /**
