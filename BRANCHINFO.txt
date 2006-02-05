@@ -24,9 +24,8 @@ To decouple the execution context for the Commons SCXML Java object model.
 
                     -- STATUS --
 
-The chosen approach discussed below has been implemented, and lightly
-tested. I expect the bulk of the work to be done. Pending a few days for
-comments, it will be ported back to trunk.
+This branch is CLOSED. The work done in this branch was merged with trunk
+in r375053.
 
                     -- DETAILS --
 
