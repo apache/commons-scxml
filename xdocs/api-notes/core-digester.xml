@@ -37,8 +37,6 @@
      <pre>
         //import java.io.IOException;
         //import java.net.URL;
-        //import org.apache.commons.scxml.Context;
-        //import org.apache.commons.scxml.Evaluator;
         //import org.apache.commons.scxml.io.SCXMLDigester;
         //import org.apache.commons.scxml.model.SCXML;
         //import org.xml.sax.ErrorHandler;
@@ -47,8 +45,7 @@
         SCXML scxml = null;
 
         try {
-          scxml = SCXMLDigester.digest(&lt;URL&gt;, &lt;ErroHandler&gt;,
-                                    &lt;Context&gt;, &lt;Evaluator&gt;);
+          scxml = SCXMLDigester.digest(&lt;URL&gt;, &lt;ErrorHandler&gt;);
         } catch (IOException ioe) {
           // IOException while parsing
         } catch (SAXException se) {
@@ -68,22 +65,18 @@
      attributes of <code>State</code> SCXML elements.</p>
 
      <p>Commons SCXML provides convenience implementations of most of the
-     interfaces such as <code>ErrorHandler</code>. The SCXML specification
-     allows implementations to support multiple expression languages so SCXML
-     documents can be used in varying environments. The <code>Context</code>
-     and <code>Evaluator</code> interfaces serve as adapters to the
-     particular expression language APIs. Commons SCXML currently supports
-     JEXL and JSP 2.0 EL expressions.</p>
+     interfaces such as <code>ErrorHandler</code>.</p>
 
-     <p>The SCXMLDigester exposes another convenience method which can handle
+     <p>The SCXMLDigester exposes other convenience methods which can handle
      a SCXML document specified using its &quot;real path&quot; on the local
      system, in which case an additional 
      <code>org.apache.commons.SCXML.PathResolver</code>parameter needs to be
-     supplied for resolving relative document references. A serialization
-     method is also available, primarily for debugging.</p>
+     supplied for resolving relative document references or as an
+     <code>InputSource</code>, in which case there is no path resolution,
+     so the document must be a standalone document.</p>
 
      <p>The <code>SCXMLDigester</code> Javadoc is available
-     <a href="../apidocs/org/apache/commons/scxml/SCXMLDigester.html">
+     <a href="../apidocs/org/apache/commons/scxml/io/SCXMLDigester.html">
      here</a>.
      </p>
     </subsection>

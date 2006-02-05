@@ -87,6 +87,9 @@
     <contributor>
       <name>Jaroslav Gergic</name>
     </contributor>
+    <contributor>
+      <name>Peter Costa</name>
+    </contributor>
   </contributors>
   
   <dependencies>
@@ -226,6 +229,7 @@
      <!--report>maven-changelog-plugin</report-->
      <report>maven-changes-plugin</report>
      <report>maven-checkstyle-plugin</report>
+     <report>maven-cobertura-plugin</report>
      <!--report>maven-clover-plugin</report-->
      <!--report>maven-developer-activity-plugin</report-->
      <!--report>maven-file-activity-plugin</report-->

@@ -36,10 +36,11 @@
    <subsection name="Usage">
      <p>The <code>SCXMLExecutor</code> is usually initialized as follows:</p>
      <pre>
-        //import org.apache.commons.scxml.SCXMLExecutor;
+        //import org.apache.commons.scxml.Context;
+        //import org.apache.commons.scxml.ErrorReporter;
         //import org.apache.commons.scxml.Evaluator;
         //import org.apache.commons.scxml.EventDispatcher;
-        //import org.apache.commons.scxml.ErrorReporter;
+        //import org.apache.commons.scxml.SCXMLExecutor;
         //import org.apache.commons.scxml.SCXMLListener;
         //import org.apache.commons.scxml.model.SCXML;
         //import org.apache.commons.scxml.model.ModelException;
@@ -48,11 +49,13 @@
         try {
             exec = new SCXMLExecutor(&lt;Evaluator&gt;,
                        &lt;EventDispatcher&gt;, &lt;ErrorReporter&gt;);
-            scxml.addListener(&lt;SCXMLListener&gt;);
-            exec.setSuperStep(true);
             exec.setStateMachine(&lt;SCXML&gt;);
+            exec.addListener(&lt;SCXML&gt;, &lt;SCXMLListener&gt;);
+            exec.setRootContext(&lt;Context&gt;);
+            exec.setSuperStep(true);
+            exec.go();
         } catch (ModelException me) {
-        	// Executor initialization failed, because the
+            // Executor initialization failed, because the
             // state machine specified has inconsistencies
         }
      </pre>
@@ -62,10 +65,12 @@
      <code>SCXMLListener</code> interfaces, which simply log
      all the events received. Commons SCXML uses Commons Logging.</p>
 
-     <p>An engine, once initialized,
-     should be cached till the state machine reaches a terminal or
-     &quot;final&quot; state, and no more.
-     </p>
+     <p>The SCXML specification allows implementations to support multiple
+     expression languages so SCXML documents can be used in varying
+     environments. The <code>Context</code> and <code>Evaluator</code> 
+     interfaces serve as adapters to the particular expression language
+     APIs. Commons SCXML currently supports JEXL and JSP 2.0 EL
+     expressions.</p>
 
      <p>The <code>SCXMLExecutor</code> Javadoc is available
      <a href="../apidocs/org/apache/commons/scxml/SCXMLExecutor.html">

@@ -1,6 +1,6 @@
 /*
  *
- *   Copyright 2005 The Apache Software Foundation.
+ *   Copyright 2005-2006 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,24 +17,18 @@
  */
 package org.apache.commons.scxml.model;
 
-import org.apache.commons.scxml.Context;
-import org.apache.commons.scxml.NotificationRegistry;
-import org.apache.commons.scxml.Observable;
-import org.apache.commons.scxml.SCXMLHelper;
-import org.apache.commons.scxml.SCXMLListener;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.commons.scxml.SCXMLHelper;
 
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;scxml&gt; root element, and serves as the &quot;document
- * root&quot;. It is also associated with the root Context, via which
- * the SCXMLExecutor may access and the query state of the host
- * environment.
+ * root&quot;.
  *
  */
-public class SCXML implements Observable {
+public class SCXML {
 
     /**
      * The SCXML XMLNS.
@@ -68,27 +62,16 @@ public class SCXML implements Observable {
     private Map states;
 
     /**
-     * The notification registry.
-     */
-    private NotificationRegistry notifReg;
-
-    /**
      * A global map of all States and Parallels associated with this
      * state machine, keyed by their id.
      */
     private Map targets;
 
     /**
-     * The root Context which interfaces with the host environment.
-     */
-    private Context rootContext;
-
-    /**
      * Constructor.
      */
     public SCXML() {
         this.states = new HashMap();
-        this.notifReg = new NotificationRegistry();
         this.targets = new HashMap();
     }
 
@@ -188,15 +171,6 @@ public class SCXML implements Observable {
     }
 
     /**
-     * Get the notification registry.
-     *
-     * @return NotificationRegistry Returns the notifReg.
-     */
-    public final NotificationRegistry getNotificationRegistry() {
-        return notifReg;
-    }
-
-    /**
      * Get the ID of the initial state.
      *
      * @return String Returns the initial state ID (used by XML Digester only).
@@ -214,44 +188,6 @@ public class SCXML implements Observable {
      */
     public final void setInitialstate(final String initialstate) {
         this.initialstate = initialstate;
-    }
-
-    /**
-     * Get the root Context for this document.
-     *
-     * @return Returns the rootContext.
-     */
-    public final Context getRootContext() {
-        return rootContext;
-    }
-
-    /**
-     * Set the root Context for this document.
-     *
-     * @param rootContext The rootContext to set.
-     */
-    public final void setRootContext(final Context rootContext) {
-        this.rootContext = rootContext;
-    }
-
-    /**
-     * Register a listener to this document root.
-     *
-     * @param lst The SCXMLListener to add
-     * Remarks: Only valid if StateMachine is non null!
-     */
-    public final void addListener(final SCXMLListener lst) {
-        notifReg.addListener(this, lst);
-    }
-
-    /**
-     * Deregister a listener from this document root.
-     *
-     * @param lst The SCXMLListener to remove
-     * Remarks: Only valid if StateMachine is non null!
-     */
-    public final void removeListener(final SCXMLListener lst) {
-        notifReg.removeListener(this, lst);
     }
 
 }

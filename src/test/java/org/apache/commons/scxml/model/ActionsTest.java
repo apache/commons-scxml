@@ -22,10 +22,10 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import org.apache.commons.scxml.env.jsp.ELEvaluator;
-import org.apache.commons.scxml.env.jsp.ELContext;
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
+import org.apache.commons.scxml.env.jsp.ELContext;
+import org.apache.commons.scxml.env.jsp.ELEvaluator;
 /**
  * Unit tests {@link org.apache.commons.scxml.model.Assign}.
  * Unit tests {@link org.apache.commons.scxml.model.Cancel}.
@@ -83,6 +83,8 @@ public class ActionsTest extends TestCase {
      */
     public void testModelActions() {
         exec = SCXMLTestHelper.getExecutor(actionsSample, ctx, evaluator);
+        ELContext ctx = (ELContext) SCXMLTestHelper.lookupContext(exec,
+            "actionsTest");
         assertEquals((String) ctx.get("foo"), "foobar");
     }
 

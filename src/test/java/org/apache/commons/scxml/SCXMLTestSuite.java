@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 The Apache Software Foundation.
+ * Copyright 2005-2006 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,6 +48,9 @@ public class SCXMLTestSuite extends TestCase {
         suite.setName("Commons-SCXML Tests");
         suite.addTest(SCXMLDigesterTest.suite());
         suite.addTest(SCXMLExecutorTest.suite());
+        suite.addTest(TestBuiltin.suite());
+        suite.addTest(TestSCXMLHelper.suite());
+        suite.addTest(TestStatus.suite());
         suite.addTest(TriggerEventTest.suite());
         return suite;
     }

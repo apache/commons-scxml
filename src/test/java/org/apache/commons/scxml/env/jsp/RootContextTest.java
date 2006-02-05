@@ -49,7 +49,7 @@ public class RootContextTest extends TestCase {
     private URL rootCtxSample;
     private ELEvaluator evaluator;
     private JspContext jspCtx;
-    private RootContext ctx;
+    private RootContext rootCtx;
     private SCXMLExecutor exec;
 
     /**
@@ -61,7 +61,7 @@ public class RootContextTest extends TestCase {
         evaluator = new ELEvaluator();
         jspCtx = new MockJspContext();
         jspCtx.setAttribute("foo", "1");
-        ctx = new RootContext(jspCtx);
+        rootCtx = new RootContext(jspCtx);
     }
 
     /**
@@ -71,7 +71,7 @@ public class RootContextTest extends TestCase {
         rootCtxSample = null;
         evaluator = null;
         jspCtx = null;
-        ctx = null;
+        rootCtx = null;
         exec = null;
     }
 
@@ -79,11 +79,14 @@ public class RootContextTest extends TestCase {
      * Test the implementation
      */
     public void testRootContext() {
-        assertEquals("1", String.valueOf(ctx.get("foo")));
-        exec = SCXMLTestHelper.getExecutor(rootCtxSample, ctx, evaluator);
+        assertEquals("1", String.valueOf(rootCtx.get("foo")));
+        exec = SCXMLTestHelper.getExecutor(rootCtxSample, rootCtx, evaluator);
         assertEquals("1", String.valueOf(jspCtx.getAttribute("foo")));
-        assertEquals("2", String.valueOf(ctx.get("foo")));
+        assertEquals("2", String.valueOf(rootCtx.get("foo")));
         assertNull(jspCtx.getAttribute("bar"));
+        ELContext ctx = (ELContext) SCXMLTestHelper.lookupContext(exec,
+            "rootCtxTest");
+        assertNotNull(ctx);
         assertNotNull(ctx.get("bar"));
         try {
             assertNull(jspCtx.getVariableResolver().resolveVariable("bar"));
