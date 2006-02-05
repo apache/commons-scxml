@@ -35,9 +35,6 @@ import org.apache.commons.digester.SetNextRule;
 import org.apache.commons.digester.SetPropertiesRule;
 import org.apache.commons.logging.LogFactory;
 
-import org.apache.commons.scxml.Context;
-import org.apache.commons.scxml.Evaluator;
-import org.apache.commons.scxml.NotificationRegistry;
 import org.apache.commons.scxml.PathResolver;
 import org.apache.commons.scxml.SCXMLHelper;
 import org.apache.commons.scxml.env.URLResolver;
@@ -91,27 +88,17 @@ public final class SCXMLDigester {
      *            top level document are to be resovled against this URL).
      * @param errHandler
      *            The SAX ErrorHandler
-     * @param evalCtx
-     *            the document-level variable context for guard condition
-     *            evaluation
-     * @param evalEngine
-     *            the scripting/expression language engine for creating local
-     *            state-level variable contexts (if supported by a given
-     *            scripting engine)
      *
      * @return SCXML The SCXML object corresponding to the file argument
      *
      * @throws IOException Underlying Digester parsing threw an IOException
      * @throws SAXException Underlying Digester parsing threw a SAXException
      *
-     * @see Context
      * @see ErrorHandler
-     * @see Evaluator
      * @see PathResolver
      */
     public static SCXML digest(final URL scxmlURL,
-            final ErrorHandler errHandler, final Context evalCtx,
-            final Evaluator evalEngine)
+            final ErrorHandler errHandler)
     throws IOException, SAXException {
 
         SCXML scxml = null;
@@ -133,7 +120,7 @@ public final class SCXMLDigester {
         }
 
         if (scxml != null) {
-            updateSCXML(scxml, evalCtx, evalEngine);
+            updateSCXML(scxml);
         }
 
         return scxml;
@@ -151,27 +138,17 @@ public final class SCXMLDigester {
      *            SCXML document
      * @param errHandler
      *            The SAX ErrorHandler
-     * @param evalCtx
-     *            the document-level variable context for guard condition
-     *            evaluation
-     * @param evalEngine
-     *            the scripting/expression language engine for creating local
-     *            state-level variable contexts (if supported by a given
-     *            scripting engine)
      *
      * @return SCXML The SCXML object corresponding to the file argument
      *
      * @throws IOException Underlying Digester parsing threw an IOException
      * @throws SAXException Underlying Digester parsing threw a SAXException
      *
-     * @see Context
      * @see ErrorHandler
-     * @see Evaluator
      * @see PathResolver
      */
     public static SCXML digest(final String documentRealPath,
-            final ErrorHandler errHandler, final Context evalCtx,
-            final Evaluator evalEngine, final PathResolver pathResolver)
+            final ErrorHandler errHandler, final PathResolver pathResolver)
     throws IOException, SAXException {
 
         SCXML scxml = null;
@@ -192,7 +169,7 @@ public final class SCXMLDigester {
         }
 
         if (scxml != null) {
-            updateSCXML(scxml, evalCtx, evalEngine);
+            updateSCXML(scxml);
         }
 
         return scxml;
@@ -214,26 +191,16 @@ public final class SCXMLDigester {
      *            The InputSource for the SCXML document
      * @param errHandler
      *            The SAX ErrorHandler
-     * @param evalCtx
-     *            the document-level variable context for guard condition
-     *            evaluation
-     * @param evalEngine
-     *            the scripting/expression language engine for creating local
-     *            state-level variable contexts (if supported by a given
-     *            scripting engine)
      *
      * @return SCXML The SCXML object corresponding to the file argument
      *
      * @throws IOException Underlying Digester parsing threw an IOException
      * @throws SAXException Underlying Digester parsing threw a SAXException
      *
-     * @see Context
      * @see ErrorHandler
-     * @see Evaluator
      */
     public static SCXML digest(final InputSource documentInputSource,
-            final ErrorHandler errHandler, final Context evalCtx,
-            final Evaluator evalEngine)
+            final ErrorHandler errHandler)
     throws IOException, SAXException {
 
         Digester scxmlDigester = SCXMLDigester.newInstance(null, null);
@@ -250,7 +217,7 @@ public final class SCXMLDigester {
         }
 
         if (scxml != null) {
-            updateSCXML(scxml, evalCtx, evalEngine);
+            updateSCXML(scxml);
         }
 
         return scxml;
@@ -285,12 +252,8 @@ public final class SCXMLDigester {
       * document.</p>
       *
       * @param scxml The SCXML object (output from Digester)
-      * @param evalCtx The root evaluation context (from the host environment
-      *                of the SCXML document)
-      * @param evalEngine The expression evaluator
       */
-    public static void updateSCXML(final SCXML scxml, final Context evalCtx,
-            final Evaluator evalEngine) {
+    public static void updateSCXML(final SCXML scxml) {
         // Watch case, slightly unfortunate naming ;-)
         String initialstate = scxml.getInitialstate();
         //we have to use getTargets() here since the initialState can be
@@ -304,13 +267,11 @@ public final class SCXMLDigester {
             logModelError(ERR_SCXML_NO_INIT, new Object[] {initialstate});
         }
         scxml.setInitialState(initialState);
-        scxml.setRootContext(evalCtx);
         Map targets = scxml.getTargets();
         Map states = scxml.getStates();
         Iterator i = states.keySet().iterator();
         while (i.hasNext()) {
-            updateState((State) states.get(i.next()), targets, evalCtx,
-                    evalEngine);
+            updateState((State) states.get(i.next()), targets);
         }
     }
 
@@ -776,25 +737,8 @@ public final class SCXMLDigester {
       *
       * @param s The State object
       * @param targets The global Map of all transition targets
-      * @param evalCtx The evaluation context for this State
-      * @param evalEngine The expression evaluator
       */
-    private static void updateState(final State s, final Map targets,
-            final Context evalCtx, final Evaluator evalEngine) {
-        //setup local variable context
-        Context localCtx = null;
-        if (s.getParent() == null) {
-            localCtx = evalEngine.newContext(evalCtx);
-        } else {
-            State parentState = null;
-            if (s.getParent() instanceof Parallel) {
-                parentState = (State) (s.getParent().getParent());
-            } else {
-                parentState = (State) (s.getParent());
-            }
-            localCtx = evalEngine.newContext(parentState.getContext());
-        }
-        s.setContext(localCtx);
+    private static void updateState(final State s, final Map targets) {
         //ensure both onEntry and onExit have parent
         //could add next two lines as a Digester rule for OnEntry/OnExit
         s.getOnEntry().setParent(s);
@@ -802,13 +746,10 @@ public final class SCXMLDigester {
         //initialize next / inital
         Initial ini = s.getInitial();
         Map c = s.getChildren();
-        String badState = "anonymous state";
-        if (!SCXMLHelper.isStringEmpty(s.getId())) {
-            badState = "state with ID " + s.getId();
-        }
         if (!c.isEmpty()) {
             if (ini == null) {
-                logModelError(ERR_STATE_NO_INIT, new Object[] {badState});
+                logModelError(ERR_STATE_NO_INIT,
+                    new Object[] {getStateName(s)});
             }
             Transition initialTransition = ini.getTransition();
             updateTransition(initialTransition, targets);
@@ -817,7 +758,8 @@ public final class SCXMLDigester {
             //check that initialState is a descendant of s
             if (initialState == null
                     || !SCXMLHelper.isDescendant(initialState, s)) {
-                logModelError(ERR_STATE_BAD_INIT, new Object[] {badState});
+                logModelError(ERR_STATE_BAD_INIT,
+                    new Object[] {getStateName(s)});
             }
         }
         List histories = s.getHistory();
@@ -828,17 +770,18 @@ public final class SCXMLDigester {
             updateTransition(historyTransition, targets);
             State historyState = (State) historyTransition.getTarget();
             if (historyState == null) {
-                logModelError(ERR_STATE_NO_HIST, new Object[] {badState});
+                logModelError(ERR_STATE_NO_HIST,
+                    new Object[] {getStateName(s)});
             }
             if (!h.isDeep()) {
                 if (!c.containsValue(historyState)) {
                     logModelError(ERR_STATE_BAD_SHALLOW_HIST, new Object[] {
-                        badState });
+                        getStateName(s) });
                 }
             } else {
                 if (!SCXMLHelper.isDescendant(historyState, s)) {
                     logModelError(ERR_STATE_BAD_DEEP_HIST, new Object[] {
-                        badState });
+                        getStateName(s) });
                 }
             }
         }
@@ -849,19 +792,17 @@ public final class SCXMLDigester {
             while (j.hasNext()) {
                 Transition trn = (Transition) j.next();
                 //could add next two lines as a Digester rule for Transition
-                trn.setNotificationRegistry(s.getNotificationRegistry());
                 trn.setParent(s);
                 updateTransition(trn, targets);
             }
         }
         Parallel p = s.getParallel();
         if (p != null) {
-            updateParallel(p, targets, evalCtx, evalEngine);
+            updateParallel(p, targets);
         } else {
             Iterator j = c.keySet().iterator();
             while (j.hasNext()) {
-                updateState((State) c.get(j.next()), targets, evalCtx,
-                        evalEngine);
+                updateState((State) c.get(j.next()), targets);
             }
         }
     }
@@ -871,14 +812,11 @@ public final class SCXMLDigester {
       *
       * @param p The Parallel object
       * @param targets The global Map of all transition targets
-      * @param evalCtx The evaluation context for this State
-      * @param evalEngine The expression evaluator
       */
-    private static void updateParallel(final Parallel p, final Map targets,
-            final Context evalCtx, final Evaluator evalEngine) {
+    private static void updateParallel(final Parallel p, final Map targets) {
         Iterator i = p.getStates().iterator();
         while (i.hasNext()) {
-            updateState((State) i.next(), targets, evalCtx, evalEngine);
+            updateState((State) i.next(), targets);
         }
     }
 
@@ -914,6 +852,22 @@ public final class SCXMLDigester {
         MessageFormat msgFormat = new MessageFormat(errType);
         String errMsg = msgFormat.format(msgArgs);
         log.error(errMsg);
+    }
+
+     /**
+      * Get state identifier for error message. This method is only
+      * called to produce an appropriate log message in some error
+      * conditions.
+      *
+      * @param state The <code>State</code> object
+      * @return The state identifier for the error message
+      */
+    private static String getStateName(final State state) {
+        String badState = "anonymous state";
+        if (!SCXMLHelper.isStringEmpty(state.getId())) {
+            badState = "state with ID " + state.getId();
+        }
+        return badState;
     }
 
     /**
@@ -955,10 +909,8 @@ public final class SCXMLDigester {
                 scxml = (SCXML) getDigester()
                         .peek(getDigester().getCount() - 1);
             }
-            NotificationRegistry notifReg = scxml.getNotificationRegistry();
             TransitionTarget tt = (TransitionTarget) getDigester().peek();
             scxml.addTarget(tt);
-            tt.setNotificationRegistry(notifReg);
         }
     }
 

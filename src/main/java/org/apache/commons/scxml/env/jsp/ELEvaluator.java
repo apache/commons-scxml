@@ -97,13 +97,7 @@ public class ELEvaluator implements Evaluator {
      * @see Evaluator#newContext(Context)
      */
     public Context newContext(final Context parent) {
-        //for now, we do not support nested variable contexts
-        //world is flat ;)
-        if (parent != null) {
-            return parent;
-        } else {
-            return new ELContext(null);
-        }
+        return new ELContext(parent);
     }
 
     /**

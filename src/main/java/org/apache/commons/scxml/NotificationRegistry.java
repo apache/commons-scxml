@@ -1,6 +1,6 @@
 /*
  *
- *   Copyright 2005 The Apache Software Foundation.
+ *   Copyright 2005-2006 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,16 +23,20 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.Transition;
 import org.apache.commons.scxml.model.TransitionTarget;
 
 /**
- * The registry where SCXML listeners are recorded for Observable
- * objects. The registry performs book keeping functions and notifies
- * all listeners of the events of interest.
+ * The registry where SCXML listeners are recorded for nodes of
+ * interest such as the <code>SCXML</code> root,
+ * <code>TransitionTarget</code>s and <code>Transition</code>s.
+ * The notification registry keeps track of all
+ * <code>SCXMLListener</code>s attached and notifies relevant
+ * listeners of the events that interest them.
  *
  */
-public class NotificationRegistry {
+public final class NotificationRegistry {
 
     /**
      * The Map of all listeners keyed by Observable.
@@ -52,7 +56,7 @@ public class NotificationRegistry {
      * @param source The observable this listener wants to listen to
      * @param lst The listener
      */
-    public final void addListener(final Observable source,
+    void addListener(final Object source,
             final SCXMLListener lst) {
         Set entries = (Set) regs.get(source);
         if (entries == null) {
@@ -68,7 +72,7 @@ public class NotificationRegistry {
      * @param source The observable this listener wants to stop listening to
      * @param lst The listener
      */
-    public final void removeListener(final Observable source,
+    void removeListener(final Object source,
             final SCXMLListener lst) {
         Set entries = (Set) regs.get(source);
         if (entries != null) {
@@ -83,10 +87,36 @@ public class NotificationRegistry {
      * Inform all relevant listeners that a TransitionTarget has been
      * entered.
      *
+     * @param observable The Observable
+     * @param state The TransitionTarget that was entered
+     */
+    public void fireOnEntry(final TransitionTarget observable,
+            final TransitionTarget state) {
+        Object source = observable;
+        fireOnEntry(source, state);
+    }
+
+    /**
+     * Inform all relevant listeners that a TransitionTarget has been
+     * entered.
+     *
+     * @param observable The Observable
+     * @param state The TransitionTarget that was entered
+     */
+    public void fireOnEntry(final SCXML observable,
+            final TransitionTarget state) {
+        Object source = observable;
+        fireOnEntry(source, state);
+    }
+
+    /**
+     * Inform all relevant listeners that a TransitionTarget has been
+     * entered.
+     *
      * @param source The Observable
      * @param state The TransitionTarget that was entered
      */
-    public final void fireOnEntry(final Observable source,
+    private void fireOnEntry(final Object source,
             final TransitionTarget state) {
         Set entries = (Set) regs.get(source);
         if (entries != null) {
@@ -101,10 +131,36 @@ public class NotificationRegistry {
      * Inform all relevant listeners that a TransitionTarget has been
      * exited.
      *
+     * @param observable The Observable
+     * @param state The TransitionTarget that was exited
+     */
+    public void fireOnExit(final TransitionTarget observable,
+            final TransitionTarget state) {
+        Object source = observable;
+        fireOnExit(source, state);
+    }
+
+    /**
+     * Inform all relevant listeners that a TransitionTarget has been
+     * exited.
+     *
+     * @param observable The Observable
+     * @param state The TransitionTarget that was exited
+     */
+    public void fireOnExit(final SCXML observable,
+            final TransitionTarget state) {
+        Object source = observable;
+        fireOnExit(source, state);
+    }
+
+    /**
+     * Inform all relevant listeners that a TransitionTarget has been
+     * exited.
+     *
      * @param source The Observable
      * @param state The TransitionTarget that was exited
      */
-    public final void fireOnExit(final Observable source,
+    private void fireOnExit(final Object source,
             final TransitionTarget state) {
         Set entries = (Set) regs.get(source);
         if (entries != null) {
@@ -118,12 +174,42 @@ public class NotificationRegistry {
     /**
      * Inform all relevant listeners of a transition that has occured.
      *
+     * @param observable The Observable
+     * @param from The source TransitionTarget
+     * @param to The destination TransitionTarget
+     * @param transition The Transition that was taken
+     */
+    public void fireOnTransition(final Transition observable,
+            final TransitionTarget from, final TransitionTarget to,
+            final Transition transition) {
+        Object source = observable;
+        fireOnTransition(source, from, to, transition);
+    }
+
+    /**
+     * Inform all relevant listeners of a transition that has occured.
+     *
+     * @param observable The Observable
+     * @param from The source TransitionTarget
+     * @param to The destination TransitionTarget
+     * @param transition The Transition that was taken
+     */
+    public void fireOnTransition(final SCXML observable,
+            final TransitionTarget from, final TransitionTarget to,
+            final Transition transition) {
+        Object source = observable;
+        fireOnTransition(source, from, to, transition);
+    }
+
+    /**
+     * Inform all relevant listeners of a transition that has occured.
+     *
      * @param source The Observable
      * @param from The source TransitionTarget
      * @param to The destination TransitionTarget
      * @param transition The Transition that was taken
      */
-    public final void fireOnTransition(final Observable source,
+    private void fireOnTransition(final Object source,
             final TransitionTarget from, final TransitionTarget to,
             final Transition transition) {
         Set entries = (Set) regs.get(source);
@@ -134,5 +220,6 @@ public class NotificationRegistry {
             }
         }
     }
+
 }
 

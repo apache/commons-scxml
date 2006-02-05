@@ -1,6 +1,6 @@
 /*
  *
- *   Copyright 2005 The Apache Software Foundation.
+ *   Copyright 2005-2006 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -68,11 +68,15 @@ public interface SCXMLSemantics {
      *            a list of States and Parallels to enter
      * @param errRep
      *            ErrorReporter callback
+     * @param scInstance
+     *            The state chart instance
+     *
      * @throws ModelException
      *             in case there is a fatal SCXML object model problem.
      */
     void determineInitialStates(final SCXML input, final Set states,
-            final List entryList, final ErrorReporter errRep)
+            final List entryList, final ErrorReporter errRep,
+            final SCInstance scInstance)
     throws ModelException;
 
     /**
@@ -83,18 +87,19 @@ public interface SCXMLSemantics {
      *            updated its AfterStatus/Events
      * @param stateMachine
      *            state machine - SCXML instance
-     * @param eval
-     *            the expression evaluator - Evaluator instance
      * @param evtDispatcher
      *            the event dispatcher - EventDispatcher instance
      * @param errRep
      *            error reporter
+     * @param scInstance
+     *            The state chart instance
+     *
      * @throws ModelException
      *             in case there is a fatal SCXML object model problem.
      */
     void executeActions(final Step step, final SCXML stateMachine,
-            final Evaluator eval, final EventDispatcher evtDispatcher,
-            final ErrorReporter errRep)
+            final EventDispatcher evtDispatcher, final ErrorReporter errRep,
+            final SCInstance scInstance)
     throws ModelException;
 
     /**
@@ -116,13 +121,13 @@ public interface SCXMLSemantics {
      *
      * @param step
      *            with current status
-     * @param evaluator
-     *            guard condition evaluator
      * @param errRep
      *            ErrorReporter callback
+     * @param scInstance
+     *            The state chart instance
      */
-    void filterTransitionsSet(final Step step, final Evaluator evaluator,
-            final ErrorReporter errRep);
+    void filterTransitionsSet(final Step step, final ErrorReporter errRep,
+            final SCInstance scInstance);
 
     /**
      * Follow the candidate transitions for this execution Step, and update the
@@ -130,11 +135,13 @@ public interface SCXMLSemantics {
      *
      * @param step The current Step
      * @param errorReporter The ErrorReporter for the current environment
+     * @param scInstance The state chart instance
      *
      * @throws ModelException
      *             in case there is a fatal SCXML object model problem.
      */
-    void followTransitions(final Step step, final ErrorReporter errorReporter)
+    void followTransitions(final Step step, final ErrorReporter errorReporter,
+            final SCInstance scInstance)
     throws ModelException;
 
     /**
@@ -145,7 +152,10 @@ public interface SCXMLSemantics {
      *            The current Step
      * @param errRep
      *            ErrorReporter callback
+     * @param scInstance
+     *            The state chart instance
      */
-    void updateHistoryStates(final Step step, final ErrorReporter errRep);
+    void updateHistoryStates(final Step step, final ErrorReporter errRep,
+            final SCInstance scInstance);
 
 }

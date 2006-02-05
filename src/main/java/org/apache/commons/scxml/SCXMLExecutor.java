@@ -1,6 +1,6 @@
 /*
  *
- *   Copyright 2005 The Apache Software Foundation.
+ *   Copyright 2005-2006 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import org.apache.commons.scxml.model.History;
 import org.apache.commons.scxml.model.ModelException;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.State;
+import org.apache.commons.scxml.model.Transition;
 import org.apache.commons.scxml.model.TransitionTarget;
 import org.apache.commons.scxml.semantics.SCXMLSemanticsImpl;
 
@@ -51,11 +52,6 @@ public class SCXMLExecutor {
      * The stateMachine being executed.
      */
     private SCXML stateMachine;
-
-    /**
-     * The evaluator for expressions.
-     */
-    private Evaluator evaluator;
 
     /**
      * The current status of the stateMachine.
@@ -83,6 +79,11 @@ public class SCXMLExecutor {
     private SCXMLSemantics semantics;
 
     /**
+     * The SCInstance.
+     */
+    private SCInstance scInstance;
+
+    /**
      * The worker method.
      * Re-evaluates current status whenever any events are triggered.
      *
@@ -102,14 +103,14 @@ public class SCXMLExecutor {
             semantics.enumerateReachableTransitions(stateMachine, step,
                     errorReporter);
             // FilterTransitionSet
-            semantics.filterTransitionsSet(step, evaluator, errorReporter);
+            semantics.filterTransitionsSet(step, errorReporter, scInstance);
             // FollowTransitions
-            semantics.followTransitions(step, errorReporter);
+            semantics.followTransitions(step, errorReporter, scInstance);
             // UpdateHistoryStates
-            semantics.updateHistoryStates(step, errorReporter);
+            semantics.updateHistoryStates(step, errorReporter, scInstance);
             // ExecuteActions
-            semantics.executeActions(step, stateMachine, evaluator,
-                    eventdispatcher, errorReporter);
+            semantics.executeActions(step, stateMachine, eventdispatcher,
+                    errorReporter, scInstance);
             // AssignCurrentStatus
             updateStatus(step);
             // ***Cleanup external events if superStep
@@ -129,7 +130,8 @@ public class SCXMLExecutor {
      */
     public SCXMLExecutor(final Evaluator expEvaluator,
             final EventDispatcher evtDisp, final ErrorReporter errRep) {
-        this(expEvaluator, evtDisp, errRep, null);    }
+        this(expEvaluator, evtDisp, errRep, null);
+    }
 
     /**
      * Convenience constructor.
@@ -149,7 +151,6 @@ public class SCXMLExecutor {
     public SCXMLExecutor(final Evaluator expEvaluator,
             final EventDispatcher evtDisp, final ErrorReporter errRep,
             final SCXMLSemantics semantics) {
-        this.evaluator = expEvaluator;
         this.eventdispatcher = evtDisp;
         this.errorReporter = errRep;
         this.currentStatus = null;
@@ -162,6 +163,8 @@ public class SCXMLExecutor {
         }
         this.currentStatus = null;
         this.stateMachine = null;
+        this.scInstance = new SCInstance();
+        this.scInstance.setEvaluator(expEvaluator);
     }
 
     /**
@@ -173,15 +176,18 @@ public class SCXMLExecutor {
      */
     public void reset() throws ModelException {
         // Reset all variable contexts
-        stateMachine.getRootContext().reset();
-        // all states and parallels, only states have var. contexts
+        scInstance.getRootContext().reset();
+        // all states and parallels, only states have variable contexts
         for (Iterator i = stateMachine.getTargets().values().iterator();
                 i.hasNext();) {
             TransitionTarget tt = (TransitionTarget) i.next();
             if (tt instanceof State) {
-                ((State) tt).getContext().reset();
+                Context context = scInstance.lookupContext(tt);
+                if (context != null) {
+                    context.reset();
+                }
             } else if (tt instanceof History) {
-                ((History) tt).reset();
+                scInstance.reset((History) tt);
             }
         }
         // CreateEmptyStatus
@@ -190,10 +196,10 @@ public class SCXMLExecutor {
         // DetermineInitialStates
         semantics.determineInitialStates(stateMachine,
                 step.getAfterStatus().getStates(),
-                step.getEntryList(), errorReporter);
+                step.getEntryList(), errorReporter, scInstance);
         // ExecuteActions
-        semantics.executeActions(step, stateMachine, evaluator,
-                eventdispatcher, errorReporter);
+        semantics.executeActions(step, stateMachine, eventdispatcher,
+                errorReporter, scInstance);
         // AssignCurrentStatus
         updateStatus(step);
         // Execute Immediate Transitions
@@ -214,19 +220,17 @@ public class SCXMLExecutor {
     }
 
     /**
-     * Get the expression evaluator.
-     *
-     * @return Returns the evaluator.
-     */
-    public Evaluator getEvaluator() {
-        return evaluator;
-    }
-
-    /**
      * @param evaluator The evaluator to set.
      */
     public void setEvaluator(final Evaluator evaluator) {
-        this.evaluator = evaluator;
+        this.scInstance.setEvaluator(evaluator);
+    }
+
+    /**
+     * @param rootContext The Context that ties to the host environment.
+     */
+    public void setRootContext(final Context rootContext) {
+        this.scInstance.setRootContext(rootContext);
     }
 
     /**
@@ -242,17 +246,23 @@ public class SCXMLExecutor {
      * Set the state machine to be executed.
      *
      * @param stateMachine The stateMachine to set.
-     * @throws ModelException in case there is a fatal SCXML object
-     *  model problem.
      */
-    public void setStateMachine(final SCXML stateMachine)
-            throws ModelException {
+    public void setStateMachine(final SCXML stateMachine) {
         // NormalizeStateMachine
         SCXML sm = semantics.normalizeStateMachine(stateMachine,
                 errorReporter);
         // StoreStateMachine
         this.stateMachine = sm;
-        // reset
+    }
+
+    /**
+     * Initiate state machine execution.
+     *
+     * @throws ModelException in case there is a fatal SCXML object
+     *  model problem.
+     */
+    public void go() throws ModelException {
+        // same as reset
         this.reset();
     }
 
@@ -319,6 +329,90 @@ public class SCXMLExecutor {
     }
 
     /**
+     * Add a listener to the document root.
+     *
+     * @param scxml The document root to attach listener to.
+     * @param listener The SCXMLListener.
+     */
+    public void addListener(final SCXML scxml, final SCXMLListener listener) {
+        Object observable = scxml;
+        scInstance.getNotificationRegistry().addListener(observable, listener);
+    }
+
+    /**
+     * Remove this listener from the document root.
+     *
+     * @param scxml The document root.
+     * @param listener The SCXMLListener to be removed.
+     */
+    public void removeListener(final SCXML scxml,
+            final SCXMLListener listener) {
+        Object observable = scxml;
+        scInstance.getNotificationRegistry().removeListener(observable,
+            listener);
+    }
+
+    /**
+     * Add a listener to this transition target.
+     *
+     * @param transitionTarget The <code>TransitionTarget</code> to
+     *                         attach listener to.
+     * @param listener The SCXMLListener.
+     */
+    public void addListener(final TransitionTarget transitionTarget,
+            final SCXMLListener listener) {
+        Object observable = transitionTarget;
+        scInstance.getNotificationRegistry().addListener(observable, listener);
+    }
+
+    /**
+     * Remove this listener for this transition target.
+     *
+     * @param transitionTarget The <code>TransitionTarget</code>.
+     * @param listener The SCXMLListener to be removed.
+     */
+    public void removeListener(final TransitionTarget transitionTarget,
+            final SCXMLListener listener) {
+        Object observable = transitionTarget;
+        scInstance.getNotificationRegistry().removeListener(observable,
+            listener);
+    }
+
+    /**
+     * Add a listener to this transition.
+     *
+     * @param transition The <code>Transition</code> to attach listener to.
+     * @param listener The SCXMLListener.
+     */
+    public void addListener(final Transition transition,
+            final SCXMLListener listener) {
+        Object observable = transition;
+        scInstance.getNotificationRegistry().addListener(observable, listener);
+    }
+
+    /**
+     * Remove this listener for this transition.
+     *
+     * @param transition The <code>Transition</code>.
+     * @param listener The SCXMLListener to be removed.
+     */
+    public void removeListener(final Transition transition,
+            final SCXMLListener listener) {
+        Object observable = transition;
+        scInstance.getNotificationRegistry().removeListener(observable,
+            listener);
+    }
+
+    /**
+     * Get the state chart instance for this executor.
+     *
+     * @return The SCInstance for this executor.
+     */
+    SCInstance getSCInstance() {
+        return scInstance;
+    }
+
+    /**
      * Log the current set of active states.
      */
     private void logState() {
@@ -341,8 +435,10 @@ public class SCXMLExecutor {
      * @param step The most recent Step
      */
     private void updateStatus(final Step step) {
-        this.currentStatus = step.getAfterStatus();
-        stateMachine.getRootContext().setLocal("_ALL_STATES",
+        currentStatus = step.getAfterStatus();
+        scInstance.getRootContext().setLocal("_ALL_STATES",
             SCXMLHelper.getAncestorClosure(currentStatus.getStates(), null));
     }
+
 }
+

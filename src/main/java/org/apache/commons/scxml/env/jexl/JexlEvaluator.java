@@ -81,13 +81,7 @@ public class JexlEvaluator implements Evaluator {
      * @see Evaluator#newContext(Context)
      */
     public Context newContext(final Context parent) {
-        //for now, we do not support nested variable contexts
-        //world is flat ;)
-        if (parent != null) {
-            return parent;
-        } else {
-            return new org.apache.commons.scxml.env.jexl.JexlContext();
-        }
+        return new org.apache.commons.scxml.env.jexl.JexlContext(parent);
     }
 
     /**

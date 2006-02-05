@@ -1,6 +1,6 @@
 /*
  *
- *   Copyright 2005 The Apache Software Foundation.
+ *   Copyright 2005-2006 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,16 +17,12 @@
  */
 package org.apache.commons.scxml.model;
 
-import org.apache.commons.scxml.NotificationRegistry;
-import org.apache.commons.scxml.Observable;
-import org.apache.commons.scxml.SCXMLListener;
-
 /**
  * An abstract base class for elements in SCXML that can serve as a
  * &lt;target&gt; for a &lt;transition&gt;, such as State or Parallel.
  *
  */
-public abstract class TransitionTarget implements Observable {
+public abstract class TransitionTarget {
 
     /**
      * Identifier for this transition target. Other parts of the SCXML
@@ -53,11 +49,6 @@ public abstract class TransitionTarget implements Observable {
     private TransitionTarget parent;
 
     /**
-     * The notification registry.
-     */
-    private NotificationRegistry notifReg;
-
-    /**
      * Constructor.
      */
     public TransitionTarget() {
@@ -67,44 +58,6 @@ public abstract class TransitionTarget implements Observable {
         onExit = new OnExit();   //empty defaults
         onExit.setParent(this);
         parent = null;
-        notifReg = null;
-    }
-
-    /**
-     * Register a listener to this document root.
-     *
-     * @param lst The SCXMLListener to add
-     */
-    public final void addListener(final SCXMLListener lst) {
-        notifReg.addListener(this, lst);
-    }
-
-    /**
-     * Deregister a listener from this document root.
-     *
-     * @param lst The SCXMLListener to remove
-     */
-    public final void removeListener(final SCXMLListener lst) {
-        notifReg.removeListener(this, lst);
-    }
-
-    /**
-     * Supply this TransitionTarget object a handle to the notification
-     * registry. Called by the Digester after instantiation.
-     *
-     * @param reg The notification registry
-     */
-    public final void setNotificationRegistry(final NotificationRegistry reg) {
-        notifReg = reg;
-    }
-
-    /**
-     * Get the notification registry.
-     *
-     * @return The notification registry.
-     */
-    public final NotificationRegistry getNotificationRegistry() {
-        return notifReg;
     }
 
     /**

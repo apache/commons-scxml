@@ -1,6 +1,6 @@
 /*
  *
- *   Copyright 2005 The Apache Software Foundation.
+ *   Copyright 2005-2006 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,9 +16,6 @@
  *
  */
 package org.apache.commons.scxml.model;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * The class in this SCXML object model that corresponds to the
@@ -38,12 +35,6 @@ public class History extends TransitionTarget {
      * never been entered before.
      */
     private Transition transition;
-
-    /**
-     * The configuration when the parent of this pseudo state was last
-     * exited.
-     */
-    private Set lastConfiguration;
 
     /**
      * Default no-args constructor for XML Digester.
@@ -90,52 +81,6 @@ public class History extends TransitionTarget {
             isDeep = true;
         }
         //shallow is by default
-    }
-
-    /**
-     * Get the last configuration for this history.
-     *
-     * @return Returns the lastConfiguration.
-     */
-    public final Set getLastConfiguration() {
-        return lastConfiguration;
-    }
-
-    /**
-     * Set the last configuration for this history.
-     *
-     * @param lc The lastConfiguration to set.
-     */
-    public final void setLastConfiguration(final Set lc) {
-        if (lastConfiguration == null) {
-            lastConfiguration = new HashSet(lc.size());
-        } else {
-            lastConfiguration.clear();
-        }
-        lastConfiguration.addAll(lc);
-    }
-
-    /**
-     * Check whether we have prior history.
-     *
-     * @return Whether we have a non-empty last configuration
-     */
-    public final boolean isEmpty() {
-        if (lastConfiguration == null || lastConfiguration.isEmpty()) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Resets the history state.
-     *
-     * @see org.apache.commons.scxml.SCXMLExecutor#reset()
-     */
-    public final void reset() {
-        if (lastConfiguration != null) {
-            lastConfiguration.clear();
-        }
     }
 
 }
