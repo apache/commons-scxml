@@ -35,6 +35,35 @@
     <release version="1.0" date="Pending"
      description="Project nearing promotion vote to Commons Proper">
 
+      <action dev="rahul" type="add" issue="38459" due-to="Peter Costa">
+       [02-05-2006] Numerous JUnit test cases added. Start publishing
+       cobertura report.
+      </action>
+
+      <action dev="rahul" type="update">
+       [02-05-2006] Contexts are now created per State, but only as and
+       when needed. The
+       <a href="http://svn.apache.org/viewcvs?rev=374981&amp;view=rev">
+       commit message for r374981</a> has the details.
+      </action>
+
+      <action dev="rahul" type="update" issue="38311" due-to="Tim O'Brien">
+       [02-05-2006] The Commons SCXML object model is now decoupled from
+       the SCXML execution engine instance. The Commons SCXML object model
+       is now stateless. For example (incomplete list):
+        <ol>
+          <li>A "SCXML" object no longer contains a root "Context"</li>
+          <li>A "State" no longer contains a "Context"</li>
+          <li>A "Transition" no longer contains a list of "SCXMLListeners"
+              attached</li>
+          <li>A "History" no longer contains the last known configuration.
+              </li>
+        </ol>
+        The advantage of this decoupling is that the SCXML document can be
+        parsed once and reused across multiple execution instances,
+        concurrently or otherwise.
+      </action>
+
       <action dev="rahul" type="update">
        [01-22-2006] Package reorganization. Mostly out of discussions on
        the dev list, three new packages were introduced:
