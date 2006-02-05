@@ -28,9 +28,12 @@ import org.apache.commons.scxml.model.Transition;
 import org.apache.commons.scxml.model.TransitionTarget;
 
 /**
- * The registry where SCXML listeners are recorded for Observable
- * objects. The registry performs book keeping functions and notifies
- * all listeners of the events of interest.
+ * The registry where SCXML listeners are recorded for nodes of
+ * interest such as the <code>SCXML</code> root,
+ * <code>TransitionTarget</code>s and <code>Transition</code>s.
+ * The notification registry keeps track of all
+ * <code>SCXMLListener</code>s attached and notifies relevant
+ * listeners of the events that interest them.
  *
  */
 public final class NotificationRegistry {
