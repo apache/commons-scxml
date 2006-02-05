@@ -20,6 +20,7 @@ package org.apache.commons.scxml.env.jexl;
 import java.util.Map;
 
 import org.apache.commons.scxml.Builtin;
+import org.apache.commons.scxml.Context;
 import org.apache.commons.scxml.env.SimpleContext;
 
 /**
@@ -44,6 +45,16 @@ public class JexlContext extends SimpleContext
      */
     public JexlContext(final Map initialVars) {
         super(initialVars);
+        getVars().put("_builtin", new Builtin());
+    }
+
+    /**
+     * Constructor with parent context.
+     *
+     * @param parent The parent context.
+     */
+    public JexlContext(final Context parent) {
+        super(parent);
         getVars().put("_builtin", new Builtin());
     }
 
