@@ -25,7 +25,8 @@ To decouple the execution context for the Commons SCXML Java object model.
                     -- STATUS --
 
 This branch is CLOSED. The work done in this branch was merged with trunk
-in r375053.
+in r375053. See Bugzilla issue 38311 for details.
+[ http://issues.apache.org/bugzilla/show_bug.cgi?id=38311 ]
 
                     -- DETAILS --
 
