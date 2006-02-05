@@ -26,11 +26,11 @@ import org.apache.commons.scxml.model.History;
 import org.apache.commons.scxml.model.TransitionTarget;
 
 /**
- * The <code>Registry</code> performs book-keeping functions for
- * a particular execution of a state machine represented by the
- * a <code>SCXML</code> object.
+ * The <code>SCInstance</code> performs book-keeping functions for
+ * a particular execution of a state chart represented by a
+ * <code>SCXML</code> object.
  */
-public class Registry {
+public class SCInstance {
 
     /**
      * The notification registry.
@@ -62,7 +62,7 @@ public class Registry {
     /**
      * Constructor.
      */
-    Registry() {
+    SCInstance() {
         this.notificationRegistry = new NotificationRegistry();
         this.contexts = new HashMap();
         this.histories = new HashMap();
