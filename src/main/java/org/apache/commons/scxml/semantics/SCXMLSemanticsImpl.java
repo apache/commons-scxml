@@ -36,7 +36,7 @@ import org.apache.commons.scxml.ErrorReporter;
 import org.apache.commons.scxml.Evaluator;
 import org.apache.commons.scxml.EventDispatcher;
 import org.apache.commons.scxml.NotificationRegistry;
-import org.apache.commons.scxml.Registry;
+import org.apache.commons.scxml.SCInstance;
 import org.apache.commons.scxml.SCXMLExpressionException;
 import org.apache.commons.scxml.SCXMLHelper;
 import org.apache.commons.scxml.SCXMLSemantics;
@@ -108,14 +108,14 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      *            a list of States and Parallels to enter [out]
      * @param errRep
      *            ErrorReporter callback [inout]
-     * @param registry
-     *            The registry [in]
+     * @param scInstance
+     *            The state chart instance [in]
      * @throws ModelException
      *             in case there is a fatal SCXML object model problem.
      */
     public void determineInitialStates(final SCXML input, final Set states,
             final List entryList, final ErrorReporter errRep,
-            final Registry registry)
+            final SCInstance scInstance)
             throws ModelException {
         State tmp = input.getInitialState();
         if (tmp == null) {
@@ -123,7 +123,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                     "SCXML initialstate is missing!", input);
         } else {
             states.add(tmp);
-            determineTargetStates(states, errRep, registry);
+            determineTargetStates(states, errRep, scInstance);
             //set of ALL entered states (even if initialState is a jump-over)
             Set onEntry = SCXMLHelper.getAncestorClosure(states, null);
             // sort onEntry according state hierarchy
@@ -147,8 +147,8 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      *            the event dispatcher - EventDispatcher instance
      * @param errRep
      *            ErrorReporter callback [inout]
-     * @param registry
-     *            The registry [inout]
+     * @param scInstance
+     *            The state chart instance [inout]
      * @throws ModelException
      *             in case there is a fatal SCXML object model problem
      * @throws SCXMLExpressionException
@@ -163,16 +163,16 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
     public void executeActionList(final List actions,
             final Collection derivedEvents,
             final EventDispatcher evtDispatcher, final ErrorReporter errRep,
-            final Registry registry)
+            final SCInstance scInstance)
     throws ModelException, SCXMLExpressionException {
-        Evaluator eval = registry.getEvaluator();
+        Evaluator eval = scInstance.getEvaluator();
         // NOTE: "if" statement is a container - we may need to call this method
         // recursively and pass a sub-list of actions embedded in a particular
         // "if"
         for (Iterator i = actions.iterator(); i.hasNext();) {
             Action a = (Action) i.next();
             State parentState = a.getParentState();
-            Context ctx = registry.getContext(parentState);
+            Context ctx = scInstance.getContext(parentState);
             // NOTE: "elseif" and "else" do not appear here, since they are
             // always handled as a part of "if" as a container
             if (a instanceof Assign) {
@@ -226,7 +226,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                 }
                 if (!todoList.isEmpty()) {
                     executeActionList(todoList, derivedEvents, evtDispatcher,
-                        errRep, registry);
+                        errRep, scInstance);
                 }
                 todoList.clear();
             } else if (a instanceof Log) {
@@ -295,16 +295,16 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      *            the event dispatcher - EventDispatcher instance
      * @param errRep
      *            error reporter
-     * @param registry
-     *            The registry
+     * @param scInstance
+     *            The state chart instance
      * @throws ModelException
      *             in case there is a fatal SCXML object model problem.
      */
     public void executeActions(final Step step, final SCXML stateMachine,
             final EventDispatcher evtDispatcher,
-            final ErrorReporter errRep, final Registry registry)
+            final ErrorReporter errRep, final SCInstance scInstance)
     throws ModelException {
-        NotificationRegistry nr = registry.getNotificationRegistry();
+        NotificationRegistry nr = scInstance.getNotificationRegistry();
         Collection internalEvents = step.getAfterStatus().getEvents();
         // ExecutePhaseActions / OnExit
         for (Iterator i = step.getExitList().iterator(); i.hasNext();) {
@@ -312,7 +312,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
             OnExit oe = tt.getOnExit();
             try {
                 executeActionList(oe.getActions(), internalEvents,
-                    evtDispatcher, errRep, registry);
+                    evtDispatcher, errRep, scInstance);
             } catch (SCXMLExpressionException e) {
                 errRep.onError(ErrorReporter.EXPRESSION_ERROR, e.getMessage(),
                         oe);
@@ -328,7 +328,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
             Transition t = (Transition) i.next();
             try {
                 executeActionList(t.getActions(), internalEvents,
-                    evtDispatcher, errRep, registry);
+                    evtDispatcher, errRep, scInstance);
             } catch (SCXMLExpressionException e) {
                 errRep.onError(ErrorReporter.EXPRESSION_ERROR,
                     e.getMessage(), t);
@@ -343,7 +343,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
             OnEntry oe = tt.getOnEntry();
             try {
                 executeActionList(oe.getActions(), internalEvents,
-                    evtDispatcher, errRep, registry);
+                    evtDispatcher, errRep, scInstance);
             } catch (SCXMLExpressionException e) {
                 errRep.onError(ErrorReporter.EXPRESSION_ERROR, e.getMessage(),
                         oe);
@@ -440,11 +440,11 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      *            [inout]
      * @param errRep
      *            ErrorReporter callback [inout]
-     * @param registry
-     *            The registry [in]
+     * @param scInstance
+     *            The state chart instance [in]
      */
     public void filterTransitionsSet(final Step step,
-            final ErrorReporter errRep, final Registry registry) {
+            final ErrorReporter errRep, final SCInstance scInstance) {
         /*
          * - filter transition set by applying events
          * (step/beforeStatus/events + step/externalEvents) (local check)
@@ -486,7 +486,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                 rslt = Boolean.TRUE;
             } else {
                 try {
-                    rslt = registry.getEvaluator().evalCond(registry.
+                    rslt = scInstance.getEvaluator().evalCond(scInstance.
                             getContext(t.getParent()), t.getCond());
                 } catch (SCXMLExpressionException e) {
                     rslt = Boolean.FALSE;
@@ -604,13 +604,13 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      *            a set seeded in previous step [inout]
      * @param errRep
      *            ErrorReporter callback [inout]
-     * @param registry
-     *            The registry [in]
+     * @param scInstance
+     *            The state chart instance [in]
      * @throws ModelException On illegal configuration
      * @see #seedTargetSet(Set, List, ErrorReporter)
      */
     public void determineTargetStates(final Set states,
-            final ErrorReporter errRep, final Registry registry)
+            final ErrorReporter errRep, final SCInstance scInstance)
     throws ModelException {
         LinkedList wrkSet = new LinkedList(states);
         // clear the seed-set - will be populated by leaf states
@@ -663,10 +663,10 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                 }
             } else if (tt instanceof History) {
                 History h = (History) tt;
-                if (registry.isEmpty(h)) {
+                if (scInstance.isEmpty(h)) {
                     wrkSet.addLast(h.getTransition().getRuntimeTarget());
                 } else {
-                    wrkSet.addAll(registry.getLastConfiguration(h));
+                    wrkSet.addAll(scInstance.getLastConfiguration(h));
                 }
             } else {
                 throw new ModelException("Unknown TransitionTarget subclass:"
@@ -683,11 +683,11 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      *            [inout]
      * @param errRep
      *            ErrorReporter callback [inout]
-     * @param registry
-     *            The registry [inout]
+     * @param scInstance
+     *            The state chart instance [inout]
      */
     public void updateHistoryStates(final Step step,
-            final ErrorReporter errRep, final Registry registry) {
+            final ErrorReporter errRep, final SCInstance scInstance) {
         Set oldState = step.getBeforeStatus().getStates();
         for (Iterator i = step.getExitList().iterator(); i.hasNext();) {
             Object o = i.next();
@@ -711,7 +711,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                                     }
                                 }
                             }
-                            registry.setLastConfiguration(h, deep);
+                            scInstance.setLastConfiguration(h, deep);
                         } else {
                             if (shallow == null) {
                                 //calculate shallow history for a given state
@@ -721,7 +721,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                                 shallow.retainAll(SCXMLHelper
                                         .getAncestorClosure(oldState, null));
                             }
-                            registry.setLastConfiguration(h, shallow);
+                            scInstance.setLastConfiguration(h, shallow);
                         }
                     }
                     shallow = null;
@@ -767,13 +767,13 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      *
      * @param step The current Step
      * @param errorReporter The ErrorReporter for the current environment
-     * @param registry The registry
+     * @param scInstance The state chart instance
      *
      * @throws ModelException
      *             in case there is a fatal SCXML object model problem.
      */
     public void followTransitions(final Step step,
-            final ErrorReporter errorReporter, final Registry registry)
+            final ErrorReporter errorReporter, final SCInstance scInstance)
     throws ModelException {
         Set currentStates = step.getBeforeStatus().getStates();
         List transitions = step.getTransitList();
@@ -792,7 +792,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
         // DetermineTargetStates (initialTargetSet) -> targetSet
         Set targetSet = step.getAfterStatus().getStates();
         targetSet.addAll(seedSet); //copy to preserve seedSet
-        determineTargetStates(targetSet, errorReporter, registry);
+        determineTargetStates(targetSet, errorReporter, scInstance);
         // BuildOnEntryList (targetSet, seedSet) -> entryList
         Set entered = SCXMLHelper.getAncestorClosure(targetSet, seedSet);
         seedSet.clear();

@@ -68,15 +68,15 @@ public interface SCXMLSemantics {
      *            a list of States and Parallels to enter
      * @param errRep
      *            ErrorReporter callback
-     * @param registry
-     *            The registry
+     * @param scInstance
+     *            The state chart instance
      *
      * @throws ModelException
      *             in case there is a fatal SCXML object model problem.
      */
     void determineInitialStates(final SCXML input, final Set states,
             final List entryList, final ErrorReporter errRep,
-            final Registry registry)
+            final SCInstance scInstance)
     throws ModelException;
 
     /**
@@ -91,15 +91,15 @@ public interface SCXMLSemantics {
      *            the event dispatcher - EventDispatcher instance
      * @param errRep
      *            error reporter
-     * @param registry
-     *            The registry
+     * @param scInstance
+     *            The state chart instance
      *
      * @throws ModelException
      *             in case there is a fatal SCXML object model problem.
      */
     void executeActions(final Step step, final SCXML stateMachine,
             final EventDispatcher evtDispatcher, final ErrorReporter errRep,
-            final Registry registry)
+            final SCInstance scInstance)
     throws ModelException;
 
     /**
@@ -123,11 +123,11 @@ public interface SCXMLSemantics {
      *            with current status
      * @param errRep
      *            ErrorReporter callback
-     * @param registry
-     *            The registry
+     * @param scInstance
+     *            The state chart instance
      */
     void filterTransitionsSet(final Step step, final ErrorReporter errRep,
-            final Registry registry);
+            final SCInstance scInstance);
 
     /**
      * Follow the candidate transitions for this execution Step, and update the
@@ -135,13 +135,13 @@ public interface SCXMLSemantics {
      *
      * @param step The current Step
      * @param errorReporter The ErrorReporter for the current environment
-     * @param registry The registry
+     * @param scInstance The state chart instance
      *
      * @throws ModelException
      *             in case there is a fatal SCXML object model problem.
      */
     void followTransitions(final Step step, final ErrorReporter errorReporter,
-            final Registry registry)
+            final SCInstance scInstance)
     throws ModelException;
 
     /**
@@ -152,11 +152,11 @@ public interface SCXMLSemantics {
      *            The current Step
      * @param errRep
      *            ErrorReporter callback
-     * @param registry
-     *            The registry
+     * @param scInstance
+     *            The state chart instance
      */
     void updateHistoryStates(final Step step, final ErrorReporter errRep,
-            final Registry registry);
+            final SCInstance scInstance);
 
 }
 

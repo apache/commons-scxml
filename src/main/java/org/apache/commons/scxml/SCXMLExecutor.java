@@ -79,9 +79,9 @@ public class SCXMLExecutor {
     private SCXMLSemantics semantics;
 
     /**
-     * The Registry.
+     * The SCInstance.
      */
-    private Registry registry;
+    private SCInstance scInstance;
 
     /**
      * The worker method.
@@ -103,14 +103,14 @@ public class SCXMLExecutor {
             semantics.enumerateReachableTransitions(stateMachine, step,
                     errorReporter);
             // FilterTransitionSet
-            semantics.filterTransitionsSet(step, errorReporter, registry);
+            semantics.filterTransitionsSet(step, errorReporter, scInstance);
             // FollowTransitions
-            semantics.followTransitions(step, errorReporter, registry);
+            semantics.followTransitions(step, errorReporter, scInstance);
             // UpdateHistoryStates
-            semantics.updateHistoryStates(step, errorReporter, registry);
+            semantics.updateHistoryStates(step, errorReporter, scInstance);
             // ExecuteActions
             semantics.executeActions(step, stateMachine, eventdispatcher,
-                    errorReporter, registry);
+                    errorReporter, scInstance);
             // AssignCurrentStatus
             updateStatus(step);
             // ***Cleanup external events if superStep
@@ -163,8 +163,8 @@ public class SCXMLExecutor {
         }
         this.currentStatus = null;
         this.stateMachine = null;
-        this.registry = new Registry();
-        this.registry.setEvaluator(expEvaluator);
+        this.scInstance = new SCInstance();
+        this.scInstance.setEvaluator(expEvaluator);
     }
 
     /**
@@ -176,18 +176,18 @@ public class SCXMLExecutor {
      */
     public void reset() throws ModelException {
         // Reset all variable contexts
-        registry.getRootContext().reset();
+        scInstance.getRootContext().reset();
         // all states and parallels, only states have variable contexts
         for (Iterator i = stateMachine.getTargets().values().iterator();
                 i.hasNext();) {
             TransitionTarget tt = (TransitionTarget) i.next();
             if (tt instanceof State) {
-                Context context = registry.lookupContext(tt);
+                Context context = scInstance.lookupContext(tt);
                 if (context != null) {
                     context.reset();
                 }
             } else if (tt instanceof History) {
-                registry.reset((History) tt);
+                scInstance.reset((History) tt);
             }
         }
         // CreateEmptyStatus
@@ -196,10 +196,10 @@ public class SCXMLExecutor {
         // DetermineInitialStates
         semantics.determineInitialStates(stateMachine,
                 step.getAfterStatus().getStates(),
-                step.getEntryList(), errorReporter, registry);
+                step.getEntryList(), errorReporter, scInstance);
         // ExecuteActions
         semantics.executeActions(step, stateMachine, eventdispatcher,
-                errorReporter, registry);
+                errorReporter, scInstance);
         // AssignCurrentStatus
         updateStatus(step);
         // Execute Immediate Transitions
@@ -223,14 +223,14 @@ public class SCXMLExecutor {
      * @param evaluator The evaluator to set.
      */
     public void setEvaluator(final Evaluator evaluator) {
-        this.registry.setEvaluator(evaluator);
+        this.scInstance.setEvaluator(evaluator);
     }
 
     /**
      * @param rootContext The Context that ties to the host environment.
      */
     public void setRootContext(final Context rootContext) {
-        this.registry.setRootContext(rootContext);
+        this.scInstance.setRootContext(rootContext);
     }
 
     /**
@@ -336,7 +336,7 @@ public class SCXMLExecutor {
      */
     public void addListener(final SCXML scxml, final SCXMLListener listener) {
         Object observable = scxml;
-        registry.getNotificationRegistry().addListener(observable, listener);
+        scInstance.getNotificationRegistry().addListener(observable, listener);
     }
 
     /**
@@ -348,7 +348,8 @@ public class SCXMLExecutor {
     public void removeListener(final SCXML scxml,
             final SCXMLListener listener) {
         Object observable = scxml;
-        registry.getNotificationRegistry().removeListener(observable, listener);
+        scInstance.getNotificationRegistry().removeListener(observable,
+            listener);
     }
 
     /**
@@ -361,7 +362,7 @@ public class SCXMLExecutor {
     public void addListener(final TransitionTarget transitionTarget,
             final SCXMLListener listener) {
         Object observable = transitionTarget;
-        registry.getNotificationRegistry().addListener(observable, listener);
+        scInstance.getNotificationRegistry().addListener(observable, listener);
     }
 
     /**
@@ -373,7 +374,7 @@ public class SCXMLExecutor {
     public void removeListener(final TransitionTarget transitionTarget,
             final SCXMLListener listener) {
         Object observable = transitionTarget;
-        registry.getNotificationRegistry().removeListener(observable,
+        scInstance.getNotificationRegistry().removeListener(observable,
             listener);
     }
 
@@ -386,7 +387,7 @@ public class SCXMLExecutor {
     public void addListener(final Transition transition,
             final SCXMLListener listener) {
         Object observable = transition;
-        registry.getNotificationRegistry().addListener(observable, listener);
+        scInstance.getNotificationRegistry().addListener(observable, listener);
     }
 
     /**
@@ -398,8 +399,17 @@ public class SCXMLExecutor {
     public void removeListener(final Transition transition,
             final SCXMLListener listener) {
         Object observable = transition;
-        registry.getNotificationRegistry().removeListener(observable,
+        scInstance.getNotificationRegistry().removeListener(observable,
             listener);
+    }
+
+    /**
+     * Get the state chart instance for this executor.
+     *
+     * @return The SCInstance for this executor.
+     */
+    SCInstance getSCInstance() {
+        return scInstance;
     }
 
     /**
@@ -426,7 +436,7 @@ public class SCXMLExecutor {
      */
     private void updateStatus(final Step step) {
         currentStatus = step.getAfterStatus();
-        registry.getRootContext().setLocal("_ALL_STATES",
+        scInstance.getRootContext().setLocal("_ALL_STATES",
             SCXMLHelper.getAncestorClosure(currentStatus.getStates(), null));
     }
 
