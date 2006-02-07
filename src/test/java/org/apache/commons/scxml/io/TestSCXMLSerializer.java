@@ -16,16 +16,17 @@
 package org.apache.commons.scxml.io;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 import org.apache.commons.scxml.model.Assign;
 import org.apache.commons.scxml.model.Cancel;
 import org.apache.commons.scxml.model.Else;
 import org.apache.commons.scxml.model.ElseIf;
 import org.apache.commons.scxml.model.Exit;
-import org.apache.commons.scxml.model.History;
 import org.apache.commons.scxml.model.If;
 import org.apache.commons.scxml.model.Log;
 import org.apache.commons.scxml.model.OnEntry;
@@ -35,10 +36,6 @@ import org.apache.commons.scxml.model.Send;
 import org.apache.commons.scxml.model.State;
 import org.apache.commons.scxml.model.TransitionTarget;
 import org.apache.commons.scxml.model.Var;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 public class TestSCXMLSerializer extends TestCase {
 
