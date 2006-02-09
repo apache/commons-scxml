@@ -33,6 +33,11 @@ public class TestStatus extends TestCase {
         return suite;
     }
 
+    public static void main(String args[]) {
+        String[] testCaseName = { TestStatus.class.getName()};
+        junit.textui.TestRunner.main(testCaseName);
+    }
+
     private Status status;
     
     public void setUp() {
