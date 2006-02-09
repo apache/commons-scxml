@@ -13,42 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.scxml.env.servlet;
+package org.apache.commons.scxml.env.faces;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import junit.textui.TestRunner;
 
+public class SessionContextTest extends TestCase {
 
-/**
- * Test suite for SCXML Servlet Environment package.
- *
- */
-public class EnvServletTestSuite extends TestCase {
-    
-    /**
-     * Construct a new instance.
-     */
-    public EnvServletTestSuite(String name) {
-        super(name);
+    public SessionContextTest(String testName) {
+        super(testName);
     }
 
-    /**
-     * Command-line interface.
-     */
-    public static void main(String[] args) {
-        TestRunner.run(suite());
-    }
-
-    /**
-     * Get the suite of tests
-     */
     public static Test suite() {
-        TestSuite suite = new TestSuite();
-        suite.setName("Commons-SCXML Servlet Environment Tests");
-        suite.addTest(ServletContextResolverTest.suite());
-        return suite;
+        return new TestSuite(SessionContextTest.class);
     }
-}
 
+    public static void main(String args[]) {
+        String[] testCaseName = {SessionContextTest.class.getName()};
+        junit.textui.TestRunner.main(testCaseName);
+    }
+
+    public void testIllegalInstance() {
+    	try {
+            new SessionContext(null);
+            fail("SessionContext successfully instantiated with"
+                + " null FacesContext");
+    	} catch (IllegalArgumentException iae) {
+    		// expected, ignore
+    	}
+    }
+
+}

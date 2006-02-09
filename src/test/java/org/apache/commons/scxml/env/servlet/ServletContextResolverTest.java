@@ -18,37 +18,30 @@ package org.apache.commons.scxml.env.servlet;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import junit.textui.TestRunner;
 
+public class ServletContextResolverTest extends TestCase {
 
-/**
- * Test suite for SCXML Servlet Environment package.
- *
- */
-public class EnvServletTestSuite extends TestCase {
-    
-    /**
-     * Construct a new instance.
-     */
-    public EnvServletTestSuite(String name) {
-        super(name);
+    public ServletContextResolverTest(String testName) {
+        super(testName);
     }
 
-    /**
-     * Command-line interface.
-     */
-    public static void main(String[] args) {
-        TestRunner.run(suite());
-    }
-
-    /**
-     * Get the suite of tests
-     */
     public static Test suite() {
-        TestSuite suite = new TestSuite();
-        suite.setName("Commons-SCXML Servlet Environment Tests");
-        suite.addTest(ServletContextResolverTest.suite());
-        return suite;
+        return new TestSuite(ServletContextResolverTest.class);
     }
-}
 
+    public static void main(String args[]) {
+        String[] testCaseName = {ServletContextResolverTest.class.getName()};
+        junit.textui.TestRunner.main(testCaseName);
+    }
+
+    public void testIllegalInstance() {
+    	try {
+            new ServletContextResolver(null);
+            fail("ServletContextResolver successfully instantiated with"
+                + " null ServletContext");
+    	} catch (IllegalArgumentException iae) {
+    		// expected, ignore
+    	}
+    }
+
+}

@@ -47,6 +47,7 @@ public class EnvFacesTestSuite extends TestCase {
     public static Test suite() {
         TestSuite suite = new TestSuite();
         suite.setName("Commons-SCXML Faces Environment Tests");
+        suite.addTest(SessionContextTest.suite());
         return suite;
     }
 }

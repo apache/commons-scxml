@@ -47,6 +47,7 @@ public class EnvJexlTestSuite extends TestCase {
     public static Test suite() {
         TestSuite suite = new TestSuite();
         suite.setName("Commons-SCXML JEXL Environment Tests");
+        suite.addTest(JexlContextTest.suite());
         return suite;
     }
 }
