@@ -124,7 +124,7 @@ public class StateTest extends TestCase {
     public void testIsSimpleHasChildren() {
         State state1 = new State();
         
-        state.addChild(state);
+        state.addChild(state1);
         
         assertFalse(state.isSimple());
     }
@@ -144,7 +144,7 @@ public class StateTest extends TestCase {
     public void testIsCompositeHasChildren() {
         State state1 = new State();
         
-        state.addChild(state);
+        state.addChild(state1);
         
         assertTrue(state.isComposite());
     }
