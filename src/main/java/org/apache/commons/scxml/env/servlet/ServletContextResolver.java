@@ -28,6 +28,12 @@ import org.apache.commons.scxml.PathResolver;
  */
 public class ServletContextResolver implements PathResolver {
 
+    /** Cannot accept a null ServletContext, it will just throw
+     *  NullPointerException down the road. */
+    private static final String ERR_SERVLET_CTX_NULL =
+        "ServletContextResolver cannot be instantiated with a null"
+        + " ServletContext";
+
     /** The SevletContext we will use to resolve paths. */
     private ServletContext ctx = null;
 
@@ -37,6 +43,9 @@ public class ServletContextResolver implements PathResolver {
      * @param ctx The ServletContext instance for this web application.
      */
     public ServletContextResolver(final ServletContext ctx) {
+        if (ctx == null) {
+            throw new IllegalArgumentException(ERR_SERVLET_CTX_NULL);
+        }
         this.ctx = ctx;
     }
 

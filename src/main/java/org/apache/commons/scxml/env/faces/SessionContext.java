@@ -60,7 +60,6 @@ public class SessionContext extends SimpleContext {
     public SessionContext(final FacesContext fc, final Context parent) {
         super(parent);
         if (fc == null) {
-            LOG.error(ERR_HOST_FACES_CTX_NULL);
             throw new IllegalArgumentException(ERR_HOST_FACES_CTX_NULL);
         } else {
           // only retain the session map
