@@ -48,6 +48,7 @@ limitations under the License.
   <li>The more information you provide, the better we can help you</li>
   <li>Test cases are vital, particularly for any proposed enhancements</li>
   <li>Patches containing new files must contain the ASL v2.0 header at the top of every new file</li>
+  <li>A test class for Foo.java must be named FooTest.java</li>
   </ul>
 </p>
 <!-- Uncomment after moving to proper
