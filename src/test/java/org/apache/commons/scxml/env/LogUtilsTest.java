@@ -23,18 +23,18 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-public class TestLogUtils extends TestCase {
+public class LogUtilsTest extends TestCase {
 
-    public TestLogUtils(String testName) {
+    public LogUtilsTest(String testName) {
         super(testName);
     }
 
     public static Test suite() {
-        return new TestSuite(TestLogUtils.class);
+        return new TestSuite(LogUtilsTest.class);
     }
 
     public static void main(String args[]) {
-        String[] testCaseName = {TestLogUtils.class.getName()};
+        String[] testCaseName = {LogUtilsTest.class.getName()};
         junit.textui.TestRunner.main(testCaseName);
     }
     

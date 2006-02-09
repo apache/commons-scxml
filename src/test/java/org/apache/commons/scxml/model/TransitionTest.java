@@ -19,18 +19,18 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-public class TestTransition extends TestCase {
+public class TransitionTest extends TestCase {
 
-    public TestTransition(String testName) {
+    public TransitionTest(String testName) {
         super(testName);
     }
 
     public static Test suite() {
-        return new TestSuite(TestTransition.class);
+        return new TestSuite(TransitionTest.class);
     }
 
     public static void main(String args[]) {
-        String[] testCaseName = { TestTransition.class.getName()};
+        String[] testCaseName = { TransitionTest.class.getName()};
         junit.textui.TestRunner.main(testCaseName);
     }
     

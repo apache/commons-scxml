@@ -22,18 +22,18 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-public class TestSimpleContext extends TestCase {
+public class SimpleContextTest extends TestCase {
 
-    public TestSimpleContext(String testName) {
+    public SimpleContextTest(String testName) {
         super(testName);
     }
 
     public static Test suite() {
-        return new TestSuite(TestSimpleContext.class);
+        return new TestSuite(SimpleContextTest.class);
     }
 
     public static void main(String args[]) {
-        String[] testCaseName = { TestSimpleContext.class.getName()};
+        String[] testCaseName = { SimpleContextTest.class.getName()};
         junit.textui.TestRunner.main(testCaseName);
     }
 

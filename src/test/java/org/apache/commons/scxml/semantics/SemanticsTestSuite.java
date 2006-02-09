@@ -47,7 +47,7 @@ public class SemanticsTestSuite extends TestCase {
     public static Test suite() {
         TestSuite suite = new TestSuite();
         suite.setName("Commons-SCXML Semantics Tests");
-        suite.addTest(TestTransitionTargetComparator.suite());
+        suite.addTest(TransitionTargetComparatorTest.suite());
         return suite;
     }
 }

@@ -22,18 +22,18 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-public class TestTransitionTargetComparator extends TestCase {
+public class TransitionTargetComparatorTest extends TestCase {
 
-    public TestTransitionTargetComparator(String testName) {
+    public TransitionTargetComparatorTest(String testName) {
         super(testName);
     }
 
     public static Test suite() {
-        return new TestSuite(TestTransitionTargetComparator.class);
+        return new TestSuite(TransitionTargetComparatorTest.class);
     }
 
     public static void main(String args[]) {
-        String[] testCaseName = { TestTransitionTargetComparator.class.getName()};
+        String[] testCaseName = { TransitionTargetComparatorTest.class.getName()};
         junit.textui.TestRunner.main(testCaseName);
     }
 

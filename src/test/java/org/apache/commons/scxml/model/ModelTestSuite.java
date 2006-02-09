@@ -48,11 +48,11 @@ public class ModelTestSuite extends TestCase {
         TestSuite suite = new TestSuite();
         suite.setName("Commons-SCXML Model Tests");
         suite.addTest(ActionsTest.suite());
-        suite.addTest(TestAction.suite());
-        suite.addTest(TestHistory.suite());
-        suite.addTest(TestPath.suite());
-        suite.addTest(TestState.suite());
-        suite.addTest(TestTransition.suite());
+        suite.addTest(ActionTest.suite());
+        suite.addTest(HistoryTest.suite());
+        suite.addTest(PathTest.suite());
+        suite.addTest(StateTest.suite());
+        suite.addTest(TransitionTest.suite());
         return suite;
     }
 }

@@ -28,18 +28,18 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-public class TestSCXMLHelper extends TestCase {
+public class SCXMLHelperTest extends TestCase {
 
-    public TestSCXMLHelper(String testName) {
+    public SCXMLHelperTest(String testName) {
         super(testName);
     }
 
     public static Test suite() {
-        return new TestSuite(TestSCXMLHelper.class);
+        return new TestSuite(SCXMLHelperTest.class);
     }
 
     public static void main(String args[]) {
-        String[] testCaseName = { TestSCXMLHelper.class.getName()};
+        String[] testCaseName = { SCXMLHelperTest.class.getName()};
         junit.textui.TestRunner.main(testCaseName);
     }
     

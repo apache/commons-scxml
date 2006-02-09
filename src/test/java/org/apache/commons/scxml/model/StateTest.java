@@ -22,18 +22,18 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-public class TestState extends TestCase {
+public class StateTest extends TestCase {
 
-    public TestState(String testName) {
+    public StateTest(String testName) {
         super(testName);
     }
 
     public static Test suite() {
-        return new TestSuite(TestState.class);
+        return new TestSuite(StateTest.class);
     }
 
     public static void main(String args[]) {
-        String[] testCaseName = { TestState.class.getName()};
+        String[] testCaseName = { StateTest.class.getName()};
         junit.textui.TestRunner.main(testCaseName);
     }
     

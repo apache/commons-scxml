@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 The Apache Software Foundation.
+ * Copyright 2005-2006 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,10 +21,14 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.apache.commons.scxml.env.EnvTestSuite;
-import org.apache.commons.scxml.env.jsp.EnvJspTestSuite;
 import org.apache.commons.scxml.env.faces.EnvFacesTestSuite;
+import org.apache.commons.scxml.env.jexl.EnvJexlTestSuite;
+import org.apache.commons.scxml.env.jsp.EnvJspTestSuite;
+import org.apache.commons.scxml.env.servlet.EnvServletTestSuite;
+import org.apache.commons.scxml.io.IOTestSuite;
 import org.apache.commons.scxml.model.ModelTestSuite;
 import org.apache.commons.scxml.semantics.SemanticsTestSuite;
+import org.apache.commons.scxml.test.TestingTestSuite;
 
 /**
  * Test suite for [SCXML].
@@ -53,12 +57,16 @@ public class AllSCXMLTestSuite extends TestCase {
     public static Test suite() {
         TestSuite suite = new TestSuite();
         suite.setName("Commons-SCXML (all) Tests");
-        suite.addTest(SCXMLTestSuite.suite());
-        suite.addTest(EnvTestSuite.suite());
-        suite.addTest(EnvJspTestSuite.suite());
         suite.addTest(EnvFacesTestSuite.suite());
+        suite.addTest(EnvJexlTestSuite.suite());
+        suite.addTest(EnvJspTestSuite.suite());
+        suite.addTest(EnvServletTestSuite.suite());
+        suite.addTest(EnvTestSuite.suite());
+        suite.addTest(IOTestSuite.suite());
         suite.addTest(ModelTestSuite.suite());
+        suite.addTest(SCXMLTestSuite.suite());
         suite.addTest(SemanticsTestSuite.suite());
+        suite.addTest(TestingTestSuite.suite());
         return suite;
     }
 }

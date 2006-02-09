@@ -25,18 +25,18 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-public class TestBuiltin extends TestCase {
+public class BuiltinTest extends TestCase {
 
-    public TestBuiltin(String testName) {
+    public BuiltinTest(String testName) {
         super(testName);
     }
 
     public static Test suite() {
-        return new TestSuite(TestBuiltin.class);
+        return new TestSuite(BuiltinTest.class);
     }
 
     public static void main(String args[]) {
-        String[] testCaseName = { TestBuiltin.class.getName()};
+        String[] testCaseName = { BuiltinTest.class.getName()};
         junit.textui.TestRunner.main(testCaseName);
     }
     

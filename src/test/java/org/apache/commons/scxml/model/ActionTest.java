@@ -19,18 +19,18 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-public class TestAction extends TestCase {
+public class ActionTest extends TestCase {
 
-    public TestAction(String testName) {
+    public ActionTest(String testName) {
         super(testName);
     }
 
     public static Test suite() {
-        return new TestSuite(TestAction.class);
+        return new TestSuite(ActionTest.class);
     }
 
     public static void main(String args[]) {
-        String[] testCaseName = { TestAction.class.getName()};
+        String[] testCaseName = { ActionTest.class.getName()};
         junit.textui.TestRunner.main(testCaseName);
     }
     
@@ -106,6 +106,7 @@ public class TestAction extends TestCase {
             fail("Unknown TransitionTarget subclass:Initial");
         }
         catch( ModelException e ){
+        	//ignore
         }
     }
 }

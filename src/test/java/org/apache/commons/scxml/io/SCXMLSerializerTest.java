@@ -37,18 +37,18 @@ import org.apache.commons.scxml.model.State;
 import org.apache.commons.scxml.model.TransitionTarget;
 import org.apache.commons.scxml.model.Var;
 
-public class TestSCXMLSerializer extends TestCase {
+public class SCXMLSerializerTest extends TestCase {
 
-    public TestSCXMLSerializer(String testName) {
+    public SCXMLSerializerTest(String testName) {
         super(testName);
     }
 
     public static Test suite() {
-        return new TestSuite(TestSCXMLSerializer.class);
+        return new TestSuite(SCXMLSerializerTest.class);
     }
 
     public static void main(String args[]) {
-        String[] testCaseName = { TestSCXMLSerializer.class.getName()};
+        String[] testCaseName = { SCXMLSerializerTest.class.getName()};
         junit.textui.TestRunner.main(testCaseName);
     }
     

@@ -46,12 +46,12 @@ public class SCXMLTestSuite extends TestCase {
     public static Test suite() {
         TestSuite suite = new TestSuite();
         suite.setName("Commons-SCXML Tests");
+        suite.addTest(BuiltinTest.suite());
+        suite.addTest(SCInstanceTest.suite());
         suite.addTest(SCXMLDigesterTest.suite());
         suite.addTest(SCXMLExecutorTest.suite());
-        suite.addTest(TestBuiltin.suite());
-        suite.addTest(TestSCInstance.suite());
-        suite.addTest(TestSCXMLHelper.suite());
-        suite.addTest(TestStatus.suite());
+        suite.addTest(SCXMLHelperTest.suite());
+        suite.addTest(StatusTest.suite());
         suite.addTest(TriggerEventTest.suite());
         return suite;
     }

@@ -29,18 +29,18 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-public class TestSCInstance extends TestCase {
+public class SCInstanceTest extends TestCase {
 
-    public TestSCInstance(String testName) {
+    public SCInstanceTest(String testName) {
         super(testName);
     }
 
     public static Test suite() {
-        return new TestSuite(TestSCInstance.class);
+        return new TestSuite(SCInstanceTest.class);
     }
 
     public static void main(String args[]) {
-        String[] testCaseName = { TestSCInstance.class.getName()};
+        String[] testCaseName = { SCInstanceTest.class.getName()};
         junit.textui.TestRunner.main(testCaseName);
     }
     
@@ -59,7 +59,7 @@ public class TestSCInstance extends TestCase {
         context.set("name", "value");
         
         instance.setRootContext(context);
-        assertEquals("value", ((Context)instance.getRootContext()).get("name"));
+        assertEquals("value", instance.getRootContext().get("name"));
     }
     
     public void testGetRootContextEvaluator() {
@@ -79,7 +79,7 @@ public class TestSCInstance extends TestCase {
         
         instance.setContext(target, context);
         
-        assertEquals("value", ((Context)instance.getContext(target)).get("name"));
+        assertEquals("value", instance.getContext(target).get("name"));
     }
     
     public void testGetContextNullParent() {
@@ -93,8 +93,8 @@ public class TestSCInstance extends TestCase {
         Evaluator evaluator = new JexlEvaluator();
         instance.setEvaluator(evaluator);
 
-        assertEquals("value", ((Context)instance.getContext(target)).get("name"));
-        assertEquals("value", ((Context)instance.lookupContext(target)).get("name"));
+        assertEquals("value", instance.getContext(target).get("name"));
+        assertEquals("value", instance.lookupContext(target).get("name"));
     }
 
     public void testGetContextParent() {
@@ -113,8 +113,8 @@ public class TestSCInstance extends TestCase {
         Evaluator evaluator = new JexlEvaluator();
         instance.setEvaluator(evaluator);
 
-        assertEquals("value", ((Context)instance.getContext(target)).get("name"));
-        assertEquals("value", ((Context)instance.lookupContext(target)).get("name"));
+        assertEquals("value", instance.getContext(target).get("name"));
+        assertEquals("value", instance.lookupContext(target).get("name"));
     }
 
     public void testGetLastConfigurationNull() {

@@ -19,18 +19,18 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-public class TestHistory extends TestCase {
+public class HistoryTest extends TestCase {
 
-    public TestHistory(String testName) {
+    public HistoryTest(String testName) {
         super(testName);
     }
 
     public static Test suite() {
-        return new TestSuite(TestHistory.class);
+        return new TestSuite(HistoryTest.class);
     }
 
     public static void main(String args[]) {
-        String[] testCaseName = { TestHistory.class.getName()};
+        String[] testCaseName = { HistoryTest.class.getName()};
         junit.textui.TestRunner.main(testCaseName);
     }
     

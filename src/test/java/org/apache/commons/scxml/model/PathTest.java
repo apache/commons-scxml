@@ -19,18 +19,18 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-public class TestPath extends TestCase {
+public class PathTest extends TestCase {
 
-    public TestPath(String testName) {
+    public PathTest(String testName) {
         super(testName);
     }
 
     public static Test suite() {
-        return new TestSuite(TestPath.class);
+        return new TestSuite(PathTest.class);
     }
 
     public static void main(String args[]) {
-        String[] testCaseName = { TestPath.class.getName()};
+        String[] testCaseName = { PathTest.class.getName()};
         junit.textui.TestRunner.main(testCaseName);
     }
     
@@ -138,7 +138,7 @@ public class TestPath extends TestCase {
 
         Path path = new Path(source, target);
 
-        assertEquals("parentid", ((State)path.getScope()).getId());
+        assertEquals("parentid", path.getScope().getId());
     }
     
     public void testConstructorParentParallel() {
@@ -179,7 +179,7 @@ public class TestPath extends TestCase {
 
         Path path = new Path(source, target);
 
-        assertEquals("superParent", ((State)path.getScope()).getId());
+        assertEquals("superParent", path.getScope().getId());
     }
     
     public void testGetRegionsExitedNull() {
