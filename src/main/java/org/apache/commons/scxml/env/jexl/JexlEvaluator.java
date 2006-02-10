@@ -17,11 +17,14 @@
  */
 package org.apache.commons.scxml.env.jexl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.apache.commons.jexl.Expression;
 import org.apache.commons.jexl.ExpressionFactory;
-import org.apache.commons.jexl.JexlContext;
 import org.apache.commons.scxml.Context;
 import org.apache.commons.scxml.Evaluator;
 import org.apache.commons.scxml.SCXMLExpressionException;
@@ -67,7 +70,7 @@ public class JexlEvaluator implements Evaluator {
             String evalExpr = inFct.matcher(expr).
                 replaceAll("_builtin.isMember(_ALL_STATES, ");
             exp = ExpressionFactory.createExpression(evalExpr);
-            return exp.evaluate(jexlCtx);
+            return exp.evaluate(getEffectiveContext(jexlCtx));
         } catch (Exception e) {
             throw new SCXMLExpressionException(e);
         }
@@ -81,7 +84,7 @@ public class JexlEvaluator implements Evaluator {
      * @see Evaluator#newContext(Context)
      */
     public Context newContext(final Context parent) {
-        return new org.apache.commons.scxml.env.jexl.JexlContext(parent);
+        return new JexlContext(parent);
     }
 
     /**
@@ -100,10 +103,35 @@ public class JexlEvaluator implements Evaluator {
             String evalExpr = inFct.matcher(expr).
                 replaceAll("_builtin.isMember(_ALL_STATES, ");
             exp = ExpressionFactory.createExpression(evalExpr);
-            return (Boolean) exp.evaluate(jexlCtx);
+            return (Boolean) exp.evaluate(getEffectiveContext(jexlCtx));
         } catch (Exception e) {
             throw new SCXMLExpressionException(e);
         }
+    }
+
+    /**
+     * Create a new context which is the summation of contexts from the
+     * current state to document root, child has priority over parent
+     * in scoping rules.
+     *
+     * @param nodeCtx The JexlContext for this state.
+     * @return The effective JexlContext for the path leading up to
+     *         document root.
+     */
+    private JexlContext getEffectiveContext(final JexlContext nodeCtx) {
+        List contexts = new ArrayList();
+        // trace path to root
+        JexlContext currentCtx = nodeCtx;
+        while (currentCtx != null) {
+            contexts.add(currentCtx);
+            currentCtx = (JexlContext) currentCtx.getParent();
+        }
+        Map vars = new HashMap();
+        // summation of the contexts, parent first, child wins
+        for (int i = contexts.size() - 1; i > -1; i--) {
+            vars.putAll(((JexlContext) contexts.get(i)).getVars());
+        }
+        return new JexlContext(vars);
     }
 
 }
