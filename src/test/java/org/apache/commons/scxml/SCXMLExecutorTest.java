@@ -23,6 +23,8 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
+import org.apache.commons.scxml.env.SimpleContext;
+import org.apache.commons.scxml.env.jsp.ELEvaluator;
 import org.apache.commons.scxml.model.State;
 /**
  * Unit tests {@link org.apache.commons.scxml.SCXMLExecutor}.
@@ -43,17 +45,22 @@ public class SCXMLExecutorTest extends TestCase {
     }
 
     // Test data
-    private URL microwave01, microwave02, transitions01;
+    private URL microwave01jsp, microwave02jsp, microwave01jexl,
+        microwave02jexl, transitions01;
     private SCXMLExecutor exec;
 
     /**
      * Set up instance variables required by this test case.
      */
     public void setUp() {
-        microwave01 = this.getClass().getClassLoader().
+        microwave01jsp = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/env/jsp/microwave-01.xml");
-        microwave02 = this.getClass().getClassLoader().
+        microwave02jsp = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/env/jsp/microwave-02.xml");
+        microwave01jexl = this.getClass().getClassLoader().
+            getResource("org/apache/commons/scxml/env/jexl/microwave-01.xml");
+        microwave02jexl = this.getClass().getClassLoader().
+            getResource("org/apache/commons/scxml/env/jexl/microwave-02.xml");
         transitions01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/transitions-01.xml");
     }
@@ -62,20 +69,37 @@ public class SCXMLExecutorTest extends TestCase {
      * Tear down instance variables required by this test case.
      */
     public void tearDown() {
-        microwave01 = microwave02 = transitions01 = null;
+        microwave01jsp = microwave02jsp = microwave01jexl = microwave02jexl =
+            transitions01 = null;
     }
 
     /**
      * Test the implementation
      */
-    public void testSCXMLExecutorMicrowave01Sample() {
-        exec = SCXMLTestHelper.getExecutor(microwave01);
+    public void testSCXMLExecutorMicrowave01JspSample() {
+        exec = SCXMLTestHelper.getExecutor(microwave01jsp,
+            new SimpleContext(), new ELEvaluator());
         assertNotNull(exec);
+        checkMicrowave01Sample();
     }
 
-    public void testSCXMLExecutorMicrowave02Sample() {
-        exec = SCXMLTestHelper.getExecutor(microwave02);
+    public void testSCXMLExecutorMicrowave02JspSample() {
+        exec = SCXMLTestHelper.getExecutor(microwave02jsp,
+            new SimpleContext(), new ELEvaluator());
         assertNotNull(exec);
+        checkMicrowave02Sample();
+    }
+
+    public void testSCXMLExecutorMicrowave01JexlSample() {
+        exec = SCXMLTestHelper.getExecutor(microwave01jexl);
+        assertNotNull(exec);
+        checkMicrowave01Sample();
+    }
+
+    public void testSCXMLExecutorMicrowave02JexlSample() {
+        exec = SCXMLTestHelper.getExecutor(microwave02jexl);
+        assertNotNull(exec);
+        checkMicrowave02Sample();
     }
 
     public void testSCXMLExecutorTransitions01Sample() {
@@ -83,15 +107,15 @@ public class SCXMLExecutorTest extends TestCase {
         assertNotNull(exec);
         try {
             Set currentStates = fireEvent("ten.done");
-            assertTrue(currentStates.size() == 1);
+            assertEquals(1, currentStates.size());
             assertEquals("twenty_one", ((State)currentStates.iterator().
                 next()).getId());
             currentStates = fireEvent("twenty_one.done");
-            assertTrue(currentStates.size() == 1);
+            assertEquals(1, currentStates.size());
             assertEquals("twenty_two", ((State)currentStates.iterator().
                 next()).getId());
             currentStates = fireEvent("twenty_two.done");
-            assertTrue(exec.getCurrentStatus().getStates().size() == 3);
+            assertEquals(3, exec.getCurrentStatus().getStates().size());
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -106,6 +130,28 @@ public class SCXMLExecutorTest extends TestCase {
             fail(e.getMessage());
         }
         return exec.getCurrentStatus().getStates();
+    }
+
+    private void checkMicrowave01Sample() {
+        try {
+            Set currentStates = fireEvent("turn_on");
+            assertEquals(1, currentStates.size());
+            assertEquals("cooking", ((State)currentStates.iterator().
+                next()).getId());
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    private void checkMicrowave02Sample() {
+        try {
+            Set currentStates = fireEvent("turn_on");
+            assertEquals(2, currentStates.size());
+            String id = ((State)currentStates.iterator().next()).getId();
+            assertTrue(id.equals("closed") || id.equals("cooking"));
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
     }
 
     public static void main(String args[]) {
