@@ -106,6 +106,8 @@ public class Path {
     }
 
     /**
+     * Does this &quot;path&quot; cross regions.
+     *
      * @return true when the path crosses a region border(s)
      * @see State#isRegion()
      */
@@ -114,8 +116,11 @@ public class Path {
     }
 
     /**
+     * Get the list of regions exited.
+     *
      * @return List a list of exited regions sorted bottom-up;
      *         no order defined for siblings
+     * @see State#isRegion()
      */
     public final List getRegionsExited() {
         LinkedList ll = new LinkedList();
@@ -132,8 +137,11 @@ public class Path {
     }
 
     /**
+     * Get the list of regions entered.
+     *
      * @return List a list of entered regions sorted top-down; no order
      *         defined for siblings
+     * @see State#isRegion()
      */
     public final List getRegionsEntered() {
         LinkedList ll = new LinkedList();
@@ -150,6 +158,9 @@ public class Path {
     }
 
     /**
+     * Get the farthest state from root which is not being exited
+     * nor entered by the transition (null if scope is document root).
+     *
      * @return State scope of the transition path, null means global transition
      *         (SCXML document level) Scope is the least state which is not
      *         being exited nor entered by the transition.
@@ -159,6 +170,8 @@ public class Path {
     }
 
     /**
+     * Get the upward segment.
+     *
      * @return List upward segment of the path up to the scope
      */
     public final List getUpwardSegment() {
@@ -166,6 +179,8 @@ public class Path {
     }
 
     /**
+     * Get the downward segment.
+     *
      * @return List downward segment from the scope to the target
      */
     public final List getDownwardSegment() {
