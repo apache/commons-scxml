@@ -226,13 +226,21 @@ public final class SCXMLDigester {
 
     /**
      * <p>Obtain a SCXML digester instance for further customization.</p>
-     * <p><b>API Note:</b> Use the digest() convenience methods if you do not
-     * need a custom digester.</p>
+     * <b>API Notes:</b>
+     * <ul>
+     *   <li>Use the digest() convenience methods if you do not
+     *       need a custom digester.</li>
+     *   <li>After the SCXML document is parsed by the customized digester,
+     *       the object model <b>must</b> be made executor-ready by calling
+     *       <code>updateSCXML(SCXML)</code> method in this class.</li>
+     * </ul>
      *
      * @param scxml The parent SCXML document if there is one (in case of
      *              state templates for examples), null otherwise
      * @param pr The PathResolver, may be null for standalone documents
      * @return Digester A newly configured SCXML digester instance
+     *
+     * @see SCXMLDigester#updateSCXML(SCXML)
      */
     public static Digester newInstance(final SCXML scxml,
             final PathResolver pr) {
@@ -276,84 +284,81 @@ public final class SCXMLDigester {
     }
 
     //---------------------- PRIVATE CONSTANTS ----------------------//
-    //// Patterns to get the digestion going
+    //// Patterns to get the digestion going, prefixed by XP_
     /** Root &lt;scxml&gt; element. */
     private static final String XP_SM = "scxml";
 
     /** &lt;state&gt; children of root &lt;scxml&gt; element. */
     private static final String XP_SM_ST = "scxml/state";
 
-    //// Universal matches
+    //// Universal matches, prefixed by XPU_
     // State
     /** &lt;state&gt; children of &lt;state&gt; elements. */
-    private static final String XP_ST_ST = "!*/state/state";
+    private static final String XPU_ST_ST = "!*/state/state";
 
     /** &lt;state&gt; children of &lt;parallel&gt; elements. */
-    private static final String XP_PAR_ST = "!*/parallel/state";
+    private static final String XPU_PAR_ST = "!*/parallel/state";
 
     /** &lt;state&gt; children of transition &lt;target&gt; elements. */
-    private static final String XP_TR_TAR_ST = "!*/transition/target/state";
+    private static final String XPU_TR_TAR_ST = "!*/transition/target/state";
 
-    //private static final String XP_ST_TAR_ST = "!*/state/target/state";
+    //private static final String XPU_ST_TAR_ST = "!*/state/target/state";
 
     // Parallel
     /** &lt;parallel&gt; child of &lt;state&gt; elements. */
-    private static final String XP_ST_PAR = "!*/state/parallel";
+    private static final String XPU_ST_PAR = "!*/state/parallel";
 
     // If
     /** &lt;if&gt; element. */
-    private static final String XP_IF = "!*/if";
+    private static final String XPU_IF = "!*/if";
 
-    //// Path Fragments
+    //// Path Fragments, constants prefixed by XPF_
     // Onentries and Onexits
     /** &lt;onentry&gt; child element. */
-    private static final String XP_ONEN = "/onentry";
+    private static final String XPF_ONEN = "/onentry";
 
     /** &lt;onexit&gt; child element. */
-    private static final String XP_ONEX = "/onexit";
+    private static final String XPF_ONEX = "/onexit";
 
     // Initial
     /** &lt;initial&gt; child element. */
-    private static final String XP_INI = "/initial";
+    private static final String XPF_INI = "/initial";
 
     // History
     /** &lt;history&gt; child element. */
-    private static final String XP_HIST = "/history";
+    private static final String XPF_HIST = "/history";
 
     // Transition, target and exit
     /** &lt;transition&gt; child element. */
-    private static final String XP_TR = "/transition";
+    private static final String XPF_TR = "/transition";
 
     /** &lt;target&gt; child element. */
-    private static final String XP_TAR = "/target";
-
-    /** &lt;state&gt; child element. */
-    private static final String XP_ST = "/state";
+    private static final String XPF_TAR = "/target";
 
     /** &lt;exit&gt; child element. */
-    private static final String XP_EXT = "/exit";
+    private static final String XPF_EXT = "/exit";
 
     // Actions
     /** &lt;var&gt; child element. */
-    private static final String XP_VAR = "/var";
+    private static final String XPF_VAR = "/var";
 
     /** &lt;assign&gt; child element. */
-    private static final String XP_ASN = "/assign";
+    private static final String XPF_ASN = "/assign";
 
     /** &lt;log&gt; child element. */
-    private static final String XP_LOG = "/log";
+    private static final String XPF_LOG = "/log";
 
     /** &lt;send&gt; child element. */
-    private static final String XP_SND = "/send";
+    private static final String XPF_SND = "/send";
 
     /** &lt;cancel&gt; child element. */
-    private static final String XP_CAN = "/cancel";
+    private static final String XPF_CAN = "/cancel";
 
     /** &lt;elseif&gt; child element. */
-    private static final String XP_EIF = "/elseif";
+    private static final String XPF_EIF = "/elseif";
 
     /** &lt;else&gt; child element. */
-    private static final String XP_ELS = "/else";
+    private static final String XPF_ELS = "/else";
 
     //// Other constants
     /**
@@ -434,21 +439,21 @@ public final class SCXMLDigester {
         addStateRules(XP_SM_ST, scxmlRules, scxml, pr, 0);
         scxmlRules.add(XP_SM_ST, new SetNextRule("addState"));
         // Nested states
-        addStateRules(XP_ST_ST, scxmlRules, scxml, pr, 1);
-        scxmlRules.add(XP_ST_ST, new SetNextRule("addChild"));
+        addStateRules(XPU_ST_ST, scxmlRules, scxml, pr, 1);
+        scxmlRules.add(XPU_ST_ST, new SetNextRule("addChild"));
 
         // Parallel states
-        addStateRules(XP_PAR_ST, scxmlRules, scxml, pr, 1);
-        scxmlRules.add(XP_PAR_ST, new SetNextRule("addState"));
+        addStateRules(XPU_PAR_ST, scxmlRules, scxml, pr, 1);
+        scxmlRules.add(XPU_PAR_ST, new SetNextRule("addState"));
         // Target states
-        addStateRules(XP_TR_TAR_ST, scxmlRules, scxml, pr, 2);
-        scxmlRules.add(XP_TR_TAR_ST, new SetNextRule("setTarget"));
+        addStateRules(XPU_TR_TAR_ST, scxmlRules, scxml, pr, 2);
+        scxmlRules.add(XPU_TR_TAR_ST, new SetNextRule("setTarget"));
 
         //// Parallels
-        addParallelRules(XP_ST_PAR, scxmlRules, scxml);
+        addParallelRules(XPU_ST_PAR, scxmlRules, scxml);
 
         //// Ifs
-        addIfRules(XP_IF, scxmlRules);
+        addIfRules(XPU_IF, scxmlRules);
 
         return scxmlRules;
 
@@ -470,10 +475,10 @@ public final class SCXMLDigester {
             final PathResolver pr, final int parent) {
         scxmlRules.add(xp, new ObjectCreateRule(State.class));
         addStatePropertiesRules(xp, scxmlRules, pr);
-        addInitialRule(xp + XP_INI, scxmlRules, pr, scxml);
-        addHistoryRules(xp + XP_HIST, scxmlRules, pr, scxml);
+        addInitialRule(xp + XPF_INI, scxmlRules, pr, scxml);
+        addHistoryRules(xp + XPF_HIST, scxmlRules, pr, scxml);
         addParentRule(xp, scxmlRules, parent);
-        addTransitionRules(xp + XP_TR, scxmlRules, "addTransition");
+        addTransitionRules(xp + XPF_TR, scxmlRules, "addTransition");
         addHandlerRules(xp, scxmlRules);
         scxmlRules.add(xp, new UpdateModelRule(scxml));
     }
@@ -525,7 +530,7 @@ public final class SCXMLDigester {
         scxmlRules.add(xp, new ObjectCreateRule(Initial.class));
         addPseudoStatePropertiesRules(xp, scxmlRules, pr);
         scxmlRules.add(xp, new UpdateModelRule(scxml));
-        addTransitionRules(xp + XP_TR, scxmlRules, "setTransition");
+        addTransitionRules(xp + XPF_TR, scxmlRules, "setTransition");
         scxmlRules.add(xp, new SetNextRule("setInitial"));
     }
 
@@ -546,7 +551,7 @@ public final class SCXMLDigester {
         scxmlRules.add(xp, new UpdateModelRule(scxml));
         scxmlRules.add(xp, new SetPropertiesRule(new String[] {"type"},
             new String[] {"type"}));
-        addTransitionRules(xp + XP_TR, scxmlRules, "setTransition");
+        addTransitionRules(xp + XPF_TR, scxmlRules, "setTransition");
         scxmlRules.add(xp, new SetNextRule("addHistory"));
     }
 
@@ -607,9 +612,9 @@ public final class SCXMLDigester {
             final ExtendedBaseRules scxmlRules, final String setNextMethod) {
         scxmlRules.add(xp, new ObjectCreateRule(Transition.class));
         scxmlRules.add(xp, new SetPropertiesRule());
-        scxmlRules.add(xp + XP_TAR, new SetPropertiesRule());
+        scxmlRules.add(xp + XPF_TAR, new SetPropertiesRule());
         addActionRules(xp, scxmlRules);
-        scxmlRules.add(xp + XP_EXT, new Rule() {
+        scxmlRules.add(xp + XPF_EXT, new Rule() {
             public void end(final String namespace, final String name) {
                 Transition t = (Transition) getDigester().peek(1);
                 State exitState = new State();
@@ -630,12 +635,12 @@ public final class SCXMLDigester {
      */
     private static void addHandlerRules(final String xp,
             final ExtendedBaseRules scxmlRules) {
-        scxmlRules.add(xp + XP_ONEN, new ObjectCreateRule(OnEntry.class));
-        addActionRules(xp + XP_ONEN, scxmlRules);
-        scxmlRules.add(xp + XP_ONEN, new SetNextRule("setOnEntry"));
-        scxmlRules.add(xp + XP_ONEX, new ObjectCreateRule(OnExit.class));
-        addActionRules(xp + XP_ONEX, scxmlRules);
-        scxmlRules.add(xp + XP_ONEX, new SetNextRule("setOnExit"));
+        scxmlRules.add(xp + XPF_ONEN, new ObjectCreateRule(OnEntry.class));
+        addActionRules(xp + XPF_ONEN, scxmlRules);
+        scxmlRules.add(xp + XPF_ONEN, new SetNextRule("setOnEntry"));
+        scxmlRules.add(xp + XPF_ONEX, new ObjectCreateRule(OnExit.class));
+        addActionRules(xp + XPF_ONEX, scxmlRules);
+        scxmlRules.add(xp + XPF_ONEX, new SetNextRule("setOnExit"));
     }
 
     /**
@@ -647,12 +652,12 @@ public final class SCXMLDigester {
      */
     private static void addActionRules(final String xp,
             final ExtendedBaseRules scxmlRules) {
-        addActionRulesTuple(xp + XP_ASN, scxmlRules, Assign.class);
-        addActionRulesTuple(xp + XP_VAR, scxmlRules, Var.class);
-        addActionRulesTuple(xp + XP_LOG, scxmlRules, Log.class);
-        addSendRulesTuple(xp + XP_SND, scxmlRules);
-        addActionRulesTuple(xp + XP_CAN, scxmlRules, Cancel.class);
-        addActionRulesTuple(xp + XP_EXT, scxmlRules, Exit.class);
+        addActionRulesTuple(xp + XPF_ASN, scxmlRules, Assign.class);
+        addActionRulesTuple(xp + XPF_VAR, scxmlRules, Var.class);
+        addActionRulesTuple(xp + XPF_LOG, scxmlRules, Log.class);
+        addSendRulesTuple(xp + XPF_SND, scxmlRules);
+        addActionRulesTuple(xp + XPF_CAN, scxmlRules, Cancel.class);
+        addActionRulesTuple(xp + XPF_EXT, scxmlRules, Exit.class);
     }
 
     /**
@@ -684,8 +689,8 @@ public final class SCXMLDigester {
             final ExtendedBaseRules scxmlRules) {
         addActionRulesTuple(xp, scxmlRules, If.class);
         addActionRules(xp, scxmlRules);
-        addActionRulesTuple(xp + XP_EIF, scxmlRules, ElseIf.class);
-        addActionRulesTuple(xp + XP_ELS, scxmlRules, Else.class);
+        addActionRulesTuple(xp + XPF_EIF, scxmlRules, ElseIf.class);
+        addActionRulesTuple(xp + XPF_ELS, scxmlRules, Else.class);
     }
 
     /**
