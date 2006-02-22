@@ -94,6 +94,8 @@ public class Send extends Action {
     }
 
     /**
+     * Get the delay.
+     *
      * @return Returns the delay.
      */
     public final String getDelay() {
@@ -101,6 +103,8 @@ public class Send extends Action {
     }
 
     /**
+     * Set the delay.
+     *
      * @param delay The delay to set.
      */
     public final void setDelay(final String delay) {
@@ -108,6 +112,8 @@ public class Send extends Action {
     }
 
     /**
+     * Get the list of external namespaced child nodes.
+     *
      * @return List Returns the list of externalnodes.
      */
     public final List getExternalNodes() {
@@ -115,6 +121,8 @@ public class Send extends Action {
     }
 
     /**
+     * Set the list of external namespaced child nodes.
+     *
      * @param externalNodes The externalnode to set.
      */
     public final void setExternalNodes(final List externalNodes) {
@@ -122,6 +130,8 @@ public class Send extends Action {
     }
 
     /**
+     * Get the hints for this &lt;send&gt; element.
+     *
      * @return String Returns the hints.
      */
     public final String getHints() {
@@ -129,6 +139,8 @@ public class Send extends Action {
     }
 
     /**
+     * Set the hints for this &lt;send&gt; element.
+     *
      * @param hints The hints to set.
      */
     public final void setHints(final String hints) {
@@ -136,6 +148,8 @@ public class Send extends Action {
     }
 
     /**
+     * Get the namelist.
+     *
      * @return String Returns the namelist.
      */
     public final String getNamelist() {
@@ -143,6 +157,8 @@ public class Send extends Action {
     }
 
     /**
+     * Set the namelist.
+     *
      * @param namelist The namelist to set.
      */
     public final void setNamelist(final String namelist) {
@@ -150,6 +166,8 @@ public class Send extends Action {
     }
 
     /**
+     * Get the identifier for this &lt;send&gt; element.
+     *
      * @return String Returns the sendid.
      */
     public final String getSendid() {
@@ -157,6 +175,8 @@ public class Send extends Action {
     }
 
     /**
+     * Set the identifier for this &lt;send&gt; element.
+     *
      * @param sendid The sendid to set.
      */
     public final void setSendid(final String sendid) {
@@ -164,6 +184,8 @@ public class Send extends Action {
     }
 
     /**
+     * Get the target for this &lt;send&gt; element.
+     *
      * @return String Returns the target.
      */
     public final String getTarget() {
@@ -171,6 +193,8 @@ public class Send extends Action {
     }
 
     /**
+     * Set the target for this &lt;send&gt; element.
+     *
      * @param target The target to set.
      */
     public final void setTarget(final String target) {
@@ -178,6 +202,8 @@ public class Send extends Action {
     }
 
     /**
+     * Get the target type for this &lt;send&gt; element.
+     *
      * @return String Returns the targettype.
      */
     public final String getTargettype() {
@@ -185,6 +211,8 @@ public class Send extends Action {
     }
 
     /**
+     * Set the target type for this &lt;send&gt; element.
+     *
      * @param targettype The targettype to set.
      */
     public final void setTargettype(final String targettype) {
@@ -192,6 +220,8 @@ public class Send extends Action {
     }
 
     /**
+     * Get the event to send.
+     *
      * @param event The event to set.
      */
     public final void setEvent(final String event) {
@@ -199,6 +229,8 @@ public class Send extends Action {
     }
 
     /**
+     * Set the event to send.
+     *
      * @return String Returns the event.
      */
     public final String getEvent() {
