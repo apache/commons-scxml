@@ -1,6 +1,6 @@
 /*
  *
- *   Copyright 2005 The Apache Software Foundation.
+ *   Copyright 2005-2006 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,19 +17,22 @@
  */
 package org.apache.commons.scxml.model;
 
+import java.util.List;
+
 /**
- * The class in this SCXML object model that corresponds to the
- * any node in the SCXML document defined in a foreign namespace.
+ * An <code>ExternalContent</code> implementation represents an
+ * element in the SCXML document that may contain &quot;body
+ * content&quot;, which means an arbitrary number of child nodes
+ * belonging to external namespaces.
  *
  */
-public class ExternalNode {
+public interface ExternalContent {
 
     /**
-     * Constructor.
+     * Return the list of external namespaced children as
+     * DOM node instances.
      */
-    public ExternalNode() {
-        super();
-    }
+    List getExternalNodes();
 
 }
 
