@@ -31,7 +31,7 @@ import java.util.List;
  * &lt;send&gt; SCXML element.
  *
  */
-public class Send extends Action {
+public class Send extends Action implements ExternalContent {
 
     /**
      * The ID of the send message.

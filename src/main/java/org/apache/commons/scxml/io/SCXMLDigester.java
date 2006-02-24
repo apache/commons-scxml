@@ -45,6 +45,7 @@ import org.apache.commons.scxml.model.Else;
 import org.apache.commons.scxml.model.ElseIf;
 import org.apache.commons.scxml.model.Executable;
 import org.apache.commons.scxml.model.Exit;
+import org.apache.commons.scxml.model.ExternalContent;
 import org.apache.commons.scxml.model.History;
 import org.apache.commons.scxml.model.If;
 import org.apache.commons.scxml.model.Initial;
@@ -671,7 +672,7 @@ public final class SCXMLDigester {
             final ExtendedBaseRules scxmlRules) {
         addActionRulesTuple(xp, scxmlRules, Send.class);
         try {
-            scxmlRules.add(xp, new ParseSendRule());
+            scxmlRules.add(xp, new ParseExternalContentRule());
         } catch (ParserConfigurationException pce) {
             log.error("Error parsing <send> element content",
                 pce);
@@ -948,26 +949,30 @@ public final class SCXMLDigester {
     }
 
     /**
-     * Custom digestion rule for setting Executable parent of Action elements.
+     * Custom digestion rule for parsing bodies of
+     * <code>ExternalContent</code> elements.
      *
+     * @see ExternalContent
      */
-    public static class ParseSendRule extends NodeCreateRule {
+    public static class ParseExternalContentRule extends NodeCreateRule {
         /**
          * Constructor.
          * @throws ParserConfigurationException A JAXP configuration error
          */
-        public ParseSendRule() throws ParserConfigurationException {
+        public ParseExternalContentRule()
+        throws ParserConfigurationException {
             super();
         }
         /**
          * @see Rule#end(String, String)
          */
         public final void end(final String namespace, final String name) {
-            Element sendElement = (Element) getDigester().pop();
-            NodeList childNodes = sendElement.getChildNodes();
-            Send send = (Send) getDigester().peek();
+            Element bodyElement = (Element) getDigester().pop();
+            NodeList childNodes = bodyElement.getChildNodes();
+            List externalNodes = ((ExternalContent) getDigester().
+                peek()).getExternalNodes();
             for (int i = 0; i < childNodes.getLength(); i++) {
-                send.getExternalNodes().add(childNodes.item(i));
+                externalNodes.add(childNodes.item(i));
             }
         }
     }
