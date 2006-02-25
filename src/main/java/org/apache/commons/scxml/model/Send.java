@@ -20,7 +20,20 @@ package org.apache.commons.scxml.model;
 //import java.io.IOException;
 //import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.scxml.Context;
+import org.apache.commons.scxml.ErrorReporter;
+import org.apache.commons.scxml.Evaluator;
+import org.apache.commons.scxml.EventDispatcher;
+import org.apache.commons.scxml.SCInstance;
+import org.apache.commons.scxml.SCXMLExpressionException;
+import org.apache.commons.scxml.SCXMLHelper;
 
 //import org.apache.xml.serialize.OutputFormat;
 //import org.apache.xml.serialize.XMLSerializer;
@@ -254,6 +267,48 @@ public class Send extends Action implements ExternalContent {
         return buf.toString();
     }
     */
+
+    /**
+     * {@inheritDoc}
+     */
+    public void execute(final EventDispatcher evtDispatcher,
+            final ErrorReporter errRep, final SCInstance scInstance,
+            final Log appLog, final Collection derivedEvents)
+    throws ModelException, SCXMLExpressionException {
+        State parentState = getParentState();
+        Context ctx = scInstance.getContext(parentState);
+        Evaluator eval = scInstance.getEvaluator();
+        Object hintsValue = null;
+        if (!SCXMLHelper.isStringEmpty(hints)) {
+            hintsValue = eval.eval(ctx, hints);
+        }
+        Map params = null;
+        if (!SCXMLHelper.isStringEmpty(namelist)) {
+            StringTokenizer tkn = new StringTokenizer(namelist);
+            params = new HashMap(tkn.countTokens());
+            while (tkn.hasMoreTokens()) {
+                String varName = tkn.nextToken();
+                Object varObj = ctx.get(varName);
+                if (varObj == null) {
+                    //considered as a warning here
+                    errRep.onError(ErrorReporter.UNDEFINED_VARIABLE,
+                            varName + " = null", parentState);
+                }
+                params.put(varName, varObj);
+            }
+        }
+        long wait = 0L;
+        if (delay != null && delay.length() > 0) {
+            try {
+                wait = Long.parseLong(delay.trim());
+            } catch (NumberFormatException nfe) {
+                appLog.warn("Could not parse delay for <send>, "
+                    + "it will be treated as immediate", nfe);
+            }
+        }
+        evtDispatcher.send(sendid, target, targettype, event, params,
+            hintsValue, wait, externalNodes);
+    }
 
 }
 

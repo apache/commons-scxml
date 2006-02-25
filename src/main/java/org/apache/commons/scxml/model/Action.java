@@ -17,6 +17,14 @@
  */
 package org.apache.commons.scxml.model;
 
+import java.util.Collection;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.scxml.ErrorReporter;
+import org.apache.commons.scxml.EventDispatcher;
+import org.apache.commons.scxml.SCInstance;
+import org.apache.commons.scxml.SCXMLExpressionException;
+
 /**
  * An abstract base class for executable elements in SCXML,
  * such as &lt;assign&gt;, &lt;log&gt; etc.
@@ -74,5 +82,28 @@ public abstract class Action {
                     + tt.getClass().getName());
         }
     }
+
+    /**
+     * Execute this action instance.
+     *
+     * @param evtDispatcher The EventDispatcher for this execution instance
+     * @param errRep        The ErrorReporter to broadcast any errors
+     *                      during execution.
+     * @param scInstance    The state machine execution instance information.
+     * @param appLog        The application Log.
+     * @param derivedEvents The collection to which any internal events
+     *                      arising from the execution of this action
+     *                      must be added.
+     *
+     * @throws ModelException If the execution causes the model to enter
+     *                        a non-deterministic state.
+     * @throws SCXMLExpressionException If the execution involves trying
+     *                        to evaluate an expression which is malformed.
+     */
+    public abstract void execute(final EventDispatcher evtDispatcher,
+        final ErrorReporter errRep, final SCInstance scInstance,
+        final Log appLog, final Collection derivedEvents)
+    throws ModelException, SCXMLExpressionException;
+
 }
 

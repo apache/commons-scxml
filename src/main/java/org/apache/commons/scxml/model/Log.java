@@ -17,6 +17,15 @@
  */
 package org.apache.commons.scxml.model;
 
+import java.util.Collection;
+
+import org.apache.commons.scxml.Context;
+import org.apache.commons.scxml.ErrorReporter;
+import org.apache.commons.scxml.Evaluator;
+import org.apache.commons.scxml.EventDispatcher;
+import org.apache.commons.scxml.SCInstance;
+import org.apache.commons.scxml.SCXMLExpressionException;
+
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;log&gt; SCXML element.
@@ -78,5 +87,17 @@ public class Log extends Action {
         this.label = label;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public void execute(final EventDispatcher evtDispatcher,
+            final ErrorReporter errRep, final SCInstance scInstance,
+            final org.apache.commons.logging.Log appLog,
+            final Collection derivedEvents)
+    throws ModelException, SCXMLExpressionException {
+        Context ctx = scInstance.getContext(getParentState());
+        Evaluator eval = scInstance.getEvaluator();
+        appLog.info(label + ": " + String.valueOf(eval.eval(ctx, expr)));
+    }
 }
 

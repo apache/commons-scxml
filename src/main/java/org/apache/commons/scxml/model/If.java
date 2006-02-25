@@ -18,7 +18,17 @@
 package org.apache.commons.scxml.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.scxml.Context;
+import org.apache.commons.scxml.ErrorReporter;
+import org.apache.commons.scxml.Evaluator;
+import org.apache.commons.scxml.EventDispatcher;
+import org.apache.commons.scxml.SCInstance;
+import org.apache.commons.scxml.SCXMLExpressionException;
 
 /**
  * The class in this SCXML object model that corresponds to the
@@ -42,11 +52,18 @@ public class If extends Action {
     private List actions;
 
     /**
+     * The boolean value that dictates whether the particular child action
+     * should be executed.
+     */
+    private boolean execute;
+
+    /**
      * Constructor.
      */
     public If() {
         super();
         this.actions = new ArrayList();
+        this.execute = false;
     }
 
     /**
@@ -86,6 +103,36 @@ public class If extends Action {
      */
     public final void setCond(final String cond) {
         this.cond = cond;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void execute(final EventDispatcher evtDispatcher,
+            final ErrorReporter errRep, final SCInstance scInstance,
+            final Log appLog, final Collection derivedEvents)
+    throws ModelException, SCXMLExpressionException {
+        State parentState = getParentState();
+        Context ctx = scInstance.getContext(parentState);
+        Evaluator eval = scInstance.getEvaluator();
+        execute = eval.evalCond(ctx, cond).booleanValue();
+        // The "if" statement is a "container"
+        for (Iterator ifiter = actions.iterator(); ifiter.hasNext();) {
+            Action aa = (Action) ifiter.next();
+            if (execute && !(aa instanceof ElseIf)
+                    && !(aa instanceof Else)) {
+                aa.execute(evtDispatcher, errRep, scInstance, appLog,
+                    derivedEvents);
+            } else if (execute
+                    && (aa instanceof ElseIf || aa instanceof Else)) {
+                break;
+            } else if (aa instanceof Else) {
+                execute = true;
+            } else if (aa instanceof ElseIf) {
+                execute = eval.evalCond(ctx, ((ElseIf) aa).getCond())
+                        .booleanValue();
+            }
+        }
     }
 
 }

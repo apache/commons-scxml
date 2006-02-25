@@ -17,6 +17,14 @@
  */
 package org.apache.commons.scxml.model;
 
+import java.util.Collection;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.scxml.ErrorReporter;
+import org.apache.commons.scxml.EventDispatcher;
+import org.apache.commons.scxml.SCInstance;
+import org.apache.commons.scxml.SCXMLExpressionException;
+
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;elseif&gt; SCXML element.
@@ -52,6 +60,17 @@ public class ElseIf extends Action {
      */
     public final void setCond(final String cond) {
         this.cond = cond;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void execute(final EventDispatcher evtDispatcher,
+            final ErrorReporter errRep, final SCInstance scInstance,
+            final Log appLog, final Collection derivedEvents)
+    throws ModelException, SCXMLExpressionException {
+        // nothing to do, the <if> container will take care of this
+        return;
     }
 
 }

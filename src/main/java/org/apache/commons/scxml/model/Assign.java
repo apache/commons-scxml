@@ -17,6 +17,17 @@
  */
 package org.apache.commons.scxml.model;
 
+import java.util.Collection;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.scxml.Context;
+import org.apache.commons.scxml.ErrorReporter;
+import org.apache.commons.scxml.Evaluator;
+import org.apache.commons.scxml.EventDispatcher;
+import org.apache.commons.scxml.SCInstance;
+import org.apache.commons.scxml.SCXMLExpressionException;
+import org.apache.commons.scxml.TriggerEvent;
+
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;assign&gt; SCXML element.
@@ -76,6 +87,28 @@ public final class Assign extends Action {
      */
     public void setName(final String name) {
         this.name = name;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void execute(final EventDispatcher evtDispatcher,
+            final ErrorReporter errRep, final SCInstance scInstance,
+            final Log appLog, final Collection derivedEvents)
+    throws ModelException, SCXMLExpressionException {
+        State parentState = getParentState();
+        Context ctx = scInstance.getContext(parentState);
+        Evaluator eval = scInstance.getEvaluator();
+        if (!ctx.has(name)) {
+            errRep.onError(ErrorReporter.UNDEFINED_VARIABLE, name
+                    + " = null", parentState);
+        } else {
+            Object varObj = eval.eval(ctx, expr);
+            ctx.set(name, varObj);
+            TriggerEvent ev = new TriggerEvent(name + ".change",
+                    TriggerEvent.CHANGE_EVENT);
+            derivedEvents.add(ev);
+        }
     }
 
 }

@@ -17,6 +17,14 @@
  */
 package org.apache.commons.scxml.model;
 
+import java.util.Collection;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.scxml.ErrorReporter;
+import org.apache.commons.scxml.EventDispatcher;
+import org.apache.commons.scxml.SCInstance;
+import org.apache.commons.scxml.SCXMLExpressionException;
+
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;exit&gt; SCXML element, which is a shorthand notation for
@@ -76,6 +84,17 @@ public class Exit extends Action {
      */
     public final void setNamelist(final String namelist) {
         this.namelist = namelist;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void execute(final EventDispatcher evtDispatcher,
+            final ErrorReporter errRep, final SCInstance scInstance,
+            final Log appLog, final Collection derivedEvents)
+    throws ModelException, SCXMLExpressionException {
+        // we're done
+        return;
     }
 
 }
