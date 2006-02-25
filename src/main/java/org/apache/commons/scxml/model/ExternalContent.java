@@ -31,6 +31,8 @@ public interface ExternalContent {
     /**
      * Return the list of external namespaced children as
      * DOM node instances.
+     *
+     * @return The list of (external namespaced) child nodes.
      */
     List getExternalNodes();
 
