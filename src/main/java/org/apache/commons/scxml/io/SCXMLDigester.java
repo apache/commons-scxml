@@ -80,6 +80,14 @@ import org.xml.sax.SAXException;
  */
 public final class SCXMLDigester {
 
+    /**
+     * The SCXML namespace that this Digester is built for. Any document
+     * that is intended to be parsed by this digester <b>must</b>
+     * bind the SCXML elements to this namespace.
+     */
+    public static final String NAMESPACE_SCXML =
+        "http://www.w3.org/2005/07/scxml";
+
     //---------------------- PUBLIC METHODS ----------------------//
     /**
      * <p>API for standalone usage where the SCXML document is a URL.</p>
@@ -250,6 +258,7 @@ public final class SCXMLDigester {
         digester.setNamespaceAware(true);
         //Uncomment next line after SCXML DTD is available
         //digester.setValidating(true);
+        digester.setRuleNamespaceURI(NAMESPACE_SCXML);
         digester.setRules(initRules(scxml, pr));
         return digester;
     }
@@ -284,6 +293,47 @@ public final class SCXMLDigester {
         }
     }
 
+    /**
+     * <p>Add a custom namespaced action as part of SCXML executable
+     * content.</p>
+     *
+     * @param digester The SCXML digester, <b>must</b> be obtained by
+     *                 calling the
+     *     <code>SCXMLDigester#newInstance(SCXML,PathResolver)</code>
+     *                 method.
+     * @param namespaceURI The namespace URI for this custom action.
+     * @param localName The local name for this custom action.
+     * @param klass The class that will represent this custom action
+     *              in the Commons SCXML object model, <b>must</b> be
+     *              a subtype of
+     *              <code>org.apache.commons.scxml.model.Action</code>
+     */
+    public static void addCustomAction(final Digester digester,
+            final String namespaceURI, final String localName,
+            final Class klass) {
+        if (SCXMLHelper.isStringEmpty(namespaceURI)) {
+            throw new IllegalArgumentException(ERR_CUSTOM_ACTION_NO_NS);
+        }
+        if (namespaceURI.trim().equals(NAMESPACE_SCXML)) {
+            throw new IllegalArgumentException(ERR_CUSTOM_ACTION_RESERVED_NS);
+        }
+        if (SCXMLHelper.isStringEmpty(localName)) {
+            throw new IllegalArgumentException(ERR_CUSTOM_ACTION_NO_NAME);
+        }
+        if (klass == null || !SCXMLHelper.subtypeOf(klass, Action.class)) {
+            throw new IllegalArgumentException(ERR_CUSTOM_ACTION_TYPE);
+        }
+        String xpfLocalName = STR_SLASH + localName.trim();
+        digester.setRuleNamespaceURI(namespaceURI.trim());
+        ExtendedBaseRules scxmlRules = (ExtendedBaseRules) digester.
+            getRules();
+        if (SCXMLHelper.implementationOf(klass, ExternalContent.class)) {
+            addCustomActionRules(xpfLocalName, scxmlRules, klass, true);
+        } else {
+            addCustomActionRules(xpfLocalName, scxmlRules, klass, false);
+        }
+    }
+
     //---------------------- PRIVATE CONSTANTS ----------------------//
     //// Patterns to get the digestion going, prefixed by XP_
     /** Root &lt;scxml&gt; element. */
@@ -312,6 +362,16 @@ public final class SCXMLDigester {
     // If
     /** &lt;if&gt; element. */
     private static final String XPU_IF = "!*/if";
+
+    // Executables, next three patterns useful when adding custom actions
+    /** &lt;onentry&gt; element. */
+    private static final String XPU_ONEN = "!*/onentry";
+
+    /** &lt;onexit&gt; element. */
+    private static final String XPU_ONEX = "!*/onexit";
+
+    /** &lt;transition&gt; element. */
+    private static final String XPU_TR = "!*/transition";
 
     //// Path Fragments, constants prefixed by XPF_
     // Onentries and Onexits
@@ -413,6 +473,41 @@ public final class SCXMLDigester {
      */
     private static final String ERR_STATE_BAD_DEEP_HIST = "History state"
         + " for deep history is not descendant for \"{0}\"";
+
+    /**
+     * Error message while attempting to define a custom action without
+     * specifying a namespace.
+     */
+    private static final String ERR_CUSTOM_ACTION_NO_NS = "Custom action"
+        + " needs a namespace";
+
+    /**
+     * Error message while attempting to define a custom action in the
+     * SCXML namespace.
+     */
+    private static final String ERR_CUSTOM_ACTION_RESERVED_NS = "Cannot add"
+        + " custom action to SCXML namespace";
+
+    /**
+     * Error message while attempting to define a custom action in the
+     * SCXML namespace.
+     */
+    private static final String ERR_CUSTOM_ACTION_NO_NAME = "Cannot add"
+        + " custom action without a local name";
+
+    /**
+     * Error message while attempting to define a custom action which does
+     * not extend the Commons SCXML Action base class.
+     */
+    private static final String ERR_CUSTOM_ACTION_TYPE = "Custom action"
+        + " must be a subtype of org.apache.commons.scxml.model.Action";
+
+    // String constants
+    /** Slash. */
+    private static final String STR_SLASH = "/";
+
+    /** Prefix for universal digester patterns. */
+    private static final String STR_UNIVERSAL = "!*";
 
     //---------------------- PRIVATE UTILITY METHODS ----------------------//
     /*
@@ -676,6 +771,57 @@ public final class SCXMLDigester {
         } catch (ParserConfigurationException pce) {
             log.error("Error parsing <send> element content",
                 pce);
+        }
+    }
+
+    /**
+     * Add Digester rules for a custom action with child nodes (in
+     * external namespaces).
+     *
+     * @param xpfLocalName The local name path fragment (trailing) for
+     *                       the custom action element
+     * @param scxmlRules The rule set to be used for digestion
+     * @param klass The <code>Action</code> class implementing the custom
+     *              action.
+     * @param bodyContent Whether the custom rule has body content
+     *              that should be parsed using
+     *              <code>NodeCreateRule</code>
+     */
+    private static void addCustomActionRules(final String xpfLocalName,
+            final ExtendedBaseRules scxmlRules, final Class klass,
+            final boolean bodyContent) {
+        addCustomActionRulesTuple(XPU_ONEN + xpfLocalName, scxmlRules,
+            klass, bodyContent);
+        addCustomActionRulesTuple(XPU_ONEX + xpfLocalName, scxmlRules,
+            klass, bodyContent);
+        addCustomActionRulesTuple(XPU_TR + xpfLocalName, scxmlRules,
+            klass, bodyContent);
+        addCustomActionRulesTuple(XPU_IF + xpfLocalName, scxmlRules,
+            klass, bodyContent);
+    }
+
+    /**
+     * Add Digester rules for a simple custom action (no body content).
+     *
+     * @param xp The path to the custom action element
+     * @param scxmlRules The rule set to be used for digestion
+     * @param klass The <code>Action</code> class implementing the custom
+     *              action.
+     * @param bodyContent Whether the custom rule has body content
+     *              that should be parsed using
+     *              <code>NodeCreateRule</code>
+     */
+    private static void addCustomActionRulesTuple(final String xp,
+            final ExtendedBaseRules scxmlRules, final Class klass,
+            final boolean bodyContent) {
+        addActionRulesTuple(xp, scxmlRules, klass);
+        if (bodyContent) {
+            try {
+                scxmlRules.add(xp, new ParseExternalContentRule());
+            } catch (ParserConfigurationException pce) {
+                log.error("Error instantiating body content parsing rule for"
+                    + " custom action", pce);
+            }
         }
     }
 

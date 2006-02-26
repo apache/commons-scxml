@@ -69,6 +69,19 @@ public class SCXMLTestHelper {
         return getExecutor(evaluator, scxml);
     }
 
+    public static SCXMLExecutor getExecutor(SCXML scxml) {
+        return getExecutor(scxml, null);
+    }
+
+    public static SCXMLExecutor getExecutor(SCXML scxml,
+            SCXMLSemantics semantics) {
+        Context context = new JexlContext();
+        Evaluator evaluator = new JexlEvaluator();
+        EventDispatcher ed = new SimpleDispatcher();
+        Tracer trc = new Tracer();
+        return getExecutor(context, evaluator, scxml, ed, trc, semantics);
+    }
+
     public static SCXMLExecutor getExecutor(Evaluator evaluator, SCXML scxml) {
         EventDispatcher ed = new SimpleDispatcher();
         Tracer trc = new Tracer();
@@ -86,6 +99,12 @@ public class SCXMLTestHelper {
 
     public static SCXMLExecutor getExecutor(Context context,
             Evaluator evaluator, SCXML scxml, EventDispatcher ed, Tracer trc) {
+        return getExecutor(context, evaluator, scxml, ed, trc, null);
+    }
+
+    public static SCXMLExecutor getExecutor(Context context,
+            Evaluator evaluator, SCXML scxml, EventDispatcher ed,
+            Tracer trc, SCXMLSemantics semantics) {
         Assert.assertNotNull(evaluator);
         Assert.assertNotNull(context);
         Assert.assertNotNull(scxml);
@@ -93,7 +112,11 @@ public class SCXMLTestHelper {
         Assert.assertNotNull(trc);
         SCXMLExecutor exec = null;
         try {
-            exec = new SCXMLExecutor(evaluator, ed, trc);
+            if (semantics == null) {
+                exec = new SCXMLExecutor(evaluator, ed, trc);
+            } else {
+                exec = new SCXMLExecutor(evaluator, ed, trc, semantics);
+            }
             exec.addListener(scxml, trc);
             exec.setRootContext(context);
             exec.setSuperStep(true);

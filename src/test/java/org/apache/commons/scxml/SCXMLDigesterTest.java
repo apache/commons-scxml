@@ -23,7 +23,10 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
+import org.apache.commons.digester.Digester;
+import org.apache.commons.scxml.io.SCXMLDigester;
 import org.apache.commons.scxml.io.SCXMLSerializer;
+import org.apache.commons.scxml.model.Hello;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.Send;
 import org.apache.commons.scxml.model.State;
@@ -48,6 +51,7 @@ public class SCXMLDigesterTest extends TestCase {
 
     // Test data
     private URL microwave01, microwave02, transitions01, send01;
+    private Digester digester;
     private SCXML scxml;
     private String scxmlAsString;
 
@@ -63,6 +67,7 @@ public class SCXMLDigesterTest extends TestCase {
             getResource("org/apache/commons/scxml/transitions-01.xml");
         send01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/send-01.xml");
+        digester = SCXMLDigester.newInstance(null, null);
     }
 
     /**
@@ -72,6 +77,7 @@ public class SCXMLDigesterTest extends TestCase {
         microwave01 = microwave02 = transitions01 = send01 = null;
         scxml = null;
         scxmlAsString = null;
+        digester = null;
     }
 
     /**
@@ -114,6 +120,65 @@ public class SCXMLDigesterTest extends TestCase {
             + " an example.</prompt></foo>";
         assertFalse(scxmlAsString.indexOf(expectedFoo2Serialization) == -1);
         */
+    }
+
+    public void testAddGoodCustomAction01() {
+        try {
+            SCXMLDigester.addCustomAction(digester,
+                "http://my.actions.domain/CUSTOM", "hello", Hello.class);
+        } catch (IllegalArgumentException iae) {
+            fail("Failed to add custom action &quot;Hello&quot;");
+        }
+    }
+
+    public void testAddBadCustomAction01() {
+        try {
+            SCXMLDigester.addCustomAction(digester,
+                null, "hello", Hello.class);
+            fail("Added custom action with illegal namespace");
+        } catch (IllegalArgumentException iae) {
+            // Expected
+        }
+    }
+
+    public void testAddBadCustomAction02() {
+        try {
+            SCXMLDigester.addCustomAction(digester,
+                "  ", "hello", Hello.class);
+            fail("Added custom action with illegal namespace");
+        } catch (IllegalArgumentException iae) {
+            // Expected
+        }
+    }
+
+    public void testAddBadCustomAction03() {
+        try {
+            SCXMLDigester.addCustomAction(digester,
+                "http://my.actions.domain/CUSTOM", "", Hello.class);
+            fail("Added custom action with illegal local name");
+        } catch (IllegalArgumentException iae) {
+            // Expected
+        }
+    }
+
+    public void testAddBadCustomAction04() {
+        try {
+            SCXMLDigester.addCustomAction(digester,
+                "http://my.actions.domain/CUSTOM", "  ", Hello.class);
+            fail("Added custom action with illegal local name");
+        } catch (IllegalArgumentException iae) {
+            // Expected
+        }
+    }
+
+    public void testAddBadCustomAction05() {
+        try {
+            SCXMLDigester.addCustomAction(digester,
+                "http://my.actions.domain/CUSTOM", "foo", this.getClass());
+            fail("Added custom action which is not an Action class subtype");
+        } catch (IllegalArgumentException iae) {
+            // Expected
+        }
     }
 
     private String serialize(final SCXML scxml) {
