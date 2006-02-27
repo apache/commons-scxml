@@ -36,11 +36,11 @@
    <p>The first set of notes walks through the most common usage pattern,
    end-to-end.</p>
    <ul>
-    <li><a href="api-notes/core-digester.html">Digester</a> - Digesting SCXML
+    <li><a href="guide/core-digester.html">Digester</a> - Digesting SCXML
     into the Commons SCXML Java object model.</li>
-    <li><a href="api-notes/core-engine.html">Executor</a> - Instantiating
+    <li><a href="guide/core-engine.html">Executor</a> - Instantiating
     an SCXML executor (engine).</li>
-    <li><a href="api-notes/core-events.html">Triggering events</a> - Executing
+    <li><a href="guide/core-events.html">Triggering events</a> - Executing
     the event driven state machine.</li>
    </ul>
   </subsection>
@@ -48,7 +48,7 @@
   <subsection name="Testing">
    <p>Contains notes about trying Commons SCXML and testing SCXML documents.</p>
    <ul>
-    <li><a href="api-notes/testing-standalone.html">Standalone</a> - Rev'ing the
+    <li><a href="guide/testing-standalone.html">Standalone</a> - Rev'ing the
     engine.</li>
    </ul>
   </subsection>
@@ -56,7 +56,7 @@
   <subsection name="Side-effects">
    <p>Contains notes about interesting non-primary uses for Commons SCXML.</p>
    <ul>
-    <li><a href="api-notes/side-effect-el.html">EL</a> - Trying Commons EL outside
+    <li><a href="guide/side-effect-el.html">EL</a> - Trying Commons EL outside
     a servlet container.</li>
    </ul>
   </subsection>

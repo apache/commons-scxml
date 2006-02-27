@@ -23,11 +23,29 @@
       <item       name="Overview"
                   href="/index.html"/>
 
+      <item       name="User Guide"
+                  href="/guide.html"
+                  collapse="true">
+
+        <item     name="SCXML Digester"  
+                  href="/guide/core-digester.html" />
+
+        <item     name="SCXML Engine"  
+                  href="/guide/core-engine.html" />
+
+        <item     name="Triggering Events"  
+                  href="/guide/core-events.html" />
+
+        <item     name="Standalone Testing"  
+                  href="/guide/testing-standalone.html" />
+
+        <item     name="Side Effect - EL"  
+                  href="/guide/side-effect-el.html" />
+
+      </item>
+
       <item       name="Javadoc"
                   href="apidocs/index.html"/>
-
-      <item       name="Building"                      
-                  href="/building.html" />
 
       <item       name="Usecases"                      
                   href="/usecases.html"
@@ -41,26 +59,8 @@
 
       </item>
 
-      <item       name="API notes"
-                  href="/api-notes.html"
-                  collapse="true">
-
-        <item     name="SCXML Digester"  
-                  href="/api-notes/core-digester.html" />
-
-        <item     name="SCXML Engine"  
-                  href="/api-notes/core-engine.html" />
-
-        <item     name="Triggering Events"  
-                  href="/api-notes/core-events.html" />
-
-        <item     name="Standalone Testing"  
-                  href="/api-notes/testing-standalone.html" />
-
-        <item     name="Side Effect - EL"  
-                  href="/api-notes/side-effect-el.html" />
-
-      </item>
+      <item       name="Building"                      
+                  href="/building.html" />
 
       <item       name="Mailing lists"
                   href="/mail-lists.html"/>
