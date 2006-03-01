@@ -37,23 +37,36 @@
    that can be represented as a UML state chart, for example, business process 
    flows, view navigation bits, interaction or dialog management etc. (this is,
    by no means, a comprehensive list), can leverage the Commons SCXML engine
-   library. We illustrate just a few sample usecases within frameworks in the
-   open source community as illustrations.
+   library. We illustrate just a few sample usecases as illustrations.
    </p>
   </subsection>
 
   <subsection name="Samples">
-   <p>
-    <ul>
-     <li><a href="usecases/scxml-in-rdc-group.html">Usecase 1</a> - Use in 
-     <a href="http://jakarta.apache.org/taglibs/doc/rdc-doc/intro.html">
-     Reusable Dialog Components (RDC) Framework</a> &lt;group&gt;
-     container.</li>
-     <li><a href="usecases/scxml-in-shale-dialogs.html">Usecase 2</a> -
-     Use in <a href="http://struts.apache.org/shale">Shale</a> dialogs</li>
-    </ul>
-   </p>
-   <br/>
+   <p>Simple usecases, and beyond:</p>
+   <subsection name="Simple">
+    <p>These are "standalone" usecases, which do not require any knowledge
+       beyond beginner Java and beginner XML.
+       <ul>
+        <li><a href="usecases/scxml-stopwatch.html">Usecase 1</a> -
+        Using Commons SCXML to model and implement behavior of stateful
+        objects (SCXML stopwatch example).</li>
+       </ul>
+    </p>
+   </subsection>
+   <subsection name="Advanced">
+    <p>These are usecases within frameworks available in the open source
+       community, and are labeled advanced since they require some additional
+       knowledge about the framework relevant to the particular usecase.
+       <ul>
+        <li><a href="usecases/scxml-in-rdc-group.html">Usecase 2</a> - Use in
+        <a href="http://jakarta.apache.org/taglibs/doc/rdc-doc/intro.html">
+        Reusable Dialog Components (RDC) Framework</a> &lt;group&gt;
+        container.</li>
+        <li><a href="usecases/scxml-in-shale-dialogs.html">Usecase 3</a> -
+        Use in <a href="http://struts.apache.org/shale">Shale</a> dialogs</li>
+       </ul>
+    </p>
+   </subsection>
    <p>If you know of another usecase we should list or if you are interesting
    in seeing if SCXML fits a usecase you have in mind, contact us via the
    <a href="mail-lists.html">mailing lists</a>.

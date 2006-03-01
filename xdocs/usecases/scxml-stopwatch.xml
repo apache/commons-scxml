@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Copyright 2006 The Apache Software Foundation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<document>
+
+ <properties>
+  <title>Commons SCXML Usecases - Stopwatch</title>
+  <author email="commons-dev@jakarta.apache.org">Commons Documentation Team</author>
+ </properties>
+
+ <body>
+
+  <section name="Using SCXML documents to define behavior">
+   
+   <p>SCXML documents (more generically, UML state chart diagrams) can be used
+      to define stateful behavior of objects, and Commons SCXML enables
+      developers to take this model directly into the corresponding code
+      artifacts. The resulting artifacts tend to be much simpler, embody a
+      useful separation of concerns and are easier to understand and maintain.
+   </p>
+
+   <subsection name="Motivation">
+    <ul>
+     <li>Demonstrate a "standalone" usecase of Commons SCXML
+         (some of the other usecases are "frameworky" in nature and require
+         additional knowledge of the framework the particular usecase
+         refers to).</li>
+     <li>Demonstrate the useful separation of concerns, the
+         simplicity of the resulting artifacts, and the direct association
+         between the model and the code when using Commons SCXML to
+         incorporate behavior.</li>
+    </ul>
+   </subsection>
+
+  </section>
+
+  <section name="Sample walkthrough - From model to working code">
+
+   <p>Here is a short exercise in modeling and implementing an object with
+      stateful behavior. A stopwatch -- for anyone who may need an introduction
+      -- is used to measure duration, with one button for starting and stopping
+      the watch and another one for pausing the display (also known as "split",
+      where the watch continues to keep time while the display is frozen, to
+      measure, for example, "lap times" in races). Once the watch has been
+      stopped, the start/stop button may be used to reset the display.
+   </p>
+
+   <subsection name="The Model - UML Diagram">
+    <p>Here is the state chart diagram that describes the behavior
+       of this particular stopwatch:<br/>
+       <a href="scxml-stopwatch/stopwatch.jpg"><img
+          src="scxml-stopwatch/stopwatch.jpg" border="0"
+          alt="stopwatch state chart diagram"/></a><br/>
+       (<a href="scxml-stopwatch/stopwatch-model.jpg">Zoom out</a>)
+    </p>
+   </subsection>
+
+   <subsection name="The SCXML document">
+    <p>The SCXML document is then, a simple serialization of
+       the "model" above:
+       <a href="http://svn.apache.org/repos/asf/jakarta/commons/sandbox/scxml/trunk/src/test/java/org/apache/commons/scxml/env/stopwatch.xml">stopwatch.xml</a>.
+    </p>
+   </subsection>
+
+   <subsection name="The Stopwatch class">
+    <p>Here is the class that implements the stopwatch behavior,
+       <a href="../xref-test/org/apache/commons/scxml/env/StopWatch.html">StopWatch.java</a>.
+       The class extends
+       <a href="../xref/org/apache/commons/scxml/env/AbstractStateMachine.html">AbstractStateMachine.java</a>,
+       which provides one approach for providing the base functionality
+       needed by classes representing stateful entities. Points to note
+       in the StopWatch class are:
+       <ul>
+        <li>The "lifecycle" is defined by the SCXML document, which is
+            an artifact easily derived from the modeling layer.</li>
+        <li>The code is much simpler, since the lifecycle management
+            task has been assigned to Commons SCXML.</li>
+       </ul>
+    </p>
+   </subsection>
+
+   <subsection name="The Stopwatch UI">
+    <p>Here is the UI for our demonstration,
+       <a href="../xref-test/org/apache/commons/scxml/env/StopWatchDisplay.html">StopWatchDisplay.java</a>.
+       Points to note here are:
+       <ul>
+        <li>The UI is "backed" by a StopWatch instance.</li>
+        <li>It merely relays the user initiated events (in this case,
+            button clicks) to the Commons SCXML driven StopWatch
+            instance by serving as an intermediary / proxy.</li>
+        <li>The UI and application behavior separation is thus, and
+            usefully, pronounced.</li>
+       </ul>
+    </p>
+   </subsection>
+
+  </section>
+
+ </body>
+
+</document>

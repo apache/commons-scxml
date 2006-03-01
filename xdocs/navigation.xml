@@ -51,6 +51,9 @@
                   href="/usecases.html"
                   collapse="true">
 
+        <item     name="SCXML Stopwatch"
+                  href="/usecases/scxml-stopwatch.html" />
+
         <item     name="SCXML in RDC group container"  
                   href="/usecases/scxml-in-rdc-group.html" />
 
