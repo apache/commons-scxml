@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Copyright 2006 The Apache Software Foundation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<document>
+
+ <properties>
+  <title>Commons SCXML Usage - Five minute SCXML tutorial</title>
+  <author email="commons-dev@jakarta.apache.org">Commons Documentation Team</author>
+ </properties>
+
+ <body>
+
+  <section name="What is SCXML?">
+
+   <p>State Chart XML (SCXML) is a general-purpose event-based state
+      machine language that can be used in many ways.</p>
+
+   <p>The definitive guide to authoring SCXML documents is the
+      <a href="http://www.w3.org/TR/scxml/">W3C Working Draft
+      of the SCXML specification</a>.</p>
+
+  </section> 
+
+  <section name="Hello World">
+
+   <p>Here is the canonical
+      <a href="http://svn.apache.org/repos/asf/jakarta/commons/sandbox/scxml/trunk/src/test/java/org/apache/commons/scxml/hello-world.xml">hello world example</a>
+      for SCXML. The interesting bits are:</p>
+
+   <pre>
+    &lt;scxml xmlns="http://www.w3.org/2005/07/SCXML"
+              version="1.0"
+              initialstate="hello"&gt;
+
+     &lt;state id="hello" final="true"&gt;
+      &lt;onentry&gt;
+       &lt;log expr="'hello world'" /&gt;
+      &lt;/onentry&gt;
+     &lt;/state&gt;
+
+    &lt;/scxml&gt;
+   </pre>
+
+   <p>
+    <ul>
+     <li>The document declares an initial state of "hello", which is the entry
+         point into the state machine.
+     </li>
+     <li>Once the state "hello" is entered the "executable content" contained
+         in the &lt;onentry&gt; is immediately executed.
+     </li>
+     <li>Similarly, there is also the symmetric &lt;onexit&gt;, which holds
+         executable content to be executed when a state is being exited.</li>
+     <li>The final attribute on state "hello" indicates that the state
+         machine has "run to completion".</li>
+     <li>Executable content is made of a series of "actions".</li>
+     <li>The "standard actions" defined by the SCXML specification are:
+         &lt;var&gt;, &lt;assign&gt;, &lt;log&gt;, &lt;send&gt;,
+         &lt;cancel&gt;, &lt;if&gt;, &lt;elseif&gt;, &lt;else&gt;.</li>
+    </ul>
+   </p>
+
+  </section>
+
+  <section name="Transitions">
+
+   <p>Transitions allow the state machine to change state. A transition is
+      "followed" if its "trigger event" is received, and the
+      "guard condition", if one is available is valid.
+   </p>
+
+   <p>Here are some transition variants:</p>
+
+   <pre>
+    &lt;!--
+      ... begin scxml, some states ...
+    --&gt;
+
+     &lt;state id="foo1"&gt;
+      &lt;!--
+        ... some content ...
+      --&gt;
+      &lt;transition&gt;
+       &lt;target next="bar" /&gt;
+      &lt;/transition&gt;
+     &lt;/state&gt;
+
+     &lt;state id="foo2"&gt;
+      &lt;!--
+        ... some content ...
+      --&gt;
+      &lt;transition event="foo.bar"&gt;
+       &lt;target next="bar" /&gt;
+      &lt;/transition&gt;
+     &lt;/state&gt;
+
+     &lt;state id="foo3"&gt;
+      &lt;!--
+        ... some content ...
+      --&gt;
+      &lt;transition event="foo.bar" cond="some-boolean-expression"&gt;
+       &lt;target next="bar" /&gt;
+      &lt;/transition&gt;
+     &lt;/state&gt;
+
+     &lt;state id="bar"&gt;
+      &lt;!--
+        ... some content ...
+      --&gt;
+     &lt;/state&gt;
+
+    &lt;!--
+       ... remaining states, end scxml ...
+    --&gt;
+   </pre>
+
+   <p>
+    <ul>
+     <li>The first transition in document order is an "immediate"
+         transition. "foo1" is the source, and "bar" is the
+         destination (transition target).
+     </li>
+     <li>The second transition waits for the trigger event "foo.bar".
+     </li>
+     <li>The third waits for "foo.bar" and the guard condition
+         specified by its "cond" attribute to evaluate to true
+         the instant the event is received.
+     </li>
+    </ul>
+   </p>
+
+  </section>
+
+  <section name="Hello World with a custom action">
+
+   <p>The Commons SCXML implementation allows you to register custom actions.
+      Here is the Commons SCXML
+      <a href="http://svn.apache.org/repos/asf/jakarta/commons/sandbox/scxml/trunk/src/test/java/org/apache/commons/scxml/custom-hello-world.xml">hello world example using a custom action</a>.
+      The interesting bits are:</p>
+
+   <pre>
+    &lt;scxml xmlns="http://www.w3.org/2005/07/SCXML"
+              xmlns:my="http://my.custom-actions.domain/CUSTOM"
+              version="1.0"
+              initialstate="custom"&gt;
+
+     &lt;state id="custom" final="true"&gt;
+      &lt;onentry&gt;
+       &lt;my:hello name="world" /&gt;
+      &lt;/onentry&gt;
+     &lt;/state&gt;
+
+    &lt;/scxml&gt;
+   </pre>
+
+   <p>
+    <ul>
+     <li>&lt;my:hello&gt; is an example of a custom action whose local
+         name is "hello" and is bound to the fictitious namespace
+         "http://my.custom-actions.domain/CUSTOM"
+     </li>
+     <li>The custom action hello merely logs a hello to the value of
+         the name attribute, and thus the above example produces results
+         identical to the initial hello world example above.
+     </li>
+     <li>For details, see the section on
+         <!--a href="custom-actions.html"-->custom actions<!--/a--> in this guide.
+     </li>
+    </ul>
+   </p>
+
+  </section>
+
+ </body>
+
+</document>

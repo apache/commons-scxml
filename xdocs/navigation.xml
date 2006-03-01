@@ -27,6 +27,12 @@
                   href="/guide.html"
                   collapse="true">
 
+        <item     name="SCXML documents"  
+                  href="/guide/scxml-documents.html" />
+
+        <item     name="Standalone Testing"  
+                  href="/guide/testing-standalone.html" />
+
         <item     name="SCXML Digester"  
                   href="/guide/core-digester.html" />
 
@@ -36,8 +42,8 @@
         <item     name="Triggering Events"  
                   href="/guide/core-events.html" />
 
-        <item     name="Standalone Testing"  
-                  href="/guide/testing-standalone.html" />
+        <!--item     name="Custom Actions"  
+                  href="/guide/core-events.html" /-->
 
         <item     name="Side Effect - EL"  
                   href="/guide/side-effect-el.html" />
