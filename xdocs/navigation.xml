@@ -42,8 +42,8 @@
         <item     name="Triggering Events"  
                   href="/guide/core-events.html" />
 
-        <!--item     name="Custom Actions"  
-                  href="/guide/core-events.html" /-->
+        <item     name="Custom Actions"
+                  href="/guide/custom-actions.html" />
 
         <item     name="Side Effect - EL"  
                   href="/guide/side-effect-el.html" />
