@@ -219,6 +219,7 @@
           <directory>${pom.build.unitTestSourceDirectory}</directory>
           <includes>
             <include>**/*.xml</include>
+            <include>**/*.gif</include>
           </includes>
         </resource>
       </resources>
