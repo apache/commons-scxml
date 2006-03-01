@@ -108,6 +108,24 @@
     </p>
    </subsection>
 
+
+   <subsection name="The result">
+    <p>
+       <img src="scxml-stopwatch/stopwatch-1.jpg"/><br/>
+       (Figure 1: Begin in state "reset")<br/><br/>
+       <img src="scxml-stopwatch/stopwatch-2.jpg"/><br/>
+       (Figure 2: Start puts the stopwatch in "running" state)<br/><br/>
+       <img src="scxml-stopwatch/stopwatch-3.jpg"/><br/>
+       (Figure 3: Split causes the stopwatch to be "paused")<br/><br/>
+       <img src="scxml-stopwatch/stopwatch-4.jpg"/><br/>
+       (Figure 4: Unsplit puts the stopwatch back in "running")<br/><br/>
+       <img src="scxml-stopwatch/stopwatch-5.jpg"/><br/>
+       (Figure 5: "stopped")<br/><br/>
+       <img src="scxml-stopwatch/stopwatch-6.jpg"/><br/>
+       (Figure 6: Rinse and repeat - "reset")<br/>
+    </p>
+   </subsection>
+
   </section>
 
  </body>
