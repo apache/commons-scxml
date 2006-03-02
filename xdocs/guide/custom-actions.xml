@@ -137,7 +137,7 @@
        rule has no body content (child "tags") or if the custom action
        implements the
        <a href="../apidocs/org/apache/commons/scxml/model/ExternalContent.html">ExternalContent</a>
-       interface, in which any body content gets read into a list
+       interface, in which case, any body content gets read into a list
        of DOM nodes. For any other requirements, the digester rules
        can be added by directly using the
        <a href="http://jakarta.apache.org/commons/digester/commons-digester-1.7/docs/api/">digester API</a>
@@ -150,7 +150,7 @@
     <p>This involves parsing the document and making the resulting
        SCXML object executor-ready (which allows us to detect any
        "model inconsistencies" before feeding it to the
-       execution engine. That amounts to:</p>
+       execution engine). That amounts to:</p>
 
     <pre>
       // (3) Parse the SCXML document containing the custom action(s)
@@ -165,7 +165,7 @@
       SCXMLDigester.updateSCXML(scxml);
     </pre>
 
-    <p>Without custom actions, the utility methods of the
+    <p>For documents without custom actions, the utility methods of the
        <a href="../apidocs/org/apache/commons/scxml/io/SCXMLDigester.html">SCXMLDigester</a>
        should be used. That section is
        <a href="core-digester.html">here</a>.</p>
