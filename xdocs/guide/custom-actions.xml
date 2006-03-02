@@ -100,6 +100,10 @@
       have one attribute "name". The action simply logs a hello to the
       value of the name attribute when it executes.</p>
 
+    <p>A simple example is
+      <a href="http://svn.apache.org/repos/asf/jakarta/commons/sandbox/scxml/trunk/src/test/java/org/apache/commons/scxml/custom-hello-world.xml">here</a>
+      .</p>
+
    </subsection>
 
    <subsection name="Custom action implementation">
