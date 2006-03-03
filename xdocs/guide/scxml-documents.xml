@@ -33,6 +33,21 @@
       <a href="http://www.w3.org/TR/scxml/">W3C Working Draft
       of the SCXML specification</a>.</p>
 
+  </section>
+
+  <section name="Contents">
+
+   <p>This document contains the following sections:
+    <ul>
+     <li><a href="#hello">Hello World</a></li>
+     <li><a href="#transitions">Transitions</a></li>
+     <li><a href="#composite">Composite states</a></li>
+     <li><a href="#parallel">Parallel</a></li>
+     <li><a href="#custom">Hello World with a custom action</a></li>
+    </ul>
+   </p>
+
+   <a name="hello"/>
   </section> 
 
   <section name="Hello World">
@@ -74,6 +89,7 @@
     </ul>
    </p>
 
+   <a name="transitions"/>
   </section>
 
   <section name="Transitions">
@@ -138,6 +154,7 @@
     </ul>
    </p>
 
+   <a name="composite"/>
   </section>
 
   <section name="Composite states">
@@ -191,6 +208,7 @@
     </ul>
    </p>
 
+   <a name="parallel"/>
   </section>
 
   <section name="Parallel">
@@ -218,7 +236,7 @@
 
        &lt;/state&gt;
 
-       &lt;state id="oven"&gt;
+       &lt;state id="door"&gt;
 
         &lt;!-- state machine for "door" (open/closed) --&gt;
 
@@ -255,6 +273,7 @@
     </ul>
    </p>
 
+   <a name="custom"/>
   </section>
 
   <section name="Hello World with a custom action">
