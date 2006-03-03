@@ -145,6 +145,61 @@
 
   </section>
 
+  <section name="Composite states">
+
+   <p>States can contain states, so we can think of an
+      SCXML document as a recursive transition network. Here is
+      a snippet (here is the entire version of this
+      <a href="http://svn.apache.org/repos/asf/jakarta/commons/sandbox/scxml/trunk/src/test/java/org/apache/commons/scxml/env/jexl/microwave-01.xml">microwave example</a>
+      ):</p>
+
+   <pre>
+    &lt;!--
+      ... begin snippet ...
+    --&gt;
+
+     &lt;state id="on"&gt;
+      &lt;initial&gt;
+       &lt;transition&gt;
+        &lt;target next="idle"/&gt;
+       &lt;/transition&gt;
+      &lt;/initial&gt;
+
+      &lt;state id="idle"&gt;
+       &lt;!-- content for state "idle" --&gt;
+      &lt;/state&gt;
+
+      &lt;state id="cooking"&gt;
+       &lt;!-- content for state "cooking" --&gt;
+      &lt;/state&gt;
+
+      &lt;!-- other content for state "on" --&gt;
+
+    &lt;!--
+      ... end snippet ...
+    --&gt;
+   </pre>
+
+   <p>
+    <ul>
+     <li>The state "on" is an example of a composite state.</li>
+     <li>It contains two states, "idle" and "cooking". Since
+         there are no other sibling states, this means that when the
+         microwave is turned on, it must be in either idle or cooking
+         state.
+     </li>
+     <li>Since there are multiple states in the state "on", an
+         &lt;initial&gt; element is required. This becomes the "active"
+         child state when a transition is made to the composite state.
+         (in this case, a transition to state "on", causes the "idle"
+         state to be active).
+     </li>
+     <li>States can be recursively nested to any depth.</li>
+    </ul>
+   </p>
+
+  </section>
+
   <section name="Hello World with a custom action">
 
    <p>The Commons SCXML implementation allows you to register custom actions.
