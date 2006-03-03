@@ -105,7 +105,7 @@ public class StopWatchDisplay extends JFrame
         setLocation(200,200);
         setIconImage(watchIcon);
         setResizable(false);
-        setSize(250,125);
+        setSize(300,125);
         show();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         Timer displayTimer = new Timer();
