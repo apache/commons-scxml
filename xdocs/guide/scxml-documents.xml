@@ -200,6 +200,70 @@
 
   </section>
 
+  <section name="Parallel">
+
+   <p>This is a wrapper element that encapsulates multiple
+      &lt;state&gt;s -- or state machines, since in the section on
+      composite states we took a look at the "recursion" or
+      "nesting" for the &lt;state&gt; element, whereby each state
+      can become a state machine in its own right -- that are "active"
+      at the same time. Here is
+      a relevant snippet (the entire version of this
+      <a href="http://svn.apache.org/repos/asf/jakarta/commons/sandbox/scxml/trunk/src/test/java/org/apache/commons/scxml/env/jexl/microwave-02.xml">parallel microwave example</a>
+      ):</p>
+
+   <pre>
+    &lt;!--
+      ... begin snippet ...
+    --&gt;
+
+     &lt;state id="microwave"&gt;
+      &lt;parallel id="parts"&gt;
+       &lt;state id="oven"&gt;
+
+        &lt;!-- state machine for "oven" (idle/cooking) --&gt;
+
+       &lt;/state&gt;
+
+       &lt;state id="oven"&gt;
+
+        &lt;!-- state machine for "door" (open/closed) --&gt;
+
+       &lt;/state&gt;
+      &lt;/parallel&gt;
+     &lt;/state&gt;
+
+    &lt;!--
+      ... end snippet ...
+    --&gt;
+   </pre>
+
+   <p>
+    <ul>
+     <li>The state "microwave" is an example of a "orthogonal"
+         state (one that owns a parallel).</li>
+     <li>It contains two state machines, "oven" and "door". These
+         state machines are "active" at the same time. These are
+         known as "regions".
+     </li>
+     <li>Transition may occur within a region or from a region to
+         outside the &lt;parallel&gt; (see below), but never from
+         one region to another ("across" regions).
+     </li>
+     <li>There is no need for an &lt;initial&gt; element within
+         a &lt;parallel&gt;</li>
+     <li>The state machine must enter all regions at the same time,
+         and an outbound transition out of the &lt;parallel&gt;
+         from any region causes the state machine to exit all
+         regions.</li>
+     <li>When all regions reach a "final" state, an "id.done" event
+         is fired, where "id" is the id of the parent &lt;parallel&gt;
+         </li>
+    </ul>
+   </p>
+
+  </section>
+
   <section name="Hello World with a custom action">
 
    <p>The Commons SCXML implementation allows you to register custom actions.
