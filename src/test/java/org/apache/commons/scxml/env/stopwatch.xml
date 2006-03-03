@@ -19,33 +19,21 @@
        initialstate="reset">
 
     <state id="reset">
-       <transition event="watch.start">
-           <target next="running"/>
-       </transition>
+        <transition event="watch.start"   target="running"/>
     </state>
 
     <state id="running">
-		<transition event="watch.split">
-            <target next="paused"/>
-        </transition>
-        <transition event="watch.stop">
-            <target next="stopped"/>
-        </transition>
+        <transition event="watch.split"   target="paused"/>
+        <transition event="watch.stop"    target="stopped"/>
     </state>
 
     <state id="paused">
-       <transition event="watch.unsplit">
-           <target next="running"/>
-       </transition>
-        <transition event="watch.stop">
-            <target next="stopped"/>
-        </transition>
+        <transition event="watch.unsplit" target="running"/>
+        <transition event="watch.stop"    target="stopped"/>
     </state>
 
     <state id="stopped">
-       <transition event="watch.reset">
-           <target next="reset"/>
-       </transition>
+        <transition event="watch.reset"   target="reset"/>
     </state>
 
 </scxml>

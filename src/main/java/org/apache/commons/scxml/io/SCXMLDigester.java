@@ -707,7 +707,9 @@ public final class SCXMLDigester {
     private static void addTransitionRules(final String xp,
             final ExtendedBaseRules scxmlRules, final String setNextMethod) {
         scxmlRules.add(xp, new ObjectCreateRule(Transition.class));
-        scxmlRules.add(xp, new SetPropertiesRule());
+        scxmlRules.add(xp, new SetPropertiesRule(
+            new String[] {"event", "cond", "target"},
+            new String[] {"event", "cond", "next"}));
         scxmlRules.add(xp + XPF_TAR, new SetPropertiesRule());
         addActionRules(xp, scxmlRules);
         scxmlRules.add(xp + XPF_EXT, new Rule() {

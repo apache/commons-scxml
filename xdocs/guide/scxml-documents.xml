@@ -94,27 +94,22 @@
       &lt;!--
         ... some content ...
       --&gt;
-      &lt;transition&gt;
-       &lt;target next="bar" /&gt;
-      &lt;/transition&gt;
+      &lt;transition target="bar" /&gt;
      &lt;/state&gt;
 
      &lt;state id="foo2"&gt;
       &lt;!--
         ... some content ...
       --&gt;
-      &lt;transition event="foo.bar"&gt;
-       &lt;target next="bar" /&gt;
-      &lt;/transition&gt;
+      &lt;transition event="foo.bar" target="bar" /&gt;
      &lt;/state&gt;
 
      &lt;state id="foo3"&gt;
       &lt;!--
         ... some content ...
       --&gt;
-      &lt;transition event="foo.bar" cond="some-boolean-expression"&gt;
-       &lt;target next="bar" /&gt;
-      &lt;/transition&gt;
+      &lt;transition event="foo.bar" cond="some-boolean-expression"
+                     target next="bar" /&gt;
      &lt;/state&gt;
 
      &lt;state id="bar"&gt;
@@ -160,9 +155,7 @@
 
      &lt;state id="on"&gt;
       &lt;initial&gt;
-       &lt;transition&gt;
-        &lt;target next="idle"/&gt;
-       &lt;/transition&gt;
+       &lt;transition target="idle"/&gt;
       &lt;/initial&gt;
 
       &lt;state id="idle"&gt;

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-   Copyright 2005 The Apache Software Foundation
+   Copyright 2005-2006 The Apache Software Foundation
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -24,16 +24,12 @@
   <!--  trivial microwave oven example -->
   <state id="off">
     <!-- off state -->
-    <transition event="turn_on">
-      <target next="on"/>
-    </transition>
+    <transition event="turn_on" target="on"/>
   </state>
 
   <state id="on">
     <initial>
-      <transition>
-        <target next="idle"/>
-      </transition>
+      <transition target="idle"/>
     </initial>
 
     <!-- on/pause state -->
@@ -52,34 +48,26 @@
       <var name="timer" expr="${0}"/>
     </onentry>
 
-    <transition event="turn_off">
-        <target next="off"/>
-    </transition>
+    <transition event="turn_off" target="off"/>
 
-    <transition cond="${timer ge cook_time}">
-        <target next="off"/>
-    </transition>
+    <transition cond="${timer ge cook_time}" target="off"/>
 
     <state id="idle">
-      <transition cond="${door_closed}">
-        <!-- default immediate transition -->
-        <target next="cooking"/>
-      </transition>  
-      <transition event="door_close">
+      <!-- default immediate transition -->
+      <transition cond="${door_closed}" target="cooking"/>
+
+      <!-- start cooking -->
+      <transition event="door_close" target="cooking">
         <assign name="door_closed" expr="${true}"/>
-        <!-- start cooking -->
-        <target next="cooking"/>
       </transition>
     </state>
 
     <state id="cooking">
-      <transition event="door_open">
+      <transition event="door_open" target="idle">
         <assign name="door_closed" expr="${false}"/>
-        <target next="idle"/>
       </transition> 
-      <transition event="time">
+      <transition event="time" target="cooking">
         <assign name="timer" expr="${timer + 1}"/>
-        <target next="cooking"/>
       </transition>
     </state>
 

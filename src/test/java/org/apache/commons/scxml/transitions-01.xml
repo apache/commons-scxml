@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-   Copyright 2005 The Apache Software Foundation
+   Copyright 2005-2006 The Apache Software Foundation
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,18 +20,14 @@
 
     <!-- Start with a simple state -->
     <state id="ten">
-        <transition event="ten.done">
-            <target next="twenty"/>
-        </transition>
+        <transition event="ten.done" target="twenty" />
     </state>
 
     <!-- Follow up with a composite state -->
     <state id="twenty">
 
         <initial>
-            <transition>
-                <target next="twenty_one"/>
-            </transition>
+            <transition target="twenty_one"/>
         </initial>
 
         <onentry>
@@ -39,15 +35,11 @@
         </onentry>
 
         <state id="twenty_one">
-            <transition event="twenty_one.done">
-                <target next="twenty_two"/>
-            </transition>
+            <transition event="twenty_one.done" target="twenty_two"/>
         </state>
 
         <state id="twenty_two">
-            <transition event="twenty_two.done">
-                <target next="thirty"/>
-            </transition>
+            <transition event="twenty_two.done" target="thirty"/>
         </state>
 
     </state>
@@ -61,24 +53,19 @@
             <state id="thirty_one">
 
                 <initial>
-                    <transition>
-                        <target next="thirty_one_child_one"/>
-                    </transition>
+                    <transition target="thirty_one_child_one"/>
                 </initial>
                 <onentry>
                     <log expr="'Entering thirty_one'" />
                 </onentry>
-                <transition event="thirty_one.done">
-                    <target next="forty"/>
-                </transition>
+                <transition event="thirty_one.done" target="forty"/>
 
                 <state id="thirty_one_child_one">
                     <onexit>
                         <log expr="'Exiting thirty_one_child_one'" />
                     </onexit>
-                    <transition event="thirty_one_child_one.done">
-                        <target next="thirty_one_child_two"/>
-                    </transition>
+                    <transition event="thirty_one_child_one.done"
+                                target="thirty_one_child_two"/>
                 </state>
 
                 <state id="thirty_one_child_two">
@@ -93,9 +80,7 @@
             <state id="thirty_two">
 
                 <initial>
-                    <transition>
-                        <target next="thirty_two_child_one"/>
-                    </transition>
+                    <transition target="thirty_two_child_one"/>
                 </initial>
                 <onentry>
                     <log expr="'Entering thirty_two'" />
@@ -105,9 +90,8 @@
                     <onexit>
                         <log expr="'Exiting thirty_two_child_one'" />
                     </onexit>
-                    <transition event="thirty_two_child_one.done">
-                        <target next="thirty_two_child_two"/>
-                    </transition>
+                    <transition event="thirty_two_child_one.done"
+                                target="thirty_two_child_two"/>
                 </state>
 
                 <state id="thirty_two_child_two">
@@ -122,9 +106,7 @@
             <state id="thirty_three">
 
                 <initial>
-                    <transition>
-                        <target next="thirty_three_child_one"/>
-                    </transition>
+                    <transition target="thirty_three_child_one"/>
                 </initial>
                 <onentry>
                     <log expr="'Entering thirty_three'" />
@@ -134,9 +116,8 @@
                     <onexit>
                         <log expr="'Exiting thirty_three_child_one'" />
                     </onexit>
-                    <transition event="thirty_three_child_one.done">
-                        <target next="thirty_three_child_two"/>
-                    </transition>
+                    <transition event="thirty_three_child_one.done"
+                                target="thirty_three_child_two"/>
                 </state>
 
                 <state id="thirty_three_child_two">

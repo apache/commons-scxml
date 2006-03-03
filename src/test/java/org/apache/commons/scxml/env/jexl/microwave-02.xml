@@ -18,32 +18,26 @@
    This document uses Commons JEXL as the expressions language.
 -->
 <scxml xmlns="http://www.w3.org/2005/07/SCXML" version="1.0"  
-       initialstate="oven"> 
+       initialstate="microwave"> 
 
   <!--  trivial microwave oven example -->
   <!-- using parallel and In() predicate -->
 
-  <state id="oven">
+  <state id="microwave">
     <parallel id="parts">
-      <state id="engine">
+      <state id="oven">
         <initial>
-          <transition>
-            <target next="off"/>
-          </transition>
+          <transition target="off"/>
         </initial>
 
         <state id="off">
           <!-- off state -->
-          <transition event="turn_on">
-            <target next="on"/>
-          </transition>
+          <transition event="turn_on" target="on"/>
         </state>
         
         <state id="on">
           <initial>
-            <transition>
-              <target next="idle"/>
-            </transition>
+            <transition target="idle"/>
           </initial>
 
           <!-- on/pause state -->
@@ -57,27 +51,19 @@
             <var name="timer" expr="0"/>
           </onentry>
           
-          <transition event="turn_off">
-              <target next="off"/>
-          </transition>
+          <transition event="turn_off" target="off"/>
 
-          <transition cond="timer ge cook_time">
-              <target next="off"/>
-          </transition>
+          <transition cond="timer ge cook_time" target="off"/>
           
           <state id="idle">
-            <transition cond="In('closed')">
-              <target next="cooking"/>
-            </transition>
+            <transition cond="In('closed')" target="cooking"/>
           </state>
           
           <state id="cooking">
-            <transition cond="not In('closed')">
-                <target next="idle"/>
-            </transition>
-            <transition event="time">
+            <transition cond="not In('closed')" target="idle"/>
+
+            <transition event="time" target="cooking">
               <assign name="timer" expr="timer + 1"/>
-              <target next="cooking"/>
             </transition>
           </state>
         </state>
@@ -85,23 +71,16 @@
 
       <state id="door">
         <initial>
-          <transition>
-            <target next="closed"/>
-          </transition>
+          <transition target="closed"/>
         </initial>
         <state id="closed">
-          <transition event="door_open">
-              <target next="open"/>
-          </transition>
+          <transition event="door_open" target="open"/>
         </state>
         <state id="open">
-          <transition event="door_close">
-              <target next="closed"/>
-          </transition>
+          <transition event="door_close" target="closed"/>
         </state>
       </state>
     </parallel>
   </state>
-
 
 </scxml>
