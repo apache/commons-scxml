@@ -55,6 +55,8 @@
    <ul>
     <li><a href="guide/core-digester.html">Digester</a> - Digesting SCXML
     into the Commons SCXML Java object model.</li>
+    <li><a href="guide/contexts-evaluators.html">Contexts and Evaluators</a> -
+    Plugging in the expression language for the document.</li>
     <li><a href="guide/core-engine.html">Executor</a> - Instantiating
     an SCXML executor (engine).</li>
     <li><a href="guide/core-events.html">Triggering events</a> - Executing

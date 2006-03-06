@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Copyright 2006 The Apache Software Foundation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<document>
+
+ <properties>
+  <title>API notes - Contexts and Evaluators</title>
+  <author email="commons-dev@jakarta.apache.org">Commons Documentation Team</author>
+ </properties>
+
+ <body>
+
+  <section name="Commons SCXML - Pluggable expression languages">
+
+   <p>The SCXML specification allows implementations to support
+      multiple expression languages to enable using SCXML documents
+      in varying environments. These expressions become part of
+      attribute values for executable content, such as:
+
+    <pre>
+     &lt;var name="foo" expr="1 + 2 + bar" /&gt;
+    </pre>
+
+      or are used to evaluate the boolean guard conditions that
+      decide whether or not a particular transition is followed
+      once its associated trigger event is received, such as: 
+
+    <pre>
+     &lt;transition event="day.close" cond="day eq 'Friday'"
+                 target="weekend" /&gt;
+    </pre>
+
+      To that end, the <code>Context</code>
+      and <code>Evaluator</code> interfaces serve as adapters to the
+      particular expression language APIs for a given usecase.</p>
+
+   <p>Variable resolution bubbles up from the current state up to the
+      document root, similar to variable shadowing via blocks in a
+      procedural language.</p>
+
+   <subsection name="What is a Context?">
+    <p>The <code>Context</code> is a collection of variables that defines
+       a variable "scope". Each &lt;state&gt; element within an SCXML
+       document gets its own Context or variable scope.</p>
+   </subsection>
+
+   <subsection name="What is a root context?">
+    <p>The root context is the context that may be supplied to the
+       Commons SCXML engine as representing the variables in the
+       "host environment". See
+       <code>SCXMLExecutor#setRootContext(Context)</code> from the
+       <a href="../apidocs/index.html">Javadoc</a>.</p>
+   </subsection>
+
+   <subsection name="What is an Evaluator?">
+    <p>The <code>Evaluator</code> is a component with the capability
+       of parsing and evaluating expressions. It is the "expression
+       language engine".</p>
+   </subsection>
+
+  </section>
+
+  <section name="Available expression languages">
+
+   <p>Commons SCXML currently supports using Commons JEXL and
+      Commons EL (JSP 2.0 EL) as the expression language.
+      The expressions throughout the document must be homogeneous.
+      This also applies to any external documents that may be refered
+      by this document, for example via "src" attributes, like so: 
+
+    <pre>
+     &lt;state id="foo" src="foo.xml"&gt;
+      &lt;!-- Something, possibly very interesting, here --&gt;
+     &lt;/state&gt;
+    </pre>
+
+      Here, foo.xml must use the same expression language as
+      the document above that hosts the state foo.<br/>
+
+      Check out the <a href="core-engine.html">engine API docs</a>
+      on how to plug in the suitable root context and evaluator
+      tuple.</p>
+
+   <subsection name="Commons JEXL">
+    <p>See
+    <a href="../apidocs/org/apache/commons/scxml/env/jexl/package-summary.html">
+    org.apache.commons.scxml.env.jexl package summary</a> for the
+    relevant root context and evaluator tuple to use.</p>
+   </subsection>
+
+   <subsection name="Commons EL (JSP 2.0 EL)">
+    <p>See
+    <a href="../apidocs/org/apache/commons/scxml/env/jsp/package-summary.html">
+    org.apache.commons.scxml.env.jsp package summary</a> for the
+    relevant root context and evaluator tuple to use.</p>
+   </subsection>
+
+  </section>
+
+ </body>
+
+</document>

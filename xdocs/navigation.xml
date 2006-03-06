@@ -36,13 +36,16 @@
         <item     name="SCXML Digester"  
                   href="/guide/core-digester.html" />
 
+        <item     name="Contexts and Evaluators"  
+                  href="/guide/contexts-evaluators.html" />
+
         <item     name="SCXML Engine"  
                   href="/guide/core-engine.html" />
 
         <item     name="Triggering Events"  
                   href="/guide/core-events.html" />
 
-        <item     name="Custom Actions"
+        <item     name="Custom Actions"  
                   href="/guide/custom-actions.html" />
 
         <item     name="Side Effect - EL"  
