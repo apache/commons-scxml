@@ -45,7 +45,7 @@
         <item     name="Triggering Events"  
                   href="/guide/core-events.html" />
 
-        <item     name="Custom Actions"  
+        <item     name="Custom Actions"
                   href="/guide/custom-actions.html" />
 
         <item     name="Side Effect - EL"  
@@ -55,6 +55,9 @@
 
       <item       name="Javadoc"
                   href="apidocs/index.html"/>
+
+      <item       name="FAQ"
+                  href="faq.html"/>
 
       <item       name="Usecases"                      
                   href="/usecases.html"
