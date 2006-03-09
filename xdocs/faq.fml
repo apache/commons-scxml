@@ -32,6 +32,18 @@
    </answer>
   </faq>
 
+  <faq id="commons-scxml">
+   <question>
+    What is Commons SCXML?
+   </question>
+   <answer>
+    Commons SCXML is aimed at creating and maintaining an
+    open-source Java SCXML engine capable of executing
+    a state machine defined using a SCXML document, while abstracting
+    out the environment interfaces.
+   </answer>
+  </faq>
+
   <faq id="simple-example">
    <question>
     Do you have a simple example where Commons SCXML is used?
@@ -109,7 +121,9 @@
     machine described by your SCXML document. For example, you may
     attach zero, one or many SCXMLListeners to interesting "nodes" within
     the SCXML document, such as the document root i.e. the SCXML object,
-    and/or particular State and Transition objects as well.
+    and/or particular State and Transition objects as well. See the
+    <a href="guide/core-engine.html">SCXMLExecutor section of the
+    user guide</a> for more.
    </answer>
   </faq>
 
