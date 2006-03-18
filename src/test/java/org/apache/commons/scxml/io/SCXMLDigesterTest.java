@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.scxml;
+package org.apache.commons.scxml.io;
 
 import java.net.URL;
 import java.util.List;
@@ -24,8 +24,7 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.apache.commons.digester.Digester;
-import org.apache.commons.scxml.io.SCXMLDigester;
-import org.apache.commons.scxml.io.SCXMLSerializer;
+import org.apache.commons.scxml.SCXMLTestHelper;
 import org.apache.commons.scxml.model.Hello;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.Send;
