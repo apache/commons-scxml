@@ -53,6 +53,7 @@ public class ModelTestSuite extends TestCase {
         suite.addTest(HistoryTest.suite());
         suite.addTest(PathTest.suite());
         suite.addTest(StateTest.suite());
+        suite.addTest(StatelessModelTest.suite());
         suite.addTest(TransitionTest.suite());
         return suite;
     }
