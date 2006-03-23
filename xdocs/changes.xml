@@ -35,6 +35,70 @@
     <release version="1.0" date="Pending"
      description="Project nearing promotion vote to Commons Proper">
 
+      <action dev="rahul" type="add">
+       [03-06-2006] Added a FAQ page for the Commons SCXML website.
+       Added a section on SCXML Contexts and Evaluators (plugging in an
+       expression language) to the online "guide".
+      </action>
+
+      <action dev="rahul" type="add">
+       [03-03-2006] Add support for "target" attribute of "transition"
+       element per the latest (Jan 06) WD.
+      </action>
+
+      <action dev="rahul" type="add" due-to="Wendy Smoak">
+       [03-03-2006] Added a Maven2 POM.
+      </action>
+
+      <action dev="rahul" type="add" issue="38274">
+       [03-01-2006] A new usecase for a stand-alone application
+       modeling a stopwatch.
+       <dueto name="Stephen Colebourne"/>
+       <dueto name="Tim O'Brien"/>
+      </action>
+
+      <action dev="rahul" type="add">
+       [02-28-2006] AbstractStateMachine class added that demonstrates
+       one approach for providing the base functionality needed by
+       standalone classes representing stateful entities, whose
+       behaviors are defined via SCXML documents.
+      </action>
+
+      <action dev="rahul" type="add">
+       [02-27-2006] Improve Commons SCXML website "guide". Added a
+       section on SCXML documents, and another on custom actions.
+      </action>
+
+      <action dev="rahul" type="add">
+       [02-25-2006] Added easier support for custom actions. Provide
+       a "hello world" example using a custom action.
+      </action>
+
+      <action dev="rahul" type="fix">
+       [02-25-2006] Refactor processing of actions (they now contain
+       an "execute" method).
+      </action>
+
+      <action dev="rahul" type="add">
+       [02-24-2006] Define ExternalContent interface to mark elements
+       that may contain "body content" (in external namespaces), for
+       example, the SCXML "send" element. 
+      </action>
+
+      <action dev="rahul" type="fix">
+       [02-22-2006] Minor Javadoc fixes and additions.
+      </action>
+
+      <action dev="rahul" type="add">
+       [02-09-2006] Basic test cases for SCXML document execution
+       when using JEXL as the expression language.
+      </action>
+
+      <action dev="rahul" type="fix" due-to="sungchan">
+       [02-09-2006] JexlEvaluator was still assuming a flat context
+       (which was changed on 02-05-2006, see change item below).
+      </action>
+
       <action dev="rahul" type="add" issue="38459" due-to="Peter Costa">
        [02-05-2006] Numerous JUnit test cases added. Start publishing
        cobertura report.
