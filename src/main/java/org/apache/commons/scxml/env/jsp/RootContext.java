@@ -17,8 +17,6 @@
  */
 package org.apache.commons.scxml.env.jsp;
 
-import java.util.Iterator;
-
 import javax.servlet.jsp.JspContext;
 import javax.servlet.jsp.el.ELException;
 import javax.servlet.jsp.el.VariableResolver;
@@ -92,17 +90,6 @@ public final class RootContext extends ELContext {
             }
         }
         return exists;
-    }
-
-    /**
-     * Get the Iterator.
-     *
-     * @see org.apache.commons.scxml.Context#iterator()
-     */
-    public Iterator iterator() {
-        // The reason why this method body exists is to emphasize that
-        // read-only (JSP) variables are not included in the Iterator
-        return super.iterator();
     }
 
     /**

@@ -109,10 +109,9 @@ public class SCXMLDigesterTest extends TestCase {
         assertEquals(1, actions.size());
         Send send = (Send) actions.get(0);
         assertEquals("send1", send.getSendid());
-        // Serialize
+        /* Serialize
         scxmlAsString = serialize(scxml);
         assertNotNull(scxmlAsString);
-        /* FIXME
         String expectedFoo2Serialization =
             "<foo xmlns=\"http://my.test.namespace\" id=\"foo2\">"
             + "<prompt xmlns=\"http://foo.bar.com/vxml3\">This is just"

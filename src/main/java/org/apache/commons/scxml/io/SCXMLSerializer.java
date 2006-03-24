@@ -17,17 +17,33 @@
  */
 package org.apache.commons.scxml.io;
 
+import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.scxml.SCXMLHelper;
 import org.apache.commons.scxml.model.Action;
 import org.apache.commons.scxml.model.Assign;
 import org.apache.commons.scxml.model.Cancel;
+import org.apache.commons.scxml.model.Data;
+import org.apache.commons.scxml.model.Datamodel;
 import org.apache.commons.scxml.model.Else;
 import org.apache.commons.scxml.model.ElseIf;
 import org.apache.commons.scxml.model.Exit;
+import org.apache.commons.scxml.model.ExternalContent;
 import org.apache.commons.scxml.model.History;
 import org.apache.commons.scxml.model.If;
 import org.apache.commons.scxml.model.Initial;
@@ -41,6 +57,7 @@ import org.apache.commons.scxml.model.State;
 import org.apache.commons.scxml.model.Transition;
 import org.apache.commons.scxml.model.TransitionTarget;
 import org.apache.commons.scxml.model.Var;
+import org.w3c.dom.Node;
 
 /**
  * Utility class for serializing the Commons SCXML Java object
@@ -53,6 +70,8 @@ public class SCXMLSerializer {
 
     /** The indent to be used while serializing an SCXML object. */
     private static final String INDENT = " ";
+    /** The JAXP transformer. */
+    private static final Transformer XFORMER = getTransformer();
 
     /**
      * Serialize this SCXML object (primarily for debugging).
@@ -62,10 +81,23 @@ public class SCXMLSerializer {
      * @return String The serialized SCXML
      */
     public static String serialize(final SCXML scxml) {
-        StringBuffer b = new StringBuffer("<scxml xmlns=\"").append(
-                scxml.getXmlns()).append("\" version=\"").append(
-                scxml.getVersion()).append("\" initialstate=\"").append(
-                scxml.getInitialstate()).append("\">\n");
+        StringBuffer b =
+            new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n").
+                append("<scxml xmlns=\"").append(scxml.getXmlns()).
+                append("\" version=\"").append(scxml.getVersion()).
+                append("\" initialstate=\"").append(scxml.getInitialstate()).
+                append("\">\n");
+        if (XFORMER == null) {
+            org.apache.commons.logging.Log log = LogFactory.
+                getLog(SCXMLSerializer.class);
+            log.warn("SCXMLSerializer: DOM serialization pertinent to"
+                + " the document will be skipped since a suitable"
+                + " JAXP Transformer could not be instantiated.");
+        }
+        Datamodel dm = scxml.getDatamodel();
+        if (dm != null) {
+            serializeDatamodel(b, dm, INDENT);
+        }
         Map s = scxml.getStates();
         Iterator i = s.keySet().iterator();
         while (i.hasNext()) {
@@ -99,6 +131,10 @@ public class SCXMLSerializer {
         if (h != null) {
             serializeHistory(b, h, indent + INDENT);
         }
+        Datamodel dm = s.getDatamodel();
+        if (dm != null) {
+            serializeDatamodel(b, dm, indent + INDENT);
+        }
         serializeOnEntry(b, s, indent + INDENT);
         Map t = s.getTransitions();
         Iterator i = t.keySet().iterator();
@@ -106,7 +142,7 @@ public class SCXMLSerializer {
             List et = (List) t.get(i.next());
             for (int len = 0; len < et.size(); len++) {
                 serializeTransition(b, (Transition) et.get(len), indent
-                        + INDENT);
+                    + INDENT);
             }
         }
         Parallel p = s.getParallel();
@@ -198,7 +234,7 @@ public class SCXMLSerializer {
     public static void serializeTransition(final StringBuffer b,
             final Transition t, final String indent) {
         b.append(indent).append("<transition event=\"").append(t.getEvent())
-                .append("\" cond=\"").append(t.getCond()).append("\">\n");
+            .append("\" cond=\"").append(t.getCond()).append("\">\n");
         boolean exit = serializeActions(b, t.getActions(), indent + INDENT);
         if (!exit) {
             serializeTarget(b, t, indent + INDENT);
@@ -228,6 +264,51 @@ public class SCXMLSerializer {
             }
         }
         b.append(indent).append("</target>\n");
+    }
+
+    /**
+     * Serialize this Datamodel object.
+     *
+     * @param b The buffer to append the serialization to
+     * @param dm The Datamodel to be serialized
+     * @param indent The indent for this XML element
+     */
+    public static void serializeDatamodel(final StringBuffer b,
+            final Datamodel dm, final String indent) {
+        List data = dm.getData();
+        if (data != null && data.size() > 0) {
+            b.append(indent).append("<datamodel>\n");
+            if (XFORMER == null) {
+                b.append(indent).append(INDENT).
+                    append("<!-- Body content was not serialized -->\n");
+                b.append(indent).append("</datamodel>\n");
+                return;
+            }
+            for (Iterator iter = data.iterator(); iter.hasNext();) {
+                Data datum = (Data) iter.next();
+                Node dataNode = datum.getNode();
+                if (dataNode != null) {
+                    StringWriter out = new StringWriter();
+                    try {
+                        Source input = new DOMSource(dataNode);
+                        Result output = new StreamResult(out);
+                        XFORMER.transform(input, output);
+                    } catch (TransformerException te) {
+                        org.apache.commons.logging.Log log = LogFactory.
+                            getLog(SCXMLSerializer.class);
+                        log.error(te.getMessage(), te);
+                        b.append(indent).append(INDENT).
+                            append("<!-- Data content not serialized -->\n");
+                    }
+                    b.append(indent).append(INDENT).append(out.toString());
+                } else {
+                    b.append(indent).append(INDENT).append("<data name=\"").
+                        append(datum.getName()).append("\" expr=\"").
+                        append(datum.getExpr()).append("\" />\n");
+                }
+            }
+            b.append(indent).append("</datamodel>\n");
+        }
     }
 
     /**
@@ -288,9 +369,19 @@ public class SCXMLSerializer {
                                 "\"/>\n");
             } else if (a instanceof Assign) {
                 Assign asn = (Assign) a;
-                b.append(indent).append("<assign name=\"")
-                        .append(asn.getName()).append("\" expr=\"")
-                        .append(asn.getExpr()).append("\"/>\n");
+                b.append(indent).append("<assign");
+                if (!SCXMLHelper.isStringEmpty(asn.getLocation())) {
+                    b.append(" location=\"").append(asn.getLocation());
+                    if (!SCXMLHelper.isStringEmpty(asn.getSrc())) {
+                        b.append("\" src=\"").append(asn.getSrc());
+                    } else {
+                        b.append("\" expr=\"").append(asn.getExpr());
+                    }
+                } else {
+                    b.append(" name=\"").append(asn.getName()).
+                        append("\" expr=\"").append(asn.getExpr());
+                }
+                b.append("\"/>\n");
             } else if (a instanceof Send) {
                 serializeSend(b, (Send) a, indent);
             } else if (a instanceof Cancel) {
@@ -344,15 +435,40 @@ public class SCXMLSerializer {
             .append(send.getNamelist()).append("\" delay=\"")
             .append(send.getDelay()).append("\" events=\"")
             .append(send.getEvent()).append("\" hints=\"")
-            .append(send.getHints()).append("\">\n");
-        /* TODO - Serialize body content
-        try {
-            b.append(send.getBodyContent());
-        } catch (IOException ioe) {
-            log.error("Failed to serialize external nodes for <send>", ioe);
+            .append(send.getHints()).append("\">\n")
+            .append(getBodyContent(send))
+            .append(indent).append("</send>\n");
+    }
+
+    /**
+     * Return serialized body of <code>ExternalContent</code>.
+     *
+     * @param externalContent The model element containing the body content
+     * @return String The serialized body content
+     */
+    public static final String getBodyContent(
+            final ExternalContent externalContent) {
+        StringBuffer buf = new StringBuffer();
+        List externalNodes = externalContent.getExternalNodes();
+        if (externalNodes.size() > 0 && XFORMER == null) {
+            buf.append("<!-- Body content was not serialized -->\n");
+            return buf.toString();
         }
-        */
-        b.append(indent).append("</send>\n");
+        for (int i = 0; i < externalNodes.size(); i++) {
+            Source input = new DOMSource((Node) externalNodes.get(i));
+            StringWriter out = new StringWriter();
+            Result output = new StreamResult(out);
+            try {
+                XFORMER.transform(input, output);
+            } catch (TransformerException te) {
+                org.apache.commons.logging.Log log = LogFactory.
+                    getLog(SCXMLSerializer.class);
+                log.error(te.getMessage(), te);
+                buf.append("<!-- Not all body content was serialized -->");
+            }
+            buf.append(out.toString()).append("\n");
+        }
+        return buf.toString();
     }
 
     /**
@@ -368,16 +484,6 @@ public class SCXMLSerializer {
                 "\">\n");
         serializeActions(b, iff.getActions(), indent + INDENT);
         b.append(indent).append("</if>\n");
-    }
-
-    /*
-     * Private methods.
-     */
-    /**
-     * Discourage instantiation since this is a utility class.
-     */
-    private SCXMLSerializer() {
-        super();
     }
 
     /**
@@ -401,4 +507,36 @@ public class SCXMLSerializer {
         }
     }
 
+    /**
+     * Get a <code>Transformer</code> instance.
+     *
+     * @return Transformer The <code>Transformer</code> instance.
+     */
+    private static Transformer getTransformer() {
+        Transformer transformer = null;
+        Properties outputProps = new Properties();
+        outputProps.put(OutputKeys.OMIT_XML_DECLARATION, "yes");
+        outputProps.put(OutputKeys.STANDALONE, "no");
+        outputProps.put(OutputKeys.INDENT, "yes");
+        try {
+            TransformerFactory tfFactory = TransformerFactory.newInstance();
+            transformer = tfFactory.newTransformer();
+            transformer.setOutputProperties(outputProps);
+        } catch (Throwable t) {
+            return null;
+        }
+        return transformer;
+    }
+
+    /*
+     * Private methods.
+     */
+    /**
+     * Discourage instantiation since this is a utility class.
+     */
+    private SCXMLSerializer() {
+        super();
+    }
+
 }
+

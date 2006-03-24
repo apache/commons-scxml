@@ -97,6 +97,13 @@ public class SCXMLTestHelper {
         return getExecutor(ctx, evaluator, scxml, ed, trc);
     }
 
+    public static SCXMLExecutor getExecutor(final SCXML scxml,
+            final Context ctx, final Evaluator evaluator) {
+        EventDispatcher ed = new SimpleDispatcher();
+        Tracer trc = new Tracer();
+        return getExecutor(ctx, evaluator, scxml, ed, trc);
+    }
+
     public static SCXMLExecutor getExecutor(Context context,
             Evaluator evaluator, SCXML scxml, EventDispatcher ed, Tracer trc) {
         return getExecutor(context, evaluator, scxml, ed, trc, null);

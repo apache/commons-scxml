@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.scxml.model.Datamodel;
 import org.apache.commons.scxml.model.History;
 import org.apache.commons.scxml.model.TransitionTarget;
 
@@ -144,6 +145,8 @@ public class SCInstance {
             } else {
                 context = evaluator.newContext(getContext(parent));
             }
+            Datamodel datamodel = transitionTarget.getDatamodel();
+            SCXMLHelper.cloneDatamodel(datamodel, context, evaluator, null);
             contexts.put(transitionTarget, context);
         }
         return context;

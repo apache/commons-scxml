@@ -23,6 +23,7 @@ import java.util.Iterator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.scxml.model.Datamodel;
 import org.apache.commons.scxml.model.History;
 import org.apache.commons.scxml.model.ModelException;
 import org.apache.commons.scxml.model.SCXML;
@@ -176,7 +177,17 @@ public class SCXMLExecutor {
      */
     public void reset() throws ModelException {
         // Reset all variable contexts
-        scInstance.getRootContext().reset();
+        Context rootCtx = scInstance.getRootContext();
+        rootCtx.reset();
+        // Clone root datamodel
+        if (stateMachine == null) {
+            log.error(ERR_NO_STATE_MACHINE);
+            throw new ModelException(ERR_NO_STATE_MACHINE);
+        } else {
+            Datamodel rootdm = stateMachine.getDatamodel();
+            SCXMLHelper.cloneDatamodel(rootdm, rootCtx,
+                scInstance.getEvaluator(), log);
+        }
         // all states and parallels, only states have variable contexts
         for (Iterator i = stateMachine.getTargets().values().iterator();
                 i.hasNext();) {
@@ -185,6 +196,11 @@ public class SCXMLExecutor {
                 Context context = scInstance.lookupContext(tt);
                 if (context != null) {
                     context.reset();
+                    Datamodel dm = tt.getDatamodel();
+                    if (dm != null) {
+                        SCXMLHelper.cloneDatamodel(dm, context,
+                            scInstance.getEvaluator(), log);
+                    }
                 }
             } else if (tt instanceof History) {
                 scInstance.reset((History) tt);
@@ -439,6 +455,12 @@ public class SCXMLExecutor {
         scInstance.getRootContext().setLocal("_ALL_STATES",
             SCXMLHelper.getAncestorClosure(currentStatus.getStates(), null));
     }
+
+    /**
+     * SCXMLExecutor put into motion without setting a model (state machine).
+     */
+    private static final String ERR_NO_STATE_MACHINE =
+        "SCXMLExecutor: State machine not set";
 
 }
 

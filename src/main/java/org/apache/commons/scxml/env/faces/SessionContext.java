@@ -17,7 +17,6 @@
  */
 package org.apache.commons.scxml.env.faces;
 
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.faces.context.FacesContext;
@@ -92,19 +91,6 @@ public class SessionContext extends SimpleContext {
      */
     public boolean has(final String name) {
         return (sessionMap.containsKey(name) || getVars().containsKey(name));
-    }
-
-    /**
-     * Get the Iterator.
-     *
-     * @return Iterator The read-write variables in this Context.
-     * @see org.apache.commons.scxml.Context#iterator()
-     */
-    public Iterator iterator() {
-        // The reason why this method body exists is to emphasize that
-        // read-only (scoped/managed beans) variables are not included in
-        // this Iterator.
-        return super.iterator();
     }
 
 }

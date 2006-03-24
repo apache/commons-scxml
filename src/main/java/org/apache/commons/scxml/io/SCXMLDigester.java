@@ -24,6 +24,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.digester.Digester;
@@ -41,6 +43,8 @@ import org.apache.commons.scxml.env.URLResolver;
 import org.apache.commons.scxml.model.Action;
 import org.apache.commons.scxml.model.Assign;
 import org.apache.commons.scxml.model.Cancel;
+import org.apache.commons.scxml.model.Data;
+import org.apache.commons.scxml.model.Datamodel;
 import org.apache.commons.scxml.model.Else;
 import org.apache.commons.scxml.model.ElseIf;
 import org.apache.commons.scxml.model.Executable;
@@ -61,6 +65,7 @@ import org.apache.commons.scxml.model.TransitionTarget;
 import org.apache.commons.scxml.model.Var;
 
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import org.xml.sax.Attributes;
@@ -381,6 +386,13 @@ public final class SCXMLDigester {
     /** &lt;onexit&gt; child element. */
     private static final String XPF_ONEX = "/onexit";
 
+    // Datamodel section
+    /** &lt;datamodel&gt; child element. */
+    private static final String XPF_DM = "/datamodel";
+
+    /** Individual &lt;data&gt; elements. */
+    private static final String XPF_DATA = "/data";
+
     // Initial
     /** &lt;initial&gt; child element. */
     private static final String XPF_INI = "/initial";
@@ -530,6 +542,9 @@ public final class SCXMLDigester {
         scxmlRules.add(XP_SM, new ObjectCreateRule(SCXML.class));
         scxmlRules.add(XP_SM, new SetPropertiesRule());
 
+        //// Datamodel at document root i.e. <scxml> datamodel
+        addDatamodelRules(XP_SM + XPF_DM, scxmlRules, scxml, pr);
+
         //// States
         // Level one states
         addStateRules(XP_SM_ST, scxmlRules, scxml, pr, 0);
@@ -571,7 +586,8 @@ public final class SCXMLDigester {
             final PathResolver pr, final int parent) {
         scxmlRules.add(xp, new ObjectCreateRule(State.class));
         addStatePropertiesRules(xp, scxmlRules, pr);
-        addInitialRule(xp + XPF_INI, scxmlRules, pr, scxml);
+        addDatamodelRules(xp + XPF_DM, scxmlRules, scxml, pr);
+        addInitialRules(xp + XPF_INI, scxmlRules, pr, scxml);
         addHistoryRules(xp + XPF_HIST, scxmlRules, pr, scxml);
         addParentRule(xp, scxmlRules, parent);
         addTransitionRules(xp + XPF_TR, scxmlRules, "addTransition");
@@ -612,6 +628,31 @@ public final class SCXMLDigester {
     }
 
     /**
+     * Add Digester rules for all &lt;datamodel&gt; elements.
+     *
+     * @param xp The Digester style XPath expression of the parent
+     *           XML element
+     * @param scxmlRules The rule set to be used for digestion
+     * @param pr The PathResolver
+     * @param scxml The parent SCXML document (or null)
+     */
+    private static void addDatamodelRules(final String xp,
+            final ExtendedBaseRules scxmlRules, final SCXML scxml,
+            final PathResolver pr) {
+        scxmlRules.add(xp, new ObjectCreateRule(Datamodel.class));
+        scxmlRules.add(xp + XPF_DATA, new ObjectCreateRule(Data.class));
+        scxmlRules.add(xp + XPF_DATA, new SetPropertiesRule());
+        scxmlRules.add(xp + XPF_DATA, new SetNextRule("addData"));
+        try {
+            scxmlRules.add(xp + XPF_DATA, new ParseDataRule(pr));
+        } catch (ParserConfigurationException pce) {
+            log.error("Error registering rule for parsing <data>"
+                + " element content", pce);
+        }
+        scxmlRules.add(xp, new SetNextRule("setDatamodel"));
+    }
+
+    /**
      * Add Digester rules for all &lt;initial&gt; elements.
      *
      * @param xp The Digester style XPath expression of the parent
@@ -620,7 +661,7 @@ public final class SCXMLDigester {
      * @param pr The PathResolver
      * @param scxml The parent SCXML document (or null)
      */
-    private static void addInitialRule(final String xp,
+    private static void addInitialRules(final String xp,
             final ExtendedBaseRules scxmlRules, final PathResolver pr,
             final SCXML scxml) {
         scxmlRules.add(xp, new ObjectCreateRule(Initial.class));
@@ -771,8 +812,8 @@ public final class SCXMLDigester {
         try {
             scxmlRules.add(xp, new ParseExternalContentRule());
         } catch (ParserConfigurationException pce) {
-            log.error("Error parsing <send> element content",
-                pce);
+            log.error("Error registering rule for parsing <send>"
+                + " element content", pce);
         }
     }
 
@@ -1126,6 +1167,91 @@ public final class SCXMLDigester {
     }
 
     /**
+     * Custom digestion rule for parsing bodies of &lt;data&gt; elements.
+     *
+     */
+    public static class ParseDataRule extends NodeCreateRule {
+
+        /**
+         * The PathResolver used to resolve the src attribute to the
+         * SCXML document it points to.
+         * @see PathResolver
+         */
+        private PathResolver pr;
+
+        /**
+         * The "src" attribute, retained to check if body content is legal.
+         */
+        private String src;
+
+        /**
+         * The "expr" attribute, retained to check if body content is legal.
+         */
+        private String expr;
+
+        /**
+         * The XML tree for this data, parse as a Node, obtained from
+         * either the "src" or the "expr" attributes.
+         */
+        private Node attrNode;
+
+        /**
+         * Constructor.
+         *
+         * @param pr The <code>PathResolver</code>
+         * @throws ParserConfigurationException A JAXP configuration error
+         */
+        public ParseDataRule(final PathResolver pr)
+        throws ParserConfigurationException {
+            super();
+            this.pr = pr;
+        }
+
+        /**
+         * @see Rule#begin(String, String, Attributes)
+         */
+        public final void begin(final String namespace, final String name,
+                final Attributes attributes) throws Exception {
+            super.begin(namespace, name, attributes);
+            src = attributes.getValue("src");
+            expr = attributes.getValue("expr");
+            if (!SCXMLHelper.isStringEmpty(src)) {
+                String path = null;
+                if (pr == null) {
+                    path = src;
+                } else {
+                    path = pr.resolvePath(src);
+                }
+                try {
+                    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.
+                        newInstance();
+                    DocumentBuilder db = dbFactory.newDocumentBuilder();
+                    attrNode = db.parse(path);
+                } catch (Throwable t) { // you read that correctly
+                    log.error(t.getMessage(), t);
+                }
+                return;
+            }
+        }
+
+        /**
+         * @see Rule#end(String, String)
+         */
+        public final void end(final String namespace, final String name) {
+            Node bodyNode = (Node) getDigester().pop();
+            Data data = ((Data) getDigester().peek());
+            // Prefer "src" over "expr", "expr" over child nodes
+            // "expr" can only be evaluated at execution time
+            if (!SCXMLHelper.isStringEmpty(src)) {
+                data.setNode(attrNode);
+            } else  if (SCXMLHelper.isStringEmpty(expr)) {
+                // both "src" and "expr" are empty
+                data.setNode(bodyNode);
+            }
+        }
+    }
+
+    /**
      * Custom digestion rule for external sources, that is, the src attribute of
      * the &lt;state&gt; element.
      *
@@ -1174,10 +1300,9 @@ public final class SCXMLDigester {
             try {
                 externalSCXML = (SCXML) externalSrcDigester.parse(path);
             } catch (Exception e) {
-                log.error(null, e);
+                log.error(e.getMessage(), e);
             }
-            // 2) Adopt the children
-            // TODO - Clarify spec; Priority: High
+            // 2) Adopt the children and datamodel
             if (externalSCXML == null) {
                 return;
             }
@@ -1192,6 +1317,7 @@ public final class SCXMLDigester {
             for (int i = 0; i < ids.length; i++) {
                 s.addChild((State) children.get(ids[i]));
             }
+            s.setDatamodel(externalSCXML.getDatamodel());
         }
     }
 }

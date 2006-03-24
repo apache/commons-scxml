@@ -28,6 +28,7 @@ import org.apache.commons.jexl.ExpressionFactory;
 import org.apache.commons.scxml.Context;
 import org.apache.commons.scxml.Evaluator;
 import org.apache.commons.scxml.SCXMLExpressionException;
+import org.w3c.dom.Node;
 
 /**
  * Evaluator implementation enabling use of JEXL expressions in
@@ -42,6 +43,8 @@ public class JexlEvaluator implements Evaluator {
 
     /** Pattern for recognizing the SCXML In() special predicate. */
     private static Pattern inFct = Pattern.compile("In\\(");
+    /** Pattern for recognizing the Commons SCXML Data() builtin function. */
+    private static Pattern dataFct = Pattern.compile("Data\\(");
 
     /** Constructor. */
     public JexlEvaluator() {
@@ -69,22 +72,13 @@ public class JexlEvaluator implements Evaluator {
         try {
             String evalExpr = inFct.matcher(expr).
                 replaceAll("_builtin.isMember(_ALL_STATES, ");
+            evalExpr = dataFct.matcher(evalExpr).
+                replaceAll("_builtin.data(");
             exp = ExpressionFactory.createExpression(evalExpr);
             return exp.evaluate(getEffectiveContext(jexlCtx));
         } catch (Exception e) {
             throw new SCXMLExpressionException(e);
         }
-    }
-
-    /**
-     * Create a new child context.
-     *
-     * @param parent parent context
-     * @return new child context
-     * @see Evaluator#newContext(Context)
-     */
-    public Context newContext(final Context parent) {
-        return new JexlContext(parent);
     }
 
     /**
@@ -102,11 +96,50 @@ public class JexlEvaluator implements Evaluator {
         try {
             String evalExpr = inFct.matcher(expr).
                 replaceAll("_builtin.isMember(_ALL_STATES, ");
+            evalExpr = dataFct.matcher(evalExpr).
+                replaceAll("_builtin.data(");
             exp = ExpressionFactory.createExpression(evalExpr);
             return (Boolean) exp.evaluate(getEffectiveContext(jexlCtx));
         } catch (Exception e) {
             throw new SCXMLExpressionException(e);
         }
+    }
+
+    /**
+     * @see Evaluator#evalLocation(Context, String)
+     */
+    public Node evalLocation(final Context ctx, final String expr)
+    throws SCXMLExpressionException {
+        JexlContext jexlCtx = null;
+        if (ctx instanceof JexlContext) {
+            jexlCtx = (JexlContext) ctx;
+        } else {
+            throw new SCXMLExpressionException(ERR_CTX_TYPE);
+        }
+        Expression exp = null;
+        try {
+            String evalExpr = inFct.matcher(expr).
+                replaceAll("_builtin.isMember(_ALL_STATES, ");
+            evalExpr = dataFct.matcher(evalExpr).
+                replaceFirst("_builtin.dataNode(");
+            evalExpr = dataFct.matcher(evalExpr).
+                replaceAll("_builtin.data(");
+            exp = ExpressionFactory.createExpression(evalExpr);
+            return (Node) exp.evaluate(getEffectiveContext(jexlCtx));
+        } catch (Exception e) {
+            throw new SCXMLExpressionException(e);
+        }
+    }
+
+    /**
+     * Create a new child context.
+     *
+     * @param parent parent context
+     * @return new child context
+     * @see Evaluator#newContext(Context)
+     */
+    public Context newContext(final Context parent) {
+        return new JexlContext(parent);
     }
 
     /**

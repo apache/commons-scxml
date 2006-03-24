@@ -20,14 +20,22 @@ package org.apache.commons.scxml;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.scxml.model.Data;
+import org.apache.commons.scxml.model.Datamodel;
 import org.apache.commons.scxml.model.Parallel;
 import org.apache.commons.scxml.model.Path;
 import org.apache.commons.scxml.model.State;
 import org.apache.commons.scxml.model.Transition;
 import org.apache.commons.scxml.model.TransitionTarget;
+import org.w3c.dom.CharacterData;
+import org.w3c.dom.Node;
+import org.w3c.dom.Text;
 
 /**
  * Helper class, all methods static final.
@@ -330,6 +338,133 @@ public final class SCXMLHelper {
             }
         }
         return false;
+    }
+
+    /**
+     * Set node value, depending on its type, from a String.
+     *
+     * @param node A Node whose value is to be set
+     * @param value The new value
+     */
+    public static void setNodeValue(final Node node, final String value) {
+        switch(node.getNodeType()) {
+            case Node.ATTRIBUTE_NODE:
+                node.setNodeValue(value);
+                break;
+            case Node.ELEMENT_NODE:
+                //remove all text children
+                if (node.hasChildNodes()) {
+                    Node child = node.getFirstChild();
+                    while (child != null) {
+                        if (child.getNodeType() == Node.TEXT_NODE) {
+                            node.removeChild(child);
+                        }
+                        child = child.getNextSibling();
+                    }
+                }
+                //create a new text node and append
+                Text txt = node.getOwnerDocument().createTextNode(value);
+                node.appendChild(txt);
+                break;
+            case Node.TEXT_NODE:
+            case Node.CDATA_SECTION_NODE:
+                ((CharacterData) node).setData(value);
+                break;
+            default:
+                String err = "Trying to set value of a strange Node type: "
+                    + node.getNodeType();
+                //Logger.logln(Logger.E, err);
+                throw new IllegalArgumentException(err);
+        }
+    }
+
+    /**
+     * Retrieve a DOM node value as a string depending on its type.
+     *
+     * @param node A node to be retreived
+     * @return The value as a string
+     */
+    public static String getNodeValue(final Node node) {
+        String result = "";
+        if (node == null) {
+            return result;
+        }
+        switch(node.getNodeType()) {
+            case Node.ATTRIBUTE_NODE:
+                result = node.getNodeValue();
+                break;
+            case Node.ELEMENT_NODE:
+                if (node.hasChildNodes()) {
+                    Node child = node.getFirstChild();
+                    StringBuffer buf = new StringBuffer();
+                    while (child != null) {
+                        if (child.getNodeType() == Node.TEXT_NODE) {
+                            buf.append(((CharacterData) child).getData());
+                        }
+                        child = child.getNextSibling();
+                    }
+                    result = buf.toString();
+                }
+                break;
+            case Node.TEXT_NODE:
+            case Node.CDATA_SECTION_NODE:
+                result = ((CharacterData) node).getData();
+                break;
+            default:
+                String err = "Trying to get value of a strange Node type: "
+                    + node.getNodeType();
+                //Logger.logln(Logger.W, err );
+                throw new IllegalArgumentException(err);
+        }
+        return result.trim();
+    }
+
+    /**
+     * Clone data model.
+     *
+     * @param ctx The context to clone to.
+     * @param datamodel The datamodel to clone.
+     * @param evaluator The expression evaluator.
+     * @param log The error log.
+     */
+    public static void cloneDatamodel(final Datamodel datamodel,
+            final Context ctx, final Evaluator evaluator,
+            final Log log) {
+        if (datamodel == null) {
+            return;
+        }
+        List data = datamodel.getData();
+        if (data == null) {
+            return;
+        }
+        for (Iterator iter = data.iterator(); iter.hasNext();) {
+            Data datum = (Data) iter.next();
+            Node datumNode = datum.getNode();
+            Node valueNode = null;
+            if (datumNode != null) {
+                valueNode = datumNode.cloneNode(true);
+            }
+            // prefer "src" over "expr" over "inline"
+            if (!SCXMLHelper.isStringEmpty(datum.getSrc())) {
+                ctx.setLocal(datum.getName(), valueNode);
+            } else if (!SCXMLHelper.isStringEmpty(datum.
+                    getExpr())) {
+                Object value = null;
+                try {
+                    value = evaluator.eval(ctx, datum.getExpr());
+                } catch (SCXMLExpressionException see) {
+                    if (log != null) {
+                        log.error(see.getMessage(), see);
+                    } else {
+                        Log defaultLog = LogFactory.getLog(SCXMLHelper.class);
+                        defaultLog.error(see.getMessage(), see);
+                    }
+                }
+                ctx.setLocal(datum.getName(), value);
+            } else {
+                ctx.setLocal(datum.getName(), valueNode);
+            }
+        }
     }
 
     /**

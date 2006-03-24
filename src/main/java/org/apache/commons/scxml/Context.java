@@ -17,7 +17,7 @@
  */
 package org.apache.commons.scxml;
 
-import java.util.Iterator;
+import java.util.Map;
 
 /**
  * A Context or &quot;scope&quot; for storing variables; usually tied to
@@ -61,13 +61,13 @@ public interface Context {
     boolean has(String name);
 
     /**
-     * Get an Iterator over all variables in this Context.
+     * Get the Map of all variables in this Context.
      *
-     * @return Local entries iterator (Map.Entry)
-     * To get parent entries, call getParent().iterator().
+     * @return Local variable entries Map
+     * To get variables in parent Context, call getParent().getVars().
      * @see #getParent()
      */
-    Iterator iterator();
+    Map getVars();
 
     /**
      * Clear this Context.

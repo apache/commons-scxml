@@ -59,7 +59,7 @@ public class JexlContext extends SimpleContext
     }
 
     /**
-     * Get the variables map.
+     * Set the variables map.
      *
      * @param vars The new variables map.
      *
@@ -74,7 +74,7 @@ public class JexlContext extends SimpleContext
     /**
      * Get the variables map.
      *
-     * @return Returns the vars.
+     * @return Map The variables map.
      *
      * @see org.apache.commons.jexl.JexlContext#getVars()
      * @see org.apache.commons.scxml.env.SimpleContext#getVars()

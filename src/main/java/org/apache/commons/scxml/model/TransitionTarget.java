@@ -43,6 +43,11 @@ public abstract class TransitionTarget {
     private OnExit onExit;
 
     /**
+     * Optional property holding the data model for this transition target.
+     */
+    private Datamodel datamodel;
+
+    /**
      * The parent of this transition target (may be null, if the parent
      * is the SCXML document root).
      */
@@ -112,6 +117,24 @@ public abstract class TransitionTarget {
      */
     public final void setOnExit(final OnExit onExit) {
         this.onExit = onExit;
+    }
+
+    /**
+     * Get the data model for this transition target.
+     *
+     * @return Returns the data model.
+     */
+    public final Datamodel getDatamodel() {
+        return datamodel;
+    }
+
+    /**
+     * Set the data model for this transition target.
+     *
+     * @param datamodel The Datamodel to set.
+     */
+    public final void setDatamodel(final Datamodel datamodel) {
+        this.datamodel = datamodel;
     }
 
     /**

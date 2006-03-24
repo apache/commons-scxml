@@ -17,6 +17,8 @@
  */
 package org.apache.commons.scxml;
 
+import org.w3c.dom.Node;
+
 /**
  * Interface for a component that may be used by the SCXML engines to
  * evaluate the expressions within the SCXML document.
@@ -32,7 +34,33 @@ public interface Evaluator {
      * @return a result of the evaluation
      * @throws SCXMLExpressionException A malformed exception
      */
-    Object eval(Context ctx, String expr) throws SCXMLExpressionException;
+    Object eval(Context ctx, String expr)
+    throws SCXMLExpressionException;
+
+    /**
+     * Evaluate a condition.
+     * Manifests as "cond" attributes of &lt;transition&gt;,
+     * &lt;if&gt; and &lt;elseif&gt; elements.
+     *
+     * @param ctx variable context
+     * @param expr expression
+     * @return true/false
+     * @throws SCXMLExpressionException A malformed exception
+     */
+    Boolean evalCond(Context ctx, String expr)
+    throws SCXMLExpressionException;
+
+    /**
+     * Evaluate a location that returns a Node within an XML data tree.
+     * Manifests as "location" attributes of &lt;assign&gt; element.
+     *
+     * @param ctx variable context
+     * @param expr expression
+     * @return The location node.
+     * @throws SCXMLExpressionException A malformed exception
+     */
+    Node evalLocation(Context ctx, String expr)
+    throws SCXMLExpressionException;
 
     /**
      * Create a new child context.
@@ -42,14 +70,5 @@ public interface Evaluator {
      */
     Context newContext(Context parent);
 
-    /**
-     * Evaluate a condition.
-     *
-     * @param ctx variable context
-     * @param expr expression
-     * @return true/false
-     * @throws SCXMLExpressionException A malformed exception
-     */
-    Boolean evalCond(Context ctx, String expr) throws SCXMLExpressionException;
-
 }
+

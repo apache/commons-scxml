@@ -95,7 +95,7 @@ public class RootContextTest extends TestCase {
         } catch (Exception e) {
             fail(e.getMessage());
         }
-        assertNotNull(ctx.iterator());
+        assertNotNull(ctx.getVars());
     }
 
      public static void main(String args[]) {

@@ -33,6 +33,7 @@ import org.apache.commons.scxml.Builtin;
 import org.apache.commons.scxml.Context;
 import org.apache.commons.scxml.Evaluator;
 import org.apache.commons.scxml.SCXMLExpressionException;
+import org.w3c.dom.Node;
 
 /**
  * Evaluator implementation enabling use of EL expressions in
@@ -47,6 +48,8 @@ public class ELEvaluator implements Evaluator {
     private FunctionMapper functionMapper = new BuiltinFunctionWrapper();
     /** Pattern for recognizing the SCXML In() special predicate. */
     private static Pattern inFct = Pattern.compile("In\\(");
+    /** Pattern for recognizing the Commons SCXML Data() builtin function. */
+    private static Pattern dataFct = Pattern.compile("Data\\(");
 
     /** The expression evaluator implementation for the JSP/EL environment. */
     private ExpressionEvaluator ee = null;
@@ -90,17 +93,6 @@ public class ELEvaluator implements Evaluator {
     }
 
     /**
-     * Create a new child context.
-     *
-     * @param parent parent context
-     * @return new child context
-     * @see Evaluator#newContext(Context)
-     */
-    public Context newContext(final Context parent) {
-        return new ELContext(parent);
-    }
-
-    /**
      * @see Evaluator#evalCond(Context, String)
      */
     public Boolean evalCond(final Context ctx, final String expr)
@@ -123,6 +115,44 @@ public class ELEvaluator implements Evaluator {
         } catch (ELException e) {
             throw new SCXMLExpressionException(e);
         }
+    }
+
+    /**
+     * @see Evaluator#evalLocation(Context, String)
+     */
+    public Node evalLocation(final Context ctx, final String expr)
+    throws SCXMLExpressionException {
+        VariableResolver vr = null;
+        if (ctx instanceof VariableResolver) {
+            vr = (VariableResolver) ctx;
+        } else {
+            vr = new ContextWrapper(ctx);
+        }
+        try {
+            String evalExpr = inFct.matcher(expr).
+                replaceAll("In(_ALL_STATES, ");
+            evalExpr = dataFct.matcher(evalExpr).
+                replaceFirst("LData(");
+            Node rslt = (Node) ee.evaluate(evalExpr, Node.class,
+                vr, functionMapper);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(expr + " = " + String.valueOf(rslt));
+            }
+            return rslt;
+        } catch (ELException e) {
+            throw new SCXMLExpressionException(e);
+        }
+    }
+
+    /**
+     * Create a new child context.
+     *
+     * @param parent parent context
+     * @return new child context
+     * @see Evaluator#newContext(Context)
+     */
+    public Context newContext(final Context parent) {
+        return new ELContext(parent);
     }
 
     /**
@@ -166,6 +196,26 @@ public class ELEvaluator implements Evaluator {
                     LOG.error("resolving isMember(Set, String)", e);
                 } catch (NoSuchMethodException e) {
                     LOG.error("resolving isMember(Set, String)", e);
+                }
+            } else if (localName.equals("Data")) {
+                // rvalue in expressions, coerce to String
+                Class[] attrs = new Class[] {Object.class, String.class};
+                try {
+                    return Builtin.class.getMethod("data", attrs);
+                } catch (SecurityException e) {
+                    LOG.error("resolving data(Node, String)", e);
+                } catch (NoSuchMethodException e) {
+                    LOG.error("resolving data(Node, String)", e);
+                }
+            } else if (localName.equals("LData")) {
+                // lvalue in expressions, retain as Node
+                Class[] attrs = new Class[] {Object.class, String.class};
+                try {
+                    return Builtin.class.getMethod("dataNode", attrs);
+                } catch (SecurityException e) {
+                    LOG.error("resolving data(Node, String)", e);
+                } catch (NoSuchMethodException e) {
+                    LOG.error("resolving data(Node, String)", e);
                 }
             }
             return null;

@@ -57,6 +57,13 @@ public class SCXML {
     private transient String initialstate;
 
     /**
+     * Optional property holding the data model for this SCXML document.
+     * This gets merged with the root context and potentially hides any
+     * (namesake) variables in the root context.
+     */
+    private Datamodel datamodel;
+
+    /**
      * The immediate child states of this SCXML document root.
      */
     private Map states;
@@ -91,6 +98,24 @@ public class SCXML {
      */
     public final void setInitialState(final State initialState) {
         this.initialState = initialState;
+    }
+
+    /**
+     * Get the data model placed at document root.
+     *
+     * @return Returns the data model.
+     */
+    public final Datamodel getDatamodel() {
+        return datamodel;
+    }
+
+    /**
+     * Set the data model at document root.
+     *
+     * @param datamodel The Datamodel to set.
+     */
+    public final void setDatamodel(final Datamodel datamodel) {
+        this.datamodel = datamodel;
     }
 
     /**

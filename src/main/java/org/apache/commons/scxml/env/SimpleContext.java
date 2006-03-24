@@ -18,7 +18,6 @@
 package org.apache.commons.scxml.env;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -131,16 +130,6 @@ public class SimpleContext implements Context {
     }
 
     /**
-     * Get an Iterator over all variables in this Context.
-     *
-     * @return Iterator The Iterator over all variables in this Context
-     * @see org.apache.commons.scxml.Context#iterator()
-     */
-    public Iterator iterator() {
-        return vars.entrySet().iterator();
-    }
-
-    /**
      * Clear this Context.
      *
      * @see org.apache.commons.scxml.Context#reset()
@@ -185,11 +174,11 @@ public class SimpleContext implements Context {
     }
 
     /**
-     * Get the variables map.
+     * Get the Map of all local variables in this Context.
      *
      * @return Returns the vars.
      */
-    protected Map getVars() {
+    public Map getVars() {
         return vars;
     }
 
