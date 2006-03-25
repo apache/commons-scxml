@@ -47,7 +47,7 @@ public class SCXMLExecutor {
     /**
      * The Logger for the SCXMLExecutor.
      */
-    private static Log log = LogFactory.getLog(SCXMLExecutor.class);
+    private Log log = LogFactory.getLog(SCXMLExecutor.class);
 
     /**
      * The stateMachine being executed.

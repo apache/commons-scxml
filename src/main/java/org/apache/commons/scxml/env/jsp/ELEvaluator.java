@@ -43,9 +43,9 @@ import org.w3c.dom.Node;
 public class ELEvaluator implements Evaluator {
 
     /** Implementation independent log category. */
-    protected static final Log LOG = LogFactory.getLog(Evaluator.class);
+    protected Log log = LogFactory.getLog(Evaluator.class);
     /** Function Mapper for SCXML expressions. */
-    private FunctionMapper functionMapper = new BuiltinFunctionWrapper();
+    private FunctionMapper functionMapper = new BuiltinFunctionMapper();
     /** Pattern for recognizing the SCXML In() special predicate. */
     private static Pattern inFct = Pattern.compile("In\\(");
     /** Pattern for recognizing the Commons SCXML Data() builtin function. */
@@ -83,8 +83,8 @@ public class ELEvaluator implements Evaluator {
                 replaceAll("In(_ALL_STATES, ");
             Object rslt = ee.evaluate(evalExpr, Object.class, vr,
                 functionMapper);
-            if (LOG.isTraceEnabled()) {
-                LOG.trace(expr + " = " + String.valueOf(rslt));
+            if (log.isTraceEnabled()) {
+                log.trace(expr + " = " + String.valueOf(rslt));
             }
             return rslt;
         } catch (ELException e) {
@@ -108,8 +108,8 @@ public class ELEvaluator implements Evaluator {
                 replaceAll("In(_ALL_STATES, ");
             Boolean rslt = (Boolean) ee.evaluate(evalExpr, Boolean.class,
                 vr, functionMapper);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug(expr + " = " + String.valueOf(rslt));
+            if (log.isDebugEnabled()) {
+                log.debug(expr + " = " + String.valueOf(rslt));
             }
             return rslt;
         } catch (ELException e) {
@@ -135,8 +135,8 @@ public class ELEvaluator implements Evaluator {
                 replaceFirst("LData(");
             Node rslt = (Node) ee.evaluate(evalExpr, Node.class,
                 vr, functionMapper);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug(expr + " = " + String.valueOf(rslt));
+            if (log.isDebugEnabled()) {
+                log.debug(expr + " = " + String.valueOf(rslt));
             }
             return rslt;
         } catch (ELException e) {
@@ -161,6 +161,8 @@ public class ELEvaluator implements Evaluator {
     static class ContextWrapper implements VariableResolver {
         /** Context to be wrapped. */
         private Context ctx = null;
+        /** The log. */
+        private Log log = LogFactory.getLog(ContextWrapper.class);
         /**
          * Constructor.
          * @param ctx The Context to be wrapped.
@@ -172,7 +174,7 @@ public class ELEvaluator implements Evaluator {
         public Object resolveVariable(final String pName) throws ELException {
             Object rslt = ctx.get(pName);
             if (rslt == null) {
-                LOG.info("Variable \"" + pName + "\" does not exist!");
+                log.info("Variable \"" + pName + "\" does not exist!");
             }
             return rslt;
         }
@@ -181,8 +183,9 @@ public class ELEvaluator implements Evaluator {
     /**
      * A simple function mapper for SCXML defined functions.
      */
-    static class BuiltinFunctionWrapper implements FunctionMapper {
-
+    static class BuiltinFunctionMapper implements FunctionMapper {
+        /** The log. */
+        private Log log = LogFactory.getLog(BuiltinFunctionMapper.class);
         /**
          * @see FunctionMapper#resolveFunction(String, String)
          */
@@ -193,9 +196,9 @@ public class ELEvaluator implements Evaluator {
                 try {
                     return Builtin.class.getMethod("isMember", attrs);
                 } catch (SecurityException e) {
-                    LOG.error("resolving isMember(Set, String)", e);
+                    log.error("resolving isMember(Set, String)", e);
                 } catch (NoSuchMethodException e) {
-                    LOG.error("resolving isMember(Set, String)", e);
+                    log.error("resolving isMember(Set, String)", e);
                 }
             } else if (localName.equals("Data")) {
                 // rvalue in expressions, coerce to String
@@ -203,9 +206,9 @@ public class ELEvaluator implements Evaluator {
                 try {
                     return Builtin.class.getMethod("data", attrs);
                 } catch (SecurityException e) {
-                    LOG.error("resolving data(Node, String)", e);
+                    log.error("resolving data(Node, String)", e);
                 } catch (NoSuchMethodException e) {
-                    LOG.error("resolving data(Node, String)", e);
+                    log.error("resolving data(Node, String)", e);
                 }
             } else if (localName.equals("LData")) {
                 // lvalue in expressions, retain as Node
@@ -213,9 +216,9 @@ public class ELEvaluator implements Evaluator {
                 try {
                     return Builtin.class.getMethod("dataNode", attrs);
                 } catch (SecurityException e) {
-                    LOG.error("resolving data(Node, String)", e);
+                    log.error("resolving data(Node, String)", e);
                 } catch (NoSuchMethodException e) {
-                    LOG.error("resolving data(Node, String)", e);
+                    log.error("resolving data(Node, String)", e);
                 }
             }
             return null;

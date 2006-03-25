@@ -129,6 +129,8 @@ public final class SCXMLDigester {
             String errMsg = msgFormat.format(new Object[] {
                 String.valueOf(scxmlURL), rte.getMessage()
             });
+            org.apache.commons.logging.Log log = LogFactory.
+                getLog(SCXMLDigester.class);
             log.error(errMsg, rte);
             throw rte;
         }
@@ -178,6 +180,8 @@ public final class SCXMLDigester {
             String errMsg = msgFormat.format(new Object[] {
                 documentRealPath, rte.getMessage()
             });
+            org.apache.commons.logging.Log log = LogFactory.
+                getLog(SCXMLDigester.class);
             log.error(errMsg, rte);
             throw rte;
         }
@@ -226,6 +230,8 @@ public final class SCXMLDigester {
         }  catch (RuntimeException rte) {
             // Intercept runtime exceptions, only to log them with a
             // sensible error message about failure in document parsing
+            org.apache.commons.logging.Log log = LogFactory.
+                getLog(SCXMLDigester.class);
             log.error("Could not parse SCXML InputSource", rte);
             throw rte;
         }
@@ -434,12 +440,6 @@ public final class SCXMLDigester {
     private static final String XPF_ELS = "/else";
 
     //// Other constants
-    /**
-     * Logger for SCXMLDigester.
-     */
-    private static org.apache.commons.logging.Log log = LogFactory
-            .getLog(SCXMLDigester.class);
-
     // Error messages
     /**
      * Parsing SCXML document has failed.
@@ -646,6 +646,8 @@ public final class SCXMLDigester {
         try {
             scxmlRules.add(xp + XPF_DATA, new ParseDataRule(pr));
         } catch (ParserConfigurationException pce) {
+            org.apache.commons.logging.Log log = LogFactory.
+                getLog(SCXMLDigester.class);
             log.error("Error registering rule for parsing <data>"
                 + " element content", pce);
         }
@@ -812,6 +814,8 @@ public final class SCXMLDigester {
         try {
             scxmlRules.add(xp, new ParseExternalContentRule());
         } catch (ParserConfigurationException pce) {
+            org.apache.commons.logging.Log log = LogFactory.
+                getLog(SCXMLDigester.class);
             log.error("Error registering rule for parsing <send>"
                 + " element content", pce);
         }
@@ -862,6 +866,8 @@ public final class SCXMLDigester {
             try {
                 scxmlRules.add(xp, new ParseExternalContentRule());
             } catch (ParserConfigurationException pce) {
+                org.apache.commons.logging.Log log = LogFactory.
+                    getLog(SCXMLDigester.class);
                 log.error("Error instantiating body content parsing rule for"
                     + " custom action", pce);
             }
@@ -1029,6 +1035,8 @@ public final class SCXMLDigester {
             tt = (TransitionTarget) targets.get(next);
             if (tt == null) {
                 // Could move Digester warnings to errors
+                org.apache.commons.logging.Log log = LogFactory.
+                    getLog(SCXMLDigester.class);
                 log.warn("WARNING: SCXMLDigester - Transition "
                         + "target \"" + next + "\" not found");
             }
@@ -1046,6 +1054,8 @@ public final class SCXMLDigester {
             final Object[] msgArgs) {
         MessageFormat msgFormat = new MessageFormat(errType);
         String errMsg = msgFormat.format(msgArgs);
+        org.apache.commons.logging.Log log = LogFactory.
+            getLog(SCXMLDigester.class);
         log.error(errMsg);
     }
 
@@ -1228,6 +1238,8 @@ public final class SCXMLDigester {
                     DocumentBuilder db = dbFactory.newDocumentBuilder();
                     attrNode = db.parse(path);
                 } catch (Throwable t) { // you read that correctly
+                    org.apache.commons.logging.Log log = LogFactory.
+                        getLog(SCXMLDigester.class);
                     log.error(t.getMessage(), t);
                 }
                 return;
@@ -1300,6 +1312,8 @@ public final class SCXMLDigester {
             try {
                 externalSCXML = (SCXML) externalSrcDigester.parse(path);
             } catch (Exception e) {
+                org.apache.commons.logging.Log log = LogFactory.
+                    getLog(SCXMLDigester.class);
                 log.error(e.getMessage(), e);
             }
             // 2) Adopt the children and datamodel

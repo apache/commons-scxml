@@ -31,7 +31,7 @@ import org.apache.commons.scxml.Context;
 public class SimpleContext implements Context {
 
     /** Implementation independent log category. */
-    protected static final Log LOG = LogFactory.getLog(Context.class);
+    protected Log log = LogFactory.getLog(Context.class);
     /** The parent Context to this Context. */
     private Context parent;
     /** The Map of variables and their values in this Context. */
@@ -159,8 +159,8 @@ public class SimpleContext implements Context {
      */
     public void setLocal(final String name, final Object value) {
         vars.put(name, value);
-        if (LOG.isDebugEnabled() && !name.equals("_ALL_STATES")) {
-            LOG.debug(name + " = " + String.valueOf(value));
+        if (log.isDebugEnabled() && !name.equals("_ALL_STATES")) {
+            log.debug(name + " = " + String.valueOf(value));
         }
     }
 

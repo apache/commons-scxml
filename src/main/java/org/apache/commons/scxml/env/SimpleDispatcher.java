@@ -1,6 +1,6 @@
 /*
  *
- *   Copyright 2005 The Apache Software Foundation.
+ *   Copyright 2005-2006 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import org.apache.commons.scxml.EventDispatcher;
 public final class SimpleDispatcher implements EventDispatcher {
 
      /** Implementation independent log category. */
-     private static Log log = LogFactory.getLog(EventDispatcher.class);
+     private Log log = LogFactory.getLog(EventDispatcher.class);
 
     /**
      *  Constructor.

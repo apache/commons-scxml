@@ -63,7 +63,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
     /**
      * SCXML Logger for the application.
      */
-    protected static final org.apache.commons.logging.Log APP_LOG = LogFactory
+    protected org.apache.commons.logging.Log appLog = LogFactory
             .getLog("scxml.app.log");
 
     /**
@@ -155,7 +155,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                 for (Iterator onExitIter = oe.getActions().iterator();
                         onExitIter.hasNext();) {
                     ((Action) onExitIter.next()).execute(evtDispatcher,
-                        errRep, scInstance, APP_LOG, internalEvents);
+                        errRep, scInstance, appLog, internalEvents);
                 }
             } catch (SCXMLExpressionException e) {
                 errRep.onError(ErrorReporter.EXPRESSION_ERROR, e.getMessage(),
@@ -174,7 +174,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                 for (Iterator transitIter = t.getActions().iterator();
                         transitIter.hasNext();) {
                     ((Action) transitIter.next()).execute(evtDispatcher,
-                        errRep, scInstance, APP_LOG, internalEvents);
+                        errRep, scInstance, appLog, internalEvents);
                 }
             } catch (SCXMLExpressionException e) {
                 errRep.onError(ErrorReporter.EXPRESSION_ERROR,
@@ -192,7 +192,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                 for (Iterator onEntryIter = oe.getActions().iterator();
                         onEntryIter.hasNext();) {
                     ((Action) onEntryIter.next()).execute(evtDispatcher,
-                        errRep, scInstance, APP_LOG, internalEvents);
+                        errRep, scInstance, appLog, internalEvents);
                 }
             } catch (SCXMLExpressionException e) {
                 errRep.onError(ErrorReporter.EXPRESSION_ERROR, e.getMessage(),

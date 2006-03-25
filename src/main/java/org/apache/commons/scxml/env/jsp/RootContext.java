@@ -1,6 +1,6 @@
 /*
  *
- *   Copyright 2005 The Apache Software Foundation.
+ *   Copyright 2005-2006 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ public final class RootContext extends ELContext {
     public RootContext(final JspContext ctx) {
         super();
         if (ctx == null) {
-            LOG.error(ERR_HOST_JSP_CTX_NULL);
+            log.error(ERR_HOST_JSP_CTX_NULL);
             throw new IllegalArgumentException(ERR_HOST_JSP_CTX_NULL);
         } else {
           // only retain the VariableResolver
@@ -63,7 +63,7 @@ public final class RootContext extends ELContext {
             try {
                 value = variableResolver.resolveVariable(name);
             } catch (ELException ele) {
-                LOG.error(ele.getMessage(), ele);
+                log.error(ele.getMessage(), ele);
             }
         }
         return value;
@@ -83,7 +83,7 @@ public final class RootContext extends ELContext {
             try {
                 value = variableResolver.resolveVariable(name);
             } catch (ELException ele) {
-                LOG.error(ele.getMessage(), ele);
+                log.error(ele.getMessage(), ele);
             }
             if (value != null) {
                 exists = true;
