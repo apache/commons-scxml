@@ -1,6 +1,6 @@
 /*
  *
- *   Copyright 2005 The Apache Software Foundation.
+ *   Copyright 2005-2006 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import org.apache.commons.scxml.EventDispatcher;
 import org.apache.commons.scxml.SCInstance;
 import org.apache.commons.scxml.SCXMLExpressionException;
 import org.apache.commons.scxml.SCXMLHelper;
+import org.apache.commons.scxml.TriggerEvent;
 
 /**
  * The class in this SCXML object model that corresponds to the
@@ -39,6 +40,18 @@ import org.apache.commons.scxml.SCXMLHelper;
  *
  */
 public class Send extends Action implements ExternalContent {
+
+    /**
+     * The default targettype.
+     */
+    private static final String TARGETTYPE_SCXML = "scxml";
+
+    /**
+     * The spec mandated derived event when target cannot be reached
+     * for TARGETTYPE_SCXML.
+     */
+    private static final String EVENT_ERR_SEND_TARGETUNAVAILABLE =
+        "error.send.targetunavailable";
 
     /**
      * The ID of the send message.
@@ -98,6 +111,7 @@ public class Send extends Action implements ExternalContent {
     public Send() {
         super();
         this.externalNodes = new ArrayList();
+        this.targettype = TARGETTYPE_SCXML;
     }
 
     /**
@@ -251,6 +265,23 @@ public class Send extends Action implements ExternalContent {
             final ErrorReporter errRep, final SCInstance scInstance,
             final Log appLog, final Collection derivedEvents)
     throws ModelException, SCXMLExpressionException {
+        // Lets see if we should handle it ourselves
+        if (targettype != null && targettype.trim().toLowerCase().
+                equals(TARGETTYPE_SCXML)) {
+            if (SCXMLHelper.isStringEmpty(target)) {
+                derivedEvents.add(new TriggerEvent(event,
+                    TriggerEvent.SIGNAL_EVENT));
+            } else {
+                // We know of no other
+                appLog.warn("<send>: Unavailable target - " + target);
+                derivedEvents.add(new TriggerEvent(
+                    EVENT_ERR_SEND_TARGETUNAVAILABLE,
+                    TriggerEvent.ERROR_EVENT));
+            }
+            // short-circuit the EventDispatcher
+            return;
+        }
+        // Else, let the EventDispatcher take care of it
         State parentState = getParentState();
         Context ctx = scInstance.getContext(parentState);
         Evaluator eval = scInstance.getEvaluator();
