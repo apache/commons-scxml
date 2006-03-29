@@ -27,6 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml.ErrorReporter;
 import org.apache.commons.scxml.EventDispatcher;
@@ -63,8 +64,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
     /**
      * SCXML Logger for the application.
      */
-    protected org.apache.commons.logging.Log appLog = LogFactory
-            .getLog("scxml.app.log");
+    private Log appLog = LogFactory.getLog("scxml.app.log");
 
     /**
      * The TransitionTarget comparator.
@@ -689,6 +689,24 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      */
     protected Comparator getTTComparator() {
         return targetComparator;
+    }
+
+    /**
+     * Set the log used by this <code>SCXMLSemantics</code> instance.
+     *
+     * @param log The new log.
+     */
+    protected void setLog(final Log log) {
+        this.appLog = log;
+    }
+
+    /**
+     * Get the log used by this <code>SCXMLSemantics</code> instance.
+     *
+     * @return Log The log being used.
+     */
+    protected Log getLog() {
+        return appLog;
     }
 
 }

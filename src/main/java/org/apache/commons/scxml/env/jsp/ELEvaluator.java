@@ -43,7 +43,7 @@ import org.w3c.dom.Node;
 public class ELEvaluator implements Evaluator {
 
     /** Implementation independent log category. */
-    protected Log log = LogFactory.getLog(Evaluator.class);
+    private Log log = LogFactory.getLog(Evaluator.class);
     /** Function Mapper for SCXML expressions. */
     private FunctionMapper functionMapper = new BuiltinFunctionMapper();
     /** Pattern for recognizing the SCXML In() special predicate. */
@@ -153,6 +153,24 @@ public class ELEvaluator implements Evaluator {
      */
     public Context newContext(final Context parent) {
         return new ELContext(parent);
+    }
+
+    /**
+     * Set the log used by this <code>Evaluator</code> instance.
+     *
+     * @param log The new log.
+     */
+    protected void setLog(final Log log) {
+        this.log = log;
+    }
+
+    /**
+     * Get the log used by this <code>Evaluator</code> instance.
+     *
+     * @return Log The log being used.
+     */
+    protected Log getLog() {
+        return log;
     }
 
     /**

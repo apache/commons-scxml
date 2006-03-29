@@ -31,7 +31,7 @@ import org.apache.commons.scxml.Context;
 public class SimpleContext implements Context {
 
     /** Implementation independent log category. */
-    protected Log log = LogFactory.getLog(Context.class);
+    private Log log = LogFactory.getLog(Context.class);
     /** The parent Context to this Context. */
     private Context parent;
     /** The Map of variables and their values in this Context. */
@@ -180,6 +180,24 @@ public class SimpleContext implements Context {
      */
     public Map getVars() {
         return vars;
+    }
+
+    /**
+     * Set the log used by this <code>Context</code> instance.
+     *
+     * @param log The new log.
+     */
+    protected void setLog(final Log log) {
+        this.log = log;
+    }
+
+    /**
+     * Get the log used by this <code>Context</code> instance.
+     *
+     * @return Log The log being used.
+     */
+    protected Log getLog() {
+        return log;
     }
 
 }
