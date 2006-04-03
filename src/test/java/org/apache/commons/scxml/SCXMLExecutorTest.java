@@ -108,15 +108,15 @@ public class SCXMLExecutorTest extends TestCase {
         exec = SCXMLTestHelper.getExecutor(transitions01);
         assertNotNull(exec);
         try {
-            Set currentStates = fireEvent("ten.done");
+            Set currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
             assertEquals(1, currentStates.size());
             assertEquals("twenty_one", ((State)currentStates.iterator().
                 next()).getId());
-            currentStates = fireEvent("twenty_one.done");
+            currentStates = SCXMLTestHelper.fireEvent(exec, "twenty_one.done");
             assertEquals(1, currentStates.size());
             assertEquals("twenty_two", ((State)currentStates.iterator().
                 next()).getId());
-            currentStates = fireEvent("twenty_two.done");
+            currentStates = SCXMLTestHelper.fireEvent(exec, "twenty_two.done");
             assertEquals(3, exec.getCurrentStatus().getStates().size());
         } catch (Exception e) {
             fail(e.getMessage());
@@ -136,20 +136,9 @@ public class SCXMLExecutorTest extends TestCase {
         }
     }
 
-    private Set fireEvent(String name) {
-        TriggerEvent[] evts = {new TriggerEvent(name,
-                TriggerEvent.SIGNAL_EVENT, null)};
-        try {
-            exec.triggerEvents(evts);
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-        return exec.getCurrentStatus().getStates();
-    }
-
     private void checkMicrowave01Sample() {
         try {
-            Set currentStates = fireEvent("turn_on");
+            Set currentStates = SCXMLTestHelper.fireEvent(exec, "turn_on");
             assertEquals(1, currentStates.size());
             assertEquals("cooking", ((State)currentStates.iterator().
                 next()).getId());
@@ -160,7 +149,7 @@ public class SCXMLExecutorTest extends TestCase {
 
     private void checkMicrowave02Sample() {
         try {
-            Set currentStates = fireEvent("turn_on");
+            Set currentStates = SCXMLTestHelper.fireEvent(exec, "turn_on");
             assertEquals(2, currentStates.size());
             String id = ((State)currentStates.iterator().next()).getId();
             assertTrue(id.equals("closed") || id.equals("cooking"));

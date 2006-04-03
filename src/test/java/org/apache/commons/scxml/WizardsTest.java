@@ -80,19 +80,19 @@ public class WizardsTest extends TestCase {
             assertEquals(1, currentStates.size());
             assertEquals("state1", ((State)currentStates.iterator().
                 next()).getId());
-            currentStates = fireEvent("event2");
+            currentStates = SCXMLTestHelper.fireEvent(exec, "event2");
             assertEquals(1, currentStates.size());
             assertEquals("state2", ((State)currentStates.iterator().
                 next()).getId());
-            currentStates = fireEvent("event4");
+            currentStates = SCXMLTestHelper.fireEvent(exec, "event4");
             assertEquals(1, currentStates.size());
             assertEquals("state4", ((State)currentStates.iterator().
                 next()).getId());
-            currentStates = fireEvent("event3");
+            currentStates = SCXMLTestHelper.fireEvent(exec, "event3");
             assertEquals(1, currentStates.size());
             assertEquals("state3", ((State)currentStates.iterator().
                 next()).getId());
-            currentStates = fireEvent("event3"); // ensure we stay put
+            currentStates = SCXMLTestHelper.fireEvent(exec, "event3"); // ensure we stay put
             assertEquals(1, currentStates.size());
             assertEquals("state3", ((State)currentStates.iterator().
                 next()).getId());
@@ -114,7 +114,7 @@ public class WizardsTest extends TestCase {
             assertEquals(1, currentStates.size());
             assertEquals("state2", ((State)currentStates.iterator().
                 next()).getId());
-            currentStates = fireEvent("event4");
+            currentStates = SCXMLTestHelper.fireEvent(exec, "event4");
             assertEquals(1, currentStates.size());
             assertEquals("state4", ((State)currentStates.iterator().
                 next()).getId());
@@ -147,17 +147,6 @@ public class WizardsTest extends TestCase {
             // should never be called
             fail("<cancel> TestEventDispatcher callback unexpected");
         }
-    }
-
-    private Set fireEvent(String name) {
-        TriggerEvent[] evts = {new TriggerEvent(name,
-                TriggerEvent.SIGNAL_EVENT, null)};
-        try {
-            exec.triggerEvents(evts);
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-        return exec.getCurrentStatus().getStates();
     }
 
     public static void main(String args[]) {

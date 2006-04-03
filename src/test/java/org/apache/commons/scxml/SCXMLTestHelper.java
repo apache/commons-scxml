@@ -177,7 +177,7 @@ public class SCXMLTestHelper {
         return exec.getCurrentStatus().getStates();
     }
 
-    public static Set fireEvent(SCXMLExecutor exec, TriggerEvent[] evts) {
+    public static Set fireEvents(SCXMLExecutor exec, TriggerEvent[] evts) {
         try {
             exec.triggerEvents(evts);
         } catch (Exception e) {

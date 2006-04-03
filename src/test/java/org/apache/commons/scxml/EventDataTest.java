@@ -84,7 +84,7 @@ public class EventDataTest extends TestCase {
             TriggerEvent[] evts = new TriggerEvent[] { te,
                 new TriggerEvent("event.bar", TriggerEvent.SIGNAL_EVENT,
                 new Integer(6))};
-            currentStates = SCXMLTestHelper.fireEvent(exec, evts);
+            currentStates = SCXMLTestHelper.fireEvents(exec, evts);
             assertEquals(1, currentStates.size());
             assertEquals("state6", ((State)currentStates.iterator().
                 next()).getId());
