@@ -16,6 +16,7 @@
 package org.apache.commons.scxml;
 
 import java.net.URL;
+import java.util.Set;
 
 import junit.framework.Assert;
 
@@ -153,6 +154,36 @@ public class SCXMLTestHelper {
             return null;
         }
         return exec.getSCInstance().lookupContext(tt);
+    }
+
+    public static Set fireEvent(SCXMLExecutor exec, String name) {
+        TriggerEvent[] evts = {new TriggerEvent(name,
+                TriggerEvent.SIGNAL_EVENT, null)};
+        try {
+            exec.triggerEvents(evts);
+        } catch (Exception e) {
+            Assert.fail(e.getMessage());
+        }
+        return exec.getCurrentStatus().getStates();
+    }
+
+    public static Set fireEvent(SCXMLExecutor exec, TriggerEvent te) {
+        TriggerEvent[] evts = { te };
+        try {
+            exec.triggerEvents(evts);
+        } catch (Exception e) {
+            Assert.fail(e.getMessage());
+        }
+        return exec.getCurrentStatus().getStates();
+    }
+
+    public static Set fireEvent(SCXMLExecutor exec, TriggerEvent[] evts) {
+        try {
+            exec.triggerEvents(evts);
+        } catch (Exception e) {
+            Assert.fail(e.getMessage());
+        }
+        return exec.getCurrentStatus().getStates();
     }
 
     /**

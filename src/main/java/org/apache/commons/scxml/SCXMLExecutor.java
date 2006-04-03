@@ -19,7 +19,9 @@ package org.apache.commons.scxml;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -96,6 +98,8 @@ public class SCXMLExecutor {
      */
     public void triggerEvents(final TriggerEvent[] evts)
             throws ModelException {
+        // Set event data, saving old values
+        Object[] oldData = setEventData(evts);
         ArrayList evs = new ArrayList(Arrays.asList(evts));
         do {
             // CreateStep
@@ -119,7 +123,23 @@ public class SCXMLExecutor {
                 evs.clear();
             }
         } while(superStep && currentStatus.getEvents().size() > 0);
+        // Restore event data
+        restoreEventData(oldData);
         logState();
+    }
+
+    /**
+     * Convenience method when only one event needs to be triggered.
+     *
+     * @param evt
+     *            the external events which triggered during the last
+     *            time quantum
+     * @throws ModelException in case there is a fatal SCXML object
+     *            model problem.
+     */
+    public void triggerEvent(final TriggerEvent evt)
+            throws ModelException {
+        triggerEvents(new TriggerEvent[] {evt});
     }
 
     /**
@@ -455,6 +475,49 @@ public class SCXMLExecutor {
         scInstance.getRootContext().setLocal("_ALL_STATES",
             SCXMLHelper.getAncestorClosure(currentStatus.getStates(), null));
     }
+
+    /**
+     * @param evts The events being triggered.
+     * @return Object[] Previous values.
+     */
+    private Object[] setEventData(final TriggerEvent[] evts) {
+        Context rootCtx = scInstance.getRootContext();
+        Object[] oldData = {rootCtx.get(EVENT_DATA),
+            rootCtx.get(EVENT_DATA_MAP)};
+        Object eventData = null;
+        Map payloadMap = new HashMap();
+        int len = evts.length;
+        for (int i = 0; i < len; i++) {
+            TriggerEvent te = evts[i];
+            payloadMap.put(te.getName(), te.getPayload());
+        }
+        if (len == 1) {
+            // we have only one event
+            eventData = evts[0].getPayload();
+        }
+        rootCtx.setLocal(EVENT_DATA, eventData);
+        rootCtx.setLocal(EVENT_DATA_MAP, payloadMap);
+        return oldData;
+    }
+
+    /**
+     * @param oldData The old values to restore to.
+     */
+    private void restoreEventData(final Object[] oldData) {
+        scInstance.getRootContext().setLocal(EVENT_DATA, oldData[0]);
+        scInstance.getRootContext().setLocal(EVENT_DATA_MAP, oldData[1]);
+    }
+
+    /**
+     * The special variable for storing single event data / payload.
+     */
+    private static final String EVENT_DATA = "_eventdata";
+
+    /**
+     * The special variable for storing event data / payload,
+     * when multiple events are triggered, keyed by event name.
+     */
+    private static final String EVENT_DATA_MAP = "_eventdatamap";
 
     /**
      * SCXMLExecutor put into motion without setting a model (state machine).
