@@ -597,13 +597,14 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
         if (SCXMLHelper.isStringEmpty(transEvent)) {
             return true;
         } else {
-            String transEventDot = transEvent + "."; //wildcard (prefix) event
-            // support
+            String transEventDot = transEvent + "."; // prefix event support
             Iterator i = eventOccurrences.iterator();
             while (i.hasNext()) {
                 String evt = (String) i.next();
                 if (evt == null) {
                     continue; // Unnamed events
+                } else if (evt.equals("*")) {
+                    return true; // Wildcard
                 } else if (evt.equals(transEvent)
                             || evt.startsWith(transEventDot)) {
                     return true;
