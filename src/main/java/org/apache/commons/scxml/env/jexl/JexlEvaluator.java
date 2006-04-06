@@ -62,6 +62,9 @@ public class JexlEvaluator implements Evaluator {
      */
     public Object eval(final Context ctx, final String expr)
     throws SCXMLExpressionException {
+        if (expr == null) {
+            return null;
+        }
         JexlContext jexlCtx = null;
         if (ctx instanceof JexlContext) {
             jexlCtx = (JexlContext) ctx;
@@ -86,6 +89,9 @@ public class JexlEvaluator implements Evaluator {
      */
     public Boolean evalCond(final Context ctx, final String expr)
     throws SCXMLExpressionException {
+        if (expr == null) {
+            return null;
+        }
         JexlContext jexlCtx = null;
         if (ctx instanceof JexlContext) {
             jexlCtx = (JexlContext) ctx;
@@ -110,6 +116,9 @@ public class JexlEvaluator implements Evaluator {
      */
     public Node evalLocation(final Context ctx, final String expr)
     throws SCXMLExpressionException {
+        if (expr == null) {
+            return null;
+        }
         JexlContext jexlCtx = null;
         if (ctx instanceof JexlContext) {
             jexlCtx = (JexlContext) ctx;

@@ -72,6 +72,9 @@ public class ELEvaluator implements Evaluator {
      */
     public Object eval(final Context ctx, final String expr)
     throws SCXMLExpressionException {
+        if (expr == null) {
+            return null;
+        }
         VariableResolver vr = null;
         if (ctx instanceof VariableResolver) {
             vr = (VariableResolver) ctx;
@@ -97,6 +100,9 @@ public class ELEvaluator implements Evaluator {
      */
     public Boolean evalCond(final Context ctx, final String expr)
     throws SCXMLExpressionException {
+        if (expr == null) {
+            return null;
+        }
         VariableResolver vr = null;
         if (ctx instanceof VariableResolver) {
             vr = (VariableResolver) ctx;
@@ -122,6 +128,9 @@ public class ELEvaluator implements Evaluator {
      */
     public Node evalLocation(final Context ctx, final String expr)
     throws SCXMLExpressionException {
+        if (expr == null) {
+            return null;
+        }
         VariableResolver vr = null;
         if (ctx instanceof VariableResolver) {
             vr = (VariableResolver) ctx;
