@@ -36,6 +36,25 @@
      description="Project nearing promotion vote to Commons Proper">
 
       <action dev="rahul" type="add">
+       [04-03-2006] Added support for the wildcard (*) event.
+      </action>
+
+      <action dev="rahul" type="add">
+       [04-03-2006] Added _eventdata support. The payload of a triggered
+       event is available under the special variable named _eventdata.
+      </action>
+
+      <action dev="rahul" type="fix">
+       [03-28-2006] Unnamed trigger events are now correctly processed
+       (they do not match any event name).
+      </action>
+
+      <action dev="rahul" type="add">
+       [03-23-2006] Initial cut at supporting the datamodel section from
+       the January 06 Working Draft.
+      </action>
+
+      <action dev="rahul" type="add">
        [03-06-2006] Added a FAQ page for the Commons SCXML website.
        Added a section on SCXML Contexts and Evaluators (plugging in an
        expression language) to the online "guide".
