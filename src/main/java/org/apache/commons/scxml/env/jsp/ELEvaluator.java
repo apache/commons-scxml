@@ -44,8 +44,11 @@ public class ELEvaluator implements Evaluator {
 
     /** Implementation independent log category. */
     private Log log = LogFactory.getLog(Evaluator.class);
-    /** Function Mapper for SCXML expressions. */
-    private FunctionMapper functionMapper = new BuiltinFunctionMapper();
+    /** Function Mapper for SCXML builtin functions. */
+    private FunctionMapper builtinFnMapper = new BuiltinFunctionMapper();
+    /** User provided function mapper, we delegate to this mapper if
+        we encounter a function that is not built into SCXML. */
+    private FunctionMapper fnMapper;
     /** Pattern for recognizing the SCXML In() special predicate. */
     private static Pattern inFct = Pattern.compile("In\\(");
     /** Pattern for recognizing the Commons SCXML Data() builtin function. */
@@ -59,6 +62,17 @@ public class ELEvaluator implements Evaluator {
      */
     public ELEvaluator() {
         ee = new ExpressionEvaluatorImpl();
+    }
+
+    /**
+     * Constructor for EL evaluator that supports user-defined functions.
+     *
+     * @param fnMapper The function mapper for this Evaluator.
+     * @see javax.servlet.jsp.el.FunctionMapper
+     */
+    public ELEvaluator(final FunctionMapper fnMapper) {
+        ee = new ExpressionEvaluatorImpl();
+        this.fnMapper = fnMapper;
     }
 
     /**
@@ -85,7 +99,7 @@ public class ELEvaluator implements Evaluator {
             String evalExpr = inFct.matcher(expr).
                 replaceAll("In(_ALL_STATES, ");
             Object rslt = ee.evaluate(evalExpr, Object.class, vr,
-                functionMapper);
+                builtinFnMapper);
             if (log.isTraceEnabled()) {
                 log.trace(expr + " = " + String.valueOf(rslt));
             }
@@ -113,7 +127,7 @@ public class ELEvaluator implements Evaluator {
             String evalExpr = inFct.matcher(expr).
                 replaceAll("In(_ALL_STATES, ");
             Boolean rslt = (Boolean) ee.evaluate(evalExpr, Boolean.class,
-                vr, functionMapper);
+                vr, builtinFnMapper);
             if (log.isDebugEnabled()) {
                 log.debug(expr + " = " + String.valueOf(rslt));
             }
@@ -143,7 +157,7 @@ public class ELEvaluator implements Evaluator {
             evalExpr = dataFct.matcher(evalExpr).
                 replaceFirst("LData(");
             Node rslt = (Node) ee.evaluate(evalExpr, Node.class,
-                vr, functionMapper);
+                vr, builtinFnMapper);
             if (log.isDebugEnabled()) {
                 log.debug(expr + " = " + String.valueOf(rslt));
             }
@@ -210,7 +224,7 @@ public class ELEvaluator implements Evaluator {
     /**
      * A simple function mapper for SCXML defined functions.
      */
-    static class BuiltinFunctionMapper implements FunctionMapper {
+    class BuiltinFunctionMapper implements FunctionMapper {
         /** The log. */
         private Log log = LogFactory.getLog(BuiltinFunctionMapper.class);
         /**
@@ -247,18 +261,20 @@ public class ELEvaluator implements Evaluator {
                 } catch (NoSuchMethodException e) {
                     log.error("resolving data(Node, String)", e);
                 }
+            } else if (fnMapper != null) {
+                return fnMapper.resolveFunction(prefix, localName);
             }
             return null;
         }
     }
 
     /**
-     * Get the FunctionMapper.
+     * Get the FunctionMapper for builtin SCXML/Commons SCXML functions.
      *
-     * @return functionMapper The FunctionMapper
+     * @return builtinFnMapper The FunctionMapper
      */
-    protected FunctionMapper getFunctionMapper() {
-        return functionMapper;
+    protected FunctionMapper getBuiltinFnMapper() {
+        return builtinFnMapper;
     }
 
 }
