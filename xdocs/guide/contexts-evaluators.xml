@@ -111,6 +111,34 @@
 
   </section>
 
+  <section name="Method invocation in expressions">
+
+   <p>Commons SCXML uses the mechanisms provided by the expression language
+   chosen for the document to support method invocation. Commons JEXL and
+   Commons EL allow for method invocations as follows:</p>
+
+   <subsection name="Commons JEXL">
+    <p>See Commons JEXL reference for 
+    <a href="http://jakarta.apache.org/commons/jexl/reference/syntax.html#Functions">
+    builtin JEXL functions</a> and the calling methods section of the
+    <a href="http://jakarta.apache.org/commons/jexl/reference/examples.html">
+    examples page</a>. As a summary, if the context contains an object
+    under name <code>foo</code> which has an accessible method
+    <code>bar()</code>, then the JEXL expression for calling the method is
+    <code>foo.bar()</code></p>
+   </subsection>
+
+   <subsection name="Commons EL (JSP 2.0 EL)">
+    <p>It is possible to register "namespaced" functions with the
+    <a href="../apidocs/org/apache/commons/scxml/env/jsp/ELEvaluator.html">
+    ELEvaluator</a> to enable method invocation. The methods need to be
+    static accessible methods in the class(es) that implement(s) them,
+    and a suitable <code>FunctionMapper</code> is passed in via the
+    ELEvaluator constructor. For further details, see the JSP 2.0 EL API.</p>
+   </subsection>
+
+  </section>
+
  </body>
 
 </document>
