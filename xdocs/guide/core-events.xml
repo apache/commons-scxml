@@ -90,9 +90,9 @@
 
      <pre>
          &lt;transition event="event.with.payload"
-                        cond="_eventdata.bar eq 'bar1' next="state1" /&gt;
+                        cond="_eventdata.bar eq 'bar1'" next="state1" /&gt;
          &lt;transition event="event.with.payload"
-                        cond="_eventdata.bar eq 'bar2' next="state2" /&gt;
+                        cond="_eventdata.bar eq 'bar2'" next="state2" /&gt;
      </pre>
 
    </subsection>
