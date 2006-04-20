@@ -36,7 +36,7 @@
    wherein the state machine has said to have executed to completion.
    </p>
 
-   <subsection name="Usage">
+   <subsection name="Basic Usage">
      <p>An event &quot;foo.bar&quot; may be fired on the engine as
      follows:</p>
      <pre>
@@ -45,12 +45,12 @@
         //import org.apache.commons.scxml.model.ModelException;
 
         // where &quot;exec&quot; is the SCXMLExecutor instance
-        TriggerEvent[] te = { new TriggerEvent("foo.bar",
-        	              TriggerEvent.SIGNAL_EVENT) };
+        TriggerEvent te = new TriggerEvent("foo.bar",
+                              TriggerEvent.SIGNAL_EVENT);
         try {
-        	exec.triggerEvents(te);
+            exec.triggerEvent(te);
         } catch (ModelException me) {
-        	// The events left the engine in inconsistent state
+            // The events left the engine in inconsistent state
         }
      </pre>
 
@@ -58,10 +58,56 @@
      state, a <code>ModelException</code> may be thrown.
      </p>
 
+   </subsection>
+
+   <subsection name="Event Payloads">
+
+     <p>Furthermore, events can carry within them a <code>payload</code>
+     property that consists of some information that is useful for the guard
+     conditions or executable content while the engine is processing the
+     event. The payload can be any user-defined type.</p>
+     <pre>
+        //import org.apache.commons.scxml.SCXMLExecutor;
+        //import org.apache.commons.scxml.TriggerEvent;
+        //import org.apache.commons.scxml.model.ModelException;
+
+        // where "exec" is the SCXMLExecutor instance
+        // and "foo" is an object (payload) with an accessible property "bar"
+        TriggerEvent te = new TriggerEvent("event.with.payload",
+                              TriggerEvent.SIGNAL_EVENT, foo);
+        try {
+            exec.triggerEvent(te);
+        } catch (ModelException me) {
+            // The events left the engine in inconsistent state
+        }
+     </pre>
+
+     <p>The payload in the above example can now be used in expressions,
+     as the special variable "_eventdata". For example, assuming a JEXL
+     expressions based document, transitions may look like (similarly
+     "_eventdata" may be used in executable content in corresponding
+     &lt;onexit&gt;, &lt;transition&gt; and &lt;onentry&gt; bodies).</p>
+
+     <pre>
+         &lt;transition event="event.with.payload"
+                        cond="_eventdata.bar eq 'bar1' next="state1" /&gt;
+         &lt;transition event="event.with.payload"
+                        cond="_eventdata.bar eq 'bar2' next="state2" /&gt;
+     </pre>
+
+   </subsection>
+
+   <subsection name="Multiple Events">
+
      <p>More than one events may be triggered on the state machine at a
-     time. After the engine processes a set of trigger events, it is
-     customary to check whether the state machine has reached a &lt;final&gt;
-     state.</p>
+     time (using <code>triggerEvents()</code> method -- plural). After the engine
+     processes a set of trigger events, it is customary to check whether the
+     state machine has reached a &lt;final&gt; state. All events will operate
+     over the same states ancestor closure.</p>
+
+   </subsection>
+
+   <subsection name="Running to completion">
 
      <p>The following snippet illustrates how the <code>SCXMLExecutor</code>
      <code>Status</code> is queried for state machine run to completion.</p>
@@ -73,7 +119,7 @@
         // where &quot;exec&quot; is the SCXMLExecutor instance    
         Status status = exec.getCurrentStatus();
         if (status.isFinal()) {
-        	// run to completion, release cached objects
+            // run to completion, release cached objects
         }
      </pre>
 
