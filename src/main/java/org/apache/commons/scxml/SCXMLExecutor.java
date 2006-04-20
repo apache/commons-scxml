@@ -256,6 +256,8 @@ public class SCXMLExecutor {
     }
 
     /**
+     * Set the expression evaluator.
+     *
      * @param evaluator The evaluator to set.
      */
     public void setEvaluator(final Evaluator evaluator) {
@@ -263,10 +265,30 @@ public class SCXMLExecutor {
     }
 
     /**
+     * Get the expression evaluator in use.
+     *
+     * @return Evaluator The evaluator in use.
+     */
+    public Evaluator getEvaluator() {
+        return scInstance.getEvaluator();
+    }
+
+    /**
+     * Set the root context for this execution.
+     *
      * @param rootContext The Context that ties to the host environment.
      */
     public void setRootContext(final Context rootContext) {
         this.scInstance.setRootContext(rootContext);
+    }
+
+    /**
+     * Get the root context for this execution.
+     *
+     * @return Context The root context.
+     */
+    public Context getRootContext() {
+        return scInstance.getRootContext();
     }
 
     /**
