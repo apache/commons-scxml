@@ -27,7 +27,7 @@
   <inceptionYear>2005</inceptionYear>
   <description>A Java Implementation of a State Chart XML Engine</description>
 
-  <url>http://jakarta.apache.org/commons/sandbox/scxml/</url>
+  <url>http://jakarta.apache.org/commons/scxml/</url>
 
   <organization>
     <name>The Apache Software Foundation</name>
@@ -42,9 +42,9 @@
   </licenses>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/jakarta/commons/sandbox/scxml/trunk</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/jakarta/commons/sandbox/scxml/trunk</developerConnection>
-    <url>http://svn.apache.org/viewcvs.cgi/jakarta/commons/sandbox/scxml/trunk</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/jakarta/commons/scxml/trunk</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/jakarta/commons/scxml/trunk</developerConnection>
+    <url>http://svn.apache.org/viewcvs.cgi/jakarta/commons/scxml/trunk</url>
   </scm>
 
   <mailingLists>
@@ -85,6 +85,9 @@
     </contributor>
     <contributor>
       <name>Wendy Smoak</name>
+    </contributor>
+    <contributor>
+      <name>Heiko Eichberger</name>
     </contributor>
   </contributors>
 

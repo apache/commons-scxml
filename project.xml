@@ -27,7 +27,7 @@
   <description>A Java Implementation of a State Chart XML Engine</description>
 
   <logo>/images/scxml-logo-white.png</logo>
-  <url>http://jakarta.apache.org/commons/sandbox/${pom.artifactId.substring(8)}/</url>
+  <url>http://jakarta.apache.org/commons/${pom.artifactId.substring(8)}/</url>
   <package>org.apache.commons.${pom.artifactId.substring(8)}</package>
 
   <organization>
@@ -44,14 +44,14 @@
   </licenses>
 
   <siteAddress>jakarta.apache.org</siteAddress>
-  <siteDirectory>/www/jakarta.apache.org/commons/sandbox/${pom.artifactId.substring(8)}/</siteDirectory>
+  <siteDirectory>/www/jakarta.apache.org/commons/${pom.artifactId.substring(8)}/</siteDirectory>
   <issueTrackingUrl>http://issues.apache.org/bugzilla/</issueTrackingUrl>
   <distributionDirectory>/www/jakarta.apache.org/builds/jakarta-commons/${pom.artifactId.substring(8)}/</distributionDirectory> 
 
   <repository>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/jakarta/commons/sandbox/${pom.artifactId.substring(8)}/trunk</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/jakarta/commons/sandbox/${pom.artifactId.substring(8)}/trunk</developerConnection>
-    <url>http://svn.apache.org/viewcvs.cgi/jakarta/commons/sandbox/${pom.artifactId.substring(8)}/trunk</url> 
+    <connection>scm:svn:http://svn.apache.org/repos/asf/jakarta/commons/${pom.artifactId.substring(8)}/trunk</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/jakarta/commons/${pom.artifactId.substring(8)}/trunk</developerConnection>
+    <url>http://svn.apache.org/viewcvs.cgi/jakarta/commons/${pom.artifactId.substring(8)}/trunk</url>
   </repository>
 
   <mailingLists>
