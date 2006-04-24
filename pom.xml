@@ -42,9 +42,9 @@
   </licenses>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/jakarta/commons/scxml/trunk</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/jakarta/commons/scxml/trunk</developerConnection>
-    <url>http://svn.apache.org/viewcvs.cgi/jakarta/commons/scxml/trunk</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/jakarta/commons/proper/scxml/trunk</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/jakarta/commons/proper/scxml/trunk</developerConnection>
+    <url>http://svn.apache.org/viewcvs.cgi/jakarta/commons/proper/scxml/trunk</url>
   </scm>
 
   <mailingLists>
