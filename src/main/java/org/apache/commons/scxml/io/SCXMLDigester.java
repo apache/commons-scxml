@@ -1299,14 +1299,15 @@ public final class SCXMLDigester {
             Digester digester = getDigester();
             SCXML scxml = (SCXML) digester.peek(digester.getCount() - 1);
             // 1) Digest the external SCXML file
-            Digester externalSrcDigester = newInstance(scxml,
-                pr.getResolver(src));
             SCXML externalSCXML = null;
-            String path = null;
+            String path;
+            Digester externalSrcDigester;
             if (pr == null) {
                 path = src;
+                externalSrcDigester = newInstance(scxml, null);
             } else {
                 path = pr.resolvePath(src);
+                externalSrcDigester = newInstance(scxml, pr.getResolver(src));
             }
 
             try {
