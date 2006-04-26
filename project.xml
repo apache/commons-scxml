@@ -15,7 +15,6 @@
    limitations under the License.
 -->
 <project>
-  <!-- For site lnf - extend>../commons-build/sandbox-project.xml</extend-->
   <pomVersion>3</pomVersion>
   <name>SCXML</name>
   <groupId>commons-scxml</groupId> 
