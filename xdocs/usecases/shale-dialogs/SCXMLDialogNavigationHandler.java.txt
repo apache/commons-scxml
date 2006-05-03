@@ -17,7 +17,7 @@
  * You may build in a package on your choice. Dependency information:
  *
  * Commons SCXML dependencies -
- * http://jakarta.apache.org/commons/sandbox/scxml/dependencies.html
+ * http://jakarta.apache.org/commons/scxml/dependencies.html
  *
  * Struts Shale dependencies -
  * http://struts.apache.org/shale/ 
