@@ -31,12 +31,14 @@
   SCXML and some related and interesting (to some of us) tidbits.
   </p>
 
-  <subsection name="SCXML documents">
+  <subsection name="Introduction">
    <p>State Chart XML (SCXML) is a general-purpose event-based state machine
    language that can be used in many ways.</p>
    <ul>
     <li><a href="guide/scxml-documents.html">SCXML documents</a> - A five
     minute introduction to SCXML documents.</li>
+    <li><a href="guide/using-commons-scxml.html">Commons SCXML</a> - Using
+    the Commons SCXML engine.</li>
    </ul>
   </subsection>
 
@@ -55,6 +57,8 @@
    <ul>
     <li><a href="guide/core-digester.html">Digester</a> - Digesting SCXML
     into the Commons SCXML Java object model.</li>
+    <li><a href="guide/datamodel.html">Datamodel</a> - Defining a
+    datamodel and temporary variables.</li>
     <li><a href="guide/contexts-evaluators.html">Contexts and Evaluators</a> -
     Plugging in the expression language for the document.</li>
     <li><a href="guide/core-engine.html">Executor</a> - Instantiating
