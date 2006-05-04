@@ -26,12 +26,7 @@
 
   <section name="Commons SCXML - Creating and configuring the SCXML engine">
 
-   <p>The Commons SCXML executor is the engine that runs the state machine.
-   Commons SCXML also allows listeners to be added to the
-   <code>SCXMLExecutor</code>, which are informed about the progress of
-   the state machine via <code>onEntry</code> and <code>onExit</code>
-   notifications for <code>TransitionTarget</code>s, as well as
-   <code>onTransition</code> notificatins when transitions are followed.</p>
+   <p>The Commons SCXML executor is the engine that runs the state machine.</p>
 
    <subsection name="Usage">
      <p>The <code>SCXMLExecutor</code> is usually initialized as follows:</p>
@@ -52,25 +47,60 @@
             exec.setStateMachine(&lt;SCXML&gt;);
             exec.addListener(&lt;SCXML&gt;, &lt;SCXMLListener&gt;);
             exec.setRootContext(&lt;Context&gt;);
-            exec.setSuperStep(true);
             exec.go();
         } catch (ModelException me) {
             // Executor initialization failed, because the
             // state machine specified has inconsistencies
         }
      </pre>
+   </subsection>
+
+   <subsection name="Explanation">
+     <p>The SCXML specification allows implementations to support multiple
+     expression languages so SCXML documents can be used in varying
+     environments. The <code>Context</code> and <code>Evaluator</code>
+     interfaces serve as adapters to the particular expression language
+     APIs. Commons SCXML currently supports JEXL and JSP 2.0 EL
+     expressions. See the section on
+     <a href="contexts-evaluators.html">contexts and evaluators</a>
+     for further details about contexts, evaluators and root contexts.</p>
+
+     <p>Commons SCXML provides an
+     <a href="../apidocs/org/apache/commons/scxml/EventDispatcher.html">EventDispatcher</a>
+     interface for wiring the behavior of SCXML &lt;send&gt; and
+     &lt;cancel&gt; actions. This allows users to define custom "targettypes"
+     as long as they handle the callbacks on the <code>EventDispatcher</code>
+     implementation provided to the executor. The introductory section on
+     using Commons SCXML has a brief discussion on
+     <a href="using-commons-scxml.html">interaction patterns</a>, including
+     &lt;send&gt; usage.</p>
+
+     <p>The
+     <a href="../apidocs/org/apache/commons/scxml/ErrorReporter.html">ErrorReporter</a>
+     interface is used by Commons SCXML for reporting SCXML errors to the host
+     environment, and contains the definition of commonly occuring errors
+     while executing SCXML documents. It is primarily used for passive usages
+     such as logging.</p>
+
+     <p>Commons SCXML also allows listeners
+     (<a href="../apidocs/org/apache/commons/scxml/SCXMLListener.html">SCXMLListener</a>)
+     to be registered with the <code>SCXMLExecutor</code>, which are informed
+     about the progress of the state machine via <code>onEntry</code> and
+     <code>onExit</code> notifications for <code>State</code>s, as
+     well as <code>onTransition</code> notifications when transitions are
+     followed.</p>
 
      <p>Commons SCXML provides basic implementations of the
      <code>EventDispatcher</code>, <code>ErrorReporter</code>, and
-     <code>SCXMLListener</code> interfaces, which simply log
-     all the events received. Commons SCXML uses Commons Logging.</p>
+     <code>SCXMLListener</code> interfaces in the
+     <a href="../apidocs/org/apache/commons/scxml/env/package-summary.html">env package</a>,
+     which simply log all the events received. Commons SCXML uses
+     Commons Logging.</p>
 
-     <p>The SCXML specification allows implementations to support multiple
-     expression languages so SCXML documents can be used in varying
-     environments. The <code>Context</code> and <code>Evaluator</code> 
-     interfaces serve as adapters to the particular expression language
-     APIs. Commons SCXML currently supports JEXL and JSP 2.0 EL
-     expressions.</p>
+     <p>The executor is "set into motion" using the marker method
+     <code>SCXMLExecutor#go()</code>. The <code>SCXMLExecutor</code> instances
+     are <b>not</b> thread-safe, and need external synchronization if the
+     usecase demands.</p>
 
      <p>The <code>SCXMLExecutor</code> Javadoc is available
      <a href="../apidocs/org/apache/commons/scxml/SCXMLExecutor.html">
