@@ -42,11 +42,17 @@
         <item     name="SCXML documents"  
                   href="/guide/scxml-documents.html" />
 
+        <item     name="Using Commons SCXML"
+                  href="/guide/using-commons-scxml.html" />
+
         <item     name="Standalone Testing"  
                   href="/guide/testing-standalone.html" />
 
         <item     name="SCXML Digester"  
                   href="/guide/core-digester.html" />
+
+        <item     name="SCXML datamodel"
+                  href="/guide/datamodel.html" />
 
         <item     name="Contexts and Evaluators"  
                   href="/guide/contexts-evaluators.html" />
