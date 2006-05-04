@@ -183,7 +183,7 @@
     for each state that needs one, and each data element may be thought of
     as a <code>org.w3c.dom.Node</code> object placed in the corresponding
     Context. See datamodel element at the document root populates the
-    root context. See <a href="contexts-evaluators">contexts and evaluators</a>
+    root context. See <a href="contexts-evaluators.html">contexts and evaluators</a>
     section of this user guide for more on contexts, evaluators and root
     contexts.</p>
 
