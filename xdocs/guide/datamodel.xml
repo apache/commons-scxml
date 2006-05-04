@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Copyright 2006 The Apache Software Foundation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<document>
+
+ <properties>
+  <title>Datamodels in Commons SCXML</title>
+  <author email="commons-dev@jakarta.apache.org">Commons Documentation Team</author>
+ </properties>
+
+ <body>
+
+  <section name="Data in SCXML documents">
+
+   <p>SCXML documents contain numerous expressions, such as when describing
+   the guard conditions for &lt;transition&gt; elements, the expressions
+   that are logged via the &lt;log&gt; element, assignments etc. The data
+   portions in these expressions can come from a couple of sources.</p>
+
+   <subsection name="The datamodel element">
+
+    <p>SCXML gives authors the ability to define a first-class data model as
+    part of the SCXML document. A data model consists of a &lt;datamodel&gt;
+    element containing one or more &lt;data&gt; element, each of which may
+    contain a XML data tree. For example, the document level data model for a
+    SCXML document defining the states in a travel reservation system may look
+    like this:</p>
+
+    <pre>
+     &lt;scxml xmlns="http://www.w3.org/2005/07/SCXML"
+               version="1.0"
+               initialstate="init-travel-plan"&gt;
+
+      &lt;datamodel&gt;
+        &lt;data name="airlineticket"&gt;
+          &lt;flight&gt;
+            &lt;origin/&gt;
+            &lt;destination/&gt;
+            &lt;!-- default values for trip and class --&gt;
+            &lt;trip&gt;round&lt;/trip&gt;
+            &lt;class&gt;economy&lt;/class&gt;
+            &lt;meal/&gt;
+          &lt;/flight&gt;
+        &lt;/data&gt;
+        &lt;data name="hotelbooking"&gt;
+          &lt;hotel&gt;
+            &lt;stay&gt;
+              &lt;arrival/&gt;
+              &lt;checkout/&gt;
+            &lt;/stay&gt;
+            &lt;adults&gt;1&lt;/adults&gt;
+            &lt;children&gt;0&lt;/children&gt;
+            &lt;rooms&gt;1&lt;/rooms&gt;
+            &lt;rate/&gt;
+          &lt;/hotel&gt;
+        &lt;/data&gt;
+      &lt;/datamodel&gt;
+
+      &lt;state id="init-travel-plan"&gt;
+        &lt;!-- content for the init-travel-plan state --&gt;
+      &lt;/state&gt;
+
+      &lt;!-- and so on ... --&gt;
+
+     &lt;/scxml&gt;
+    </pre>
+
+    <p>A &lt;data&gt; element may also contain a string literal or number,
+    which can be considered as a degenerate XML data tree with a single
+    leaf node:</p>
+
+    <pre>
+     &lt;data name="foo" expr='bar'" /&gt;
+    </pre>
+
+   </subsection>
+
+   <subsection name="Scratch space variables">
+
+    <p>SCXML also allows document authors to define scratch space variables.
+    These may be defined only where executable content is permissible,
+    that is within an &lt;onentry&gt;, &lt;onexit&gt; or &lt;transition&gt;
+    element. A &lt;var&gt; element is used for such definition, like so:</p>
+    
+    <pre>
+     &lt;onentry&gt;
+      &lt;var name="foo" expr="'bar'" /&gt;
+     &lt;/onentry&gt;
+    </pre>
+
+    <p>The difference between the use of a var element as shown above and
+    the degenerate use of a data element (where it contains a single string
+    literal or number, rather than an XML tree) is that the data element
+    is part of the first class datamodel for the document (or state) but
+    the var isn't. This subtlety manifests as different behavior when
+    the SCXML engine is reset, whereby the scratch space variables (var)
+    are lost or deleted, whereas the first class data model elements
+    are restored to their initial value.</p>
+
+   </subsection>
+
+   <subsection name="Distributing the data model">
+
+    <p>The &lt;datamodel&gt; element can be "distributed" through the SCXML
+    document. It can be placed as a child element of either the &lt;scxml&gt;
+    element (document root) or any &lt;state&gt; element. This is meant
+    to be an authoring convenience in order to allow parts of the data model
+    to be placed closer to the location in the document where they will be
+    accessed (via expressions, for example).</p>
+
+    <p>For example, the above travel reservation datamodel may be
+    authored as follows:</p>
+
+    <pre>
+     &lt;scxml xmlns="http://www.w3.org/2005/07/SCXML"
+               version="1.0"
+               initialstate="airline-ticket"&gt;
+
+      &lt;state id="airline-ticket"&gt;
+        &lt;datamodel&gt;
+          &lt;data name="airlineticket"&gt;
+            &lt;flight&gt;
+              &lt;origin/&gt;
+              &lt;destination/&gt;
+              &lt;!-- default values for trip and class --&gt;
+              &lt;trip&gt;round&lt;/trip&gt;
+              &lt;class&gt;economy&lt;/class&gt;
+              &lt;meal/&gt;
+            &lt;/flight&gt;
+          &lt;/data&gt;
+        &lt;/datamodel&gt;
+
+        &lt;!-- other content for the airline-ticket state --&gt;
+
+        &lt;!-- event names on transitions arbitrarily chosen
+                for illustration--&gt;
+
+        &lt;transition event="done.flight.reservation" target="hotel-booking" /&gt;
+      &lt;/state&gt;
+
+      &lt;state id="hotel-booking"&gt;
+        &lt;datamodel&gt;
+          &lt;data name="hotelbooking"&gt;
+            &lt;hotel&gt;
+              &lt;stay&gt;
+                &lt;startdate/&gt;
+                &lt;enddate/&gt;
+              &lt;/stay&gt;
+              &lt;adults&gt;1&lt;/adults&gt;
+              &lt;children&gt;0&lt;/children&gt;
+              &lt;rooms&gt;1&lt;/rooms&gt;
+              &lt;rate/&gt;
+            &lt;/hotel&gt;
+          &lt;/data&gt;
+        &lt;/datamodel&gt;
+
+        &lt;!-- other content for the hotel-booking state --&gt;
+
+        &lt;transition event="done.hotel.booking" target="hotel-booking" /&gt;
+      &lt;/state&gt;
+
+      &lt;!-- other states ... --&gt;
+
+     &lt;/scxml&gt;
+    </pre>
+
+    <p>Commons SCXML creates a new
+    <a href="../apidocs/org/apache/commons/scxml/Context.html">Context</a>
+    for each state that needs one, and each data element may be thought of
+    as a <code>org.w3c.dom.Node</code> object placed in the corresponding
+    Context. See datamodel element at the document root populates the
+    root context. See <a href="contexts-evaluators">contexts and evaluators</a>
+    section of this user guide for more on contexts, evaluators and root
+    contexts.</p>
+
+   </subsection>
+
+   <a name="datafn"/>
+  </section>
+
+  <section name="References to data in expressions">
+
+   <p>Since the data elements contain XML data trees, the straightforward
+   way to refer to bits inside these in expressions is to use XPath or an
+   equivalent language. Commons SCXML currently supports expression languages
+   such as Commons JEXL and Commons EL, which do not have any inherent
+   understanding of XPath. Therefore, Commons SCXML defines a <b>Data()</b>
+   function for use in JEXL or EL expressions, for example:</p>
+
+   <pre>
+    &lt;var name="arrival" expr="Data(hotelbooking, 'hotel/stay/arrival')" /&gt;
+   </pre>
+
+   <p>The above expression extracts the arrival date from the hotelbooking
+   data in the documents datamodel and stores it in a scratch space variable
+   named "arrival". The first argument is value of the name attribute of the
+   &lt;data&gt; element and the second is the String value of the XPath
+   expression. If more than one matching nodes are found, the first one
+   is returned.</p>
+
+   <a name="assign"/>
+  </section>
+
+  <section name="Assignments">
+
+   <p>Assignments are done via the SCXML &lt;assign&gt; action, which can
+   only be placed in an &lt;onentry&gt;, &lt;onexit&gt; or &lt;transition&gt;
+   element. Based on the left hand side value (lvalue) and right hand side
+   value (rvalue) in the assignment, Commons SCXML supports three kinds
+   of assignments:</p>
+
+   <ol>
+
+    <li><p><b>Assigning to a scratch space variable</b> - Here, the lvalue is
+    a variable defined via a &lt;var&gt; element.
+    <pre>
+      &lt;assign name="foo" expr="some-expression" /&gt;
+    </pre>
+    The expression may return a value of any type, which becomes the new
+    value for the variable named "foo".</p>
+    </li>
+
+    <li><p><b>Assigning a literal to a data subtree</b> - In this case, the
+    lvalue is a node in a data tree and the rvalue is a String literal
+    or a number.
+    <pre>
+      &lt;assign location="Data(hotelbooking, 'hotel/rooms')" expr="2" /&gt;
+    </pre>
+    Or more usefully, the rvalue is some expression that evaluates to the
+    numeric constant (2). In such cases, the literal (String or number)
+    is added as a child text node to the node the lvalue points to.</p>
+    </li>
+
+    <li><p><b>Assigning a XML tree to a data subtree</b> - Here, the lvalue is
+    a node in a data tree and the rvalue is also a node (in a data tree or
+    otherwise). As an illustration, consider we also had data related to car
+    rentals in the above example, and in certain situations (probably
+    common) the car rental reservation dates coincide with the hotel booking
+    dates, such a data "copy" is performed as:
+    <pre>
+      &lt;assign location="Data(carrental, 'car/stay')"
+                 expr="Data(hotelbooking, 'hotel/stay')" /&gt;
+
+      &lt;!-- copies over all children of &lt;stay&gt;, the
+              &lt;startdate&gt; and &lt;enddate&gt; in this case --&gt;
+    </pre>
+    In these cases, the node pointed by the expression is first cloned, and
+    then added as a child node to the node the lvalue points to.</p>
+    </li>
+
+   </ol>
+
+  </section>
+
+ </body>
+
+</document>
+
