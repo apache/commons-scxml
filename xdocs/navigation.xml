@@ -66,6 +66,9 @@
         <item     name="Custom Actions"
                   href="/guide/custom-actions.html" />
 
+        <item     name="Custom Semantics"
+                  href="/guide/custom-semantics.html" />
+
         <item     name="Side Effect - EL"  
                   href="/guide/side-effect-el.html" />
 

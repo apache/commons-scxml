@@ -74,6 +74,9 @@
    <ul>
     <li><a href="guide/custom-actions.html">Custom actions</a> - Adding
     custom actions to the Commons SCXML object model.</li>
+    <li><a href="guide/custom-semantics.html">Custom semantics</a> - Changing
+    the default semantics of the Commons SCXML engine for specialized
+    uses.</li>
    </ul>
   </subsection>
 
