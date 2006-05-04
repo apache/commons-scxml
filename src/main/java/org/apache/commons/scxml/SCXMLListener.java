@@ -21,7 +21,13 @@ import org.apache.commons.scxml.model.Transition;
 import org.apache.commons.scxml.model.TransitionTarget;
 
 /**
- * Listener interface for Observable entities in the SCXML model.
+ * Listener interface for observable entities in the SCXML model.
+ * Observable entities include {@link org.apache.commons.scxml.model.SCXML}
+ * instances (subscribe to all entry, exit and transition notifications),
+ * {@link org.apache.commons.scxml.model.State} instances (subscribe to
+ * particular entry and exit notifications) and
+ * {@link org.apache.commons.scxml.model.Transition} instances (subscribe to
+ * particular transitions).
  *
  */
 public interface SCXMLListener {
