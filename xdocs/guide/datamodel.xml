@@ -59,8 +59,8 @@
         &lt;data name="hotelbooking"&gt;
           &lt;hotel&gt;
             &lt;stay&gt;
-              &lt;arrival/&gt;
-              &lt;checkout/&gt;
+              &lt;startdate/&gt;
+              &lt;enddate/&gt;
             &lt;/stay&gt;
             &lt;adults&gt;1&lt;/adults&gt;
             &lt;children&gt;0&lt;/children&gt;
@@ -182,7 +182,7 @@
     <a href="../apidocs/org/apache/commons/scxml/Context.html">Context</a>
     for each state that needs one, and each data element may be thought of
     as a <code>org.w3c.dom.Node</code> object placed in the corresponding
-    Context. See datamodel element at the document root populates the
+    Context. The datamodel element at the document root populates the
     root context. See <a href="contexts-evaluators.html">contexts and evaluators</a>
     section of this user guide for more on contexts, evaluators and root
     contexts.</p>
@@ -252,7 +252,7 @@
     common) the car rental reservation dates coincide with the hotel booking
     dates, such a data "copy" is performed as:
     <pre>
-      &lt;assign location="Data(carrental, 'car/stay')"
+      &lt;assign location="Data(carrental, 'car/dates')"
                  expr="Data(hotelbooking, 'hotel/stay')" /&gt;
 
       &lt;!-- copies over all children of &lt;stay&gt;, the

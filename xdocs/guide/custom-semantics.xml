@@ -55,7 +55,8 @@
     <p>Consider dispute resolution for example -- when more than one
     outbound transitions from a single state hold true. The default
     <code>SCXMLSemantics</code> implementation available in the distribution
-    is puristic, it will throw a <code>ModelException</code>. However, a user
+    does none, it will follow all filtered transitions, possibly leading to a
+    <code>ModelException</code> immediately or down the road. However, a user
     may want:</p>
 
     <ul>
