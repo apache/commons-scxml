@@ -16,6 +16,8 @@
 package org.apache.commons.scxml.model;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -24,9 +26,6 @@ import junit.framework.TestSuite;
 import org.apache.commons.digester.Digester;
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
-import org.apache.commons.scxml.io.SCXMLDigester;
-import org.apache.commons.scxml.model.SCXML;
-import org.apache.commons.scxml.model.State;
 
 public class CustomActionTest extends TestCase {
 
@@ -43,7 +42,7 @@ public class CustomActionTest extends TestCase {
         junit.textui.TestRunner.main(testCaseName);
     }
 
-    private URL hello01, custom01;
+    private URL hello01, custom01, external01;
     private Digester digester;
     private SCXMLExecutor exec;
 
@@ -54,16 +53,75 @@ public class CustomActionTest extends TestCase {
         hello01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/hello-world.xml");
         custom01 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml/custom-hello-world.xml");
+            getResource("org/apache/commons/scxml/custom-hello-world-01.xml");
+        external01 = this.getClass().getClassLoader().
+            getResource("org/apache/commons/scxml/external-hello-world.xml");
     }
 
     /**
      * Tear down instance variables required by this test case.
      */
     public void tearDown() {
-        hello01 = custom01 = null;
+        hello01 = custom01 = external01 = null;
         digester = null;
         exec = null;
+    }
+
+    public void testAddGoodCustomAction01() {
+        try {
+            new CustomAction("http://my.actions.domain/CUSTOM", "hello",
+                Hello.class);
+        } catch (IllegalArgumentException iae) {
+            fail("Failed to add custom action &quot;Hello&quot;");
+        }
+    }
+
+    public void testAddBadCustomAction01() {
+        try {
+            new CustomAction(null, "hello", Hello.class);
+            fail("Added custom action with illegal namespace");
+        } catch (IllegalArgumentException iae) {
+            // Expected
+        }
+    }
+
+    public void testAddBadCustomAction02() {
+        try {
+            new CustomAction("  ", "hello", Hello.class);
+            fail("Added custom action with illegal namespace");
+        } catch (IllegalArgumentException iae) {
+            // Expected
+        }
+    }
+
+    public void testAddBadCustomAction03() {
+        try {
+            new CustomAction("http://my.actions.domain/CUSTOM", "",
+                Hello.class);
+            fail("Added custom action with illegal local name");
+        } catch (IllegalArgumentException iae) {
+            // Expected
+        }
+    }
+
+    public void testAddBadCustomAction04() {
+        try {
+            new CustomAction("http://my.actions.domain/CUSTOM", "  ",
+                Hello.class);
+            fail("Added custom action with illegal local name");
+        } catch (IllegalArgumentException iae) {
+            // Expected
+        }
+    }
+
+    public void testAddBadCustomAction05() {
+        try {
+            new CustomAction("http://my.actions.domain/CUSTOM", "foo",
+                this.getClass());
+            fail("Added custom action which is not an Action class subtype");
+        } catch (IllegalArgumentException iae) {
+            // Expected
+        }
     }
 
     // Hello World example using the SCXML <log> action
@@ -78,26 +136,52 @@ public class CustomActionTest extends TestCase {
 
     // Hello World example using a custom <hello> action
     public void testCustomActionHelloWorld() {
-        // (1) Get Digester with "default" rules for parsing SCXML documents
-        digester = SCXMLDigester.newInstance(null, null);
-        // (2) Register the "custom" action(s)
-        SCXMLDigester.addCustomAction(digester,
-            "http://my.custom-actions.domain/CUSTOM", "hello", Hello.class);
-        // (3) Parse the SCXML document containing the custom action(s)
-        SCXML scxml = null;
-        try {
-            scxml = (SCXML) digester.parse(custom01.toString());
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-        // (4) Wire up the object model for the SCXMLExecutor
-        SCXMLDigester.updateSCXML(scxml);
-        // (5) Get a SCXMLExecutor
+        // (1) Form a list of custom actions defined in the SCXML
+        //     document (and any included documents via "src" attributes)
+        CustomAction ca1 =
+            new CustomAction("http://my.custom-actions.domain/CUSTOM1",
+                             "hello", Hello.class);
+        // Register the same action under a different name, just to test
+        // multiple custom actions
+        CustomAction ca2 =
+            new CustomAction("http://my.custom-actions.domain/CUSTOM2",
+                             "bar", Hello.class);
+        List customActions = new ArrayList();
+        customActions.add(ca1);
+        customActions.add(ca2);
+        // (2) Parse the document with a custom digester.
+        SCXML scxml = SCXMLTestHelper.digest(custom01, customActions);
+        // (3) Get a SCXMLExecutor
         exec = SCXMLTestHelper.getExecutor(scxml);
-        // (6) Fire events, proceed as usual
+        // (4) Single, final state
         assertEquals("custom", ((State) exec.getCurrentStatus().getStates().
                 iterator().next()).getId());
         assertTrue(exec.getCurrentStatus().isFinal());
+    }
+
+    // Hello World example using custom <my:hello> action
+    // as part of an external state source (src attribute)
+    public void testCustomActionExternalSrcHelloWorld() {
+        // (1) Form a list of custom actions defined in the SCXML
+        //     document (and any included documents via "src" attributes)
+        CustomAction ca =
+            new CustomAction("http://my.custom-actions.domain/CUSTOM",
+                             "hello", Hello.class);
+        List customActions = new ArrayList();
+        customActions.add(ca);
+        // (2) Parse the document with a custom digester.
+        SCXML scxml = SCXMLTestHelper.digest(external01, customActions);
+        // (3) Get a SCXMLExecutor
+        exec = SCXMLTestHelper.getExecutor(scxml);
+        // (4) Single, final state
+        assertEquals("custom", ((State) exec.getCurrentStatus().getStates().
+            iterator().next()).getId());
+    }
+
+    // The custom action defined by Hello.class should be called
+    // to execute() exactly 4 times upto this point
+    public void testCustomActionCallbacks() {
+        assertEquals(4, Hello.callbacks);
     }
 
 }

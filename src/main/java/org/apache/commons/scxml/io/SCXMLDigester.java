@@ -20,7 +20,6 @@ package org.apache.commons.scxml.io;
 import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +42,7 @@ import org.apache.commons.scxml.env.URLResolver;
 import org.apache.commons.scxml.model.Action;
 import org.apache.commons.scxml.model.Assign;
 import org.apache.commons.scxml.model.Cancel;
+import org.apache.commons.scxml.model.CustomAction;
 import org.apache.commons.scxml.model.Data;
 import org.apache.commons.scxml.model.Datamodel;
 import org.apache.commons.scxml.model.Else;
@@ -54,6 +54,7 @@ import org.apache.commons.scxml.model.History;
 import org.apache.commons.scxml.model.If;
 import org.apache.commons.scxml.model.Initial;
 import org.apache.commons.scxml.model.Log;
+import org.apache.commons.scxml.model.ModelException;
 import org.apache.commons.scxml.model.OnEntry;
 import org.apache.commons.scxml.model.OnExit;
 import org.apache.commons.scxml.model.Parallel;
@@ -90,7 +91,7 @@ public final class SCXMLDigester {
      * that is intended to be parsed by this digester <b>must</b>
      * bind the SCXML elements to this namespace.
      */
-    public static final String NAMESPACE_SCXML =
+    private static final String NAMESPACE_SCXML =
         "http://www.w3.org/2005/07/scxml";
 
     //---------------------- PUBLIC METHODS ----------------------//
@@ -107,39 +108,20 @@ public final class SCXMLDigester {
      *
      * @throws IOException Underlying Digester parsing threw an IOException
      * @throws SAXException Underlying Digester parsing threw a SAXException
+     * @throws ModelException If the resulting document model has flaws
      *
      * @see ErrorHandler
      * @see PathResolver
      */
     public static SCXML digest(final URL scxmlURL,
             final ErrorHandler errHandler)
-    throws IOException, SAXException {
+    throws IOException, SAXException, ModelException {
 
-        SCXML scxml = null;
-        Digester scxmlDigester = SCXMLDigester
-                .newInstance(null, new URLResolver(scxmlURL));
-        scxmlDigester.setErrorHandler(errHandler);
-
-        try {
-            scxml = (SCXML) scxmlDigester.parse(scxmlURL.toString());
-        } catch (RuntimeException rte) {
-            // Intercept runtime exceptions, only to log them with a
-            // sensible error message about failure in document parsing
-            MessageFormat msgFormat = new MessageFormat(ERR_DOC_PARSE_FAIL);
-            String errMsg = msgFormat.format(new Object[] {
-                String.valueOf(scxmlURL), rte.getMessage()
-            });
-            org.apache.commons.logging.Log log = LogFactory.
-                getLog(SCXMLDigester.class);
-            log.error(errMsg, rte);
-            throw rte;
+        if (scxmlURL == null) {
+            throw new IllegalArgumentException(ERR_NULL_URL);
         }
 
-        if (scxml != null) {
-            updateSCXML(scxml);
-        }
-
-        return scxml;
+        return digest(scxmlURL, errHandler, null);
 
     }
 
@@ -159,38 +141,16 @@ public final class SCXMLDigester {
      *
      * @throws IOException Underlying Digester parsing threw an IOException
      * @throws SAXException Underlying Digester parsing threw a SAXException
+     * @throws ModelException If the resulting document model has flaws
      *
      * @see ErrorHandler
      * @see PathResolver
      */
     public static SCXML digest(final String documentRealPath,
             final ErrorHandler errHandler, final PathResolver pathResolver)
-    throws IOException, SAXException {
+    throws IOException, SAXException, ModelException {
 
-        SCXML scxml = null;
-        Digester scxmlDigester = SCXMLDigester.newInstance(null, pathResolver);
-        scxmlDigester.setErrorHandler(errHandler);
-
-        try {
-            scxml = (SCXML) scxmlDigester.parse(documentRealPath);
-        } catch (RuntimeException rte) {
-            // Intercept runtime exceptions, only to log them with a
-            // sensible error message about failure in document parsing
-            MessageFormat msgFormat = new MessageFormat(ERR_DOC_PARSE_FAIL);
-            String errMsg = msgFormat.format(new Object[] {
-                documentRealPath, rte.getMessage()
-            });
-            org.apache.commons.logging.Log log = LogFactory.
-                getLog(SCXMLDigester.class);
-            log.error(errMsg, rte);
-            throw rte;
-        }
-
-        if (scxml != null) {
-            updateSCXML(scxml);
-        }
-
-        return scxml;
+        return digest(documentRealPath, errHandler, pathResolver, null);
 
     }
 
@@ -214,14 +174,170 @@ public final class SCXMLDigester {
      *
      * @throws IOException Underlying Digester parsing threw an IOException
      * @throws SAXException Underlying Digester parsing threw a SAXException
+     * @throws ModelException If the resulting document model has flaws
      *
      * @see ErrorHandler
      */
     public static SCXML digest(final InputSource documentInputSource,
             final ErrorHandler errHandler)
-    throws IOException, SAXException {
+    throws IOException, SAXException, ModelException {
 
-        Digester scxmlDigester = SCXMLDigester.newInstance(null, null);
+        if (documentInputSource == null) {
+            throw new IllegalArgumentException(ERR_NULL_ISRC);
+        }
+
+        return digest(documentInputSource, errHandler, null);
+
+    }
+
+    /**
+     * <p>API for standalone usage where the SCXML document is a URL, and
+     * the document uses custom actions.</p>
+     *
+     * @param scxmlURL
+     *            a canonical absolute URL to parse (relative URLs within the
+     *            top level document are to be resovled against this URL).
+     * @param errHandler
+     *            The SAX ErrorHandler
+     * @param customActions
+     *            The list of {@link CustomAction}s this digester
+     *            instance will process, can be null or empty
+     *
+     * @return SCXML The SCXML object corresponding to the file argument
+     *
+     * @throws IOException Underlying Digester parsing threw an IOException
+     * @throws SAXException Underlying Digester parsing threw a SAXException
+     * @throws ModelException If the resulting document model has flaws
+     *
+     * @see ErrorHandler
+     * @see PathResolver
+     */
+    public static SCXML digest(final URL scxmlURL,
+            final ErrorHandler errHandler, final List customActions)
+    throws IOException, SAXException, ModelException {
+
+        SCXML scxml = null;
+        Digester scxmlDigester = SCXMLDigester
+                .newInstance(null, new URLResolver(scxmlURL), customActions);
+        scxmlDigester.setErrorHandler(errHandler);
+
+        try {
+            scxml = (SCXML) scxmlDigester.parse(scxmlURL.toString());
+        } catch (RuntimeException rte) {
+            // Intercept runtime exceptions, only to log them with a
+            // sensible error message about failure in document parsing
+            MessageFormat msgFormat = new MessageFormat(ERR_DOC_PARSE_FAIL);
+            String errMsg = msgFormat.format(new Object[] {
+                String.valueOf(scxmlURL), rte.getMessage()
+            });
+            org.apache.commons.logging.Log log = LogFactory.
+                getLog(SCXMLDigester.class);
+            log.error(errMsg, rte);
+            throw rte;
+        }
+
+        if (scxml != null) {
+            ModelUpdater.updateSCXML(scxml);
+        }
+
+        return scxml;
+
+    }
+
+    /**
+     * <p>API for standalone usage where the SCXML document is a URI.
+     * A PathResolver must be provided.</p>
+     *
+     * @param pathResolver
+     *            The PathResolver for this context
+     * @param documentRealPath
+     *            The String pointing to the absolute (real) path of the
+     *            SCXML document
+     * @param errHandler
+     *            The SAX ErrorHandler
+     * @param customActions
+     *            The list of {@link CustomAction}s this digester
+     *            instance will process, can be null or empty
+     *
+     * @return SCXML The SCXML object corresponding to the file argument
+     *
+     * @throws IOException Underlying Digester parsing threw an IOException
+     * @throws SAXException Underlying Digester parsing threw a SAXException
+     * @throws ModelException If the resulting document model has flaws
+     *
+     * @see ErrorHandler
+     * @see PathResolver
+     */
+    public static SCXML digest(final String documentRealPath,
+            final ErrorHandler errHandler, final PathResolver pathResolver,
+            final List customActions)
+    throws IOException, SAXException, ModelException {
+
+        if (documentRealPath == null) {
+            throw new IllegalArgumentException(ERR_NULL_PATH);
+        }
+
+        SCXML scxml = null;
+        Digester scxmlDigester = SCXMLDigester.newInstance(null, pathResolver,
+            customActions);
+        scxmlDigester.setErrorHandler(errHandler);
+
+        try {
+            scxml = (SCXML) scxmlDigester.parse(documentRealPath);
+        } catch (RuntimeException rte) {
+            // Intercept runtime exceptions, only to log them with a
+            // sensible error message about failure in document parsing
+            MessageFormat msgFormat = new MessageFormat(ERR_DOC_PARSE_FAIL);
+            String errMsg = msgFormat.format(new Object[] {
+                documentRealPath, rte.getMessage()
+            });
+            org.apache.commons.logging.Log log = LogFactory.
+                getLog(SCXMLDigester.class);
+            log.error(errMsg, rte);
+            throw rte;
+        }
+
+        if (scxml != null) {
+            ModelUpdater.updateSCXML(scxml);
+        }
+
+        return scxml;
+
+    }
+
+    /**
+     * <p>API for standalone usage where the SCXML document is an
+     * InputSource. This method may be used when the SCXML document is
+     * packaged in a Java archive, or part of a compound document
+     * where the SCXML root is available as a
+     * <code>org.w3c.dom.Element</code> or via a <code>java.io.Reader</code>.
+     * </p>
+     *
+     * <p><em>Note:</em> Since there is no path resolution, the SCXML document
+     * must not have external state sources.</p>
+     *
+     * @param documentInputSource
+     *            The InputSource for the SCXML document
+     * @param errHandler
+     *            The SAX ErrorHandler
+     * @param customActions
+     *            The list of {@link CustomAction}s this digester
+     *            instance will process, can be null or empty
+     *
+     * @return SCXML The SCXML object corresponding to the file argument
+     *
+     * @throws IOException Underlying Digester parsing threw an IOException
+     * @throws SAXException Underlying Digester parsing threw a SAXException
+     * @throws ModelException If the resulting document model has flaws
+     *
+     * @see ErrorHandler
+     */
+    public static SCXML digest(final InputSource documentInputSource,
+            final ErrorHandler errHandler, final List customActions)
+    throws IOException, SAXException, ModelException {
+
+        Digester scxmlDigester = SCXMLDigester.newInstance(null, null,
+            customActions);
         scxmlDigester.setErrorHandler(errHandler);
 
         SCXML scxml = null;
@@ -232,12 +348,12 @@ public final class SCXMLDigester {
             // sensible error message about failure in document parsing
             org.apache.commons.logging.Log log = LogFactory.
                 getLog(SCXMLDigester.class);
-            log.error("Could not parse SCXML InputSource", rte);
+            log.error(ERR_ISRC_PARSE_FAIL, rte);
             throw rte;
         }
 
         if (scxml != null) {
-            updateSCXML(scxml);
+            ModelUpdater.updateSCXML(scxml);
         }
 
         return scxml;
@@ -255,8 +371,51 @@ public final class SCXMLDigester {
      *       <code>updateSCXML(SCXML)</code> method in this class.</li>
      * </ul>
      *
+     * @return Digester A newly configured SCXML digester instance
+     *
+     * @see SCXMLDigester#updateSCXML(SCXML)
+     */
+    public static Digester newInstance() {
+
+        return newInstance(null, null, null);
+
+    }
+
+    /**
+     * <p>Obtain a SCXML digester instance for further customization.</p>
+     * <b>API Notes:</b>
+     * <ul>
+     *   <li>Use the digest() convenience methods if you do not
+     *       need a custom digester.</li>
+     *   <li>After the SCXML document is parsed by the customized digester,
+     *       the object model <b>must</b> be made executor-ready by calling
+     *       <code>updateSCXML(SCXML)</code> method in this class.</li>
+     * </ul>
+     *
+     * @param pr The PathResolver, may be null for standalone documents
+     * @return Digester A newly configured SCXML digester instance
+     *
+     * @see SCXMLDigester#updateSCXML(SCXML)
+     */
+    public static Digester newInstance(final PathResolver pr) {
+
+        return newInstance(null, pr, null);
+
+    }
+
+    /**
+     * <p>Obtain a SCXML digester instance for further customization.</p>
+     * <b>API Notes:</b>
+     * <ul>
+     *   <li>Use the digest() convenience methods if you do not
+     *       need a custom digester.</li>
+     *   <li>After the SCXML document is parsed by the customized digester,
+     *       the object model <b>must</b> be made executor-ready by calling
+     *       <code>updateSCXML(SCXML)</code> method in this class.</li>
+     * </ul>
+     *
      * @param scxml The parent SCXML document if there is one (in case of
-     *              state templates for examples), null otherwise
+     *              state templates for example), null otherwise
      * @param pr The PathResolver, may be null for standalone documents
      * @return Digester A newly configured SCXML digester instance
      *
@@ -265,85 +424,55 @@ public final class SCXMLDigester {
     public static Digester newInstance(final SCXML scxml,
             final PathResolver pr) {
 
+        return newInstance(scxml, pr, null);
+
+    }
+
+    /**
+     * <p>Obtain a SCXML digester instance for further customization.</p>
+     * <b>API Notes:</b>
+     * <ul>
+     *   <li>Use the digest() convenience methods if you do not
+     *       need a custom digester.</li>
+     *   <li>After the SCXML document is parsed by the customized digester,
+     *       the object model <b>must</b> be made executor-ready by calling
+     *       <code>updateSCXML(SCXML)</code> method in this class.</li>
+     * </ul>
+     *
+     * @param scxml The parent SCXML document if there is one (in case of
+     *              state templates for example), null otherwise
+     * @param pr The PathResolver, may be null for standalone documents
+     * @param customActions The list of {@link CustomAction}s this digester
+     *              instance will process, can be null or empty
+     * @return Digester A newly configured SCXML digester instance
+     *
+     * @see SCXMLDigester#updateSCXML(SCXML)
+     */
+    public static Digester newInstance(final SCXML scxml,
+            final PathResolver pr, final List customActions) {
+
         Digester digester = new Digester();
         digester.setNamespaceAware(true);
         //Uncomment next line after SCXML DTD is available
         //digester.setValidating(true);
-        digester.setRuleNamespaceURI(NAMESPACE_SCXML);
-        digester.setRules(initRules(scxml, pr));
+        digester.setRules(initRules(scxml, pr, customActions));
         return digester;
     }
 
-     /**
-      * <p>Update the SCXML object model and make it SCXMLExecutor ready.
-      * This is part of post-digester processing, and sets up the necessary
-      * object references throughtout the SCXML object model for the parsed
-      * document.</p>
-      *
-      * @param scxml The SCXML object (output from Digester)
-      */
-    public static void updateSCXML(final SCXML scxml) {
-        // Watch case, slightly unfortunate naming ;-)
-        String initialstate = scxml.getInitialstate();
-        //we have to use getTargets() here since the initialState can be
-        //an indirect descendant
-        // Concern marked by one of the code reviewers: better type check,
-        //            now ClassCastException happens for Parallel
-        // Response: initial should be a State, for Parallel, it is implicit
-        State initialState = (State) scxml.getTargets().get(initialstate);
-        if (initialState == null) {
-            // Where do we, where do we go?
-            logModelError(ERR_SCXML_NO_INIT, new Object[] {initialstate});
-        }
-        scxml.setInitialState(initialState);
-        Map targets = scxml.getTargets();
-        Map states = scxml.getStates();
-        Iterator i = states.keySet().iterator();
-        while (i.hasNext()) {
-            updateState((State) states.get(i.next()), targets);
-        }
-    }
-
     /**
-     * <p>Add a custom namespaced action as part of SCXML executable
-     * content.</p>
+     * <p>Update the SCXML object model and make it SCXMLExecutor ready.
+     * This is part of post-digester processing, and sets up the necessary
+     * object references throughtout the SCXML object model for the parsed
+     * document. Should be used only if a customized digester obtained
+     * using the <code>newInstance()</code> methods is needed.</p>
      *
-     * @param digester The SCXML digester, <b>must</b> be obtained by
-     *                 calling the
-     *     <code>SCXMLDigester#newInstance(SCXML,PathResolver)</code>
-     *                 method.
-     * @param namespaceURI The namespace URI for this custom action.
-     * @param localName The local name for this custom action.
-     * @param klass The class that will represent this custom action
-     *              in the Commons SCXML object model, <b>must</b> be
-     *              a subtype of
-     *              <code>org.apache.commons.scxml.model.Action</code>
+     * @param scxml The SCXML object (output from Digester)
+     * @throws ModelException If the document model has flaws
      */
-    public static void addCustomAction(final Digester digester,
-            final String namespaceURI, final String localName,
-            final Class klass) {
-        if (SCXMLHelper.isStringEmpty(namespaceURI)) {
-            throw new IllegalArgumentException(ERR_CUSTOM_ACTION_NO_NS);
-        }
-        if (namespaceURI.trim().equals(NAMESPACE_SCXML)) {
-            throw new IllegalArgumentException(ERR_CUSTOM_ACTION_RESERVED_NS);
-        }
-        if (SCXMLHelper.isStringEmpty(localName)) {
-            throw new IllegalArgumentException(ERR_CUSTOM_ACTION_NO_NAME);
-        }
-        if (klass == null || !SCXMLHelper.subtypeOf(klass, Action.class)) {
-            throw new IllegalArgumentException(ERR_CUSTOM_ACTION_TYPE);
-        }
-        String xpfLocalName = STR_SLASH + localName.trim();
-        digester.setRuleNamespaceURI(namespaceURI.trim());
-        ExtendedBaseRules scxmlRules = (ExtendedBaseRules) digester.
-            getRules();
-        if (SCXMLHelper.implementationOf(klass, ExternalContent.class)) {
-            addCustomActionRules(xpfLocalName, scxmlRules, klass, true);
-        } else {
-            addCustomActionRules(xpfLocalName, scxmlRules, klass, false);
-        }
-    }
+   public static void updateSCXML(final SCXML scxml)
+   throws ModelException {
+       ModelUpdater.updateSCXML(scxml);
+   }
 
     //---------------------- PRIVATE CONSTANTS ----------------------//
     //// Patterns to get the digestion going, prefixed by XP_
@@ -442,77 +571,57 @@ public final class SCXMLDigester {
     //// Other constants
     // Error messages
     /**
+     * Null URL passed as argument.
+     */
+    private static final String ERR_NULL_URL = "Cannot parse null URL";
+
+    /**
+     * Null path passed as argument.
+     */
+    private static final String ERR_NULL_PATH = "Cannot parse null URL";
+
+    /**
+     * Null InputSource passed as argument.
+     */
+    private static final String ERR_NULL_ISRC = "Cannot parse null URL";
+
+    /**
      * Parsing SCXML document has failed.
-     * This message may be rendered hence wrapped in a comment.
      */
-    private static final String ERR_DOC_PARSE_FAIL = "<!-- Error parsing "
-        + "SCXML document: \"{0}\", with message: \"{1}\" -->\n";
+    private static final String ERR_DOC_PARSE_FAIL = "Error parsing "
+        + "SCXML document: \"{0}\", with message: \"{1}\"\n";
 
     /**
-     * Error message when SCXML document specifies an illegal initial state.
+     * Parsing SCXML document InputSource has failed.
      */
-    private static final String ERR_SCXML_NO_INIT = "No SCXML child state "
-        + "with ID \"{0}\" found; illegal initialstate for SCXML document";
+    private static final String ERR_ISRC_PARSE_FAIL =
+        "Could not parse SCXML InputSource";
 
     /**
-     * Error message when a state element specifies an initial state which
-     * cannot be found.
+     * Parser configuration error while registering data rule.
      */
-    private static final String ERR_STATE_NO_INIT = "No initial element "
-        + "available for \"{0}\"";
+    private static final String ERR_PARSER_CFG_DATA = "XML Parser "
+        + "misconfiguration, error registering <data> element rule";
 
     /**
-     * Error message when a state element specifies an initial state which
-     * is not a direct descendent.
+     * Parser configuration error while registering send rule.
      */
-    private static final String ERR_STATE_BAD_INIT = "Initial state "
-        + "null or not a descendant of \"{0}\"";
+    private static final String ERR_PARSER_CFG_SEND = "XML Parser "
+        + "misconfiguration, error registering <send> element rule";
 
     /**
-     * Error message when a referenced history state cannot be found.
+     * Parser configuration error while registering body content rule for
+     * custom action.
      */
-    private static final String ERR_STATE_NO_HIST = "Referenced history state "
-        + "null for \"{0}\"";
-
-    /**
-     * Error message when a shallow history state is not a child state.
-     */
-    private static final String ERR_STATE_BAD_SHALLOW_HIST = "History state"
-        + " for shallow history is not child for \"{0}\"";
-
-    /**
-     * Error message when a deep history state is not a descendent state.
-     */
-    private static final String ERR_STATE_BAD_DEEP_HIST = "History state"
-        + " for deep history is not descendant for \"{0}\"";
-
-    /**
-     * Error message while attempting to define a custom action without
-     * specifying a namespace.
-     */
-    private static final String ERR_CUSTOM_ACTION_NO_NS = "Custom action"
-        + " needs a namespace";
-
-    /**
-     * Error message while attempting to define a custom action in the
-     * SCXML namespace.
-     */
-    private static final String ERR_CUSTOM_ACTION_RESERVED_NS = "Cannot add"
-        + " custom action to SCXML namespace";
-
-    /**
-     * Error message while attempting to define a custom action in the
-     * SCXML namespace.
-     */
-    private static final String ERR_CUSTOM_ACTION_NO_NAME = "Cannot add"
-        + " custom action without a local name";
+    private static final String ERR_PARSER_CFG_CUSTOM = "XML Parser "
+        + "misconfiguration, error registering custom action rules";
 
     /**
      * Error message while attempting to define a custom action which does
      * not extend the Commons SCXML Action base class.
      */
-    private static final String ERR_CUSTOM_ACTION_TYPE = "Custom action"
-        + " must be a subtype of org.apache.commons.scxml.model.Action";
+    private static final String ERR_CUSTOM_ACTION_TYPE = "Custom actions list"
+        + " contained unknown object (not a Commons SCXML Action subtype)";
 
     // String constants
     /** Slash. */
@@ -530,11 +639,13 @@ public final class SCXMLDigester {
      *
      * @param scxml The parent SCXML document (or null)
      * @param pr The PathResolver
-     * @return ExtendedBaseRules The Digester rules configured for the
-     *                           current document
+     * @param customActions The list of custom actions this digester needs
+     *                      to be able to process
+     *
+     * @return scxmlRules The rule set to be used for digestion
      */
     private static ExtendedBaseRules initRules(final SCXML scxml,
-            final PathResolver pr) {
+            final PathResolver pr, final List customActions) {
 
         ExtendedBaseRules scxmlRules = new ExtendedBaseRules();
 
@@ -547,24 +658,30 @@ public final class SCXMLDigester {
 
         //// States
         // Level one states
-        addStateRules(XP_SM_ST, scxmlRules, scxml, pr, 0);
+        addStateRules(XP_SM_ST, scxmlRules, customActions, scxml, pr, 0);
         scxmlRules.add(XP_SM_ST, new SetNextRule("addState"));
         // Nested states
-        addStateRules(XPU_ST_ST, scxmlRules, scxml, pr, 1);
+        addStateRules(XPU_ST_ST, scxmlRules, customActions, scxml, pr, 1);
         scxmlRules.add(XPU_ST_ST, new SetNextRule("addChild"));
 
         // Parallel states
-        addStateRules(XPU_PAR_ST, scxmlRules, scxml, pr, 1);
+        addStateRules(XPU_PAR_ST, scxmlRules, customActions, scxml, pr, 1);
         scxmlRules.add(XPU_PAR_ST, new SetNextRule("addState"));
         // Target states
-        addStateRules(XPU_TR_TAR_ST, scxmlRules, scxml, pr, 2);
+        addStateRules(XPU_TR_TAR_ST, scxmlRules, customActions, scxml, pr, 2);
         scxmlRules.add(XPU_TR_TAR_ST, new SetNextRule("setTarget"));
 
         //// Parallels
-        addParallelRules(XPU_ST_PAR, scxmlRules, scxml);
+        addParallelRules(XPU_ST_PAR, scxmlRules, customActions, scxml);
 
         //// Ifs
-        addIfRules(XPU_IF, scxmlRules);
+        addIfRules(XPU_IF, scxmlRules, customActions);
+
+        //// Custom actions
+        addCustomActionRules(XPU_ONEN, scxmlRules, customActions);
+        addCustomActionRules(XPU_ONEX, scxmlRules, customActions);
+        addCustomActionRules(XPU_TR, scxmlRules, customActions);
+        addCustomActionRules(XPU_IF, scxmlRules, customActions);
 
         return scxmlRules;
 
@@ -576,22 +693,25 @@ public final class SCXMLDigester {
      * @param xp The Digester style XPath expression of the parent
      *           XML element
      * @param scxmlRules The rule set to be used for digestion
+     * @param customActions The list of custom actions this digester needs
+     *                      to be able to process
      * @param scxml The parent SCXML document (or null)
      * @param pr The PathResolver
      * @param parent The distance between this state and its parent
      *               state on the Digester stack
      */
     private static void addStateRules(final String xp,
-            final ExtendedBaseRules scxmlRules, final SCXML scxml,
-            final PathResolver pr, final int parent) {
+            final ExtendedBaseRules scxmlRules, final List customActions,
+            final SCXML scxml, final PathResolver pr, final int parent) {
         scxmlRules.add(xp, new ObjectCreateRule(State.class));
-        addStatePropertiesRules(xp, scxmlRules, pr);
+        addStatePropertiesRules(xp, scxmlRules, customActions, pr);
         addDatamodelRules(xp + XPF_DM, scxmlRules, scxml, pr);
-        addInitialRules(xp + XPF_INI, scxmlRules, pr, scxml);
-        addHistoryRules(xp + XPF_HIST, scxmlRules, pr, scxml);
+        addInitialRules(xp + XPF_INI, scxmlRules, customActions, pr, scxml);
+        addHistoryRules(xp + XPF_HIST, scxmlRules, customActions, pr, scxml);
         addParentRule(xp, scxmlRules, parent);
-        addTransitionRules(xp + XPF_TR, scxmlRules, "addTransition");
-        addHandlerRules(xp, scxmlRules);
+        addTransitionRules(xp + XPF_TR, scxmlRules, "addTransition",
+            customActions);
+        addHandlerRules(xp, scxmlRules, customActions);
         scxmlRules.add(xp, new UpdateModelRule(scxml));
     }
 
@@ -601,13 +721,16 @@ public final class SCXMLDigester {
      * @param xp The Digester style XPath expression of the parent
      *           XML element
      * @param scxmlRules The rule set to be used for digestion
+     * @param customActions The list of custom actions this digester needs
+     *                      to be able to process
      * @param scxml The parent SCXML document (or null)
      */
     private static void addParallelRules(final String xp,
-            final ExtendedBaseRules scxmlRules, final SCXML scxml) {
+            final ExtendedBaseRules scxmlRules, final List customActions,
+            final SCXML scxml) {
         addSimpleRulesTuple(xp, scxmlRules, Parallel.class, null, null,
                 "setParallel");
-        addHandlerRules(xp, scxmlRules);
+        addHandlerRules(xp, scxmlRules, customActions);
         addParentRule(xp, scxmlRules, 1);
         scxmlRules.add(xp, new UpdateModelRule(scxml));
     }
@@ -618,13 +741,16 @@ public final class SCXMLDigester {
      * @param xp The Digester style XPath expression of the parent
      *           XML element
      * @param scxmlRules The rule set to be used for digestion
+     * @param customActions The list of custom actions this digester needs
+     *                      to be able to process
      * @param pr The PathResolver
      */
     private static void addStatePropertiesRules(final String xp,
-            final ExtendedBaseRules scxmlRules, final PathResolver pr) {
+            final ExtendedBaseRules scxmlRules, final List customActions,
+            final PathResolver pr) {
         scxmlRules.add(xp, new SetPropertiesRule(new String[] {"id", "final"},
             new String[] {"id", "isFinal"}));
-        scxmlRules.add(xp, new DigestSrcAttributeRule(pr));
+        scxmlRules.add(xp, new DigestSrcAttributeRule(customActions, pr));
     }
 
     /**
@@ -648,8 +774,7 @@ public final class SCXMLDigester {
         } catch (ParserConfigurationException pce) {
             org.apache.commons.logging.Log log = LogFactory.
                 getLog(SCXMLDigester.class);
-            log.error("Error registering rule for parsing <data>"
-                + " element content", pce);
+            log.error(ERR_PARSER_CFG_DATA, pce);
         }
         scxmlRules.add(xp, new SetNextRule("setDatamodel"));
     }
@@ -660,16 +785,19 @@ public final class SCXMLDigester {
      * @param xp The Digester style XPath expression of the parent
      *           XML element
      * @param scxmlRules The rule set to be used for digestion
+     * @param customActions The list of custom actions this digester needs
+     *                      to be able to process
      * @param pr The PathResolver
      * @param scxml The parent SCXML document (or null)
      */
     private static void addInitialRules(final String xp,
-            final ExtendedBaseRules scxmlRules, final PathResolver pr,
-            final SCXML scxml) {
+            final ExtendedBaseRules scxmlRules, final List customActions,
+            final PathResolver pr, final SCXML scxml) {
         scxmlRules.add(xp, new ObjectCreateRule(Initial.class));
-        addPseudoStatePropertiesRules(xp, scxmlRules, pr);
+        addPseudoStatePropertiesRules(xp, scxmlRules, customActions, pr);
         scxmlRules.add(xp, new UpdateModelRule(scxml));
-        addTransitionRules(xp + XPF_TR, scxmlRules, "setTransition");
+        addTransitionRules(xp + XPF_TR, scxmlRules, "setTransition",
+            customActions);
         scxmlRules.add(xp, new SetNextRule("setInitial"));
     }
 
@@ -679,18 +807,21 @@ public final class SCXMLDigester {
      * @param xp The Digester style XPath expression of the parent
      *           XML element
      * @param scxmlRules The rule set to be used for digestion
+     * @param customActions The list of custom actions this digester needs
+     *                      to be able to process
      * @param pr The PathResolver
      * @param scxml The parent SCXML document (or null)
      */
     private static void addHistoryRules(final String xp,
-            final ExtendedBaseRules scxmlRules, final PathResolver pr,
-            final SCXML scxml) {
+            final ExtendedBaseRules scxmlRules, final List customActions,
+            final PathResolver pr, final SCXML scxml) {
         scxmlRules.add(xp, new ObjectCreateRule(History.class));
-        addPseudoStatePropertiesRules(xp, scxmlRules, pr);
+        addPseudoStatePropertiesRules(xp, scxmlRules, customActions, pr);
         scxmlRules.add(xp, new UpdateModelRule(scxml));
         scxmlRules.add(xp, new SetPropertiesRule(new String[] {"type"},
             new String[] {"type"}));
-        addTransitionRules(xp + XPF_TR, scxmlRules, "setTransition");
+        addTransitionRules(xp + XPF_TR, scxmlRules, "setTransition",
+            customActions);
         scxmlRules.add(xp, new SetNextRule("addHistory"));
     }
 
@@ -701,13 +832,16 @@ public final class SCXMLDigester {
      * @param xp The Digester style XPath expression of the parent
      *           XML element
      * @param scxmlRules The rule set to be used for digestion
+     * @param customActions The list of custom actions this digester needs
+     *                      to be able to process
      * @param pr The PathResolver
      */
     private static void addPseudoStatePropertiesRules(final String xp,
-            final ExtendedBaseRules scxmlRules, final PathResolver pr) {
+            final ExtendedBaseRules scxmlRules, final List customActions,
+            final PathResolver pr) {
         scxmlRules.add(xp, new SetPropertiesRule(new String[] {"id"},
             new String[] {"id"}));
-        scxmlRules.add(xp, new DigestSrcAttributeRule(pr));
+        scxmlRules.add(xp, new DigestSrcAttributeRule(customActions, pr));
         addParentRule(xp, scxmlRules, 1);
     }
 
@@ -746,15 +880,18 @@ public final class SCXMLDigester {
      * @param scxmlRules The rule set to be used for digestion
      * @param setNextMethod The method name for adding this transition
      *             to its parent (defined by the SCXML Java object model).
+     * @param customActions The list of custom actions this digester needs
+     *                      to be able to process
      */
     private static void addTransitionRules(final String xp,
-            final ExtendedBaseRules scxmlRules, final String setNextMethod) {
+            final ExtendedBaseRules scxmlRules, final String setNextMethod,
+            final List customActions) {
         scxmlRules.add(xp, new ObjectCreateRule(Transition.class));
         scxmlRules.add(xp, new SetPropertiesRule(
             new String[] {"event", "cond", "target"},
             new String[] {"event", "cond", "next"}));
         scxmlRules.add(xp + XPF_TAR, new SetPropertiesRule());
-        addActionRules(xp, scxmlRules);
+        addActionRules(xp, scxmlRules, customActions);
         scxmlRules.add(xp + XPF_EXT, new Rule() {
             public void end(final String namespace, final String name) {
                 Transition t = (Transition) getDigester().peek(1);
@@ -773,14 +910,16 @@ public final class SCXMLDigester {
      * @param xp The Digester style XPath expression of the parent
      *           XML element
      * @param scxmlRules The rule set to be used for digestion
+     * @param customActions The list of custom actions this digester needs
+     *                      to be able to process
      */
     private static void addHandlerRules(final String xp,
-            final ExtendedBaseRules scxmlRules) {
+            final ExtendedBaseRules scxmlRules, final List customActions) {
         scxmlRules.add(xp + XPF_ONEN, new ObjectCreateRule(OnEntry.class));
-        addActionRules(xp + XPF_ONEN, scxmlRules);
+        addActionRules(xp + XPF_ONEN, scxmlRules, customActions);
         scxmlRules.add(xp + XPF_ONEN, new SetNextRule("setOnEntry"));
         scxmlRules.add(xp + XPF_ONEX, new ObjectCreateRule(OnExit.class));
-        addActionRules(xp + XPF_ONEX, scxmlRules);
+        addActionRules(xp + XPF_ONEX, scxmlRules, customActions);
         scxmlRules.add(xp + XPF_ONEX, new SetNextRule("setOnExit"));
     }
 
@@ -790,15 +929,56 @@ public final class SCXMLDigester {
      * @param xp The Digester style XPath expression of the parent
      *           XML element
      * @param scxmlRules The rule set to be used for digestion
+     * @param customActions The list of custom actions this digester needs
+     *                      to be able to process
      */
     private static void addActionRules(final String xp,
-            final ExtendedBaseRules scxmlRules) {
+            final ExtendedBaseRules scxmlRules, final List customActions) {
         addActionRulesTuple(xp + XPF_ASN, scxmlRules, Assign.class);
         addActionRulesTuple(xp + XPF_VAR, scxmlRules, Var.class);
         addActionRulesTuple(xp + XPF_LOG, scxmlRules, Log.class);
         addSendRulesTuple(xp + XPF_SND, scxmlRules);
         addActionRulesTuple(xp + XPF_CAN, scxmlRules, Cancel.class);
         addActionRulesTuple(xp + XPF_EXT, scxmlRules, Exit.class);
+        //addCustomActionRules(xp, scxmlRules, customActions);
+    }
+
+    /**
+     * Add custom action rules, if any custom actions are provided.
+     *
+     * @param xp The Digester style XPath expression of the parent
+     *           XML element
+     * @param scxmlRules The rule set to be used for digestion
+     * @param customActions The list of custom actions this digester needs
+     *                      to be able to process
+     */
+    private static void addCustomActionRules(final String xp,
+            final ExtendedBaseRules scxmlRules, final List customActions) {
+        if (customActions == null || customActions.size() == 0) {
+            return;
+        }
+        for (int i = 0; i < customActions.size(); i++) {
+            Object item = customActions.get(i);
+            if (item == null || !(item instanceof CustomAction)) {
+                org.apache.commons.logging.Log log = LogFactory.
+                    getLog(SCXMLDigester.class);
+                log.warn(ERR_CUSTOM_ACTION_TYPE);
+            } else {
+                CustomAction ca = (CustomAction) item;
+                scxmlRules.setNamespaceURI(ca.getNamespaceURI());
+                String xpfLocalName = STR_SLASH + ca.getLocalName();
+                Class klass = ca.getActionClass();
+                if (SCXMLHelper.implementationOf(klass,
+                        ExternalContent.class)) {
+                    addCustomActionRulesTuple(xp + xpfLocalName, scxmlRules,
+                        klass, true);
+                } else {
+                    addCustomActionRulesTuple(xp + xpfLocalName, scxmlRules,
+                        klass, false);
+                }
+            }
+        }
+        scxmlRules.setNamespaceURI(NAMESPACE_SCXML);
     }
 
     /**
@@ -816,35 +996,8 @@ public final class SCXMLDigester {
         } catch (ParserConfigurationException pce) {
             org.apache.commons.logging.Log log = LogFactory.
                 getLog(SCXMLDigester.class);
-            log.error("Error registering rule for parsing <send>"
-                + " element content", pce);
+            log.error(ERR_PARSER_CFG_SEND, pce);
         }
-    }
-
-    /**
-     * Add Digester rules for a custom action with child nodes (in
-     * external namespaces).
-     *
-     * @param xpfLocalName The local name path fragment (trailing) for
-     *                       the custom action element
-     * @param scxmlRules The rule set to be used for digestion
-     * @param klass The <code>Action</code> class implementing the custom
-     *              action.
-     * @param bodyContent Whether the custom rule has body content
-     *              that should be parsed using
-     *              <code>NodeCreateRule</code>
-     */
-    private static void addCustomActionRules(final String xpfLocalName,
-            final ExtendedBaseRules scxmlRules, final Class klass,
-            final boolean bodyContent) {
-        addCustomActionRulesTuple(XPU_ONEN + xpfLocalName, scxmlRules,
-            klass, bodyContent);
-        addCustomActionRulesTuple(XPU_ONEX + xpfLocalName, scxmlRules,
-            klass, bodyContent);
-        addCustomActionRulesTuple(XPU_TR + xpfLocalName, scxmlRules,
-            klass, bodyContent);
-        addCustomActionRulesTuple(XPU_IF + xpfLocalName, scxmlRules,
-            klass, bodyContent);
     }
 
     /**
@@ -868,8 +1021,7 @@ public final class SCXMLDigester {
             } catch (ParserConfigurationException pce) {
                 org.apache.commons.logging.Log log = LogFactory.
                     getLog(SCXMLDigester.class);
-                log.error("Error instantiating body content parsing rule for"
-                    + " custom action", pce);
+                log.error(ERR_PARSER_CFG_CUSTOM, pce);
             }
         }
     }
@@ -880,11 +1032,13 @@ public final class SCXMLDigester {
      * @param xp The Digester style XPath expression of the parent
      *           XML element
      * @param scxmlRules The rule set to be used for digestion
+     * @param customActions The list of custom actions this digester needs
+     *                      to be able to process
      */
     private static void addIfRules(final String xp,
-            final ExtendedBaseRules scxmlRules) {
+            final ExtendedBaseRules scxmlRules, final List customActions) {
         addActionRulesTuple(xp, scxmlRules, If.class);
-        addActionRules(xp, scxmlRules);
+        addActionRules(xp, scxmlRules, customActions);
         addActionRulesTuple(xp + XPF_EIF, scxmlRules, ElseIf.class);
         addActionRulesTuple(xp + XPF_ELS, scxmlRules, Else.class);
     }
@@ -927,152 +1081,6 @@ public final class SCXMLDigester {
             scxmlRules.add(xp, new SetPropertiesRule(args, props));
         }
         scxmlRules.add(xp, new SetNextRule(addMethod));
-    }
-
-    /*
-     * Post-processing methods to make the SCXML object SCXMLExecutor ready.
-     */
-    /**
-      * Update this State object (part of post-digestion processing).
-      * Also checks for any errors in the document.
-      *
-      * @param s The State object
-      * @param targets The global Map of all transition targets
-      */
-    private static void updateState(final State s, final Map targets) {
-        //ensure both onEntry and onExit have parent
-        //could add next two lines as a Digester rule for OnEntry/OnExit
-        s.getOnEntry().setParent(s);
-        s.getOnExit().setParent(s);
-        //initialize next / inital
-        Initial ini = s.getInitial();
-        Map c = s.getChildren();
-        if (!c.isEmpty()) {
-            if (ini == null) {
-                logModelError(ERR_STATE_NO_INIT,
-                    new Object[] {getStateName(s)});
-            }
-            Transition initialTransition = ini.getTransition();
-            updateTransition(initialTransition, targets);
-            TransitionTarget initialState = initialTransition.getTarget();
-            // we have to allow for an indirect descendant initial (targets)
-            //check that initialState is a descendant of s
-            if (initialState == null
-                    || !SCXMLHelper.isDescendant(initialState, s)) {
-                logModelError(ERR_STATE_BAD_INIT,
-                    new Object[] {getStateName(s)});
-            }
-        }
-        List histories = s.getHistory();
-        Iterator histIter = histories.iterator();
-        while (histIter.hasNext()) {
-            History h = (History) histIter.next();
-            Transition historyTransition = h.getTransition();
-            updateTransition(historyTransition, targets);
-            State historyState = (State) historyTransition.getTarget();
-            if (historyState == null) {
-                logModelError(ERR_STATE_NO_HIST,
-                    new Object[] {getStateName(s)});
-            }
-            if (!h.isDeep()) {
-                if (!c.containsValue(historyState)) {
-                    logModelError(ERR_STATE_BAD_SHALLOW_HIST, new Object[] {
-                        getStateName(s) });
-                }
-            } else {
-                if (!SCXMLHelper.isDescendant(historyState, s)) {
-                    logModelError(ERR_STATE_BAD_DEEP_HIST, new Object[] {
-                        getStateName(s) });
-                }
-            }
-        }
-        Map t = s.getTransitions();
-        Iterator i = t.keySet().iterator();
-        while (i.hasNext()) {
-            Iterator j = ((List) t.get(i.next())).iterator();
-            while (j.hasNext()) {
-                Transition trn = (Transition) j.next();
-                //could add next two lines as a Digester rule for Transition
-                trn.setParent(s);
-                updateTransition(trn, targets);
-            }
-        }
-        Parallel p = s.getParallel();
-        if (p != null) {
-            updateParallel(p, targets);
-        } else {
-            Iterator j = c.keySet().iterator();
-            while (j.hasNext()) {
-                updateState((State) c.get(j.next()), targets);
-            }
-        }
-    }
-
-    /**
-      * Update this Parallel object (part of post-digestion processing).
-      *
-      * @param p The Parallel object
-      * @param targets The global Map of all transition targets
-      */
-    private static void updateParallel(final Parallel p, final Map targets) {
-        Iterator i = p.getStates().iterator();
-        while (i.hasNext()) {
-            updateState((State) i.next(), targets);
-        }
-    }
-
-    /**
-      * Update this Transition object (part of post-digestion processing).
-      *
-      * @param t The Transition object
-      * @param targets The global Map of all transition targets
-      */
-    private static void updateTransition(final Transition t,
-            final Map targets) {
-        String next = t.getNext();
-        TransitionTarget tt = t.getTarget();
-        if (tt == null) {
-            tt = (TransitionTarget) targets.get(next);
-            if (tt == null) {
-                // Could move Digester warnings to errors
-                org.apache.commons.logging.Log log = LogFactory.
-                    getLog(SCXMLDigester.class);
-                log.warn("WARNING: SCXMLDigester - Transition "
-                        + "target \"" + next + "\" not found");
-            }
-            t.setTarget(tt);
-        }
-    }
-
-    /**
-      * Log an error discovered in post-digestion processing.
-      *
-      * @param errType The type of error
-      * @param msgArgs The arguments for formatting the error message
-      */
-    private static void logModelError(final String errType,
-            final Object[] msgArgs) {
-        MessageFormat msgFormat = new MessageFormat(errType);
-        String errMsg = msgFormat.format(msgArgs);
-        org.apache.commons.logging.Log log = LogFactory.
-            getLog(SCXMLDigester.class);
-        log.error(errMsg);
-    }
-
-     /**
-      * Get state identifier for error message. This method is only
-      * called to produce an appropriate log message in some error
-      * conditions.
-      *
-      * @param state The <code>State</code> object
-      * @return The state identifier for the error message
-      */
-    private static String getStateName(final State state) {
-        String badState = "anonymous state";
-        if (!SCXMLHelper.isStringEmpty(state.getId())) {
-            badState = "state with ID " + state.getId();
-        }
-        return badState;
     }
 
     /**
@@ -1278,12 +1286,25 @@ public final class SCXMLDigester {
         private PathResolver pr;
 
         /**
+         * The list of custom actions the parent document is capable of
+         * processing (and hence, the child should be, by transitivity).
+         * @see CustomAction
+         */
+        private List customActions;
+
+        /**
          * Constructor.
          * @param pr The PathResolver
+         * @param customActions The list of custom actions this digester needs
+         *                      to be able to process
+         *
          * @see PathResolver
+         * @see CustomAction
          */
-        public DigestSrcAttributeRule(final PathResolver pr) {
+        public DigestSrcAttributeRule(final List customActions,
+                final PathResolver pr) {
             super();
+            this.customActions = customActions;
             this.pr = pr;
         }
 
@@ -1304,10 +1325,11 @@ public final class SCXMLDigester {
             Digester externalSrcDigester;
             if (pr == null) {
                 path = src;
-                externalSrcDigester = newInstance(scxml, null);
+                externalSrcDigester = newInstance(scxml, null, customActions);
             } else {
                 path = pr.resolvePath(src);
-                externalSrcDigester = newInstance(scxml, pr.getResolver(src));
+                externalSrcDigester = newInstance(scxml, pr.getResolver(src),
+                    customActions);
             }
 
             try {

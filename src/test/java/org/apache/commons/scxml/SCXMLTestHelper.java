@@ -16,9 +16,13 @@
 package org.apache.commons.scxml;
 
 import java.net.URL;
+import java.util.List;
 import java.util.Set;
 
 import junit.framework.Assert;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.apache.commons.scxml.env.SimpleDispatcher;
 import org.apache.commons.scxml.env.Tracer;
@@ -35,15 +39,24 @@ import org.xml.sax.ErrorHandler;
 public class SCXMLTestHelper {
 
     public static SCXML digest(final URL url) {
-        return digest(url, null);
+        return digest(url, null, null);
+    }
+
+    public static SCXML digest(final URL url, final List customActions) {
+        return digest(url, null, customActions);
     }
 
     public static SCXML digest(final URL url, final ErrorHandler errHandler) {
+        return digest(url, errHandler, null);
+    }
+
+    public static SCXML digest(final URL url, final ErrorHandler errHandler,
+            final List customActions) {
         Assert.assertNotNull(url);
         // SAX ErrorHandler may be null
         SCXML scxml = null;
         try {
-            scxml = SCXMLDigester.digest(url, errHandler);
+            scxml = SCXMLDigester.digest(url, errHandler, customActions);
         } catch (Exception e) {
             Assert.fail(e.getMessage());
         }
@@ -52,14 +65,14 @@ public class SCXMLTestHelper {
     }
 
     public static SCXMLExecutor getExecutor(final URL url) {
-        SCXML scxml = digest(url, null);
+        SCXML scxml = digest(url);
         Evaluator evaluator = new JexlEvaluator();
         return getExecutor(evaluator, scxml);
     }
 
     public static SCXMLExecutor getExecutor(final URL url,
             final Evaluator evaluator) {
-        SCXML scxml = digest(url, null);
+        SCXML scxml = digest(url);
         return getExecutor(evaluator, scxml);
     }
 
@@ -92,7 +105,7 @@ public class SCXMLTestHelper {
 
     public static SCXMLExecutor getExecutor(final URL url, final Context ctx,
             final Evaluator evaluator) {
-        SCXML scxml = digest(url, null);
+        SCXML scxml = digest(url);
         EventDispatcher ed = new SimpleDispatcher();
         Tracer trc = new Tracer();
         return getExecutor(ctx, evaluator, scxml, ed, trc);
@@ -131,6 +144,8 @@ public class SCXMLTestHelper {
             exec.setStateMachine(scxml);
             exec.go();
         } catch (Exception e) {
+            Log log = LogFactory.getLog(SCXMLTestHelper.class);
+            log.error(e.getMessage(), e);
             Assert.fail(e.getMessage());
         }
         Assert.assertNotNull(exec);

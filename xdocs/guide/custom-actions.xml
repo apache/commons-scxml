@@ -118,52 +118,47 @@
 
    </subsection>
 
-   <subsection name="Registering the action with the digester">
+   <subsection name="Using a custom SCXML digester">
 
-    <p>With the custom action implemented, obtain a configured digester which
-       has the "default" ruleset required for reading (parsing) SCXML
-       documents, and then register the custom action like so:</p>
+    <p>With the custom action(s) implemented, the document may be
+    parsed using a custom SCXML digester that is aware of these actions
+    like so:</p>
 
     <pre>
-      // (1) Get Digester with "default" rules for parsing SCXML documents
-      Digester digester = SCXMLDigester.newInstance(null, null);
+      // (1) Create a list of custom actions, add as many as are needed
+      List customActions = new ArrayList();
+      CustomAction ca =
+            new CustomAction("http://my.custom-actions.domain/CUSTOM",
+                             "hello", Hello.class);
+      customActions.add(ca);
 
-      // (2) Register the "custom" action(s)
-      SCXMLDigester.addCustomAction(digester,
-          "http://my.custom-actions.domain/CUSTOM", "hello", Hello.class);
+      // (2) Parse the SCXML document containing the custom action(s)
+      SCXML scxml = null;
+      try {
+          scxml = SCXMLDigester.digest(url, errorHandler, customActions);
+          // Also see other methods in SCXMLDigester API
+          // "url" points to SCXML document
+          // "errorHandler" is SAX ErrorHandler
+      } catch (Exception e) {
+          // bad document, take necessary action
+      }
     </pre>
 
-    <p>This static addCustomAction() method can only be used if the custom
+    <p>This approach can only be used if the custom
        rule has no body content (child "tags") or if the custom action
        implements the
        <a href="../apidocs/org/apache/commons/scxml/model/ExternalContent.html">ExternalContent</a>
        interface, in which case, any body content gets read into a list
        of DOM nodes. For any other requirements, the digester rules
-       can be added by directly using the
+       can be added by directly by obtaining a Digester instance with the
+       "default" SCXML rules using the <code>newInstance()</code> methods
+       and further directly adding the necessary rules using the
        <a href="http://jakarta.apache.org/commons/digester/commons-digester-1.7/docs/api/">digester API</a>
        .</p>
 
    </subsection>
 
    <subsection name="Read in the 'custom' SCXML document">
-
-    <p>This involves parsing the document and making the resulting
-       SCXML object executor-ready (which allows us to detect any
-       "model inconsistencies" before feeding it to the
-       execution engine). That amounts to:</p>
-
-    <pre>
-      // (3) Parse the SCXML document containing the custom action(s)
-      SCXML scxml = null;
-      try {
-          scxml = (SCXML) digester.parse(&lt;String&gt;);
-          //String method as an example
-      } catch (Exception e) {
-          // bad document, take necessary action
-      }
-      // (4) Wire up the object model for the SCXMLExecutor
-      SCXMLDigester.updateSCXML(scxml);
-    </pre>
 
     <p>For documents without custom actions, the utility methods of the
        <a href="../apidocs/org/apache/commons/scxml/io/SCXMLDigester.html">SCXMLDigester</a>
@@ -175,7 +170,7 @@
 
    <subsection name="Launching the engine">
 
-    <p>Having obtained the SCXML object beyond step (4) above,
+    <p>Having obtained the SCXML object beyond step (2) above,
        proceed as usual, see the section on the
        <a href="core-engine.html">Commons SCXML engine</a>
        for details.</p>

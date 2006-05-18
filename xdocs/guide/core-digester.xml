@@ -38,6 +38,7 @@
         //import java.io.IOException;
         //import java.net.URL;
         //import org.apache.commons.scxml.io.SCXMLDigester;
+        //import org.apache.commons.scxml.model.ModelException;
         //import org.apache.commons.scxml.model.SCXML;
         //import org.xml.sax.ErrorHandler;
         //import org.xml.sax.SAXException;
@@ -50,6 +51,8 @@
           // IOException while parsing
         } catch (SAXException se) {
           // SAXException while parsing
+        } catch (ModelException me) {
+          // ModelException while parsing
         }
           
 

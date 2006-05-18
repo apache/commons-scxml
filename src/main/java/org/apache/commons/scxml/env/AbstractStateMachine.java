@@ -129,6 +129,8 @@ public abstract class AbstractStateMachine {
                 logError(ioe);
             } catch (SAXException sae) {
                 logError(sae);
+            } catch (ModelException me) {
+                logError(me);
             }
         }
         engine = new SCXMLExecutor(evaluator, new SimpleDispatcher(),
