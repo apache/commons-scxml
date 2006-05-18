@@ -23,19 +23,29 @@ limitations under the License.
 <!-- ================================================== -->
 <section name="Commons SCXML Issue tracking">
 <p>
-  Commons SCXML uses <a href="http://issues.apache.org/bugzilla/">ASF Bugzilla</a> for tracking issues.
-  To use Bugzilla you may need to <a href="http://issues.apache.org/bugzilla/createaccount.cgi">create an account</a>.
+  Commons SCXML uses <a href="http://issues.apache.org/jira/">ASF JIRA</a>
+  for tracking issues. Issues for Commons SCXML are tracked at
+  <a href="http://issues.apache.org/jira/browse/SCXML">http://issues.apache.org/jira/browse/SCXML</a>
 </p>
 <p>
-  Bugs and enhancements should be filed under the "SCXML" component of Commons in Bugzilla. 
-  If you would like to report a bug, or raise an enhancement request with Commons SCXML please do the following:
+  To create a new issue you will need to
+  <a href="http://issues.apache.org/jira/secure/Signup!default.jspa">sign up</a>
+  for a new account, unless you had previously used the Commons product in
+  Bugzilla in which case your username is your email address and you will
+  need to use the
+  <a href="http://issues.apache.org/jira/secure/ForgotPassword!default.jspa">Forgot Password</a>
+  page to get a new password.
+</p>
+<p>
+  Bugs and enhancements should be filed under the "Commons SCXML" project in JIRA. 
+  If you would like to report a bug, or raise an enhancement request with Commons
+  SCXML please do the following:
   <ol>
-  <li><a href="http://issues.apache.org/bugzilla/buglist.cgi?bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_status=NEEDINFO&amp;product=Commons&amp;component=SCXML">Search existing open bugs</a>.
+  <li><a href="http://issues.apache.org/jira/secure/IssueNavigator.jspa?reset=true&amp;mode=hide&amp;pid=12310492">Search existing bugs</a>.
   If you find your issue listed then please add a comment with your details.</li>
   <li><a href="http://mail-archives.apache.org/mod_mbox/jakarta-commons-dev/">Search the mailing list archive</a>.
   You may find your issue or idea has already been discussed.</li>
-  <li><a href="http://issues.apache.org/bugzilla/enter_bug.cgi?product=Commons&amp;component=SCXML">Submit a bug report or enhancement request</a>.
-  Please prefix all new issues with [SCXML] in the summary line. 
+  <li><a href="http://issues.apache.org/jira/secure/CreateIssue!default.jspa">Submit a bug report or enhancement request</a>.
   </li>
   </ol>
 </p>
@@ -51,9 +61,9 @@ limitations under the License.
 <p>
   You may also find these links useful:
   <ul>
-  <li><a href="http://issues.apache.org/bugzilla/buglist.cgi?bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_status=NEEDINFO&amp;product=Commons&amp;component=SCXML">All Open SCXML bugs</a></li>
-  <li><a href="http://issues.apache.org/bugzilla/buglist.cgi?bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;product=Commons&amp;component=SCXML">All Closed SCXML bugs</a></li>
-  <li><a href="http://issues.apache.org/bugzilla/buglist.cgi?bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;bug_status=NEEDINFO&amp;bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;product=Commons&amp;component=SCXML">All SCXML bugs</a></li>
+  <li><a href="http://issues.apache.org/jira/secure/IssueNavigator.jspa?reset=true&amp;pid=12310492&amp;status=1">All Open SCXML bugs</a></li>
+  <li><a href="http://issues.apache.org/jira/secure/IssueNavigator.jspa?reset=true&amp;pid=12310492&amp;status=5">All Resolved SCXML bugs</a></li>
+  <li><a href="http://issues.apache.org/jira/secure/IssueNavigator.jspa?reset=true&amp;mode=hide&amp;pid=12310492">All SCXML bugs</a></li>
   </ul>
 </p>
 </section>
