@@ -19,9 +19,9 @@
        initialstate="state1">
 
     <state id="state1">
-        <!--onentry>
+        <onentry>
             <log expr="'foo is ' + foo + ' and bar is ' + bar" />
-        </onentry-->
+        </onentry>
         <transition event="invoked.next" target="state2" />
     </state>
 
