@@ -33,7 +33,65 @@
     </section>
 
     <release version="1.0" date="Pending"
-     description="Project nearing promotion vote to Commons Proper">
+     description="Project nearing first release candidate towards a 1.0">
+
+      <action dev="rahul" type="add">
+       [06-19-2006] Added invoke, param and finalize processing. These
+       SCXML elements were added in the January 2006 Working Draft.
+      </action>
+
+      <action dev="rahul" type="fix">
+       [05-17-2006] Reflect use of JIRA as the issue tracker for
+       Commons SCXML. Bugzilla should no longer be used.
+      </action>
+
+      <action dev="rahul" type="add">
+       [05-17-2006] Added examples of shallow and deep history.
+      </action>
+
+      <action dev="rahul" type="fix" issue="SCXML-8">
+       [05-17-2006] External document digester now processes custom
+       actions.
+      </action>
+
+      <action dev="rahul" type="add">
+       [05-04-2006] Added section on custom semantics to user guide.
+      </action>
+
+      <action dev="rahul" type="add" issue="SCXML-4">
+       [05-04-2006] Added explicit Instructions on core-engine.html
+       from user guide.
+      </action>
+
+      <action dev="rahul" type="add" issue="SCXML-10">
+       [05-04-2006] Added datamodel explanation and examples to user
+       guide.
+      </action>
+
+      <action dev="rahul" type="add">
+       [05-04-2006] Added documentation blurb on common interaction
+       patterns using the Commons SCXML library (the "glue" or "bridge"
+       code).
+      </action>
+
+      <action dev="rahul" type="fix">
+       [04-24-2006] Commons SCXML has graduated from Commons Sandbox,
+       updated repository to reflect move to Commons Proper.
+      </action>
+
+      <action dev="rahul" type="add">
+       [04-20-2006] Added documentation on "_eventdata" and method
+       invocation in expression languages used.
+      </action>
+
+      <action dev="rahul" type="add">
+       [04-20-2006] Allow SCXML documents using EL to define arbitrary EL
+       functions by providing a FunctionMapper to the ELEvaluator.
+      </action>
+
+      <action dev="rahul" type="add" issue="SCXML-11">
+       [04-20-2006] Provide access to SCXMLExecutor's root context.
+      </action>
 
       <action dev="rahul" type="add">
        [04-03-2006] Added support for the wildcard (*) event.
@@ -69,7 +127,7 @@
        [03-03-2006] Added a Maven2 POM.
       </action>
 
-      <action dev="rahul" type="add" issue="38274">
+      <action dev="rahul" type="add" issue="SCXML-7">
        [03-01-2006] A new usecase for a stand-alone application
        modeling a stopwatch.
        <dueto name="Stephen Colebourne"/>
@@ -118,7 +176,7 @@
        (which was changed on 02-05-2006, see change item below).
       </action>
 
-      <action dev="rahul" type="add" issue="38459" due-to="Peter Costa">
+      <action dev="rahul" type="add" issue="SCXML-1" due-to="Peter Costa">
        [02-05-2006] Numerous JUnit test cases added. Start publishing
        cobertura report.
       </action>
@@ -130,7 +188,7 @@
        commit message for r374981</a> has the details.
       </action>
 
-      <action dev="rahul" type="update" issue="38311" due-to="Tim O'Brien">
+      <action dev="rahul" type="update" issue="SCXML-6" due-to="Tim O'Brien">
        [02-05-2006] The Commons SCXML object model is now decoupled from
        the SCXML execution engine instance. The Commons SCXML object model
        is now stateless. For example (incomplete list):
