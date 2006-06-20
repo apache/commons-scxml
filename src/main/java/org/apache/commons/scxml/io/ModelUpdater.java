@@ -26,6 +26,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml.SCXMLHelper;
 import org.apache.commons.scxml.model.History;
 import org.apache.commons.scxml.model.Initial;
+import org.apache.commons.scxml.model.Invoke;
 import org.apache.commons.scxml.model.ModelException;
 import org.apache.commons.scxml.model.Parallel;
 import org.apache.commons.scxml.model.SCXML;
@@ -162,8 +163,34 @@ final class ModelUpdater {
             }
         }
         Parallel p = s.getParallel();
+        Invoke inv = s.getInvoke();
+        if ((inv != null && p != null)
+                || (inv != null && !c.isEmpty())
+                || (p != null && !c.isEmpty())) {
+            logAndThrowModelError(ERR_STATE_BAD_CONTENTS,
+                new Object[] {getStateName(s)});
+        }
         if (p != null) {
             updateParallel(p, targets);
+        } else if (inv != null) {
+            String ttype = inv.getTargettype();
+            if (ttype == null || ttype.trim().length() == 0) {
+                logAndThrowModelError(ERR_INVOKE_NO_TARGETTYPE,
+                    new Object[] {getStateName(s)});
+            }
+            String src = inv.getSrc();
+            boolean noSrc = (src == null || src.trim().length() == 0);
+            String srcexpr = inv.getSrcexpr();
+            boolean noSrcexpr = (srcexpr == null
+                                 || srcexpr.trim().length() == 0);
+            if (noSrc && noSrcexpr) {
+                logAndThrowModelError(ERR_INVOKE_NO_SRC,
+                    new Object[] {getStateName(s)});
+            }
+            if (!noSrc && !noSrcexpr) {
+                logAndThrowModelError(ERR_INVOKE_AMBIGUOUS_SRC,
+                    new Object[] {getStateName(s)});
+            }
         } else {
             Iterator j = c.keySet().iterator();
             while (j.hasNext()) {
@@ -270,6 +297,15 @@ final class ModelUpdater {
         + "null or not a descendant of {0}";
 
     /**
+     * Error message when a state element contains anything other than
+     * one &lt;parallel&gt;, one &lt;invoke&gt; or any number of
+     * &lt;state&gt; children.
+     */
+    private static final String ERR_STATE_BAD_CONTENTS = "{0} should "
+        + "contain either one <parallel>, one <invoke> or any number of "
+        + "<state> children.";
+
+    /**
      * Error message when a referenced history state cannot be found.
      */
     private static final String ERR_STATE_NO_HIST = "Referenced history state"
@@ -306,4 +342,27 @@ final class ModelUpdater {
         "No default target specified for history with ID \"{0}\""
         + " belonging to {1}";
 
+    /**
+     * Error message when an &lt;invoke&gt; does not specify a "targettype"
+     * attribute.
+     */
+    private static final String ERR_INVOKE_NO_TARGETTYPE = "{0} contains "
+        + "<invoke> with no \"targettype\" attribute specified.";
+
+    /**
+     * Error message when an &lt;invoke&gt; does not specify a "src"
+     * or a "srcexpr" attribute.
+     */
+    private static final String ERR_INVOKE_NO_SRC = "{0} contains "
+        + "<invoke> without a \"src\" or \"srcexpr\" attribute specified.";
+
+    /**
+     * Error message when an &lt;invoke&gt; specifies both "src" and "srcexpr"
+     * attributes.
+     */
+    private static final String ERR_INVOKE_AMBIGUOUS_SRC = "{0} contains "
+        + "<invoke> with both \"src\" and \"srcexpr\" attributes specified,"
+        + " must specify either one, but not both.";
+
 }
+

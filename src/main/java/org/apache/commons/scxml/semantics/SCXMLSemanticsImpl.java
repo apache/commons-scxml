@@ -21,26 +21,35 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.scxml.Context;
 import org.apache.commons.scxml.ErrorReporter;
+import org.apache.commons.scxml.Evaluator;
 import org.apache.commons.scxml.EventDispatcher;
 import org.apache.commons.scxml.NotificationRegistry;
+import org.apache.commons.scxml.PathResolver;
 import org.apache.commons.scxml.SCInstance;
 import org.apache.commons.scxml.SCXMLExpressionException;
 import org.apache.commons.scxml.SCXMLHelper;
 import org.apache.commons.scxml.SCXMLSemantics;
 import org.apache.commons.scxml.Step;
 import org.apache.commons.scxml.TriggerEvent;
+import org.apache.commons.scxml.invoke.Invoker;
+import org.apache.commons.scxml.invoke.InvokerException;
 import org.apache.commons.scxml.model.Action;
+import org.apache.commons.scxml.model.Finalize;
 import org.apache.commons.scxml.model.History;
 import org.apache.commons.scxml.model.Initial;
+import org.apache.commons.scxml.model.Invoke;
 import org.apache.commons.scxml.model.ModelException;
 import org.apache.commons.scxml.model.OnEntry;
 import org.apache.commons.scxml.model.OnExit;
@@ -147,6 +156,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
     throws ModelException {
         NotificationRegistry nr = scInstance.getNotificationRegistry();
         Collection internalEvents = step.getAfterStatus().getEvents();
+        Map invokers = scInstance.getInvokers();
         // ExecutePhaseActions / OnExit
         for (Iterator i = step.getExitList().iterator(); i.hasNext();) {
             TransitionTarget tt = (TransitionTarget) i.next();
@@ -160,6 +170,19 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
             } catch (SCXMLExpressionException e) {
                 errRep.onError(ErrorReporter.EXPRESSION_ERROR, e.getMessage(),
                         oe);
+            }
+            // check if invoke is active in this state
+            if (invokers.containsKey(tt)) {
+                Invoker toCancel = (Invoker) invokers.get(tt);
+                try {
+                    toCancel.cancel();
+                } catch (InvokerException ie) {
+                    TriggerEvent te = new TriggerEvent(tt.getId()
+                        + ".invoke.cancel.failed", TriggerEvent.ERROR_EVENT);
+                    internalEvents.add(te);
+                }
+                // done here, don't wait for cancel response
+                invokers.remove(tt);
             }
             nr.fireOnExit(tt, tt);
             nr.fireOnExit(stateMachine, tt);
@@ -288,13 +311,19 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
     /**
      * @param step
      *            [inout]
+     * @param evtDispatcher
+     *            The {@link EventDispatcher} [in]
      * @param errRep
      *            ErrorReporter callback [inout]
      * @param scInstance
      *            The state chart instance [in]
+     * @throws ModelException
+     *             in case there is a fatal SCXML object model problem.
      */
     public void filterTransitionsSet(final Step step,
-            final ErrorReporter errRep, final SCInstance scInstance) {
+            final EventDispatcher evtDispatcher,
+            final ErrorReporter errRep, final SCInstance scInstance)
+    throws ModelException {
         /*
          * - filter transition set by applying events
          * (step/beforeStatus/events + step/externalEvents) (local check)
@@ -302,9 +331,8 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
          * each transition (local check) - transition precedence (bottom-up)
          * as defined by SCXML specs
          */
-        Set allEvents = new HashSet(step.getBeforeStatus().getEvents()
-                .size()
-                + step.getExternalEvents().size());
+        Set allEvents = new HashSet(step.getBeforeStatus().getEvents().size()
+            + step.getExternalEvents().size());
         //for now, we only match against event names
         for (Iterator ei = step.getBeforeStatus().getEvents().iterator();
                 ei.hasNext();) {
@@ -315,6 +343,27 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                 ei.hasNext();) {
             TriggerEvent te = (TriggerEvent) ei.next();
             allEvents.add(te.getName());
+        }
+        // Finalize invokes, if applicable
+        for (Iterator iter = scInstance.getInvokers().keySet().iterator();
+                iter.hasNext();) {
+            State s = (State) iter.next();
+            if (finalizeMatch(s.getId(), allEvents)) {
+                Finalize fn = s.getInvoke().getFinalize();
+                if (fn != null) {
+                    try {
+                        for (Iterator fnIter = fn.getActions().iterator();
+                                fnIter.hasNext();) {
+                            ((Action) fnIter.next()).execute(evtDispatcher,
+                                errRep, scInstance, appLog,
+                                step.getAfterStatus().getEvents());
+                        }
+                    } catch (SCXMLExpressionException e) {
+                        errRep.onError(ErrorReporter.EXPRESSION_ERROR,
+                            e.getMessage(), fn);
+                    }
+                }
+            }
         }
         //remove list (filtered-out list)
         List removeList = new LinkedList();
@@ -582,39 +631,6 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
     }
 
     /**
-     * Implements prefix match, that is, if, for example,
-     * &quot;mouse.click&quot; is a member of eventOccurrences and a
-     * transition is triggered by &quot;mouse&quot;, the method returns true.
-     *
-     * @param transEvent
-     *            a trigger event of a transition
-     * @param eventOccurrences
-     *            current events
-     * @return true/false
-     */
-    public boolean eventMatch(final String transEvent,
-            final Set eventOccurrences) {
-        if (SCXMLHelper.isStringEmpty(transEvent)) {
-            return true;
-        } else {
-            String transEventDot = transEvent + "."; // prefix event support
-            Iterator i = eventOccurrences.iterator();
-            while (i.hasNext()) {
-                String evt = (String) i.next();
-                if (evt == null) {
-                    continue; // Unnamed events
-                } else if (evt.equals("*")) {
-                    return true; // Wildcard
-                } else if (evt.equals(transEvent)
-                            || evt.startsWith(transEventDot)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
-
-    /**
      * Follow the candidate transitions for this execution Step, and update the
      * lists of entered and exited states accordingly.
      *
@@ -682,6 +698,180 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                 ((State) o).setDone(false);
             }
         }
+    }
+    /**
+     * Process any existing invokes, includes forwarding external events,
+     * and executing any finalize handlers.
+     *
+     * @param events
+     *            The events to be forwarded
+     * @param errRep
+     *            ErrorReporter callback
+     * @param scInstance
+     *            The state chart instance
+     * @throws ModelException
+     *             in case there is a fatal SCXML object model problem.
+     */
+    public void processInvokes(final TriggerEvent[] events,
+            final ErrorReporter errRep, final SCInstance scInstance)
+    throws ModelException {
+        Set eventNames = new HashSet();
+        //for now, we only match against event names
+        for (int i = 0; i < events.length; i++) {
+            eventNames.add(events[i].getName());
+        }
+        for (Iterator invokeIter = scInstance.getInvokers().entrySet().
+                iterator(); invokeIter.hasNext();) {
+            Map.Entry iEntry = (Map.Entry) invokeIter.next();
+            String parentId = ((TransitionTarget) iEntry.getKey()).getId();
+            if (!finalizeMatch(parentId, eventNames)) { // prevent cycles
+                Invoker inv = (Invoker) iEntry.getValue();
+                try {
+                    inv.parentEvents(events);
+                } catch (InvokerException ie) {
+                    appLog.error(ie.getMessage(), ie);
+                    throw new ModelException(ie.getMessage(), ie.getCause());
+                }
+            }
+        }
+    }
+
+    /**
+     * Initiate any new invokes.
+     *
+     * @param step
+     *            The current Step
+     * @param errRep
+     *            ErrorReporter callback
+     * @param scInstance
+     *            The state chart instance
+     */
+    public void initiateInvokes(final Step step, final ErrorReporter errRep,
+            final SCInstance scInstance) {
+        Evaluator eval = scInstance.getEvaluator();
+        Collection internalEvents = step.getAfterStatus().getEvents();
+        for (Iterator iter = step.getAfterStatus().getStates().iterator();
+                iter.hasNext();) {
+            State s = (State) iter.next();
+            Context ctx = scInstance.getContext(s);
+            Invoke i = s.getInvoke();
+            if (i != null && scInstance.getInvoker(s) == null) {
+                String src = i.getSrc();
+                if (src == null) {
+                    String srcexpr = i.getSrcexpr();
+                    Object srcObj = null;
+                    try {
+                        srcObj = eval.eval(ctx, srcexpr);
+                        src = String.valueOf(srcObj);
+                    } catch (SCXMLExpressionException see) {
+                        errRep.onError(ErrorReporter.EXPRESSION_ERROR,
+                            see.getMessage(), i);
+                    }
+                }
+                String source = src;
+                PathResolver pr = i.getPathResolver();
+                if (pr != null) {
+                    source = i.getPathResolver().resolvePath(src);
+                }
+                String ttype = i.getTargettype();
+                Invoker inv = null;
+                try {
+                    inv = scInstance.newInvoker(ttype);
+                } catch (InvokerException ie) {
+                    TriggerEvent te = new TriggerEvent(s.getId()
+                        + ".invoke.failed", TriggerEvent.ERROR_EVENT);
+                    internalEvents.add(te);
+                    continue;
+                }
+                inv.setParentStateId(s.getId());
+                inv.setSCInstance(scInstance);
+                Map params = i.getParams();
+                Map args = new HashMap();
+                for (Iterator pIter = params.entrySet().iterator();
+                        pIter.hasNext();) {
+                    Map.Entry entry = (Map.Entry) pIter.next();
+                    String argName = (String) entry.getKey();
+                    String argExpr = (String) entry.getValue();
+                    Object argValue = null;
+                    if (argExpr != null && argExpr.trim().length() > 0) {
+                        try {
+                            argValue = eval.eval(ctx, argExpr);
+                        } catch (SCXMLExpressionException see) {
+                            errRep.onError(ErrorReporter.EXPRESSION_ERROR,
+                                see.getMessage(), i);
+                        }
+                    }
+                    args.put(argName, argValue);
+                }
+                try {
+                    inv.invoke(source, args);
+                } catch (InvokerException ie) {
+                    TriggerEvent te = new TriggerEvent(s.getId()
+                        + ".invoke.failed", TriggerEvent.ERROR_EVENT);
+                    internalEvents.add(te);
+                    continue;
+                }
+                scInstance.setInvoker(s, inv);
+            }
+        }
+    }
+
+    /**
+     * Implements prefix match, that is, if, for example,
+     * &quot;mouse.click&quot; is a member of eventOccurrences and a
+     * transition is triggered by &quot;mouse&quot;, the method returns true.
+     *
+     * @param transEvent
+     *            a trigger event of a transition
+     * @param eventOccurrences
+     *            current events
+     * @return true/false
+     */
+    protected boolean eventMatch(final String transEvent,
+            final Set eventOccurrences) {
+        if (SCXMLHelper.isStringEmpty(transEvent)) {
+            return true;
+        } else {
+            String transEventDot = transEvent + "."; // prefix event support
+            Iterator i = eventOccurrences.iterator();
+            while (i.hasNext()) {
+                String evt = (String) i.next();
+                if (evt == null) {
+                    continue; // Unnamed events
+                } else if (evt.equals("*")) {
+                    return true; // Wildcard
+                } else if (evt.equals(transEvent)
+                            || evt.startsWith(transEventDot)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    /**
+     * Implements event prefix match to ascertain &lt;finalize&gt; execution.
+     *
+     * @param parentStateId
+     *            the ID of the parent state of the &lt;invoke&gt; holding
+     *            the &lt;finalize&gt;
+     * @param eventOccurrences
+     *            current events
+     * @return true/false
+     */
+    protected boolean finalizeMatch(final String parentStateId,
+            final Set eventOccurrences) {
+        String prefix = parentStateId + ".invoke."; // invoke prefix
+        Iterator i = eventOccurrences.iterator();
+        while (i.hasNext()) {
+            String evt = (String) i.next();
+            if (evt == null) {
+                continue; // Unnamed events
+            } else if (evt.startsWith(prefix)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

@@ -32,6 +32,7 @@ import org.apache.commons.scxml.SCXMLHelper;
 import org.apache.commons.scxml.TriggerEvent;
 import org.apache.commons.scxml.env.SimpleDispatcher;
 import org.apache.commons.scxml.env.Tracer;
+import org.apache.commons.scxml.invoke.SimpleSCXMLInvoker;
 import org.apache.commons.scxml.io.SCXMLDigester;
 import org.apache.commons.scxml.io.SCXMLSerializer;
 import org.apache.commons.scxml.model.ModelException;
@@ -86,7 +87,7 @@ public final class StandaloneUtils {
             System.out.println(SCXMLSerializer.serialize(doc));
             SCXMLExecutor exec = new SCXMLExecutor(evaluator, ed, trc);
             exec.addListener(doc, trc);
-            exec.setSuperStep(true);
+            exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
             exec.setRootContext(rootCtx);
             exec.setStateMachine(doc);
             exec.go();

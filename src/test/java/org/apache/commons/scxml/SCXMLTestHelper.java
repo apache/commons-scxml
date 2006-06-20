@@ -58,6 +58,8 @@ public class SCXMLTestHelper {
         try {
             scxml = SCXMLDigester.digest(url, errHandler, customActions);
         } catch (Exception e) {
+            Log log = LogFactory.getLog(SCXMLTestHelper.class);
+            log.error(e.getMessage(), e);
             Assert.fail(e.getMessage());
         }
         Assert.assertNotNull(scxml);
@@ -177,6 +179,8 @@ public class SCXMLTestHelper {
         try {
             exec.triggerEvents(evts);
         } catch (Exception e) {
+            Log log = LogFactory.getLog(SCXMLTestHelper.class);
+            log.error(e.getMessage(), e);
             Assert.fail(e.getMessage());
         }
         return exec.getCurrentStatus().getStates();
@@ -187,6 +191,8 @@ public class SCXMLTestHelper {
         try {
             exec.triggerEvents(evts);
         } catch (Exception e) {
+            Log log = LogFactory.getLog(SCXMLTestHelper.class);
+            log.error(e.getMessage(), e);
             Assert.fail(e.getMessage());
         }
         return exec.getCurrentStatus().getStates();
@@ -196,6 +202,8 @@ public class SCXMLTestHelper {
         try {
             exec.triggerEvents(evts);
         } catch (Exception e) {
+            Log log = LogFactory.getLog(SCXMLTestHelper.class);
+            log.error(e.getMessage(), e);
             Assert.fail(e.getMessage());
         }
         return exec.getCurrentStatus().getStates();

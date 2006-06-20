@@ -47,7 +47,7 @@ public class SCInstanceTest extends TestCase {
     private SCInstance instance;
     
     public void setUp() {
-        instance = new SCInstance();
+        instance = new SCInstance(null);
     }
     
     public void testGetRootContextNull() {

@@ -44,9 +44,11 @@ import org.apache.commons.scxml.model.Else;
 import org.apache.commons.scxml.model.ElseIf;
 import org.apache.commons.scxml.model.Exit;
 import org.apache.commons.scxml.model.ExternalContent;
+import org.apache.commons.scxml.model.Finalize;
 import org.apache.commons.scxml.model.History;
 import org.apache.commons.scxml.model.If;
 import org.apache.commons.scxml.model.Initial;
+import org.apache.commons.scxml.model.Invoke;
 import org.apache.commons.scxml.model.Log;
 import org.apache.commons.scxml.model.OnEntry;
 import org.apache.commons.scxml.model.OnExit;
@@ -146,8 +148,11 @@ public class SCXMLSerializer {
             }
         }
         Parallel p = s.getParallel();
+        Invoke inv = s.getInvoke();
         if (p != null) {
             serializeParallel(b, p, indent + INDENT);
+        } else if (inv != null) {
+            serializeInvoke(b , inv, indent + INDENT);
         } else {
             Map c = s.getChildren();
             Iterator j = c.keySet().iterator();
@@ -180,6 +185,45 @@ public class SCXMLSerializer {
         }
         serializeOnExit(b, p, indent + INDENT);
         b.append(indent).append("</parallel>\n");
+    }
+
+    /**
+     * Serialize this Invoke object.
+     *
+     * @param b The buffer to append the serialization to
+     * @param i The Invoke to serialize
+     * @param indent The indent for this XML element
+     */
+    public static void serializeInvoke(final StringBuffer b,
+            final Invoke i, final String indent) {
+        b.append(indent).append("<invoke");
+        String ttype = i.getTargettype();
+        String src = i.getSrc();
+        String srcexpr = i.getSrcexpr();
+        if (ttype != null) {
+            b.append(" targettype=\"").append(ttype).append("\"");
+        }
+        // Prefer src
+        if (src != null) {
+            b.append(" src=\"").append(src).append("\"");
+        } else if (srcexpr != null) {
+            b.append(" srcexpr=\"").append(srcexpr).append("\"");
+        }
+        b.append(">\n");
+        Map params = i.getParams();
+        for (Iterator iter = params.entrySet().iterator(); iter.hasNext();) {
+            Map.Entry e = (Map.Entry) iter.next();
+            b.append(indent).append(INDENT).append("<param name=\"").
+                append(e.getKey()).append("\" expr=\"").
+                append(e.getValue()).append("\"/>\n");
+        }
+        Finalize f = i.getFinalize();
+        if (f != null) {
+            b.append(indent).append(INDENT).append("<finalize>\n");
+            serializeActions(b, f.getActions(), indent + INDENT + INDENT);
+            b.append(indent).append(INDENT).append("</finalize>\n");
+        }
+        b.append(indent).append("</invoke>\n");
     }
 
     /**
@@ -496,7 +540,7 @@ public class SCXMLSerializer {
             final StringBuffer b, final TransitionTarget t) {
         String id = t.getId();
         if (id != null) {
-            b.append(" id=\"" + id + "\"");
+            b.append(" id=\"").append(id).append("\"");
         }
         TransitionTarget pt = t.getParent();
         if (pt != null) {

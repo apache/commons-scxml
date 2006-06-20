@@ -25,6 +25,7 @@ import org.apache.commons.scxml.env.faces.EnvFacesTestSuite;
 import org.apache.commons.scxml.env.jexl.EnvJexlTestSuite;
 import org.apache.commons.scxml.env.jsp.EnvJspTestSuite;
 import org.apache.commons.scxml.env.servlet.EnvServletTestSuite;
+import org.apache.commons.scxml.invoke.InvokeTestSuite;
 import org.apache.commons.scxml.io.IOTestSuite;
 import org.apache.commons.scxml.model.ModelTestSuite;
 import org.apache.commons.scxml.semantics.SemanticsTestSuite;
@@ -62,6 +63,7 @@ public class AllSCXMLTestSuite extends TestCase {
         suite.addTest(EnvJspTestSuite.suite());
         suite.addTest(EnvServletTestSuite.suite());
         suite.addTest(EnvTestSuite.suite());
+        suite.addTest(InvokeTestSuite.suite());
         suite.addTest(IOTestSuite.suite());
         suite.addTest(ModelTestSuite.suite());
         suite.addTest(SCXMLTestSuite.suite());

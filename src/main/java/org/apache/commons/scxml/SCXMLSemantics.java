@@ -121,13 +121,20 @@ public interface SCXMLSemantics {
      *
      * @param step
      *            with current status
+     * @param evtDispatcher
+     *            the event dispatcher - EventDispatcher instance
      * @param errRep
      *            ErrorReporter callback
      * @param scInstance
      *            The state chart instance
+     *
+     * @throws ModelException
+     *             in case there is a fatal SCXML object model problem.
      */
-    void filterTransitionsSet(final Step step, final ErrorReporter errRep,
-            final SCInstance scInstance);
+    void filterTransitionsSet(final Step step,
+            final EventDispatcher evtDispatcher, final ErrorReporter errRep,
+            final SCInstance scInstance)
+    throws ModelException;
 
     /**
      * Follow the candidate transitions for this execution Step, and update the
@@ -158,4 +165,36 @@ public interface SCXMLSemantics {
     void updateHistoryStates(final Step step, final ErrorReporter errRep,
             final SCInstance scInstance);
 
+    /**
+     * Forward events to invoked activities, execute finalize handlers.
+     *
+     * @param events
+     *            The events to be forwarded
+     * @param errRep
+     *            ErrorReporter callback
+     * @param scInstance
+     *            The state chart instance
+     *
+     * @throws ModelException
+     *             in case there is a fatal SCXML object model problem.
+     */
+    void processInvokes(final TriggerEvent[] events,
+            final ErrorReporter errRep, final SCInstance scInstance)
+    throws ModelException;
+
+    /**
+     * Initiate any new invoked activities.
+     *
+     * @param step
+     *            The current Step
+     * @param errRep
+     *            ErrorReporter callback
+     * @param scInstance
+     *            The state chart instance
+     *
+     */
+    void initiateInvokes(final Step step, final ErrorReporter errRep,
+            final SCInstance scInstance);
+
 }
+

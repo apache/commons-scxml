@@ -50,14 +50,17 @@ import org.apache.commons.scxml.model.ElseIf;
 import org.apache.commons.scxml.model.Executable;
 import org.apache.commons.scxml.model.Exit;
 import org.apache.commons.scxml.model.ExternalContent;
+import org.apache.commons.scxml.model.Finalize;
 import org.apache.commons.scxml.model.History;
 import org.apache.commons.scxml.model.If;
 import org.apache.commons.scxml.model.Initial;
+import org.apache.commons.scxml.model.Invoke;
 import org.apache.commons.scxml.model.Log;
 import org.apache.commons.scxml.model.ModelException;
 import org.apache.commons.scxml.model.OnEntry;
 import org.apache.commons.scxml.model.OnExit;
 import org.apache.commons.scxml.model.Parallel;
+import org.apache.commons.scxml.model.Param;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.Send;
 import org.apache.commons.scxml.model.State;
@@ -513,6 +516,9 @@ public final class SCXMLDigester {
     /** &lt;transition&gt; element. */
     private static final String XPU_TR = "!*/transition";
 
+    /** &lt;finalize&gt; element. */
+    private static final String XPU_FIN = "!*/finalize";
+
     //// Path Fragments, constants prefixed by XPF_
     // Onentries and Onexits
     /** &lt;onentry&gt; child element. */
@@ -531,6 +537,16 @@ public final class SCXMLDigester {
     // Initial
     /** &lt;initial&gt; child element. */
     private static final String XPF_INI = "/initial";
+
+    // Invoke, param and finalize
+    /** &lt;invoke&gt; child element of &lt;state&gt;. */
+    private static final String XPF_INV = "/invoke";
+
+    /** &lt;param&gt; child element of &lt;invoke&gt;. */
+    private static final String XPF_PRM = "/param";
+
+    /** &lt;finalize&gt; child element of &lt;invoke&gt;. */
+    private static final String XPF_FIN = "/finalize";
 
     // History
     /** &lt;history&gt; child element. */
@@ -682,6 +698,7 @@ public final class SCXMLDigester {
         addCustomActionRules(XPU_ONEX, scxmlRules, customActions);
         addCustomActionRules(XPU_TR, scxmlRules, customActions);
         addCustomActionRules(XPU_IF, scxmlRules, customActions);
+        addCustomActionRules(XPU_FIN, scxmlRules, customActions);
 
         return scxmlRules;
 
@@ -706,6 +723,7 @@ public final class SCXMLDigester {
         scxmlRules.add(xp, new ObjectCreateRule(State.class));
         addStatePropertiesRules(xp, scxmlRules, customActions, pr);
         addDatamodelRules(xp + XPF_DM, scxmlRules, scxml, pr);
+        addInvokeRules(xp + XPF_INV, scxmlRules, customActions, pr, scxml);
         addInitialRules(xp + XPF_INI, scxmlRules, customActions, pr, scxml);
         addHistoryRules(xp + XPF_HIST, scxmlRules, customActions, pr, scxml);
         addParentRule(xp, scxmlRules, parent);
@@ -777,6 +795,33 @@ public final class SCXMLDigester {
             log.error(ERR_PARSER_CFG_DATA, pce);
         }
         scxmlRules.add(xp, new SetNextRule("setDatamodel"));
+    }
+
+    /**
+     * Add Digester rules for all &lt;invoke&gt; elements.
+     *
+     * @param xp The Digester style XPath expression of the parent
+     *           XML element
+     * @param scxmlRules The rule set to be used for digestion
+     * @param customActions The list of {@link CustomAction}s this digester
+     *              instance will process, can be null or empty
+     * @param pr The PathResolver
+     * @param scxml The parent SCXML document (or null)
+     */
+    private static void addInvokeRules(final String xp,
+            final ExtendedBaseRules scxmlRules, final List customActions,
+            final PathResolver pr, final SCXML scxml) {
+        scxmlRules.add(xp, new ObjectCreateRule(Invoke.class));
+        scxmlRules.add(xp, new SetPropertiesRule());
+        scxmlRules.add(xp, new UpdateInvokeRule(pr));
+        scxmlRules.add(xp + XPF_PRM, new ObjectCreateRule(Param.class));
+        scxmlRules.add(xp + XPF_PRM, new SetPropertiesRule());
+        scxmlRules.add(xp + XPF_PRM, new SetNextRule("addParam"));
+        scxmlRules.add(xp + XPF_FIN, new ObjectCreateRule(Finalize.class));
+        scxmlRules.add(xp + XPF_FIN, new UpdateFinalizeRule());
+        addActionRules(xp + XPF_FIN, scxmlRules, customActions);
+        scxmlRules.add(xp + XPF_FIN, new SetNextRule("setFinalize"));
+        scxmlRules.add(xp, new SetNextRule("setInvoke"));
     }
 
     /**
@@ -1357,5 +1402,58 @@ public final class SCXMLDigester {
             s.setDatamodel(externalSCXML.getDatamodel());
         }
     }
+
+    /**
+     * Custom digestion rule for setting PathResolver for runtime retrieval
+     * and parent state.
+     *
+     */
+    public static class UpdateInvokeRule extends Rule {
+
+        /**
+         * The PathResolver to set.
+         * @see PathResolver
+         */
+        private PathResolver pr;
+
+        /**
+         * Constructor.
+         * @param pr The PathResolver
+         *
+         * @see PathResolver
+         */
+        public UpdateInvokeRule(final PathResolver pr) {
+            super();
+            this.pr = pr;
+        }
+
+        /**
+         * @see Rule#begin(String, String, Attributes)
+         */
+        public final void begin(final String namespace, final String name,
+                final Attributes attributes) {
+            Invoke invoke = (Invoke) getDigester().peek();
+            invoke.setPathResolver(pr);
+        }
+    }
+
+    /**
+     * Custom digestion rule for setting state parent of finalize.
+     *
+     */
+    public static class UpdateFinalizeRule extends Rule {
+
+        /**
+         * @see Rule#begin(String, String, Attributes)
+         */
+        public final void begin(final String namespace, final String name,
+                final Attributes attributes) {
+            Finalize finalize = (Finalize) getDigester().peek();
+            // state/invoke/finalize --> peek(2)
+            TransitionTarget tt = (TransitionTarget) getDigester().peek(2);
+            finalize.setParent(tt);
+        }
+    }
+
 }
 

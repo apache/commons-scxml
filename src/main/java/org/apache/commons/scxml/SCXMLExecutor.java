@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -100,29 +101,41 @@ public class SCXMLExecutor {
             throws ModelException {
         // Set event data, saving old values
         Object[] oldData = setEventData(evts);
-        ArrayList evs = new ArrayList(Arrays.asList(evts));
+
+        // Forward events (external only) to any existing invokes,
+        // and finalize processing
+        semantics.processInvokes(evts, errorReporter, scInstance);
+
+        List evs = new ArrayList(Arrays.asList(evts));
+        Step step = null;
+
         do {
             // CreateStep
-            Step step = new Step(evs, currentStatus);
+            step = new Step(evs, currentStatus);
             // EnumerateReachableTransitions
             semantics.enumerateReachableTransitions(stateMachine, step,
-                    errorReporter);
+                errorReporter);
             // FilterTransitionSet
-            semantics.filterTransitionsSet(step, errorReporter, scInstance);
+            semantics.filterTransitionsSet(step, eventdispatcher,
+                errorReporter, scInstance);
             // FollowTransitions
             semantics.followTransitions(step, errorReporter, scInstance);
             // UpdateHistoryStates
             semantics.updateHistoryStates(step, errorReporter, scInstance);
             // ExecuteActions
             semantics.executeActions(step, stateMachine, eventdispatcher,
-                    errorReporter, scInstance);
+                errorReporter, scInstance);
             // AssignCurrentStatus
             updateStatus(step);
             // ***Cleanup external events if superStep
             if (superStep) {
                 evs.clear();
             }
-        } while(superStep && currentStatus.getEvents().size() > 0);
+        } while (superStep && currentStatus.getEvents().size() > 0);
+
+        // InitiateInvokes only after state machine has stabilized
+        semantics.initiateInvokes(step, errorReporter, scInstance);
+
         // Restore event data
         restoreEventData(oldData);
         logState();
@@ -184,7 +197,7 @@ public class SCXMLExecutor {
         }
         this.currentStatus = null;
         this.stateMachine = null;
-        this.scInstance = new SCInstance();
+        this.scInstance = new SCInstance(this);
         this.scInstance.setEvaluator(expEvaluator);
     }
 
@@ -198,7 +211,6 @@ public class SCXMLExecutor {
     public void reset() throws ModelException {
         // Reset all variable contexts
         Context rootCtx = scInstance.getRootContext();
-        rootCtx.reset();
         // Clone root datamodel
         if (stateMachine == null) {
             log.error(ERR_NO_STATE_MACHINE);
@@ -242,6 +254,8 @@ public class SCXMLExecutor {
         if (superStep && currentStatus.getEvents().size() > 0) {
             this.triggerEvents(new TriggerEvent[0]);
         } else {
+            // InitiateInvokes only after state machine has stabilized
+            semantics.initiateInvokes(step, errorReporter, scInstance);
             logState();
         }
     }
@@ -459,6 +473,29 @@ public class SCXMLExecutor {
         Object observable = transition;
         scInstance.getNotificationRegistry().removeListener(observable,
             listener);
+    }
+
+    /**
+     * Register an <code>Invoker</code> for this target type.
+     *
+     * @param targettype The target type (specified by "targettype"
+     *                   attribute of &lt;invoke&gt; tag).
+     * @param invokerClass The <code>Invoker</code> <code>Class</code>.
+     */
+    public void registerInvokerClass(final String targettype,
+            final Class invokerClass) {
+        scInstance.registerInvokerClass(targettype, invokerClass);
+    }
+
+    /**
+     * Remove the <code>Invoker</code> registered for this target
+     * type (if there is one registered).
+     *
+     * @param targettype The target type (specified by "targettype"
+     *                   attribute of &lt;invoke&gt; tag).
+     */
+    public void unregisterInvokerClass(final String targettype) {
+        scInstance.unregisterInvokerClass(targettype);
     }
 
     /**

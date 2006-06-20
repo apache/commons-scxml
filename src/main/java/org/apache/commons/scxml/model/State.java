@@ -32,15 +32,25 @@ public class State extends TransitionTarget {
 
     /**
      * The Map containing immediate children of this State, keyed by
-     * their IDs. Incompatible with the parallel property.
+     * their IDs. Incompatible with the parallel or invoke property.
      */
     private Map children;
 
     /**
      * The Parallel child, which defines a set of parallel substates.
-     * May occur 0 or 1 times. Incompatible with the state property.
+     * May occur 0 or 1 times. Incompatible with the state or invoke property.
      */
     private Parallel parallel;
+
+    /**
+     * The Invoke child, which defines an external process that should
+     * be invoked, immediately after the onentry executable content,
+     * and the transitions become candidates after the invoked
+     * process has completed its execution.
+     * May occur 0 or 1 times. Incompatible with the state or parallel
+     * property.
+     */
+    private Invoke invoke;
 
     /**
      * Boolean property indicating whether this is a final state or not.
@@ -118,6 +128,25 @@ public class State extends TransitionTarget {
      */
     public final void setParallel(final Parallel parallel) {
         this.parallel = parallel;
+    }
+
+    /**
+     * Get the Invoke child (may be null).
+     *
+     * @return Invoke Returns the invoke.
+     */
+    public final Invoke getInvoke() {
+        return invoke;
+    }
+
+    /**
+     * Set the Invoke child.
+     *
+     * @param invoke
+     *            The invoke to set.
+     */
+    public final void setInvoke(final Invoke invoke) {
+        this.invoke = invoke;
     }
 
     /**

@@ -186,6 +186,7 @@
             <include>org/apache/commons/scxml/env/jexl/EnvJexlTestSuite.java</include>
             <include>org/apache/commons/scxml/env/jsp/EnvJspTestSuite.java</include>
             <include>org/apache/commons/scxml/env/servlet/EnvServletTestSuite.java</include>
+            <include>org/apache/commons/scxml/invoke/InvokeTestSuite.java</include>
             <include>org/apache/commons/scxml/io/IOTestSuite.java</include>
             <include>org/apache/commons/scxml/model/ModelTestSuite.java</include>
             <include>org/apache/commons/scxml/semantics/SemanticsTestSuite.java</include>

@@ -22,6 +22,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.scxml.invoke.Invoker;
+import org.apache.commons.scxml.invoke.InvokerException;
 import org.apache.commons.scxml.model.Datamodel;
 import org.apache.commons.scxml.model.History;
 import org.apache.commons.scxml.model.TransitionTarget;
@@ -51,6 +53,18 @@ public class SCInstance {
     private Map histories;
 
     /**
+     * The <code>Invoker</code> classes <code>Map</code>, keyed by
+     * &lt;invoke&gt; target types (specified using "targettype" attribute).
+     */
+    private Map invokerClasses;
+
+    /**
+     * The <code>Map</code> of active <code>Invoker</code>s, keyed by
+     * (leaf) <code>State</code>s.
+     */
+    private Map invokers;
+
+    /**
      * The evaluator for expressions.
      */
     private Evaluator evaluator;
@@ -61,14 +75,24 @@ public class SCInstance {
     private Context rootContext;
 
     /**
-     * Constructor.
+     * The owning state machine executor.
      */
-    SCInstance() {
+    private SCXMLExecutor executor;
+
+    /**
+     * Constructor.
+     *
+     * @param executor The executor that this instance is attached to.
+     */
+    SCInstance(final SCXMLExecutor executor) {
         this.notificationRegistry = new NotificationRegistry();
         this.contexts = new HashMap();
         this.histories = new HashMap();
+        this.invokerClasses = new HashMap();
+        this.invokers = new HashMap();
         this.evaluator = null;
         this.rootContext = null;
+        this.executor = executor;
     }
 
     /**
@@ -227,6 +251,103 @@ public class SCInstance {
         if (lastConfiguration != null) {
             lastConfiguration.clear();
         }
+    }
+
+    /**
+     * Get the {@link SCXMLExecutor} this instance is attached to.
+     *
+     * @return The SCXMLExecutor this instance is attached to.
+     * @see org.apache.commons.scxml.SCXMLExecutor
+     */
+    public SCXMLExecutor getExecutor() {
+        return executor;
+    }
+
+    /**
+     * Register an {@link Invoker} class for this target type.
+     *
+     * @param targettype The target type (specified by "targettype"
+     *                   attribute of &lt;invoke&gt; tag).
+     * @param invokerClass The <code>Invoker</code> <code>Class</code>.
+     */
+    void registerInvokerClass(final String targettype,
+            final Class invokerClass) {
+        invokerClasses.put(targettype, invokerClass);
+    }
+
+    /**
+     * Remove the {@link Invoker} class registered for this target
+     * type (if there is one registered).
+     *
+     * @param targettype The target type (specified by "targettype"
+     *                   attribute of &lt;invoke&gt; tag).
+     */
+    void unregisterInvokerClass(final String targettype) {
+        invokerClasses.remove(targettype);
+    }
+
+    /**
+     * Get the {@link Invoker} for this {@link TransitionTarget}.
+     * May return <code>null</code>. A non-null <code>Invoker</code> will be
+     * returned if and only if the <code>TransitionTarget</code> is
+     * currently active and contains an &lt;invoke&gt; child.
+     *
+     * @param targettype The type of the target being invoked.
+     * @return An {@link Invoker} for the specified type, if an
+     *         invoker class is registered against that type,
+     *         <code>null</code> otherwise.
+     * @throws InvokerException When a suitable {@link Invoker} cannot
+     *                          be instantiated.
+     */
+    public Invoker newInvoker(final String targettype)
+    throws InvokerException {
+        Class invokerClass = (Class) invokerClasses.get(targettype);
+        if (invokerClass == null) {
+            throw new InvokerException("No Invoker registered for "
+                + "targettype \"" + targettype + "\"");
+        }
+        Invoker invoker = null;
+        try {
+            invoker = (Invoker) invokerClass.newInstance();
+        } catch (InstantiationException ie) {
+            throw new InvokerException(ie.getMessage(), ie.getCause());
+        } catch (IllegalAccessException iae) {
+            throw new InvokerException(iae.getMessage(), iae.getCause());
+        }
+        return invoker;
+    }
+
+    /**
+    * Get the {@link Invoker} for this {@link TransitionTarget}.
+     * May return <code>null</code>. A non-null {@link Invoker} will be
+     * returned if and only if the {@link TransitionTarget} is
+     * currently active and contains an &lt;invoke&gt; child.
+     *
+     * @param transitionTarget The <code>TransitionTarget</code>.
+     * @return The Invoker.
+     */
+    public Invoker getInvoker(final TransitionTarget transitionTarget) {
+        return (Invoker) invokers.get(transitionTarget);
+    }
+
+    /**
+     * Set the {@link Invoker} for this {@link TransitionTarget}.
+     *
+     * @param transitionTarget The TransitionTarget.
+     * @param invoker The Invoker.
+     */
+    public void setInvoker(final TransitionTarget transitionTarget,
+            final Invoker invoker) {
+        invokers.put(transitionTarget, invoker);
+    }
+
+    /**
+     * Return the Map of {@link Invoker}s currently "active".
+     *
+     * @return The map of invokers.
+     */
+    public Map getInvokers() {
+        return invokers;
     }
 
 }
