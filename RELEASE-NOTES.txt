@@ -15,22 +15,33 @@
 -->
 $Id$
 
-			 Commons  SCXML Package
-			  Version 1.0-SNAPSHOT
-			    Release Notes
+                         Commons  SCXML Package
+                          Version 1.0-SNAPSHOT
+                            Release Notes
 
 
 INTRODUCTION:
 
-This document contains the release notes for this version of the Commons
-SCXML package, and highlights changes since the previous version. The
-current release adds new features and bug fixes, and is being done now to
-follow the release early/release often mentality.
+The Commons SCXML (State Chart XML) project provides a generic
+state-machine based execution environment. It borrows most semantics
+from its namesake Working Draft at the W3C. Anything that can be
+represented as a UML state chart -- business process flows, view
+navigation bits, interaction or dialog management, and many more -- can
+leverage the Commons SCXML library. The library abstracts out the
+environment interfaces, and can be used in numerous server-side and
+client-side runtimes.
+
+Please visit the website for project information and documentation:
+
+http://jakarta.apache.org/commons/scxml/
 
 
 NEW FEATURES:
 
+This is the first release.
+
 
 BUG FIXES:
 
+This is the first release.
 
