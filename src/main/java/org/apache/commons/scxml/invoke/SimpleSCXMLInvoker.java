@@ -29,6 +29,7 @@ import org.apache.commons.scxml.TriggerEvent;
 import org.apache.commons.scxml.env.SimpleDispatcher;
 import org.apache.commons.scxml.env.SimpleErrorHandler;
 import org.apache.commons.scxml.env.SimpleErrorReporter;
+import org.apache.commons.scxml.env.SimpleSCXMLListener;
 import org.apache.commons.scxml.io.SCXMLDigester;
 import org.apache.commons.scxml.model.ModelException;
 import org.apache.commons.scxml.model.SCXML;
@@ -102,6 +103,7 @@ public class SimpleSCXMLInvoker implements Invoker {
         }
         executor.setRootContext(rootCtx);
         executor.setStateMachine(scxml);
+        executor.addListener(scxml, new SimpleSCXMLListener());
         try {
             executor.go();
         } catch (ModelException me) {
