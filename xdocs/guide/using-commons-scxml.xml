@@ -144,16 +144,13 @@
 
    <subsection name="Using invoke to kickstart external processes">
 
-    <p><i>Not yet implemented in Commons SCXML.</i></p>
-
     <p>The &lt;invoke&gt; element is defined by the latest version of
     the W3C SCXML Working Draft. It allows the engine to invoke processes from
     simple states (those that don't have &lt;parallel&gt; or &lt;state&gt;
     children). The process may return a payload with the "done" event,
     that becomes available for decision making in the state machine
-    context. Many related details are currently <b>TBD</b> in the Working
-    Draft and thefore, the Commons SCXML engine does not implement
-    &lt;invoke&gt; yet.</p>
+    context. Some related details are currently <b>TBD</b> in the Working
+    Draft and thefore, susceptible to change.</p>
 
    </subsection>
 
