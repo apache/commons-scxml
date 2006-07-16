@@ -112,7 +112,7 @@
                   href="http://svn.apache.org/viewcvs/jakarta/commons/proper/scxml/trunk/"/>
 
       <item       name="Nightly snapshots"
-                  href="http://cvs.apache.org/builds/jakarta-commons/nightly/commons-scxml/"/>
+                  href="http://people.apache.org/builds/jakarta-commons/nightly/commons-scxml/"/>
 
     </menu>
 
