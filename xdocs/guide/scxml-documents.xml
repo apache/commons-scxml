@@ -280,7 +280,7 @@
 
    <p>The Commons SCXML implementation allows you to register custom actions.
       Here is the Commons SCXML
-      <a href="http://svn.apache.org/repos/asf/jakarta/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml/custom-hello-world.xml">hello world example using a custom action</a>.
+      <a href="http://svn.apache.org/repos/asf/jakarta/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml/custom-hello-world-02.xml">hello world example using a custom action</a>.
       The interesting bits are:</p>
 
    <pre>
