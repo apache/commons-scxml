@@ -16,7 +16,7 @@
 $Id$
 
 			 Commons  SCXML Package
-			  Version 1.0-SNAPSHOT
+			  Version 0.5-SNAPSHOT
 			    Release Notes
 
 
