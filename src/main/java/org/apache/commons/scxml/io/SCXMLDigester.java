@@ -61,6 +61,7 @@ import org.apache.commons.scxml.model.OnEntry;
 import org.apache.commons.scxml.model.OnExit;
 import org.apache.commons.scxml.model.Parallel;
 import org.apache.commons.scxml.model.Param;
+import org.apache.commons.scxml.model.PathResolverHolder;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.Send;
 import org.apache.commons.scxml.model.State;
@@ -688,10 +689,10 @@ public final class SCXMLDigester {
         scxmlRules.add(XPU_TR_TAR_ST, new SetNextRule("setTarget"));
 
         //// Parallels
-        addParallelRules(XPU_ST_PAR, scxmlRules, customActions, scxml);
+        addParallelRules(XPU_ST_PAR, scxmlRules, pr, customActions, scxml);
 
         //// Ifs
-        addIfRules(XPU_IF, scxmlRules, customActions);
+        addIfRules(XPU_IF, scxmlRules, pr, customActions);
 
         //// Custom actions
         addCustomActionRules(XPU_ONEN, scxmlRules, customActions);
@@ -728,8 +729,8 @@ public final class SCXMLDigester {
         addHistoryRules(xp + XPF_HIST, scxmlRules, customActions, pr, scxml);
         addParentRule(xp, scxmlRules, parent);
         addTransitionRules(xp + XPF_TR, scxmlRules, "addTransition",
-            customActions);
-        addHandlerRules(xp, scxmlRules, customActions);
+            pr, customActions);
+        addHandlerRules(xp, scxmlRules, pr, customActions);
         scxmlRules.add(xp, new UpdateModelRule(scxml));
     }
 
@@ -741,14 +742,15 @@ public final class SCXMLDigester {
      * @param scxmlRules The rule set to be used for digestion
      * @param customActions The list of custom actions this digester needs
      *                      to be able to process
+     * @param pr The {@link PathResolver} for this document
      * @param scxml The parent SCXML document (or null)
      */
     private static void addParallelRules(final String xp,
-            final ExtendedBaseRules scxmlRules, final List customActions,
-            final SCXML scxml) {
+            final ExtendedBaseRules scxmlRules, final PathResolver pr,
+            final List customActions, final SCXML scxml) {
         addSimpleRulesTuple(xp, scxmlRules, Parallel.class, null, null,
                 "setParallel");
-        addHandlerRules(xp, scxmlRules, customActions);
+        addHandlerRules(xp, scxmlRules, pr, customActions);
         addParentRule(xp, scxmlRules, 1);
         scxmlRules.add(xp, new UpdateModelRule(scxml));
     }
@@ -813,13 +815,13 @@ public final class SCXMLDigester {
             final PathResolver pr, final SCXML scxml) {
         scxmlRules.add(xp, new ObjectCreateRule(Invoke.class));
         scxmlRules.add(xp, new SetPropertiesRule());
-        scxmlRules.add(xp, new UpdateInvokeRule(pr));
+        scxmlRules.add(xp, new SetPathResolverRule(pr));
         scxmlRules.add(xp + XPF_PRM, new ObjectCreateRule(Param.class));
         scxmlRules.add(xp + XPF_PRM, new SetPropertiesRule());
         scxmlRules.add(xp + XPF_PRM, new SetNextRule("addParam"));
         scxmlRules.add(xp + XPF_FIN, new ObjectCreateRule(Finalize.class));
         scxmlRules.add(xp + XPF_FIN, new UpdateFinalizeRule());
-        addActionRules(xp + XPF_FIN, scxmlRules, customActions);
+        addActionRules(xp + XPF_FIN, scxmlRules, pr, customActions);
         scxmlRules.add(xp + XPF_FIN, new SetNextRule("setFinalize"));
         scxmlRules.add(xp, new SetNextRule("setInvoke"));
     }
@@ -842,7 +844,7 @@ public final class SCXMLDigester {
         addPseudoStatePropertiesRules(xp, scxmlRules, customActions, pr);
         scxmlRules.add(xp, new UpdateModelRule(scxml));
         addTransitionRules(xp + XPF_TR, scxmlRules, "setTransition",
-            customActions);
+            pr, customActions);
         scxmlRules.add(xp, new SetNextRule("setInitial"));
     }
 
@@ -866,7 +868,7 @@ public final class SCXMLDigester {
         scxmlRules.add(xp, new SetPropertiesRule(new String[] {"type"},
             new String[] {"type"}));
         addTransitionRules(xp + XPF_TR, scxmlRules, "setTransition",
-            customActions);
+            pr, customActions);
         scxmlRules.add(xp, new SetNextRule("addHistory"));
     }
 
@@ -925,18 +927,19 @@ public final class SCXMLDigester {
      * @param scxmlRules The rule set to be used for digestion
      * @param setNextMethod The method name for adding this transition
      *             to its parent (defined by the SCXML Java object model).
+     * @param pr The {@link PathResolver} for this document
      * @param customActions The list of custom actions this digester needs
      *                      to be able to process
      */
     private static void addTransitionRules(final String xp,
             final ExtendedBaseRules scxmlRules, final String setNextMethod,
-            final List customActions) {
+            final PathResolver pr, final List customActions) {
         scxmlRules.add(xp, new ObjectCreateRule(Transition.class));
         scxmlRules.add(xp, new SetPropertiesRule(
             new String[] {"event", "cond", "target"},
             new String[] {"event", "cond", "next"}));
         scxmlRules.add(xp + XPF_TAR, new SetPropertiesRule());
-        addActionRules(xp, scxmlRules, customActions);
+        addActionRules(xp, scxmlRules, pr, customActions);
         scxmlRules.add(xp + XPF_EXT, new Rule() {
             public void end(final String namespace, final String name) {
                 Transition t = (Transition) getDigester().peek(1);
@@ -955,16 +958,18 @@ public final class SCXMLDigester {
      * @param xp The Digester style XPath expression of the parent
      *           XML element
      * @param scxmlRules The rule set to be used for digestion
+     * @param pr The {@link PathResolver} for this document
      * @param customActions The list of custom actions this digester needs
      *                      to be able to process
      */
     private static void addHandlerRules(final String xp,
-            final ExtendedBaseRules scxmlRules, final List customActions) {
+            final ExtendedBaseRules scxmlRules, final PathResolver pr,
+            final List customActions) {
         scxmlRules.add(xp + XPF_ONEN, new ObjectCreateRule(OnEntry.class));
-        addActionRules(xp + XPF_ONEN, scxmlRules, customActions);
+        addActionRules(xp + XPF_ONEN, scxmlRules, pr, customActions);
         scxmlRules.add(xp + XPF_ONEN, new SetNextRule("setOnEntry"));
         scxmlRules.add(xp + XPF_ONEX, new ObjectCreateRule(OnExit.class));
-        addActionRules(xp + XPF_ONEX, scxmlRules, customActions);
+        addActionRules(xp + XPF_ONEX, scxmlRules, pr, customActions);
         scxmlRules.add(xp + XPF_ONEX, new SetNextRule("setOnExit"));
     }
 
@@ -974,12 +979,15 @@ public final class SCXMLDigester {
      * @param xp The Digester style XPath expression of the parent
      *           XML element
      * @param scxmlRules The rule set to be used for digestion
+     * @param pr The {@link PathResolver} for this document
      * @param customActions The list of custom actions this digester needs
      *                      to be able to process
      */
     private static void addActionRules(final String xp,
-            final ExtendedBaseRules scxmlRules, final List customActions) {
+            final ExtendedBaseRules scxmlRules, final PathResolver pr,
+            final List customActions) {
         addActionRulesTuple(xp + XPF_ASN, scxmlRules, Assign.class);
+        scxmlRules.add(xp + XPF_ASN, new SetPathResolverRule(pr));
         addActionRulesTuple(xp + XPF_VAR, scxmlRules, Var.class);
         addActionRulesTuple(xp + XPF_LOG, scxmlRules, Log.class);
         addSendRulesTuple(xp + XPF_SND, scxmlRules);
@@ -1077,13 +1085,15 @@ public final class SCXMLDigester {
      * @param xp The Digester style XPath expression of the parent
      *           XML element
      * @param scxmlRules The rule set to be used for digestion
+     * @param pr The {@link PathResolver} for this document
      * @param customActions The list of custom actions this digester needs
      *                      to be able to process
      */
     private static void addIfRules(final String xp,
-            final ExtendedBaseRules scxmlRules, final List customActions) {
+            final ExtendedBaseRules scxmlRules, final PathResolver pr,
+            final List customActions) {
         addActionRulesTuple(xp, scxmlRules, If.class);
-        addActionRules(xp, scxmlRules, customActions);
+        addActionRules(xp, scxmlRules, pr, customActions);
         addActionRulesTuple(xp + XPF_EIF, scxmlRules, ElseIf.class);
         addActionRulesTuple(xp + XPF_ELS, scxmlRules, Else.class);
     }
@@ -1404,11 +1414,10 @@ public final class SCXMLDigester {
     }
 
     /**
-     * Custom digestion rule for setting PathResolver for runtime retrieval
-     * and parent state.
+     * Custom digestion rule for setting PathResolver for runtime retrieval.
      *
      */
-    public static class UpdateInvokeRule extends Rule {
+    public static class SetPathResolverRule extends Rule {
 
         /**
          * The PathResolver to set.
@@ -1422,7 +1431,7 @@ public final class SCXMLDigester {
          *
          * @see PathResolver
          */
-        public UpdateInvokeRule(final PathResolver pr) {
+        public SetPathResolverRule(final PathResolver pr) {
             super();
             this.pr = pr;
         }
@@ -1432,8 +1441,9 @@ public final class SCXMLDigester {
          */
         public final void begin(final String namespace, final String name,
                 final Attributes attributes) {
-            Invoke invoke = (Invoke) getDigester().peek();
-            invoke.setPathResolver(pr);
+            PathResolverHolder prHolder = (PathResolverHolder) getDigester().
+                peek();
+            prHolder.setPathResolver(pr);
         }
     }
 

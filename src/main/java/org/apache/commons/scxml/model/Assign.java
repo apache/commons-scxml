@@ -19,15 +19,20 @@ package org.apache.commons.scxml.model;
 
 import java.util.Collection;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml.Context;
 import org.apache.commons.scxml.ErrorReporter;
 import org.apache.commons.scxml.Evaluator;
 import org.apache.commons.scxml.EventDispatcher;
+import org.apache.commons.scxml.PathResolver;
 import org.apache.commons.scxml.SCInstance;
 import org.apache.commons.scxml.SCXMLExpressionException;
 import org.apache.commons.scxml.SCXMLHelper;
 import org.apache.commons.scxml.TriggerEvent;
+import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 /**
@@ -35,7 +40,7 @@ import org.w3c.dom.Node;
  * &lt;assign&gt; SCXML element.
  *
  */
-public final class Assign extends Action {
+public final class Assign extends Action implements PathResolverHolder {
 
     /**
      * Left hand side expression evaluating to a previously
@@ -58,6 +63,11 @@ public final class Assign extends Action {
      * Expression evaluating to the new value of the variable.
      */
     private String expr;
+
+    /**
+     * {@link PathResolver} for resolving the "src" result.
+     */
+    private PathResolver pathResolver;
 
     /**
      * Constructor.
@@ -139,6 +149,24 @@ public final class Assign extends Action {
     }
 
     /**
+     * Get the {@link PathResolver}.
+     *
+     * @return Returns the pathResolver.
+     */
+    public PathResolver getPathResolver() {
+        return pathResolver;
+    }
+
+    /**
+     * Set the {@link PathResolver}.
+     *
+     * @param pathResolver The pathResolver to set.
+     */
+    public void setPathResolver(final PathResolver pathResolver) {
+        this.pathResolver = pathResolver;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public void execute(final EventDispatcher evtDispatcher,
@@ -156,14 +184,19 @@ public final class Assign extends Action {
                 // a Node, if so, import it at location
                 Node newNode = null;
                 try {
-                    newNode = eval.evalLocation(ctx, expr);
+                    if (src != null && src.trim().length() > 0) {
+                        newNode = getSrcNode();
+                    } else {
+                        newNode = eval.evalLocation(ctx, expr);
+                    }
                     if (newNode != null) {
                         // adopt children, possible spec clarification needed
-                        Node importedNode = oldNode.getOwnerDocument().
-                            importNode(newNode, true);
-                        for (Node child = importedNode.getFirstChild();
-                            child != null; child = child.getNextSibling()) {
-                                oldNode.appendChild(child);
+                        for (Node child = newNode.getFirstChild();
+                                child != null;
+                                child = child.getNextSibling()) {
+                            Node importedNode = oldNode.getOwnerDocument().
+                                importNode(child, true);
+                            oldNode.appendChild(importedNode);
                         }
                     }
                 } catch (SCXMLExpressionException see) {
@@ -184,7 +217,12 @@ public final class Assign extends Action {
                 errRep.onError(ErrorReporter.UNDEFINED_VARIABLE, name
                     + " = null", parentState);
             } else {
-                Object varObj = eval.eval(ctx, expr);
+                Object varObj = null;
+                if (src != null && src.trim().length() > 0) {
+                    varObj = getSrcNode();
+                } else {
+                    varObj = eval.eval(ctx, expr);
+                }
                 ctx.set(name, varObj);
                 TriggerEvent ev = new TriggerEvent(name + ".change",
                     TriggerEvent.CHANGE_EVENT);
@@ -193,5 +231,29 @@ public final class Assign extends Action {
         }
     }
 
-}
+    /**
+     * Get the {@link Node} the "src" attribute points to.
+     *
+     * @return The node the "src" attribute points to.
+     */
+    private Node getSrcNode() {
+        String resolvedSrc = src;
+        if (pathResolver != null) {
+            resolvedSrc = pathResolver.resolvePath(src);
+        }
+        Document doc = null;
+        try {
+            doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().
+                parse(resolvedSrc);
+        } catch (Throwable t) {
+            org.apache.commons.logging.Log log = LogFactory.
+                getLog(Assign.class);
+            log.error(t.getMessage(), t);
+        }
+        if (doc == null) {
+            return null;
+        }
+        return doc.getDocumentElement();
+    }
 
+}

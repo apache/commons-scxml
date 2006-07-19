@@ -27,7 +27,7 @@ import org.apache.commons.scxml.PathResolver;
  * &lt;invoke&gt; SCXML element.
  *
  */
-public class Invoke {
+public class Invoke implements PathResolverHolder {
 
     /**
      * The type of target to be invoked.
