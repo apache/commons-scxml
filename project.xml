@@ -193,6 +193,17 @@
       </properties>
     </dependency>
     <dependency>
+      <groupId>xalan</groupId>
+      <artifactId>xalan</artifactId>
+      <version>2.6.0</version>
+      <url>http://xml.apache.org/xalan-j/</url>
+      <properties>
+        <comment>&lt;b&gt;Sun JDK 1.5&lt;/b&gt;
+        only</comment>
+        <optional>true</optional>
+      </properties>
+    </dependency>
+    <dependency>
       <groupId>maven-plugins</groupId>
       <artifactId>maven-cobertura-plugin</artifactId>
       <version>1.1.1</version>
