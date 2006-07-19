@@ -27,9 +27,8 @@
  <section name="Commons SCXML">
 
   <p>
-  The first <a href="http://www.w3.org/TR/scxml/">Working Draft of State 
-  Chart XML (SCXML)</a> was published by the World Wide Web Consortium (W3C)
-  Voice Browser Working Group in July 2005.
+  <a href="http://www.w3.org/TR/scxml/">State Chart XML (SCXML)</a> is currently a
+  Working Draft published by the World Wide Web Consortium (W3C).
   SCXML provides a generic state-machine based execution environment based on Harel
   State Tables. SCXML is a candidate for the control language within 
   multiple markup languages coming out of the W3C (see Working Draft for details).
@@ -47,9 +46,8 @@
   <subsection name="Status">
    <p>
     <ul>
-     <li>The code is unreleased</li>
-     <li>Methods and classes can and will appear and disappear without warning</li>
-     <li>If you like the code and want to push it towards a release, join the mailing list!</li>
+     <li>The code is approaching its first (version 0.5) release</li>
+     <li>If you like the code and want to push it forward, join the mailing list!</li>
     </ul>   
    </p>
   </subsection>
@@ -73,7 +71,15 @@
 
  <section name="Releases">
   <p>
-  Commons SCXML is headed for a (first) 1.0 release soon. See wiki for release plans.
+  Commons SCXML is headed for a first release soon. See wiki for release plans.
+  The initial release version number has been chosen to be 0.5 (rather than a
+  1.0). This is meant to better convey the fact that the underlying W3C
+  specification is still a Working Draft, and subsequent changes to the Draft
+  may warrant changes to portions of the library API. The core Commons SCXML
+  APIs (SCXMLDigester, SCXMLExecutor etc.) are stable. Portions such as
+  processing of &lt;datamodel&gt; and &lt;invoke&gt; SCXML elements, on the
+  other hand, are subject to change as further changes are expected in these
+  sections of the W3C Working Draft. See Working Draft for details.
   </p>
  </section>
 
