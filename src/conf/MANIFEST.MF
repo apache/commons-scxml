@@ -6,5 +6,5 @@ Specification-Title: Commons SCXML Engine
 Specification-Vendor: The Apache Software Foundation
 Implementation-Title: org.apache.commons.scxml
 Implementation-Vendor: The Apache Software Foundation
-Implementation-Version: 0.5-RC2
+Implementation-Version: 0.5-RC3
 
