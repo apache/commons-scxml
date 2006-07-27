@@ -46,7 +46,7 @@ class AsyncTrigger implements Runnable {
         this.executor = executor;
         this.events = new TriggerEvent[1];
         this.events[0] = event;
-        new Thread(this).run();
+        new Thread(this).start();
     }
 
     /**
