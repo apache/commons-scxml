@@ -26,14 +26,24 @@
 
     <section name="About this document">
       <ul>
-        <li>Commons SCXML has had no official releases.</li>
-        <li>To help towards a release, join us on the
+        <li>The latest (and first) release of Commons SCXML is version
+            0.5.</li>
+        <li>If you are interested in helping the project, join us on the
             <a href="mail-lists.html">commons-dev mailing list</a>.</li>
       </ul>
     </section>
 
-    <release version="1.0" date="Pending"
-     description="Project nearing first release candidate towards a 1.0">
+    <release version="0.5.1" date="In SVN"
+     description="Future release">
+
+      <action dev="rahul" type="fix">
+       [07-28-2006] Updated website to reflect 0.5 release.
+      </action>
+
+    </release>
+
+    <release version="0.5" date="2006-07-28"
+     description="First release">
 
       <action dev="rahul" type="add">
        [06-19-2006] Added invoke, param and finalize processing. These
