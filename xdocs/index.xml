@@ -46,8 +46,10 @@
   <subsection name="Status">
    <p>
     <ul>
-     <li>The code is approaching its first (version 0.5) release</li>
-     <li>If you like the code and want to push it forward, join the mailing list!</li>
+     <li>The project has recently (July 2006) completed its first (version 0.5)
+         release.</li>
+     <li>If you like the code and want to push it forward, join the effort
+         via the mailing list!</li>
     </ul>   
    </p>
   </subsection>
@@ -56,6 +58,9 @@
 
 
  <section name="Documentation">
+  <p>
+  Latest documentation is available:
+  </p>
   <p>
     <ul>
       <li>The latest <a href="apidocs/index.html">Javadoc</a>.</li>
@@ -66,20 +71,28 @@
       <li>A <a href="guide.html">user guide</a> containing assorted API notes and tutorials.</li>
     </ul>
   </p>
+  <p>
+  Documentation for the most recent release is also available via the left side
+  menu bar.
+  </p>
  </section>
 
 
  <section name="Releases">
   <p>
-  Commons SCXML is headed for a first release soon. See wiki for release plans.
-  The initial release version number has been chosen to be 0.5 (rather than a
-  1.0). This is meant to better convey the fact that the underlying W3C
-  specification is still a Working Draft, and subsequent changes to the Draft
-  may warrant changes to portions of the library API. The core Commons SCXML
-  APIs (SCXMLDigester, SCXMLExecutor etc.) are stable. Portions such as
-  processing of &lt;datamodel&gt; and &lt;invoke&gt; SCXML elements, on the
-  other hand, are subject to change as further changes are expected in these
-  sections of the W3C Working Draft. See Working Draft for details.
+  The latest release is v0.5. -
+  <a href="http://jakarta.apache.org/site/downloads/downloads_commons-scxml.cgi">Download now!</a>
+  </p>
+  <p>
+  This is the first release. The initial release version number has been chosen
+  to be 0.5 (rather than a 1.0). This is meant to better convey the fact that the
+  underlying W3C specification is still a Working Draft, and subsequent changes
+  to the Draft may warrant changes to portions of the library API. The core
+  Commons SCXML APIs (SCXMLDigester, SCXMLExecutor etc.) are stable.
+  Portions such as processing of &lt;datamodel&gt; and &lt;invoke&gt; SCXML
+  elements, on the other hand, are subject to change as further changes are
+  expected in these sections of the W3C Working Draft. See Working Draft for
+  details.
   </p>
  </section>
 
