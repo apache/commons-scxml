@@ -45,6 +45,15 @@
     <release version="0.5" date="2006-07-28"
      description="First release">
 
+      <action dev="rahul" type="fix" issue="SCXML-13">
+       [07-19-2006] SCXML doesn't compile using (Sun) JDK 1.5.
+       actions.
+      </action>
+
+      <action dev="rahul" type="add" issue="SCXML-3">
+       [07-19-2006] Add src attribute processing for assign tag.
+      </action>
+
       <action dev="rahul" type="add">
        [06-19-2006] Added invoke, param and finalize processing. These
        SCXML elements were added in the January 2006 Working Draft.
