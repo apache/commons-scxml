@@ -68,6 +68,14 @@
     </mailingList>
   </mailingLists>
 
+  <versions>
+    <version>
+      <id>0.5</id>
+      <name>0.5</name>
+      <tag>SCXML_0_5</tag>
+    </version>
+  </versions>
+
   <developers>
     <developer>
       <name>Rahul Akolkar</name>
