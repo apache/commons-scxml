@@ -224,6 +224,9 @@ final class ModelUpdater {
     private static void updateTransition(final Transition t,
             final Map targets) throws ModelException {
         String next = t.getNext();
+        if (next == null) { // stay transition
+            return;
+        }
         TransitionTarget tt = t.getTarget();
         if (tt == null) {
             tt = (TransitionTarget) targets.get(next);
