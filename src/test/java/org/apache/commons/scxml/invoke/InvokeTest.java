@@ -24,7 +24,6 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.apache.commons.scxml.SCXMLExecutor;
-import org.apache.commons.scxml.SCXMLTestHelper;
 import org.apache.commons.scxml.env.SimpleDispatcher;
 import org.apache.commons.scxml.env.SimpleErrorHandler;
 import org.apache.commons.scxml.env.SimpleErrorReporter;
@@ -33,7 +32,7 @@ import org.apache.commons.scxml.env.jexl.JexlEvaluator;
 import org.apache.commons.scxml.io.SCXMLDigester;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.State;
-import org.apache.commons.scxml.model.TransitionTarget;
+
 /**
  * Unit tests {@link org.apache.commons.scxml.SCXMLExecutor}.
  * Testing <invoke>
