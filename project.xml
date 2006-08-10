@@ -50,7 +50,7 @@
   <repository>
     <connection>scm:svn:http://svn.apache.org/repos/asf/jakarta/commons/proper/${pom.artifactId.substring(8)}/trunk</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/jakarta/commons/proper/${pom.artifactId.substring(8)}/trunk</developerConnection>
-    <url>http://svn.apache.org/viewcvs.cgi/jakarta/commons/proper/${pom.artifactId.substring(8)}/trunk</url>
+    <url>http://svn.apache.org/viewvc/jakarta/commons/proper/${pom.artifactId.substring(8)}/trunk</url>
   </repository>
 
   <mailingLists>

@@ -44,7 +44,7 @@
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/jakarta/commons/proper/scxml/trunk</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/jakarta/commons/proper/scxml/trunk</developerConnection>
-    <url>http://svn.apache.org/viewcvs.cgi/jakarta/commons/proper/scxml/trunk</url>
+    <url>http://svn.apache.org/viewvc/jakarta/commons/proper/scxml/trunk</url>
   </scm>
 
   <mailingLists>
