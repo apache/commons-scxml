@@ -55,6 +55,14 @@
   </section>
 
   <section name="Proof of concept">
+
+   <subsection name="Note">
+    <p>This proof of concept uses the "legacy" Shale dialogs API. This
+       code is now obsolete. A better implementation is available in
+       the Apache Shale project sandbox.</p>
+   </subsection>
+
+   <subsection name="Webapps">
     <p>There are two war files below, the first one uses SCXML
     documents to describe the Shale dialogs, and the second
     one is the Shale source distro as-is, built locally
@@ -76,7 +84,8 @@
      nightly build)</li>
     </ul>
     </p>
-   
+   </subsection>
+
    <subsection name="UML Diagrams">
     <p>Here are the UML state machine diagrams for the two dialogs in
     the usecases examples:</p>
