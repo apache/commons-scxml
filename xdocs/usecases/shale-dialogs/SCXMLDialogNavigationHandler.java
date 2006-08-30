@@ -19,9 +19,8 @@
  * Commons SCXML dependencies -
  * http://jakarta.apache.org/commons/scxml/dependencies.html
  *
- * Struts Shale dependencies -
- * http://struts.apache.org/shale/ 
- * (Currently under "Foundations" section)
+ * Apache Shale dependencies -
+ * http://shale.apache.org/dependencies.html
  */
 package org.apache.commons.scxml.usecases;
 

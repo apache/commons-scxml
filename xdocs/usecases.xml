@@ -63,7 +63,7 @@
         Reusable Dialog Components (RDC) Framework</a> &lt;group&gt;
         container.</li>
         <li><a href="usecases/scxml-in-shale-dialogs.html">Usecase 3</a> -
-        Use in <a href="http://struts.apache.org/shale">Shale</a> dialogs</li>
+        Use in <a href="http://shale.apache.org/">Shale</a> dialogs</li>
        </ul>
     </p>
    </subsection>

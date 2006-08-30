@@ -26,7 +26,7 @@
 
   <section name="SCXML documents to describe Shale dialogs">
 
-   <p><a href="http://struts.apache.org/shale">Shale</a> is
+   <p><a href="http://shale.apache.org/">Shale</a> is
    &quot;<i>a proposal for a modern web application framework, fundamentaly
    based on JavaServer Faces</i>&quot;. The Shale Framework includes a Dialog
    Manager, to describe &quot;conversations&quot; or &quot;dialogs&quot;
