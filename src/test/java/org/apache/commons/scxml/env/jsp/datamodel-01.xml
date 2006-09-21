@@ -17,7 +17,7 @@
 <!-- A fictitious state machine used by test cases.
      Meant to illustrate the usage of SCXML <datamodel> element
      and the Commons SCXML Data() function -->
-<scxml xmlns="http://www.w3.org/2005/07/SCXML"
+<scxml xmlns="http://www.w3.org/2005/07/scxml"
        version="1.0"
        initialstate="main">
 

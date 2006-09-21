@@ -665,6 +665,7 @@ public final class SCXMLDigester {
             final PathResolver pr, final List customActions) {
 
         ExtendedBaseRules scxmlRules = new ExtendedBaseRules();
+        scxmlRules.setNamespaceURI(NAMESPACE_SCXML);
 
         //// SCXML
         scxmlRules.add(XP_SM, new ObjectCreateRule(SCXML.class));

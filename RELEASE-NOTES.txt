@@ -16,7 +16,7 @@
 $Id$
 
                          Commons  SCXML Package
-                         Version 0.5.1-SNAPSHOT
+                         Version 0.6-SNAPSHOT
                             Release Notes
 
 
@@ -36,25 +36,10 @@ Please visit the website for project information and documentation:
 http://jakarta.apache.org/commons/scxml/
 
 
-API STABILITY:
-
-The initial release version number has been chosen to be 0.5 (rather
-than a 1.0). This is meant to better convey the fact that the underlying
-W3C specification is still a Working Draft, and subsequent changes to
-the Draft may warrant changes to portions of the library API. The core
-Commons SCXML APIs (SCXMLDigester, SCXMLExecutor etc.) are stable.
-Portions such as processing of <datamodel> and <invoke> SCXML elements,
-on the other hand, are subject to change as further changes are expected
-in these sections of the W3C Working Draft. See Working Draft for
-details.
-
-
 NEW FEATURES:
 
-This is the first release.
 
 
 BUG FIXES:
 
-This is the first release.
 

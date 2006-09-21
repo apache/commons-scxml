@@ -33,7 +33,7 @@ public class SCXML {
     /**
      * The SCXML XMLNS.
      */
-    public static final String XMLNS = "http://www.w3.org/2005/07/SCXML";
+    public static final String XMLNS = "http://www.w3.org/2005/07/scxml";
 
     /**
      * The xmlns attribute on the root &lt;smxml&gt; element.

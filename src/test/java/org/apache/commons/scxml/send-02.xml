@@ -16,7 +16,7 @@
 -->
 <!-- Various send usages that fire the events on the existing execution
      engine. -->
-<scxml xmlns="http://www.w3.org/2005/07/SCXML"
+<scxml xmlns="http://www.w3.org/2005/07/scxml"
        version="1.0"
        initialstate="ten">
 

@@ -124,6 +124,16 @@ public class CustomActionTest extends TestCase {
         }
     }
 
+    public void testAddBadCustomAction06() {
+        try {
+            new CustomAction("http://www.w3.org/2005/07/scxml", "foo",
+                this.getClass());
+            fail("Added custom action in the SCXML namespace");
+        } catch (IllegalArgumentException iae) {
+            // Expected
+        }
+    }
+
     // Hello World example using the SCXML <log> action
     public void testHelloWorld() {
         // (1) Get a SCXMLExecutor

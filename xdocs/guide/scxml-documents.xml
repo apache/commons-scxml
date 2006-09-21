@@ -57,7 +57,7 @@
       for SCXML. The interesting bits are:</p>
 
    <pre>
-    &lt;scxml xmlns="http://www.w3.org/2005/07/SCXML"
+    &lt;scxml xmlns="http://www.w3.org/2005/07/scxml"
               version="1.0"
               initialstate="hello"&gt;
 
@@ -284,7 +284,7 @@
       The interesting bits are:</p>
 
    <pre>
-    &lt;scxml xmlns="http://www.w3.org/2005/07/SCXML"
+    &lt;scxml xmlns="http://www.w3.org/2005/07/scxml"
               xmlns:my="http://my.custom-actions.domain/CUSTOM"
               version="1.0"
               initialstate="custom"&gt;

@@ -22,7 +22,7 @@
   <name>SCXML</name>
   <groupId>commons-scxml</groupId>
   <artifactId>commons-scxml</artifactId>
-  <version>0.5.1-SNAPSHOT</version>
+  <version>0.6-SNAPSHOT</version>
 
   <inceptionYear>2005</inceptionYear>
   <description>A Java Implementation of a State Chart XML Engine</description>
