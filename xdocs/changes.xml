@@ -33,8 +33,17 @@
       </ul>
     </section>
 
-    <release version="0.5.1" date="In SVN"
+    <release version="0.6" date="In SVN"
      description="Future release">
+
+      <action dev="rahul" type="fix">
+       [09-21-2006] SCXML elements have to be defined in the following
+       namespace (case sensitive): http://www.w3.org/2005/07/scxml
+      </action>
+
+      <action dev="rahul" type="fix" issue="SCXML-14" due-to="Sitthichai Rernglertpricha">
+       [08-07-2006] Allow the target of a transition to be omitted.
+      </action>
 
       <action dev="rahul" type="fix">
        [07-28-2006] Updated website to reflect 0.5 release.

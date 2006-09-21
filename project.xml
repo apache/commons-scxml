@@ -19,7 +19,7 @@
   <name>SCXML</name>
   <groupId>commons-scxml</groupId> 
   <artifactId>commons-scxml</artifactId>
-  <currentVersion>0.5.1-SNAPSHOT</currentVersion>
+  <currentVersion>0.6-SNAPSHOT</currentVersion>
 
   <inceptionYear>2005</inceptionYear>
   <shortDescription>Jakarta Commons SCXML</shortDescription>
@@ -105,6 +105,9 @@
     </contributor>
     <contributor>
       <name>Niall Pemberton</name>
+    </contributor>
+    <contributor>
+      <name>Sitthichai Rernglertpricha</name>
     </contributor>
   </contributors>
   

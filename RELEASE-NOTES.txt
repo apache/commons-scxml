@@ -42,4 +42,7 @@ NEW FEATURES:
 
 BUG FIXES:
 
+ o SCXML elements have to be defined in the following namespace
+   (case sensitive): http://www.w3.org/2005/07/scxml
 
+ o [SCXML-14] Allow target of a transition to be omitted.
