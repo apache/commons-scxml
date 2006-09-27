@@ -187,7 +187,7 @@ public class SCXMLExecutor {
             final SCXMLSemantics semantics) {
         this.eventdispatcher = evtDisp;
         this.errorReporter = errRep;
-        this.currentStatus = null;
+        this.currentStatus = new Status();
         this.stateMachine = null;
         if (semantics == null) {
             // Use default semantics, if none provided
@@ -195,8 +195,6 @@ public class SCXMLExecutor {
         } else {
             this.semantics = semantics;
         }
-        this.currentStatus = null;
-        this.stateMachine = null;
         this.scInstance = new SCInstance(this);
         this.scInstance.setEvaluator(expEvaluator);
     }
