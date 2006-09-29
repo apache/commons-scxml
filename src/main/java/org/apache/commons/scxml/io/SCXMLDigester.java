@@ -1153,6 +1153,7 @@ public final class SCXMLDigester {
      * 1) Updation of the SCXML object's global targets Map <br>
      * 2) Obtaining a handle to the SCXML object's NotificationRegistry <br>
      *
+     * @deprecated Will be removed in version 1.0
      */
     public static class UpdateModelRule extends Rule {
 
@@ -1186,6 +1187,7 @@ public final class SCXMLDigester {
     /**
      * Custom digestion rule for setting Executable parent of Action elements.
      *
+     * @deprecated Will be removed in version 1.0
      */
     public static class SetExecutableParentRule extends Rule {
 
@@ -1216,6 +1218,8 @@ public final class SCXMLDigester {
      * <code>ExternalContent</code> elements.
      *
      * @see ExternalContent
+     *
+     * @deprecated Will be removed in version 1.0
      */
     public static class ParseExternalContentRule extends NodeCreateRule {
         /**
@@ -1243,6 +1247,7 @@ public final class SCXMLDigester {
     /**
      * Custom digestion rule for parsing bodies of &lt;data&gt; elements.
      *
+     * @deprecated Will be removed in version 1.0
      */
     public static class ParseDataRule extends NodeCreateRule {
 
@@ -1331,6 +1336,7 @@ public final class SCXMLDigester {
      * Custom digestion rule for external sources, that is, the src attribute of
      * the &lt;state&gt; element.
      *
+     * @deprecated Will be removed in version 1.0
      */
     public static class DigestSrcAttributeRule extends Rule {
 
@@ -1417,6 +1423,7 @@ public final class SCXMLDigester {
     /**
      * Custom digestion rule for setting PathResolver for runtime retrieval.
      *
+     * @deprecated Will be removed in version 1.0
      */
     public static class SetPathResolverRule extends Rule {
 
@@ -1451,6 +1458,7 @@ public final class SCXMLDigester {
     /**
      * Custom digestion rule for setting state parent of finalize.
      *
+     * @deprecated Will be removed in version 1.0
      */
     public static class UpdateFinalizeRule extends Rule {
 
