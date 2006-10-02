@@ -114,7 +114,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
             throws ModelException {
         State tmp = input.getInitialState();
         if (tmp == null) {
-            errRep.onError(ErrorReporter.NO_INITIAL,
+            errRep.onError(ErrorConstants.NO_INITIAL,
                     "SCXML initialstate is missing!", input);
         } else {
             states.add(tmp);
@@ -168,7 +168,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                         errRep, scInstance, appLog, internalEvents);
                 }
             } catch (SCXMLExpressionException e) {
-                errRep.onError(ErrorReporter.EXPRESSION_ERROR, e.getMessage(),
+                errRep.onError(ErrorConstants.EXPRESSION_ERROR, e.getMessage(),
                         oe);
             }
             // check if invoke is active in this state
@@ -200,7 +200,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                         errRep, scInstance, appLog, internalEvents);
                 }
             } catch (SCXMLExpressionException e) {
-                errRep.onError(ErrorReporter.EXPRESSION_ERROR,
+                errRep.onError(ErrorConstants.EXPRESSION_ERROR,
                     e.getMessage(), t);
             }
             nr.fireOnTransition(t, t.getParent(), t.getRuntimeTarget(), t);
@@ -218,7 +218,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                         errRep, scInstance, appLog, internalEvents);
                 }
             } catch (SCXMLExpressionException e) {
-                errRep.onError(ErrorReporter.EXPRESSION_ERROR, e.getMessage(),
+                errRep.onError(ErrorConstants.EXPRESSION_ERROR, e.getMessage(),
                         oe);
             }
             nr.fireOnEntry(tt, tt);
@@ -359,7 +359,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                                 step.getAfterStatus().getEvents());
                         }
                     } catch (SCXMLExpressionException e) {
-                        errRep.onError(ErrorReporter.EXPRESSION_ERROR,
+                        errRep.onError(ErrorConstants.EXPRESSION_ERROR,
                             e.getMessage(), fn);
                     }
                 }
@@ -389,7 +389,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                             getContext(t.getParent()), t.getCond());
                 } catch (SCXMLExpressionException e) {
                     rslt = Boolean.FALSE;
-                    errRep.onError(ErrorReporter.EXPRESSION_ERROR, e
+                    errRep.onError(ErrorConstants.EXPRESSION_ERROR, e
                             .getMessage(), t);
                 }
             }
@@ -439,7 +439,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
             // check if all non-deterministic situations have been resolved
             nonDeterm.removeAll(removeList);
             if (nonDeterm.size() > 0) {
-                errRep.onError(ErrorReporter.NON_DETERMINISTIC,
+                errRep.onError(ErrorConstants.NON_DETERMINISTIC,
                     "Multiple conflicting transitions enabled.", nonDeterm);
             }
             // apply global transition filter
@@ -529,14 +529,14 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                     // composite state
                     Initial ini = st.getInitial();
                     if (ini == null) {
-                        errRep.onError(ErrorReporter.NO_INITIAL,
+                        errRep.onError(ErrorConstants.NO_INITIAL,
                             "Initial pseudostate is missing!", st);
                     } else {
                         // If we are here, transition target must be a State
                         // or History
                         Transition initialTransition = ini.getTransition();
                         if (initialTransition == null) {
-                            errRep.onError(ErrorReporter.ILLEGAL_INITIAL,
+                            errRep.onError(ErrorConstants.ILLEGAL_INITIAL,
                                 "Initial transition is null!", st);
                         } else {
                             TransitionTarget init = initialTransition.
@@ -545,7 +545,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                                 ||
                                 !(init instanceof State
                                   || init instanceof History)) {
-                                errRep.onError(ErrorReporter.ILLEGAL_INITIAL,
+                                errRep.onError(ErrorConstants.ILLEGAL_INITIAL,
                                 "Initial not pointing to a State or History!",
                                 st);
                             } else {
@@ -764,7 +764,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                         srcObj = eval.eval(ctx, srcexpr);
                         src = String.valueOf(srcObj);
                     } catch (SCXMLExpressionException see) {
-                        errRep.onError(ErrorReporter.EXPRESSION_ERROR,
+                        errRep.onError(ErrorConstants.EXPRESSION_ERROR,
                             see.getMessage(), i);
                     }
                 }
@@ -797,7 +797,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                         try {
                             argValue = eval.eval(ctx, argExpr);
                         } catch (SCXMLExpressionException see) {
-                            errRep.onError(ErrorReporter.EXPRESSION_ERROR,
+                            errRep.onError(ErrorConstants.EXPRESSION_ERROR,
                                 see.getMessage(), i);
                         }
                     }

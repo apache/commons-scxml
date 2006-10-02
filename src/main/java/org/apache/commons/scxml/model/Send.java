@@ -33,6 +33,7 @@ import org.apache.commons.scxml.SCInstance;
 import org.apache.commons.scxml.SCXMLExpressionException;
 import org.apache.commons.scxml.SCXMLHelper;
 import org.apache.commons.scxml.TriggerEvent;
+import org.apache.commons.scxml.semantics.ErrorConstants;
 
 /**
  * The class in this SCXML object model that corresponds to the
@@ -298,7 +299,7 @@ public class Send extends Action implements ExternalContent {
                 Object varObj = ctx.get(varName);
                 if (varObj == null) {
                     //considered as a warning here
-                    errRep.onError(ErrorReporter.UNDEFINED_VARIABLE,
+                    errRep.onError(ErrorConstants.UNDEFINED_VARIABLE,
                             varName + " = null", parentState);
                 }
                 params.put(varName, varObj);

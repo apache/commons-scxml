@@ -1,6 +1,6 @@
 /*
  *
- *   Copyright 2005 The Apache Software Foundation.
+ *   Copyright 2005-2006 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,12 +24,12 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.apache.commons.scxml.ErrorReporter;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.State;
 import org.apache.commons.scxml.model.Transition;
 import org.apache.commons.scxml.model.TransitionTarget;
+import org.apache.commons.scxml.semantics.ErrorConstants;
 
 /**
  * Custom error reporter that log execution errors.
@@ -57,7 +57,7 @@ public class SimpleErrorReporter implements ErrorReporter {
         StringBuffer msg = new StringBuffer();
         msg.append(errCode).append(" (");
         msg.append(errDetail).append("): ");
-        if (errCode == ErrorReporter.NO_INITIAL) {
+        if (errCode == ErrorConstants.NO_INITIAL) {
             if (errCtx instanceof SCXML) {
                 //determineInitialStates
                 msg.append("<SCXML>");
@@ -66,10 +66,10 @@ public class SimpleErrorReporter implements ErrorReporter {
                 //determineTargetStates
                 msg.append("State " + LogUtils.getTTPath((State) errCtx));
             }
-        } else if (errCode == ErrorReporter.UNKNOWN_ACTION) {
+        } else if (errCode == ErrorConstants.UNKNOWN_ACTION) {
             //executeActionList
             msg.append("Action: " + errCtx.getClass().getName());
-        } else if (errCode == ErrorReporter.NON_DETERMINISTIC) {
+        } else if (errCode == ErrorConstants.NON_DETERMINISTIC) {
             //filterTransitionSet
             msg.append(" [");
             if (errCtx instanceof HashSet) {
@@ -83,7 +83,7 @@ public class SimpleErrorReporter implements ErrorReporter {
                 }
             }
             msg.append(']');
-        } else if (errCode == ErrorReporter.ILLEGAL_CONFIG) {
+        } else if (errCode == ErrorConstants.ILLEGAL_CONFIG) {
             //isLegalConfig
             if (errCtx instanceof Map.Entry) {
                 TransitionTarget tt = (TransitionTarget)

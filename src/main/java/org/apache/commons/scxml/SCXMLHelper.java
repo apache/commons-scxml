@@ -1,6 +1,6 @@
 /*
  *
- *   Copyright 2005 The Apache Software Foundation.
+ *   Copyright 2005-2006 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ import org.apache.commons.scxml.model.Path;
 import org.apache.commons.scxml.model.State;
 import org.apache.commons.scxml.model.Transition;
 import org.apache.commons.scxml.model.TransitionTarget;
+import org.apache.commons.scxml.semantics.ErrorConstants;
 import org.w3c.dom.CharacterData;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
@@ -153,14 +154,14 @@ public final class SCXMLHelper {
             if (tt instanceof Parallel) {
                 Parallel p = (Parallel) tt;
                 if (count.size() < p.getStates().size()) {
-                    errRep.onError(ErrorReporter.ILLEGAL_CONFIG,
+                    errRep.onError(ErrorConstants.ILLEGAL_CONFIG,
                         "Not all AND states active for parallel "
                         + p.getId(), entry);
                     legalConfig = false;
                 }
             } else {
                 if (count.size() > 1) {
-                    errRep.onError(ErrorReporter.ILLEGAL_CONFIG,
+                    errRep.onError(ErrorConstants.ILLEGAL_CONFIG,
                         "Multiple OR states active for state "
                         + tt.getId(), entry);
                     legalConfig = false;
@@ -169,7 +170,7 @@ public final class SCXMLHelper {
             count.clear(); //cleanup
         }
         if (scxmlCount.size() > 1) {
-            errRep.onError(ErrorReporter.ILLEGAL_CONFIG,
+            errRep.onError(ErrorConstants.ILLEGAL_CONFIG,
                     "Multiple top-level OR states active!", scxmlCount);
         }
         //cleanup

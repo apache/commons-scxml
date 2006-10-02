@@ -18,15 +18,16 @@ package org.apache.commons.scxml;
 import java.util.HashSet;
 import java.util.Set;
 
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
 import org.apache.commons.scxml.env.MockErrorReporter;
 import org.apache.commons.scxml.env.SimpleErrorReporter;
 import org.apache.commons.scxml.model.Parallel;
 import org.apache.commons.scxml.model.State;
 import org.apache.commons.scxml.model.TransitionTarget;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.apache.commons.scxml.semantics.ErrorConstants;
 
 public class SCXMLHelperTest extends TestCase {
 
@@ -155,7 +156,7 @@ public class SCXMLHelperTest extends TestCase {
         MockErrorReporter errorReporter = new MockErrorReporter();
         
         assertFalse(SCXMLHelper.isLegalConfig(states, errorReporter));
-        assertEquals(ErrorReporter.ILLEGAL_CONFIG, errorReporter.getErrCode());
+        assertEquals(ErrorConstants.ILLEGAL_CONFIG, errorReporter.getErrCode());
         assertEquals("Not all AND states active for parallel 4", errorReporter.getErrDetail());
     }
     
@@ -173,7 +174,7 @@ public class SCXMLHelperTest extends TestCase {
         MockErrorReporter errorReporter = new MockErrorReporter();
         
         assertTrue(SCXMLHelper.isLegalConfig(states, errorReporter));
-        assertEquals(ErrorReporter.ILLEGAL_CONFIG, errorReporter.getErrCode());
+        assertEquals(ErrorConstants.ILLEGAL_CONFIG, errorReporter.getErrCode());
         assertEquals("Multiple top-level OR states active!", errorReporter.getErrDetail());
     }
     
@@ -198,7 +199,7 @@ public class SCXMLHelperTest extends TestCase {
         MockErrorReporter errorReporter = new MockErrorReporter();
         
         assertFalse(SCXMLHelper.isLegalConfig(states, errorReporter));
-        assertEquals(ErrorReporter.ILLEGAL_CONFIG, errorReporter.getErrCode());
+        assertEquals(ErrorConstants.ILLEGAL_CONFIG, errorReporter.getErrCode());
         assertEquals("Multiple OR states active for state parentid", errorReporter.getErrDetail());
     }
     

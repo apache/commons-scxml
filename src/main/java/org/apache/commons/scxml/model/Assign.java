@@ -1,6 +1,6 @@
 /*
  *
- *   Copyright 2005 The Apache Software Foundation.
+ *   Copyright 2005-2006 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import org.apache.commons.scxml.SCInstance;
 import org.apache.commons.scxml.SCXMLExpressionException;
 import org.apache.commons.scxml.SCXMLHelper;
 import org.apache.commons.scxml.TriggerEvent;
+import org.apache.commons.scxml.semantics.ErrorConstants;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -214,7 +215,7 @@ public final class Assign extends Action implements PathResolverHolder {
         } else {
             // lets try "name" (usage as in Sep '05 WD, useful with <var>)
             if (!ctx.has(name)) {
-                errRep.onError(ErrorReporter.UNDEFINED_VARIABLE, name
+                errRep.onError(ErrorConstants.UNDEFINED_VARIABLE, name
                     + " = null", parentState);
             } else {
                 Object varObj = null;
