@@ -29,43 +29,43 @@ public class ErrorConstants {
      * @see org.apache.commons.scxml.model.SCXML#getInitialState()
      * @see org.apache.commons.scxml.model.State#getInitial()
      */
-    public static String NO_INITIAL = "NO_INITIAL";
+    public static final String NO_INITIAL = "NO_INITIAL";
 
     /**
      * An initial state for a composite state whose Transition does not.
      * Map to a descendant of the composite state.
      *
      */
-    public static String ILLEGAL_INITIAL = "ILLEGAL_INITIAL";
+    public static final String ILLEGAL_INITIAL = "ILLEGAL_INITIAL";
 
     /**
      * Unknown action - unsupported executable content. List of supported.
      * actions: assign, cancel, elseif, else, if, log, send, var
      */
-    public static String UNKNOWN_ACTION = "UNKNOWN_ACTION";
+    public static final String UNKNOWN_ACTION = "UNKNOWN_ACTION";
 
     /**
      * Illegal state machine configuration.
      * Either a parallel exists which does not have all its AND sub-states
      * active or there are multiple enabled OR states on the same level.
      */
-    public static String ILLEGAL_CONFIG = "ILLEGAL_CONFIG";
+    public static final String ILLEGAL_CONFIG = "ILLEGAL_CONFIG";
 
     /**
      * Non-deterministic situation has occured - there are more than
      * one enabled transitions in conflict.
      */
-    public static String NON_DETERMINISTIC = "NON_DETERMINISTIC";
+    public static final String NON_DETERMINISTIC = "NON_DETERMINISTIC";
 
     /**
      * A variable referred to by assign name attribute is undefined.
      */
-    public static String UNDEFINED_VARIABLE = "UNDEFINED_VARIABLE";
+    public static final String UNDEFINED_VARIABLE = "UNDEFINED_VARIABLE";
 
     /**
      * An expression language error.
      */
-    public static String EXPRESSION_ERROR = "EXPRESSION_ERROR";
+    public static final String EXPRESSION_ERROR = "EXPRESSION_ERROR";
 
     //---------------------------------------------- STATIC CONSTANTS ONLY
 
