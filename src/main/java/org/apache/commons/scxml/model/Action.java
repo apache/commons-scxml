@@ -1,6 +1,6 @@
 /*
  *
- *   Copyright 2005 The Apache Software Foundation.
+ *   Copyright 2005-2006 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
  */
 package org.apache.commons.scxml.model;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 import org.apache.commons.logging.Log;
@@ -30,7 +31,7 @@ import org.apache.commons.scxml.SCXMLExpressionException;
  * such as &lt;assign&gt;, &lt;log&gt; etc.
  *
  */
-public abstract class Action {
+public abstract class Action implements Serializable {
 
     /**
      * Link to its parent or container.

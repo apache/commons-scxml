@@ -109,7 +109,7 @@ public class CustomAction {
             throw new IllegalArgumentException(ERR_NO_LOCAL_NAME);
         }
         if (actionClass == null
-                || !SCXMLHelper.subtypeOf(actionClass, Action.class)) {
+                || !Action.class.isAssignableFrom(actionClass)) {
             log.error(ERR_NOT_AN_ACTION);
             throw new IllegalArgumentException(ERR_NOT_AN_ACTION);
         }

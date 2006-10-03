@@ -1,6 +1,6 @@
 /*
  *
- *   Copyright 2005 The Apache Software Foundation.
+ *   Copyright 2005-2006 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
  */
 package org.apache.commons.scxml.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,7 @@ import java.util.List;
  * such as &lt;onentry&gt; and &lt;onexit&gt;.
  *
  */
-public abstract class Executable {
+public abstract class Executable implements Serializable {
 
     /**
      * The set of executable elements (those that inheriting from

@@ -17,6 +17,7 @@
  */
 package org.apache.commons.scxml.model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +28,7 @@ import org.apache.commons.scxml.PathResolver;
  * &lt;invoke&gt; SCXML element.
  *
  */
-public class Invoke implements PathResolverHolder {
+public class Invoke implements PathResolverHolder, Serializable {
 
     /**
      * The type of target to be invoked.

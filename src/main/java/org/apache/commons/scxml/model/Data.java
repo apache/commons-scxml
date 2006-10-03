@@ -17,6 +17,8 @@
  */
 package org.apache.commons.scxml.model;
 
+import java.io.Serializable;
+
 import org.w3c.dom.Node;
 
 /**
@@ -24,7 +26,7 @@ import org.w3c.dom.Node;
  * &lt;data&gt; child element of the &lt;datamodel&gt; element.
  *
  */
-public class Data {
+public class Data implements Serializable {
 
     /**
      * The name of this data instance, that is used as its identifier.

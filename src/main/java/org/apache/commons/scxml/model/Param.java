@@ -17,12 +17,14 @@
  */
 package org.apache.commons.scxml.model;
 
+import java.io.Serializable;
+
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;param&gt; SCXML element.
  *
  */
-public class Param {
+public class Param implements Serializable {
 
     /**
      * The param name.

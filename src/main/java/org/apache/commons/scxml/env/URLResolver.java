@@ -17,6 +17,7 @@
  */
 package org.apache.commons.scxml.env;
 
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -29,7 +30,7 @@ import org.apache.commons.scxml.PathResolver;
  *
  * @see org.apache.commons.scxml.PathResolver
  */
-public class URLResolver implements PathResolver {
+public class URLResolver implements PathResolver, Serializable {
 
     /** Implementation independent log category. */
     private Log log = LogFactory.getLog(PathResolver.class);

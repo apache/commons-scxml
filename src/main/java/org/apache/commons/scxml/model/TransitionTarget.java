@@ -17,12 +17,14 @@
  */
 package org.apache.commons.scxml.model;
 
+import java.io.Serializable;
+
 /**
  * An abstract base class for elements in SCXML that can serve as a
  * &lt;target&gt; for a &lt;transition&gt;, such as State or Parallel.
  *
  */
-public abstract class TransitionTarget {
+public abstract class TransitionTarget implements Serializable {
 
     /**
      * Identifier for this transition target. Other parts of the SCXML

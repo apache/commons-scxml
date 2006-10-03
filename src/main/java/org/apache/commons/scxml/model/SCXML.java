@@ -17,6 +17,7 @@
  */
 package org.apache.commons.scxml.model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +29,7 @@ import org.apache.commons.scxml.SCXMLHelper;
  * root&quot;.
  *
  */
-public class SCXML {
+public class SCXML implements Serializable {
 
     /**
      * The SCXML XMLNS.
@@ -54,7 +55,7 @@ public class SCXML {
     /**
      * The initial state ID (used by XML Digester only).
      */
-    private transient String initialstate;
+    private String initialstate;
 
     /**
      * Optional property holding the data model for this SCXML document.

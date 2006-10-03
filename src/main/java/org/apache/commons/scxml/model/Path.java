@@ -1,6 +1,6 @@
 /*
  *
- *   Copyright 2005 The Apache Software Foundation.
+ *   Copyright 2005-2006 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
  */
 package org.apache.commons.scxml.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -34,7 +35,7 @@ import org.apache.commons.scxml.SCXMLHelper;
  * down to the target of the Transition.
  *
  */
-public class Path {
+public class Path implements Serializable {
 
     /**
      * The list of TransitionTargets in the &quot;up segment&quot;.

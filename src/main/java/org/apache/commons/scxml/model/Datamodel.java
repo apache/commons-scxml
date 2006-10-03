@@ -17,6 +17,7 @@
  */
 package org.apache.commons.scxml.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,7 @@ import java.util.List;
  * &lt;datamodel&gt; element.
  *
  */
-public class Datamodel {
+public class Datamodel implements Serializable {
 
    /**
     * The set of &lt;data&gt; elements, parsed as Elements, that are

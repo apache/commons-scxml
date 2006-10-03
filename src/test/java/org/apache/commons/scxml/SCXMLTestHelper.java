@@ -15,6 +15,12 @@
  */
 package org.apache.commons.scxml;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.Set;
@@ -23,7 +29,6 @@ import junit.framework.Assert;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.apache.commons.scxml.env.SimpleDispatcher;
 import org.apache.commons.scxml.env.Tracer;
 import org.apache.commons.scxml.env.jexl.JexlContext;
@@ -31,12 +36,21 @@ import org.apache.commons.scxml.env.jexl.JexlEvaluator;
 import org.apache.commons.scxml.io.SCXMLDigester;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.TransitionTarget;
-
 import org.xml.sax.ErrorHandler;
 /**
  * Helper methods for running SCXML unit tests.
  */
 public class SCXMLTestHelper {
+
+    /**
+     * Serialized Commons SCXML object model temporary store.
+     * Assumes the default build artifacts are generated in the
+     * "target" directory (so it can be removed via a clean build).
+     */
+    public static final String SERIALIZATION_DIR = "target/serialization";
+    public static final String SERIALIZATION_FILE_PREFIX =
+        SERIALIZATION_DIR + "/scxml";
+    public static final String SERIALIZATION_FILE_SUFFIX = ".ser";
 
     public static SCXML digest(final URL url) {
         return digest(url, null, null);
@@ -63,7 +77,8 @@ public class SCXMLTestHelper {
             Assert.fail(e.getMessage());
         }
         Assert.assertNotNull(scxml);
-        return scxml;
+        SCXML roundtrip = testModelSerializability(scxml);
+        return roundtrip;
     }
 
     public static SCXMLExecutor getExecutor(final URL url) {
@@ -207,6 +222,31 @@ public class SCXMLTestHelper {
             Assert.fail(e.getMessage());
         }
         return exec.getCurrentStatus().getStates();
+    }
+
+    public static SCXML testModelSerializability(final SCXML scxml) {
+        File fileDir = new File(SERIALIZATION_DIR);
+        if (!fileDir.exists() && !fileDir.mkdir()) {
+            return null;
+        }
+        String filename = SERIALIZATION_FILE_PREFIX
+            + System.currentTimeMillis() + SERIALIZATION_FILE_SUFFIX;
+        SCXML roundtrip = null;
+        try {
+            ObjectOutputStream out =
+                new ObjectOutputStream(new FileOutputStream(filename));
+            out.writeObject(scxml);
+            out.close();
+            ObjectInputStream in =
+                new ObjectInputStream(new FileInputStream(filename));
+            roundtrip = (SCXML) in.readObject();
+            in.close();
+        } catch(IOException ex) {
+            ex.printStackTrace();
+        } catch(ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        return roundtrip;
     }
 
     /**
