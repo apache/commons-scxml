@@ -41,7 +41,7 @@ import org.w3c.dom.Node;
  * &lt;assign&gt; SCXML element.
  *
  */
-public final class Assign extends Action implements PathResolverHolder {
+public class Assign extends Action implements PathResolverHolder {
 
     /**
      * Left hand side expression evaluating to a previously

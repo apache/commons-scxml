@@ -30,7 +30,7 @@ import org.apache.commons.scxml.SCXMLExpressionException;
  * &lt;cancel&gt; SCXML element.
  *
  */
-public final class Cancel extends Action {
+public class Cancel extends Action {
 
     /**
      * Constructor.
