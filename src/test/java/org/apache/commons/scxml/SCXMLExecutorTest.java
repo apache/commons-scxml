@@ -133,6 +133,7 @@ public class SCXMLExecutorTest extends TestCase {
             assertEquals(1, currentStates.size());
             assertEquals("ten", ((State)currentStates.iterator().
                 next()).getId());
+            exec = SCXMLTestHelper.testExecutorSerializability(exec);
             currentStates = SCXMLTestHelper.fireEvent(exec, "ten.self");
             assertEquals(1, currentStates.size());
             assertEquals("ten", ((State)currentStates.iterator().

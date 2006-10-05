@@ -17,6 +17,7 @@
  */
 package org.apache.commons.scxml.env.jsp;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -40,7 +41,7 @@ import org.w3c.dom.Node;
  * SCXML documents.
  *
  */
-public class ELEvaluator implements Evaluator {
+public class ELEvaluator implements Evaluator, Serializable {
 
     /** Implementation independent log category. */
     private Log log = LogFactory.getLog(Evaluator.class);
@@ -55,7 +56,7 @@ public class ELEvaluator implements Evaluator {
     private static Pattern dataFct = Pattern.compile("Data\\(");
 
     /** The expression evaluator implementation for the JSP/EL environment. */
-    private ExpressionEvaluator ee = null;
+    private transient ExpressionEvaluator ee = null;
 
     /**
      * Constructor.
@@ -98,7 +99,7 @@ public class ELEvaluator implements Evaluator {
         try {
             String evalExpr = inFct.matcher(expr).
                 replaceAll("In(_ALL_STATES, ");
-            Object rslt = ee.evaluate(evalExpr, Object.class, vr,
+            Object rslt = getEvaluator().evaluate(evalExpr, Object.class, vr,
                 builtinFnMapper);
             if (log.isTraceEnabled()) {
                 log.trace(expr + " = " + String.valueOf(rslt));
@@ -126,8 +127,8 @@ public class ELEvaluator implements Evaluator {
         try {
             String evalExpr = inFct.matcher(expr).
                 replaceAll("In(_ALL_STATES, ");
-            Boolean rslt = (Boolean) ee.evaluate(evalExpr, Boolean.class,
-                vr, builtinFnMapper);
+            Boolean rslt = (Boolean) getEvaluator().evaluate(evalExpr,
+                Boolean.class, vr, builtinFnMapper);
             if (log.isDebugEnabled()) {
                 log.debug(expr + " = " + String.valueOf(rslt));
             }
@@ -156,7 +157,7 @@ public class ELEvaluator implements Evaluator {
                 replaceAll("In(_ALL_STATES, ");
             evalExpr = dataFct.matcher(evalExpr).
                 replaceFirst("LData(");
-            Node rslt = (Node) ee.evaluate(evalExpr, Node.class,
+            Node rslt = (Node) getEvaluator().evaluate(evalExpr, Node.class,
                 vr, builtinFnMapper);
             if (log.isDebugEnabled()) {
                 log.debug(expr + " = " + String.valueOf(rslt));
@@ -197,9 +198,21 @@ public class ELEvaluator implements Evaluator {
     }
 
     /**
+     * Get the <code>ExpressionEvaluator</code>, with lazy initialization.
+     *
+     * @return Log The log being used.
+     */
+    private ExpressionEvaluator getEvaluator() {
+        if (ee == null) {
+            ee = new ExpressionEvaluatorImpl();
+        }
+        return ee;
+    }
+
+    /**
      * A Context wrapper that implements VariableResolver.
      */
-    static class ContextWrapper implements VariableResolver {
+    static class ContextWrapper implements VariableResolver, Serializable {
         /** Context to be wrapped. */
         private Context ctx = null;
         /** The log. */
@@ -224,7 +237,7 @@ public class ELEvaluator implements Evaluator {
     /**
      * A simple function mapper for SCXML defined functions.
      */
-    class BuiltinFunctionMapper implements FunctionMapper {
+    class BuiltinFunctionMapper implements FunctionMapper, Serializable {
         /** The log. */
         private Log log = LogFactory.getLog(BuiltinFunctionMapper.class);
         /**

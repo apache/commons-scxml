@@ -17,6 +17,7 @@
  */
 package org.apache.commons.scxml.env;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +29,7 @@ import org.apache.commons.scxml.Context;
  * Simple Context wrapping a map of variables.
  *
  */
-public class SimpleContext implements Context {
+public class SimpleContext implements Context, Serializable {
 
     /** Implementation independent log category. */
     private Log log = LogFactory.getLog(Context.class);

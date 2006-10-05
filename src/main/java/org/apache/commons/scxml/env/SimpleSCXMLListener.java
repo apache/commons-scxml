@@ -17,9 +17,10 @@
  */
 package org.apache.commons.scxml.env;
 
+import java.io.Serializable;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.apache.commons.scxml.SCXMLListener;
 import org.apache.commons.scxml.model.Transition;
 import org.apache.commons.scxml.model.TransitionTarget;
@@ -28,7 +29,7 @@ import org.apache.commons.scxml.model.TransitionTarget;
 /**
  * Simple SCXML Listener that logs execution.
  */
-public class SimpleSCXMLListener implements SCXMLListener {
+public class SimpleSCXMLListener implements SCXMLListener, Serializable {
 
     /** Log. */
     private Log log = LogFactory.getLog(getClass());

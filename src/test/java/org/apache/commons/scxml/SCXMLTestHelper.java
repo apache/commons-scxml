@@ -249,6 +249,31 @@ public class SCXMLTestHelper {
         return roundtrip;
     }
 
+    public static SCXMLExecutor testExecutorSerializability(final SCXMLExecutor exec) {
+        File fileDir = new File(SERIALIZATION_DIR);
+        if (!fileDir.exists() && !fileDir.mkdir()) {
+            return null;
+        }
+        String filename = SERIALIZATION_FILE_PREFIX
+            + System.currentTimeMillis() + SERIALIZATION_FILE_SUFFIX;
+        SCXMLExecutor roundtrip = null;
+        try {
+            ObjectOutputStream out =
+                new ObjectOutputStream(new FileOutputStream(filename));
+            out.writeObject(exec);
+            out.close();
+            ObjectInputStream in =
+                new ObjectInputStream(new FileInputStream(filename));
+            roundtrip = (SCXMLExecutor) in.readObject();
+            in.close();
+        } catch(IOException ex) {
+            ex.printStackTrace();
+        } catch(ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        return roundtrip;
+    }
+
     /**
      * Discourage instantiation.
      */

@@ -17,6 +17,7 @@
  */
 package org.apache.commons.scxml.env;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +30,7 @@ import org.apache.commons.scxml.EventDispatcher;
  * No remote eventing.
  *
  */
-public final class SimpleDispatcher implements EventDispatcher {
+public final class SimpleDispatcher implements EventDispatcher, Serializable {
 
      /** Implementation independent log category. */
      private Log log = LogFactory.getLog(EventDispatcher.class);

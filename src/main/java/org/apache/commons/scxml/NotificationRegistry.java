@@ -17,6 +17,7 @@
  */
 package org.apache.commons.scxml;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -36,7 +37,7 @@ import org.apache.commons.scxml.model.TransitionTarget;
  * listeners of the events that interest them.
  *
  */
-public final class NotificationRegistry {
+public final class NotificationRegistry implements Serializable {
 
     /**
      * The Map of all listeners keyed by Observable.

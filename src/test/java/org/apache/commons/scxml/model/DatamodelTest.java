@@ -102,6 +102,7 @@ public class DatamodelTest extends TestCase {
             assertEquals(1, currentStates.size());
             assertEquals("ten", ((State)currentStates.iterator().
                 next()).getId());
+            exec01 = SCXMLTestHelper.testExecutorSerializability(exec01);
             currentStates = fireEvent("ten.done", exec01);
             assertEquals(1, currentStates.size());
             assertEquals("twenty", ((State)currentStates.iterator().
@@ -116,11 +117,13 @@ public class DatamodelTest extends TestCase {
             assertEquals(1, currentStates.size());
             assertEquals("thirty", ((State)currentStates.iterator().
                 next()).getId());
+            exec01 = SCXMLTestHelper.testExecutorSerializability(exec01);
             // exec02
             currentStates = fireEvent("ten.done", exec02);
             assertEquals(1, currentStates.size());
             assertEquals("twenty", ((State)currentStates.iterator().
                 next()).getId());
+            exec02 = SCXMLTestHelper.testExecutorSerializability(exec02);
             currentStates = fireEvent("twenty.done", exec02);
             assertEquals(1, currentStates.size());
             assertEquals("thirty", ((State)currentStates.iterator().

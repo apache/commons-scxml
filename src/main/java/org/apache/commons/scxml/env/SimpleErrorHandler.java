@@ -17,9 +17,10 @@
  */
 package org.apache.commons.scxml.env;
 
+import java.io.Serializable;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXParseException;
 
@@ -27,7 +28,7 @@ import org.xml.sax.SAXParseException;
  * Custom error handler that logs the parsing errors in the
  * SCXML document.
  */
-public class SimpleErrorHandler implements ErrorHandler {
+public class SimpleErrorHandler implements ErrorHandler, Serializable {
 
     /** Message prefix. */
     private static final String MSG_PREFIX = "SCXML SAX Parsing: ";

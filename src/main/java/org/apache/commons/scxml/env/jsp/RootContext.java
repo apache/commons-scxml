@@ -17,6 +17,11 @@
  */
 package org.apache.commons.scxml.env.jsp;
 
+import java.io.IOException;
+import java.io.NotSerializableException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import javax.servlet.jsp.JspContext;
 import javax.servlet.jsp.el.ELException;
 import javax.servlet.jsp.el.VariableResolver;
@@ -108,6 +113,30 @@ public final class RootContext extends ELContext {
      */
     public void setVariableResolver(final VariableResolver variableResolver) {
         this.variableResolver = variableResolver;
+    }
+
+    //--------------------------------------------------- Truth in advertising
+
+    /**
+     * Instances of this class are not serializable.
+     *
+     * @param out The object output stream.
+     * @throws IOException Guaranteed to throw a NotSerializableException
+     */
+    private void writeObject(final ObjectOutputStream out)
+    throws IOException {
+        throw new NotSerializableException();
+    }
+
+    /**
+     * Instances of this class are not serializable.
+     *
+     * @param in The object input stream.
+     * @throws IOException Guaranteed to throw a NotSerializableException
+     */
+    private void readObject(final ObjectInputStream in)
+    throws IOException {
+        throw new NotSerializableException();
     }
 
 }

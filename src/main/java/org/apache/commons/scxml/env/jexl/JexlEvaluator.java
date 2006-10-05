@@ -17,6 +17,7 @@
  */
 package org.apache.commons.scxml.env.jexl;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +36,7 @@ import org.w3c.dom.Node;
  * SCXML documents.
  *
  */
-public class JexlEvaluator implements Evaluator {
+public class JexlEvaluator implements Evaluator, Serializable {
 
     /** Error message if evaluation context is not a JexlContext. */
     private static final String ERR_CTX_TYPE = "Error evaluating JEXL "

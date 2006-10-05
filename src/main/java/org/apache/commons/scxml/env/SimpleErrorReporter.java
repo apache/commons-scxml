@@ -17,6 +17,7 @@
  */
 package org.apache.commons.scxml.env;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -34,7 +35,7 @@ import org.apache.commons.scxml.semantics.ErrorConstants;
 /**
  * Custom error reporter that log execution errors.
  */
-public class SimpleErrorReporter implements ErrorReporter {
+public class SimpleErrorReporter implements ErrorReporter, Serializable {
 
     /** Log. */
     private Log log = LogFactory.getLog(getClass());

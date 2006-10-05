@@ -17,6 +17,7 @@
  */
 package org.apache.commons.scxml.semantics;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 import org.apache.commons.scxml.SCXMLHelper;
@@ -27,7 +28,7 @@ import org.apache.commons.scxml.model.TransitionTarget;
  * A comparator for TransitionTarget instances.
  *
  */
-final class TransitionTargetComparator implements Comparator {
+final class TransitionTargetComparator implements Comparator, Serializable {
 
     /**
      * Constructor.

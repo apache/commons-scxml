@@ -73,6 +73,7 @@ public class WildcardTest extends TestCase {
             assertEquals(1, currentStates.size());
             assertEquals("state1", ((State)currentStates.iterator().
                 next()).getId());
+            exec = SCXMLTestHelper.testExecutorSerializability(exec);
             currentStates = SCXMLTestHelper.fireEvent(exec, "*");
             assertEquals(1, currentStates.size());
             assertEquals("state4", ((State)currentStates.iterator().

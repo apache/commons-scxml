@@ -17,6 +17,7 @@
  */
 package org.apache.commons.scxml;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -33,7 +34,7 @@ import org.apache.commons.scxml.model.TransitionTarget;
  * a particular execution of a state chart represented by a
  * <code>SCXML</code> object.
  */
-public class SCInstance {
+public class SCInstance implements Serializable {
 
     /**
      * The notification registry.

@@ -139,8 +139,10 @@ public class HistoryTest extends TestCase {
         assertEquals(1, currentStates.size());
         assertEquals("interrupted", ((State)currentStates.iterator().
             next()).getId());
+        exec = SCXMLTestHelper.testExecutorSerializability(exec);
         currentStates = SCXMLTestHelper.fireEvent(exec, "flow.resume");
         assertEquals(1, currentStates.size());
+        exec = SCXMLTestHelper.testExecutorSerializability(exec);
         return ((State)currentStates.iterator().next()).getId();
     }
 

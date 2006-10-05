@@ -15,6 +15,7 @@
  */
 package org.apache.commons.scxml;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -80,6 +81,7 @@ public class WizardsTest extends TestCase {
             assertEquals(1, currentStates.size());
             assertEquals("state1", ((State)currentStates.iterator().
                 next()).getId());
+            exec = SCXMLTestHelper.testExecutorSerializability(exec);
             currentStates = SCXMLTestHelper.fireEvent(exec, "event2");
             assertEquals(1, currentStates.size());
             assertEquals("state2", ((State)currentStates.iterator().
@@ -92,6 +94,7 @@ public class WizardsTest extends TestCase {
             assertEquals(1, currentStates.size());
             assertEquals("state3", ((State)currentStates.iterator().
                 next()).getId());
+            exec = SCXMLTestHelper.testExecutorSerializability(exec);
             currentStates = SCXMLTestHelper.fireEvent(exec, "event3"); // ensure we stay put
             assertEquals(1, currentStates.size());
             assertEquals("state3", ((State)currentStates.iterator().
@@ -114,6 +117,7 @@ public class WizardsTest extends TestCase {
             assertEquals(1, currentStates.size());
             assertEquals("state2", ((State)currentStates.iterator().
                 next()).getId());
+            exec = SCXMLTestHelper.testExecutorSerializability(exec);
             currentStates = SCXMLTestHelper.fireEvent(exec, "event4");
             assertEquals(1, currentStates.size());
             assertEquals("state4", ((State)currentStates.iterator().
@@ -123,7 +127,7 @@ public class WizardsTest extends TestCase {
         }
     }
 
-    class TestEventDispatcher implements EventDispatcher {
+    static class TestEventDispatcher implements EventDispatcher, Serializable {
         // If you change this, you must also change testWizard02Sample()
         int callback = 0;
         public void send(String sendId, String target, String targetType,

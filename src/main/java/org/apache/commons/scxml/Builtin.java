@@ -17,6 +17,7 @@
  */
 package org.apache.commons.scxml;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -36,7 +37,7 @@ import org.w3c.dom.NodeList;
  * The current version of the specification defines one builtin
  * predicate In()
  */
-public class Builtin {
+public class Builtin implements Serializable {
 
     /**
      * Implements the In() predicate for SCXML documents. The method

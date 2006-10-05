@@ -17,6 +17,7 @@
  */
 package org.apache.commons.scxml.semantics;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -68,7 +69,7 @@ import org.apache.commons.scxml.model.TransitionTarget;
  *
  * <p>Specific semantics can be created by subclassing this class.</p>
  */
-public class SCXMLSemanticsImpl implements SCXMLSemantics {
+public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
 
     /**
      * SCXML Logger for the application.

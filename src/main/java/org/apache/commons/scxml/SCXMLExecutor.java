@@ -17,6 +17,7 @@
  */
 package org.apache.commons.scxml;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -45,7 +46,7 @@ import org.apache.commons.scxml.semantics.SCXMLSemanticsImpl;
  *
  * @see SCXMLSemantics
  */
-public class SCXMLExecutor {
+public class SCXMLExecutor implements Serializable {
 
     /**
      * The Logger for the SCXMLExecutor.

@@ -17,11 +17,12 @@
  */
 package org.apache.commons.scxml.env;
 
+import java.io.Serializable;
+
 import org.apache.commons.scxml.ErrorReporter;
 import org.apache.commons.scxml.SCXMLListener;
 import org.apache.commons.scxml.model.Transition;
 import org.apache.commons.scxml.model.TransitionTarget;
-
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -30,7 +31,8 @@ import org.xml.sax.SAXParseException;
  * A simple tracer connected to Jakarta Commons Logging.
  *
  */
-public class Tracer implements ErrorHandler, ErrorReporter, SCXMLListener {
+public class Tracer implements ErrorHandler, ErrorReporter,
+                               SCXMLListener, Serializable {
 
     /** ErrorHandler delegate. */
     private ErrorHandler errHandler;
