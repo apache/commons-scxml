@@ -151,6 +151,15 @@
    </answer>
   </faq>
 
+  <faq id="serializability">
+   <question>
+    Are SCXMLExecutor instances serializable?
+   </question>
+   <answer>
+    Yes, as long as all associated user-defined content is too.
+   </answer>
+  </faq>
+
  </part>
 
 </faqs>
