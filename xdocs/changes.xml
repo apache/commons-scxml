@@ -36,6 +36,21 @@
     <release version="0.6" date="In SVN"
      description="Future release">
 
+      <action dev="rahul" type="add">
+       [10-05-2006] The Commons SCXML object model as well as the
+       SCXMLExecutor instances are now serializable.
+      </action>
+
+      <action dev="rahul" type="fix" issue="SCXML-25">
+       [10-02-2006] Deprecate ErrorReporter fields, add ErrorConstants
+       class for default Commons SCXML semantics.
+      </action>
+
+      <action dev="rahul" type="fix" issue="SCXML-23">
+       [09-29-2006] Begin the deprecation process for custom digester
+       rules in the io package.
+      </action>
+
       <action dev="rahul" type="fix">
        [09-21-2006] SCXML elements have to be defined in the following
        namespace (case sensitive): http://www.w3.org/2005/07/scxml
