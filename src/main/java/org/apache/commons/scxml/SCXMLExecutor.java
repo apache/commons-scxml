@@ -97,7 +97,7 @@ public class SCXMLExecutor implements Serializable {
      * @throws ModelException in case there is a fatal SCXML object
      *            model problem.
      */
-    public void triggerEvents(final TriggerEvent[] evts)
+    public synchronized void triggerEvents(final TriggerEvent[] evts)
             throws ModelException {
         // Set event data, saving old values
         Object[] oldData = setEventData(evts);
@@ -206,7 +206,7 @@ public class SCXMLExecutor implements Serializable {
      * @throws ModelException in case there is a fatal SCXML object
      *         model problem.
      */
-    public void reset() throws ModelException {
+    public synchronized void reset() throws ModelException {
         // Reset all variable contexts
         Context rootCtx = scInstance.getRootContext();
         // Clone root datamodel
@@ -263,7 +263,7 @@ public class SCXMLExecutor implements Serializable {
      *
      * @return The current Status
      */
-    public Status getCurrentStatus() {
+    public synchronized Status getCurrentStatus() {
         return currentStatus;
     }
 

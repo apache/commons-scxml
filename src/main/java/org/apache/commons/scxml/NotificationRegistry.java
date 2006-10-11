@@ -56,7 +56,7 @@ public final class NotificationRegistry implements Serializable {
      * @param source The observable this listener wants to listen to
      * @param lst The listener
      */
-    void addListener(final Object source,
+    synchronized void addListener(final Object source,
             final SCXMLListener lst) {
         Set entries = (Set) regs.get(source);
         if (entries == null) {
@@ -72,7 +72,7 @@ public final class NotificationRegistry implements Serializable {
      * @param source The observable this listener wants to stop listening to
      * @param lst The listener
      */
-    void removeListener(final Object source,
+    synchronized void removeListener(final Object source,
             final SCXMLListener lst) {
         Set entries = (Set) regs.get(source);
         if (entries != null) {
@@ -116,7 +116,7 @@ public final class NotificationRegistry implements Serializable {
      * @param source The Observable
      * @param state The TransitionTarget that was entered
      */
-    private void fireOnEntry(final Object source,
+    private synchronized void fireOnEntry(final Object source,
             final TransitionTarget state) {
         Set entries = (Set) regs.get(source);
         if (entries != null) {
@@ -160,7 +160,7 @@ public final class NotificationRegistry implements Serializable {
      * @param source The Observable
      * @param state The TransitionTarget that was exited
      */
-    private void fireOnExit(final Object source,
+    private synchronized void fireOnExit(final Object source,
             final TransitionTarget state) {
         Set entries = (Set) regs.get(source);
         if (entries != null) {
@@ -209,7 +209,7 @@ public final class NotificationRegistry implements Serializable {
      * @param to The destination TransitionTarget
      * @param transition The Transition that was taken
      */
-    private void fireOnTransition(final Object source,
+    private synchronized void fireOnTransition(final Object source,
             final TransitionTarget from, final TransitionTarget to,
             final Transition transition) {
         Set entries = (Set) regs.get(source);

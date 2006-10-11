@@ -17,6 +17,7 @@
 package org.apache.commons.scxml;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -86,10 +87,10 @@ public class SCInstance implements Serializable {
      */
     SCInstance(final SCXMLExecutor executor) {
         this.notificationRegistry = new NotificationRegistry();
-        this.contexts = new HashMap();
-        this.histories = new HashMap();
-        this.invokerClasses = new HashMap();
-        this.invokers = new HashMap();
+        this.contexts = Collections.synchronizedMap(new HashMap());
+        this.histories = Collections.synchronizedMap(new HashMap());
+        this.invokerClasses = Collections.synchronizedMap(new HashMap());
+        this.invokers = Collections.synchronizedMap(new HashMap());
         this.evaluator = null;
         this.rootContext = null;
         this.executor = executor;
