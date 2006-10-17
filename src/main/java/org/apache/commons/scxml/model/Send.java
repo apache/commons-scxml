@@ -265,23 +265,7 @@ public class Send extends Action implements ExternalContent {
             final ErrorReporter errRep, final SCInstance scInstance,
             final Log appLog, final Collection derivedEvents)
     throws ModelException, SCXMLExpressionException {
-        // Lets see if we should handle it ourselves
-        if (targettype != null && targettype.trim().toLowerCase().
-                equals(TARGETTYPE_SCXML)) {
-            if (SCXMLHelper.isStringEmpty(target)) {
-                derivedEvents.add(new TriggerEvent(event,
-                    TriggerEvent.SIGNAL_EVENT));
-            } else {
-                // We know of no other
-                appLog.warn("<send>: Unavailable target - " + target);
-                derivedEvents.add(new TriggerEvent(
-                    EVENT_ERR_SEND_TARGETUNAVAILABLE,
-                    TriggerEvent.ERROR_EVENT));
-            }
-            // short-circuit the EventDispatcher
-            return;
-        }
-        // Else, let the EventDispatcher take care of it
+        // Send attributes evaluation
         State parentState = getParentState();
         Context ctx = scInstance.getContext(parentState);
         Evaluator eval = scInstance.getEvaluator();
@@ -304,18 +288,87 @@ public class Send extends Action implements ExternalContent {
                 params.put(varName, varObj);
             }
         }
-        long wait = 0L;
-        if (delay != null && delay.length() > 0) {
-            try {
-                wait = Long.parseLong(delay.trim());
-            } catch (NumberFormatException nfe) {
-                appLog.warn("Could not parse delay for <send>, "
-                    + "it will be treated as immediate", nfe);
+        long wait = parseDelay(appLog);
+        // Lets see if we should handle it ourselves
+        if (SCXMLHelper.isStringEmpty(targettype)
+                || targettype.trim().equalsIgnoreCase(TARGETTYPE_SCXML)) {
+            if (SCXMLHelper.isStringEmpty(target)) {
+                // TODO: Remove both short-circuit passes in v1.0
+                if (wait == 0L) {
+                    derivedEvents.add(new TriggerEvent(event,
+                        TriggerEvent.SIGNAL_EVENT));
+                    return;
+                }
+            } else {
+                // We know of no other
+                appLog.warn("<send>: Unavailable target - " + target);
+                derivedEvents.add(new TriggerEvent(
+                    EVENT_ERR_SEND_TARGETUNAVAILABLE,
+                    TriggerEvent.ERROR_EVENT));
+                // short-circuit the EventDispatcher
+                return;
             }
         }
+        // Else, let the EventDispatcher take care of it
         evtDispatcher.send(sendid, target, targettype, event, params,
             hintsValue, wait, externalNodes);
     }
+
+    /**
+     * Parse delay.
+     *
+     * @param appLog The application log
+     * @return The parsed delay in milliseconds
+     * @throws SCXMLExpressionException If the delay cannot be parsed
+     */
+    private long parseDelay(final Log appLog)
+    throws SCXMLExpressionException {
+
+        long wait = 0L;
+        long multiplier = 1L;
+
+        if (!SCXMLHelper.isStringEmpty(delay)) {
+
+            String trimDelay = delay.trim();
+            String numericDelay = trimDelay;
+            if (trimDelay.endsWith(MILLIS)) {
+                numericDelay = trimDelay.substring(0, trimDelay.length() - 2);
+            } else if (trimDelay.endsWith(SECONDS)) {
+                multiplier = MILLIS_IN_A_SECOND;
+                numericDelay = trimDelay.substring(0, trimDelay.length() - 1);
+            } else if (trimDelay.endsWith(MINUTES)) {
+                multiplier = MILLIS_IN_A_MINUTE;
+                numericDelay = trimDelay.substring(0, trimDelay.length() - 1);
+            }
+
+            try {
+                wait = Long.parseLong(numericDelay);
+            } catch (NumberFormatException nfe) {
+                appLog.error(nfe.getMessage(), nfe);
+                throw new SCXMLExpressionException(nfe.getMessage(), nfe);
+            }
+            wait *= multiplier;
+
+        }
+
+        return wait;
+
+    }
+
+    /** The suffix in the delay string for milliseconds. */
+    private static final String MILLIS = "ms";
+
+    /** The suffix in the delay string for seconds. */
+    private static final String SECONDS = "s";
+
+    /** The suffix in the delay string for minutes. */
+    private static final String MINUTES = "m";
+
+    /** The number of milliseconds in a second. */
+    private static final long MILLIS_IN_A_SECOND = 1000L;
+
+    /** The number of milliseconds in a minute. */
+    private static final long MILLIS_IN_A_MINUTE = 60000L;
 
 }
 

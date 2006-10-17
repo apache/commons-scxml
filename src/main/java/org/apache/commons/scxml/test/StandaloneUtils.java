@@ -29,7 +29,7 @@ import org.apache.commons.scxml.EventDispatcher;
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLHelper;
 import org.apache.commons.scxml.TriggerEvent;
-import org.apache.commons.scxml.env.SimpleDispatcher;
+import org.apache.commons.scxml.env.SimpleScheduler;
 import org.apache.commons.scxml.env.Tracer;
 import org.apache.commons.scxml.invoke.SimpleSCXMLInvoker;
 import org.apache.commons.scxml.io.SCXMLDigester;
@@ -75,7 +75,6 @@ public final class StandaloneUtils {
         try {
             String documentURI = getCanonicalURI(uri);
             Context rootCtx = evaluator.newContext(null);
-            EventDispatcher ed = new SimpleDispatcher();
             Tracer trc = new Tracer();
             SCXML doc = SCXMLDigester.digest(new URL(documentURI), trc);
             if (doc == null) {
@@ -84,11 +83,13 @@ public final class StandaloneUtils {
                 System.exit(-1);
             }
             System.out.println(SCXMLSerializer.serialize(doc));
-            SCXMLExecutor exec = new SCXMLExecutor(evaluator, ed, trc);
+            SCXMLExecutor exec = new SCXMLExecutor(evaluator, null, trc);
+            EventDispatcher ed = new SimpleScheduler(exec);
+            exec.setEventdispatcher(ed);
+            exec.setStateMachine(doc);
             exec.addListener(doc, trc);
             exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
             exec.setRootContext(rootCtx);
-            exec.setStateMachine(doc);
             exec.go();
             BufferedReader br = new BufferedReader(new
                 InputStreamReader(System.in));
