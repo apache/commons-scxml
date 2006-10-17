@@ -129,6 +129,7 @@ public class WizardsTest extends TestCase {
     }
 
     static class TestEventDispatcher implements EventDispatcher, Serializable {
+        private static final long serialVersionUID = 1L;
         // If you change this, you must also change testWizard02Sample()
         int callback = 0;
         public void send(String sendId, String target, String targetType,

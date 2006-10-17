@@ -46,6 +46,7 @@ import javax.swing.JPanel;
 public class StopWatchDisplay extends JFrame
         implements ActionListener {
 
+    private static final long serialVersionUID = 1L;
     private StopWatch stopWatch;
     private Image watchImage, watchIcon;
 
@@ -131,6 +132,8 @@ public class StopWatchDisplay extends JFrame
     }
 
     class WatchPanel extends JPanel {
+        private static final long serialVersionUID = 1L;
+
         public void paintComponent(Graphics g) {
             if(watchImage != null) {
                 g.drawImage(watchImage,0,0,this.getWidth(),this.getHeight(),this);
