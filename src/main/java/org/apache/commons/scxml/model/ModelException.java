@@ -25,6 +25,11 @@ package org.apache.commons.scxml.model;
 public class ModelException extends Exception {
 
     /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * @see java.lang.Exception#Exception()
      */
     public ModelException() {

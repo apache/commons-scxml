@@ -31,7 +31,9 @@ import org.apache.commons.scxml.EventDispatcher;
  */
 public final class SimpleDispatcher implements EventDispatcher, Serializable {
 
-     /** Implementation independent log category. */
+     /** Serial version UID. */
+    private static final long serialVersionUID = 1L;
+    /** Implementation independent log category. */
      private Log log = LogFactory.getLog(EventDispatcher.class);
 
     /**

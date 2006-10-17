@@ -24,6 +24,11 @@ package org.apache.commons.scxml.invoke;
 public class InvokerException extends Exception {
 
     /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * @see java.lang.Exception#Exception()
      */
     public InvokerException() {

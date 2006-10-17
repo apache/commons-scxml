@@ -33,6 +33,8 @@ import org.xml.sax.SAXParseException;
 public class Tracer implements ErrorHandler, ErrorReporter,
                                SCXMLListener, Serializable {
 
+    /** Serial version UID. */
+    private static final long serialVersionUID = 1L;
     /** ErrorHandler delegate. */
     private ErrorHandler errHandler;
     /** ErrorReporter delegate. */

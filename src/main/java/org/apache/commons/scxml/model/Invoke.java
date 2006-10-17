@@ -30,6 +30,11 @@ import org.apache.commons.scxml.PathResolver;
 public class Invoke implements PathResolverHolder, Serializable {
 
     /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * The type of target to be invoked.
      */
     private String targettype;

@@ -48,6 +48,11 @@ import org.apache.commons.scxml.semantics.SCXMLSemanticsImpl;
 public class SCXMLExecutor implements Serializable {
 
     /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * The Logger for the SCXMLExecutor.
      */
     private Log log = LogFactory.getLog(SCXMLExecutor.class);

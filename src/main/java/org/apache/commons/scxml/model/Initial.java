@@ -24,6 +24,11 @@ package org.apache.commons.scxml.model;
 public class Initial extends TransitionTarget {
 
     /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * A conditionless transition that is always enabled and will be taken
      * as soon as the state is entered. The target of the transition must
      * be a descendant of the parent state of initial.

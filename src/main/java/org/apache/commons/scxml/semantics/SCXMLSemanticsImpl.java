@@ -71,6 +71,11 @@ import org.apache.commons.scxml.model.TransitionTarget;
 public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
 
     /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * SCXML Logger for the application.
      */
     private Log appLog = LogFactory.getLog("scxml.app.log");

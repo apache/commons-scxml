@@ -35,6 +35,11 @@ import org.apache.commons.scxml.TriggerEvent;
 public class Var extends Action {
 
     /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * The name of the variable to be created.
      */
     private String name;

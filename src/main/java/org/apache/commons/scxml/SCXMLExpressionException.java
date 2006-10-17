@@ -24,6 +24,11 @@ package org.apache.commons.scxml;
 public class SCXMLExpressionException extends Exception {
 
     /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * @see java.lang.Exception#Exception()
      */
     public SCXMLExpressionException() {

@@ -39,6 +39,11 @@ import org.apache.commons.scxml.model.TransitionTarget;
 public final class NotificationRegistry implements Serializable {
 
     /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * The Map of all listeners keyed by Observable.
      */
     private Map regs = new HashMap();

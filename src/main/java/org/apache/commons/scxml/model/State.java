@@ -30,6 +30,11 @@ import java.util.Map;
 public class State extends TransitionTarget {
 
     /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * The Map containing immediate children of this State, keyed by
      * their IDs. Incompatible with the parallel or invoke property.
      */

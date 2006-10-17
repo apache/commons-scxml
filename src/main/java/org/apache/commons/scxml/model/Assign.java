@@ -43,6 +43,11 @@ import org.w3c.dom.Node;
 public class Assign extends Action implements PathResolverHolder {
 
     /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * Left hand side expression evaluating to a previously
      * defined variable.
      */

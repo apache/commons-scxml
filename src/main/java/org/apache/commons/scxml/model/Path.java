@@ -37,6 +37,11 @@ import org.apache.commons.scxml.SCXMLHelper;
 public class Path implements Serializable {
 
     /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * The list of TransitionTargets in the &quot;up segment&quot;.
      */
     private List upSeg = new ArrayList();

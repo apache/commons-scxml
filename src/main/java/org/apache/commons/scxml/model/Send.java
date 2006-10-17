@@ -42,6 +42,11 @@ import org.apache.commons.scxml.semantics.ErrorConstants;
 public class Send extends Action implements ExternalContent {
 
     /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * The default targettype.
      */
     private static final String TARGETTYPE_SCXML = "scxml";

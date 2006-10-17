@@ -33,6 +33,11 @@ import org.apache.commons.scxml.SCXMLExpressionException;
 public class Log extends Action {
 
     /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * An expression evaluating to a string to be logged.
      */
     private String expr;

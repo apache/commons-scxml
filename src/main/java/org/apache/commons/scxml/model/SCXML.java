@@ -31,6 +31,11 @@ import org.apache.commons.scxml.SCXMLHelper;
 public class SCXML implements Serializable {
 
     /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * The SCXML XMLNS.
      */
     public static final String XMLNS = "http://www.w3.org/2005/07/scxml";

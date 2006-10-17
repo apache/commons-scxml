@@ -42,6 +42,8 @@ import org.w3c.dom.Node;
  */
 public class ELEvaluator implements Evaluator, Serializable {
 
+    /** Serial version UID. */
+    private static final long serialVersionUID = 1L;
     /** Implementation independent log category. */
     private Log log = LogFactory.getLog(Evaluator.class);
     /** Function Mapper for SCXML builtin functions. */
@@ -212,6 +214,8 @@ public class ELEvaluator implements Evaluator, Serializable {
      * A Context wrapper that implements VariableResolver.
      */
     static class ContextWrapper implements VariableResolver, Serializable {
+        /** Serial version UID. */
+        private static final long serialVersionUID = 1L;
         /** Context to be wrapped. */
         private Context ctx = null;
         /** The log. */
@@ -237,6 +241,8 @@ public class ELEvaluator implements Evaluator, Serializable {
      * A simple function mapper for SCXML defined functions.
      */
     class BuiltinFunctionMapper implements FunctionMapper, Serializable {
+        /** Serial version UID. */
+        private static final long serialVersionUID = 1L;
         /** The log. */
         private Log log = LogFactory.getLog(BuiltinFunctionMapper.class);
         /**

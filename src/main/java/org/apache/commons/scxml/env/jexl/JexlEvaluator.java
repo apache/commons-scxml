@@ -37,6 +37,9 @@ import org.w3c.dom.Node;
  */
 public class JexlEvaluator implements Evaluator, Serializable {
 
+    /** Serial version UID. */
+    private static final long serialVersionUID = 1L;
+
     /** Error message if evaluation context is not a JexlContext. */
     private static final String ERR_CTX_TYPE = "Error evaluating JEXL "
         + "expression, Context must be a org.apache.commons.jexl.JexlContext";

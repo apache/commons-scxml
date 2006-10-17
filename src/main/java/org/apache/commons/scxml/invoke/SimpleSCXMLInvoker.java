@@ -17,6 +17,7 @@
 package org.apache.commons.scxml.invoke;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -38,8 +39,10 @@ import org.xml.sax.SAXException;
  * A simple {@link Invoker} for SCXML documents. Invoked SCXML document
  * may not contain external namespace elements, further invokes etc.
  */
-public class SimpleSCXMLInvoker implements Invoker {
+public class SimpleSCXMLInvoker implements Invoker, Serializable {
 
+    /** Serial version UID. */
+    private static final long serialVersionUID = 1L;
     /** Parent state ID. */
     private String parentStateId;
     /** Event prefix, all events sent to the parent executor must begin

@@ -24,6 +24,11 @@ package org.apache.commons.scxml.model;
 public class History extends TransitionTarget {
 
     /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * Whether this is a shallow or deep history, the default is shallow.
      */
     private boolean isDeep;

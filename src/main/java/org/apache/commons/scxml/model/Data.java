@@ -28,6 +28,11 @@ import org.w3c.dom.Node;
 public class Data implements Serializable {
 
     /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * The name of this data instance, that is used as its identifier.
      */
     private String name;

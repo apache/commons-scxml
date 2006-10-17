@@ -28,6 +28,9 @@ import org.apache.commons.scxml.env.SimpleContext;
  */
 public class ELContext extends SimpleContext implements VariableResolver {
 
+    /** Serial version UID. */
+    private static final long serialVersionUID = 1L;
+
     /**
      * Constructor.
      *

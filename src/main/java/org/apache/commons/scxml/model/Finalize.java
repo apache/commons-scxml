@@ -24,6 +24,11 @@ package org.apache.commons.scxml.model;
 public class Finalize extends Executable {
 
     /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * Default no-args constructor for Digester.
      */
     public Finalize() {

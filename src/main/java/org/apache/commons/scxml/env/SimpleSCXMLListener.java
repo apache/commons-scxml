@@ -30,6 +30,8 @@ import org.apache.commons.scxml.model.TransitionTarget;
  */
 public class SimpleSCXMLListener implements SCXMLListener, Serializable {
 
+    /** Serial version UID. */
+    private static final long serialVersionUID = 1L;
     /** Log. */
     private Log log = LogFactory.getLog(getClass());
 

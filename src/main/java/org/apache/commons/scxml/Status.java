@@ -32,6 +32,11 @@ import org.apache.commons.scxml.model.State;
 public class Status implements Serializable {
 
     /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * The states that are currently active.
      */
     private Set states;

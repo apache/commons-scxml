@@ -37,6 +37,11 @@ import org.apache.commons.scxml.model.TransitionTarget;
 public class SCInstance implements Serializable {
 
     /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * The notification registry.
      */
     private NotificationRegistry notificationRegistry;

@@ -39,6 +39,11 @@ import org.w3c.dom.NodeList;
 public class Builtin implements Serializable {
 
     /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * Implements the In() predicate for SCXML documents. The method
      * name chosen is different since &quot;in&quot; is a reserved token
      * in some expression languages.

@@ -36,6 +36,8 @@ import org.apache.commons.scxml.semantics.ErrorConstants;
  */
 public class SimpleErrorReporter implements ErrorReporter, Serializable {
 
+    /** Serial version UID. */
+    private static final long serialVersionUID = 1L;
     /** Log. */
     private Log log = LogFactory.getLog(getClass());
 

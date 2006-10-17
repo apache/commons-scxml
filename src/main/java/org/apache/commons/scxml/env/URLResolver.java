@@ -31,6 +31,9 @@ import org.apache.commons.scxml.PathResolver;
  */
 public class URLResolver implements PathResolver, Serializable {
 
+    /** Serial version UID. */
+    private static final long serialVersionUID = 1L;
+
     /** Implementation independent log category. */
     private Log log = LogFactory.getLog(PathResolver.class);
 

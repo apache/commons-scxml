@@ -28,6 +28,11 @@ import java.util.List;
 public class Datamodel implements Serializable {
 
    /**
+    * Serial version UID.
+    */
+   private static final long serialVersionUID = 1L;
+
+   /**
     * The set of &lt;data&gt; elements, parsed as Elements, that are
     * children of this &lt;datamodel&gt; element.
     */

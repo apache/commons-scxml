@@ -34,6 +34,8 @@ import org.apache.commons.scxml.env.SimpleContext;
  */
 public class SessionContext extends SimpleContext {
 
+    /** Serial version UID. */
+    private static final long serialVersionUID = 1L;
     /** The map of session scoped variables. */
     private Map sessionMap;
     /** Bark if FacesContext is null. */

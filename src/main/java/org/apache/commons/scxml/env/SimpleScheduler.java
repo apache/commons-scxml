@@ -47,6 +47,9 @@ import org.apache.commons.scxml.model.ModelException;
  */
 public class SimpleScheduler implements EventDispatcher, Serializable {
 
+    /** Serial version UID. */
+    private static final long serialVersionUID = 1L;
+
     /** Log instance. */
     private Log log = LogFactory.getLog(SimpleScheduler.class);
 

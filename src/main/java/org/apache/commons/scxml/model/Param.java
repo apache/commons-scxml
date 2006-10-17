@@ -26,6 +26,11 @@ import java.io.Serializable;
 public class Param implements Serializable {
 
     /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * The param name.
      */
     private String name;

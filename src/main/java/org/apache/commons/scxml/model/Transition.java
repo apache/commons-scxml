@@ -26,6 +26,11 @@ package org.apache.commons.scxml.model;
 public class Transition extends Executable {
 
     /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * Property that specifies the trigger for this transition.
      */
     private String event;

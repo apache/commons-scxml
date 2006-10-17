@@ -32,6 +32,11 @@ import org.apache.commons.scxml.SCXMLExpressionException;
 public class ElseIf extends Action {
 
     /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * An conditional expression which can be evaluated to true or false.
      */
     private String cond;

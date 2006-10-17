@@ -33,6 +33,11 @@ import org.apache.commons.scxml.SCXMLExpressionException;
 public class Exit extends Action {
 
     /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * The optional expression.
      */
     private String expr;

@@ -32,6 +32,11 @@ import org.apache.commons.scxml.SCXMLExpressionException;
 public class Cancel extends Action {
 
     /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * Constructor.
      */
     public Cancel() {

@@ -24,6 +24,11 @@ package org.apache.commons.scxml.model;
 public class Else extends ElseIf {
 
     /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * &lt;else/&gt; is equivalent to &lt;elseif cond="true" /&gt;.
      */
     public Else() {
