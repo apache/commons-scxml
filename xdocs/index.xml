@@ -114,8 +114,11 @@
   <p>
    Projects that use Commons SCXML:
    <ul>
-    <li><a href="http://jakarta.apache.org/taglibs/doc/rdc-doc/intro.html">Reusable Dialog Components (RDC)</a>
-        tag library</li>
+    <li><a href="http://jakarta.apache.org/taglibs/doc/rdc-doc/intro.html">Reusable Dialog Components (RDC)</a>,
+        part of Apache Jakarta Taglibs - For choreographing the execution of speech components
+        taking part in a voice interaction bounded by a RDC group container.</li>
+    <li><a href="http://shale.apache.org/">Apache Shale</a> - For managing the flow of control in
+        web based applications, using <a href="http://shale.apache.org/shale-dialog/">Shale dialogs</a>.</li>
    </ul>
   </p>
  </section>
