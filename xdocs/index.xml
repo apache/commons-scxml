@@ -37,6 +37,10 @@
   and maintaining a Java SCXML engine capable of executing a state machine defined 
   using a SCXML document, while abstracting out the environment interfaces.
   </p>
+  <p align="center">
+  <img src="images/scxml-dev-cycle.png"
+       alt="Development cycle when using Commons SCXML" />
+  </p>
   <p>
   The use cases for an SCXML engine are multiple and varied. Anything that can be
   represented as a UML state chart -- business process flows, view navigation bits,
