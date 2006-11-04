@@ -722,7 +722,7 @@ public final class SCXMLDigester {
             final ExtendedBaseRules scxmlRules, final List customActions,
             final SCXML scxml, final PathResolver pr, final int parent) {
         scxmlRules.add(xp, new ObjectCreateRule(State.class));
-        addStatePropertiesRules(xp, scxmlRules, customActions, pr);
+        addStatePropertiesRules(xp, scxmlRules, customActions, pr, scxml);
         addDatamodelRules(xp + XPF_DM, scxmlRules, scxml, pr);
         addInvokeRules(xp + XPF_INV, scxmlRules, customActions, pr, scxml);
         addInitialRules(xp + XPF_INI, scxmlRules, customActions, pr, scxml);
@@ -764,13 +764,15 @@ public final class SCXMLDigester {
      * @param customActions The list of custom actions this digester needs
      *                      to be able to process
      * @param pr The PathResolver
+     * @param scxml The root document, if this one is src'ed in
      */
     private static void addStatePropertiesRules(final String xp,
             final ExtendedBaseRules scxmlRules, final List customActions,
-            final PathResolver pr) {
+            final PathResolver pr, final SCXML scxml) {
         scxmlRules.add(xp, new SetPropertiesRule(new String[] {"id", "final"},
             new String[] {"id", "isFinal"}));
-        scxmlRules.add(xp, new DigestSrcAttributeRule(customActions, pr));
+        scxmlRules.add(xp, new DigestSrcAttributeRule(scxml,
+            customActions, pr));
     }
 
     /**
@@ -841,7 +843,8 @@ public final class SCXMLDigester {
             final ExtendedBaseRules scxmlRules, final List customActions,
             final PathResolver pr, final SCXML scxml) {
         scxmlRules.add(xp, new ObjectCreateRule(Initial.class));
-        addPseudoStatePropertiesRules(xp, scxmlRules, customActions, pr);
+        addPseudoStatePropertiesRules(xp, scxmlRules, customActions, pr,
+            scxml);
         scxmlRules.add(xp, new UpdateModelRule(scxml));
         addTransitionRules(xp + XPF_TR, scxmlRules, "setTransition",
             pr, customActions);
@@ -863,7 +866,8 @@ public final class SCXMLDigester {
             final ExtendedBaseRules scxmlRules, final List customActions,
             final PathResolver pr, final SCXML scxml) {
         scxmlRules.add(xp, new ObjectCreateRule(History.class));
-        addPseudoStatePropertiesRules(xp, scxmlRules, customActions, pr);
+        addPseudoStatePropertiesRules(xp, scxmlRules, customActions, pr,
+            scxml);
         scxmlRules.add(xp, new UpdateModelRule(scxml));
         scxmlRules.add(xp, new SetPropertiesRule(new String[] {"type"},
             new String[] {"type"}));
@@ -882,13 +886,15 @@ public final class SCXMLDigester {
      * @param customActions The list of custom actions this digester needs
      *                      to be able to process
      * @param pr The PathResolver
+     * @param scxml The root document, if this one is src'ed in
      */
     private static void addPseudoStatePropertiesRules(final String xp,
             final ExtendedBaseRules scxmlRules, final List customActions,
-            final PathResolver pr) {
+            final PathResolver pr, final SCXML scxml) {
         scxmlRules.add(xp, new SetPropertiesRule(new String[] {"id"},
             new String[] {"id"}));
-        scxmlRules.add(xp, new DigestSrcAttributeRule(customActions, pr));
+        scxmlRules.add(xp, new DigestSrcAttributeRule(scxml, customActions,
+            pr));
         addParentRule(xp, scxmlRules, 1);
     }
 
@@ -1347,6 +1353,11 @@ public final class SCXMLDigester {
         private PathResolver pr;
 
         /**
+         * The root document.
+         */
+        private SCXML root;
+
+        /**
          * The list of custom actions the parent document is capable of
          * processing (and hence, the child should be, by transitivity).
          * @see CustomAction
@@ -1361,10 +1372,30 @@ public final class SCXMLDigester {
          *
          * @see PathResolver
          * @see CustomAction
+         *
+         * TODO: Remove in v1.0
          */
         public DigestSrcAttributeRule(final List customActions,
                 final PathResolver pr) {
             super();
+            this.customActions = customActions;
+            this.pr = pr;
+        }
+
+        /**
+         * Constructor.
+         * @param root The root document, if this one is src'ed in
+         * @param pr The PathResolver
+         * @param customActions The list of custom actions this digester needs
+         *                      to be able to process
+         *
+         * @see PathResolver
+         * @see CustomAction
+         */
+        public DigestSrcAttributeRule(final SCXML root,
+                final List customActions, final PathResolver pr) {
+            super();
+            this.root = root;
             this.customActions = customActions;
             this.pr = pr;
         }
@@ -1386,11 +1417,22 @@ public final class SCXMLDigester {
             Digester externalSrcDigester;
             if (pr == null) {
                 path = src;
-                externalSrcDigester = newInstance(scxml, null, customActions);
+                if (root != null) {
+                    externalSrcDigester = newInstance(root, null,
+                        customActions);
+                } else {
+                    externalSrcDigester = newInstance(scxml, null,
+                        customActions);
+                }
             } else {
                 path = pr.resolvePath(src);
-                externalSrcDigester = newInstance(scxml, pr.getResolver(src),
-                    customActions);
+                if (root != null) {
+                    externalSrcDigester = newInstance(root,
+                        pr.getResolver(src), customActions);
+                } else {
+                    externalSrcDigester = newInstance(scxml,
+                        pr.getResolver(src), customActions);
+                }
             }
 
             try {
