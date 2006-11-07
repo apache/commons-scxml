@@ -43,7 +43,7 @@ public class CustomActionTest extends TestCase {
         junit.textui.TestRunner.main(testCaseName);
     }
 
-    private URL hello01, custom01, external01;
+    private URL hello01, custom01, external01, override01;
     private Digester digester;
     private SCXMLExecutor exec;
 
@@ -57,6 +57,8 @@ public class CustomActionTest extends TestCase {
             getResource("org/apache/commons/scxml/custom-hello-world-01.xml");
         external01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/external-hello-world.xml");
+        override01 = this.getClass().getClassLoader().
+            getResource("org/apache/commons/scxml/custom-hello-world-03.xml");
     }
 
     /**
@@ -189,10 +191,28 @@ public class CustomActionTest extends TestCase {
             iterator().next()).getId());
     }
 
+    // Hello World example using custom <my:send> action
+    // (overriding SCXML local name "send")
+    public void testCustomActionOverrideLocalName() {
+        // (1) List of custom actions, use same local name as SCXML action
+        CustomAction ca =
+            new CustomAction("http://my.custom-actions.domain/CUSTOM",
+                             "send", Hello.class);
+        List customActions = new ArrayList();
+        customActions.add(ca);
+        // (2) Parse the document with a custom digester.
+        SCXML scxml = SCXMLTestHelper.digest(override01, customActions);
+        // (3) Get a SCXMLExecutor
+        exec = SCXMLTestHelper.getExecutor(scxml);
+        // (4) Single, final state
+        assertEquals("custom", ((State) exec.getCurrentStatus().getStates().
+            iterator().next()).getId());
+    }
+
     // The custom action defined by Hello.class should be called
-    // to execute() exactly 4 times upto this point
+    // to execute() exactly 5 times upto this point
     public void testCustomActionCallbacks() {
-        assertEquals(4, Hello.callbacks);
+        assertEquals(5, Hello.callbacks);
     }
 
 }
