@@ -36,38 +36,11 @@
 
   <url>http://jakarta.apache.org/commons/scxml/</url>
 
-  <organization>
-    <name>The Apache Software Foundation</name>
-    <url>http://jakarta.apache.org</url>
-  </organization>
-  <licenses>
-    <license>
-      <name>The Apache Software License, Version 2.0</name>
-      <url>/LICENSE.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/jakarta/commons/proper/scxml/trunk</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/jakarta/commons/proper/scxml/trunk</developerConnection>
     <url>http://svn.apache.org/viewvc/jakarta/commons/proper/scxml/trunk</url>
   </scm>
-
-  <mailingLists>
-    <mailingList>
-      <name>Commons Dev List</name>
-      <subscribe>commons-dev-subscribe@jakarta.apache.org</subscribe>
-      <unsubscribe>commons-dev-unsubscribe@jakarta.apache.org</unsubscribe>
-      <archive>http://mail-archives.apache.org/mod_mbox/jakarta-commons-dev/</archive>
-    </mailingList>
-    <mailingList>
-      <name>Commons User List</name>
-      <subscribe>commons-user-subscribe@jakarta.apache.org</subscribe>
-      <unsubscribe>commons-user-unsubscribe@jakarta.apache.org</unsubscribe>
-      <archive>http://mail-archives.apache.org/mod_mbox/jakarta-commons-user/</archive>
-    </mailingList>
-  </mailingLists>
 
   <developers>
     <developer>
