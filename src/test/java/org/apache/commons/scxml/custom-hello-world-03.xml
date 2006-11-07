@@ -24,7 +24,7 @@
     <state id="custom" final="true">
         
         <onentry>
-            <my:send name="child (included) document" />
+            <my:send name="overridden local name" />
         </onentry>
 
     </state>
