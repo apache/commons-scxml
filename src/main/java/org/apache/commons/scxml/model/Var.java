@@ -105,6 +105,10 @@ public class Var extends Action {
         Evaluator eval = scInstance.getEvaluator();
         Object varObj = eval.eval(ctx, expr);
         ctx.setLocal(name, varObj);
+        if (appLog.isDebugEnabled()) {
+            appLog.debug("<var>: Defined variable '" + name
+                + "' with initial value '" + String.valueOf(varObj) + "'");
+        }
         TriggerEvent ev = new TriggerEvent(name + ".change",
                 TriggerEvent.CHANGE_EVENT);
         derivedEvents.add(ev);

@@ -209,6 +209,10 @@ public class Assign extends Action implements PathResolverHolder {
                     Object valueObject = eval.eval(ctx, expr);
                     SCXMLHelper.setNodeValue(oldNode, valueObject.toString());
                 }
+                if (appLog.isDebugEnabled()) {
+                    appLog.debug("<assign>: data node '" + oldNode.getNodeName()
+                        + "' updated");
+                }
                 TriggerEvent ev = new TriggerEvent(name + ".change",
                     TriggerEvent.CHANGE_EVENT);
                 derivedEvents.add(ev);
@@ -229,6 +233,10 @@ public class Assign extends Action implements PathResolverHolder {
                     varObj = eval.eval(ctx, expr);
                 }
                 ctx.set(name, varObj);
+                if (appLog.isDebugEnabled()) {
+                    appLog.debug("<assign>: Set variable '" + name + "' to '"
+                        + String.valueOf(varObj) + "'");
+                }
                 TriggerEvent ev = new TriggerEvent(name + ".change",
                     TriggerEvent.CHANGE_EVENT);
                 derivedEvents.add(ev);
