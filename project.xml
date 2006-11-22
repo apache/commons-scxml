@@ -175,6 +175,7 @@
       <properties>
         <comment>&lt;b&gt;Usecases&lt;/b&gt;
         (JEXL environments)</comment>
+        <optional>true</optional>
       </properties>
     </dependency>
     <dependency>
