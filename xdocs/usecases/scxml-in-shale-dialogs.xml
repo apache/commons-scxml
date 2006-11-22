@@ -55,121 +55,12 @@
 
   </section>
 
-  <section name="Proof of concept">
+  <section name="Details">
 
-   <subsection name="Note">
-    <p>This proof of concept uses the "legacy" Shale dialogs API. This
-       code is now obsolete. A better implementation is available in
-       the Apache Shale project sandbox.</p>
-   </subsection>
-
-   <subsection name="Webapps">
-    <p>There are two war files below, the first one uses SCXML
-    documents to describe the Shale dialogs, and the second
-    one is the Shale source distro as-is, built locally
-    (use cases of interest are the log on / create profile dialogs).
-    <ul>
-     <!-- 
-          The next two links point to my personal web space since I
-          was not too keen on polluting the Commons SCXML space in SVN
-          with usecases war files.
-     -->
-     <li><a href="http://people.apache.org/~rahul/scxml-in-shale/struts-shale-usecases-scxml.war">
-     struts-shale-usecases-scxml.war</a>
-     - Shale usecases war file with SCXML dialogs (note absence of
-     <code>dialog-config.xml</code> in <code>WEB-INF/</code>, since
-     SCXML documents are used to describe the Shale dialogs instead)</li>
-     <li><a href="http://people.apache.org/~rahul/scxml-in-shale/struts-shale-usecases.war">
-     struts-shale-usecases.war</a>
-     - Shale usecases war file (09/28/05 snapshot, not an official
-     nightly build)</li>
-    </ul>
-    </p>
-   </subsection>
-
-   <subsection name="UML Diagrams">
-    <p>Here are the UML state machine diagrams for the two dialogs in
-    the usecases examples:</p>
-    <ul>
-     <li><a href="shale-dialogs/log-on-dialog.jpg">Log on dialog</a></li>
-     <li><a href="shale-dialogs/edit-profile-dialog.jpg">Edit Profile dialog</a></li>
-    </ul>
-   </subsection>
-
-   <subsection name="Building">
-   <p>For the proof of concept, we delegate the SCXML documents based
-   Shale Dialog Management to a 
-   &quot;<code>SCXMLDialogNavigationHandler</code>&quot;, instead of
-   the <code>DialogNavigationHandler</code> in <code>shale-core</code>.
-   </p>
-
-   <p>Some of the Javadoc is reproduced here:</p>
-
-   <p>Recipe for using SCXML documents to drive Shale dialogs:
-    <ol>
-     <li>Build the <code>SCXMLDialogNavigationHandler</code> (available
-     below, use a Commons SCXML nightly build 10/09/05 or later) and make it
-     available to your web application classpath (<code>WEB-INF/classes</code>).
-     </li>
-     <li>Update the &quot;<code>WEB-INF/faces-config.xml</code>&quot;
-     for your web application such that the
-     &quot;<code>faces-config/application/navigation-handler</code>&quot;
-     entry points to
-     &quot;<code>org.apache.commons.scxml.usecases.SCXMLDialogNavigationHandler</code>&quot;
-     (with the appropriate package name, if you changed it).
-     </li>
-     <li>As an alternative to (1) and (2), you can place a <i>jar</i> in the 
-     <code>WEB-INF/lib</code> directory which contains the
-     <code>SCXMLDialogNavigationHandler</code> and a
-     <code>META-INF/faces-config.xml</code> with just the entry in (2).</li>
-     <li>Use SCXML documents to describe Shale dialog flows (details below)
-     in your application. You may have multiple mappings from transition
-     targets to JSF views to support multi-channel applications.</li>
-     <li>The SCXML-based dialog is entered when
-     <code>handleNavigation()</code> is called with a logical outcome
-     of the form &quot;<code>dialog:xxx</code>&quot; and there is no current
-     dialog in progress, where &quot;<code>xxx</code>&quot; is the URL pointing
-     to the SCXML document.</li>
-    </ol>
-   </p>
-
-   <p>Using SCXML documents to define the Shale dialog &quot;flows&quot;:
-    <ul>
-     <li>ActionState instances may be mapped to executable content
-     in UML <code>&lt;onentry&gt;</code> (and may be chained similarly).</li>
-     <li>ViewState instances may be mapped to UML transition
-     targets.</li>
-     <li>SubdialogState instances may be mapped to external SCXML
-     documents.</li>
-     <li>EndState instances may be mapped to SCXML final states.</li>
-     <li>The SCXMLDialogNavigationHandler defines a
-     <code>&quot;faces.outcome&quot;</code> event which the relevant SCXML
-     transitions from a &quot;view state&quot; can wait for.</li>
-    </ul>
-   </p>
-   </subsection>
-
-   <subsection name="Artifacts">
-   <p>Relevant artifacts:
-   <ol>
-    <li><a href="shale-dialogs/SCXMLDialogNavigationHandler.java">
-    SCXMLDialogNavigationHandler.java</a></li>
-    <li><a href="shale-dialogs/SCXMLDialogNavigationHandler.java.txt">
-    SCXMLDialogNavigationHandler.java.txt</a>
-    (for browsers that insist of enforcing mime-type by filename 
-    extension)</li>
-    <li><a href="shale-dialogs/dialog-config.xml">dialog-config.xml</a>
-    (from Shale distro, 09/28/05 snapshot)</li>
-    <li><a href="shale-dialogs/log-on-config.xml">log-on-config.xml</a>
-    (SCXML document describing the &quot;Log On&quot; dialog)</li>
-    <li><a href="shale-dialogs/edit-profile-config.xml">
-    edit-profile-config.xml</a> (SCXML document describing
-    the &quot;Edit Profile&quot; dialog)</li>
-    <li><a href="shale-dialogs/dialogstate2view.xml">dialogstate2view.xml</a>
-    (Map UML states and activities)</li>
-   </ol>
-   </p>
-   </subsection>
+   <p>Please refer to the <a href="http://shale.apache.org/">Apache Shale website</a>
+   for details. The relevant module is the
+   <a href="http://shale.apache.org/shale-dialog-scxml/">Shale Dialogs (Commons SCXML Implementation)</a>
+   module.</p>
 
   </section> 
 
