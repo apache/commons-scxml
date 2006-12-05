@@ -24,7 +24,6 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import org.apache.commons.digester.Digester;
 import org.apache.commons.scxml.SCXMLTestHelper;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.Send;
@@ -50,7 +49,6 @@ public class SCXMLDigesterTest extends TestCase {
 
     // Test data
     private URL microwave01, microwave02, transitions01, send01;
-    private Digester digester;
     private SCXML scxml;
     private String scxmlAsString;
 
@@ -66,7 +64,6 @@ public class SCXMLDigesterTest extends TestCase {
             getResource("org/apache/commons/scxml/transitions-01.xml");
         send01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/send-01.xml");
-        digester = SCXMLDigester.newInstance();
     }
 
     /**
@@ -76,7 +73,6 @@ public class SCXMLDigesterTest extends TestCase {
         microwave01 = microwave02 = transitions01 = send01 = null;
         scxml = null;
         scxmlAsString = null;
-        digester = null;
     }
 
     /**

@@ -24,7 +24,6 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.apache.commons.digester.Digester;
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
 
@@ -44,7 +43,6 @@ public class CustomActionTest extends TestCase {
     }
 
     private URL hello01, custom01, external01, override01;
-    private Digester digester;
     private SCXMLExecutor exec;
 
     /**
@@ -66,7 +64,6 @@ public class CustomActionTest extends TestCase {
      */
     public void tearDown() {
         hello01 = custom01 = external01 = null;
-        digester = null;
         exec = null;
     }
 
