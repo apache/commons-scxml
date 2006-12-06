@@ -201,7 +201,7 @@
     </setproxy>
     <get dest="${libdir}/junit-3.8.1.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/junit/jars/junit-3.8.1.jar">
     </get>
-    <get dest="${libdir}/commons-digester-1.7.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-digester/jars/commons-digester-1.7.jar">
+    <get dest="${libdir}/commons-digester-1.8.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-digester/jars/commons-digester-1.8.jar">
     </get>
     <get dest="${libdir}/commons-beanutils-1.7.0.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-beanutils/jars/commons-beanutils-1.7.0.jar">
     </get>
