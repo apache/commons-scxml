@@ -48,17 +48,6 @@
   library.
   </p>
 
-  <subsection name="Status">
-   <p>
-    <ul>
-     <li>The project has recently (July 2006) completed its first (version 0.5)
-         release.</li>
-     <li>If you like the code and want to push it forward, join the effort
-         via the mailing list!</li>
-    </ul>   
-   </p>
-  </subsection>
-
  </section>
 
 
@@ -85,12 +74,12 @@
 
  <section name="Releases">
   <p>
-  The latest release is v0.5. -
+  The latest release is v0.6. -
   <a href="http://jakarta.apache.org/site/downloads/downloads_commons-scxml.cgi">Download now!</a>
   </p>
   <p>
-  This is the first release. The initial release version number has been chosen
-  to be 0.5 (rather than a 1.0). This is meant to better convey the fact that the
+  The first release was v0.5. The initial release version number was chosen
+  to be 0.5 (rather than a 1.0) to better convey the fact that the
   underlying W3C specification is still a Working Draft, and subsequent changes
   to the Draft may warrant changes to portions of the library API. The core
   Commons SCXML APIs (SCXMLDigester, SCXMLExecutor etc.) are stable.
