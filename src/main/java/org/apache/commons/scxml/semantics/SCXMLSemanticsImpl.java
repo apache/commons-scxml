@@ -54,6 +54,7 @@ import org.apache.commons.scxml.model.ModelException;
 import org.apache.commons.scxml.model.OnEntry;
 import org.apache.commons.scxml.model.OnExit;
 import org.apache.commons.scxml.model.Parallel;
+import org.apache.commons.scxml.model.Param;
 import org.apache.commons.scxml.model.Path;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.State;
@@ -85,6 +86,12 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
      */
     private TransitionTargetComparator targetComparator =
         new TransitionTargetComparator();
+
+    /**
+     * Current document namespaces are saved under this key in the parent
+     * state's context.
+     */
+    private static final String NAMESPACES_KEY = "_ALL_NAMESPACES";
 
     /**
      * @param input
@@ -390,8 +397,11 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                 rslt = Boolean.TRUE;
             } else {
                 try {
-                    rslt = scInstance.getEvaluator().evalCond(scInstance.
-                            getContext(t.getParent()), t.getCond());
+                    Context ctx = scInstance.getContext(t.getParent());
+                    ctx.setLocal(NAMESPACES_KEY, t.getNamespaces());
+                    rslt = scInstance.getEvaluator().evalCond(ctx,
+                        t.getCond());
+                    ctx.setLocal(NAMESPACES_KEY, null);
                 } catch (SCXMLExpressionException e) {
                     rslt = Boolean.FALSE;
                     errRep.onError(ErrorConstants.EXPRESSION_ERROR, e
@@ -766,7 +776,9 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                     String srcexpr = i.getSrcexpr();
                     Object srcObj = null;
                     try {
+                        ctx.setLocal(NAMESPACES_KEY, i.getNamespaces());
                         srcObj = eval.eval(ctx, srcexpr);
+                        ctx.setLocal(NAMESPACES_KEY, null);
                         src = String.valueOf(srcObj);
                     } catch (SCXMLExpressionException see) {
                         errRep.onError(ErrorConstants.EXPRESSION_ERROR,
@@ -790,23 +802,23 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                 }
                 inv.setParentStateId(s.getId());
                 inv.setSCInstance(scInstance);
-                Map params = i.getParams();
+                List params = i.params();
                 Map args = new HashMap();
-                for (Iterator pIter = params.entrySet().iterator();
-                        pIter.hasNext();) {
-                    Map.Entry entry = (Map.Entry) pIter.next();
-                    String argName = (String) entry.getKey();
-                    String argExpr = (String) entry.getValue();
+                for (Iterator pIter = params.iterator(); pIter.hasNext();) {
+                    Param p = (Param) pIter.next();
+                    String argExpr = p.getExpr();
                     Object argValue = null;
                     if (argExpr != null && argExpr.trim().length() > 0) {
                         try {
+                            ctx.setLocal(NAMESPACES_KEY, p.getNamespaces());
                             argValue = eval.eval(ctx, argExpr);
+                            ctx.setLocal(NAMESPACES_KEY, null);
                         } catch (SCXMLExpressionException see) {
                             errRep.onError(ErrorConstants.EXPRESSION_ERROR,
                                 see.getMessage(), i);
                         }
                     }
-                    args.put(argName, argValue);
+                    args.put(p.getName(), argValue);
                 }
                 try {
                     inv.invoke(source, args);

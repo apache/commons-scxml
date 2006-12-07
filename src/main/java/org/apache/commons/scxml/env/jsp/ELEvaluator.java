@@ -18,6 +18,7 @@ package org.apache.commons.scxml.env.jsp;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -100,6 +101,8 @@ public class ELEvaluator implements Evaluator, Serializable {
         try {
             String evalExpr = inFct.matcher(expr).
                 replaceAll("In(_ALL_STATES, ");
+            evalExpr = dataFct.matcher(evalExpr).
+                replaceAll("Data(_ALL_NAMESPACES, ");
             Object rslt = getEvaluator().evaluate(evalExpr, Object.class, vr,
                 builtinFnMapper);
             if (log.isTraceEnabled()) {
@@ -128,6 +131,8 @@ public class ELEvaluator implements Evaluator, Serializable {
         try {
             String evalExpr = inFct.matcher(expr).
                 replaceAll("In(_ALL_STATES, ");
+            evalExpr = dataFct.matcher(evalExpr).
+                replaceAll("Data(_ALL_NAMESPACES, ");
             Boolean rslt = (Boolean) getEvaluator().evaluate(evalExpr,
                 Boolean.class, vr, builtinFnMapper);
             if (log.isDebugEnabled()) {
@@ -156,6 +161,8 @@ public class ELEvaluator implements Evaluator, Serializable {
         try {
             String evalExpr = inFct.matcher(expr).
                 replaceAll("In(_ALL_STATES, ");
+            evalExpr = dataFct.matcher(evalExpr).
+                replaceAll("Data(_ALL_NAMESPACES, ");
             evalExpr = dataFct.matcher(evalExpr).
                 replaceFirst("LData(");
             Node rslt = (Node) getEvaluator().evaluate(evalExpr, Node.class,
@@ -261,7 +268,8 @@ public class ELEvaluator implements Evaluator, Serializable {
                 }
             } else if (localName.equals("Data")) {
                 // rvalue in expressions, coerce to String
-                Class[] attrs = new Class[] {Object.class, String.class};
+                Class[] attrs =
+                    new Class[] {Map.class, Object.class, String.class};
                 try {
                     return Builtin.class.getMethod("data", attrs);
                 } catch (SecurityException e) {
@@ -271,7 +279,8 @@ public class ELEvaluator implements Evaluator, Serializable {
                 }
             } else if (localName.equals("LData")) {
                 // lvalue in expressions, retain as Node
-                Class[] attrs = new Class[] {Object.class, String.class};
+                Class[] attrs =
+                    new Class[] {Map.class, Object.class, String.class};
                 try {
                     return Builtin.class.getMethod("dataNode", attrs);
                 } catch (SecurityException e) {

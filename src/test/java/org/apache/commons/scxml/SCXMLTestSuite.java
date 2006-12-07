@@ -49,6 +49,7 @@ public class SCXMLTestSuite extends TestCase {
         suite.setName("Commons-SCXML Tests");
         suite.addTest(BuiltinTest.suite());
         suite.addTest(EventDataTest.suite());
+        suite.addTest(NamespacePrefixedXPathsTest.suite());
         suite.addTest(SCInstanceTest.suite());
         suite.addTest(SCXMLExecutorTest.suite());
         suite.addTest(SCXMLHelperTest.suite());

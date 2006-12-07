@@ -451,7 +451,9 @@ public final class SCXMLHelper {
                     getExpr())) {
                 Object value = null;
                 try {
+                    ctx.setLocal(NAMESPACES_KEY, datum.getNamespaces());
                     value = evaluator.eval(ctx, datum.getExpr());
+                    ctx.setLocal(NAMESPACES_KEY, null);
                 } catch (SCXMLExpressionException see) {
                     if (log != null) {
                         log.error(see.getMessage(), see);
@@ -473,6 +475,12 @@ public final class SCXMLHelper {
     private SCXMLHelper() {
         super();
     }
+
+    /**
+     * Current document namespaces are saved under this key in the parent
+     * state's context.
+     */
+    private static final String NAMESPACES_KEY = "_ALL_NAMESPACES";
 
 }
 

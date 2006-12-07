@@ -52,6 +52,7 @@ import org.apache.commons.scxml.model.Log;
 import org.apache.commons.scxml.model.OnEntry;
 import org.apache.commons.scxml.model.OnExit;
 import org.apache.commons.scxml.model.Parallel;
+import org.apache.commons.scxml.model.Param;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.Send;
 import org.apache.commons.scxml.model.State;
@@ -209,12 +210,12 @@ public class SCXMLSerializer {
             b.append(" srcexpr=\"").append(srcexpr).append("\"");
         }
         b.append(">\n");
-        Map params = i.getParams();
-        for (Iterator iter = params.entrySet().iterator(); iter.hasNext();) {
-            Map.Entry e = (Map.Entry) iter.next();
+        List params = i.params();
+        for (Iterator iter = params.iterator(); iter.hasNext();) {
+            Param p = (Param) iter.next();
             b.append(indent).append(INDENT).append("<param name=\"").
-                append(e.getKey()).append("\" expr=\"").
-                append(e.getValue()).append("\"/>\n");
+                append(p.getName()).append("\" expr=\"").
+                append(p.getExpr()).append("\"/>\n");
         }
         Finalize f = i.getFinalize();
         if (f != null) {

@@ -273,6 +273,7 @@ public class Send extends Action implements ExternalContent {
         // Send attributes evaluation
         State parentState = getParentState();
         Context ctx = scInstance.getContext(parentState);
+        ctx.setLocal(getNamespacesKey(), getNamespaces());
         Evaluator eval = scInstance.getEvaluator();
         Object hintsValue = null;
         if (!SCXMLHelper.isStringEmpty(hints)) {
@@ -314,6 +315,7 @@ public class Send extends Action implements ExternalContent {
                 return;
             }
         }
+        ctx.setLocal(getNamespacesKey(), null);
         // Else, let the EventDispatcher take care of it
         evtDispatcher.send(sendid, target, targettype, event, params,
             hintsValue, wait, externalNodes);

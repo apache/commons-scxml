@@ -56,6 +56,7 @@ import org.apache.commons.scxml.model.Initial;
 import org.apache.commons.scxml.model.Invoke;
 import org.apache.commons.scxml.model.Log;
 import org.apache.commons.scxml.model.ModelException;
+import org.apache.commons.scxml.model.NamespacePrefixesHolder;
 import org.apache.commons.scxml.model.OnEntry;
 import org.apache.commons.scxml.model.OnExit;
 import org.apache.commons.scxml.model.Parallel;
@@ -643,9 +644,6 @@ public final class SCXMLDigester {
     /** Slash. */
     private static final String STR_SLASH = "/";
 
-    /** Prefix for universal digester patterns. */
-    private static final String STR_UNIVERSAL = "!*";
-
     //---------------------- PRIVATE UTILITY METHODS ----------------------//
     /*
      * Private utility functions for configuring digester rule base for SCXML.
@@ -790,6 +788,7 @@ public final class SCXMLDigester {
         scxmlRules.add(xp, new ObjectCreateRule(Datamodel.class));
         scxmlRules.add(xp + XPF_DATA, new ObjectCreateRule(Data.class));
         scxmlRules.add(xp + XPF_DATA, new SetPropertiesRule());
+        scxmlRules.add(xp + XPF_DATA, new SetCurrentNamespacesRule());
         scxmlRules.add(xp + XPF_DATA, new SetNextRule("addData"));
         try {
             scxmlRules.add(xp + XPF_DATA, new ParseDataRule(pr));
@@ -817,9 +816,11 @@ public final class SCXMLDigester {
             final PathResolver pr, final SCXML scxml) {
         scxmlRules.add(xp, new ObjectCreateRule(Invoke.class));
         scxmlRules.add(xp, new SetPropertiesRule());
+        scxmlRules.add(xp, new SetCurrentNamespacesRule());
         scxmlRules.add(xp, new SetPathResolverRule(pr));
         scxmlRules.add(xp + XPF_PRM, new ObjectCreateRule(Param.class));
         scxmlRules.add(xp + XPF_PRM, new SetPropertiesRule());
+        scxmlRules.add(xp + XPF_PRM, new SetCurrentNamespacesRule());
         scxmlRules.add(xp + XPF_PRM, new SetNextRule("addParam"));
         scxmlRules.add(xp + XPF_FIN, new ObjectCreateRule(Finalize.class));
         scxmlRules.add(xp + XPF_FIN, new UpdateFinalizeRule());
@@ -944,6 +945,7 @@ public final class SCXMLDigester {
         scxmlRules.add(xp, new SetPropertiesRule(
             new String[] {"event", "cond", "target"},
             new String[] {"event", "cond", "next"}));
+        scxmlRules.add(xp, new SetCurrentNamespacesRule());
         scxmlRules.add(xp + XPF_TAR, new SetPropertiesRule());
         addActionRules(xp, scxmlRules, pr, customActions);
         scxmlRules.add(xp + XPF_EXT, new Rule() {
@@ -1117,6 +1119,7 @@ public final class SCXMLDigester {
             final ExtendedBaseRules scxmlRules, final Class klass) {
         addSimpleRulesTuple(xp, scxmlRules, klass, null, null, "addAction");
         scxmlRules.add(xp, new SetExecutableParentRule());
+        scxmlRules.add(xp, new SetCurrentNamespacesRule());
     }
 
     /**
@@ -1512,6 +1515,25 @@ public final class SCXMLDigester {
             // state/invoke/finalize --> peek(2)
             TransitionTarget tt = (TransitionTarget) getDigester().peek(2);
             finalize.setParent(tt);
+        }
+    }
+
+
+    /**
+     * Custom digestion rule for attaching a snapshot of current namespaces
+     * to SCXML actions for deferred XPath evaluation.
+     *
+     */
+    private static class SetCurrentNamespacesRule extends Rule {
+
+        /**
+         * @see Rule#begin(String, String, Attributes)
+         */
+        public final void begin(final String namespace, final String name,
+                final Attributes attributes) {
+            NamespacePrefixesHolder nsHolder =
+                (NamespacePrefixesHolder) getDigester().peek();
+            nsHolder.setNamespaces(getDigester().getCurrentNamespaces());
         }
     }
 

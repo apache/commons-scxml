@@ -103,7 +103,9 @@ public class Var extends Action {
     throws ModelException, SCXMLExpressionException {
         Context ctx = scInstance.getContext(getParentState());
         Evaluator eval = scInstance.getEvaluator();
+        ctx.setLocal(getNamespacesKey(), getNamespaces());
         Object varObj = eval.eval(ctx, expr);
+        ctx.setLocal(getNamespacesKey(), null);
         ctx.setLocal(name, varObj);
         if (appLog.isDebugEnabled()) {
             appLog.debug("<var>: Defined variable '" + name

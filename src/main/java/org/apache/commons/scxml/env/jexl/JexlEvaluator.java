@@ -79,7 +79,7 @@ public class JexlEvaluator implements Evaluator, Serializable {
             String evalExpr = inFct.matcher(expr).
                 replaceAll("_builtin.isMember(_ALL_STATES, ");
             evalExpr = dataFct.matcher(evalExpr).
-                replaceAll("_builtin.data(");
+                replaceAll("_builtin.data(_ALL_NAMESPACES, ");
             exp = ExpressionFactory.createExpression(evalExpr);
             return exp.evaluate(getEffectiveContext(jexlCtx));
         } catch (Exception e) {
@@ -106,7 +106,7 @@ public class JexlEvaluator implements Evaluator, Serializable {
             String evalExpr = inFct.matcher(expr).
                 replaceAll("_builtin.isMember(_ALL_STATES, ");
             evalExpr = dataFct.matcher(evalExpr).
-                replaceAll("_builtin.data(");
+                replaceAll("_builtin.data(_ALL_NAMESPACES, ");
             exp = ExpressionFactory.createExpression(evalExpr);
             return (Boolean) exp.evaluate(getEffectiveContext(jexlCtx));
         } catch (Exception e) {
@@ -133,9 +133,9 @@ public class JexlEvaluator implements Evaluator, Serializable {
             String evalExpr = inFct.matcher(expr).
                 replaceAll("_builtin.isMember(_ALL_STATES, ");
             evalExpr = dataFct.matcher(evalExpr).
-                replaceFirst("_builtin.dataNode(");
+                replaceFirst("_builtin.dataNode(_ALL_NAMESPACES, ");
             evalExpr = dataFct.matcher(evalExpr).
-                replaceAll("_builtin.data(");
+                replaceAll("_builtin.data(_ALL_NAMESPACES, ");
             exp = ExpressionFactory.createExpression(evalExpr);
             return (Node) exp.evaluate(getEffectiveContext(jexlCtx));
         } catch (Exception e) {

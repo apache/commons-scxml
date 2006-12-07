@@ -17,7 +17,9 @@
 package org.apache.commons.scxml.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.scxml.PathResolver;
@@ -27,7 +29,8 @@ import org.apache.commons.scxml.PathResolver;
  * &lt;invoke&gt; SCXML element.
  *
  */
-public class Invoke implements PathResolverHolder, Serializable {
+public class Invoke implements NamespacePrefixesHolder, PathResolverHolder,
+        Serializable {
 
     /**
      * Serial version UID.
@@ -52,8 +55,15 @@ public class Invoke implements PathResolverHolder, Serializable {
 
     /**
      * The Map of the params to be sent to the invoked process.
+     *
+     * Remove with deprecated getParams() in 1.0
      */
     private Map params;
+
+    /**
+     * The List of the params to be sent to the invoked process.
+     */
+    private List paramsList;
 
     /**
      * The &lt;finalize&gt; child, may be null.
@@ -66,10 +76,17 @@ public class Invoke implements PathResolverHolder, Serializable {
     private PathResolver pathResolver;
 
     /**
+     * The current XML namespaces in the SCXML document for this action node,
+     * preserved for deferred XPath evaluation.
+     */
+    private Map namespaces;
+
+    /**
      * Default no-args constructor for Digester.
      */
     public Invoke() {
         params = new HashMap();
+        paramsList = new ArrayList();
     }
 
     /**
@@ -132,9 +149,19 @@ public class Invoke implements PathResolverHolder, Serializable {
      * Get the params Map.
      *
      * @return Map The params map.
+     * @deprecated Remove in v1.0, use params() instead
      */
     public final Map getParams() {
         return params;
+    }
+
+    /**
+     * Get the list of {@link Param}s.
+     *
+     * @return List The params list.
+     */
+    public final List params() {
+        return paramsList;
     }
 
     /**
@@ -144,6 +171,7 @@ public class Invoke implements PathResolverHolder, Serializable {
      */
     public final void addParam(final Param param) {
         params.put(param.getName(), param.getExpr());
+        paramsList.add(param);
     }
 
     /**
@@ -180,6 +208,24 @@ public class Invoke implements PathResolverHolder, Serializable {
      */
     public void setPathResolver(final PathResolver pathResolver) {
         this.pathResolver = pathResolver;
+    }
+
+    /**
+     * Get the XML namespaces at this action node in the SCXML document.
+     *
+     * @return Returns the map of namespaces.
+     */
+    public final Map getNamespaces() {
+        return namespaces;
+    }
+
+    /**
+     * Set the XML namespaces at this action node in the SCXML document.
+     *
+     * @param namespaces The document namespaces.
+     */
+    public final void setNamespaces(final Map namespaces) {
+        this.namespaces = namespaces;
     }
 
 }

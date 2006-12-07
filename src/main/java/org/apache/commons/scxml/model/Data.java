@@ -17,6 +17,7 @@
 package org.apache.commons.scxml.model;
 
 import java.io.Serializable;
+import java.util.Map;
 
 import org.w3c.dom.Node;
 
@@ -25,7 +26,7 @@ import org.w3c.dom.Node;
  * &lt;data&gt; child element of the &lt;datamodel&gt; element.
  *
  */
-public class Data implements Serializable {
+public class Data implements NamespacePrefixesHolder, Serializable {
 
     /**
      * Serial version UID.
@@ -52,6 +53,13 @@ public class Data implements Serializable {
      * instance.
      */
     private Node node;
+
+    /**
+     * The current XML namespaces in the SCXML document for this action node,
+     * preserved for deferred XPath evaluation. Easier than to scrape node
+     * above, given the Builtin API.
+     */
+    private Map namespaces;
 
     /**
      * Constructor.
@@ -133,6 +141,24 @@ public class Data implements Serializable {
      */
     public final void setNode(final Node node) {
         this.node = node;
+    }
+
+    /**
+     * Get the XML namespaces at this action node in the SCXML document.
+     *
+     * @return Returns the map of namespaces.
+     */
+    public final Map getNamespaces() {
+        return namespaces;
+    }
+
+    /**
+     * Set the XML namespaces at this action node in the SCXML document.
+     *
+     * @param namespaces The document namespaces.
+     */
+    public final void setNamespaces(final Map namespaces) {
+        this.namespaces = namespaces;
     }
 
 }

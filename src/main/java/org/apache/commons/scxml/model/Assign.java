@@ -181,6 +181,7 @@ public class Assign extends Action implements PathResolverHolder {
         State parentState = getParentState();
         Context ctx = scInstance.getContext(parentState);
         Evaluator eval = scInstance.getEvaluator();
+        ctx.setLocal(getNamespacesKey(), getNamespaces());
         // "location" gets preference over "name"
         if (!SCXMLHelper.isStringEmpty(location)) {
             Node oldNode = eval.evalLocation(ctx, location);
@@ -242,6 +243,7 @@ public class Assign extends Action implements PathResolverHolder {
                 derivedEvents.add(ev);
             }
         }
+        ctx.setLocal(getNamespacesKey(), null);
     }
 
     /**

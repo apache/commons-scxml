@@ -101,7 +101,9 @@ public class Log extends Action {
     throws ModelException, SCXMLExpressionException {
         Context ctx = scInstance.getContext(getParentState());
         Evaluator eval = scInstance.getEvaluator();
+        ctx.setLocal(getNamespacesKey(), getNamespaces());
         appLog.info(label + ": " + String.valueOf(eval.eval(ctx, expr)));
+        ctx.setLocal(getNamespacesKey(), null);
     }
 }
 

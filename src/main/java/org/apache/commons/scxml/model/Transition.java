@@ -16,6 +16,8 @@
  */
 package org.apache.commons.scxml.model;
 
+import java.util.Map;
+
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;transition&gt; SCXML element. Transition rules are triggered
@@ -23,7 +25,8 @@ package org.apache.commons.scxml.model;
  * &quot;guard-conditions&quot;.
  *
  */
-public class Transition extends Executable {
+public class Transition extends Executable
+        implements NamespacePrefixesHolder {
 
     /**
      * Serial version UID.
@@ -56,6 +59,12 @@ public class Transition extends Executable {
      * @see Path
      */
     private Path path;
+
+    /**
+     * The current XML namespaces in the SCXML document for this action node,
+     * preserved for deferred XPath evaluation.
+     */
+    private Map namespaces;
 
     /**
      * Constructor.
@@ -102,6 +111,24 @@ public class Transition extends Executable {
      */
     public final void setEvent(final String event) {
         this.event = event;
+    }
+
+    /**
+     * Get the XML namespaces at this action node in the SCXML document.
+     *
+     * @return Returns the map of namespaces.
+     */
+    public final Map getNamespaces() {
+        return namespaces;
+    }
+
+    /**
+     * Set the XML namespaces at this action node in the SCXML document.
+     *
+     * @param namespaces The document namespaces.
+     */
+    public final void setNamespaces(final Map namespaces) {
+        this.namespaces = namespaces;
     }
 
     /**

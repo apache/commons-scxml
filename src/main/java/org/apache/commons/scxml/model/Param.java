@@ -17,13 +17,14 @@
 package org.apache.commons.scxml.model;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;param&gt; SCXML element.
  *
  */
-public class Param implements Serializable {
+public class Param implements NamespacePrefixesHolder, Serializable {
 
     /**
      * Serial version UID.
@@ -39,6 +40,12 @@ public class Param implements Serializable {
      * The param expression, may be null.
      */
     private String expr;
+
+    /**
+     * The current XML namespaces in the SCXML document for this action node,
+     * preserved for deferred XPath evaluation.
+     */
+    private Map namespaces;
 
     /**
      * Default no-args constructor for Digester.
@@ -81,6 +88,24 @@ public class Param implements Serializable {
      */
     public final void setExpr(final String expr) {
         this.expr = expr;
+    }
+
+    /**
+     * Get the XML namespaces at this action node in the SCXML document.
+     *
+     * @return Returns the map of namespaces.
+     */
+    public final Map getNamespaces() {
+        return namespaces;
+    }
+
+    /**
+     * Set the XML namespaces at this action node in the SCXML document.
+     *
+     * @param namespaces The document namespaces.
+     */
+    public final void setNamespaces(final Map namespaces) {
+        this.namespaces = namespaces;
     }
 
 }

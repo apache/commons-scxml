@@ -119,7 +119,9 @@ public class If extends Action {
         State parentState = getParentState();
         Context ctx = scInstance.getContext(parentState);
         Evaluator eval = scInstance.getEvaluator();
+        ctx.setLocal(getNamespacesKey(), getNamespaces());
         execute = eval.evalCond(ctx, cond).booleanValue();
+        ctx.setLocal(getNamespacesKey(), null);
         // The "if" statement is a "container"
         for (Iterator ifiter = actions.iterator(); ifiter.hasNext();) {
             Action aa = (Action) ifiter.next();
@@ -133,8 +135,10 @@ public class If extends Action {
             } else if (aa instanceof Else) {
                 execute = true;
             } else if (aa instanceof ElseIf) {
+                ctx.setLocal(getNamespacesKey(), getNamespaces());
                 execute = eval.evalCond(ctx, ((ElseIf) aa).getCond())
                         .booleanValue();
+                ctx.setLocal(getNamespacesKey(), null);
             }
         }
     }

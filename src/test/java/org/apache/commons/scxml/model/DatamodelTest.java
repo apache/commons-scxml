@@ -50,7 +50,7 @@ public class DatamodelTest extends TestCase {
     }
 
     // Test data
-    private URL datamodel01jexl, datamodel01jsp;
+    private URL datamodel01jexl, datamodel02jexl, datamodel01jsp, datamodel02jsp;
     private SCXMLExecutor exec01, exec02;
 
     /**
@@ -59,15 +59,19 @@ public class DatamodelTest extends TestCase {
     public void setUp() {
         datamodel01jexl = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/env/jexl/datamodel-01.xml");
+        datamodel02jexl = this.getClass().getClassLoader().
+           getResource("org/apache/commons/scxml/env/jexl/datamodel-02.xml");
         datamodel01jsp = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/env/jsp/datamodel-01.xml");
+        datamodel02jsp = this.getClass().getClassLoader().
+            getResource("org/apache/commons/scxml/env/jsp/datamodel-02.xml");
     }
 
     /**
      * Tear down instance variables required by this test case.
      */
     public void tearDown() {
-        datamodel01jexl = datamodel01jsp = null;
+        datamodel01jexl = datamodel02jexl = datamodel01jsp = datamodel02jsp = null;
     }
 
     /**
@@ -89,6 +93,17 @@ public class DatamodelTest extends TestCase {
             new ELContext(), new ELEvaluator());
         assertNotNull(exec01);
         exec02 = SCXMLTestHelper.getExecutor(datamodel01jsp,
+            new ELContext(), new ELEvaluator());
+        assertNotNull(exec02);
+        assertFalse(exec01 == exec02);
+        runtest();
+    }
+
+    public void testDatamodelNamespacePrefixedXPaths() {
+        exec01 = SCXMLTestHelper.getExecutor(datamodel02jexl,
+            new JexlContext(), new JexlEvaluator());
+        assertNotNull(exec01);
+        exec02 = SCXMLTestHelper.getExecutor(datamodel02jsp,
             new ELContext(), new ELEvaluator());
         assertNotNull(exec02);
         assertFalse(exec01 == exec02);

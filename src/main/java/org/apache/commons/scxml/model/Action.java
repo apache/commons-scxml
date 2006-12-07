@@ -18,6 +18,7 @@ package org.apache.commons.scxml.model;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.scxml.ErrorReporter;
@@ -30,7 +31,8 @@ import org.apache.commons.scxml.SCXMLExpressionException;
  * such as &lt;assign&gt;, &lt;log&gt; etc.
  *
  */
-public abstract class Action implements Serializable {
+public abstract class Action implements NamespacePrefixesHolder,
+        Serializable {
 
     /**
      * Link to its parent or container.
@@ -38,11 +40,24 @@ public abstract class Action implements Serializable {
     private Executable parent;
 
     /**
+     * The current XML namespaces in the SCXML document for this action node,
+     * preserved for deferred XPath evaluation.
+     */
+    private Map namespaces;
+
+    /**
+     * Current document namespaces are saved under this key in the parent
+     * state's context.
+     */
+    private static final String NAMESPACES_KEY = "_ALL_NAMESPACES";
+
+    /**
      * Constructor.
      */
     public Action() {
         super();
         this.parent = null;
+        this.namespaces = null;
     }
 
     /**
@@ -61,6 +76,24 @@ public abstract class Action implements Serializable {
      */
     public final void setParent(final Executable parent) {
         this.parent = parent;
+    }
+
+    /**
+     * Get the XML namespaces at this action node in the SCXML document.
+     *
+     * @return Returns the map of namespaces.
+     */
+    public final Map getNamespaces() {
+        return namespaces;
+    }
+
+    /**
+     * Set the XML namespaces at this action node in the SCXML document.
+     *
+     * @param namespaces The document namespaces.
+     */
+    public final void setNamespaces(final Map namespaces) {
+        this.namespaces = namespaces;
     }
 
     /**
@@ -104,6 +137,16 @@ public abstract class Action implements Serializable {
         final ErrorReporter errRep, final SCInstance scInstance,
         final Log appLog, final Collection derivedEvents)
     throws ModelException, SCXMLExpressionException;
+
+    /**
+     * Return the key under which the current document namespaces are saved
+     * in the parent state's context.
+     *
+     * @return The namespaces key
+     */
+    protected static String getNamespacesKey() {
+        return NAMESPACES_KEY;
+    }
 
 }
 
