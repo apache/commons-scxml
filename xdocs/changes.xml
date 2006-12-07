@@ -27,21 +27,76 @@
 
     <section name="About this document">
       <ul>
-        <li>The latest (and first) release of Commons SCXML is version
-            0.5.</li>
+        <li>The latest release of Commons SCXML is version 0.6.</li>
         <li>If you are interested in helping the project, join us on the
             <a href="mail-lists.html">commons-dev mailing list</a>.</li>
       </ul>
     </section>
 
-    <release version="0.6" date="In SVN"
-     description="Future release">
+    <release version="0.6" date="December 2006"
+     description="Latest release">
+
+      <action dev="rahul" type="fix" issue="SCXML-32">
+       [12-07-2006] Update Commons Logging to version 1.1.
+      </action>
+
+      <action dev="rahul" type="fix" issue="SCXML-32">
+       [12-07-2006] Update Commons JEXL to version 1.1.
+      </action>
+
+      <action dev="rahul" type="add" issue="SCXML-33">
+       [12-07-2006] Improved processing of namespace prefixes in
+       deferred evaluation of XPath expressions.
+      </action>
+
+      <action dev="rahul" type="fix" issue="SCXML-32">
+       [12-06-2006] Update Commons Digester to version 1.8.
+      </action>
+
+      <action dev="rahul" type="add" issue="SCXML-31" due-to="Nestor Urquiza">
+       [11-22-2006] Logging for &lt;var&gt; and &lt;assign&gt;.
+      </action>
+
+      <action dev="rahul" type="add">
+       [11-08-2006] Add project DOAP file.
+      </action>
+
+      <action dev="rahul" type="add">
+       [11-07-2006] Add a test case to demonstrate adding a custom
+       action with the same local name as one of the standard SCXML
+       actions (but a different namespace).
+      </action>
+
+      <action dev="rahul" type="add">
+       [11-04-2006] Add tests to ensure white box behavior of the
+       &lt;state&gt; element's src attribute.
+      </action>
+
+      <action dev="rahul" type="fix">
+       [10-23-2006] Up to date versions for the usecases blurbs
+       for the website. Update image on site front page.
+      </action>
+
+      <action dev="rahul" type="fix" issue="SCXML-29">
+       [10-17-2006] Added serial version UIDs.
+      </action>
+
+      <action dev="rahul" type="fix" issue="SCXML-21">
+       [10-17-2006] New EventDispatcher implementation (SimpleScheduler)
+       that provides the ability to deal with delayed events for the
+       "scxml" &lt;send&gt; targettype.
+      </action>
+
+      <action dev="rahul" type="fix" issue="SCXML-2">
+       [10-11-2006] Some thread-safety improvements for
+       SCXMLExecutor instances.
+      </action>
 
       <action dev="rahul" type="fix">
        [10-11-2006] Update to new ASLv2 license headers for source files.
       </action>
 
-      <action dev="rahul" type="add">
+      <action dev="rahul" type="add" issues="SCXML-20">
        [10-05-2006] The Commons SCXML object model as well as the
        SCXMLExecutor instances are now serializable.
       </action>
@@ -71,7 +126,7 @@
 
     </release>
 
-    <release version="0.5" date="2006-07-28"
+    <release version="0.5" date="July 2006"
      description="First release">
 
       <action dev="rahul" type="fix" issue="SCXML-13">
