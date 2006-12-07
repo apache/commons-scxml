@@ -207,7 +207,7 @@
     </get>
     <get dest="${libdir}/commons-el-1.0.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-el/jars/commons-el-1.0.jar">
     </get>
-    <get dest="${libdir}/commons-jexl-1.0.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-jexl/jars/commons-jexl-1.0.jar">
+    <get dest="${libdir}/commons-jexl-1.1.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-jexl/jars/commons-jexl-1.1.jar">
     </get>
     <get dest="${libdir}/commons-logging-1.1.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-logging/jars/commons-logging-1.1.jar">
     </get>
