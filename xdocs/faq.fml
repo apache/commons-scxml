@@ -148,7 +148,10 @@
     Can multiple threads safely interact with an instance of SCXMLExecutor?
    </question>
    <answer>
-    No. You have to worry about synchronizing access if you need to.
+    To a certain extent. Things such as firing events on a state machine or
+    reseting it are threadsafe. The underlying state machine needs to
+    model any race conditions correctly. You have to worry about
+    synchronizing access to other bits if you need to.
    </answer>
   </faq>
 
