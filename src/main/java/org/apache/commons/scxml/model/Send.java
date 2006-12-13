@@ -323,13 +323,20 @@ public class Send extends Action implements ExternalContent {
             if (SCXMLHelper.isStringEmpty(targetValue)) {
                 // TODO: Remove both short-circuit passes in v1.0
                 if (wait == 0L) {
+                    if (appLog.isDebugEnabled()) {
+                        appLog.debug("<send>: Enqueued event '" + event
+                            + "' with no delay");
+                    }
                     derivedEvents.add(new TriggerEvent(event,
                         TriggerEvent.SIGNAL_EVENT));
                     return;
                 }
             } else {
                 // We know of no other
-                appLog.warn("<send>: Unavailable target - " + target);
+                if (appLog.isWarnEnabled()) {
+                    appLog.warn("<send>: Unavailable target - "
+                        + targetValue);
+                }
                 derivedEvents.add(new TriggerEvent(
                     EVENT_ERR_SEND_TARGETUNAVAILABLE,
                     TriggerEvent.ERROR_EVENT));
@@ -338,6 +345,12 @@ public class Send extends Action implements ExternalContent {
             }
         }
         ctx.setLocal(getNamespacesKey(), null);
+        if (appLog.isDebugEnabled()) {
+            appLog.debug("<send>: Dispatching event '" + event
+                + "' to target '" + targetValue + "' of target type '"
+                + targettypeValue + "' with suggested delay of " + wait
+                + "ms");
+        }
         // Else, let the EventDispatcher take care of it
         evtDispatcher.send(sendid, targetValue, targettypeValue, event,
             params, hintsValue, wait, externalNodes);
