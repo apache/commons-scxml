@@ -36,6 +36,16 @@
     <release version="0.6" date="December 2006"
      description="Latest release">
 
+      <action dev="rahul" type="fix" issue="SCXML-16" due-to="Sitthichai Rernglertpricha">
+       [12-12-2006] target and targettype attributes of &lt;send&gt; element
+       are now evaluated as expressions.
+      </action>
+
+      <action dev="rahul" type="fix">
+       [12-12-2006] Set tests to warn, but not fail, if the DOM L2
+       implementation in use is not serializable.
+      </action>
+
       <action dev="rahul" type="fix" issue="SCXML-32">
        [12-07-2006] Update Commons Logging to version 1.1.
       </action>
