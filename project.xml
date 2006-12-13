@@ -27,8 +27,8 @@
   <description>A Java Implementation of a State Chart XML Engine</description>
 
   <logo>/images/scxml-logo-white.png</logo>
-  <url>http://jakarta.apache.org/commons/${pom.artifactId.substring(8)}/</url>
-  <package>org.apache.commons.${pom.artifactId.substring(8)}</package>
+  <url>http://jakarta.apache.org/commons/scxml/</url>
+  <package>org.apache.commons.scxml</package>
 
   <organization>
     <name>The Apache Software Foundation</name>
@@ -44,14 +44,14 @@
   </licenses>
 
   <siteAddress>people.apache.org</siteAddress>
-  <siteDirectory>/www/jakarta.apache.org/commons/${pom.artifactId.substring(8)}/</siteDirectory>
+  <siteDirectory>/www/jakarta.apache.org/commons/scxml/</siteDirectory>
   <issueTrackingUrl>http://issues.apache.org/jira/</issueTrackingUrl>
-  <distributionDirectory>/www/jakarta.apache.org/builds/jakarta-commons/${pom.artifactId.substring(8)}/</distributionDirectory> 
+  <distributionDirectory>/www/jakarta.apache.org/builds/jakarta-commons/scxml/</distributionDirectory> 
 
   <repository>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/jakarta/commons/proper/${pom.artifactId.substring(8)}/trunk</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/jakarta/commons/proper/${pom.artifactId.substring(8)}/trunk</developerConnection>
-    <url>http://svn.apache.org/viewvc/jakarta/commons/proper/${pom.artifactId.substring(8)}/trunk</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/jakarta/commons/proper/scxml/trunk</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/jakarta/commons/proper/scxml/trunk</developerConnection>
+    <url>http://svn.apache.org/viewvc/jakarta/commons/proper/scxml/trunk</url>
   </repository>
 
   <mailingLists>
@@ -273,20 +273,14 @@
   </build>
 
   <reports>
-     <!--report>maven-changelog-plugin</report-->
      <report>maven-changes-plugin</report>
      <report>maven-checkstyle-plugin</report>
      <report>maven-cobertura-plugin</report>
-     <!--report>maven-developer-activity-plugin</report-->
      <report>maven-faq-plugin</report>
-     <!--report>maven-file-activity-plugin</report-->
      <report>maven-javadoc-plugin</report>
      <report>maven-junit-report-plugin</report>
      <report>maven-jxr-plugin</report>
      <report>maven-license-plugin</report>
-     <!--report>maven-linkcheck-plugin</report-->
-     <!--report>maven-statcvs-plugin</report-->
-     <!--report>maven-tasklist-plugin</report-->
   </reports>
   
 </project>
