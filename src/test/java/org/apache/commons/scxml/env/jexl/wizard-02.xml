@@ -38,7 +38,7 @@
                       EventDispatcher implementation. See
                       testWizard02Sample() in WizardsTest
                       (org.apache.commons.scxml test package) -->
-                 <send namelist="aValue" targettype="foo" />
+                 <send namelist="aValue" targettype="'foo'" />
            </onentry>
            <transition event="event1" target="state1"/>
            <transition event="event3" target="state3"/>
@@ -47,7 +47,7 @@
      <state id="state3">
            <onentry>
                  <var name="aValue" expr="3"/>
-                 <send namelist="aValue" targettype="foo" />
+                 <send namelist="aValue" targettype="'foo'" />
            </onentry>
            <transition event="event1" target="state1"/>
            <transition event="event2" target="state2"/>
@@ -56,7 +56,7 @@
      <state id="state4">
            <onentry>
                  <var name="aValue" expr="4"/>
-                 <send namelist="aValue" targettype="foo" />
+                 <send namelist="aValue" targettype="'foo'" />
            </onentry>
            <transition event="event1" target="state1"/>
            <transition event="event2" target="state2"/>

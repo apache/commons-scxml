@@ -116,7 +116,6 @@ public class Send extends Action implements ExternalContent {
     public Send() {
         super();
         this.externalNodes = new ArrayList();
-        this.targettype = TARGETTYPE_SCXML;
     }
 
     /**
@@ -275,9 +274,32 @@ public class Send extends Action implements ExternalContent {
         Context ctx = scInstance.getContext(parentState);
         ctx.setLocal(getNamespacesKey(), getNamespaces());
         Evaluator eval = scInstance.getEvaluator();
+        // Most attributes of <send> are expressions so need to be
+        // evaluated before the EventDispatcher callback
         Object hintsValue = null;
         if (!SCXMLHelper.isStringEmpty(hints)) {
             hintsValue = eval.eval(ctx, hints);
+        }
+        String targetValue = target;
+        if (!SCXMLHelper.isStringEmpty(target)) {
+            targetValue = (String) eval.eval(ctx, target);
+            if (SCXMLHelper.isStringEmpty(targetValue)
+                    && appLog.isWarnEnabled()) {
+                appLog.warn("<send>: target expression \"" + target
+                    + "\" evaluated to null or empty String");
+            }
+        }
+        String targettypeValue = targettype;
+        if (!SCXMLHelper.isStringEmpty(targettype)) {
+            targettypeValue = (String) eval.eval(ctx, targettype);
+            if (SCXMLHelper.isStringEmpty(targettypeValue)
+                    && appLog.isWarnEnabled()) {
+                appLog.warn("<send>: targettype expression \"" + targettype
+                    + "\" evaluated to null or empty String");
+            }
+        } else {
+            // must default to 'scxml' when unspecified
+            targettypeValue = TARGETTYPE_SCXML;
         }
         Map params = null;
         if (!SCXMLHelper.isStringEmpty(namelist)) {
@@ -296,9 +318,9 @@ public class Send extends Action implements ExternalContent {
         }
         long wait = parseDelay(appLog);
         // Lets see if we should handle it ourselves
-        if (SCXMLHelper.isStringEmpty(targettype)
-                || targettype.trim().equalsIgnoreCase(TARGETTYPE_SCXML)) {
-            if (SCXMLHelper.isStringEmpty(target)) {
+        if (targettypeValue != null
+              && targettypeValue.trim().equalsIgnoreCase(TARGETTYPE_SCXML)) {
+            if (SCXMLHelper.isStringEmpty(targetValue)) {
                 // TODO: Remove both short-circuit passes in v1.0
                 if (wait == 0L) {
                     derivedEvents.add(new TriggerEvent(event,
@@ -317,8 +339,8 @@ public class Send extends Action implements ExternalContent {
         }
         ctx.setLocal(getNamespacesKey(), null);
         // Else, let the EventDispatcher take care of it
-        evtDispatcher.send(sendid, target, targettype, event, params,
-            hintsValue, wait, externalNodes);
+        evtDispatcher.send(sendid, targetValue, targettypeValue, event,
+            params, hintsValue, wait, externalNodes);
     }
 
     /**
