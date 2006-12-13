@@ -74,8 +74,10 @@
 
  <section name="Releases">
   <p>
-  The latest release is v0.6. -
-  <a href="http://jakarta.apache.org/site/downloads/downloads_commons-scxml.cgi">Download now!</a>
+  The latest release is v0.6. Read
+  <a href="http://svn.apache.org/viewvc/jakarta/commons/proper/scxml/tags/SCXML_0_6/RELEASE-NOTES.txt?view=markup">v0.6
+  release notes</a> before upgrading.
+  <a href="http://jakarta.apache.org/site/downloads/downloads_commons-scxml.cgi">Download v0.6!</a>
   </p>
   <p>
   The first release was v0.5. The initial release version number was chosen
