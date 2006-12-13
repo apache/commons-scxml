@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.URL;
@@ -242,6 +243,11 @@ public class SCXMLTestHelper {
                 new ObjectInputStream(new FileInputStream(filename));
             roundtrip = (SCXML) in.readObject();
             in.close();
+        } catch (NotSerializableException nse) {
+            // <data> nodes failed serialization
+            System.err.println("SERIALIZATION ERROR: The DOM implementation"
+                + " in use is not serializable");
+            return scxml;
         } catch(IOException ex) {
             ex.printStackTrace();
         } catch(ClassNotFoundException ex) {
@@ -267,6 +273,12 @@ public class SCXMLTestHelper {
                 new ObjectInputStream(new FileInputStream(filename));
             roundtrip = (SCXMLExecutor) in.readObject();
             in.close();
+        } catch (NotSerializableException nse) {
+            // <data> nodes failed serialization, test cases do not add
+            // other non-serializable context data
+            System.err.println("SERIALIZATION ERROR: The DOM implementation"
+                + " in use is not serializable");
+            return exec;
         } catch(IOException ex) {
             ex.printStackTrace();
         } catch(ClassNotFoundException ex) {
