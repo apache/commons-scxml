@@ -48,7 +48,7 @@ public class SCXMLDigesterTest extends TestCase {
     }
 
     // Test data
-    private URL microwave01, microwave02, transitions01, send01;
+    private URL microwave01, microwave02, transitions01, send01, prefix01;
     private SCXML scxml;
     private String scxmlAsString;
 
@@ -64,13 +64,15 @@ public class SCXMLDigesterTest extends TestCase {
             getResource("org/apache/commons/scxml/transitions-01.xml");
         send01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/send-01.xml");
+        prefix01 = this.getClass().getClassLoader().
+            getResource("org/apache/commons/scxml/prefix-01.xml");
     }
 
     /**
      * Tear down instance variables required by this test case.
      */
     public void tearDown() {
-        microwave01 = microwave02 = transitions01 = send01 = null;
+        microwave01 = microwave02 = transitions01 = prefix01 = send01 = null;
         scxml = null;
         scxmlAsString = null;
     }
@@ -80,17 +82,30 @@ public class SCXMLDigesterTest extends TestCase {
      */
     public void testSCXMLDigesterMicrowave01Sample() {
         scxml = SCXMLTestHelper.digest(microwave01);
+        assertNotNull(scxml);
         scxmlAsString = serialize(scxml);
+        assertNotNull(scxmlAsString);
     }
 
     public void testSCXMLDigesterMicrowave02Sample() {
         scxml = SCXMLTestHelper.digest(microwave02);
+        assertNotNull(scxml);
         scxmlAsString = serialize(scxml);
+        assertNotNull(scxmlAsString);
     }
 
     public void testSCXMLDigesterTransitions01Sample() {
         scxml = SCXMLTestHelper.digest(transitions01);
+        assertNotNull(scxml);
         scxmlAsString = serialize(scxml);
+        assertNotNull(scxmlAsString);
+    }
+
+    public void testSCXMLDigesterPrefix01Sample() {
+        scxml = SCXMLTestHelper.digest(prefix01);
+        assertNotNull(scxml);
+        scxmlAsString = serialize(scxml);
+        assertNotNull(scxmlAsString);
     }
 
     public void testSCXMLDigesterSend01Sample() {
