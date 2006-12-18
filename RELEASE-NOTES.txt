@@ -44,7 +44,8 @@ BUG FIXES:
 
 OTHER CHANGES:
 
-
+ o SCXMLExecutor logs state at a lower severity (changed from log level
+   'info' to log level 'debug')
 
 ABOUT COMMONS SCXML:
 

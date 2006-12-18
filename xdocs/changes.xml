@@ -33,6 +33,16 @@
       </ul>
     </section>
 
+    <release version="0.7" date="In SVN"
+     description="Latest unreleased code">
+
+      <action dev="rahul" type="fix">
+       [12-18-2006] SCXMLExecutor#logState() now uses debug level to reduce noise
+       at console.
+      </action>
+
+    </release>
+
     <release version="0.6" date="December 2006"
      description="Latest release">
 

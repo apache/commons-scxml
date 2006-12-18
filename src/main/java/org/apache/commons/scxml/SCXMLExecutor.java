@@ -514,7 +514,7 @@ public class SCXMLExecutor implements Serializable {
      * Log the current set of active states.
      */
     private void logState() {
-        if (log.isInfoEnabled()) {
+        if (log.isDebugEnabled()) {
             Iterator si = currentStatus.getStates().iterator();
             StringBuffer sb = new StringBuffer("Current States: [");
             while (si.hasNext()) {
@@ -525,7 +525,7 @@ public class SCXMLExecutor implements Serializable {
                 }
             }
             sb.append(']');
-            log.info(sb.toString());
+            log.debug(sb.toString());
         }
     }
 
