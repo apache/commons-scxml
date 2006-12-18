@@ -17,85 +17,34 @@
 $Id$
 
                          Commons SCXML Package
-                             Version 0.6
+                          Version 0.7-SNAPSHOT
                             Release Notes
 
 INTRODUCTION:
 
-Commons SCXML 0.6 primarily contains new features, along with a
+Commons SCXML 0.7 primarily contains new features, along with a
 handful of bug fixes. See about section below for general information
 on Commons SCXML.
 
 IMPORTANT NOTES:
 
- o Commons SCXML v0.6 requires Commons Digester v1.8 (mandatory update)
 
- o The recommended version of Commons JEXL is now v1.1 and the
-   recommended version of Commons Logging is v1.1
-
- o Starting v0.6, all SCXML elements must strictly belong to the
-   correct namespace with the following URI (case sensitive):
-
-    http://www.w3.org/2005/07/scxml
-
- o See bug fixes section for semantic incompatibilities introduced due
-   to bugs fixed from v0.5
 
 NEW FEATURES:
 
- o The entire Commons SCXML object model as well as the SCXMLExecutor
-   instances are now serializable, as long as the user specified content
-   in all state contexts is also serializable. This is particularly
-   useful in web environments for session persistence and clustering.
-   If <data> elements are used; the DOM Level 2 implementation in use
-   must also be serializable.
 
- o There is improved support for XML namespaces in SCXML documents.
-   Custom actions may be defined in user-specified namespaces.
-
- o Deferred XPath expression evaluation, in context of interaction with
-   <data> elements, has improved. It is now possible to use namespace
-   prefixed XPath expressions based on prefixes used in the document.
-
- o The SCXMLExecutor instances now provide some element of thread-safety.
-   Firing events on a state machine executor instance or reseting it
-   are synchronized operations. The underlying state machine needs to
-   model any race conditions correctly.
 
 DEPRECATIONS:
 
-All deprecations introduced in this version are scheduled for removal in
-v1.0 of the library.
 
- o [org.apache.commons.scxml.Builtin] The data() and dataNode() methods
-   that take two arguments are deprecated. They are replaced by their
-   three argument namespace-aware counterparts.
-
- o [org.apache.commons.scxml.ErrorReporter] All String constants in this
-   class have been deprecated. Use constants with the same names in
-   org.apache.commons.scxml.semantics.ErrorConstants instead.
-
- o [org.apache.commons.scxml.io.SCXMLDigester] The custom digester rules
-   in this class are deprecated. They should not have been part of the
-   public API to begin with.
-
- o [org.apache.commons.scxml.model.Invoke] The method getParams()
-   returning a java.util.Map has been deprecated. Use the method
-   params() returning a java.util.List instead. See Javadocs for details.
 
 BUG FIXES:
 
- o [SCXML-21] Delay is not processed for <send> element with default
-   targettype ("scxml").
 
- o [SCXML-16] target and targettype attributes of <send> element should
-   be evaluated as expressions.
-
- o [SCXML-14] Allow target of a transition to be omitted.
 
 OTHER CHANGES:
 
- o [SCXML-31] <var> and <assign> now log new values.
+
 
 ABOUT COMMONS SCXML:
 
