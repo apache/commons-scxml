@@ -138,14 +138,9 @@ public class SCXMLSerializer {
             serializeDatamodel(b, dm, indent + INDENT);
         }
         serializeOnEntry(b, s, indent + INDENT);
-        Map t = s.getTransitions();
-        Iterator i = t.keySet().iterator();
-        while (i.hasNext()) {
-            List et = (List) t.get(i.next());
-            for (int len = 0; len < et.size(); len++) {
-                serializeTransition(b, (Transition) et.get(len), indent
-                    + INDENT);
-            }
+        List t = s.getTransitionsList();
+        for (int i = 0; i < t.size(); i++) {
+            serializeTransition(b, (Transition) t.get(i), indent + INDENT);
         }
         Parallel p = s.getParallel();
         Invoke inv = s.getInvoke();

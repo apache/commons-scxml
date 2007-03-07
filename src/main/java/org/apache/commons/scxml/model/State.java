@@ -18,7 +18,7 @@ package org.apache.commons.scxml.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -70,9 +70,9 @@ public class State extends TransitionTarget {
     private Initial initial;
 
     /**
-     * A map of outgoing Transitions from this state.
+     * A list of outgoing Transitions from this state, by document order.
      */
-    private Map transitions;
+    private List transitions;
 
     /**
      * List of history states owned by a given state (applies to non-leaf
@@ -91,8 +91,8 @@ public class State extends TransitionTarget {
      * Constructor.
      */
     public State() {
-        this.children = new HashMap();
-        this.transitions = new HashMap();
+        this.children = new LinkedHashMap();
+        this.transitions = new ArrayList();
         this.history = new ArrayList();
     }
 
@@ -176,9 +176,22 @@ public class State extends TransitionTarget {
      * Get the map of all outgoing transitions from this state.
      *
      * @return Map Returns the transitions Map.
+     * @deprecated Use getTransitionsList() instead
      */
     public final Map getTransitions() {
-        return transitions;
+        Map transitionsMap = new HashMap();
+        for (int i = 0; i < transitions.size(); i++) {
+            Transition transition = (Transition) transitions.get(i);
+            String event = transition.getEvent();
+            if (!transitionsMap.containsKey(event)) {
+                List eventTransitions = new ArrayList();
+                eventTransitions.add(transition);
+                transitionsMap.put(event, eventTransitions);
+            } else {
+                ((List) transitionsMap.get(event)).add(transition);
+            }
+        }
+        return transitionsMap;
     }
 
     /**
@@ -189,11 +202,18 @@ public class State extends TransitionTarget {
      * @return List Returns the candidate transitions for given event
      */
     public final List getTransitionsList(final String event) {
-        Object candidateTransitions = transitions.get(event);
-        if (candidateTransitions == null) {
-            return null;
+        List matchingTransitions = null; // since we returned null upto v0.6
+        for (int i = 0; i < transitions.size(); i++) {
+            Transition t = (Transition) transitions.get(i);
+            if ((event == null && t.getEvent() == null)
+                    || (event != null && event.equals(t.getEvent()))) {
+                if (matchingTransitions == null) {
+                    matchingTransitions = new ArrayList();
+                }
+                matchingTransitions.add(t);
+            }
         }
-        return (List) candidateTransitions;
+        return matchingTransitions;
     }
 
     /**
@@ -204,14 +224,7 @@ public class State extends TransitionTarget {
      *            The transitions to set.
      */
     public final void addTransition(final Transition transition) {
-        String event = transition.getEvent();
-        if (!transitions.containsKey(event)) {
-            List eventTransitions = new ArrayList();
-            eventTransitions.add(transition);
-            transitions.put(event, eventTransitions);
-        } else {
-            ((List) transitions.get(event)).add(transition);
-        }
+        transitions.add(transition);
     }
 
     /**
@@ -237,17 +250,10 @@ public class State extends TransitionTarget {
     /**
      * Get the outgoing transitions for this state as a java.util.List.
      *
-     * @return List Returns the transitions (as a list). TODO - Check in next
-     *         iteration whether both methods need to be retained.
+     * @return List Returns the transitions list.
      */
     public final List getTransitionsList() {
-        // Each call creates a new List, this will change once TO-DO is handled
-        List transitionsList = new ArrayList();
-        for (Iterator iter = transitions.keySet().iterator();
-                iter.hasNext();) {
-            transitionsList.addAll((List) transitions.get(iter.next()));
-        }
-        return transitionsList;
+        return transitions;
     }
 
     /**

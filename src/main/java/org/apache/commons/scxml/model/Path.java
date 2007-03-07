@@ -128,7 +128,7 @@ public class Path implements Serializable {
      * @see State#isRegion()
      */
     public final List getRegionsExited() {
-        LinkedList ll = new LinkedList();
+        List ll = new LinkedList();
         for (Iterator i = upSeg.iterator(); i.hasNext();) {
             Object o = i.next();
             if (o instanceof State) {
@@ -149,7 +149,7 @@ public class Path implements Serializable {
      * @see State#isRegion()
      */
     public final List getRegionsEntered() {
-        LinkedList ll = new LinkedList();
+        List ll = new LinkedList();
         for (Iterator i = downSeg.iterator(); i.hasNext();) {
             Object o = i.next();
             if (o instanceof State) {

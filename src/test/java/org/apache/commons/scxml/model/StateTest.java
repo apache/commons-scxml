@@ -16,7 +16,6 @@
  */
 package org.apache.commons.scxml.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.Test;
@@ -49,11 +48,10 @@ public class StateTest extends TestCase {
     }
     
     public void testGetTransitionsList() {
-        List values = new ArrayList();
         
-        state.getTransitions().put("event", values);
+        state.getTransitionsList().add(new Transition());
         
-        assertNotNull(state.getTransitionsList("event"));
+        assertNotNull(state.getTransitionsList(null));
     }
     
     public void testAddTransitionDoesNotContainKey() {
@@ -62,7 +60,7 @@ public class StateTest extends TestCase {
         
         state.addTransition(transition);
         
-        List events = (List)state.getTransitions().get("event");
+        List events = (List)state.getTransitionsList("event");
         
         assertEquals(1, events.size());
         assertEquals("event", ((Transition)events.get(0)).getEvent());
@@ -78,7 +76,7 @@ public class StateTest extends TestCase {
         state.addTransition(transition1);
         state.addTransition(transition2);
         
-        List events = (List)state.getTransitions().get("event");
+        List events = (List)state.getTransitionsList("event");
         
         assertEquals(2, events.size());
     }

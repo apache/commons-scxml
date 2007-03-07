@@ -150,16 +150,12 @@ final class ModelUpdater {
                 }
             }
         }
-        Map t = s.getTransitions();
-        Iterator i = t.keySet().iterator();
-        while (i.hasNext()) {
-            Iterator j = ((List) t.get(i.next())).iterator();
-            while (j.hasNext()) {
-                Transition trn = (Transition) j.next();
-                //could add next two lines as a Digester rule for Transition
-                trn.setParent(s);
-                updateTransition(trn, targets);
-            }
+        List t = s.getTransitionsList();
+        for (int i = 0; i < t.size(); i++) {
+            Transition trn = (Transition) t.get(i);
+            //could add next two lines as a Digester rule for Transition
+            trn.setParent(s);
+            updateTransition(trn, targets);
         }
         Parallel p = s.getParallel();
         Invoke inv = s.getInvoke();

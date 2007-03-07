@@ -16,7 +16,7 @@
  */
 package org.apache.commons.scxml.model;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -44,7 +44,7 @@ public class Parallel extends TransitionTarget {
      * Constructor.
      */
     public Parallel() {
-        this.states = new HashSet();
+        this.states = new LinkedHashSet();
     }
 
     /**

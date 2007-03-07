@@ -18,6 +18,7 @@ package org.apache.commons.scxml.model;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.commons.scxml.SCXMLHelper;
@@ -83,7 +84,7 @@ public class SCXML implements Serializable {
      * Constructor.
      */
     public SCXML() {
-        this.states = new HashMap();
+        this.states = new LinkedHashMap();
         this.targets = new HashMap();
     }
 
