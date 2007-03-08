@@ -78,7 +78,6 @@ public class TieBreakerTest extends TestCase {
     /**
      * Test the implementation
      */
-    /* TODO - These tests must pass before v0.7
     public void testTieBreaker01() {
         exec = SCXMLTestHelper.getExecutor(tiebreaker01);
         assertNotNull(exec);
@@ -116,7 +115,7 @@ public class TieBreakerTest extends TestCase {
         assertEquals(1, currentStates.size());
         assertEquals("forty", ((State)currentStates.iterator().
             next()).getId());
-    }*/
+    }
 
     public static void main(String args[]) {
         TestRunner.run(suite());

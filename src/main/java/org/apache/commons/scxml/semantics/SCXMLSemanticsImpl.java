@@ -24,6 +24,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -425,7 +426,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
             Object[] trans = step.getTransitList().toArray();
             Set currentStates = step.getBeforeStatus().getStates();
             // non-determinism candidates
-            Set nonDeterm = new HashSet();
+            Set nonDeterm = new LinkedHashSet();
             for (int i = 0; i < trans.length; i++) {
                 Transition t = (Transition) trans[i];
                 TransitionTarget tsrc = t.getParent();
@@ -454,11 +455,15 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
             // check if all non-deterministic situations have been resolved
             nonDeterm.removeAll(removeList);
             if (nonDeterm.size() > 0) {
-                errRep.onError(ErrorConstants.NON_DETERMINISTIC,
-                    "Multiple conflicting transitions enabled.", nonDeterm);
+                // if not, first one wins (which is also first
+                // in document order)
+                Transition t = (Transition) nonDeterm.iterator().next();
+                nonDeterm.remove(t);
             }
             // apply global transition filter
             step.getTransitList().removeAll(removeList);
+            // apply document order priority
+            step.getTransitList().removeAll(nonDeterm);
             removeList.clear();
             nonDeterm.clear();
         }
