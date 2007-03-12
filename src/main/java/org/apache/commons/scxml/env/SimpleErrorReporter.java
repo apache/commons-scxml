@@ -17,7 +17,6 @@
 package org.apache.commons.scxml.env;
 
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -27,7 +26,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml.ErrorReporter;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.State;
-import org.apache.commons.scxml.model.Transition;
 import org.apache.commons.scxml.model.TransitionTarget;
 import org.apache.commons.scxml.semantics.ErrorConstants;
 
@@ -71,20 +69,6 @@ public class SimpleErrorReporter implements ErrorReporter, Serializable {
         } else if (errCode == ErrorConstants.UNKNOWN_ACTION) {
             //executeActionList
             msg.append("Action: " + errCtx.getClass().getName());
-        } else if (errCode == ErrorConstants.NON_DETERMINISTIC) {
-            //filterTransitionSet
-            msg.append(" [");
-            if (errCtx instanceof HashSet) {
-                for (Iterator i = ((Set) errCtx).iterator(); i.hasNext();) {
-                    Transition t = (Transition) i.next();
-                    msg.append(LogUtils.transToString(t.getParent(),
-                        t.getTarget(), t));
-                    if (i.hasNext()) {
-                        msg.append(", ");
-                    }
-                }
-            }
-            msg.append(']');
         } else if (errCode == ErrorConstants.ILLEGAL_CONFIG) {
             //isLegalConfig
             if (errCtx instanceof Map.Entry) {

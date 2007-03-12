@@ -79,7 +79,8 @@ public interface ErrorReporter {
      * Non-deterministic situation has occured - there are more than
      * one enabled transitions in conflict.
      *
-     * @deprecated Use {@link ErrorConstants#NON_DETERMINISTIC} instead.
+     * @deprecated No longer necessary, non determinism is solved based
+     *             on state heirarchy and document order priorities.
      */
     String NON_DETERMINISTIC = "NON_DETERMINISTIC";
 

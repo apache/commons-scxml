@@ -53,6 +53,9 @@ public class ErrorConstants {
     /**
      * Non-deterministic situation has occured - there are more than
      * one enabled transitions in conflict.
+     *
+     * @deprecated Non deterministic behavior is now resolved using
+     *             state heirarchy and document order priorities.
      */
     public static final String NON_DETERMINISTIC = "NON_DETERMINISTIC";
 
