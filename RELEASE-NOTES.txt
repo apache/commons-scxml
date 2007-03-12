@@ -28,15 +28,29 @@ on Commons SCXML.
 
 IMPORTANT NOTES:
 
-
+ o State IDs can no longer contain whitespace. Any IDs that contain spaces
+   must be changed to conform before switching to v0.7.
 
 NEW FEATURES:
 
+ o Conflicts between transitions are now resolved based on document order
+   of the transitions.
 
+ o Transition targets can now be specified as a space separated list of
+   state IDs. When more than one targets are specified, they must belong
+   to regions of the same parallel.
 
 DEPRECATIONS:
 
+ o org.apache.commons.scxml.model.State#getTransitions()
+   org.apache.commons.scxml.semantics.ErrorConstants#NON_DETERMINISTIC
 
+ o org.apache.commons.scxml.model.Transition#getTarget()
+   org.apache.commons.scxml.model.Transition#setTarget(TransitionTarget)
+   org.apache.commons.scxml.model.Transition#getRuntimeTarget()
+   org.apache.commons.scxml.model.Transition#getPath()
+
+ o org.apache.commons.scxml.io.SCXMLSerializer#serializeTarget(StringBuffer,Transition,String)
 
 BUG FIXES:
 
@@ -46,6 +60,9 @@ OTHER CHANGES:
 
  o SCXMLExecutor logs state at a lower severity (changed from log level
    'info' to log level 'debug')
+
+ o The LCA of two states belonging to sibling regions is now the enclosing
+   Parallel, rather than the orthogonal State.
 
 ABOUT COMMONS SCXML:
 
