@@ -49,7 +49,6 @@ import org.apache.commons.scxml.invoke.InvokerException;
 import org.apache.commons.scxml.model.Action;
 import org.apache.commons.scxml.model.Finalize;
 import org.apache.commons.scxml.model.History;
-import org.apache.commons.scxml.model.Initial;
 import org.apache.commons.scxml.model.Invoke;
 import org.apache.commons.scxml.model.ModelException;
 import org.apache.commons.scxml.model.OnEntry;
@@ -216,9 +215,12 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                 errRep.onError(ErrorConstants.EXPRESSION_ERROR,
                     e.getMessage(), t);
             }
-            nr.fireOnTransition(t, t.getParent(), t.getRuntimeTarget(), t);
-            nr.fireOnTransition(stateMachine, t.getParent(),
-                t.getRuntimeTarget(), t);
+            List rtargets = t.getRuntimeTargets();
+            for (int j = 0; j < rtargets.size(); j++) {
+                TransitionTarget tt = (TransitionTarget) rtargets.get(j);
+                nr.fireOnTransition(t, t.getParent(), tt, t);
+                nr.fireOnTransition(stateMachine, t.getParent(), tt, t);
+            }
         }
         // ExecutePhaseActions / OnEntry
         for (Iterator i = step.getEntryList().iterator(); i.hasNext();) {
@@ -491,17 +493,20 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
         for (Iterator i = transitList.iterator(); i.hasNext();) {
             Transition t = (Transition) i.next();
             //iterate over transitions and add target states
-            if (t.getTarget() != null) {
-                seedSet.add(t.getTarget());
+            if (t.getTargets().size() > 0) {
+                seedSet.addAll(t.getTargets());
             }
             //build a set of all entered regions
-            Path p = t.getPath();
-            if (p.isCrossRegion()) {
-                List regs = p.getRegionsEntered();
-                for (Iterator j = regs.iterator(); j.hasNext();) {
-                    State region = (State) j.next();
-                    regions.addAll(((Parallel) region.getParent()).
-                        getStates());
+            List paths = t.getPaths();
+            for (int j = 0; j < paths.size(); j++) {
+                Path p = (Path) paths.get(j);
+                if (p.isCrossRegion()) {
+                    List regs = p.getRegionsEntered();
+                    for (Iterator k = regs.iterator(); k.hasNext();) {
+                        State region = (State) k.next();
+                        regions.addAll(((Parallel) region.getParent()).
+                            getStates());
+                    }
                 }
             }
         }
@@ -547,32 +552,9 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                     wrkSet.addLast(st.getParallel()); //parallel
                 } else {
                     // composite state
-                    Initial ini = st.getInitial();
-                    if (ini == null) {
-                        errRep.onError(ErrorConstants.NO_INITIAL,
-                            "Initial pseudostate is missing!", st);
-                    } else {
-                        // If we are here, transition target must be a State
-                        // or History
-                        Transition initialTransition = ini.getTransition();
-                        if (initialTransition == null) {
-                            errRep.onError(ErrorConstants.ILLEGAL_INITIAL,
-                                "Initial transition is null!", st);
-                        } else {
-                            TransitionTarget init = initialTransition.
-                                getTarget();
-                            if (init == null
-                                ||
-                                !(init instanceof State
-                                  || init instanceof History)) {
-                                errRep.onError(ErrorConstants.ILLEGAL_INITIAL,
-                                "Initial not pointing to a State or History!",
-                                st);
-                            } else {
-                                wrkSet.addLast(init);
-                            }
-                        }
-                    }
+                    List initialStates = st.getInitial().getTransition().
+                        getTargets();
+                    wrkSet.addAll(initialStates);
                 }
             } else if (tt instanceof Parallel) {
                 Parallel prl = (Parallel) tt;
@@ -583,7 +565,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
             } else if (tt instanceof History) {
                 History h = (History) tt;
                 if (scInstance.isEmpty(h)) {
-                    wrkSet.addLast(h.getTransition().getRuntimeTarget());
+                    wrkSet.addAll(h.getTransition().getRuntimeTargets());
                 } else {
                     wrkSet.addAll(scInstance.getLastConfiguration(h));
                 }
@@ -687,10 +669,18 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
         seedSet.clear();
         for (Iterator i = transitions.iterator(); i.hasNext();) {
             Transition t = (Transition) i.next();
-            entered.addAll(t.getPath().getDownwardSegment());
+            List paths = t.getPaths();
+            for (int j = 0; j < paths.size(); j++) {
+                Path p = (Path) paths.get(j);
+                entered.addAll(p.getDownwardSegment());
+            }
             // If target is a History pseudo state, remove from entered list
-            if (t.getRuntimeTarget() instanceof History) {
-                entered.remove(t.getRuntimeTarget());
+            List rtargets = t.getRuntimeTargets();
+            for (int j = 0; j < rtargets.size(); j++) {
+                TransitionTarget tt = (TransitionTarget) rtargets.get(j);
+                if (tt instanceof History) {
+                    entered.remove(tt);
+                }
             }
         }
         // Check whether the computed state config is legal

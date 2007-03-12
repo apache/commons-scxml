@@ -953,7 +953,7 @@ public final class SCXMLDigester {
                 Transition t = (Transition) getDigester().peek(1);
                 State exitState = new State();
                 exitState.setIsFinal(true);
-                t.setTarget(exitState);
+                t.getTargets().add(exitState);
             }
         });
         scxmlRules.add(xp, new SetNextRule(setNextMethod));

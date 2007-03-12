@@ -17,9 +17,12 @@
 package org.apache.commons.scxml.io;
 
 import java.text.MessageFormat;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml.SCXMLHelper;
@@ -86,14 +89,10 @@ final class ModelUpdater {
       */
     private static void updateState(final State s, final Map targets)
     throws ModelException {
-        //ensure both onEntry and onExit have parent
-        //could add next two lines as a Digester rule for OnEntry/OnExit
-        s.getOnEntry().setParent(s);
-        s.getOnExit().setParent(s);
         //initialize next / inital
         Initial ini = s.getInitial();
         Map c = s.getChildren();
-        TransitionTarget initialState = null;
+        List initialStates = null;
         if (!c.isEmpty()) {
             if (ini == null) {
                 logAndThrowModelError(ERR_STATE_NO_INIT,
@@ -101,13 +100,21 @@ final class ModelUpdater {
             }
             Transition initialTransition = ini.getTransition();
             updateTransition(initialTransition, targets);
-            initialState = initialTransition.getTarget();
+            initialStates = initialTransition.getTargets();
             // we have to allow for an indirect descendant initial (targets)
             //check that initialState is a descendant of s
-            if (initialState == null
-                    || !SCXMLHelper.isDescendant(initialState, s)) {
+            if (initialStates.size() == 0) {
                 logAndThrowModelError(ERR_STATE_BAD_INIT,
                     new Object[] {getStateName(s)});
+            } else {
+                for (int i = 0; i < initialStates.size(); i++) {
+                    TransitionTarget initialState = (TransitionTarget)
+                        initialStates.get(i);
+                    if (!SCXMLHelper.isDescendant(initialState, s)) {
+                        logAndThrowModelError(ERR_STATE_BAD_INIT,
+                            new Object[] {getStateName(s)});
+                    }
+                }
             }
         }
         List histories = s.getHistory();
@@ -121,11 +128,15 @@ final class ModelUpdater {
             Transition historyTransition = h.getTransition();
             if (historyTransition == null) {
                 // try to assign initial as default
-                if (initialState != null
-                        && !(initialState instanceof History)) {
+                if (initialStates != null && initialStates.size() > 0) {
+                    for (int i = 0; i < initialStates.size(); i++) {
+                        if (initialStates.get(i) instanceof History) {
+                            logAndThrowModelError(ERR_HISTORY_BAD_DEFAULT,
+                                new Object[] {h.getId(), getStateName(s)});
+                        }
+                    }
                     historyTransition = new Transition();
-                    historyTransition.setNext(initialState.getId());
-                    historyTransition.setParent(h);
+                    historyTransition.getTargets().addAll(initialStates);
                     h.setTransition(historyTransition);
                 } else {
                     logAndThrowModelError(ERR_HISTORY_NO_DEFAULT,
@@ -133,28 +144,30 @@ final class ModelUpdater {
                 }
             }
             updateTransition(historyTransition, targets);
-            State historyState = (State) historyTransition.getTarget();
-            if (historyState == null) {
+            List historyStates = historyTransition.getTargets();
+            if (historyStates.size() == 0) {
                 logAndThrowModelError(ERR_STATE_NO_HIST,
                     new Object[] {getStateName(s)});
             }
-            if (!h.isDeep()) {
-                if (!c.containsValue(historyState)) {
-                    logAndThrowModelError(ERR_STATE_BAD_SHALLOW_HIST,
-                        new Object[] {getStateName(s)});
-                }
-            } else {
-                if (!SCXMLHelper.isDescendant(historyState, s)) {
-                    logAndThrowModelError(ERR_STATE_BAD_DEEP_HIST,
-                        new Object[] {getStateName(s)});
+            for (int i = 0; i < historyStates.size(); i++) {
+                TransitionTarget historyState = (TransitionTarget)
+                    historyStates.get(i);
+                if (!h.isDeep()) {
+                    if (!c.containsValue(historyState)) {
+                        logAndThrowModelError(ERR_STATE_BAD_SHALLOW_HIST,
+                            new Object[] {getStateName(s)});
+                    }
+                } else {
+                    if (!SCXMLHelper.isDescendant(historyState, s)) {
+                        logAndThrowModelError(ERR_STATE_BAD_DEEP_HIST,
+                            new Object[] {getStateName(s)});
+                    }
                 }
             }
         }
         List t = s.getTransitionsList();
         for (int i = 0; i < t.size(); i++) {
             Transition trn = (Transition) t.get(i);
-            //could add next two lines as a Digester rule for Transition
-            trn.setParent(s);
             updateTransition(trn, targets);
         }
         Parallel p = s.getParallel();
@@ -222,14 +235,26 @@ final class ModelUpdater {
         if (next == null) { // stay transition
             return;
         }
-        TransitionTarget tt = t.getTarget();
-        if (tt == null) {
-            tt = (TransitionTarget) targets.get(next);
-            if (tt == null) {
-                logAndThrowModelError(ERR_TARGET_NOT_FOUND, new Object[] {
-                    next });
+        List tts = t.getTargets();
+        if (tts.size() == 0) {
+            // 'next' is a space separated list of transition target IDs
+            StringTokenizer ids = new StringTokenizer(next);
+            while (ids.hasMoreTokens()) {
+                String id = ids.nextToken();
+                TransitionTarget tt = (TransitionTarget) targets.get(id);
+                if (tt == null) {
+                    logAndThrowModelError(ERR_TARGET_NOT_FOUND, new Object[] {
+                        id });
+                }
+                tts.add(tt);
             }
-            t.setTarget(tt);
+            if (tts.size() > 1) {
+                boolean legal = verifyTransitionTargets(tts);
+                if (!legal) {
+                    logAndThrowModelError(ERR_ILLEGAL_TARGETS, new Object[] {
+                            next });
+                }
+            }
         }
     }
 
@@ -264,6 +289,43 @@ final class ModelUpdater {
             badState = "state with ID \"" + state.getId() + "\"";
         }
         return badState;
+    }
+
+    /**
+     * If a transition has multiple targets, then they satisfy the following
+     * criteria:
+     * <ul>
+     *  <li>They must belong to the regions of the same parallel</li>
+     *  <li>All regions must be represented with exactly one target</li>
+     * </ul>
+     *
+     * @param tts The transition targets
+     * @return Whether this is a legal configuration
+     */
+    private static boolean verifyTransitionTargets(final List tts) {
+        if (tts.size() <= 1) { // No contention
+            return true;
+        }
+        TransitionTarget lca = SCXMLHelper.getLCA((TransitionTarget)
+            tts.get(0), (TransitionTarget) tts.get(1));
+        if (lca == null || !(lca instanceof Parallel)) {
+            return false; // Must have a Parallel LCA
+        }
+        Parallel p = (Parallel) lca;
+        Set regions = new HashSet();
+        for (int i = 0; i < tts.size(); i++) {
+            TransitionTarget tt = (TransitionTarget) tts.get(i);
+            while (tt.getParent() != p) {
+                tt = tt.getParent();
+            }
+            if (!regions.add(tt)) {
+                return false; // One per region
+            }
+        }
+        if (regions.size() != p.getStates().size()) {
+            return false; // Must represent all regions
+        }
+        return true;
     }
 
     /**
@@ -328,6 +390,13 @@ final class ModelUpdater {
         "Transition target with ID \"{0}\" not found";
 
     /**
+     * Transition targets do not form a legal configuration.
+     */
+    private static final String ERR_ILLEGAL_TARGETS =
+        "Transition targets \"{0}\" do not satisfy the requirements for"
+        + " target regions belonging to a <parallel>";
+
+    /**
      * Simple states should not contain a history.
      */
     private static final String ERR_HISTORY_SIMPLE_STATE =
@@ -339,6 +408,13 @@ final class ModelUpdater {
     private static final String ERR_HISTORY_NO_DEFAULT =
         "No default target specified for history with ID \"{0}\""
         + " belonging to {1}";
+
+    /**
+     * History specifies a bad default transition target.
+     */
+    private static final String ERR_HISTORY_BAD_DEFAULT =
+        "Default target specified for history with ID \"{0}\""
+        + " belonging to \"{1}\" is also a history";
 
     /**
      * Error message when an &lt;invoke&gt; does not specify a "targettype"

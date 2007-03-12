@@ -198,18 +198,14 @@ public final class SCXMLHelper {
         Set parents = new HashSet();
         TransitionTarget tmp = tt1;
         while ((tmp = tmp.getParent()) != null) {
-            if (tmp instanceof State) {
-                parents.add(tmp);
-            }
+            parents.add(tmp);
         }
         tmp = tt2;
         while ((tmp = tmp.getParent()) != null) {
-            if (tmp instanceof State) {
-                //test redundant add = common ancestor
-                if (!parents.add(tmp)) {
-                    parents.clear();
-                    return tmp;
-                }
+            //test redundant add = common ancestor
+            if (!parents.add(tmp)) {
+                parents.clear();
+                return tmp;
             }
         }
         return null;
@@ -232,7 +228,7 @@ public final class SCXMLHelper {
     public static Set getStatesExited(final Transition t,
             final Set currentStates) {
         Set allStates = new HashSet();
-        Path p = t.getPath();
+        Path p = (Path) t.getPaths().get(0); // all paths have same upseg
         //the easy part
         allStates.addAll(p.getUpwardSegment());
         TransitionTarget source = t.getParent();
