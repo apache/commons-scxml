@@ -16,6 +16,8 @@
  */
 package org.apache.commons.scxml.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,10 +46,12 @@ public class Transition extends Executable
     private String cond;
 
     /**
-     * Optional property that specifies the new state or parallel
+     * Optional property that specifies the new state(s) or parallel
      * element to transition to. May be specified by reference or in-line.
+     * If multiple state(s) are specified, they must belong to the regions
+     * of the same parallel.
      */
-    private TransitionTarget target;
+    private List targets;
 
     /**
      * The transition target ID (used by XML Digester only).
@@ -55,10 +59,11 @@ public class Transition extends Executable
     private String next;
 
     /**
-     * The path for this transition.
+     * The path(s) for this transition, one per target, in the same order
+     * as <code>targets</code>.
      * @see Path
      */
-    private Path path;
+    private List paths;
 
     /**
      * The current XML namespaces in the SCXML document for this action node,
@@ -71,8 +76,8 @@ public class Transition extends Executable
      */
     public Transition() {
         super();
-        this.target = null;
-        this.path = null;
+        this.targets = new ArrayList();
+        this.paths = new ArrayList();
     }
 
     /**
@@ -137,9 +142,26 @@ public class Transition extends Executable
      * @return Returns the target as specified in SCXML markup.
      * <p>Remarks: Is <code>null</code> for &quot;stay&quot; transitions.
      *  Returns parent (the source node) for &quot;self&quot; transitions.</p>
+     *
+     * @deprecated A transition may have multiple targets,
+     *             use getTargets() instead.
      */
     public final TransitionTarget getTarget() {
-        return target;
+        if (targets.size() > 0) {
+            return (TransitionTarget) targets.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * Get the list of transition targets (may be an empty list).
+     *
+     * @return Returns the target(s) as specified in SCXML markup.
+     * <p>Remarks: Is <code>empty</code> for &quot;stay&quot; transitions.
+     * Contains parent (the source node) for &quot;self&quot; transitions.</p>
+     */
+    public final List getTargets() {
+        return targets;
     }
 
     /**
@@ -150,22 +172,40 @@ public class Transition extends Executable
      * <p>Remarks: For both the &quot;stay&quot; and &quot;self&quot;
      * transitions it returns parent (the source node). This method should
      * never return <code>null</code>.</p>
+     *
+     * @deprecated A transition may have multiple targets,
+     *             use getRuntimeTargets() instead.
      */
     public final TransitionTarget getRuntimeTarget() {
-        if (target != null) {
-            return target;
-        }
-        return getParent();
+        return (TransitionTarget) getRuntimeTargets().get(0);
     }
 
+    /**
+     * Get the list of runtime transition target, which always contains
+     * atleast one TransitionTarget instance.
+     *
+     * @return Returns the actual targets of a transition at runtime.
+     * <p>Remarks: For both the &quot;stay&quot; and &quot;self&quot;
+     * transitions it returns parent (the source node). This method should
+     * never return an empty list or <code>null</code>.</p>
+     */
+    public final List getRuntimeTargets() {
+        if (targets.size() == 0) {
+            List runtimeTargets = new ArrayList();
+            runtimeTargets.add(getParent());
+            return runtimeTargets;
+        }
+        return targets;
+    }
 
     /**
      * Set the transition target.
      *
      * @param target The target to set.
+     * @deprecated Use setTargets(List) instead.
      */
     public final void setTarget(final TransitionTarget target) {
-        this.target = target;
+        this.targets.add(0, target);
     }
 
     /**
@@ -174,7 +214,7 @@ public class Transition extends Executable
      *
      * @return String Returns the transition target ID
      *                (used by SCXML Digester only).
-     * @see #getTarget()
+     * @see #getTargets()
      */
     public final String getNext() {
         return next;
@@ -184,7 +224,7 @@ public class Transition extends Executable
      * Set the transition target by specifying its ID.
      *
      * @param next The the transition target ID (used by SCXML Digester only).
-     * @see #setTarget(TransitionTarget)
+     * @see #setTargets(List)
      */
     public final void setNext(final String next) {
         this.next = next;
@@ -195,13 +235,30 @@ public class Transition extends Executable
      *
      * @see Path
      * @return Path returns the transition path
+     * @deprecated Use getPaths() instead.
      */
     public final Path getPath() {
-        if (path == null) {
-            path = new Path(getParent(), getTarget());
-        }
-        return path;
+        return (Path) getPaths().get(0);
     }
 
+    /**
+     * Get the path(s) of this transiton.
+     *
+     * @see Path
+     * @return List returns the list of transition path(s)
+     */
+    public final List getPaths() {
+        if (paths.size() == 0) {
+            if (targets.size() > 0) {
+                for (int i = 0; i < targets.size(); i++) {
+                    paths.add(i, new Path(getParent(),
+                        (TransitionTarget) targets.get(i)));
+                }
+            } else {
+                paths.add(new Path(getParent(), null));
+            }
+        }
+        return paths;
+    }
 }
 

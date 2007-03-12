@@ -42,31 +42,30 @@ public class TransitionTest extends TestCase {
     }
     
     public void testGetRuntimeTargetNullNoParent() {
-        transition.setTarget(null);
-        
-        assertNull(transition.getRuntimeTarget());
+        assertTrue(transition.getRuntimeTargets().size() > 0);
     }
     
     public void testGetRuntimeTargetNullWithParent() {
         State state = new State();
         state.setId("1");
         
-        transition.setTarget(null);
         transition.setParent(state);
         
-        assertEquals("1", transition.getRuntimeTarget().getId());
+        assertEquals("1", ((TransitionTarget) transition.
+            getRuntimeTargets().get(0)).getId());
     }
     
     public void testGetRuntimeTarget() {
         State state = new State();
         state.setId("2");
         
-        transition.setTarget(state);
+        transition.getTargets().add(state);
         
-        assertEquals("2", transition.getRuntimeTarget().getId());
+        assertEquals("2", ((TransitionTarget) transition.
+            getRuntimeTargets().get(0)).getId());
     }
     
     public void testGetPath() {
-        assertNotNull(transition.getPath());
+        assertTrue(transition.getPaths().size() > 0);
     }
 }
