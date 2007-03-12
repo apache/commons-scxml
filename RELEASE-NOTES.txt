@@ -64,6 +64,9 @@ OTHER CHANGES:
  o The LCA of two states belonging to sibling regions is now the enclosing
    Parallel, rather than the orthogonal State.
 
+ o The regions of a parallel are entered in document order. This is
+   implementation-specific behavior and users should not rely on it.
+
 ABOUT COMMONS SCXML:
 
 The Commons SCXML (State Chart XML) project provides a generic

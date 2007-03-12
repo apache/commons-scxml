@@ -37,6 +37,12 @@
      description="Latest unreleased code">
 
       <action dev="rahul" type="add">
+       [03-12-2007] The regions of a parallel are entered in document
+       order. This is implementation-specific behavior and users should
+       not rely on it.
+      </action>
+
+      <action dev="rahul" type="add">
        [03-12-2007] Added tests for conflict resolution based on document
        order and for multiple transition targets.
       </action>
