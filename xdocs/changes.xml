@@ -36,6 +36,35 @@
     <release version="0.7" date="In SVN"
      description="Latest unreleased code">
 
+      <action dev="rahul" type="add">
+       [03-12-2007] Added tests for conflict resolution based on document
+       order and for multiple transition targets.
+      </action>
+
+      <action dev="rahul" type="fix">
+       [03-12-2007] Deprecated various methods in Transition class that
+       refer to a singular target.
+      </action>
+
+      <action dev="rahul" type="add">
+       [03-12-2007] Implement ability to support multiple transition targets
+       (space separated list of state IDs). IDs must no longer contain
+       whitespace.
+      </action>
+
+      <action dev="rahul" type="fix" issue="SCXML-30">
+       [03-12-2007] Better handling of parent-child relationships (part 1).
+      </action>
+
+      <action dev="rahul" type="fix">
+       [03-12-2007] Deprecated State#getTransitions() in favor of
+       State#getTransitionsList().
+      </action>
+
+      <action dev="rahul" type="add">
+       [03-09-2007] Implement document order priority for transitions.
+      </action>
+
       <action dev="rahul" type="fix">
        [12-18-2006] SCXMLExecutor#logState() now uses debug level to reduce noise
        at console.
