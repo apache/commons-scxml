@@ -18,8 +18,11 @@ package org.apache.commons.scxml.semantics;
 
 import java.io.Serializable;
 import java.util.Comparator;
+import java.util.Iterator;
 
 import org.apache.commons.scxml.SCXMLHelper;
+import org.apache.commons.scxml.model.Parallel;
+import org.apache.commons.scxml.model.State;
 import org.apache.commons.scxml.model.TransitionTarget;
 
 
@@ -68,6 +71,29 @@ final class TransitionTargetComparator implements Comparator, Serializable {
             //the tt1 and tt2 are parallel, now we have to count chain sizes
             int tc1 = countChainLength(tt1);
             int tc2 = countChainLength(tt2);
+            if (tc2 == tc1) {
+                // use document order as priority
+                // - not a requirement
+                // - though useful for an impl to have repeatable behavior
+                // - downside is users may rely on this behavior
+                Parallel lca = (Parallel) SCXMLHelper.getLCA(tt1, tt2);
+                TransitionTarget parent1 = tt1;
+                while (parent1.getParent() != lca) {
+                    parent1 = parent1.getParent();
+                }
+                TransitionTarget parent2 = tt2;
+                while (parent2.getParent() != lca) {
+                    parent2 = parent2.getParent();
+                }
+                for (Iterator iter = lca.getStates().iterator(); iter.hasNext();) {
+                    State s = (State) iter.next();
+                    if (s == parent1) {
+                        return 1;
+                    } else if (s == parent2) {
+                        return -1;
+                    }
+                }
+            }
             //longer the chain, deeper the node is
             return tc2 - tc1;
         }

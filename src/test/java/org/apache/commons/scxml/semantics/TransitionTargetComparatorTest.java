@@ -16,12 +16,13 @@
  */
 package org.apache.commons.scxml.semantics;
 
-import org.apache.commons.scxml.model.State;
-import org.apache.commons.scxml.model.TransitionTarget;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+
+import org.apache.commons.scxml.model.Parallel;
+import org.apache.commons.scxml.model.State;
+import org.apache.commons.scxml.model.TransitionTarget;
 
 public class TransitionTargetComparatorTest extends TestCase {
 
@@ -100,17 +101,16 @@ public class TransitionTargetComparatorTest extends TestCase {
         assertEquals(1, comparator.compare(target2, target1)); // reversed
     }
     
-    public void testComparatorSameParents() {
-        TransitionTarget target1 = new State();
-        TransitionTarget parent1 = new State();
-
-        target1.setParent(parent1);
+    public void testComparatorSameParent() {
+        State target1 = new State();
+        Parallel parent = new Parallel();
+        target1.setParent(parent);
+        parent.addState(target1);
         
-        TransitionTarget target2 = new State();
-        TransitionTarget parent2 = new State();
+        State target2 = new State();
+        target2.setParent(parent);
+        parent.addState(target2);
         
-        target2.setParent(parent2);
-        
-        assertEquals(0, comparator.compare(target1, target2));
+        assertEquals(1, comparator.compare(target1, target2));
     }
 }
