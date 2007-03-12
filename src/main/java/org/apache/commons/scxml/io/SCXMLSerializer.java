@@ -288,6 +288,8 @@ public class SCXMLSerializer {
      * @param b The buffer to append the serialization to
      * @param t The Transition whose Target needs to be serialized
      * @param indent The indent for this XML element
+     *
+     * @deprecated Inline <target> element has been deprecated in the SCXML WD
      */
     public static void serializeTarget(final StringBuffer b,
             final Transition t, final String indent) {
