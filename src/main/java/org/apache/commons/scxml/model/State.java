@@ -225,6 +225,7 @@ public class State extends TransitionTarget {
      */
     public final void addTransition(final Transition transition) {
         transitions.add(transition);
+        transition.setParent(this);
     }
 
     /**

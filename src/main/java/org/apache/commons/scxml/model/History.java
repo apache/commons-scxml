@@ -63,6 +63,7 @@ public class History extends TransitionTarget {
      */
     public final void setTransition(final Transition transition) {
         this.transition = transition;
+        this.transition.setParent(this);
     }
 
     /**

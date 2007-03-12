@@ -100,6 +100,7 @@ public abstract class TransitionTarget implements Serializable {
      */
     public final void setOnEntry(final OnEntry onEntry) {
         this.onEntry = onEntry;
+        this.onEntry.setParent(this);
     }
 
     /**
@@ -118,6 +119,7 @@ public abstract class TransitionTarget implements Serializable {
      */
     public final void setOnExit(final OnExit onExit) {
         this.onExit = onExit;
+        this.onExit.setParent(this);
     }
 
     /**
