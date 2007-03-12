@@ -224,7 +224,6 @@ public class Transition extends Executable
      * Set the transition target by specifying its ID.
      *
      * @param next The the transition target ID (used by SCXML Digester only).
-     * @see #setTargets(List)
      */
     public final void setNext(final String next) {
         this.next = next;

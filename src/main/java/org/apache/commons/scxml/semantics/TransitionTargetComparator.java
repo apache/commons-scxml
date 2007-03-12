@@ -85,7 +85,8 @@ final class TransitionTargetComparator implements Comparator, Serializable {
                 while (parent2.getParent() != lca) {
                     parent2 = parent2.getParent();
                 }
-                for (Iterator iter = lca.getStates().iterator(); iter.hasNext();) {
+                for (Iterator iter = lca.getStates().iterator();
+                        iter.hasNext();) {
                     State s = (State) iter.next();
                     if (s == parent1) {
                         return 1;

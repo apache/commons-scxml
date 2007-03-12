@@ -293,7 +293,7 @@ final class ModelUpdater {
 
     /**
      * If a transition has multiple targets, then they satisfy the following
-     * criteria:
+     * criteria.
      * <ul>
      *  <li>They must belong to the regions of the same parallel</li>
      *  <li>All regions must be represented with exactly one target</li>
