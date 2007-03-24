@@ -36,6 +36,7 @@ import org.apache.commons.scxml.env.Tracer;
 import org.apache.commons.scxml.env.jexl.JexlContext;
 import org.apache.commons.scxml.env.jexl.JexlEvaluator;
 import org.apache.commons.scxml.io.SCXMLDigester;
+import org.apache.commons.scxml.io.SCXMLParser;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.TransitionTarget;
 import org.xml.sax.ErrorHandler;
@@ -83,6 +84,34 @@ public class SCXMLTestHelper {
         return roundtrip;
     }
 
+    public static SCXML parse(final URL url) {
+        return parse(url, null, null);
+    }
+
+    public static SCXML parse(final URL url, final List customActions) {
+        return parse(url, null, customActions);
+    }
+
+    public static SCXML parse(final URL url, final ErrorHandler errHandler) {
+        return parse(url, errHandler, null);
+    }
+
+    public static SCXML parse(final URL url, final ErrorHandler errHandler,
+            final List customActions) {
+        Assert.assertNotNull(url);
+        // SAX ErrorHandler may be null
+        SCXML scxml = null;
+        try {
+            scxml = SCXMLParser.parse(url, errHandler, customActions);
+        } catch (Exception e) {
+            Log log = LogFactory.getLog(SCXMLTestHelper.class);
+            log.error(e.getMessage(), e);
+            Assert.fail(e.getMessage());
+        }
+        Assert.assertNotNull(scxml);
+        SCXML roundtrip = testModelSerializability(scxml);
+        return roundtrip;
+    }
     public static SCXMLExecutor getExecutor(final URL url) {
         SCXML scxml = digest(url);
         Evaluator evaluator = new JexlEvaluator();
