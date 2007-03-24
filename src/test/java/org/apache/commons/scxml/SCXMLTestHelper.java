@@ -112,6 +112,7 @@ public class SCXMLTestHelper {
         SCXML roundtrip = testModelSerializability(scxml);
         return roundtrip;
     }
+
     public static SCXMLExecutor getExecutor(final URL url) {
         SCXML scxml = digest(url);
         Evaluator evaluator = new JexlEvaluator();
