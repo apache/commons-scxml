@@ -75,12 +75,6 @@ public class State extends TransitionTarget {
     private List transitions;
 
     /**
-     * List of history states owned by a given state (applies to non-leaf
-     * states).
-     */
-    private List history;
-
-    /**
      * Applies to composite states only. If one of its final children is
      * active, its parent is marked done. This property is reset upon
      * re-entry.
@@ -93,7 +87,6 @@ public class State extends TransitionTarget {
     public State() {
         this.children = new LinkedHashMap();
         this.transitions = new ArrayList();
-        this.history = new ArrayList();
     }
 
     /**
@@ -119,6 +112,9 @@ public class State extends TransitionTarget {
      * Get the Parallel child (may be null).
      *
      * @return Parallel Returns the parallel.
+     *
+     * @deprecated &lt;parallel&gt; no longer needs an enclosing
+     *             &lt;state&gt; element.
      */
     public final Parallel getParallel() {
         return parallel;
@@ -129,6 +125,9 @@ public class State extends TransitionTarget {
      *
      * @param parallel
      *            The parallel to set.
+     *
+     * @deprecated &lt;parallel&gt; no longer needs an enclosing
+     *             &lt;state&gt; element.
      */
     public final void setParallel(final Parallel parallel) {
         this.parallel = parallel;
@@ -170,6 +169,7 @@ public class State extends TransitionTarget {
      */
     public final void setInitial(final Initial target) {
         this.initial = target;
+        target.setParent(this);
     }
 
     /**
@@ -242,10 +242,23 @@ public class State extends TransitionTarget {
      *
      * @param state
      *            a child state
+     *
+     * @deprecated Use addChild(TransitionTarget) instead.
      */
     public final void addChild(final State state) {
         this.children.put(state.getId(), state);
         state.setParent(this);
+    }
+
+    /**
+     * Add a child transition target.
+     *
+     * @param tt
+     *            a child transition target
+     */
+    public final void addChild(final TransitionTarget tt) {
+        this.children.put(tt.getId(), tt);
+        tt.setParent(this);
     }
 
     /**
@@ -255,37 +268,6 @@ public class State extends TransitionTarget {
      */
     public final List getTransitionsList() {
         return transitions;
-    }
-
-    /**
-     * This method is used by XML digester.
-     *
-     * @param h
-     *            History pseudo state
-     */
-    public final void addHistory(final History h) {
-        history.add(h);
-    }
-
-    /**
-     * Does this state have a history pseudo state.
-     *
-     * @return boolean true if a given state contains at least one
-     *                 history pseudo state
-     */
-    public final boolean hasHistory() {
-        return (!history.isEmpty());
-    }
-
-    /**
-     * Get the list of history pseudo states for this state.
-     *
-     * @return a list of all history pseudo states contained by a given state
-     *         (can be empty)
-     * @see #hasHistory()
-     */
-    public final List getHistory() {
-        return history;
     }
 
     /**
@@ -331,6 +313,10 @@ public class State extends TransitionTarget {
      * (UML terminology).
      *
      * @return true if this is a orthogonal state, otherwise false
+     * @deprecated &lt;parallel&gt; now represents an orthogonal state, rather
+     *             than denoting that the enclosing state is orthogonal, as
+     *             it did in previous SCXML WDs.
+     *             
      */
     public final boolean isOrthogonal() {
         if (parallel != null) {

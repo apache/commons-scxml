@@ -112,18 +112,12 @@ public class StateTest extends TestCase {
         assertTrue(state.isSimple());
     }
     
-    public void testIsSimpleParallel() {
-        Parallel parallel = new Parallel();
-        
-        state.setParallel(parallel);
-        
-        assertFalse(state.isSimple());
-    }
-    
     public void testIsSimpleHasChildren() {
         State state1 = new State();
         
-        state.addChild(state1);
+        // redundant cast to remove deprecation warning
+        // could be removed in v1.0
+        state.addChild((TransitionTarget) state1);
         
         assertFalse(state.isSimple());
     }
@@ -133,9 +127,9 @@ public class StateTest extends TestCase {
     }
     
     public void testIsCompositeParallel() {
-        Parallel parallel = new Parallel();
+        State child = new State();
         
-        state.setParallel(parallel);
+        state.addChild(child);
         
         assertTrue(state.isComposite());
     }
@@ -143,7 +137,9 @@ public class StateTest extends TestCase {
     public void testIsCompositeHasChildren() {
         State state1 = new State();
         
-        state.addChild(state1);
+        // redundant cast to remove deprecation warning
+        // could be removed in v1.0
+        state.addChild((TransitionTarget) state1);
         
         assertTrue(state.isComposite());
     }
@@ -160,16 +156,4 @@ public class StateTest extends TestCase {
         assertFalse(state.isRegion());
     }
     
-    public void testIsOrthogonal() {
-        Parallel parallel = new Parallel();
-        
-        state.setParallel(parallel);
-        
-        assertTrue(state.isOrthogonal());
-    }
-    
-    public void testIsOrthogonalFalse() {
-        assertFalse(state.isOrthogonal());
-    }
-
 }
