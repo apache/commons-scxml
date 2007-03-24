@@ -38,22 +38,24 @@ public class Parallel extends TransitionTarget {
     /**
      * The set of parallel state machines contained in this &lt;parallel&gt;.
      */
-    private Set states;
+    private Set children;
 
     /**
      * Constructor.
      */
     public Parallel() {
-        this.states = new LinkedHashSet();
+        this.children = new LinkedHashSet();
     }
 
     /**
      * Get the set of parallel state machines contained in this Parallel.
      *
      * @return Returns the state.
+     *
+     * @deprecated Use getChildren() instead.
      */
     public final Set getStates() {
-        return states;
+        return children;
     }
 
     /**
@@ -61,11 +63,34 @@ public class Parallel extends TransitionTarget {
      * in this Parallel.
      *
      * @param state The state to add.
+     *
+     * @deprecated Use addChild(TransitionTarget) instead.
      */
     public final void addState(final State state) {
         if (state != null) {
-            this.states.add(state);
+            this.children.add(state);
+            state.setParent(this);
         }
+    }
+
+    /**
+     * Get the set of child transition targets (may be empty).
+     *
+     * @return Set Returns the children.
+     */
+    public final Set getChildren() {
+        return children;
+    }
+
+    /**
+     * Add a child.
+     *
+     * @param tt A child transition target.
+     */
+    public final void addChild(final TransitionTarget tt) {
+        // TODO: State is a sufficient enough type for the parameter
+        this.children.add(tt);
+        tt.setParent(this);
     }
 
 }
