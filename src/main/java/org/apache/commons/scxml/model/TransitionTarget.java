@@ -17,6 +17,8 @@
 package org.apache.commons.scxml.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An abstract base class for elements in SCXML that can serve as a
@@ -55,6 +57,12 @@ public abstract class TransitionTarget implements Serializable {
     private TransitionTarget parent;
 
     /**
+     * List of history states owned by a given state (applies to non-leaf
+     * states).
+     */
+    private List history;
+
+    /**
      * Constructor.
      */
     public TransitionTarget() {
@@ -64,6 +72,7 @@ public abstract class TransitionTarget implements Serializable {
         onExit = new OnExit();   //empty defaults
         onExit.setParent(this);
         parent = null;
+        history = new ArrayList();
     }
 
     /**
@@ -175,6 +184,38 @@ public abstract class TransitionTarget implements Serializable {
                 return tt.getParentState();
             }
         }
+    }
+
+    /**
+     * This method is used by XML digester.
+     *
+     * @param h
+     *            History pseudo state
+     */
+    public final void addHistory(final History h) {
+        history.add(h);
+        h.setParent(this);
+    }
+
+    /**
+     * Does this state have a history pseudo state.
+     *
+     * @return boolean true if a given state contains at least one
+     *                 history pseudo state
+     */
+    public final boolean hasHistory() {
+        return (!history.isEmpty());
+    }
+
+    /**
+     * Get the list of history pseudo states for this state.
+     *
+     * @return a list of all history pseudo states contained by a given state
+     *         (can be empty)
+     * @see #hasHistory()
+     */
+    public final List getHistory() {
+        return history;
     }
 
 }
