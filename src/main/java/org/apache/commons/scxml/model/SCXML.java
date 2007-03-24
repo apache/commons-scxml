@@ -53,12 +53,12 @@ public class SCXML implements Serializable {
     private String version;
 
     /**
-     * The initial State for the SCXML executor.
+     * The initial TransitionTarget for the SCXML executor.
      */
-    private State initialState;
+    private TransitionTarget initialTarget;
 
     /**
-     * The initial state ID (used by XML Digester only).
+     * The initial transition target ID (used by XML Digester only).
      */
     private String initialstate;
 
@@ -70,9 +70,9 @@ public class SCXML implements Serializable {
     private Datamodel datamodel;
 
     /**
-     * The immediate child states of this SCXML document root.
+     * The immediate child targets of this SCXML document root.
      */
-    private Map states;
+    private Map children;
 
     /**
      * A global map of all States and Parallels associated with this
@@ -84,7 +84,7 @@ public class SCXML implements Serializable {
      * Constructor.
      */
     public SCXML() {
-        this.states = new LinkedHashMap();
+        this.children = new LinkedHashMap();
         this.targets = new HashMap();
     }
 
@@ -92,18 +92,44 @@ public class SCXML implements Serializable {
      * Get the initial State.
      *
      * @return State Returns the initialstate.
+     *
+     * @deprecated Use getInitialTarget() instead. Returns <code>null</code>
+     *             if the initial target is a Parallel.
      */
     public final State getInitialState() {
-        return initialState;
+        if (initialTarget != null && initialTarget instanceof State) {
+            return (State) initialTarget;
+        }
+        return null;
     }
 
     /**
      * Set the initial State.
      *
-     * @param initialState The initialstate to set.
+     * @param initialTarget The initialstate to set.
+     *
+     * @deprecated Use setInitialTarget(TransitionTarget) instead.
      */
     public final void setInitialState(final State initialState) {
-        this.initialState = initialState;
+        this.initialTarget = initialState;
+    }
+
+    /**
+     * Get the initial TransitionTarget.
+     *
+     * @return Returns the initial target for this state machine.
+     */
+    public final TransitionTarget getInitialTarget() {
+        return initialTarget;
+    }
+
+    /**
+     * Set the initial TransitionTarget.
+     *
+     * @param initialTarget The initial target to set.
+     */
+    public final void setInitialTarget(final TransitionTarget initialTarget) {
+        this.initialTarget = initialTarget;
     }
 
     /**
@@ -128,22 +154,44 @@ public class SCXML implements Serializable {
      * Get the children states.
      *
      * @return Map Returns map of the child states.
+     *
+     * @deprecated Use getChildren() instead.
      */
     public final Map getStates() {
-        return states;
+        return children;
     }
 
     /**
      * Add a child state.
      *
      * @param state The state to be added to the states Map.
+     *
+     * @deprecated Use addChild(TransitionTarget) instead.
      */
     public final void addState(final State state) {
-        states.put(state.getId(), state);
+        children.put(state.getId(), state);
     }
 
     /**
-     * Get the targets map, whichis a Map of all States and Parallels
+     * Get the immediate child targets of the SCXML root.
+     *
+     * @return Map Returns map of the child targets.
+     */
+    public final Map getChildren() {
+        return children;
+    }
+
+    /**
+     * Add an immediate child target of the SCXML root.
+     *
+     * @param target The transition target to be added to the states Map.
+     */
+    public final void addChild(final TransitionTarget tt) {
+        children.put(tt.getId(), tt);
+    }
+
+    /**
+     * Get the targets map, which is a Map of all States and Parallels
      * associated with this state machine, keyed by their id.
      *
      * @return Map Returns the targets.
