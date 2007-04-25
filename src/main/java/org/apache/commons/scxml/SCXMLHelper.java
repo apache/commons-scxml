@@ -152,7 +152,7 @@ public final class SCXMLHelper {
             Set count = (Set) entry.getValue();
             if (tt instanceof Parallel) {
                 Parallel p = (Parallel) tt;
-                if (count.size() < p.getStates().size()) {
+                if (count.size() < p.getChildren().size()) {
                     errRep.onError(ErrorConstants.ILLEGAL_CONFIG,
                         "Not all AND states active for parallel "
                         + p.getId(), entry);
@@ -249,7 +249,7 @@ public final class SCXMLHelper {
                 Parallel par = ((Parallel) ((State) regions.next()).
                     getParent());
                 //let's find affected states in sibling regions
-                for (Iterator siblings = par.getStates().iterator();
+                for (Iterator siblings = par.getChildren().iterator();
                         siblings.hasNext();) {
                     State s = (State) siblings.next();
                     for (Iterator act = currentStates.iterator();
