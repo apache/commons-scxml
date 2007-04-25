@@ -32,7 +32,7 @@ import org.apache.commons.scxml.TriggerEvent;
 import org.apache.commons.scxml.env.SimpleScheduler;
 import org.apache.commons.scxml.env.Tracer;
 import org.apache.commons.scxml.invoke.SimpleSCXMLInvoker;
-import org.apache.commons.scxml.io.SCXMLDigester;
+import org.apache.commons.scxml.io.SCXMLParser;
 import org.apache.commons.scxml.io.SCXMLSerializer;
 import org.apache.commons.scxml.model.ModelException;
 import org.apache.commons.scxml.model.SCXML;
@@ -76,7 +76,7 @@ public final class StandaloneUtils {
             String documentURI = getCanonicalURI(uri);
             Context rootCtx = evaluator.newContext(null);
             Tracer trc = new Tracer();
-            SCXML doc = SCXMLDigester.digest(new URL(documentURI), trc);
+            SCXML doc = SCXMLParser.parse(new URL(documentURI), trc);
             if (doc == null) {
                 System.err.println("The SCXML document " + uri
                         + " can not be parsed!");
