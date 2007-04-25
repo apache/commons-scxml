@@ -109,8 +109,8 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
     /**
      * @param input
      *            SCXML state machine [in]
-     * @param states
-     *            a set of States to populate [out]
+     * @param targets
+     *            a set of initial targets to populate [out]
      * @param entryList
      *            a list of States and Parallels to enter [out]
      * @param errRep
@@ -120,19 +120,19 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
      * @throws ModelException
      *             in case there is a fatal SCXML object model problem.
      */
-    public void determineInitialStates(final SCXML input, final Set states,
+    public void determineInitialStates(final SCXML input, final Set targets,
             final List entryList, final ErrorReporter errRep,
             final SCInstance scInstance)
             throws ModelException {
-        State tmp = input.getInitialState();
+        TransitionTarget tmp = input.getInitialTarget();
         if (tmp == null) {
             errRep.onError(ErrorConstants.NO_INITIAL,
                     "SCXML initialstate is missing!", input);
         } else {
-            states.add(tmp);
-            determineTargetStates(states, errRep, scInstance);
+            targets.add(tmp);
+            determineTargetStates(targets, errRep, scInstance);
             //set of ALL entered states (even if initialState is a jump-over)
-            Set onEntry = SCXMLHelper.getAncestorClosure(states, null);
+            Set onEntry = SCXMLHelper.getAncestorClosure(targets, null);
             // sort onEntry according state hierarchy
             Object[] oen = onEntry.toArray();
             onEntry.clear();
@@ -261,8 +261,8 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                         //let's check its siblings too
                         Parallel p = (Parallel) parent.getParent();
                         int finCount = 0;
-                        int pCount = p.getStates().size();
-                        for (Iterator regions = p.getStates().iterator();
+                        int pCount = p.getChildren().size();
+                        for (Iterator regions = p.getChildren().iterator();
                                 regions.hasNext();) {
                             State reg = (State) regions.next();
                             if (reg.isDone()) {
@@ -505,7 +505,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                     for (Iterator k = regs.iterator(); k.hasNext();) {
                         State region = (State) k.next();
                         regions.addAll(((Parallel) region.getParent()).
-                            getStates());
+                            getChildren());
                     }
                 }
             }
@@ -548,7 +548,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                 // NOTE: Digester has to verify this precondition!
                 if (st.isSimple()) {
                     states.add(st); //leaf
-                } else if (st.isOrthogonal()) {
+                } else if (st.isOrthogonal()) { //TODO: Remove else if in v1.0
                     wrkSet.addLast(st.getParallel()); //parallel
                 } else {
                     // composite state
@@ -558,7 +558,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                 }
             } else if (tt instanceof Parallel) {
                 Parallel prl = (Parallel) tt;
-                for (Iterator i = prl.getStates().iterator(); i.hasNext();) {
+                for (Iterator i = prl.getChildren().iterator(); i.hasNext();) {
                     //fork
                     wrkSet.addLast(i.next());
                 }
