@@ -34,7 +34,6 @@ import org.apache.commons.digester.Rule;
 import org.apache.commons.digester.SetNextRule;
 import org.apache.commons.digester.SetPropertiesRule;
 import org.apache.commons.logging.LogFactory;
-
 import org.apache.commons.scxml.PathResolver;
 import org.apache.commons.scxml.SCXMLHelper;
 import org.apache.commons.scxml.env.URLResolver;
@@ -49,6 +48,7 @@ import org.apache.commons.scxml.model.ElseIf;
 import org.apache.commons.scxml.model.Executable;
 import org.apache.commons.scxml.model.Exit;
 import org.apache.commons.scxml.model.ExternalContent;
+import org.apache.commons.scxml.model.Final;
 import org.apache.commons.scxml.model.Finalize;
 import org.apache.commons.scxml.model.History;
 import org.apache.commons.scxml.model.If;
@@ -68,11 +68,9 @@ import org.apache.commons.scxml.model.State;
 import org.apache.commons.scxml.model.Transition;
 import org.apache.commons.scxml.model.TransitionTarget;
 import org.apache.commons.scxml.model.Var;
-
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
@@ -97,6 +95,16 @@ public final class SCXMLParser {
      */
     private static final String NAMESPACE_SCXML =
         "http://www.w3.org/2005/07/scxml";
+
+    /**
+     * The namespace that defines any custom actions defined by the Commons
+     * SCXML implementation. Any document that intends to use these custom
+     * actions needs to ensure that they are in the correct namespace. Use
+     * of actions in this namespace makes the document non-portable across
+     * implementations.
+     */
+    private static final String NAMESPACE_COMMONS_SCXML =
+        "http://jakarta.apache.org/commons/scxml";
 
     //---------------------- PUBLIC METHODS ----------------------//
     /**
@@ -486,18 +494,22 @@ public final class SCXMLParser {
     /** &lt;state&gt; children of root &lt;scxml&gt; element. */
     private static final String XP_SM_ST = "scxml/state";
 
+    /** &lt;state&gt; children of root &lt;scxml&gt; element. */
+    private static final String XP_SM_PAR = "scxml/parallel";
+
+    /** &lt;final&gt; children of root &lt;scxml&gt; element. */
+    private static final String XP_SM_FIN = "scxml/final";
+
     //// Universal matches, prefixed by XPU_
     // State
     /** &lt;state&gt; children of &lt;state&gt; elements. */
     private static final String XPU_ST_ST = "!*/state/state";
 
+    /** &lt;final&gt; children of &lt;state&gt; elements. */
+    private static final String XPU_ST_FIN = "!*/state/final";
+
     /** &lt;state&gt; children of &lt;parallel&gt; elements. */
     private static final String XPU_PAR_ST = "!*/parallel/state";
-
-    /** &lt;state&gt; children of transition &lt;target&gt; elements. */
-    private static final String XPU_TR_TAR_ST = "!*/transition/target/state";
-
-    //private static final String XPU_ST_TAR_ST = "!*/state/target/state";
 
     // Parallel
     /** &lt;parallel&gt; child of &lt;state&gt; elements. */
@@ -557,21 +569,12 @@ public final class SCXMLParser {
     /** &lt;transition&gt; child element. */
     private static final String XPF_TR = "/transition";
 
-    /** &lt;target&gt; child element. */
-    private static final String XPF_TAR = "/target";
-
-    /** &lt;exit&gt; child element. */
+    /** &lt;exit&gt; child element, a Commons SCXML custom action. */
     private static final String XPF_EXT = "/exit";
 
     // Actions
-    /** &lt;var&gt; child element. */
-    private static final String XPF_VAR = "/var";
-
     /** &lt;assign&gt; child element. */
     private static final String XPF_ASN = "/assign";
-
-    /** &lt;log&gt; child element. */
-    private static final String XPF_LOG = "/log";
 
     /** &lt;send&gt; child element. */
     private static final String XPF_SND = "/send";
@@ -584,6 +587,13 @@ public final class SCXMLParser {
 
     /** &lt;else&gt; child element. */
     private static final String XPF_ELS = "/else";
+
+    // Custom Commons SCXML actions
+    /** &lt;var&gt; child element. */
+    private static final String XPF_VAR = "/var";
+
+    /** &lt;log&gt; child element. */
+    private static final String XPF_LOG = "/log";
 
     //// Other constants
     // Error messages
@@ -673,21 +683,27 @@ public final class SCXMLParser {
 
         //// States
         // Level one states
-        addStateRules(XP_SM_ST, scxmlRules, customActions, scxml, pr, 0);
-        scxmlRules.add(XP_SM_ST, new SetNextRule("addState"));
-        // Nested states
-        addStateRules(XPU_ST_ST, scxmlRules, customActions, scxml, pr, 1);
-        scxmlRules.add(XPU_ST_ST, new SetNextRule("addChild"));
+        addStateRules(XP_SM_ST, scxmlRules, customActions, scxml, pr);
 
-        // Parallel states
-        addStateRules(XPU_PAR_ST, scxmlRules, customActions, scxml, pr, 1);
-        scxmlRules.add(XPU_PAR_ST, new SetNextRule("addState"));
-        // Target states
-        addStateRules(XPU_TR_TAR_ST, scxmlRules, customActions, scxml, pr, 2);
-        scxmlRules.add(XPU_TR_TAR_ST, new SetNextRule("setTarget"));
+        // Nested states
+        addStateRules(XPU_ST_ST, scxmlRules, customActions, scxml, pr);
+
+        // Orthogonal states
+        addStateRules(XPU_PAR_ST, scxmlRules, customActions, scxml, pr);
 
         //// Parallels
-        addParallelRules(XPU_ST_PAR, scxmlRules, pr, customActions, scxml);
+        // Level one parallels
+        addParallelRules(XP_SM_PAR, scxmlRules, customActions, scxml, pr);
+
+        // Parallel children of composite states
+        addParallelRules(XPU_ST_PAR, scxmlRules, customActions, scxml, pr);
+
+        //// Finals
+        // Level one finals
+        addFinalRules(XP_SM_FIN, scxmlRules, customActions, scxml, pr);
+
+        // Final children of composite states
+        addFinalRules(XPU_ST_FIN, scxmlRules, customActions, scxml, pr);
 
         //// Ifs
         addIfRules(XPU_IF, scxmlRules, pr, customActions);
@@ -713,23 +729,21 @@ public final class SCXMLParser {
      *                      to be able to process
      * @param scxml The parent SCXML document (or null)
      * @param pr The PathResolver
-     * @param parent The distance between this state and its parent
-     *               state on the Digester stack
      */
     private static void addStateRules(final String xp,
             final ExtendedBaseRules scxmlRules, final List customActions,
-            final SCXML scxml, final PathResolver pr, final int parent) {
+            final SCXML scxml, final PathResolver pr) {
         scxmlRules.add(xp, new ObjectCreateRule(State.class));
         addStatePropertiesRules(xp, scxmlRules, customActions, pr, scxml);
         addDatamodelRules(xp + XPF_DM, scxmlRules, scxml, pr);
         addInvokeRules(xp + XPF_INV, scxmlRules, customActions, pr, scxml);
         addInitialRules(xp + XPF_INI, scxmlRules, customActions, pr, scxml);
         addHistoryRules(xp + XPF_HIST, scxmlRules, customActions, pr, scxml);
-        addParentRule(xp, scxmlRules, parent);
         addTransitionRules(xp + XPF_TR, scxmlRules, "addTransition",
             pr, customActions);
         addHandlerRules(xp, scxmlRules, pr, customActions);
         scxmlRules.add(xp, new UpdateModelRule(scxml));
+        scxmlRules.add(xp, new SetNextRule("addChild"));
     }
 
     /**
@@ -744,12 +758,28 @@ public final class SCXMLParser {
      * @param scxml The parent SCXML document (or null)
      */
     private static void addParallelRules(final String xp,
-            final ExtendedBaseRules scxmlRules, final PathResolver pr,
-            final List customActions, final SCXML scxml) {
+            final ExtendedBaseRules scxmlRules, final List customActions,
+            final SCXML scxml, final PathResolver pr) {
         addSimpleRulesTuple(xp, scxmlRules, Parallel.class, null, null,
-                "setParallel");
+                "addChild");
+        addDatamodelRules(xp + XPF_DM, scxmlRules, scxml, pr);
         addHandlerRules(xp, scxmlRules, pr, customActions);
-        addParentRule(xp, scxmlRules, 1);
+        scxmlRules.add(xp, new UpdateModelRule(scxml));
+    }
+
+    /**
+     * Add Digester rules for all &lt;final&gt; elements.
+     *
+     * @param xp The Digester style XPath expression of the parent
+     *           XML element
+     * @param scxmlRules The rule set to be used for digestion
+     */
+    private static void addFinalRules(final String xp,
+            final ExtendedBaseRules scxmlRules, final List customActions,
+            final SCXML scxml, final PathResolver pr) {
+        addSimpleRulesTuple(xp, scxmlRules, Final.class, null, null,
+            "addChild");
+        addHandlerRules(xp, scxmlRules, pr, customActions);
         scxmlRules.add(xp, new UpdateModelRule(scxml));
     }
 
@@ -767,8 +797,7 @@ public final class SCXMLParser {
     private static void addStatePropertiesRules(final String xp,
             final ExtendedBaseRules scxmlRules, final List customActions,
             final PathResolver pr, final SCXML scxml) {
-        scxmlRules.add(xp, new SetPropertiesRule(new String[] {"id", "final"},
-            new String[] {"id", "isFinal"}));
+        scxmlRules.add(xp, new SetPropertiesRule());
         scxmlRules.add(xp, new DigestSrcAttributeRule(scxml,
             customActions, pr));
     }
@@ -896,34 +925,6 @@ public final class SCXMLParser {
             new String[] {"id"}));
         scxmlRules.add(xp, new DigestSrcAttributeRule(scxml, customActions,
             pr));
-        addParentRule(xp, scxmlRules, 1);
-    }
-
-    /**
-     * Add Digester rule for all setting parent state.
-     *
-     * @param xp The Digester style XPath expression of the parent
-     *           XML element
-     * @param scxmlRules The rule set to be used for digestion
-     * @param parent The distance between this state and its parent
-     *               state on the Digester stack
-     */
-    private static void addParentRule(final String xp,
-            final ExtendedBaseRules scxmlRules, final int parent) {
-        if (parent < 1) {
-            return;
-        }
-        scxmlRules.add(xp, new Rule() {
-            // A generic version of setTopRule
-            public void body(final String namespace, final String name,
-                    final String text) throws Exception {
-                TransitionTarget t = (TransitionTarget) getDigester().peek();
-                TransitionTarget p = (TransitionTarget) getDigester().peek(
-                        parent);
-                // CHANGE - Moved parent property to TransitionTarget
-                t.setParent(p);
-            }
-        });
     }
 
     /**
@@ -946,8 +947,10 @@ public final class SCXMLParser {
             new String[] {"event", "cond", "target"},
             new String[] {"event", "cond", "next"}));
         scxmlRules.add(xp, new SetCurrentNamespacesRule());
-        scxmlRules.add(xp + XPF_TAR, new SetPropertiesRule());
         addActionRules(xp, scxmlRules, pr, customActions);
+
+        // Add <exit> custom action rule in Commons SCXML namespace
+        scxmlRules.setNamespaceURI(NAMESPACE_COMMONS_SCXML);
         scxmlRules.add(xp + XPF_EXT, new Rule() {
             public void end(final String namespace, final String name) {
                 Transition t = (Transition) getDigester().peek(1);
@@ -956,6 +959,8 @@ public final class SCXMLParser {
                 t.getTargets().add(exitState);
             }
         });
+        scxmlRules.setNamespaceURI(NAMESPACE_SCXML);
+
         scxmlRules.add(xp, new SetNextRule(setNextMethod));
     }
 
@@ -994,14 +999,21 @@ public final class SCXMLParser {
     private static void addActionRules(final String xp,
             final ExtendedBaseRules scxmlRules, final PathResolver pr,
             final List customActions) {
+        // Actions in SCXML namespace
         addActionRulesTuple(xp + XPF_ASN, scxmlRules, Assign.class);
         scxmlRules.add(xp + XPF_ASN, new SetPathResolverRule(pr));
-        addActionRulesTuple(xp + XPF_VAR, scxmlRules, Var.class);
-        addActionRulesTuple(xp + XPF_LOG, scxmlRules, Log.class);
         addSendRulesTuple(xp + XPF_SND, scxmlRules);
         addActionRulesTuple(xp + XPF_CAN, scxmlRules, Cancel.class);
+        addActionRulesTuple(xp + XPF_LOG, scxmlRules, Log.class);
+
+        // Actions in Commons SCXML namespace
+        scxmlRules.setNamespaceURI(NAMESPACE_COMMONS_SCXML);
+
+        addActionRulesTuple(xp + XPF_VAR, scxmlRules, Var.class);
         addActionRulesTuple(xp + XPF_EXT, scxmlRules, Exit.class);
-        //addCustomActionRules(xp, scxmlRules, customActions);
+
+        // Reset namespace
+        scxmlRules.setNamespaceURI(NAMESPACE_SCXML);
     }
 
     /**
@@ -1160,10 +1172,8 @@ public final class SCXMLParser {
      * These include: <br>
      * 1) Updation of the SCXML object's global targets Map <br>
      * 2) Obtaining a handle to the SCXML object's NotificationRegistry <br>
-     *
-     * @deprecated Will be removed in version 1.0
      */
-    public static class UpdateModelRule extends Rule {
+    private static class UpdateModelRule extends Rule {
 
         /**
          * The root SCXML object.
@@ -1174,7 +1184,7 @@ public final class SCXMLParser {
          * Constructor.
          * @param scxml The root SCXML object
          */
-        public UpdateModelRule(final SCXML scxml) {
+        UpdateModelRule(final SCXML scxml) {
             super();
             this.scxml = scxml;
         }
@@ -1194,15 +1204,13 @@ public final class SCXMLParser {
 
     /**
      * Custom digestion rule for setting Executable parent of Action elements.
-     *
-     * @deprecated Will be removed in version 1.0
      */
-    public static class SetExecutableParentRule extends Rule {
+    private static class SetExecutableParentRule extends Rule {
 
         /**
          * Constructor.
          */
-        public SetExecutableParentRule() {
+        SetExecutableParentRule() {
             super();
         }
 
@@ -1226,15 +1234,13 @@ public final class SCXMLParser {
      * <code>ExternalContent</code> elements.
      *
      * @see ExternalContent
-     *
-     * @deprecated Will be removed in version 1.0
      */
-    public static class ParseExternalContentRule extends NodeCreateRule {
+    private static class ParseExternalContentRule extends NodeCreateRule {
         /**
          * Constructor.
          * @throws ParserConfigurationException A JAXP configuration error
          */
-        public ParseExternalContentRule()
+        ParseExternalContentRule()
         throws ParserConfigurationException {
             super();
         }
@@ -1254,10 +1260,8 @@ public final class SCXMLParser {
 
     /**
      * Custom digestion rule for parsing bodies of &lt;data&gt; elements.
-     *
-     * @deprecated Will be removed in version 1.0
      */
-    public static class ParseDataRule extends NodeCreateRule {
+    private static class ParseDataRule extends NodeCreateRule {
 
         /**
          * The PathResolver used to resolve the src attribute to the
@@ -1288,7 +1292,7 @@ public final class SCXMLParser {
          * @param pr The <code>PathResolver</code>
          * @throws ParserConfigurationException A JAXP configuration error
          */
-        public ParseDataRule(final PathResolver pr)
+        ParseDataRule(final PathResolver pr)
         throws ParserConfigurationException {
             super();
             this.pr = pr;
@@ -1343,10 +1347,8 @@ public final class SCXMLParser {
     /**
      * Custom digestion rule for external sources, that is, the src attribute of
      * the &lt;state&gt; element.
-     *
-     * @deprecated Will be removed in version 1.0
      */
-    public static class DigestSrcAttributeRule extends Rule {
+    private static class DigestSrcAttributeRule extends Rule {
 
         /**
          * The PathResolver used to resolve the src attribute to the
@@ -1375,10 +1377,8 @@ public final class SCXMLParser {
          *
          * @see PathResolver
          * @see CustomAction
-         *
-         * TODO: Remove in v1.0
          */
-        public DigestSrcAttributeRule(final List customActions,
+        DigestSrcAttributeRule(final List customActions,
                 final PathResolver pr) {
             super();
             this.customActions = customActions;
@@ -1395,7 +1395,7 @@ public final class SCXMLParser {
          * @see PathResolver
          * @see CustomAction
          */
-        public DigestSrcAttributeRule(final SCXML root,
+        DigestSrcAttributeRule(final SCXML root,
                 final List customActions, final PathResolver pr) {
             super();
             this.root = root;
@@ -1455,10 +1455,10 @@ public final class SCXMLParser {
             Initial ini = new Initial();
             ini.setTransition(t);
             s.setInitial(ini);
-            Map children = externalSCXML.getStates();
+            Map children = externalSCXML.getChildren();
             Object[] ids = children.keySet().toArray();
             for (int i = 0; i < ids.length; i++) {
-                s.addChild((State) children.get(ids[i]));
+                s.addChild((TransitionTarget) children.get(ids[i]));
             }
             s.setDatamodel(externalSCXML.getDatamodel());
         }
@@ -1466,10 +1466,8 @@ public final class SCXMLParser {
 
     /**
      * Custom digestion rule for setting PathResolver for runtime retrieval.
-     *
-     * @deprecated Will be removed in version 1.0
      */
-    public static class SetPathResolverRule extends Rule {
+    private static class SetPathResolverRule extends Rule {
 
         /**
          * The PathResolver to set.
@@ -1483,7 +1481,7 @@ public final class SCXMLParser {
          *
          * @see PathResolver
          */
-        public SetPathResolverRule(final PathResolver pr) {
+        SetPathResolverRule(final PathResolver pr) {
             super();
             this.pr = pr;
         }
@@ -1501,10 +1499,8 @@ public final class SCXMLParser {
 
     /**
      * Custom digestion rule for setting state parent of finalize.
-     *
-     * @deprecated Will be removed in version 1.0
      */
-    public static class UpdateFinalizeRule extends Rule {
+    private static class UpdateFinalizeRule extends Rule {
 
         /**
          * @see Rule#begin(String, String, Attributes)
@@ -1522,7 +1518,6 @@ public final class SCXMLParser {
     /**
      * Custom digestion rule for attaching a snapshot of current namespaces
      * to SCXML actions for deferred XPath evaluation.
-     *
      */
     private static class SetCurrentNamespacesRule extends Rule {
 

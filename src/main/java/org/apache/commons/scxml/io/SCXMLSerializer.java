@@ -100,10 +100,15 @@ public class SCXMLSerializer {
         if (dm != null) {
             serializeDatamodel(b, dm, INDENT);
         }
-        Map s = scxml.getStates();
-        Iterator i = s.keySet().iterator();
+        Map c = scxml.getChildren();
+        Iterator i = c.keySet().iterator();
         while (i.hasNext()) {
-            serializeState(b, (State) s.get(i.next()), INDENT);
+            TransitionTarget tt = (TransitionTarget) c.get(i.next());
+            if (tt instanceof State) {
+                serializeState(b, (State) tt, INDENT);
+            } else {
+                serializeParallel(b, (Parallel) tt, INDENT); 
+            }
         }
         b.append("</scxml>\n");
         return b.toString();
@@ -142,7 +147,7 @@ public class SCXMLSerializer {
         for (int i = 0; i < t.size(); i++) {
             serializeTransition(b, (Transition) t.get(i), indent + INDENT);
         }
-        Parallel p = s.getParallel();
+        Parallel p = s.getParallel(); //TODO: Remove in v1.0
         Invoke inv = s.getInvoke();
         if (p != null) {
             serializeParallel(b, p, indent + INDENT);
@@ -173,7 +178,7 @@ public class SCXMLSerializer {
         serializeTransitionTargetAttributes(b, p);
         b.append(">\n");
         serializeOnEntry(b, p, indent + INDENT);
-        Set s = p.getStates();
+        Set s = p.getChildren();
         Iterator i = s.iterator();
         while (i.hasNext()) {
             serializeState(b, (State) i.next(), indent + INDENT);

@@ -61,21 +61,24 @@ final class ModelUpdater {
        String initialstate = scxml.getInitialstate();
        //we have to use getTargets() here since the initialState can be
        //an indirect descendant
-       // Concern marked by one of the code reviewers: better type check,
-       //            now ClassCastException happens for Parallel
-       // Response: initial should be a State, for Parallel, it is implicit
-       State initialState = (State) scxml.getTargets().get(initialstate);
-       if (initialState == null) {
+       TransitionTarget initialTarget = (TransitionTarget) scxml.getTargets().
+           get(initialstate);
+       if (initialTarget == null) {
            // Where do we, where do we go?
            logAndThrowModelError(ERR_SCXML_NO_INIT, new Object[] {
                initialstate });
        }
-       scxml.setInitialState(initialState);
+       scxml.setInitialTarget(initialTarget);
        Map targets = scxml.getTargets();
-       Map states = scxml.getStates();
-       Iterator i = states.keySet().iterator();
+       Map children = scxml.getChildren();
+       Iterator i = children.keySet().iterator();
        while (i.hasNext()) {
-           updateState((State) states.get(i.next()), targets);
+           TransitionTarget tt = (TransitionTarget) children.get(i.next());
+           if (tt instanceof State) {
+               updateState((State) tt, targets);
+           } else {
+               updateParallel((Parallel) tt, targets); 
+           }
        }
    }
 
@@ -170,7 +173,7 @@ final class ModelUpdater {
             Transition trn = (Transition) t.get(i);
             updateTransition(trn, targets);
         }
-        Parallel p = s.getParallel();
+        Parallel p = s.getParallel(); //TODO: Remove in v1.0
         Invoke inv = s.getInvoke();
         if ((inv != null && p != null)
                 || (inv != null && !c.isEmpty())
@@ -216,7 +219,7 @@ final class ModelUpdater {
       */
     private static void updateParallel(final Parallel p, final Map targets)
     throws ModelException {
-        Iterator i = p.getStates().iterator();
+        Iterator i = p.getChildren().iterator();
         while (i.hasNext()) {
             updateState((State) i.next(), targets);
         }
@@ -322,7 +325,7 @@ final class ModelUpdater {
                 return false; // One per region
             }
         }
-        if (regions.size() != p.getStates().size()) {
+        if (regions.size() != p.getChildren().size()) {
             return false; // Must represent all regions
         }
         return true;
