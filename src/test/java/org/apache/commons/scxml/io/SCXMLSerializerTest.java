@@ -58,7 +58,7 @@ public class SCXMLSerializerTest extends TestCase {
         scxml.setXmlns("namespace");
         scxml.setVersion("version1");
         scxml.setInitialstate("off");
-        scxml.addState(new State());
+        scxml.addChild(new State());
         
         String assertValue = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
             + "<scxml xmlns=\"namespace\" version=\"version1\" "

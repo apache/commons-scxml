@@ -111,7 +111,7 @@ public class SCXMLDigesterTest extends TestCase {
     public void testSCXMLDigesterSend01Sample() {
         // Digest
         scxml = SCXMLTestHelper.digest(send01);
-        State ten = scxml.getInitialState();
+        State ten = (State) scxml.getInitialTarget();
         assertEquals("ten", ten.getId());
         List ten_done = ten.getTransitionsList("ten.done");
         assertEquals(1, ten_done.size());
