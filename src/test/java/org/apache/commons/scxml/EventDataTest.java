@@ -45,7 +45,7 @@ public class EventDataTest extends TestCase {
     }
 
     // Test data
-    private URL eventdata01, eventdata02;
+    private URL eventdata01, eventdata02, eventdata03;
     private SCXMLExecutor exec;
 
     /**
@@ -56,13 +56,15 @@ public class EventDataTest extends TestCase {
             getResource("org/apache/commons/scxml/env/jexl/eventdata-01.xml");
         eventdata02 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/env/jexl/eventdata-02.xml");
+        eventdata03 = this.getClass().getClassLoader().
+            getResource("org/apache/commons/scxml/env/jexl/eventdata-03.xml");
     }
 
     /**
      * Tear down instance variables required by this test case.
      */
     public void tearDown() {
-        eventdata01 = eventdata02 = null;
+        eventdata01 = eventdata02 = eventdata03 = null;
     }
 
     /**
@@ -120,6 +122,25 @@ public class EventDataTest extends TestCase {
             currentStates = SCXMLTestHelper.fireEvent(exec, te2);
             assertEquals(1, currentStates.size());
             assertEquals("state4", ((State)currentStates.iterator().
+                next()).getId());
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    public void testEventdata03Sample() {
+        exec = SCXMLTestHelper.getExecutor(eventdata03);
+        assertNotNull(exec);
+        try {
+            Set currentStates = exec.getCurrentStatus().getStates();
+            assertEquals(1, currentStates.size());
+            assertEquals("ten", ((State)currentStates.iterator().
+                next()).getId());
+            TriggerEvent te = new TriggerEvent("event.foo",
+                TriggerEvent.SIGNAL_EVENT);
+            currentStates = SCXMLTestHelper.fireEvent(exec, te);
+            assertEquals(1, currentStates.size());
+            assertEquals("thirty", ((State)currentStates.iterator().
                 next()).getId());
         } catch (Exception e) {
             fail(e.getMessage());

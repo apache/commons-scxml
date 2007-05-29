@@ -328,7 +328,7 @@ public class Send extends Action implements ExternalContent {
                             + "' with no delay");
                     }
                     derivedEvents.add(new TriggerEvent(event,
-                        TriggerEvent.SIGNAL_EVENT));
+                        TriggerEvent.SIGNAL_EVENT, params));
                     return;
                 }
             } else {
