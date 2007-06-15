@@ -110,7 +110,8 @@ public class ELEvaluator implements Evaluator, Serializable {
             }
             return rslt;
         } catch (ELException e) {
-            throw new SCXMLExpressionException(e);
+            throw new SCXMLExpressionException("eval('" + expr + "'):"
+                + e.getMessage(), e);
         }
     }
 
@@ -140,7 +141,8 @@ public class ELEvaluator implements Evaluator, Serializable {
             }
             return rslt;
         } catch (ELException e) {
-            throw new SCXMLExpressionException(e);
+            throw new SCXMLExpressionException("eval('" + expr + "'):"
+                + e.getMessage(), e);
         }
     }
 
@@ -172,7 +174,8 @@ public class ELEvaluator implements Evaluator, Serializable {
             }
             return rslt;
         } catch (ELException e) {
-            throw new SCXMLExpressionException(e);
+            throw new SCXMLExpressionException("eval('" + expr + "'):"
+                + e.getMessage(), e);
         }
     }
 

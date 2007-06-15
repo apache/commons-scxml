@@ -83,7 +83,8 @@ public class JexlEvaluator implements Evaluator, Serializable {
             exp = ExpressionFactory.createExpression(evalExpr);
             return exp.evaluate(getEffectiveContext(jexlCtx));
         } catch (Exception e) {
-            throw new SCXMLExpressionException(e);
+            throw new SCXMLExpressionException("eval('" + expr + "'):"
+                + e.getMessage(), e);
         }
     }
 
@@ -110,7 +111,8 @@ public class JexlEvaluator implements Evaluator, Serializable {
             exp = ExpressionFactory.createExpression(evalExpr);
             return (Boolean) exp.evaluate(getEffectiveContext(jexlCtx));
         } catch (Exception e) {
-            throw new SCXMLExpressionException(e);
+            throw new SCXMLExpressionException("eval('" + expr + "'):"
+                + e.getMessage(), e);
         }
     }
 
@@ -139,7 +141,8 @@ public class JexlEvaluator implements Evaluator, Serializable {
             exp = ExpressionFactory.createExpression(evalExpr);
             return (Node) exp.evaluate(getEffectiveContext(jexlCtx));
         } catch (Exception e) {
-            throw new SCXMLExpressionException(e);
+            throw new SCXMLExpressionException("eval('" + expr + "'):"
+                + e.getMessage(), e);
         }
     }
 

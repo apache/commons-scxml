@@ -48,6 +48,7 @@ public class EnvJspTestSuite extends TestCase {
     public static Test suite() {
         TestSuite suite = new TestSuite();
         suite.setName("Commons-SCXML JSP Environment Tests");
+        suite.addTest(ELEvaluatorTest.suite());
         suite.addTest(RootContextTest.suite());
         return suite;
     }
