@@ -197,7 +197,7 @@ public class State extends TransitionTarget {
      * Get the map of all outgoing transitions from this state.
      *
      * @return Map Returns the transitions Map.
-     * @deprecated Use getTransitionsList() instead
+     * @deprecated Use {@link #getTransitionsList()} instead
      */
     public final Map getTransitions() {
         Map transitionsMap = new HashMap();
@@ -264,7 +264,7 @@ public class State extends TransitionTarget {
      * @param state
      *            a child state
      *
-     * @deprecated Use addChild(TransitionTarget) instead.
+     * @deprecated Use {@link #addChild(TransitionTarget)} instead.
      */
     public final void addChild(final State state) {
         this.children.put(state.getId(), state);
