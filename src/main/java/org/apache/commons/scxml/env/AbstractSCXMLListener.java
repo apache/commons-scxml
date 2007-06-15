@@ -16,43 +16,38 @@
  */
 package org.apache.commons.scxml.env;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-
+import org.apache.commons.scxml.SCXMLListener;
+import org.apache.commons.scxml.model.Transition;
+import org.apache.commons.scxml.model.TransitionTarget;
 
 /**
- * Test suite for SCXML env package.
- *
+ * An abstract adapter class for the <code>SXCMLListener</code> interface.
+ * This class exists as a convenience for creating listener objects, and as
+ * such all the methods in this class are empty.
  */
-public class EnvTestSuite extends TestCase {
-    
+public abstract class AbstractSCXMLListener implements SCXMLListener {
+
     /**
-     * Construct a new instance.
+     * @see SCXMLListener#onEntry(TransitionTarget)
      */
-    public EnvTestSuite(String name) {
-        super(name);
+    public void onEntry(final TransitionTarget state) {
+        // empty
     }
 
     /**
-     * Command-line interface.
+     * @see SCXMLListener#onExit(TransitionTarget)
      */
-    public static void main(String[] args) {
-        TestRunner.run(suite());
+    public void onExit(final TransitionTarget state) {
+        // empty
     }
 
     /**
-     * Get the suite of tests
+* @see SCXMLListener#onTransition(TransitionTarget,TransitionTarget,Transition)
      */
-    public static Test suite() {
-        TestSuite suite = new TestSuite();
-        suite.setName("Commons-SCXML Environments Tests");
-        suite.addTest(AbstractSCXMLListenerTest.suite());
-        suite.addTest(LogUtilsTest.suite());
-        suite.addTest(SimpleContextTest.suite());
-        suite.addTest(StopWatchTest.suite());
-        return suite;
+    public void onTransition(final TransitionTarget from,
+            final TransitionTarget to, final Transition transition) {
+        // empty
     }
+
 }
 
