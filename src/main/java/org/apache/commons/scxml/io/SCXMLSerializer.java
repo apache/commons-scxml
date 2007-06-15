@@ -107,7 +107,7 @@ public class SCXMLSerializer {
             if (tt instanceof State) {
                 serializeState(b, (State) tt, INDENT);
             } else {
-                serializeParallel(b, (Parallel) tt, INDENT); 
+                serializeParallel(b, (Parallel) tt, INDENT);
             }
         }
         b.append("</scxml>\n");

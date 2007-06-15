@@ -77,7 +77,7 @@ final class ModelUpdater {
            if (tt instanceof State) {
                updateState((State) tt, targets);
            } else {
-               updateParallel((Parallel) tt, targets); 
+               updateParallel((Parallel) tt, targets);
            }
        }
    }

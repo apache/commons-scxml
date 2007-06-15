@@ -316,7 +316,6 @@ public class State extends TransitionTarget {
      * @deprecated &lt;parallel&gt; now represents an orthogonal state, rather
      *             than denoting that the enclosing state is orthogonal, as
      *             it did in previous SCXML WDs.
-     *             
      */
     public final boolean isOrthogonal() {
         if (parallel != null) {

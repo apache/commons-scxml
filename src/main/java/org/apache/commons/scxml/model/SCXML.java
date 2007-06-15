@@ -106,7 +106,7 @@ public class SCXML implements Serializable {
     /**
      * Set the initial State.
      *
-     * @param initialTarget The initialstate to set.
+     * @param initialState The initialstate to set.
      *
      * @deprecated Use setInitialTarget(TransitionTarget) instead.
      */
@@ -184,7 +184,7 @@ public class SCXML implements Serializable {
     /**
      * Add an immediate child target of the SCXML root.
      *
-     * @param target The transition target to be added to the states Map.
+     * @param tt The transition target to be added to the states Map.
      */
     public final void addChild(final TransitionTarget tt) {
         children.put(tt.getId(), tt);

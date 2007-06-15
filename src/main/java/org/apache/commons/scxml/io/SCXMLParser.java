@@ -773,6 +773,10 @@ public final class SCXMLParser {
      * @param xp The Digester style XPath expression of the parent
      *           XML element
      * @param scxmlRules The rule set to be used for digestion
+     * @param customActions The list of custom actions this digester needs
+     *                      to be able to process
+     * @param scxml The parent SCXML document (or null)
+     * @param pr The {@link PathResolver} for this document
      */
     private static void addFinalRules(final String xp,
             final ExtendedBaseRules scxmlRules, final List customActions,
