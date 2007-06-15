@@ -36,7 +36,7 @@ public class Final extends State {
      */
     public Final() {
         super();
-        this.setIsFinal(true);
+        this.setFinal(true);
     }
 
 }

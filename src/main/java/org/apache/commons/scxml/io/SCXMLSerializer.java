@@ -125,7 +125,7 @@ public class SCXMLSerializer {
             final State s, final String indent) {
         b.append(indent).append("<state");
         serializeTransitionTargetAttributes(b, s);
-        boolean f = s.getIsFinal();
+        boolean f = s.isFinal();
         if (f) {
             b.append(" final=\"true\"");
         }

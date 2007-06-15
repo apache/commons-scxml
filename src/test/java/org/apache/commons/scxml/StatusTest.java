@@ -47,7 +47,7 @@ public class StatusTest extends TestCase {
     
     public void testIsFinalStateFalse() {
         State state = new State();
-        state.setIsFinal(false);
+        state.setFinal(false);
         
         status.getStates().add(state);
         
@@ -56,7 +56,7 @@ public class StatusTest extends TestCase {
     
     public void testIsFinalStateHasParent() {
         State state = new State();
-        state.setIsFinal(true);
+        state.setFinal(true);
         state.setParent(new State());
         
         status.getStates().add(state);
@@ -66,7 +66,7 @@ public class StatusTest extends TestCase {
     
     public void testIsFinalStateHasEvent() {
         State state = new State();
-        state.setIsFinal(true);
+        state.setFinal(true);
         
         status.getStates().add(state);
         status.getEvents().add(new TriggerEvent("name", TriggerEvent.CALL_EVENT));
@@ -76,7 +76,7 @@ public class StatusTest extends TestCase {
     
     public void testIsFinalState() {
         State state = new State();
-        state.setIsFinal(true);
+        state.setFinal(true);
         
         status.getStates().add(state);
         

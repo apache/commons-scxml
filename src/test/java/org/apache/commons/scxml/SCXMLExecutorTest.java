@@ -273,6 +273,7 @@ public class SCXMLExecutorTest extends TestCase {
             assertEquals(1, currentStates.size());
             assertEquals("ninety", ((State)currentStates.iterator().
                 next()).getId());
+            assertTrue(exec.getCurrentStatus().isFinal());
         } catch (Exception e) {
             fail(e.getMessage());
         }

@@ -244,7 +244,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
             //3.2.1 and 3.4 (.done events)
             if (tt instanceof State) {
                 State ts = (State) tt;
-                if (ts.getIsFinal()) {
+                if (ts.isFinal()) {
                     State parent = (State) ts.getParent();
                     String prefix = "";
                     if (parent != null) {

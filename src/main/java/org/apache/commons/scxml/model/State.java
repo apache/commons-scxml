@@ -93,8 +93,18 @@ public class State extends TransitionTarget {
      * Is this state a &quot;final&quot; state.
      *
      * @return boolean Returns the isFinal.
+     * @deprecated Use {@link #isFinal()} instead
      */
     public final boolean getIsFinal() {
+        return isFinal;
+    }
+
+    /**
+     * Is this state a &quot;final&quot; state.
+     *
+     * @return boolean Returns the isFinal.
+     */
+    public final boolean isFinal() {
         return isFinal;
     }
 
@@ -103,8 +113,19 @@ public class State extends TransitionTarget {
      *
      * @param isFinal
      *            The isFinal to set.
+     * @deprecated Use {@link #setFinal(boolean)} instead
      */
     public final void setIsFinal(final boolean isFinal) {
+        this.isFinal = isFinal;
+    }
+
+    /**
+     * Set whether this is a &quot;final&quot; state.
+     *
+     * @param isFinal
+     *            The isFinal to set.
+     */
+    public final void setFinal(final boolean isFinal) {
         this.isFinal = isFinal;
     }
 

@@ -58,7 +58,7 @@ public class Status implements Serializable {
         boolean rslt = true;
         for (Iterator i = states.iterator(); i.hasNext();) {
             State s = (State) i.next();
-            if (!s.getIsFinal()) {
+            if (!s.isFinal()) {
                 rslt = false;
                 break;
             }
