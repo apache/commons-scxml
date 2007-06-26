@@ -39,27 +39,27 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 
 /**
- * This class demonstrates one approach for providing the base
+ * <p>This class demonstrates one approach for providing the base
  * functionality needed by classes representing stateful entities,
- * whose behaviors are defined via SCXML documents.
+ * whose behaviors are defined via SCXML documents.</p>
  *
- * SCXML documents (more generically, UML state chart diagrams) can be
+ * <p>SCXML documents (more generically, UML state chart diagrams) can be
  * used to define stateful behavior of objects, and Commons SCXML enables
  * developers to use this model directly into the corresponding code
  * artifacts. The resulting artifacts tend to be much simpler, embody
  * a useful separation of concerns and are easier to understand and
  * maintain. As the size of the modeled entity grows, these benefits
- * become more apparent.
+ * become more apparent.</p>
  *
- * This approach functions by registering an SCXMLListener that gets
+ * <p>This approach functions by registering an SCXMLListener that gets
  * notified onentry, and calls the namesake method for each state that
- * has been entered.
+ * has been entered.</p>
  *
- * This class swallows all exceptions only to log them. Developers of
+ * <p>This class swallows all exceptions only to log them. Developers of
  * subclasses should think of themselves as &quot;component developers&quot;
  * catering to other end users, and therefore ensure that the subclasses
  * are free of <code>ModelException</code>s and the like. Most methods
- * are <code>protected</code> for ease of subclassing.
+ * are <code>protected</code> for ease of subclassing.</p>
  *
  */
 public abstract class AbstractStateMachine {
@@ -67,7 +67,7 @@ public abstract class AbstractStateMachine {
     /**
      * The state machine that will drive the instances of this class.
      */
-    private static SCXML stateMachine;
+    private SCXML stateMachine;
 
     /**
      * The instance specific SCXML engine.
@@ -92,7 +92,7 @@ public abstract class AbstractStateMachine {
     private static final Object[] PARAMETERS = new Object[0];
 
     /**
-     * Convenience constructor.
+     * Convenience constructor, object instantiation incurs parsing cost.
      *
      * @param scxmlDocument The URL pointing to the SCXML document that
      *                      describes the &quot;lifecycle&quot; of the
@@ -104,7 +104,7 @@ public abstract class AbstractStateMachine {
     }
 
     /**
-     * Primary constructor.
+     * Primary constructor, object instantiation incurs parsing cost.
      *
      * @param scxmlDocument The URL pointing to the SCXML document that
      *                      describes the &quot;lifecycle&quot; of the
@@ -118,20 +118,58 @@ public abstract class AbstractStateMachine {
     public AbstractStateMachine(final URL scxmlDocument,
             final Context rootCtx, final Evaluator evaluator) {
         log = LogFactory.getLog(this.getClass());
-        if (stateMachine == null) {
-            // parse only once per subclass
-            ErrorHandler errHandler = new SimpleErrorHandler();
-            try {
-                stateMachine = SCXMLDigester.digest(scxmlDocument,
-                    errHandler);
-            } catch (IOException ioe) {
-                logError(ioe);
-            } catch (SAXException sae) {
-                logError(sae);
-            } catch (ModelException me) {
-                logError(me);
-            }
+        ErrorHandler errHandler = new SimpleErrorHandler();
+        try {
+            stateMachine = SCXMLDigester.digest(scxmlDocument,
+                errHandler);
+        } catch (IOException ioe) {
+            logError(ioe);
+        } catch (SAXException sae) {
+            logError(sae);
+        } catch (ModelException me) {
+            logError(me);
         }
+        initialize(stateMachine, rootCtx, evaluator);
+    }
+
+    /**
+     * Convenience constructor.
+     *
+     * @param stateMachine The parsed SCXML instance that
+     *                     describes the &quot;lifecycle&quot; of the
+     *                     instances of this class.
+     */
+    public AbstractStateMachine(final SCXML stateMachine) {
+        // default is JEXL
+        this(stateMachine, new JexlContext(), new JexlEvaluator());
+    }
+
+    /**
+     * Primary constructor.
+     *
+     * @param stateMachine The parsed SCXML instance that
+     *                     describes the &quot;lifecycle&quot; of the
+     *                     instances of this class.
+     * @param rootCtx The root context for this instance.
+     * @param evaluator The expression evaluator for this instance.
+     *
+     * @see Context
+     * @see Evaluator
+     */
+    public AbstractStateMachine(final SCXML stateMachine,
+            final Context rootCtx, final Evaluator evaluator) {
+        initialize(stateMachine, rootCtx, evaluator);
+    }
+
+    /**
+     * Instantiate and initialize the underlying executor instance.
+     *
+     * @param stateMachine The state machine
+     * @param rootCtx The root context
+     * @param evaluator The expression evaluator
+     */
+    private void initialize(final SCXML stateMachine,
+            final Context rootCtx, final Evaluator evaluator) {
         engine = new SCXMLExecutor(evaluator, new SimpleDispatcher(),
             new SimpleErrorReporter());
         engine.setStateMachine(stateMachine);
@@ -167,9 +205,10 @@ public abstract class AbstractStateMachine {
      * Get the SCXML object representing this state machine.
      *
      * @return Returns the stateMachine.
+     * @deprecated Returns null, use getEngine().getStateMachine() instead
      */
     public static SCXML getStateMachine() {
-        return stateMachine;
+        return null;
     }
 
     /**
