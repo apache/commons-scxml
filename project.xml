@@ -23,17 +23,17 @@
   <currentVersion>0.7-SNAPSHOT</currentVersion>
 
   <inceptionYear>2005</inceptionYear>
-  <shortDescription>Jakarta Commons SCXML</shortDescription>
+  <shortDescription>Commons SCXML</shortDescription>
   <description>A Java Implementation of a State Chart XML Engine</description>
 
   <logo>/images/scxml-logo-white.png</logo>
-  <url>http://jakarta.apache.org/commons/scxml/</url>
+  <url>http://commons.apache.org/scxml/</url>
   <package>org.apache.commons.scxml</package>
 
   <organization>
     <name>The Apache Software Foundation</name>
-    <url>http://jakarta.apache.org</url>
-    <logo>http://jakarta.apache.org/images/original-jakarta-logo.gif</logo>
+    <url>http://commons.apache.org/</url>
+    <logo>http://commons.apache.org/images/logo.png</logo>
   </organization>
   <licenses>
     <license>
@@ -44,28 +44,28 @@
   </licenses>
 
   <siteAddress>people.apache.org</siteAddress>
-  <siteDirectory>/www/jakarta.apache.org/commons/scxml/</siteDirectory>
+  <siteDirectory>/www/commons.apache.org/scxml/</siteDirectory>
   <issueTrackingUrl>http://issues.apache.org/jira/</issueTrackingUrl>
-  <distributionDirectory>/www/jakarta.apache.org/builds/jakarta-commons/scxml/</distributionDirectory> 
+  <distributionDirectory>/www/people.apache.org/builds/commons/scxml/</distributionDirectory> 
 
   <repository>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/jakarta/commons/proper/scxml/trunk</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/jakarta/commons/proper/scxml/trunk</developerConnection>
-    <url>http://svn.apache.org/viewvc/jakarta/commons/proper/scxml/trunk</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/scxml/trunk</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/scxml/trunk</developerConnection>
+    <url>http://svn.apache.org/viewvc/commons/proper/scxml/trunk</url>
   </repository>
 
   <mailingLists>
     <mailingList>
-      <name>Commons Dev List</name> 
-      <subscribe>commons-dev-subscribe@jakarta.apache.org</subscribe> 
-      <unsubscribe>commons-dev-unsubscribe@jakarta.apache.org</unsubscribe> 
-      <archive>http://mail-archives.apache.org/mod_mbox/jakarta-commons-dev/</archive>
+      <name>Commons Dev List</name>
+      <subscribe>dev-subscribe@commons.apache.org</subscribe>
+      <unsubscribe>dev-unsubscribe@commons.apache.org</unsubscribe>
+      <archive>http://mail-archives.apache.org/mod_mbox/commons-dev/</archive>
     </mailingList>
     <mailingList>
-      <name>Commons User List</name> 
-      <subscribe>commons-user-subscribe@jakarta.apache.org</subscribe> 
-      <unsubscribe>commons-user-unsubscribe@jakarta.apache.org</unsubscribe> 
-      <archive>http://mail-archives.apache.org/mod_mbox/jakarta-commons-user/</archive>
+      <name>Commons User List</name>
+      <subscribe>user-subscribe@commons.apache.org</subscribe>
+      <unsubscribe>user-unsubscribe@commons.apache.org</unsubscribe>
+      <archive>http://mail-archives.apache.org/mod_mbox/commons-user/</archive>
     </mailingList>
   </mailingLists>
 
@@ -123,7 +123,7 @@
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
       <version>1.1</version>
-      <url>http://jakarta.apache.org/commons/logging/</url>
+      <url>http://commons.apache.org/logging/</url>
       <properties>
         <comment>&lt;b&gt;Core&lt;/b&gt;
         (everything)</comment>
@@ -133,7 +133,7 @@
       <groupId>commons-digester</groupId>
       <artifactId>commons-digester</artifactId>
       <version>1.8</version>
-      <url>http://jakarta.apache.org/commons/digester/</url>
+      <url>http://commons.apache.org/digester/</url>
       <properties>
         <comment>&lt;b&gt;Core&lt;/b&gt;
         (everything)</comment>
@@ -143,7 +143,7 @@
       <groupId>commons-beanutils</groupId>
       <artifactId>commons-beanutils</artifactId>
       <version>1.7.0</version>
-      <url>http://jakarta.apache.org/commons/beanutils/</url>
+      <url>http://commons.apache.org/beanutils/</url>
       <properties>
         <comment>&lt;b&gt;Transitive&lt;/b&gt;
         (from Digester, so &lt;b&gt;core&lt;/b&gt;)</comment>
@@ -163,7 +163,7 @@
       <groupId>commons-el</groupId>
       <artifactId>commons-el</artifactId>
       <version>1.0</version>
-      <url>http://jakarta.apache.org/commons/el/</url>
+      <url>http://commons.apache.org/el/</url>
       <properties>
         <comment>&lt;b&gt;Usecases&lt;/b&gt;
         (JSP/JSF environments)</comment>
@@ -174,7 +174,7 @@
       <groupId>commons-jexl</groupId>
       <artifactId>commons-jexl</artifactId>
       <version>1.1</version>
-      <url>http://jakarta.apache.org/commons/jexl/</url>
+      <url>http://commons.apache.org/jexl/</url>
       <properties>
         <comment>&lt;b&gt;Usecases&lt;/b&gt;
         (JEXL environments)</comment>
