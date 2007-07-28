@@ -16,16 +16,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 -->
-  <Project rdf:about="http://jakarta.apache.org/commons/scxml/">
-    <name>Apache Jakarta Commons SCXML</name>
+  <Project rdf:about="http://commons.apache.org/scxml/">
+    <name>Apache Apache Commons SCXML</name>
     <shortname>Commons SCXML</shortname>
-    <homepage rdf:resource="http://jakarta.apache.org/commons/scxml/"/>
+    <homepage rdf:resource="http://commons.apache.org/scxml/"/>
     <programming-language>Java</programming-language>
     <category rdf:resource="http://projects.apache.org/category/library"/>
     <license rdf:resource="http://usefulinc.com/doap/licenses/asl20"/>
     <bug-database rdf:resource="http://issues.apache.org/jira/browse/SCXML"/>
     <download-page rdf:resource="http://jakarta.apache.org/site/downloads/downloads_commons-scxml.cgi"/>
-    <asfext:pmc rdf:resource="http://jakarta.apache.org/"/>
+    <asfext:pmc rdf:resource="http://commons.apache.org/"/>
     <shortdesc xml:lang="en">A Java implementation of State Chart XML</shortdesc>
     <description xml:lang="en">
      An implementation of the State Chart XML specification aimed at creating
@@ -45,6 +45,6 @@
         <version>0.5</version>
       </revision>
     </release>
-    <mailing-list rdf:resource="http://jakarta.apache.org/site/mail2.html#Commons"/>
+    <mailing-list rdf:resource="http://commons.apache.org/mail-lists.html"/>
   </Project>
 </rdf:RDF>
