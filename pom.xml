@@ -34,12 +34,12 @@
   <inceptionYear>2005</inceptionYear>
   <description>A Java Implementation of a State Chart XML Engine</description>
 
-  <url>http://jakarta.apache.org/commons/scxml/</url>
+  <url>http://commons.apache.org/scxml/</url>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/jakarta/commons/proper/scxml/trunk</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/jakarta/commons/proper/scxml/trunk</developerConnection>
-    <url>http://svn.apache.org/viewvc/jakarta/commons/proper/scxml/trunk</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/scxml/trunk</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/scxml/trunk</developerConnection>
+    <url>http://svn.apache.org/viewvc/commons/proper/scxml/trunk</url>
   </scm>
 
   <developers>

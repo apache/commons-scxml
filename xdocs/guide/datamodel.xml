@@ -256,11 +256,13 @@
       &lt;assign location="Data(carrental, 'car/dates')"
                  expr="Data(hotelbooking, 'hotel/stay')" /&gt;
 
-      &lt;!-- copies over all children of &lt;stay&gt;, the
-              &lt;startdate&gt; and &lt;enddate&gt; in this case --&gt;
+      &lt;!-- deletes all children of &lt;dates&gt; and then copies
+              over all children of &lt;stay&gt;, the &lt;startdate&gt;
+              and &lt;enddate&gt; in this case --&gt;
     </pre>
-    In these cases, the node pointed by the expression is first cloned, and
-    then added as a child node to the node the lvalue points to.</p>
+    In these cases, the children of the node pointed by the expression are
+    first cloned, and then added as children to the node the lvalue points
+    to.</p>
     </li>
 
    </ol>

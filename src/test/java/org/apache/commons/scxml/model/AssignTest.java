@@ -69,7 +69,7 @@ public class AssignTest extends TestCase {
     public void testAssignSrc() {
         Set currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
-        assertEquals("assign2", ((State)currentStates.iterator().
+        assertEquals("assign3", ((State)currentStates.iterator().
             next()).getId());
         assertTrue(exec.getCurrentStatus().isFinal());
     }
