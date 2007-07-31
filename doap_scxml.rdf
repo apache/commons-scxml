@@ -17,7 +17,7 @@
  * limitations under the License.
 -->
   <Project rdf:about="http://commons.apache.org/scxml/">
-    <name>Apache Apache Commons SCXML</name>
+    <name>Apache Commons SCXML</name>
     <shortname>Commons SCXML</shortname>
     <homepage rdf:resource="http://commons.apache.org/scxml/"/>
     <programming-language>Java</programming-language>
