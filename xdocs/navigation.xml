@@ -26,8 +26,6 @@
     <links>
       <item name="Apache"
             href="http://www.apache.org"/>
-      <item name="Jakarta"
-            href="http://jakarta.apache.org"/>
       <item name="Commons"
             href="http://commons.apache.org/"/>
     </links>
@@ -113,7 +111,7 @@
                   href="http://svn.apache.org/viewvc/commons/proper/scxml/trunk/"/>
 
       <item       name="Nightly snapshots"
-                  href="http://people.apache.org/builds/jakarta-commons/nightly/commons-scxml/"/>
+                  href="http://people.apache.org/builds/commons/nightly/commons-scxml/"/>
 
     </menu>
 
