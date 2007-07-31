@@ -120,9 +120,9 @@
 
    <subsection name="Commons JEXL">
     <p>See Commons JEXL reference for 
-    <a href="http://jakarta.apache.org/commons/jexl/reference/syntax.html#Functions">
+    <a href="http://commons.apache.org/jexl/reference/syntax.html#Functions">
     builtin JEXL functions</a> and the calling methods section of the
-    <a href="http://jakarta.apache.org/commons/jexl/reference/examples.html">
+    <a href="http://commons.apache.org/jexl/reference/examples.html">
     examples page</a>. As a summary, if the context contains an object
     under name <code>foo</code> which has an accessible method
     <code>bar()</code>, then the JEXL expression for calling the method is

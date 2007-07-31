@@ -16,7 +16,7 @@
  * limitations under the License.
 -->
 <!DOCTYPE org.apache.commons.menus SYSTEM 
-         'http://jakarta.apache.org/commons/build/maven-build.dtd'>
+         'http://commons.apache.org/build/maven-build.dtd'>
 <project name="Commons SCXML">
 
   <title>Commons SCXML</title>
@@ -29,7 +29,7 @@
       <item name="Jakarta"
             href="http://jakarta.apache.org"/>
       <item name="Commons"
-            href="http://jakarta.apache.org/commons/"/>
+            href="http://commons.apache.org/"/>
     </links>
 
     <menu         name="Commons SCXML Resources">
@@ -110,7 +110,7 @@
                   href="/team-list.html"/>
 
       <item       name="SVN repository"
-                  href="http://svn.apache.org/viewcvs/jakarta/commons/proper/scxml/trunk/"/>
+                  href="http://svn.apache.org/viewvc/commons/proper/scxml/trunk/"/>
 
       <item       name="Nightly snapshots"
                   href="http://people.apache.org/builds/jakarta-commons/nightly/commons-scxml/"/>
@@ -127,10 +127,10 @@
                   href="/0.6/apidocs/index.html" />
 
         <item     name="Release notes"
-                  href="http://svn.apache.org/viewvc/jakarta/commons/proper/scxml/tags/SCXML_0_6/RELEASE-NOTES.txt?view=markup" />
+                  href="http://svn.apache.org/viewvc/commons/proper/scxml/tags/SCXML_0_6/RELEASE-NOTES.txt?view=markup" />
 
         <item     name="Source"
-                  href="http://svn.apache.org/viewvc/jakarta/commons/proper/scxml/tags/SCXML_0_6/" />
+                  href="http://svn.apache.org/viewvc/commons/proper/scxml/tags/SCXML_0_6/" />
 
       </item>
 
@@ -142,10 +142,10 @@
                   href="/0.5/apidocs/index.html" />
 
         <item     name="Release notes"
-                  href="http://svn.apache.org/viewvc/jakarta/commons/proper/scxml/tags/SCXML_0_5/RELEASE-NOTES.txt?view=markup" />
+                  href="http://svn.apache.org/viewvc/commons/proper/scxml/tags/SCXML_0_5/RELEASE-NOTES.txt?view=markup" />
 
         <item     name="Source"
-                  href="http://svn.apache.org/viewvc/jakarta/commons/proper/scxml/tags/SCXML_0_5/" />
+                  href="http://svn.apache.org/viewvc/commons/proper/scxml/tags/SCXML_0_5/" />
 
       </item>
 

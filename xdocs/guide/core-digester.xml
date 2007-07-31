@@ -27,9 +27,9 @@
 
   <section name="Commons SCXML - Digesting SCXML documents for Commons SCXML">
     <p>Commons SCXML provides its own implementation of the
-    <a href="http://jakarta.apache.org/commons/scxml/apidocs/org/apache/commons/scxml/model/package-summary.html">
+    <a href="http://commons.apache.org/scxml/apidocs/org/apache/commons/scxml/model/package-summary.html">
     Java object model for SCXML</a>
-    and a configured <a href="http://jakarta.apache.org/commons/digester">
+    and a configured <a href="http://commons.apache.org/digester">
     Digester</a> that can digest SCXML documents into that object model.</p>
 
     <subsection name="Usage">

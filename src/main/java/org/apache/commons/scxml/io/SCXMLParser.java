@@ -104,7 +104,7 @@ public final class SCXMLParser {
      * implementations.
      */
     private static final String NAMESPACE_COMMONS_SCXML =
-        "http://jakarta.apache.org/commons/scxml";
+        "http://commons.apache.org/scxml";
 
     //---------------------- PUBLIC METHODS ----------------------//
     /**

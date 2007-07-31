@@ -102,7 +102,7 @@
       value of the name attribute when it executes.</p>
 
     <p>A simple example is
-      <a href="http://svn.apache.org/repos/asf/jakarta/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml/custom-hello-world-01.xml">here</a>
+      <a href="http://svn.apache.org/repos/asf/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml/custom-hello-world-01.xml">here</a>
       .</p>
 
    </subsection>
@@ -154,7 +154,7 @@
        can be added by directly by obtaining a Digester instance with the
        "default" SCXML rules using the <code>newInstance()</code> methods
        and further directly adding the necessary rules using the
-       <a href="http://jakarta.apache.org/commons/digester/commons-digester-1.7/docs/api/">digester API</a>
+       <a href="http://commons.apache.org/digester/commons-digester-1.7/docs/api/">digester API</a>
        .</p>
 
    </subsection>

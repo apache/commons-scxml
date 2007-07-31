@@ -80,5 +80,5 @@ client-side runtimes.
 
 Please visit the website for project information and documentation:
 
-http://jakarta.apache.org/commons/scxml/
+http://commons.apache.org/scxml/
 
