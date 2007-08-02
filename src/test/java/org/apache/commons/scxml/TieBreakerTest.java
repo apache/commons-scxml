@@ -53,7 +53,7 @@ public class TieBreakerTest extends TestCase {
     }
 
     // Test data
-    private URL tiebreaker01, tiebreaker02, tiebreaker03;
+    private URL tiebreaker01, tiebreaker02, tiebreaker03, tiebreaker04;
     private SCXMLExecutor exec;
 
     /**
@@ -66,13 +66,15 @@ public class TieBreakerTest extends TestCase {
             getResource("org/apache/commons/scxml/tie-breaker-02.xml");
         tiebreaker03 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/tie-breaker-03.xml");
+        tiebreaker04 = this.getClass().getClassLoader().
+            getResource("org/apache/commons/scxml/tie-breaker-04.xml");
     }
 
     /**
      * Tear down instance variables required by this test case.
      */
     public void tearDown() {
-        tiebreaker01 = tiebreaker02 = tiebreaker03 = null;
+        tiebreaker01 = tiebreaker02 = tiebreaker03 = tiebreaker04 = null;
     }
 
     /**
@@ -115,6 +117,15 @@ public class TieBreakerTest extends TestCase {
         assertEquals(1, currentStates.size());
         assertEquals("forty", ((State)currentStates.iterator().
             next()).getId());
+    }
+
+    public void testTieBreaker04() {
+        exec = SCXMLTestHelper.getExecutor(tiebreaker04);
+        assertNotNull(exec);
+        Set currentStates = SCXMLTestHelper.fireEvent(exec, "event_2");
+        assertEquals(1, currentStates.size());
+        currentStates = SCXMLTestHelper.fireEvent(exec, "event_1");
+        assertEquals(1, currentStates.size());
     }
 
     public static void main(String args[]) {

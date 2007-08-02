@@ -426,7 +426,6 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
         if (step.getTransitList().size() > 1) {
             // global transition precedence check
             Object[] trans = step.getTransitList().toArray();
-            Set currentStates = step.getBeforeStatus().getStates();
             // non-determinism candidates
             Set nonDeterm = new LinkedHashSet();
             for (int i = 0; i < trans.length; i++) {
@@ -434,23 +433,18 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                 TransitionTarget tsrc = t.getParent();
                 for (int j = i + 1; j < trans.length; j++) {
                     Transition t2 = (Transition) trans[j];
-                    boolean conflict = SCXMLHelper.inConflict(t, t2,
-                            currentStates);
-                    if (conflict) {
-                        //potentially conflicting transitions
-                        TransitionTarget t2src = t2.getParent();
-                        if (SCXMLHelper.isDescendant(t2src, tsrc)) {
-                            //t2 takes precedence over t
-                            removeList.add(t);
-                            break; //it makes no sense to waste cycles with t
-                        } else if (SCXMLHelper.isDescendant(tsrc, t2src)) {
-                            //t takes precendence over t2
-                            removeList.add(t2);
-                        } else {
-                            //add both to the non-determinism candidates
-                            nonDeterm.add(t);
-                            nonDeterm.add(t2);
-                        }
+                    TransitionTarget t2src = t2.getParent();
+                    if (SCXMLHelper.isDescendant(t2src, tsrc)) {
+                        //t2 takes precedence over t
+                        removeList.add(t);
+                        break; //it makes no sense to waste cycles with t
+                    } else if (SCXMLHelper.isDescendant(tsrc, t2src)) {
+                        //t takes precendence over t2
+                        removeList.add(t2);
+                    } else {
+                        //add both to the non-determinism candidates
+                        nonDeterm.add(t);
+                        nonDeterm.add(t2);
                     }
                 }
             }

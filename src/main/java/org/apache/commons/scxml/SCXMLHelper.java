@@ -228,6 +228,9 @@ public final class SCXMLHelper {
     public static Set getStatesExited(final Transition t,
             final Set currentStates) {
         Set allStates = new HashSet();
+        if (t.getTargets().size() == 0) {
+            return allStates;
+        }
         Path p = (Path) t.getPaths().get(0); // all paths have same upseg
         //the easy part
         allStates.addAll(p.getUpwardSegment());
