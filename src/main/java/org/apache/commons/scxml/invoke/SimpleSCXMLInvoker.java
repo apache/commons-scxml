@@ -111,6 +111,11 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
         } catch (ModelException me) {
             throw new InvokerException(me.getMessage(), me.getCause());
         }
+        if (executor.getCurrentStatus().isFinal()) {
+            TriggerEvent te = new TriggerEvent(eventPrefix + invokeDone,
+                TriggerEvent.SIGNAL_EVENT);
+            new AsyncTrigger(parentSCInstance.getExecutor(), te);
+        }
     }
 
     /**

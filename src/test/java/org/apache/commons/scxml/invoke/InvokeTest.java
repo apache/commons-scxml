@@ -54,7 +54,7 @@ public class InvokeTest extends TestCase {
     }
 
     // Test data
-    private URL invoke01;
+    private URL invoke01, invoke02;
     private SCXMLExecutor exec;
 
     /**
@@ -63,13 +63,15 @@ public class InvokeTest extends TestCase {
     public void setUp() {
         invoke01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/invoke/invoker-01.xml");
+        invoke02 = this.getClass().getClassLoader().
+            getResource("org/apache/commons/scxml/invoke/invoker-02.xml");
     }
 
     /**
      * Tear down instance variables required by this test case.
      */
     public void tearDown() {
-        invoke01 = null;
+        invoke01 = invoke02 = null;
     }
 
     /**
@@ -90,6 +92,25 @@ public class InvokeTest extends TestCase {
             assertEquals(1, currentStates.size());
             assertEquals("invoker", ((State)currentStates.iterator().
                 next()).getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        }
+    }
+
+    public void testInvoke02Sample() {
+        try {
+            SCXML scxml = SCXMLDigester.digest(invoke02,
+                new SimpleErrorHandler());
+            exec = new SCXMLExecutor(new JexlEvaluator(), new SimpleDispatcher(),
+                new SimpleErrorReporter());
+            assertNotNull(exec);
+            exec.setRootContext(new JexlContext());
+            exec.setStateMachine(scxml);
+            exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
+            exec.go();
+            Set currentStates = exec.getCurrentStatus().getStates();
+            assertEquals(1, currentStates.size());
         } catch (Exception e) {
             e.printStackTrace();
             fail(e.getMessage());
