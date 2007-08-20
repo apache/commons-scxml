@@ -451,17 +451,22 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
             // check if all non-deterministic situations have been resolved
             nonDeterm.removeAll(removeList);
             if (nonDeterm.size() > 0) {
-                // if not, first one wins (which is also first
-                // in document order)
-                Transition t = (Transition) nonDeterm.iterator().next();
-                nonDeterm.remove(t);
+                // if not, first one in each state / region (which is also
+                // first in document order) wins
+                Set regions = new HashSet();
+                Iterator iter = nonDeterm.iterator();
+                while (iter.hasNext()) {
+                    Transition t = (Transition) iter.next();
+                    TransitionTarget parent = t.getParent();
+                    if (regions.contains(parent)) {
+                        removeList.add(t);
+                    } else {
+                        regions.add(parent);
+                    }
+                }
             }
-            // apply global transition filter
+            // apply global and document order transition filter
             step.getTransitList().removeAll(removeList);
-            // apply document order priority
-            step.getTransitList().removeAll(nonDeterm);
-            removeList.clear();
-            nonDeterm.clear();
         }
     }
 

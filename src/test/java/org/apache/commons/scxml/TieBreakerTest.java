@@ -17,6 +17,7 @@
 package org.apache.commons.scxml;
 
 import java.net.URL;
+import java.util.Iterator;
 import java.util.Set;
 
 import junit.framework.Test;
@@ -53,7 +54,8 @@ public class TieBreakerTest extends TestCase {
     }
 
     // Test data
-    private URL tiebreaker01, tiebreaker02, tiebreaker03, tiebreaker04;
+    private URL tiebreaker01, tiebreaker02, tiebreaker03, tiebreaker04,
+        tiebreaker05;
     private SCXMLExecutor exec;
 
     /**
@@ -68,13 +70,16 @@ public class TieBreakerTest extends TestCase {
             getResource("org/apache/commons/scxml/tie-breaker-03.xml");
         tiebreaker04 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/tie-breaker-04.xml");
+        tiebreaker05 = this.getClass().getClassLoader().
+            getResource("org/apache/commons/scxml/tie-breaker-05.xml");
     }
 
     /**
      * Tear down instance variables required by this test case.
      */
     public void tearDown() {
-        tiebreaker01 = tiebreaker02 = tiebreaker03 = tiebreaker04 = null;
+        tiebreaker01 = tiebreaker02 = tiebreaker03 = tiebreaker04 =
+            tiebreaker05 = null;
     }
 
     /**
@@ -126,6 +131,29 @@ public class TieBreakerTest extends TestCase {
         assertEquals(1, currentStates.size());
         currentStates = SCXMLTestHelper.fireEvent(exec, "event_1");
         assertEquals(1, currentStates.size());
+    }
+
+    public void testTieBreaker05() {
+        exec = SCXMLTestHelper.getExecutor(tiebreaker05);
+        assertNotNull(exec);
+        Set currentStates = exec.getCurrentStatus().getStates();
+        assertEquals(3, currentStates.size());
+        String id = ((State) currentStates.iterator().next()).getId();
+        Iterator iter = currentStates.iterator();
+        while (iter.hasNext()) {
+            id = ((State) iter.next()).getId();
+            assertTrue(id.equals("s11") || id.equals("s212")
+                || id.equals("s2111"));
+        }
+        currentStates = SCXMLTestHelper.fireEvent(exec, "event1");
+        assertEquals(3, currentStates.size());
+        id = ((State) currentStates.iterator().next()).getId();
+        iter = currentStates.iterator();
+        while (iter.hasNext()) {
+            id = ((State) iter.next()).getId();
+            assertTrue(id.equals("s12") || id.equals("s212")
+                || id.equals("s2112"));
+        }
     }
 
     public static void main(String args[]) {
