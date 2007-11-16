@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements.  See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<project name="SCXML">
+  <bannerRight>
+    <name>Commons SCXML</name>
+    <src>/images/scxml-logo-white.png</src>
+    <href>/index.html</href>
+  </bannerRight>
+
+  <body>
+    <menu         name="Commons SCXML Resources">
+      <item       name="Overview"
+                  href="/index.html"/>
+
+      <item       name="User Guide"
+                  href="/guide.html"
+                  collapse="true">
+
+        <item     name="SCXML documents"  
+                  href="/guide/scxml-documents.html" />
+
+        <item     name="Using Commons SCXML"
+                  href="/guide/using-commons-scxml.html" />
+
+        <item     name="Standalone Testing"  
+                  href="/guide/testing-standalone.html" />
+
+        <item     name="SCXML Digester"  
+                  href="/guide/core-digester.html" />
+
+        <item     name="SCXML datamodel"
+                  href="/guide/datamodel.html" />
+
+        <item     name="Contexts and Evaluators"  
+                  href="/guide/contexts-evaluators.html" />
+
+        <item     name="SCXML Engine"  
+                  href="/guide/core-engine.html" />
+
+        <item     name="Triggering Events"  
+                  href="/guide/core-events.html" />
+
+        <item     name="Custom Actions"
+                  href="/guide/custom-actions.html" />
+
+        <item     name="Custom Semantics"
+                  href="/guide/custom-semantics.html" />
+
+        <item     name="Side Effect - EL"  
+                  href="/guide/side-effect-el.html" />
+
+      </item>
+
+      <item       name="Javadoc"
+                  href="apidocs/index.html"/>
+
+      <item       name="FAQ"
+                  href="faq.html"/>
+
+      <item       name="Usecases"                      
+                  href="/usecases.html"
+                  collapse="true">
+
+        <item     name="SCXML Stopwatch"
+                  href="/usecases/scxml-stopwatch.html" />
+
+        <item     name="SCXML in RDC group container"  
+                  href="/usecases/scxml-in-rdc-group.html" />
+
+        <item     name="SCXML in Shale dialogs"        
+                  href="/usecases/scxml-in-shale-dialogs.html" />
+
+      </item>
+
+      <item       name="Building"                      
+                  href="/building.html" />
+
+      <item       name="Dependencies"
+                  href="/dependencies.html" />
+
+      <item       name="Mailing lists"
+                  href="/mail-lists.html"/>
+
+      <item       name="Issue Tracking"
+                  href="/issue-tracking.html"/>
+
+      <item       name="Team"
+                  href="/team-list.html"/>
+
+      <item       name="SVN repository"
+                  href="/source-repository.html"/>
+
+    </menu>
+
+    <menu         name="Releases">
+
+      <item       name="Version 0.6"
+                  href="/0.6/index.html"
+                  collapse="true">
+
+        <item     name="Javadoc"
+                  href="/0.6/apidocs/index.html" />
+
+        <item     name="Release notes"
+                  href="http://svn.apache.org/viewvc/commons/proper/scxml/tags/SCXML_0_6/RELEASE-NOTES.txt?view=markup" />
+
+        <item     name="Source"
+                  href="http://svn.apache.org/viewvc/commons/proper/scxml/tags/SCXML_0_6/" />
+
+      </item>
+
+      <item       name="Version 0.5"
+                  href="/0.5/index.html"
+                  collapse="true">
+
+        <item     name="Javadoc"
+                  href="/0.5/apidocs/index.html" />
+
+        <item     name="Release notes"
+                  href="http://svn.apache.org/viewvc/commons/proper/scxml/tags/SCXML_0_5/RELEASE-NOTES.txt?view=markup" />
+
+        <item     name="Source"
+                  href="http://svn.apache.org/viewvc/commons/proper/scxml/tags/SCXML_0_5/" />
+
+      </item>
+
+    </menu>
+
+  </body>
+
+</project>

@@ -105,7 +105,7 @@
             <!-- <property                                              -->
             <!--     name="headerFile"                                  -->
             <!--     value="${basedir}/java.header"/>                   -->
-            <property name="headerFile" value="${checkstyle.header.file}"/>
+            <property name="headerFile" value="scxml-asl-header.txt"/>
         </module>
 
         <!-- Following interprets the header file as regular expressions. -->
