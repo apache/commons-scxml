@@ -33,7 +33,6 @@
                 <include>project.properties</include>
                 <include>project.xml</include>
                 <include>RELEASE-NOTES.txt</include>
-                <include>PROPOSAL.html</include>
                 <include>scxml-asl-header.txt</include>
                 <include>scxml-checks.xml</include>
             </includes>
