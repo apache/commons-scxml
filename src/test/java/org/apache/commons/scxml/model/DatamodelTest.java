@@ -17,6 +17,8 @@
 package org.apache.commons.scxml.model;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import junit.framework.Test;
@@ -50,7 +52,7 @@ public class DatamodelTest extends TestCase {
     }
 
     // Test data
-    private URL datamodel01jexl, datamodel02jexl, datamodel01jsp, datamodel02jsp;
+    private URL datamodel01jexl, datamodel02jexl, datamodel04jexl, datamodel01jsp, datamodel02jsp;
     private SCXMLExecutor exec01, exec02;
 
     /**
@@ -61,6 +63,8 @@ public class DatamodelTest extends TestCase {
             getResource("org/apache/commons/scxml/env/jexl/datamodel-01.xml");
         datamodel02jexl = this.getClass().getClassLoader().
            getResource("org/apache/commons/scxml/env/jexl/datamodel-02.xml");
+        datamodel04jexl = this.getClass().getClassLoader().
+           getResource("org/apache/commons/scxml/env/jexl/datamodel-04.xml");
         datamodel01jsp = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/env/jsp/datamodel-01.xml");
         datamodel02jsp = this.getClass().getClassLoader().
@@ -108,6 +112,30 @@ public class DatamodelTest extends TestCase {
         assertNotNull(exec02);
         assertFalse(exec01 == exec02);
         runtest();
+    }
+
+    public void testDatamodel04Jexl() {
+        exec01 = SCXMLTestHelper.getExecutor(datamodel04jexl,
+            new JexlContext(), new JexlEvaluator());
+        assertNotNull(exec01);
+        Set currentStates = exec01.getCurrentStatus().getStates();
+        assertEquals(1, currentStates.size());
+        assertEquals("ten", ((State)currentStates.iterator().
+            next()).getId());
+        Map payload = new HashMap();
+        payload.put("one", "1");
+        payload.put("two", "2");
+        TriggerEvent te = new TriggerEvent("ten.done", TriggerEvent.SIGNAL_EVENT, payload);
+        SCXMLTestHelper.fireEvent(exec01, te);
+        currentStates = exec01.getCurrentStatus().getStates();
+        assertEquals(1, currentStates.size());
+        assertEquals("twenty", ((State)currentStates.iterator().
+            next()).getId());
+        SCXMLTestHelper.fireEvent(exec01, "twenty.done");
+        currentStates = exec01.getCurrentStatus().getStates();
+        assertEquals(1, currentStates.size());
+        assertEquals("thirty", ((State)currentStates.iterator().
+            next()).getId());
     }
 
     private void runtest() {
