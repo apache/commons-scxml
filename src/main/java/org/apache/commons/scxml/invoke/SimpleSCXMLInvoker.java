@@ -18,6 +18,7 @@ package org.apache.commons.scxml.invoke;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -86,8 +87,8 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
     throws InvokerException {
         SCXML scxml = null;
         try {
-            scxml = SCXMLDigester.digest(source,
-                new SimpleErrorHandler(), null);
+            scxml = SCXMLDigester.digest(new URL(source),
+                new SimpleErrorHandler());
         } catch (ModelException me) {
             throw new InvokerException(me.getMessage(), me.getCause());
         } catch (IOException ioe) {
@@ -106,6 +107,7 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
         executor.setRootContext(rootCtx);
         executor.setStateMachine(scxml);
         executor.addListener(scxml, new SimpleSCXMLListener());
+        executor.registerInvokerClass("scxml", this.getClass());
         try {
             executor.go();
         } catch (ModelException me) {

@@ -25,6 +25,7 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.apache.commons.scxml.SCXMLExecutor;
+import org.apache.commons.scxml.SCXMLTestHelper;
 import org.apache.commons.scxml.env.SimpleDispatcher;
 import org.apache.commons.scxml.env.SimpleErrorHandler;
 import org.apache.commons.scxml.env.SimpleErrorReporter;
@@ -54,7 +55,7 @@ public class InvokeTest extends TestCase {
     }
 
     // Test data
-    private URL invoke01, invoke02;
+    private URL invoke01, invoke02, invoke03;
     private SCXMLExecutor exec;
 
     /**
@@ -65,13 +66,15 @@ public class InvokeTest extends TestCase {
             getResource("org/apache/commons/scxml/invoke/invoker-01.xml");
         invoke02 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/invoke/invoker-02.xml");
+        invoke03 = this.getClass().getClassLoader().
+            getResource("org/apache/commons/scxml/invoke/invoker-03.xml");
     }
 
     /**
      * Tear down instance variables required by this test case.
      */
     public void tearDown() {
-        invoke01 = invoke02 = null;
+        invoke01 = invoke02 = invoke03 = null;
     }
 
     /**
@@ -111,6 +114,27 @@ public class InvokeTest extends TestCase {
             exec.go();
             Set currentStates = exec.getCurrentStatus().getStates();
             assertEquals(1, currentStates.size());
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        }
+    }
+
+    public void testInvoke03Sample() {
+        try {
+            SCXML scxml = SCXMLDigester.digest(invoke03,
+                new SimpleErrorHandler());
+            exec = new SCXMLExecutor(new JexlEvaluator(), new SimpleDispatcher(),
+                new SimpleErrorReporter());
+            assertNotNull(exec);
+            exec.setRootContext(new JexlContext());
+            exec.setStateMachine(scxml);
+            exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
+            exec.go();
+            Set currentStates = exec.getCurrentStatus().getStates();
+            assertEquals(1, currentStates.size());
+            SCXMLTestHelper.fireEvent(exec, "s1.next");
+            SCXMLTestHelper.fireEvent(exec, "state1.next");
         } catch (Exception e) {
             e.printStackTrace();
             fail(e.getMessage());
