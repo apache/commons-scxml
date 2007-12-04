@@ -83,10 +83,13 @@ public class ActionsTest extends TestCase {
      * Test the implementation
      */
     public void testModelActions() {
-        exec = SCXMLTestHelper.getExecutor(actionsSample, ctx, evaluator);
+        SCXML scxml = SCXMLTestHelper.parse(actionsSample);
+        exec = SCXMLTestHelper.getExecutor(scxml, ctx, evaluator);
         ELContext ctx = (ELContext) SCXMLTestHelper.lookupContext(exec,
             "actionsTest");
         assertEquals((String) ctx.get("foo"), "foobar");
+        assertEquals("Missed event transition",
+            "true", (String) ctx.get("eventsent"));
     }
 
      public static void main(String args[]) {

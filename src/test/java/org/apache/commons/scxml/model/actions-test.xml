@@ -16,13 +16,15 @@
  * limitations under the License.
 -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
+       xmlns:cs="http://commons.apache.org/scxml"
        version="1.0"
        initialstate="actionsTest">
   
   <state id="actionsTest" final="true">
     <onentry>
-      <var name="foo" expr="" />
-      <var name="delta" expr="${1+2+3}" />
+      <cs:var name="foo"/>
+      <cs:var name="delta" expr="${1+2+3}" />
+      <cs:var name="eventsent"/>
       <if cond="${delta le 3}">
         <assign name="foo" expr="bar" />
       <elseif cond="${delta eq 3}"/>
@@ -30,15 +32,21 @@
       <else/>
         <assign name="foo" expr="foobar" />
       </if>
-      <var name="drink" expr="water" />
-      <var name="eat" expr="flies" />
+      <cs:var name="drink" expr="water" />
+      <cs:var name="eat" expr="flies" />
       <send sendid="send12345" target="freddy" targettype="frog"
        event="croak" namelist="drink eat" hints="h2o bzz"
        delay="1000" />
       <cancel sendId="send12345"/>
       <log expr="leaving" label="entry001" />
+      <event name="event.test"/>
       <exit expr="later" namelist="freddy" />
     </onentry>
+
+    <transition event="event.test">
+      <assign name="eventsent" expr="true"/>
+    </transition>
+
   </state>
 
 </scxml>

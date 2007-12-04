@@ -45,6 +45,7 @@ import org.apache.commons.scxml.model.Data;
 import org.apache.commons.scxml.model.Datamodel;
 import org.apache.commons.scxml.model.Else;
 import org.apache.commons.scxml.model.ElseIf;
+import org.apache.commons.scxml.model.Event;
 import org.apache.commons.scxml.model.Executable;
 import org.apache.commons.scxml.model.Exit;
 import org.apache.commons.scxml.model.ExternalContent;
@@ -576,6 +577,9 @@ public final class SCXMLParser {
     /** &lt;assign&gt; child element. */
     private static final String XPF_ASN = "/assign";
 
+    /** &lt;event&gt; child element. */
+    private static final String XPF_EVT = "/event";
+
     /** &lt;send&gt; child element. */
     private static final String XPF_SND = "/send";
 
@@ -1006,6 +1010,7 @@ public final class SCXMLParser {
         // Actions in SCXML namespace
         addActionRulesTuple(xp + XPF_ASN, scxmlRules, Assign.class);
         scxmlRules.add(xp + XPF_ASN, new SetPathResolverRule(pr));
+        addActionRulesTuple(xp + XPF_EVT, scxmlRules, Event.class);
         addSendRulesTuple(xp + XPF_SND, scxmlRules);
         addActionRulesTuple(xp + XPF_CAN, scxmlRules, Cancel.class);
         addActionRulesTuple(xp + XPF_LOG, scxmlRules, Log.class);
