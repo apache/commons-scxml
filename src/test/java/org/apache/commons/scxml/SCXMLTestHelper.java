@@ -33,7 +33,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml.env.SimpleDispatcher;
 import org.apache.commons.scxml.env.Tracer;
-import org.apache.commons.scxml.env.jexl.JexlContext;
 import org.apache.commons.scxml.env.jexl.JexlEvaluator;
 import org.apache.commons.scxml.io.SCXMLDigester;
 import org.apache.commons.scxml.io.SCXMLParser;
@@ -138,8 +137,8 @@ public class SCXMLTestHelper {
 
     public static SCXMLExecutor getExecutor(SCXML scxml,
             SCXMLSemantics semantics) {
-        Context context = new JexlContext();
         Evaluator evaluator = new JexlEvaluator();
+        Context context = evaluator.newContext(null);
         EventDispatcher ed = new SimpleDispatcher();
         Tracer trc = new Tracer();
         return getExecutor(context, evaluator, scxml, ed, trc, semantics);
@@ -148,7 +147,8 @@ public class SCXMLTestHelper {
     public static SCXMLExecutor getExecutor(Evaluator evaluator, SCXML scxml) {
         EventDispatcher ed = new SimpleDispatcher();
         Tracer trc = new Tracer();
-        Context context = new JexlContext();
+        Assert.assertNotNull("Null evaluator", evaluator);
+        Context context = evaluator.newContext(null);
         return getExecutor(context, evaluator, scxml, ed, trc);
     }
 
