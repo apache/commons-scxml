@@ -58,6 +58,12 @@ import org.apache.commons.scxml.TriggerEvent;
  *   <li>Either completion or cancellation.</li>
  *  </ol>
  * </p>
+ *
+ * <p><b>Note:</b> The semantics of &lt;invoke&gt; are necessarily
+ * asynchronous, tending towards long(er) running interactions with external
+ * processes. Implementations must not communicate with the parent state
+ * machine executor in a synchronous manner. For synchronous
+ * communication semantics, use &lt;event&gt; or custom actions instead.</p>
  */
 public interface Invoker {
 
