@@ -254,7 +254,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                             TriggerEvent.CHANGE_EVENT);
                     internalEvents.add(te);
                     if (parent != null) {
-                        parent.setDone(true);
+                        scInstance.setDone(parent, true);
                     }
                     if (parent != null && parent.isRegion()) {
                         //3.4 we got a region, which is finalized
@@ -265,7 +265,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                         for (Iterator regions = p.getChildren().iterator();
                                 regions.hasNext();) {
                             State reg = (State) regions.next();
-                            if (reg.isDone()) {
+                            if (scInstance.isDone(reg)) {
                                 finCount++;
                             }
                         }
@@ -277,7 +277,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                                 + ".done", TriggerEvent.CHANGE_EVENT);
                             internalEvents.add(te);
                             //this is not in the specs, but is makes sense
-                            p.getParentState().setDone(true);
+                            scInstance.setDone(p.getParentState(), true);
                         }
                     }
                 }
@@ -704,7 +704,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
         for (Iterator reset = entering.iterator(); reset.hasNext();) {
             Object o = reset.next();
             if (o instanceof State) {
-                ((State) o).setDone(false);
+                scInstance.setDone((State) o, false);
             }
         }
     }

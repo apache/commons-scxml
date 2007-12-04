@@ -59,6 +59,12 @@ public class SCInstance implements Serializable {
     private Map histories;
 
     /**
+     * <code>Map</code> for recording the run to completion status of
+     * composite states.
+     */
+    private Map completions;
+
+    /**
      * The <code>Invoker</code> classes <code>Map</code>, keyed by
      * &lt;invoke&gt; target types (specified using "targettype" attribute).
      */
@@ -96,6 +102,7 @@ public class SCInstance implements Serializable {
         this.histories = Collections.synchronizedMap(new HashMap());
         this.invokerClasses = Collections.synchronizedMap(new HashMap());
         this.invokers = Collections.synchronizedMap(new HashMap());
+        this.completions = Collections.synchronizedMap(new HashMap());
         this.evaluator = null;
         this.rootContext = null;
         this.executor = executor;
@@ -354,6 +361,34 @@ public class SCInstance implements Serializable {
      */
     public Map getInvokers() {
         return invokers;
+    }
+
+    /**
+     * Get the completion status for this composite
+     * {@link TransitionTarget}.
+     *
+     * @param transitionTarget The <code>TransitionTarget</code>.
+     * @return The completion status.
+     */
+    public boolean isDone(final TransitionTarget transitionTarget) {
+        Boolean done = (Boolean) completions.get(transitionTarget);
+        if (done == null) {
+            return false;
+        } else {
+            return done.booleanValue();
+        }
+    }
+
+    /**
+     * Set the completion status for this composite
+     * {@link TransitionTarget}.
+     *
+     * @param transitionTarget The TransitionTarget.
+     * @param done The completion status.
+     */
+    public void setDone(final TransitionTarget transitionTarget,
+            final boolean done) {
+        completions.put(transitionTarget, done ? Boolean.TRUE : Boolean.FALSE);
     }
 
 }

@@ -78,6 +78,8 @@ public class State extends TransitionTarget {
      * Applies to composite states only. If one of its final children is
      * active, its parent is marked done. This property is reset upon
      * re-entry.
+     *
+     * @deprecated Will be removed in v1.0
      */
     private boolean done = false;
 
@@ -350,6 +352,8 @@ public class State extends TransitionTarget {
      * is active.
      *
      * @return Returns the done.
+     * @deprecated Will be removed in v1.0, in favor of
+     *             <code>SCInstance#isDone(TransitionTarget)</code>
      */
     public final boolean isDone() {
         return done;
@@ -360,6 +364,8 @@ public class State extends TransitionTarget {
      * and one its final states is active.
      *
      * @param done The done to set.
+     * @deprecated Will be removed in v1.0, in favor of
+     *             <code>SCInstance#setDone(TransitionTarget)</code>
      */
     public final void setDone(final boolean done) {
         this.done = done;

@@ -17,6 +17,7 @@
 package org.apache.commons.scxml.model;
 
 import java.net.URL;
+import java.util.Iterator;
 import java.util.Set;
 
 import junit.framework.Test;
@@ -48,9 +49,9 @@ public class StatelessModelTest extends TestCase {
     }
 
     // Test data
-    private URL stateless01jexl, stateless01jsp;
-    private SCXML scxml01jexl, scxml01jsp;
-    private SCXMLExecutor exec01, exec02;
+    private URL stateless01jexl, stateless01jsp, stateless01par;
+    private SCXML scxml01jexl, scxml01jsp, scxml01par, scxml02par;
+    private SCXMLExecutor exec01, exec02, exec03;
 
     /**
      * Set up instance variables required by this test case.
@@ -60,8 +61,12 @@ public class StatelessModelTest extends TestCase {
             getResource("org/apache/commons/scxml/env/jexl/stateless-01.xml");
         stateless01jsp = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/env/jsp/stateless-01.xml");
+        stateless01par = this.getClass().getClassLoader().
+            getResource("org/apache/commons/scxml/model/stateless-parallel-01.xml");
         scxml01jexl = SCXMLTestHelper.digest(stateless01jexl);
         scxml01jsp = SCXMLTestHelper.digest(stateless01jsp);
+        scxml01par = SCXMLTestHelper.digest(stateless01par);
+        scxml02par = SCXMLTestHelper.digest(stateless01par);
     }
 
     /**
@@ -122,6 +127,83 @@ public class StatelessModelTest extends TestCase {
             assertNotNull(exec01);
             runSequentialTest();
         }
+    }
+
+    /**
+     * Test sharing a single SCXML object between two executors
+     */
+    public void testStatelessModelParallelSharedSCXML() {
+        exec01 = SCXMLTestHelper.getExecutor(scxml01par);
+        assertNotNull(exec01);
+        exec02 = SCXMLTestHelper.getExecutor(scxml01par);
+        assertNotNull(exec02);
+        assertFalse(exec01 == exec02);
+
+        Set currentStates = exec01.getCurrentStatus().getStates();
+        checkParallelStates(currentStates, "state1.init", "state2.init", "exec01");
+
+        currentStates = exec02.getCurrentStatus().getStates();
+        checkParallelStates(currentStates, "state1.init", "state2.init", "exec02");
+
+        currentStates = fireEvent("state1.event", exec01);
+        checkParallelStates(currentStates, "state1.final", "state2.init", "exec01");
+
+        currentStates = fireEvent("state2.event", exec02);
+        checkParallelStates(currentStates, "state1.init", "state2.final", "exec02");
+
+        currentStates = fireEvent("state2.event", exec01);
+        checkParallelStates(currentStates, "next", null, "exec01");
+
+        currentStates = fireEvent("state1.event", exec02);
+        checkParallelStates(currentStates, "next", null, "exec02");
+    }
+
+    /**
+     * Test sharing two SCXML objects between one executor (not recommended)
+     */
+    public void testStatelessModelParallelSwapSCXML() {
+        exec01 = SCXMLTestHelper.getExecutor(scxml01par);
+        assertNotNull(exec01);
+        assertTrue(scxml01par != scxml02par);
+
+        Set currentStates = exec01.getCurrentStatus().getStates();
+        checkParallelStates(currentStates, "state1.init", "state2.init", "exec01");
+
+        currentStates = fireEvent("state1.event", exec01);
+        checkParallelStates(currentStates, "state1.final", "state2.init", "exec01");
+        exec01.setStateMachine(scxml02par);
+
+        currentStates = fireEvent("state2.event", exec01);
+        checkParallelStates(currentStates, "next", null, "exec01");
+    }
+
+    private void checkParallelStates(Set currentStates, String s1, String s2,
+            String label) {
+        Iterator i = currentStates.iterator();
+        assertTrue("Not enough states", i.hasNext());
+        String cs1 = ((State) i.next()).getId();
+        String cs2 = null;
+        if (s2 != null) {
+            assertTrue("Not enough states, found one state: " + cs1, i.hasNext());
+            cs2 = ((State) i.next()).getId();
+            assertFalse("Too many states", i.hasNext());
+            if (s2.equals(cs2)) {
+                cs2 = null;
+            } else if (s1.equals(cs2)) {
+                cs2 = null;
+            } else {
+                fail(label + " in unexpected state " + cs2);
+            }
+        } else {
+            assertFalse("Too many states", i.hasNext());
+        }
+        if (s1 != null && s1.equals(cs1)) {
+            return;
+        }
+        if (s2 != null && s2.equals(cs1)) {
+            return;
+        }
+        fail(label + " in unexpected state " + cs1);
     }
 
     private void runSimultaneousTest() {
