@@ -86,6 +86,18 @@ import org.xml.sax.SAXException;
  *  <li>Obtain a SCXML Parser for further customization of the default
  *      ruleset.</li>
  * </ol>
+ *
+ * <p>If switching from {@link SCXMLDigester}, changes need to be made to
+ * the SCXML documents, such as:</p>
+ * <ul>
+ *  <li>A &lt;parallel&gt; should not be wrapped in a &lt;state&gt; element
+ *      unless otherwise necessary</li>
+ *  <li>&lt;var&gt; and &lt;exit&gt; elements continue to be supported by
+ *      Commons SCXML, but in the Commons SCXML namespace:
+ *      <code>http://commons.apache.org/scxml</code></li>
+ *  <li>&lt;event&gt; is now supported</li>
+ * </ul>
+ * <p>See latest version of the SCXML Working Draft for more details.</p>
  */
 public final class SCXMLParser {
 
