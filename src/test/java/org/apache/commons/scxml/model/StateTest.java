@@ -129,7 +129,7 @@ public class StateTest extends TestCase {
     public void testIsCompositeParallel() {
         State child = new State();
         
-        state.addChild(child);
+        state.addChild((TransitionTarget) child);
         
         assertTrue(state.isComposite());
     }
