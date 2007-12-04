@@ -29,11 +29,11 @@ import org.apache.commons.scxml.model.ModelException;
 class AsyncTrigger implements Runnable {
 
     /** The state machine executor. */
-    private SCXMLExecutor executor;
+    private final SCXMLExecutor executor;
     /** The event(s) to be triggered. */
-    private TriggerEvent[] events;
+    private final TriggerEvent[] events;
     /** The log. */
-    private Log log = LogFactory.getLog(AsyncTrigger.class);
+    private final Log log = LogFactory.getLog(AsyncTrigger.class);
 
     /**
      * Constructor.
@@ -45,6 +45,12 @@ class AsyncTrigger implements Runnable {
         this.executor = executor;
         this.events = new TriggerEvent[1];
         this.events[0] = event;
+    }
+
+    /**
+     * Fire the trigger(s) asynchronously.
+     */
+    public void start() {
         new Thread(this).start();
     }
 
