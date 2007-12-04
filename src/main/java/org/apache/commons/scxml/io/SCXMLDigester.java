@@ -87,6 +87,9 @@ import org.xml.sax.SAXException;
  *  <li>Obtain a SCXML Digester for further customization of the default
  *      ruleset.</li>
  * </ol>
+ *
+ * @deprecated Use {@link SCXMLParser} instead, after updating the SCXML
+ *             document as necessary, in line with newer Working Drafts.
  */
 public final class SCXMLDigester {
 
