@@ -80,6 +80,7 @@ public class SCXMLTestHelper {
         }
         Assert.assertNotNull(scxml);
         SCXML roundtrip = testModelSerializability(scxml);
+        Assert.assertNotNull(roundtrip);
         return roundtrip;
     }
 
@@ -259,7 +260,8 @@ public class SCXMLTestHelper {
     public static SCXML testModelSerializability(final SCXML scxml) {
         File fileDir = new File(SERIALIZATION_DIR);
         if (!fileDir.exists() && !fileDir.mkdir()) {
-            return null;
+            System.err.println("SKIPPED SERIALIZATION: Failed directory creation");
+            return scxml;
         }
         String filename = SERIALIZATION_FILE_PREFIX
             + System.currentTimeMillis() + SERIALIZATION_FILE_SUFFIX;
@@ -289,7 +291,8 @@ public class SCXMLTestHelper {
     public static SCXMLExecutor testExecutorSerializability(final SCXMLExecutor exec) {
         File fileDir = new File(SERIALIZATION_DIR);
         if (!fileDir.exists() && !fileDir.mkdir()) {
-            return null;
+            System.err.println("SKIPPED SERIALIZATION: Failed directory creation");
+            return exec;
         }
         String filename = SERIALIZATION_FILE_PREFIX
             + System.currentTimeMillis() + SERIALIZATION_FILE_SUFFIX;
