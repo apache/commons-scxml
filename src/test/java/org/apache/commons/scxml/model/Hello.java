@@ -23,7 +23,7 @@ import org.apache.commons.scxml.ErrorReporter;
 import org.apache.commons.scxml.EventDispatcher;
 import org.apache.commons.scxml.SCInstance;
 import org.apache.commons.scxml.SCXMLExpressionException;
-import org.apache.commons.scxml.model.Action;
+import org.apache.commons.scxml.TriggerEvent;
 
 /**
  * Our custom &quot;hello world&quot; action.
@@ -70,6 +70,10 @@ public class Hello extends Action {
         if (appLog.isInfoEnabled()) {
             appLog.info("Hello " + name);
         }
+        // For derived events payload testing
+        TriggerEvent event =
+            new TriggerEvent("helloevent", TriggerEvent.SIGNAL_EVENT, name);
+        derivedEvents.add(event);
         callbacks++;
     }
 }

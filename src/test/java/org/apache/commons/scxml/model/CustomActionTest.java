@@ -26,6 +26,7 @@ import junit.framework.TestSuite;
 
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
+import org.apache.commons.scxml.env.jsp.ELEvaluator;
 
 public class CustomActionTest extends TestCase {
 
@@ -42,7 +43,7 @@ public class CustomActionTest extends TestCase {
         junit.textui.TestRunner.main(testCaseName);
     }
 
-    private URL hello01, custom01, external01, override01;
+    private URL hello01, custom01, external01, override01, payload01, payload02;
     private SCXMLExecutor exec;
 
     /**
@@ -57,13 +58,17 @@ public class CustomActionTest extends TestCase {
             getResource("org/apache/commons/scxml/external-hello-world.xml");
         override01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/custom-hello-world-03.xml");
+        payload01 = this.getClass().getClassLoader().
+            getResource("org/apache/commons/scxml/custom-hello-world-04-jexl.xml");
+        payload02 = this.getClass().getClassLoader().
+            getResource("org/apache/commons/scxml/custom-hello-world-04-el.xml");
     }
 
     /**
      * Tear down instance variables required by this test case.
      */
     public void tearDown() {
-        hello01 = custom01 = external01 = null;
+        hello01 = custom01 = external01 = payload01 = payload02 = null;
         exec = null;
     }
 
@@ -210,6 +215,61 @@ public class CustomActionTest extends TestCase {
     // to execute() exactly 5 times upto this point
     public void testCustomActionCallbacks() {
         assertEquals(5, Hello.callbacks);
+    }
+
+    // Hello World example using custom <my:hello> action that generates an
+    // event which has the payload examined with JEXL expressions
+    public void testCustomActionEventPayloadHelloWorldJexl() {
+        // (1) Form a list of custom actions defined in the SCXML
+        //     document (and any included documents via "src" attributes)
+        CustomAction ca =
+            new CustomAction("http://my.custom-actions.domain/CUSTOM",
+                             "hello", Hello.class);
+        List customActions = new ArrayList();
+        customActions.add(ca);
+        // (2) Parse the document with a custom digester.
+        SCXML scxml = SCXMLTestHelper.digest(payload01, customActions);
+        // (3) Get a SCXMLExecutor
+        exec = SCXMLTestHelper.getExecutor(scxml);
+        // (4) Single, final state
+        assertEquals("Invalid intermediate state",
+                     "custom1", ((State) exec.getCurrentStatus().getStates().
+                                iterator().next()).getId());
+        // (5) Verify datamodel variable is correct
+        assertEquals("Missing helloName1 in root context", "custom04a",
+                     (String) exec.getRootContext().get("helloName1"));
+        // (6) Check use of payload in non-initial state
+        SCXMLTestHelper.fireEvent(exec, "custom.next");
+        // (7) Verify correct end state
+        assertEquals("Missing helloName1 in root context", "custom04b",
+                (String) exec.getRootContext().get("helloName1"));
+        assertEquals("Invalid final state",
+                "end", ((State) exec.getCurrentStatus().getStates().
+                iterator().next()).getId());
+        assertTrue(exec.getCurrentStatus().isFinal());
+    }
+
+    // Hello World example using custom <my:hello> action that generates an
+    // event which has the payload examined with EL expressions
+    public void testCustomActionEventPayloadHelloWorldEL() {
+        // (1) Form a list of custom actions defined in the SCXML
+        //     document (and any included documents via "src" attributes)
+        CustomAction ca =
+            new CustomAction("http://my.custom-actions.domain/CUSTOM",
+                             "hello", Hello.class);
+        List customActions = new ArrayList();
+        customActions.add(ca);
+        // (2) Parse the document with a custom digester.
+        SCXML scxml = SCXMLTestHelper.digest(payload02, customActions);
+        // (3) Get a SCXMLExecutor
+        exec = SCXMLTestHelper.getExecutor(new ELEvaluator(), scxml);
+        // (4) Single, final state
+        assertEquals("Invalid final state",
+                     "custom", ((State) exec.getCurrentStatus().getStates().
+                                iterator().next()).getId());
+        // (5) Verify datamodel variable is correct
+        assertEquals("Missing helloName1 in root context", "custom04",
+                     (String) exec.getRootContext().get("helloName1"));
     }
 
 }

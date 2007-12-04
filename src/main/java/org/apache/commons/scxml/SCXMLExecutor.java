@@ -548,19 +548,21 @@ public class SCXMLExecutor implements Serializable {
         Context rootCtx = scInstance.getRootContext();
         Object[] oldData = {rootCtx.get(EVENT_DATA),
             rootCtx.get(EVENT_DATA_MAP)};
-        Object eventData = null;
-        Map payloadMap = new HashMap();
         int len = evts.length;
-        for (int i = 0; i < len; i++) {
-            TriggerEvent te = evts[i];
-            payloadMap.put(te.getName(), te.getPayload());
+        if (len > 0) { // 0 has retry semantics (eg: see usage in reset())
+            Object eventData = null;
+            Map payloadMap = new HashMap();
+            for (int i = 0; i < len; i++) {
+                TriggerEvent te = evts[i];
+                payloadMap.put(te.getName(), te.getPayload());
+            }
+            if (len == 1) {
+                // we have only one event
+                eventData = evts[0].getPayload();
+            }
+            rootCtx.setLocal(EVENT_DATA, eventData);
+            rootCtx.setLocal(EVENT_DATA_MAP, payloadMap);
         }
-        if (len == 1) {
-            // we have only one event
-            eventData = evts[0].getPayload();
-        }
-        rootCtx.setLocal(EVENT_DATA, eventData);
-        rootCtx.setLocal(EVENT_DATA_MAP, payloadMap);
         return oldData;
     }
 
