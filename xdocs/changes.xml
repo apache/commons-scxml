@@ -36,6 +36,96 @@
     <release version="0.7" date="In SVN"
      description="Latest unreleased code">
 
+      <action dev="rahul" type="fix" issue="SCXML-61">
+       [12-04-2007] Clarify via class Javadoc interaction model between
+       Invokers and parent executor.
+      </action>
+
+      <action dev="rahul" type="add" issue="SCXML-55">
+       [12-04-2007] Add support for the &lt;event&gt; tag.
+      </action>
+
+      <action dev="rahul" type="fix" issue="SCXML-58">
+       [12-04-2007] Object model not stateless due to State class. Store the
+       completion status for composite states along with other instance
+       information in the executor.
+      </action>
+
+      <action dev="rahul" type="fix">
+       [12-04-2007] Deprecate SCXMLDigester class in favor of the new
+       SCXMLParser class. The new class supports newer Working Drafts and has
+       better naming.
+      </action>
+
+      <action dev="rahul" type="fix" issue="SCXML-60" due-to="Andy Bailey">
+       [12-03-2007] Fix possible race condition in AsyncTrigger class.
+      </action>
+
+      <action dev="rahul" type="fix" issue="SCXML-54" due-to="Mike Tillberg">
+       [12-03-2007] Events from custom actions missing payload. Also fix
+       test classes to safely create contexts.
+      </action>
+
+      <action dev="rahul" type="fix">
+       [12-03-2007] Skip serialization tests if necessary directory cannot
+       be created.
+      </action>
+
+      <action dev="rahul" type="add">
+       [11-30-2007] Support nested invokes when using SimpleSCXMLInvoker
+       class.
+      </action>
+
+      <action dev="niallp" type="add" due-to="Niall Pemberton">
+       [11-16-2007] Update Maven 2 build to include source and binary
+       assemblies and site resources.
+      </action>
+
+      <action dev="rahul" type="fix">
+       [08-20-2007] Apply per region document order filter for transition
+       conflict resolution. See SCXML-52 for part of discussion.
+      </action>
+
+      <action dev="rahul" type="fix" issue="SCXML-49">
+       [08-06-2007] SimpleSCXMLInvoker may miss transition to final state.
+      </action>
+
+      <action dev="rahul" type="fix" issue="SCXML-52" due-to="Ingmar Kliche">
+       [08-01-2007] Fix conflict resolution for conditionless stay transitions.
+       class.
+      </action>
+
+      <action dev="rahul" type="fix" issue="SCXML-51">
+       [06-27-2007] Delete existing child nodes before adding new ones
+       when using &lt;assign&gt; to supply new values to &lt;data&gt; nodes.
+      </action>
+
+      <action dev="rahul" type="fix" issue="SCXML-48" due-to="Michael Heuer">
+       [06-26-2007] Fixed subclassing behavior for AbstractStateMachine
+       class.
+      </action>
+
+      <action dev="rahul" type="fix" issue="SCXML-44">
+       [06-15-2007] Better names for getter and setter of the boolean
+       property State#isFinal. Previous names deprecated.
+      </action>
+
+      <action dev="rahul" type="fix" issue="SCXML-46" due-to="Michael Heuer">
+       [06-15-2007] Added a SCXMLListener abstract adapter class.
+      </action>
+
+      <action dev="rahul" type="fix" issue="SCXML-41">
+       [06-15-2007] Added information about failing expression to
+       evaluation error messages.
+      </action>
+
+      <action dev="rahul" type="fix" issue="SCXML-45">
+       [05-29-2007] Payload of events sent to current scxml session using
+       &lt;send&gt; tag are now injected into engine. Commons SCXML adds
+       the special <i>_eventdatamap</i> variable for storing payloads
+       for derived events.
+      </action>
+
       <action dev="rahul" type="add">
        [03-12-2007] The regions of a parallel are entered in document
        order. This is implementation-specific behavior and users should
