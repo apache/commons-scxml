@@ -22,17 +22,17 @@
   <state id="main">
 
     <onentry>
-      <send event="internal_event1"/>
-      <send event="internal_event2"/>
+      <event name="internal_event1"/>
+      <event name="internal_event2"/>
     </onentry>
 
     <transition event="internal_event1">
       <log label="Expected"
-           expr="'Transition for first send (internal_event1) followed'"/>
+           expr="'Transition for first event (internal_event1) followed'"/>
     </transition>
     <transition event="internal_event2">
       <log label="Unexpected"
-           expr="'Transition for second send (internal_event2) followed'"/>
+           expr="'Transition for second event (internal_event2) followed'"/>
     </transition>
 
   </state>

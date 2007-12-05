@@ -159,7 +159,7 @@ public class TieBreakerTest extends TestCase {
     }
 
     public void testTieBreaker06() {
-        exec = SCXMLTestHelper.getExecutor(tiebreaker06);
+        exec = SCXMLTestHelper.getExecutor(SCXMLTestHelper.parse(tiebreaker06));
         assertNotNull(exec);
         Set currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
