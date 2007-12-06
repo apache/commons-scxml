@@ -348,17 +348,8 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
          */
         Set allEvents = new HashSet(step.getBeforeStatus().getEvents().size()
             + step.getExternalEvents().size());
-        //for now, we only match against event names
-        for (Iterator ei = step.getBeforeStatus().getEvents().iterator();
-                ei.hasNext();) {
-            TriggerEvent te = (TriggerEvent) ei.next();
-            allEvents.add(te.getName());
-        }
-        for (Iterator ei = step.getExternalEvents().iterator();
-                ei.hasNext();) {
-            TriggerEvent te = (TriggerEvent) ei.next();
-            allEvents.add(te.getName());
-        }
+        allEvents.addAll(step.getBeforeStatus().getEvents());
+        allEvents.addAll(step.getExternalEvents());
         // Finalize invokes, if applicable
         for (Iterator iter = scInstance.getInvokers().keySet().iterator();
                 iter.hasNext();) {
@@ -724,16 +715,13 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
     public void processInvokes(final TriggerEvent[] events,
             final ErrorReporter errRep, final SCInstance scInstance)
     throws ModelException {
-        Set eventNames = new HashSet();
-        //for now, we only match against event names
-        for (int i = 0; i < events.length; i++) {
-            eventNames.add(events[i].getName());
-        }
+        Set allEvents = new HashSet();
+        allEvents.addAll(Arrays.asList(events));
         for (Iterator invokeIter = scInstance.getInvokers().entrySet().
                 iterator(); invokeIter.hasNext();) {
             Map.Entry iEntry = (Map.Entry) invokeIter.next();
             String parentId = ((TransitionTarget) iEntry.getKey()).getId();
-            if (!finalizeMatch(parentId, eventNames)) { // prevent cycles
+            if (!finalizeMatch(parentId, allEvents)) { // prevent cycles
                 Invoker inv = (Invoker) iEntry.getValue();
                 try {
                     inv.parentEvents(events);
@@ -840,20 +828,27 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
      */
     protected boolean eventMatch(final String transEvent,
             final Set eventOccurrences) {
-        if (SCXMLHelper.isStringEmpty(transEvent)) {
+        if (SCXMLHelper.isStringEmpty(transEvent)) { // Eventless transition
             return true;
         } else {
-            String transEventDot = transEvent + "."; // prefix event support
+            String trimTransEvent = transEvent.trim();
             Iterator i = eventOccurrences.iterator();
             while (i.hasNext()) {
-                String evt = (String) i.next();
-                if (evt == null) {
+                TriggerEvent te = (TriggerEvent) i.next();
+                String event = te.getName();
+                if (event == null) {
                     continue; // Unnamed events
-                } else if (evt.equals("*")) {
-                    return true; // Wildcard
-                } else if (evt.equals(transEvent)
-                            || evt.startsWith(transEventDot)) {
-                    return true;
+                }
+                String trimEvent = event.trim();
+                if (trimEvent.equals(trimTransEvent)) {
+                    return true; // Match
+                } else if (te.getType() != TriggerEvent.CHANGE_EVENT
+                        && trimTransEvent.equals("*")) {
+                    return true; // Wildcard, skip gen'ed ones like .done etc.
+                } else if (trimTransEvent.endsWith(".*")
+                        && trimEvent.startsWith(trimTransEvent.substring(0,
+                                trimTransEvent.length()-1))) {
+                    return true; // Prefixed wildcard
                 }
             }
             return false;
@@ -875,10 +870,10 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
         String prefix = parentStateId + ".invoke."; // invoke prefix
         Iterator i = eventOccurrences.iterator();
         while (i.hasNext()) {
-            String evt = (String) i.next();
+            String evt = ((TriggerEvent) i.next()).getName();
             if (evt == null) {
                 continue; // Unnamed events
-            } else if (evt.startsWith(prefix)) {
+            } else if (evt.trim().startsWith(prefix)) {
                 return true;
             }
         }

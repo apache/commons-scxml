@@ -22,11 +22,11 @@
            <onentry>
                <var name="switch" expr="4" />
            </onentry>
-           <!-- We'll match all the events using a wildcard (*),
+           <!-- We'll trigger 'foo.bar.baz' event,
                 and therefore, must end up in state4 -->
-           <transition event="foo.bar" cond="switch eq 2" target="state2"/>
-           <transition event="err.foo" cond="switch eq 3" target="state3"/>
-           <transition event="done.it" cond="switch eq 4" target="state4"/>
+           <transition event="*" cond="switch eq 2" target="state2"/>
+           <transition event="foo.*" cond="switch eq 3" target="state3"/>
+           <transition event="foo.bar.*" cond="switch eq 4" target="state4"/>
      </state>
      <state id="state2" final="true"/>
      <state id="state3" final="true"/>
