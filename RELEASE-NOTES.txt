@@ -34,6 +34,9 @@ IMPORTANT NOTES:
  o Behavior related to wild card event name handling for transitions has
    changed (now aligns with latest Working Draft).
 
+ o org.apache.commons.scxml.io.SCXMLDigester has been deprecated in favor
+   of SCXMLParser in same package. See Javadocs for changes before switching.
+
 NEW FEATURES:
 
  o Conflicts between transitions are now resolved based on document order
@@ -43,21 +46,46 @@ NEW FEATURES:
    state IDs. When more than one targets are specified, they must belong
    to regions of the same parallel.
 
- o <event> is supported.
+ o <final> is supported (by org.apache.commons.scxml.io.SCXMLParser).
+
+ o <event> is supported (by org.apache.commons.scxml.io.SCXMLParser).
 
 DEPRECATIONS:
 
+See Javadocs of each item for details. All deprecated items are scheduled for
+removal in v1.0.
+
+ o org.apache.commons.scxml.env.AbstractStateMachine#getStateMachine()
+
  o org.apache.commons.scxml.io.SCXMLDigester
 
- o org.apache.commons.scxml.io.SCXMLSerializer#serializeTarget(StringBuffer,Transition,String)
+ o org.apache.commons.scxml.io.SCXMLSerializer#serializeTarget(StringBuffer,
+           Transition,String)
 
- o org.apache.commons.scxml.model.State#getTransitions()
-   org.apache.commons.scxml.semantics.ErrorConstants#NON_DETERMINISTIC
+ o org.apache.commons.scxml.model.Parallel#addState(State)
+   org.apache.commons.scxml.model.Parallel#getStates()
 
- o org.apache.commons.scxml.model.Transition#getTarget()
-   org.apache.commons.scxml.model.Transition#setTarget(TransitionTarget)
+ o org.apache.commons.scxml.model.SCXML#addState(State)
+   org.apache.commons.scxml.model.SCXML#getInitialState()
+   org.apache.commons.scxml.model.SCXML#getStates()
+   org.apache.commons.scxml.model.SCXML#setInitialState(State)
+
+ o org.apache.commons.scxml.model.State#addChild(State)
+   org.apache.commons.scxml.model.State#getIsFinal()
+   org.apache.commons.scxml.model.State#getParallel()
+   org.apache.commons.scxml.model.State#getTransitions()
+   org.apache.commons.scxml.model.State#isDone()
+   org.apache.commons.scxml.model.State#isOrthogonal()
+   org.apache.commons.scxml.model.State#setDone(boolean)
+   org.apache.commons.scxml.model.State#setIsFinal(boolean)
+   org.apache.commons.scxml.model.State#setParallel(Parallel)
+
+ o org.apache.commons.scxml.model.Transition#getPath()
    org.apache.commons.scxml.model.Transition#getRuntimeTarget()
-   org.apache.commons.scxml.model.Transition#getPath()
+   org.apache.commons.scxml.model.Transition#getTarget()
+   org.apache.commons.scxml.model.Transition#setTarget(TransitionTarget)
+
+ o org.apache.commons.scxml.semantics.ErrorConstants#NON_DETERMINISTIC
 
 BUG FIXES:
 
