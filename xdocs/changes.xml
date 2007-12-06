@@ -100,8 +100,12 @@
        class.
       </action>
 
+      <action dev="rahul" type="fix">
+       [07-30-2007] Various changes related to the Commons TLP move.
+      </action>
+
       <action dev="rahul" type="fix" issue="SCXML-51">
-       [06-27-2007] Delete existing child nodes before adding new ones
+       [07-27-2007] Delete existing child nodes before adding new ones
        when using &lt;assign&gt; to supply new values to &lt;data&gt; nodes.
       </action>
 
@@ -124,11 +128,49 @@
        evaluation error messages.
       </action>
 
+      <action dev="bayard" type="remove" due-to="Henri Yandell">
+       [06-14-2007] Remove KEYS file, in favor of one file for all of Commons.
+      </action>
+
       <action dev="rahul" type="fix" issue="SCXML-45">
        [05-29-2007] Payload of events sent to current scxml session using
        &lt;send&gt; tag are now injected into engine. Commons SCXML adds
        the special <i>_eventdatamap</i> variable for storing payloads
        for derived events.
+      </action>
+
+      <action dev="rahul" type="update">
+       [04-25-2007] Replace deprecated API usage, with current ones.
+      </action>
+
+      <action dev="rahul" type="update">
+       [04-25-2007] The test package switched to using SCXMLParser class.
+      </action>
+
+      <action dev="rahul" type="update">
+       [04-25-2007] Added support for &lt;final&gt; to SCXMLParser class.
+      </action>
+
+      <action dev="rahul" type="add">
+       [04-25-2007] Add a Commons SCXML namespace to support implementation
+       specific actions. Moved &lt;var&gt; and &lt;exit&gt; actions to
+       this implementation specific namespace.
+      </action>
+
+      <action dev="rahul" type="add">
+       [03-24-2007] New set of tests matching vocabulary in latest Working
+       Draft, for testing the new SCXMLParser class.
+      </action>
+
+      <action dev="rahul" type="update">
+       [03-24-2007] Deprecate various method in the model package (primarily
+       SCXML, State and Parallel classes) based on changes brought on by the
+       latest WDs.
+      </action>
+
+      <action dev="rahul" type="add">
+       [03-22-2007] Add new parser (org.apache.commons.scxml.io.SCXMLParser)
+       to support latest WD and improve naming.
       </action>
 
       <action dev="rahul" type="add">
