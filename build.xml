@@ -209,7 +209,7 @@
     </get>
     <get dest="${libdir}/commons-jexl-1.1.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-jexl/jars/commons-jexl-1.1.jar">
     </get>
-    <get dest="${libdir}/commons-logging-1.1.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-logging/jars/commons-logging-1.1.jar">
+    <get dest="${libdir}/commons-logging-1.1.1.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-logging/jars/commons-logging-1.1.1.jar">
     </get>
     <get dest="${libdir}/servletapi-2.4.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/servletapi/jars/servletapi-2.4.jar">
     </get>

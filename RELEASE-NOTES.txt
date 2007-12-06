@@ -124,6 +124,8 @@ OTHER CHANGES:
  o The regions of a parallel are entered in document order. This is
    implementation-specific behavior and users should not rely on it.
 
+ o Recommended version of Commons Logging has been upgraded to v1.1.1.
+
 ABOUT COMMONS SCXML:
 
 The Commons SCXML (State Chart XML) project provides a generic

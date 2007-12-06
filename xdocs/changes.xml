@@ -36,6 +36,11 @@
     <release version="0.7" date="December 2007"
      description="Latest release">
 
+      <action dev="rahul" type="update">
+       [12-06-2007] Recommended version of Commons Logging has been upgraded
+       to v1.1.1.
+      </action>
+
       <action dev="rahul" type="fix" issue="SCXML-53">
        [12-06-2007] Wild card event name handling on transitions made in
        line with WD.
