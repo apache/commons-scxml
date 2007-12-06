@@ -117,6 +117,21 @@
 
     <menu         name="Releases">
 
+      <item       name="Version 0.7"
+                  href="/0.7/index.html"
+                  collapse="true">
+
+        <item     name="Javadoc"
+                  href="/0.7/apidocs/index.html" />
+
+        <item     name="Release notes"
+                  href="http://svn.apache.org/viewvc/commons/proper/scxml/tags/SCXML_0_7/RELEASE-NOTES.txt?view=markup" />
+
+        <item     name="Source"
+                  href="http://svn.apache.org/viewvc/commons/proper/scxml/tags/SCXML_0_7/" />
+
+      </item>
+
       <item       name="Version 0.6"
                   href="/0.6/index.html"
                   collapse="true">
