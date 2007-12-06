@@ -75,6 +75,16 @@
       <name>0.5</name>
       <tag>SCXML_0_5</tag>
     </version>
+    <version>
+      <id>0.6</id>
+      <name>0.6</name>
+      <tag>SCXML_0_6</tag>
+    </version>
+    <version>
+      <id>0.7</id>
+      <name>0.7</name>
+      <tag>SCXML_0_7</tag>
+    </version>
   </versions>
 
   <developers>
