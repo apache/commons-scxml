@@ -61,7 +61,29 @@ DEPRECATIONS:
 
 BUG FIXES:
 
+ o [SCXML-45] - Payload of events sent to current scxml session using <send>
+                tag not injected into engine
+ o [SCXML-48] - Cannot create more than one subclass of AbstractStateMachine
+ o [SCXML-49] - SimpleSCXMLInvoker may miss transition to final state
+ o [SCXML-51] - <assign> with location and expr both containing datamodel
+                expressions concatenates old and new values
+ o [SCXML-52] - Error on resolving conflicting transitions for compound states
+ o [SCXML-53] - Wild card event name handling on transitions is not in line
+                with W3C WD
+ o [SCXML-54] - Events from custom actions missing payload
+ o [SCXML-56] - onentry and onexit child elements of parallel do not have
+                parent
+ o [SCXML-58] - SCXML not stateless because of State class
+ o [SCXML-60] - Possible race condition in AsyncTrigger
+ o [SCXML-61] - Clarify interaction patterns for Invoker implementations with
+                parent state machine executor
 
+IMPROVEMENTS:
+
+ o [SCXML-41] - Adding information about original expression to evaluation
+                error messages
+ o [SCXML-46] - Provide a SCXMLListener abstract adapter class
+ o [SCXML-55] - Add support for <event> tag
 
 OTHER CHANGES:
 
