@@ -23,7 +23,7 @@ $Id$
 INTRODUCTION:
 
 Commons SCXML 0.7 primarily contains new features, along with a
-handful of bug fixes. See about section below for general information
+handful of bug fixes. See about section at the end for general information
 on Commons SCXML.
 
 IMPORTANT NOTES:
