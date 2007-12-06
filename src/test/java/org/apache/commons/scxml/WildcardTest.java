@@ -45,7 +45,7 @@ public class WildcardTest extends TestCase {
     }
 
     // Test data
-    private URL wildcard01;
+    private URL wildcard01, wildcard02;
     private SCXMLExecutor exec;
 
     /**
@@ -54,13 +54,15 @@ public class WildcardTest extends TestCase {
     public void setUp() {
         wildcard01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/env/jexl/wildcard-01.xml");
+        wildcard02 = this.getClass().getClassLoader().
+            getResource("org/apache/commons/scxml/env/jexl/wildcard-02.xml");
     }
 
     /**
      * Tear down instance variables required by this test case.
      */
     public void tearDown() {
-        wildcard01 = null;
+        wildcard01 = wildcard02 = null;
     }
 
     /**
@@ -78,6 +80,19 @@ public class WildcardTest extends TestCase {
             currentStates = SCXMLTestHelper.fireEvent(exec, "foo.bar.baz");
             assertEquals(1, currentStates.size());
             assertEquals("state4", ((State)currentStates.iterator().
+                next()).getId());
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    public void testWildcard02Sample() {
+        exec = SCXMLTestHelper.getExecutor(SCXMLTestHelper.parse(wildcard02));
+        assertNotNull(exec);
+        try {
+            Set currentStates = exec.getCurrentStatus().getStates();
+            assertEquals(1, currentStates.size());
+            assertEquals("state2", ((State)currentStates.iterator().
                 next()).getId());
         } catch (Exception e) {
             fail(e.getMessage());
