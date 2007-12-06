@@ -36,6 +36,11 @@
     <release version="0.7" date="In SVN"
      description="Latest unreleased code">
 
+      <action dev="rahul" type="fix" issue="SCXML-53">
+       [12-06-2007] Wild card event name handling on transitions made in
+       line with WD.
+      </action>
+
       <action dev="rahul" type="fix" issue="SCXML-61">
        [12-04-2007] Clarify via class Javadoc interaction model between
        Invokers and parent executor.
