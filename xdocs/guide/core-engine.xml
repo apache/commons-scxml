@@ -111,7 +111,7 @@
 
    <subsection name="API notes set">
     <p>The previous note in this set describes the
-    <a href="core-digester.html">SCXML digester</a>.<br/>
+    <a href="core-parser.html">SCXML parser</a>.<br/>
     The next note in this set describes
     <a href="core-events.html">triggering events</a>.</p>
    </subsection>

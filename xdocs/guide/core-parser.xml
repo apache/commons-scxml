@@ -19,26 +19,26 @@
 <document>
 
  <properties>
-  <title>Commons SCXML Usage - API notes - Digester</title>
+  <title>Commons SCXML Usage - API notes - Parser</title>
   <author email="dev@commons.apache.org">Commons Documentation Team</author>
  </properties>
 
  <body>
 
-  <section name="Commons SCXML - Digesting SCXML documents for Commons SCXML">
+  <section name="Commons SCXML - Parsing SCXML documents for Commons SCXML">
     <p>Commons SCXML provides its own implementation of the
     <a href="http://commons.apache.org/scxml/apidocs/org/apache/commons/scxml/model/package-summary.html">
     Java object model for SCXML</a>
     and a configured <a href="http://commons.apache.org/digester">
-    Digester</a> that can digest SCXML documents into that object model.</p>
+    Digester</a> that can parse SCXML documents into that object model.</p>
 
     <subsection name="Usage">
-     <p>The primary convenience method exposed by the <code>SCXMLDigester</code>
+     <p>The primary convenience method exposed by the <code>SCXMLParser</code>
      is:</p>
      <pre>
         //import java.io.IOException;
         //import java.net.URL;
-        //import org.apache.commons.scxml.io.SCXMLDigester;
+        //import org.apache.commons.scxml.io.SCXMLParser;
         //import org.apache.commons.scxml.model.ModelException;
         //import org.apache.commons.scxml.model.SCXML;
         //import org.xml.sax.ErrorHandler;
@@ -47,7 +47,7 @@
         SCXML scxml = null;
 
         try {
-          scxml = SCXMLDigester.digest(&lt;URL&gt;, &lt;ErrorHandler&gt;);
+          scxml = SCXMLParser.parse(&lt;URL&gt;, &lt;ErrorHandler&gt;);
         } catch (IOException ioe) {
           // IOException while parsing
         } catch (SAXException se) {
@@ -58,7 +58,7 @@
           
 
         if (scxml == null) {
-          // Digestion failed
+          // Parsing failed
         }
      </pre>
 
@@ -71,7 +71,7 @@
      <p>Commons SCXML provides convenience implementations of most of the
      interfaces such as <code>ErrorHandler</code>.</p>
 
-     <p>The SCXMLDigester exposes other convenience methods which can handle
+     <p>The SCXMLParser exposes other convenience methods which can handle
      a SCXML document specified using its &quot;real path&quot; on the local
      system, in which case an additional 
      <code>org.apache.commons.SCXML.PathResolver</code>parameter needs to be
@@ -79,8 +79,8 @@
      <code>InputSource</code>, in which case there is no path resolution,
      so the document must be a standalone document.</p>
 
-     <p>The <code>SCXMLDigester</code> Javadoc is available
-     <a href="../apidocs/org/apache/commons/scxml/io/SCXMLDigester.html">
+     <p>The <code>SCXMLParser</code> Javadoc is available
+     <a href="../apidocs/org/apache/commons/scxml/io/SCXMLParser.html">
      here</a>.
      </p>
     </subsection>
