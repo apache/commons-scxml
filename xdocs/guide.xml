@@ -56,7 +56,7 @@
    <p>The first set of notes walks through the most common usage pattern,
    end-to-end.</p>
    <ul>
-    <li><a href="guide/core-digester.html">Digester</a> - Digesting SCXML
+    <li><a href="guide/core-parser.html">SCXML Parser</a> - Parsing SCXML
     into the Commons SCXML Java object model.</li>
     <li><a href="guide/datamodel.html">Datamodel</a> - Defining a
     datamodel and temporary variables.</li>
