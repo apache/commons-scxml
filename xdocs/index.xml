@@ -59,7 +59,6 @@
     <ul>
       <li>The latest <a href="apidocs/index.html">Javadoc</a>.</li>
       <li>The latest <a href="xref/index.html">source</a>.</li>
-      <li>The <a href="http://people.apache.org/builds/commons/nightly/commons-scxml">nightly build</a>.</li>
       <li>The <a href="http://wiki.apache.org/commons/SCXML">wiki</a>.</li>
       <li>Commons SCXML <a href="usecases.html">usecases</a> (case studies).</li>
       <li>A <a href="guide.html">user guide</a> containing assorted API notes and tutorials.</li>
