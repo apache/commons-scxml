@@ -40,8 +40,8 @@
         <item     name="Standalone Testing"  
                   href="/guide/testing-standalone.html" />
 
-        <item     name="SCXML Digester"  
-                  href="/guide/core-digester.html" />
+        <item     name="SCXML Parser"  
+                  href="/guide/core-parser.html" />
 
         <item     name="SCXML datamodel"
                   href="/guide/datamodel.html" />
