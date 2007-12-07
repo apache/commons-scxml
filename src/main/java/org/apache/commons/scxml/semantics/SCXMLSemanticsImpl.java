@@ -847,7 +847,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                     return true; // Wildcard, skip gen'ed ones like .done etc.
                 } else if (trimTransEvent.endsWith(".*")
                         && trimEvent.startsWith(trimTransEvent.substring(0,
-                                trimTransEvent.length()-1))) {
+                                trimTransEvent.length() - 1))) {
                     return true; // Prefixed wildcard
                 }
             }
