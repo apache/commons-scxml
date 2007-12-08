@@ -39,7 +39,7 @@ public class SCInstance implements Serializable {
     /**
      * Serial version UID.
      */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     /**
      * The notification registry.

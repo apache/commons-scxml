@@ -31,7 +31,7 @@ import org.apache.commons.scxml.env.SimpleDispatcher;
 import org.apache.commons.scxml.env.SimpleErrorHandler;
 import org.apache.commons.scxml.env.SimpleErrorReporter;
 import org.apache.commons.scxml.env.SimpleSCXMLListener;
-import org.apache.commons.scxml.io.SCXMLDigester;
+import org.apache.commons.scxml.io.SCXMLParser;
 import org.apache.commons.scxml.model.ModelException;
 import org.apache.commons.scxml.model.SCXML;
 import org.xml.sax.SAXException;
@@ -69,7 +69,7 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
      */
     public void setParentStateId(final String parentStateId) {
         this.parentStateId = parentStateId;
-        this.eventPrefix = parentStateId + invokePrefix;
+        this.eventPrefix = this.parentStateId + invokePrefix;
         this.cancelled = false;
     }
 
@@ -87,7 +87,7 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
     throws InvokerException {
         SCXML scxml = null;
         try {
-            scxml = SCXMLDigester.digest(new URL(source),
+            scxml = SCXMLParser.parse(new URL(source),
                 new SimpleErrorHandler());
         } catch (ModelException me) {
             throw new InvokerException(me.getMessage(), me.getCause());

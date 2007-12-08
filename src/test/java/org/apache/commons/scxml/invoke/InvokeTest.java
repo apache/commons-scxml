@@ -31,7 +31,7 @@ import org.apache.commons.scxml.env.SimpleErrorHandler;
 import org.apache.commons.scxml.env.SimpleErrorReporter;
 import org.apache.commons.scxml.env.jexl.JexlContext;
 import org.apache.commons.scxml.env.jexl.JexlEvaluator;
-import org.apache.commons.scxml.io.SCXMLDigester;
+import org.apache.commons.scxml.io.SCXMLParser;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.State;
 
@@ -82,7 +82,7 @@ public class InvokeTest extends TestCase {
      */
     public void testInvoke01Sample() {
         try {
-            SCXML scxml = SCXMLDigester.digest(invoke01,
+            SCXML scxml = SCXMLParser.parse(invoke01,
                 new SimpleErrorHandler());
             exec = new SCXMLExecutor(new JexlEvaluator(), new SimpleDispatcher(),
                 new SimpleErrorReporter());
@@ -103,7 +103,7 @@ public class InvokeTest extends TestCase {
 
     public void testInvoke02Sample() {
         try {
-            SCXML scxml = SCXMLDigester.digest(invoke02,
+            SCXML scxml = SCXMLParser.parse(invoke02,
                 new SimpleErrorHandler());
             exec = new SCXMLExecutor(new JexlEvaluator(), new SimpleDispatcher(),
                 new SimpleErrorReporter());
@@ -122,7 +122,7 @@ public class InvokeTest extends TestCase {
 
     public void testInvoke03Sample() {
         try {
-            SCXML scxml = SCXMLDigester.digest(invoke03,
+            SCXML scxml = SCXMLParser.parse(invoke03,
                 new SimpleErrorHandler());
             exec = new SCXMLExecutor(new JexlEvaluator(), new SimpleDispatcher(),
                 new SimpleErrorReporter());

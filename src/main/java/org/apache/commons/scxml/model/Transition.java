@@ -33,7 +33,7 @@ public class Transition extends Executable
     /**
      * Serial version UID.
      */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     /**
      * Property that specifies the trigger for this transition.

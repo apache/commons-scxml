@@ -124,6 +124,10 @@ OTHER CHANGES:
  o The regions of a parallel are entered in document order. This is
    implementation-specific behavior and users should not rely on it.
 
+ o AbstractStateMachine and SimpleSCXMLListener classes, as well as the two
+   standalone testing classes in the test package, have switched to the new
+   SCXMLParser class.
+
  o Recommended version of Commons Logging has been upgraded to v1.1.1.
 
 ABOUT COMMONS SCXML:

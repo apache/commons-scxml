@@ -37,6 +37,11 @@
      description="Latest release">
 
       <action dev="rahul" type="update">
+       [12-08-2007] AbstractStateMachine and SimpleSCXMLListener classes
+       switched to the new SCXMLParser.
+      </action>
+
+      <action dev="rahul" type="update">
        [12-06-2007] Recommended version of Commons Logging has been upgraded
        to v1.1.1.
       </action>

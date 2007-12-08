@@ -30,7 +30,7 @@ import org.apache.commons.scxml.SCXMLListener;
 import org.apache.commons.scxml.TriggerEvent;
 import org.apache.commons.scxml.env.jexl.JexlContext;
 import org.apache.commons.scxml.env.jexl.JexlEvaluator;
-import org.apache.commons.scxml.io.SCXMLDigester;
+import org.apache.commons.scxml.io.SCXMLParser;
 import org.apache.commons.scxml.model.ModelException;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.Transition;
@@ -120,7 +120,7 @@ public abstract class AbstractStateMachine {
         log = LogFactory.getLog(this.getClass());
         ErrorHandler errHandler = new SimpleErrorHandler();
         try {
-            stateMachine = SCXMLDigester.digest(scxmlDocument,
+            stateMachine = SCXMLParser.parse(scxmlDocument,
                 errHandler);
         } catch (IOException ioe) {
             logError(ioe);

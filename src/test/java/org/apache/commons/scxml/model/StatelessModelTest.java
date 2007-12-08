@@ -51,7 +51,7 @@ public class StatelessModelTest extends TestCase {
     // Test data
     private URL stateless01jexl, stateless01jsp, stateless01par;
     private SCXML scxml01jexl, scxml01jsp, scxml01par, scxml02par;
-    private SCXMLExecutor exec01, exec02, exec03;
+    private SCXMLExecutor exec01, exec02;
 
     /**
      * Set up instance variables required by this test case.

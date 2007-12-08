@@ -32,7 +32,7 @@ public class State extends TransitionTarget {
     /**
      * Serial version UID.
      */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     /**
      * The Map containing immediate children of this State, keyed by
