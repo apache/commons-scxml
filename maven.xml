@@ -42,6 +42,7 @@
       <fileset file="${basedir}/build.properties.sample"/>
       <fileset file="${basedir}/scxml-checks.xml"/>
       <fileset file="${basedir}/scxml-asl-header.txt"/>
+      <fileset file="${basedir}/pom.xml"/>
     </copy>
 
     <!-- Copy xdoc files -->
