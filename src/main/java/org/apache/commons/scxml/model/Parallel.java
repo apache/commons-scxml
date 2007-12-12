@@ -77,6 +77,8 @@ public class Parallel extends TransitionTarget {
      * Get the set of child transition targets (may be empty).
      *
      * @return Set Returns the children.
+     *
+     * @since 0.7
      */
     public final Set getChildren() {
         return children;
@@ -86,6 +88,8 @@ public class Parallel extends TransitionTarget {
      * Add a child.
      *
      * @param tt A child transition target.
+     *
+     * @since 0.7
      */
     public final void addChild(final TransitionTarget tt) {
         // TODO: State is a sufficient enough type for the parameter

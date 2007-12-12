@@ -118,6 +118,8 @@ public class SCXML implements Serializable {
      * Get the initial TransitionTarget.
      *
      * @return Returns the initial target for this state machine.
+     *
+     * @since 0.7
      */
     public final TransitionTarget getInitialTarget() {
         return initialTarget;
@@ -127,6 +129,8 @@ public class SCXML implements Serializable {
      * Set the initial TransitionTarget.
      *
      * @param initialTarget The initial target to set.
+     *
+     * @since 0.7
      */
     public final void setInitialTarget(final TransitionTarget initialTarget) {
         this.initialTarget = initialTarget;
@@ -176,6 +180,8 @@ public class SCXML implements Serializable {
      * Get the immediate child targets of the SCXML root.
      *
      * @return Map Returns map of the child targets.
+     *
+     * @since 0.7
      */
     public final Map getChildren() {
         return children;
@@ -185,6 +191,8 @@ public class SCXML implements Serializable {
      * Add an immediate child target of the SCXML root.
      *
      * @param tt The transition target to be added to the states Map.
+     *
+     * @since 0.7
      */
     public final void addChild(final TransitionTarget tt) {
         children.put(tt.getId(), tt);

@@ -29,6 +29,7 @@ import org.apache.commons.scxml.TriggerEvent;
  * The class in this SCXML object model that corresponds to the
  * &lt;event&gt; SCXML element.
  *
+ * @since 0.7
  */
 public class Event extends Action {
 

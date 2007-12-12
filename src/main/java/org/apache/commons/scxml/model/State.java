@@ -102,15 +102,6 @@ public class State extends TransitionTarget {
     }
 
     /**
-     * Is this state a &quot;final&quot; state.
-     *
-     * @return boolean Returns the isFinal.
-     */
-    public final boolean isFinal() {
-        return isFinal;
-    }
-
-    /**
      * Set whether this is a &quot;final&quot; state.
      *
      * @param isFinal
@@ -122,10 +113,23 @@ public class State extends TransitionTarget {
     }
 
     /**
+     * Is this state a &quot;final&quot; state.
+     *
+     * @return boolean Returns the isFinal.
+     *
+     * @since 0.7
+     */
+    public final boolean isFinal() {
+        return isFinal;
+    }
+
+    /**
      * Set whether this is a &quot;final&quot; state.
      *
      * @param isFinal
      *            The isFinal to set.
+     *
+     * @since 0.7
      */
     public final void setFinal(final boolean isFinal) {
         this.isFinal = isFinal;
@@ -278,6 +282,8 @@ public class State extends TransitionTarget {
      *
      * @param tt
      *            a child transition target
+     *
+     * @since 0.7
      */
     public final void addChild(final TransitionTarget tt) {
         this.children.put(tt.getId(), tt);

@@ -369,6 +369,8 @@ public class SCInstance implements Serializable {
      *
      * @param transitionTarget The <code>TransitionTarget</code>.
      * @return The completion status.
+     *
+     * @since 0.7
      */
     public boolean isDone(final TransitionTarget transitionTarget) {
         Boolean done = (Boolean) completions.get(transitionTarget);
@@ -385,6 +387,8 @@ public class SCInstance implements Serializable {
      *
      * @param transitionTarget The TransitionTarget.
      * @param done The completion status.
+     *
+     * @since 0.7
      */
     public void setDone(final TransitionTarget transitionTarget,
             final boolean done) {

@@ -138,6 +138,8 @@ public abstract class AbstractStateMachine {
      * @param stateMachine The parsed SCXML instance that
      *                     describes the &quot;lifecycle&quot; of the
      *                     instances of this class.
+     *
+     * @since 0.7
      */
     public AbstractStateMachine(final SCXML stateMachine) {
         // default is JEXL
@@ -155,6 +157,8 @@ public abstract class AbstractStateMachine {
      *
      * @see Context
      * @see Evaluator
+     *
+     * @since 0.7
      */
     public AbstractStateMachine(final SCXML stateMachine,
             final Context rootCtx, final Evaluator evaluator) {

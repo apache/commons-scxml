@@ -98,6 +98,8 @@ import org.xml.sax.SAXException;
  *  <li>&lt;event&gt; is now supported</li>
  * </ul>
  * <p>See latest version of the SCXML Working Draft for more details.</p>
+ *
+ * @since 0.7
  */
 public final class SCXMLParser {
 

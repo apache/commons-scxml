@@ -191,6 +191,8 @@ public abstract class TransitionTarget implements Serializable {
      *
      * @param h
      *            History pseudo state
+     *
+     * @since 0.7
      */
     public final void addHistory(final History h) {
         history.add(h);
@@ -202,6 +204,8 @@ public abstract class TransitionTarget implements Serializable {
      *
      * @return boolean true if a given state contains at least one
      *                 history pseudo state
+     *
+     * @since 0.7
      */
     public final boolean hasHistory() {
         return (!history.isEmpty());
@@ -213,6 +217,8 @@ public abstract class TransitionTarget implements Serializable {
      * @return a list of all history pseudo states contained by a given state
      *         (can be empty)
      * @see #hasHistory()
+     *
+     * @since 0.7
      */
     public final List getHistory() {
         return history;

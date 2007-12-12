@@ -159,6 +159,8 @@ public class Transition extends Executable
      * @return Returns the target(s) as specified in SCXML markup.
      * <p>Remarks: Is <code>empty</code> for &quot;stay&quot; transitions.
      * Contains parent (the source node) for &quot;self&quot; transitions.</p>
+     *
+     * @since 0.7
      */
     public final List getTargets() {
         return targets;
@@ -188,6 +190,8 @@ public class Transition extends Executable
      * <p>Remarks: For both the &quot;stay&quot; and &quot;self&quot;
      * transitions it returns parent (the source node). This method should
      * never return an empty list or <code>null</code>.</p>
+     *
+     * @since 0.7
      */
     public final List getRuntimeTargets() {
         if (targets.size() == 0) {
@@ -245,6 +249,8 @@ public class Transition extends Executable
      *
      * @see Path
      * @return List returns the list of transition path(s)
+     *
+     * @since 0.7
      */
     public final List getPaths() {
         if (paths.size() == 0) {

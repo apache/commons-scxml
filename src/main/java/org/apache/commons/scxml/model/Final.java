@@ -20,7 +20,7 @@ package org.apache.commons.scxml.model;
  * The class in this SCXML object model that corresponds to the
  * &lt;final&gt; SCXML element.
  *
- * TODO: Re-evaluate if we need this before v0.7 release.
+ * @since 0.7
  */
 public class Final extends State {
 
