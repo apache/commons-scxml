@@ -36,7 +36,15 @@
     <release version="0.7" date="December 2007"
      description="Latest release">
 
-      <action dev="rahul" type="update">
+     <action dev="rahul" type="add">
+       [12-12-2007] Add experimental Maven2 pom.xml to source distro.
+     </action>
+
+     <action dev="rahul" type="update">
+       [12-12-2007] Update JUnit dependency version to 3.8.2.
+     </action>
+
+     <action dev="rahul" type="update">
        [12-08-2007] AbstractStateMachine and SimpleSCXMLListener classes
        switched to the new SCXMLParser.
       </action>
