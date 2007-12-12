@@ -262,7 +262,7 @@
       <groupId>maven</groupId>
       <artifactId>maven-xdoc-plugin</artifactId>
       <version>1.9.2</version>
-      <url>http://maven.apache.org/reference/plugins/xdoc/</url>
+      <url>http://maven.apache.org/maven-1.x/plugins/xdoc/</url>
       <type>plugin</type>
       <properties>
         <comment>&lt;b&gt;Site&lt;/b&gt; only</comment>
