@@ -248,17 +248,6 @@
       </properties>
     </dependency>
     <dependency>
-      <groupId>maven-plugins</groupId>
-      <artifactId>maven-cobertura-plugin</artifactId>
-      <version>1.1.1</version>
-      <url>http://maven-plugins.sourceforge.net/maven-cobertura-plugin/</url>
-      <type>plugin</type>
-      <properties>
-       <comment>&lt;b&gt;Site&lt;/b&gt; only</comment>
-       <scope>test</scope>
-      </properties>
-    </dependency>
-    <dependency>
       <groupId>maven</groupId>
       <artifactId>maven-xdoc-plugin</artifactId>
       <version>1.9.2</version>
@@ -320,7 +309,6 @@
   <reports>
      <report>maven-changes-plugin</report>
      <report>maven-checkstyle-plugin</report>
-     <report>maven-cobertura-plugin</report>
      <report>maven-faq-plugin</report>
      <report>maven-javadoc-plugin</report>
      <report>maven-junit-report-plugin</report>
