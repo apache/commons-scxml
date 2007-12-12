@@ -35,30 +35,20 @@ public class AbstractStateMachineTest extends TestCase {
         super(name);
     }
 
-    // Test data
-    private boolean fooCalled;
-    private boolean barCalled;
-
-    /**
-     * Set up instance variables required by this test case.
-     */
-    public void setUp() {
-        fooCalled = false;
-        barCalled = false;
-    }
-
     public void testMoreThanOneScxmlDocument() throws Exception {
         URL fooScxmlDocument = getClass().getResource("foo.xml");
         URL barScxmlDocument = getClass().getResource("bar.xml");
 
-        new Foo(fooScxmlDocument);
-        new Bar(barScxmlDocument);
+        Foo f = new Foo(fooScxmlDocument);
+        Bar b = new Bar(barScxmlDocument);
 
-        assertTrue(fooCalled);
-        assertTrue(barCalled);
+        assertTrue(f.fooCalled());
+        assertTrue(b.barCalled());
     }
 
     private class Foo extends AbstractStateMachine {
+
+        private boolean fooCalled;
 
         public Foo(final URL scxmlDocument) {
             super(scxmlDocument);
@@ -67,9 +57,15 @@ public class AbstractStateMachineTest extends TestCase {
         public void foo() {
             fooCalled = true;
         }
+
+        public boolean fooCalled() {
+            return fooCalled;
+        }
     }
 
     private class Bar extends AbstractStateMachine {
+
+        private boolean barCalled;
 
         public Bar(final URL scxmlDocument) {
             super(scxmlDocument);
@@ -77,6 +73,10 @@ public class AbstractStateMachineTest extends TestCase {
 
         public void bar() {
             barCalled = true;
+        }
+
+        public boolean barCalled() {
+            return barCalled;
         }
     }
 
