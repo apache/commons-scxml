@@ -242,7 +242,7 @@
       <version>2.6.0</version>
       <url>http://xml.apache.org/xalan-j/</url>
       <properties>
-        <comment>&lt;b&gt;Sun JDK 1.5&lt;/b&gt;
+        <comment>&lt;b&gt;Sun JDK 1.5+&lt;/b&gt;
         only</comment>
         <optional>true</optional>
       </properties>
