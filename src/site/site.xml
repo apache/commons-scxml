@@ -105,6 +105,9 @@
       <item       name="SVN repository"
                   href="/source-repository.html"/>
 
+      <item       name="Download"
+                  href="http://commons.apache.org/downloads/download_scxml.cgi"/>
+
     </menu>
 
     <menu         name="Releases">

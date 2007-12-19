@@ -110,8 +110,8 @@
       <item       name="SVN repository"
                   href="http://svn.apache.org/viewvc/commons/proper/scxml/trunk/"/>
 
-      <item       name="Nightly snapshots"
-                  href="http://people.apache.org/builds/commons/nightly/commons-scxml/"/>
+      <item       name="Download"
+                  href="http://commons.apache.org/downloads/download_scxml.cgi"/>
 
     </menu>
 
