@@ -54,7 +54,7 @@
   <section name="Hello World">
 
    <p>Here is the canonical
-      <a href="http://svn.apache.org/repos/asf/jakarta/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml/hello-world.xml">hello world example</a>
+      <a href="http://svn.apache.org/repos/asf/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml/hello-world.xml">hello world example</a>
       for SCXML. The interesting bits are:</p>
 
    <pre>
@@ -163,7 +163,7 @@
    <p>States can contain states, so we can think of an
       SCXML document as a recursive transition network. Here is
       a snippet (here is the entire version of this
-      <a href="http://svn.apache.org/repos/asf/jakarta/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml/env/jexl/microwave-01.xml">microwave example</a>
+      <a href="http://svn.apache.org/repos/asf/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml/env/jexl/microwave-01.xml">microwave example</a>
       ):</p>
 
    <pre>
@@ -221,7 +221,7 @@
       can become a state machine in its own right -- that are "active"
       at the same time. Here is
       a relevant snippet (the entire version of this
-      <a href="http://svn.apache.org/repos/asf/jakarta/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml/env/jexl/microwave-02.xml">parallel microwave example</a>
+      <a href="http://svn.apache.org/repos/asf/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml/env/jexl/microwave-02.xml">parallel microwave example</a>
       ):</p>
 
    <pre>
@@ -281,7 +281,7 @@
 
    <p>The Commons SCXML implementation allows you to register custom actions.
       Here is the Commons SCXML
-      <a href="http://svn.apache.org/repos/asf/jakarta/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml/custom-hello-world-02.xml">hello world example using a custom action</a>.
+      <a href="http://svn.apache.org/repos/asf/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml/custom-hello-world-02.xml">hello world example using a custom action</a>.
       The interesting bits are:</p>
 
    <pre>

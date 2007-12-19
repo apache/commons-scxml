@@ -58,7 +58,7 @@
 
     <a href="../xref/org/apache/commons/scxml/test/StandaloneJexlExpressions.html">org.apache.commons.scxml.test.StandaloneJexlExpressions</a>
 
-    <a href="http://svn.apache.org/repos/asf/jakarta/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml/env/jexl/microwave-01.xml">microwave01.xml</a>
+    <a href="http://svn.apache.org/repos/asf/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml/env/jexl/microwave-01.xml">microwave01.xml</a>
     </pre>
 
    </subsection>
@@ -80,7 +80,7 @@
 
     <a href="../xref/org/apache/commons/scxml/test/StandaloneElExpressions.html">org.apache.commons.scxml.test.StandaloneElExpressions</a>
 
-    <a href="http://svn.apache.org/repos/asf/jakarta/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml/env/jsp/microwave-01.xml">microwave01.xml</a>
+    <a href="http://svn.apache.org/repos/asf/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml/env/jsp/microwave-01.xml">microwave01.xml</a>
     </pre>
 
    </subsection>
@@ -93,7 +93,7 @@
    </p>
 
    <p>A few examples are available as part of the 
-   <a href="http://svn.apache.org/repos/asf/jakarta/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml/">
+   <a href="http://svn.apache.org/repos/asf/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml/">
    Commons SCXML test suite</a> (look in env.jexl and env.jsp child packages as well).</p>
 
   </section> 

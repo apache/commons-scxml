@@ -85,8 +85,8 @@
    </question>
    <answer>
     Commons SCXML currently supports
-    <a href="http://jakarta.apache.org/commons/jexl/">Commons JEXL</a> and
-    <a href="http://jakarta.apache.org/commons/el/">Commons EL</a>. For details,
+    <a href="http://commons.apache.org/jexl/">Commons JEXL</a> and
+    <a href="http://commons.apache.org/el/">Commons EL</a>. For details,
     see the <a href="guide/testing-standalone.html">trying out</a> and
     <a href="guide/contexts-evaluators.html">contexts and evaluators</a>
     pages of the user guide.

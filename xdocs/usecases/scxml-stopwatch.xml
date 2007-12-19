@@ -73,7 +73,7 @@
    <subsection name="The SCXML document">
     <p>The SCXML document is then, a simple serialization of
        the "model" above:
-       <a href="http://svn.apache.org/repos/asf/jakarta/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml/env/stopwatch.xml">stopwatch.xml</a>.
+       <a href="http://svn.apache.org/repos/asf/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml/env/stopwatch.xml">stopwatch.xml</a>.
     </p>
    </subsection>
 

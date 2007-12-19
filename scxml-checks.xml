@@ -164,7 +164,7 @@
         <module name="EqualsHashCode"/>
         <!-- Commons SCXML change # 2 :
              Turn off the hidden field check
-             based on discussion on commons-dev AT jakarta.apache.org
+             based on discussion on dev AT commons.apache.org
              The code uses same names for arguments
              in side-effect free setters. -->
         <!--module name="HiddenField"/-->
@@ -180,7 +180,7 @@
         <!-- See http://checkstyle.sf.net/config_design.html -->
         <!-- Commons SCXML change # 3 :
              Turn off the design for extension check 
-             based on discussion on commons-dev AT jakarta.apache.org -->
+             based on discussion on dev AT commons.apache.org -->
         <!--module name="DesignForExtension"/-->
         <!--module name="FinalClass"/-->
         <module name="HideUtilityClassConstructor"/>
