@@ -33,6 +33,16 @@
       </ul>
     </section>
 
+    <release version="0.8" date="In SVN"
+     description="Latest unreleased code">
+
+     <action dev="rahul" type="update" due-to="Sebastian Bazley">
+       [12-20-2007] Minor site updates: add a prominent download link, and
+       update a few remaining Jakarta references.
+     </action>
+
+    </release>
+
     <release version="0.7" date="December 2007"
      description="Latest release">
 
