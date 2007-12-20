@@ -45,6 +45,20 @@
         <version>0.5</version>
       </revision>
     </release>
+    <release>
+      <revision>
+        <name>commons-scxml</name>
+        <created>2006-12-18</created>
+        <version>0.6</version>
+      </revision>
+    </release>
+    <release>
+      <revision>
+        <name>commons-scxml</name>
+        <created>2007-12-20</created>
+        <version>0.7</version>
+      </revision>
+    </release>
     <mailing-list rdf:resource="http://commons.apache.org/mail-lists.html"/>
   </Project>
 </rdf:RDF>
