@@ -83,7 +83,7 @@
   to be 0.5 (rather than a 1.0) to better convey the fact that the
   underlying W3C specification is still a Working Draft, and subsequent changes
   to the Draft may warrant changes to portions of the library API. The core
-  Commons SCXML APIs (SCXMLDigester, SCXMLExecutor etc.) are stable.
+  Commons SCXML APIs (SCXMLParser, SCXMLExecutor etc.) are stable.
   Portions such as processing of &lt;datamodel&gt; and &lt;invoke&gt; SCXML
   elements, on the other hand, are subject to change as further changes are
   expected in these sections of the W3C Working Draft. See Working Draft for
