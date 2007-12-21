@@ -75,7 +75,7 @@
       </item>
 
       <item       name="Javadoc"
-                  href="apidocs/index.html"/>
+                  href="/0.7/apidocs/index.html"/>
 
       <item       name="FAQ"
                   href="faq.html"/>
