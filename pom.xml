@@ -203,6 +203,7 @@
             <include>org/apache/commons/scxml/env/servlet/EnvServletTestSuite.java</include>
             <include>org/apache/commons/scxml/invoke/InvokeTestSuite.java</include>
             <include>org/apache/commons/scxml/io/IOTestSuite.java</include>
+            <include>org/apache/commons/scxml/issues/IssuesTestSuite.java</include>
             <include>org/apache/commons/scxml/model/ModelTestSuite.java</include>
             <include>org/apache/commons/scxml/semantics/SemanticsTestSuite.java</include>
             <include>org/apache/commons/scxml/test/TestingTestSuite.java</include>
