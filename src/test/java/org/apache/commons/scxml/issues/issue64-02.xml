@@ -1,4 +1,5 @@
-/*
+<?xml version="1.0"?>
+<!--
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -13,42 +14,27 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-package org.apache.commons.scxml.issues;
+-->
+<!-- Bad SCXML document -->
+<scxml xmlns="http://www.w3.org/2005/07/scxml"
+       version="1.0"
+       initialstate="tranbug">
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
+    <state id="tranbug">
+        <onentry>
+            <log expr="'Begin transition bug test ...'" />
+        </onentry>
+        <transition event="show.bug" target="end">
+         <!-- FOLLOWING datamodel IS MISPLACED -->
+         <datamodel>
+ 			<data name="dummy" expr="'somedata'"/>
+         </datamodel>
+         <log expr="dummy" />
+         <log expr="'*****' + dummy" />
+        </transition>
+    </state>
+    
+    <state id="end" final="true" />
 
-/**
- * Issue-specific test suite for Commons SCXML.
- *
- */
-public class IssuesTestSuite extends TestCase {
-
-    /**
-     * Construct a new instance.
-     */
-    public IssuesTestSuite(String name) {
-        super(name);
-    }
-
-    /**
-     * Command-line interface.
-     */
-    public static void main(String[] args) {
-        TestRunner.run(suite());
-    }
-
-    /**
-     * Get the suite of tests
-     */
-    public static Test suite() {
-        TestSuite suite = new TestSuite();
-        suite.setName("Commons SCXML Issues Tests");
-        suite.addTest(Issue64Test.suite());
-        return suite;
-    }
-}
+</scxml>
 
