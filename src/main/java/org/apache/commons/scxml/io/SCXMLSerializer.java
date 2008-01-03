@@ -74,6 +74,9 @@ public class SCXMLSerializer {
     private static final String INDENT = " ";
     /** The JAXP transformer. */
     private static final Transformer XFORMER = getTransformer();
+    /** The SCXML namespace. */
+    private static final String NAMESPACE_SCXML =
+        "http://www.w3.org/2005/07/scxml";
 
     /**
      * Serialize this SCXML object (primarily for debugging).
@@ -85,7 +88,7 @@ public class SCXMLSerializer {
     public static String serialize(final SCXML scxml) {
         StringBuffer b =
             new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n").
-                append("<scxml xmlns=\"").append(scxml.getXmlns()).
+                append("<scxml xmlns=\"").append(NAMESPACE_SCXML).
                 append("\" version=\"").append(scxml.getVersion()).
                 append("\" initialstate=\"").append(scxml.getInitialstate()).
                 append("\">\n");
