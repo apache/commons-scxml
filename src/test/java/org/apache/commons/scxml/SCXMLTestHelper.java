@@ -24,6 +24,8 @@ import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -37,6 +39,7 @@ import org.apache.commons.scxml.env.jexl.JexlEvaluator;
 import org.apache.commons.scxml.io.SCXMLDigester;
 import org.apache.commons.scxml.io.SCXMLParser;
 import org.apache.commons.scxml.model.SCXML;
+import org.apache.commons.scxml.model.State;
 import org.apache.commons.scxml.model.TransitionTarget;
 import org.xml.sax.ErrorHandler;
 /**
@@ -229,19 +232,18 @@ public class SCXMLTestHelper {
         } catch (Exception e) {
             Log log = LogFactory.getLog(SCXMLTestHelper.class);
             log.error(e.getMessage(), e);
-            Assert.fail(e.getMessage());
+            Assert.fail(e.getMessage() + " while firing event named " + name);
         }
         return exec.getCurrentStatus().getStates();
     }
 
     public static Set fireEvent(SCXMLExecutor exec, TriggerEvent te) {
-        TriggerEvent[] evts = { te };
         try {
-            exec.triggerEvents(evts);
+            exec.triggerEvent(te);
         } catch (Exception e) {
             Log log = LogFactory.getLog(SCXMLTestHelper.class);
             log.error(e.getMessage(), e);
-            Assert.fail(e.getMessage());
+            Assert.fail(e.getMessage() + " while firing event " + te);
         }
         return exec.getCurrentStatus().getStates();
     }
@@ -252,9 +254,59 @@ public class SCXMLTestHelper {
         } catch (Exception e) {
             Log log = LogFactory.getLog(SCXMLTestHelper.class);
             log.error(e.getMessage(), e);
-            Assert.fail(e.getMessage());
+            Assert.fail(e.getMessage() + " while firing events " + evts);
         }
         return exec.getCurrentStatus().getStates();
+    }
+
+    public static void assertPostTriggerState(SCXMLExecutor exec,
+            String triggerEventName, String expectedStateId) {
+        assertPostTriggerState(exec, new TriggerEvent(triggerEventName,
+                TriggerEvent.SIGNAL_EVENT), expectedStateId);
+    }
+
+    public static void assertPostTriggerStates(SCXMLExecutor exec,
+            String triggerEventName, String[] expectedStateIds) {
+        assertPostTriggerStates(exec, new TriggerEvent(triggerEventName,
+                TriggerEvent.SIGNAL_EVENT), expectedStateIds);
+    }
+
+    public static void assertPostTriggerState(SCXMLExecutor exec,
+            TriggerEvent triggerEvent, String expectedStateId) {
+        Set currentStates = fireEvent(exec, triggerEvent);
+        Assert.assertEquals("Expected 1 simple (leaf) state with id '"
+            + expectedStateId + "' on firing event " + triggerEvent
+            + " but found " + currentStates.size() + " states instead.",
+            1, currentStates.size());
+        Assert.assertEquals(expectedStateId, ((State)currentStates.iterator().
+            next()).getId());
+    }
+
+    public static void assertPostTriggerStates(SCXMLExecutor exec,
+            TriggerEvent triggerEvent, String[] expectedStateIds) {
+        if (expectedStateIds == null || expectedStateIds.length == 0) {
+            Assert.fail("Must specify an array of one or more "
+                + "expected state IDs");
+        }
+        Set currentStates = fireEvent(exec, triggerEvent);
+        int n = expectedStateIds.length;
+        Assert.assertEquals("Expected " + n + " simple (leaf) state(s) "
+            + " on firing event " + triggerEvent + " but found "
+            + currentStates.size() + " states instead.",
+            n, currentStates.size());
+        List expectedStateIdList = Arrays.asList(expectedStateIds);
+        Iterator iter = currentStates.iterator();
+        while (iter.hasNext()) {
+            String stateId = ((State) iter.next()).getId();
+            if(!expectedStateIdList.remove(stateId)) {
+                Assert.fail("Expected state with id '" + stateId
+                    + "' in current states on firing event "
+                    + triggerEvent);
+            }
+        }
+        Assert.assertEquals("More states in current configuration than those"
+            + "specified in the expected state ids '" + expectedStateIds
+            + "'", 0, expectedStateIdList.size());
     }
 
     public static SCXML testModelSerializability(final SCXML scxml) {
