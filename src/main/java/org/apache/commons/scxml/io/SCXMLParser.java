@@ -99,6 +99,10 @@ import org.xml.sax.SAXException;
  * </ul>
  * <p>See latest version of the SCXML Working Draft for more details.</p>
  *
+ * <p><b>NOTE:</b> The SCXMLParser assumes that the SCXML document to be
+ * parsed is well-formed and correct. If that assumption does not hold,
+ * any subsequent behavior is undefined.</p>
+ *
  * @since 0.7
  */
 public final class SCXMLParser {

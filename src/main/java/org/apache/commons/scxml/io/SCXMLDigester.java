@@ -88,6 +88,10 @@ import org.xml.sax.SAXException;
  *      ruleset.</li>
  * </ol>
  *
+ * <p><b>NOTE:</b> The SCXMLDigester assumes that the SCXML document to be
+ * parsed is well-formed and correct. If that assumption does not hold,
+ * any subsequent behavior is undefined.</p>
+ *
  * @deprecated Use {@link SCXMLParser} instead, after updating the SCXML
  *             document as necessary, in line with newer Working Drafts.
  */
