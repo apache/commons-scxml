@@ -55,13 +55,12 @@ public class SCXMLSerializerTest extends TestCase {
     
     public void testSerializeSCXMLNoStates() {
         SCXML scxml = new SCXML();
-        scxml.setXmlns("namespace");
         scxml.setVersion("version1");
         scxml.setInitialstate("off");
         scxml.addChild(new State());
         
         String assertValue = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-            + "<scxml xmlns=\"namespace\" version=\"version1\" "
+            + "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" version=\"version1\" "
             + "initialstate=\"off\">\n <state>\n </state>\n</scxml>\n";
         
         assertEquals(assertValue, SCXMLSerializer.serialize(scxml));
