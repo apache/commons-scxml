@@ -36,6 +36,28 @@
     <release version="0.8" date="In SVN"
      description="Latest unreleased code">
 
+     <action dev="rahul" type="update">
+       [01-03-2008] Clarify via Javadocs that the SCXMLParser assumes the
+       input if a well-formed and correct SCXML document.
+     </action>
+
+     <action dev="rahul" type="add" due-to="Ross Yakulis">
+       [01-03-2008] Added tests for SCXML-64.
+     </action>
+
+     <action dev="rahul" type="add">
+       [01-03-2008] Add the issues test package for tracking tests tied to
+       the Commons issue tracker.
+     </action>
+
+     <action dev="rahul" type="update">
+       [01-03-2008] Improve serialization of &lt;transition&gt; elements.
+     </action>
+
+     <action dev="rahul" type="add">
+       [01-03-2008] Add assertPostTriggerState() methods to SCXMLTestHelper.
+     </action>
+
      <action dev="rahul" type="update" due-to="Sebastian Bazley">
        [12-20-2007] Minor site updates: add a prominent download link, and
        update a few remaining Jakarta references.
