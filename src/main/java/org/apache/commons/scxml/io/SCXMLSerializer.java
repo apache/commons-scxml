@@ -277,10 +277,20 @@ public class SCXMLSerializer {
      */
     public static void serializeTransition(final StringBuffer b,
             final Transition t, final String indent) {
-        b.append(indent).append("<transition event=\"").append(t.getEvent())
-            .append("\" cond=\"").append(t.getCond()).append("\">\n");
+        b.append(indent).append("<transition");
+        if (!SCXMLHelper.isStringEmpty(t.getEvent())) {
+            b.append(" event=\"").append(t.getEvent()).append("\"");
+        }
+        if (!SCXMLHelper.isStringEmpty(t.getCond())) {
+            b.append(" cond=\"").append(t.getCond()).append("\"");
+        }
+        boolean next = !SCXMLHelper.isStringEmpty(t.getNext());
+        if (next) {
+            b.append(" target=\"" + t.getNext() + "\"");
+        }
+        b.append(">\n");
         boolean exit = serializeActions(b, t.getActions(), indent + INDENT);
-        if (!exit) {
+        if (!next && !exit) {
             serializeTarget(b, t, indent + INDENT);
         }
         b.append(indent).append("</transition>\n");
@@ -299,18 +309,12 @@ public class SCXMLSerializer {
      */
     public static void serializeTarget(final StringBuffer b,
             final Transition t, final String indent) {
-        b.append(indent).append("<target");
-        String n = t.getNext();
-        if (n != null) {
-            b.append(" next=\"" + n + "\">\n");
-        } else {
-            b.append(">\n");
-            if (t.getTarget() != null) {
-                // The inline transition target can only be a state
-                serializeState(b, (State) t.getTarget(), indent + INDENT);
-            }
+        if (t.getTarget() != null) {
+            b.append(indent).append("<target>");
+            // The inline transition target can only be a state
+            serializeState(b, (State) t.getTarget(), indent + INDENT);
+            b.append(indent).append("</target>");
         }
-        b.append(indent).append("</target>\n");
     }
 
     /**
