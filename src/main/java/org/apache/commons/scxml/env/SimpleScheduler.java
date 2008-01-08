@@ -57,7 +57,7 @@ public class SimpleScheduler implements EventDispatcher, Serializable {
      * The <code>Map</code> of active <code>Timer</code>s, keyed by
      * &lt;send&gt; element <code>id</code>s.
      */
-    private Map timers;
+    private Map<String, Timer> timers;
 
     /**
      * The state chart execution instance we schedule events for.
@@ -72,7 +72,7 @@ public class SimpleScheduler implements EventDispatcher, Serializable {
     public SimpleScheduler(final SCXMLExecutor executor) {
         super();
         this.executor = executor;
-        this.timers = Collections.synchronizedMap(new HashMap());
+        this.timers = Collections.synchronizedMap(new HashMap<String, Timer>());
     }
 
     /**
