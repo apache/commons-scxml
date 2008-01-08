@@ -38,7 +38,7 @@ public class State extends TransitionTarget {
      * The Map containing immediate children of this State, keyed by
      * their IDs. Incompatible with the parallel or invoke property.
      */
-    private Map children;
+    private Map<String, TransitionTarget> children;
 
     /**
      * The Parallel child, which defines a set of parallel substates.
@@ -72,7 +72,7 @@ public class State extends TransitionTarget {
     /**
      * A list of outgoing Transitions from this state, by document order.
      */
-    private List transitions;
+    private List<Transition> transitions;
 
     /**
      * Applies to composite states only. If one of its final children is
@@ -87,8 +87,8 @@ public class State extends TransitionTarget {
      * Constructor.
      */
     public State() {
-        this.children = new LinkedHashMap();
-        this.transitions = new ArrayList();
+        this.children = new LinkedHashMap<String, TransitionTarget>();
+        this.transitions = new ArrayList<Transition>();
     }
 
     /**
@@ -206,16 +206,16 @@ public class State extends TransitionTarget {
      * @deprecated Use {@link #getTransitionsList()} instead
      */
     public final Map getTransitions() {
-        Map transitionsMap = new HashMap();
+        Map<String, List<Transition>> transitionsMap = new HashMap<String, List<Transition>>();
         for (int i = 0; i < transitions.size(); i++) {
-            Transition transition = (Transition) transitions.get(i);
+            Transition transition = transitions.get(i);
             String event = transition.getEvent();
             if (!transitionsMap.containsKey(event)) {
-                List eventTransitions = new ArrayList();
+                List<Transition> eventTransitions = new ArrayList<Transition>();
                 eventTransitions.add(transition);
                 transitionsMap.put(event, eventTransitions);
             } else {
-                ((List) transitionsMap.get(event)).add(transition);
+                transitionsMap.get(event).add(transition);
             }
         }
         return transitionsMap;
@@ -229,13 +229,13 @@ public class State extends TransitionTarget {
      * @return List Returns the candidate transitions for given event
      */
     public final List getTransitionsList(final String event) {
-        List matchingTransitions = null; // since we returned null upto v0.6
+        List<Transition> matchingTransitions = null; // since we returned null upto v0.6
         for (int i = 0; i < transitions.size(); i++) {
-            Transition t = (Transition) transitions.get(i);
+            Transition t = transitions.get(i);
             if ((event == null && t.getEvent() == null)
                     || (event != null && event.equals(t.getEvent()))) {
                 if (matchingTransitions == null) {
-                    matchingTransitions = new ArrayList();
+                    matchingTransitions = new ArrayList<Transition>();
                 }
                 matchingTransitions.add(t);
             }

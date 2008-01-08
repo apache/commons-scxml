@@ -38,13 +38,13 @@ public class Parallel extends TransitionTarget {
     /**
      * The set of parallel state machines contained in this &lt;parallel&gt;.
      */
-    private Set children;
+    private Set<TransitionTarget> children;
 
     /**
      * Constructor.
      */
     public Parallel() {
-        this.children = new LinkedHashSet();
+        this.children = new LinkedHashSet<TransitionTarget>();
     }
 
     /**
@@ -54,7 +54,7 @@ public class Parallel extends TransitionTarget {
      *
      * @deprecated Use getChildren() instead.
      */
-    public final Set getStates() {
+    public final Set<TransitionTarget> getStates() {
         return children;
     }
 
@@ -80,7 +80,7 @@ public class Parallel extends TransitionTarget {
      *
      * @since 0.7
      */
-    public final Set getChildren() {
+    public final Set<TransitionTarget> getChildren() {
         return children;
     }
 

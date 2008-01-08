@@ -60,7 +60,7 @@ public abstract class TransitionTarget implements Serializable {
      * List of history states owned by a given state (applies to non-leaf
      * states).
      */
-    private List history;
+    private List<History> history;
 
     /**
      * Constructor.
@@ -72,7 +72,7 @@ public abstract class TransitionTarget implements Serializable {
         onExit = new OnExit();   //empty defaults
         onExit.setParent(this);
         parent = null;
-        history = new ArrayList();
+        history = new ArrayList<History>();
     }
 
     /**
