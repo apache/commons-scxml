@@ -25,6 +25,7 @@ import org.apache.commons.scxml.ErrorReporter;
 import org.apache.commons.scxml.EventDispatcher;
 import org.apache.commons.scxml.SCInstance;
 import org.apache.commons.scxml.SCXMLExpressionException;
+import org.apache.commons.scxml.TriggerEvent;
 
 /**
  * An abstract base class for executable elements in SCXML,
@@ -43,7 +44,7 @@ public abstract class Action implements NamespacePrefixesHolder,
      * The current XML namespaces in the SCXML document for this action node,
      * preserved for deferred XPath evaluation.
      */
-    private Map namespaces;
+    private Map<String, String> namespaces;
 
     /**
      * Current document namespaces are saved under this key in the parent
@@ -83,7 +84,7 @@ public abstract class Action implements NamespacePrefixesHolder,
      *
      * @return Returns the map of namespaces.
      */
-    public final Map getNamespaces() {
+    public final Map<String, String> getNamespaces() {
         return namespaces;
     }
 
@@ -92,7 +93,7 @@ public abstract class Action implements NamespacePrefixesHolder,
      *
      * @param namespaces The document namespaces.
      */
-    public final void setNamespaces(final Map namespaces) {
+    public final void setNamespaces(final Map<String, String> namespaces) {
         this.namespaces = namespaces;
     }
 
@@ -135,7 +136,7 @@ public abstract class Action implements NamespacePrefixesHolder,
      */
     public abstract void execute(final EventDispatcher evtDispatcher,
         final ErrorReporter errRep, final SCInstance scInstance,
-        final Log appLog, final Collection derivedEvents)
+        final Log appLog, final Collection<TriggerEvent> derivedEvents)
     throws ModelException, SCXMLExpressionException;
 
     /**
