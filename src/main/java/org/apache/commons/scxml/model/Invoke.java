@@ -18,6 +18,7 @@ package org.apache.commons.scxml.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,12 +59,12 @@ public class Invoke implements NamespacePrefixesHolder, PathResolverHolder,
      *
      * Remove with deprecated getParams() in 1.0
      */
-    private Map params;
+    private final Map<String, String> params;
 
     /**
      * The List of the params to be sent to the invoked process.
      */
-    private List paramsList;
+    private final List<Param> paramsList;
 
     /**
      * The &lt;finalize&gt; child, may be null.
@@ -79,14 +80,14 @@ public class Invoke implements NamespacePrefixesHolder, PathResolverHolder,
      * The current XML namespaces in the SCXML document for this action node,
      * preserved for deferred XPath evaluation.
      */
-    private Map namespaces;
+    private Map<String, String> namespaces;
 
     /**
      * Default no-args constructor for Digester.
      */
     public Invoke() {
-        params = new HashMap();
-        paramsList = new ArrayList();
+        params = Collections.synchronizedMap(new HashMap<String, String>());
+        paramsList = Collections.synchronizedList(new ArrayList<Param>());
     }
 
     /**
@@ -151,7 +152,7 @@ public class Invoke implements NamespacePrefixesHolder, PathResolverHolder,
      * @return Map The params map.
      * @deprecated Remove in v1.0, use params() instead
      */
-    public final Map getParams() {
+    public final Map<String, String> getParams() {
         return params;
     }
 
@@ -160,7 +161,7 @@ public class Invoke implements NamespacePrefixesHolder, PathResolverHolder,
      *
      * @return List The params list.
      */
-    public final List params() {
+    public final List<Param> params() {
         return paramsList;
     }
 
@@ -215,7 +216,7 @@ public class Invoke implements NamespacePrefixesHolder, PathResolverHolder,
      *
      * @return Returns the map of namespaces.
      */
-    public final Map getNamespaces() {
+    public final Map<String, String> getNamespaces() {
         return namespaces;
     }
 
@@ -224,7 +225,7 @@ public class Invoke implements NamespacePrefixesHolder, PathResolverHolder,
      *
      * @param namespaces The document namespaces.
      */
-    public final void setNamespaces(final Map namespaces) {
+    public final void setNamespaces(final Map<String, String> namespaces) {
         this.namespaces = namespaces;
     }
 
