@@ -59,10 +59,10 @@ public class Builtin implements Serializable {
      * @param state The State ID to compare with
      * @return Whether this State belongs to this Set
      */
-    public static boolean isMember(final Set allStates,
+    public static boolean isMember(final Set<TransitionTarget> allStates,
             final String state) {
-        for (Iterator i = allStates.iterator(); i.hasNext();) {
-            TransitionTarget tt = (TransitionTarget) i.next();
+        for (Iterator<TransitionTarget> i = allStates.iterator(); i.hasNext();) {
+            TransitionTarget tt = i.next();
             if (state.equals(tt.getId())) {
                 return true;
             }
@@ -83,7 +83,7 @@ public class Builtin implements Serializable {
      * @param path The XPath expression.
      * @return The first node matching the path, or null if no nodes match.
      */
-    public static Node dataNode(final Map namespaces, final Object data,
+    public static Node dataNode(final Map<String, String> namespaces, final Object data,
             final String path) {
         if (data == null || !(data instanceof Node)) {
             Log log = LogFactory.getLog(Builtin.class);
@@ -148,7 +148,7 @@ public class Builtin implements Serializable {
      * @return The first node matching the path, coerced to a String, or null
      *         if no nodes match.
      */
-    public static Object data(final Map namespaces, final Object data,
+    public static Object data(final Map<String, String> namespaces, final Object data,
             final String path) {
         Object retVal = null;
         String strVal = SCXMLHelper.getNodeValue(dataNode(namespaces,
