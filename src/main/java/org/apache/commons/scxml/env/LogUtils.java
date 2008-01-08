@@ -59,7 +59,7 @@ public final class LogUtils {
         if (parent == null) {
             return "/" + tt.getId();
         } else {
-            LinkedList pathElements = new LinkedList();
+            LinkedList<TransitionTarget> pathElements = new LinkedList<TransitionTarget>();
             pathElements.addFirst(tt);
             while (parent != null) {
                 pathElements.addFirst(parent);
