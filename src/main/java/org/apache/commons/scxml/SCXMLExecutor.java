@@ -32,7 +32,6 @@ import org.apache.commons.scxml.model.ModelException;
 import org.apache.commons.scxml.model.Observable;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.State;
-import org.apache.commons.scxml.model.Transition;
 import org.apache.commons.scxml.model.TransitionTarget;
 import org.apache.commons.scxml.semantics.SCXMLSemanticsImpl;
 
@@ -112,7 +111,7 @@ public class SCXMLExecutor implements Serializable {
         // and finalize processing
         semantics.processInvokes(evts, errorReporter, scInstance);
 
-        List evs = new ArrayList(Arrays.asList(evts));
+        List<TriggerEvent> evs = new ArrayList<TriggerEvent>(Arrays.asList(evts));
         Step step = null;
 
         do {
@@ -417,7 +416,7 @@ public class SCXMLExecutor implements Serializable {
     /**
      * Remove this listener from the {@link Observable}.
      *
-     * @param scxml The {@link Observable}.
+     * @param observable The {@link Observable}.
      * @param listener The SCXMLListener to be removed.
      */
     public void removeListener(final Observable observable,
@@ -499,7 +498,7 @@ public class SCXMLExecutor implements Serializable {
         int len = evts.length;
         if (len > 0) { // 0 has retry semantics (eg: see usage in reset())
             Object eventData = null;
-            Map payloadMap = new HashMap();
+            Map<String, Object> payloadMap = new HashMap<String, Object>();
             for (int i = 0; i < len; i++) {
                 TriggerEvent te = evts[i];
                 payloadMap.put(te.getName(), te.getPayload());

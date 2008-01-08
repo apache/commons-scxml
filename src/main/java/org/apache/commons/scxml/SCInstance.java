@@ -50,31 +50,31 @@ public class SCInstance implements Serializable {
      * The <code>Map</code> of <code>Context</code>s per
      * <code>TransitionTarget</code>.
      */
-    private Map contexts;
+    private final Map<TransitionTarget, Context> contexts;
 
     /**
      * The <code>Map</code> of last known configurations per
      * <code>History</code>.
      */
-    private Map histories;
+    private final Map<History, Set<TransitionTarget>> histories;
 
     /**
      * <code>Map</code> for recording the run to completion status of
      * composite states.
      */
-    private Map completions;
+    private final Map<TransitionTarget, Boolean> completions;
 
     /**
      * The <code>Invoker</code> classes <code>Map</code>, keyed by
      * &lt;invoke&gt; target types (specified using "targettype" attribute).
      */
-    private Map invokerClasses;
+    private final Map<String, Class> invokerClasses;
 
     /**
      * The <code>Map</code> of active <code>Invoker</code>s, keyed by
      * (leaf) <code>State</code>s.
      */
-    private Map invokers;
+    private final Map<TransitionTarget, Invoker> invokers;
 
     /**
      * The evaluator for expressions.
@@ -98,11 +98,11 @@ public class SCInstance implements Serializable {
      */
     SCInstance(final SCXMLExecutor executor) {
         this.notificationRegistry = new NotificationRegistry();
-        this.contexts = Collections.synchronizedMap(new HashMap());
-        this.histories = Collections.synchronizedMap(new HashMap());
-        this.invokerClasses = Collections.synchronizedMap(new HashMap());
-        this.invokers = Collections.synchronizedMap(new HashMap());
-        this.completions = Collections.synchronizedMap(new HashMap());
+        this.contexts = Collections.synchronizedMap(new HashMap<TransitionTarget, Context>());
+        this.histories = Collections.synchronizedMap(new HashMap<History, Set<TransitionTarget>>());
+        this.invokerClasses = Collections.synchronizedMap(new HashMap<String, Class>());
+        this.invokers = Collections.synchronizedMap(new HashMap<TransitionTarget, Invoker>());
+        this.completions = Collections.synchronizedMap(new HashMap<TransitionTarget, Boolean>());
         this.evaluator = null;
         this.rootContext = null;
         this.executor = executor;
@@ -173,7 +173,7 @@ public class SCInstance implements Serializable {
      * @return The Context.
      */
     public Context getContext(final TransitionTarget transitionTarget) {
-        Context context = (Context) contexts.get(transitionTarget);
+        Context context = contexts.get(transitionTarget);
         if (context == null) {
             TransitionTarget parent = transitionTarget.getParent();
             if (parent == null) {
@@ -197,7 +197,7 @@ public class SCInstance implements Serializable {
      * @return The Context.
      */
     Context lookupContext(final TransitionTarget transitionTarget) {
-        return (Context) contexts.get(transitionTarget);
+        return contexts.get(transitionTarget);
     }
 
     /**
@@ -217,10 +217,10 @@ public class SCInstance implements Serializable {
      * @param history The history.
      * @return Returns the lastConfiguration.
      */
-    public Set getLastConfiguration(final History history) {
-        Set lastConfiguration = (Set) histories.get(history);
+    public Set<TransitionTarget> getLastConfiguration(final History history) {
+        Set<TransitionTarget> lastConfiguration = histories.get(history);
         if (lastConfiguration == null) {
-            lastConfiguration = new HashSet();
+            lastConfiguration = new HashSet<TransitionTarget>();
             histories.put(history, lastConfiguration);
         }
         return lastConfiguration;
@@ -233,8 +233,8 @@ public class SCInstance implements Serializable {
      * @param lc The lastConfiguration to set.
      */
     public void setLastConfiguration(final History history,
-            final Set lc) {
-        Set lastConfiguration = getLastConfiguration(history);
+            final Set<TransitionTarget> lc) {
+        Set<TransitionTarget> lastConfiguration = getLastConfiguration(history);
         lastConfiguration.clear();
         lastConfiguration.addAll(lc);
     }
@@ -246,7 +246,7 @@ public class SCInstance implements Serializable {
      * @return Whether we have a non-empty last configuration
      */
     public boolean isEmpty(final History history) {
-        Set lastConfiguration = (Set) histories.get(history);
+        Set<TransitionTarget> lastConfiguration = histories.get(history);
         if (lastConfiguration == null || lastConfiguration.isEmpty()) {
             return true;
         }
@@ -260,7 +260,7 @@ public class SCInstance implements Serializable {
      * @see org.apache.commons.scxml.SCXMLExecutor#reset()
      */
     public void reset(final History history) {
-        Set lastConfiguration = (Set) histories.get(history);
+        Set<TransitionTarget> lastConfiguration = histories.get(history);
         if (lastConfiguration != null) {
             lastConfiguration.clear();
         }
@@ -314,7 +314,7 @@ public class SCInstance implements Serializable {
      */
     public Invoker newInvoker(final String targettype)
     throws InvokerException {
-        Class invokerClass = (Class) invokerClasses.get(targettype);
+        Class invokerClass = invokerClasses.get(targettype);
         if (invokerClass == null) {
             throw new InvokerException("No Invoker registered for "
                 + "targettype \"" + targettype + "\"");
@@ -340,7 +340,7 @@ public class SCInstance implements Serializable {
      * @return The Invoker.
      */
     public Invoker getInvoker(final TransitionTarget transitionTarget) {
-        return (Invoker) invokers.get(transitionTarget);
+        return invokers.get(transitionTarget);
     }
 
     /**
@@ -373,12 +373,10 @@ public class SCInstance implements Serializable {
      * @since 0.7
      */
     public boolean isDone(final TransitionTarget transitionTarget) {
-        Boolean done = (Boolean) completions.get(transitionTarget);
-        if (done == null) {
-            return false;
-        } else {
-            return done.booleanValue();
+        if (completions.containsKey(transitionTarget)) {
+            return completions.get(transitionTarget);
         }
+        return false;
     }
 
     /**
@@ -392,7 +390,7 @@ public class SCInstance implements Serializable {
      */
     public void setDone(final TransitionTarget transitionTarget,
             final boolean done) {
-        completions.put(transitionTarget, done ? Boolean.TRUE : Boolean.FALSE);
+        completions.put(transitionTarget, done);
     }
 
 }
