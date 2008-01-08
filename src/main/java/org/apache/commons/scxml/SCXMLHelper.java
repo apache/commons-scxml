@@ -87,9 +87,9 @@ public final class SCXMLHelper {
      * @param upperBounds The Set of upper bound States
      * @return transitive closure of a given state set
      */
-    public static Set getAncestorClosure(final Set states,
-            final Set upperBounds) {
-        Set closure = new HashSet(states.size() * 2);
+    public static Set<TransitionTarget> getAncestorClosure(final Set<TransitionTarget> states,
+            final Set<TransitionTarget> upperBounds) {
+        Set<TransitionTarget> closure = new HashSet<TransitionTarget>(states.size() * 2);
         for (Iterator i = states.iterator(); i.hasNext();) {
             TransitionTarget tt = (TransitionTarget) i.next();
             while (tt != null) {
@@ -117,7 +117,7 @@ public final class SCXMLHelper {
      *            ErrorReporter to report detailed error info if needed
      * @return true if a given state configuration is legal, false otherwise
      */
-    public static boolean isLegalConfig(final Set states,
+    public static boolean isLegalConfig(final Set<TransitionTarget> states,
             final ErrorReporter errRep) {
         /*
          * For every active state we add 1 to the count of its parent. Each
@@ -128,15 +128,16 @@ public final class SCXMLHelper {
          * states = active configuration.
          */
         boolean legalConfig = true; // let's be optimists
-        Map counts = new IdentityHashMap();
-        Set scxmlCount = new HashSet();
+        Map<TransitionTarget, Set<TransitionTarget>> counts =
+            new IdentityHashMap<TransitionTarget, Set<TransitionTarget>>();
+        Set<TransitionTarget> scxmlCount = new HashSet<TransitionTarget>();
         for (Iterator i = states.iterator(); i.hasNext();) {
             TransitionTarget tt = (TransitionTarget) i.next();
             TransitionTarget parent = null;
             while ((parent = tt.getParent()) != null) {
-                HashSet cnt = (HashSet) counts.get(parent);
+                Set<TransitionTarget> cnt = counts.get(parent);
                 if (cnt == null) {
-                    cnt = new HashSet();
+                    cnt = new HashSet<TransitionTarget>();
                     counts.put(parent, cnt);
                 }
                 cnt.add(tt);
@@ -195,7 +196,7 @@ public final class SCXMLHelper {
         } else if (isDescendant(tt2, tt1)) {
             return tt1;
         }
-        Set parents = new HashSet();
+        Set<TransitionTarget> parents = new HashSet<TransitionTarget>();
         TransitionTarget tmp = tt1;
         while ((tmp = tmp.getParent()) != null) {
             parents.add(tmp);
@@ -225,9 +226,9 @@ public final class SCXMLHelper {
      * @return a set of all states (including composite) which are exited if a
      *         given transition is taken
      */
-    public static Set getStatesExited(final Transition t,
-            final Set currentStates) {
-        Set allStates = new HashSet();
+    public static Set<TransitionTarget> getStatesExited(final Transition t,
+            final Set<TransitionTarget> currentStates) {
+        Set<TransitionTarget> allStates = new HashSet<TransitionTarget>();
         if (t.getTargets().size() == 0) {
             return allStates;
         }
@@ -285,9 +286,9 @@ public final class SCXMLHelper {
      * @see #getStatesExited(Transition, Set)
      */
     public static boolean inConflict(final Transition t1,
-            final Transition t2, final Set currentStates) {
-        Set ts1 = getStatesExited(t1, currentStates);
-        Set ts2 = getStatesExited(t2, currentStates);
+            final Transition t2, final Set<TransitionTarget> currentStates) {
+        Set<TransitionTarget> ts1 = getStatesExited(t1, currentStates);
+        Set<TransitionTarget> ts2 = getStatesExited(t2, currentStates);
         ts1.retainAll(ts2);
         if (ts1.isEmpty()) {
             return false;
