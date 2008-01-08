@@ -99,7 +99,7 @@ public class Var extends Action {
      */
     public void execute(final EventDispatcher evtDispatcher,
             final ErrorReporter errRep, final SCInstance scInstance,
-            final Log appLog, final Collection derivedEvents)
+            final Log appLog, final Collection<TriggerEvent> derivedEvents)
     throws ModelException, SCXMLExpressionException {
         Context ctx = scInstance.getContext(getParentState());
         Evaluator eval = scInstance.getEvaluator();

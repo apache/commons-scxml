@@ -73,7 +73,7 @@ public class Event extends Action {
      */
     public void execute(final EventDispatcher evtDispatcher,
             final ErrorReporter errRep, final SCInstance scInstance,
-            final Log appLog, final Collection derivedEvents)
+            final Log appLog, final Collection<TriggerEvent> derivedEvents)
     throws ModelException, SCXMLExpressionException {
 
         if (appLog.isDebugEnabled()) {

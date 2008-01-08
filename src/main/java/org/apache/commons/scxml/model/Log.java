@@ -24,6 +24,7 @@ import org.apache.commons.scxml.Evaluator;
 import org.apache.commons.scxml.EventDispatcher;
 import org.apache.commons.scxml.SCInstance;
 import org.apache.commons.scxml.SCXMLExpressionException;
+import org.apache.commons.scxml.TriggerEvent;
 
 /**
  * The class in this SCXML object model that corresponds to the
@@ -97,7 +98,7 @@ public class Log extends Action {
     public void execute(final EventDispatcher evtDispatcher,
             final ErrorReporter errRep, final SCInstance scInstance,
             final org.apache.commons.logging.Log appLog,
-            final Collection derivedEvents)
+            final Collection<TriggerEvent> derivedEvents)
     throws ModelException, SCXMLExpressionException {
         Context ctx = scInstance.getContext(getParentState());
         Evaluator eval = scInstance.getEvaluator();

@@ -176,7 +176,7 @@ public class Assign extends Action implements PathResolverHolder {
      */
     public void execute(final EventDispatcher evtDispatcher,
             final ErrorReporter errRep, final SCInstance scInstance,
-            final Log appLog, final Collection derivedEvents)
+            final Log appLog, final Collection<TriggerEvent> derivedEvents)
     throws ModelException, SCXMLExpressionException {
         State parentState = getParentState();
         Context ctx = scInstance.getContext(parentState);

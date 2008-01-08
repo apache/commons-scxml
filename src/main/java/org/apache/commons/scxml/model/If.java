@@ -28,6 +28,7 @@ import org.apache.commons.scxml.Evaluator;
 import org.apache.commons.scxml.EventDispatcher;
 import org.apache.commons.scxml.SCInstance;
 import org.apache.commons.scxml.SCXMLExpressionException;
+import org.apache.commons.scxml.TriggerEvent;
 
 /**
  * The class in this SCXML object model that corresponds to the
@@ -53,7 +54,7 @@ public class If extends Action {
      * The set of executable elements (those that inheriting from
      * Action) that are contained in this &lt;if&gt; element.
      */
-    private List actions;
+    private List<Action> actions;
 
     /**
      * The boolean value that dictates whether the particular child action
@@ -66,7 +67,7 @@ public class If extends Action {
      */
     public If() {
         super();
-        this.actions = new ArrayList();
+        this.actions = new ArrayList<Action>();
         this.execute = false;
     }
 
@@ -75,7 +76,7 @@ public class If extends Action {
      *
      * @return Returns the actions.
      */
-    public final List getActions() {
+    public final List<Action> getActions() {
         return actions;
     }
 
@@ -114,7 +115,7 @@ public class If extends Action {
      */
     public void execute(final EventDispatcher evtDispatcher,
             final ErrorReporter errRep, final SCInstance scInstance,
-            final Log appLog, final Collection derivedEvents)
+            final Log appLog, final Collection<TriggerEvent> derivedEvents)
     throws ModelException, SCXMLExpressionException {
         State parentState = getParentState();
         Context ctx = scInstance.getContext(parentState);

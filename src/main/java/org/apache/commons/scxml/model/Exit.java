@@ -23,6 +23,7 @@ import org.apache.commons.scxml.ErrorReporter;
 import org.apache.commons.scxml.EventDispatcher;
 import org.apache.commons.scxml.SCInstance;
 import org.apache.commons.scxml.SCXMLExpressionException;
+import org.apache.commons.scxml.TriggerEvent;
 
 /**
  * The class in this SCXML object model that corresponds to the
@@ -95,7 +96,7 @@ public class Exit extends Action {
      */
     public void execute(final EventDispatcher evtDispatcher,
             final ErrorReporter errRep, final SCInstance scInstance,
-            final Log appLog, final Collection derivedEvents)
+            final Log appLog, final Collection<TriggerEvent> derivedEvents)
     throws ModelException, SCXMLExpressionException {
         // we're done
         return;
