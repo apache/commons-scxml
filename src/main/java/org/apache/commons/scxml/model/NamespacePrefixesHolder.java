@@ -31,14 +31,14 @@ public interface NamespacePrefixesHolder {
      *
      * @param namespaces The namespaces prefix map.
      */
-    void setNamespaces(Map namespaces);
+    void setNamespaces(Map<String, String> namespaces);
 
     /**
      * Get the map of namespaces, with keys as prefixes and values as URIs.
      *
      * @return The namespaces prefix map.
      */
-    Map getNamespaces();
+    Map<String, String> getNamespaces();
 
 }
 
