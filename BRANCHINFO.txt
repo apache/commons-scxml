@@ -24,7 +24,7 @@ To set up the Commons SCXML IO using betwixt.
 
                     -- STATUS --
 
-Under active development.
+This branch is dormant. Ping the Commons dev list for any discussion.
 
                     -- DETAILS --
 
