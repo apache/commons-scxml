@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.commons.scxml.model.State;
+import org.apache.commons.scxml.model.TransitionTarget;
 
 /**
  * The encapsulation of the current state of a state machine.
@@ -39,12 +40,12 @@ public class Status implements Serializable {
     /**
      * The states that are currently active.
      */
-    private Set states;
+    private Set<TransitionTarget> states;
 
     /**
      * The events that are currently queued.
      */
-    private Collection events;
+    private Collection<TriggerEvent> events;
 
     /**
      * Have we reached a final configuration for this state machine.
@@ -78,8 +79,8 @@ public class Status implements Serializable {
      * Constructor.
      */
     public Status() {
-        states = new HashSet();
-        events = new ArrayList();
+        states = new HashSet<TransitionTarget>();
+        events = new ArrayList<TriggerEvent>();
     }
 
     /**
@@ -87,7 +88,7 @@ public class Status implements Serializable {
      *
      * @return Returns the states configuration - simple (leaf) states only.
      */
-    public Set getStates() {
+    public Set<TransitionTarget> getStates() {
         return states;
     }
 
@@ -96,7 +97,7 @@ public class Status implements Serializable {
      *
      * @return The events that are currently queued.
      */
-    public Collection getEvents() {
+    public Collection<TriggerEvent> getEvents() {
         return events;
     }
 
@@ -106,7 +107,7 @@ public class Status implements Serializable {
      * @return complete states configuration including simple states and their
      *         complex ancestors up to the root.
      */
-    public Set getAllStates() {
+    public Set<TransitionTarget> getAllStates() {
         return SCXMLHelper.getAncestorClosure(states, null);
     }
 
