@@ -51,7 +51,7 @@ public class Transition extends Executable
      * If multiple state(s) are specified, they must belong to the regions
      * of the same parallel.
      */
-    private List targets;
+    private List<TransitionTarget> targets;
 
     /**
      * The transition target ID (used by XML Digester only).
@@ -63,21 +63,21 @@ public class Transition extends Executable
      * as <code>targets</code>.
      * @see Path
      */
-    private List paths;
+    private List<Path> paths;
 
     /**
      * The current XML namespaces in the SCXML document for this action node,
      * preserved for deferred XPath evaluation.
      */
-    private Map namespaces;
+    private Map<String, String> namespaces;
 
     /**
      * Constructor.
      */
     public Transition() {
         super();
-        this.targets = new ArrayList();
-        this.paths = new ArrayList();
+        this.targets = new ArrayList<TransitionTarget>();
+        this.paths = new ArrayList<Path>();
     }
 
     /**
@@ -123,7 +123,7 @@ public class Transition extends Executable
      *
      * @return Returns the map of namespaces.
      */
-    public final Map getNamespaces() {
+    public final Map<String, String> getNamespaces() {
         return namespaces;
     }
 
@@ -132,7 +132,7 @@ public class Transition extends Executable
      *
      * @param namespaces The document namespaces.
      */
-    public final void setNamespaces(final Map namespaces) {
+    public final void setNamespaces(final Map<String, String> namespaces) {
         this.namespaces = namespaces;
     }
 
@@ -148,7 +148,7 @@ public class Transition extends Executable
      */
     public final TransitionTarget getTarget() {
         if (targets.size() > 0) {
-            return (TransitionTarget) targets.get(0);
+            return targets.get(0);
         }
         return null;
     }
@@ -162,7 +162,7 @@ public class Transition extends Executable
      *
      * @since 0.7
      */
-    public final List getTargets() {
+    public final List<TransitionTarget> getTargets() {
         return targets;
     }
 
@@ -179,7 +179,7 @@ public class Transition extends Executable
      *             use getRuntimeTargets() instead.
      */
     public final TransitionTarget getRuntimeTarget() {
-        return (TransitionTarget) getRuntimeTargets().get(0);
+        return getRuntimeTargets().get(0);
     }
 
     /**
@@ -193,9 +193,9 @@ public class Transition extends Executable
      *
      * @since 0.7
      */
-    public final List getRuntimeTargets() {
+    public final List<TransitionTarget> getRuntimeTargets() {
         if (targets.size() == 0) {
-            List runtimeTargets = new ArrayList();
+            List<TransitionTarget> runtimeTargets = new ArrayList<TransitionTarget>();
             runtimeTargets.add(getParent());
             return runtimeTargets;
         }
@@ -241,7 +241,7 @@ public class Transition extends Executable
      * @deprecated Use getPaths() instead.
      */
     public final Path getPath() {
-        return (Path) getPaths().get(0);
+        return getPaths().get(0);
     }
 
     /**
@@ -252,7 +252,7 @@ public class Transition extends Executable
      *
      * @since 0.7
      */
-    public final List getPaths() {
+    public final List<Path> getPaths() {
         if (paths.size() == 0) {
             if (targets.size() > 0) {
                 for (int i = 0; i < targets.size(); i++) {
