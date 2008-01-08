@@ -44,12 +44,12 @@ public class Path implements Serializable {
     /**
      * The list of TransitionTargets in the &quot;up segment&quot;.
      */
-    private List upSeg = new ArrayList();
+    private List<TransitionTarget> upSeg = new ArrayList<TransitionTarget>();
 
     /**
      * The list of TransitionTargets in the &quot;down segment&quot;.
      */
-    private List downSeg = new ArrayList();
+    private List<TransitionTarget> downSeg = new ArrayList<TransitionTarget>();
 
     /**
      * &quot;Lowest&quot; state which is not being exited nor entered by
@@ -127,8 +127,8 @@ public class Path implements Serializable {
      *         no order defined for siblings
      * @see State#isRegion()
      */
-    public final List getRegionsExited() {
-        List ll = new LinkedList();
+    public final List<State> getRegionsExited() {
+        List<State> ll = new LinkedList<State>();
         for (Iterator i = upSeg.iterator(); i.hasNext();) {
             Object o = i.next();
             if (o instanceof State) {
@@ -148,8 +148,8 @@ public class Path implements Serializable {
      *         defined for siblings
      * @see State#isRegion()
      */
-    public final List getRegionsEntered() {
-        List ll = new LinkedList();
+    public final List<State> getRegionsEntered() {
+        List<State> ll = new LinkedList<State>();
         for (Iterator i = downSeg.iterator(); i.hasNext();) {
             Object o = i.next();
             if (o instanceof State) {
@@ -179,7 +179,7 @@ public class Path implements Serializable {
      *
      * @return List upward segment of the path up to the scope
      */
-    public final List getUpwardSegment() {
+    public final List<TransitionTarget> getUpwardSegment() {
         return upSeg;
     }
 
@@ -188,7 +188,7 @@ public class Path implements Serializable {
      *
      * @return List downward segment from the scope to the target
      */
-    public final List getDownwardSegment() {
+    public final List<TransitionTarget> getDownwardSegment() {
         return downSeg;
     }
 }
