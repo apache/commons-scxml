@@ -72,20 +72,20 @@ public class SCXML implements Serializable {
     /**
      * The immediate child targets of this SCXML document root.
      */
-    private Map children;
+    private Map<String, TransitionTarget> children;
 
     /**
      * A global map of all States and Parallels associated with this
      * state machine, keyed by their id.
      */
-    private Map targets;
+    private Map<String, TransitionTarget> targets;
 
     /**
      * Constructor.
      */
     public SCXML() {
-        this.children = new LinkedHashMap();
-        this.targets = new HashMap();
+        this.children = new LinkedHashMap<String, TransitionTarget>();
+        this.targets = new HashMap<String, TransitionTarget>();
     }
 
     /**
@@ -161,7 +161,7 @@ public class SCXML implements Serializable {
      *
      * @deprecated Use getChildren() instead.
      */
-    public final Map getStates() {
+    public final Map<String, TransitionTarget> getStates() {
         return children;
     }
 
@@ -183,7 +183,7 @@ public class SCXML implements Serializable {
      *
      * @since 0.7
      */
-    public final Map getChildren() {
+    public final Map<String, TransitionTarget> getChildren() {
         return children;
     }
 
@@ -204,7 +204,7 @@ public class SCXML implements Serializable {
      *
      * @return Map Returns the targets.
      */
-    public final Map getTargets() {
+    public final Map<String, TransitionTarget> getTargets() {
         return targets;
     }
 
