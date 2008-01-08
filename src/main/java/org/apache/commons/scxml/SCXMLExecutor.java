@@ -29,6 +29,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml.model.Datamodel;
 import org.apache.commons.scxml.model.History;
 import org.apache.commons.scxml.model.ModelException;
+import org.apache.commons.scxml.model.Observable;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.State;
 import org.apache.commons.scxml.model.Transition;
@@ -404,76 +405,23 @@ public class SCXMLExecutor implements Serializable {
     }
 
     /**
-     * Add a listener to the document root.
+     * Add a listener to the {@link Observable}.
      *
-     * @param scxml The document root to attach listener to.
+     * @param observable The {@link Observable} to attach the listener to.
      * @param listener The SCXMLListener.
      */
-    public void addListener(final SCXML scxml, final SCXMLListener listener) {
-        Object observable = scxml;
+    public void addListener(final Observable observable, final SCXMLListener listener) {
         scInstance.getNotificationRegistry().addListener(observable, listener);
     }
 
     /**
-     * Remove this listener from the document root.
+     * Remove this listener from the {@link Observable}.
      *
-     * @param scxml The document root.
+     * @param scxml The {@link Observable}.
      * @param listener The SCXMLListener to be removed.
      */
-    public void removeListener(final SCXML scxml,
+    public void removeListener(final Observable observable,
             final SCXMLListener listener) {
-        Object observable = scxml;
-        scInstance.getNotificationRegistry().removeListener(observable,
-            listener);
-    }
-
-    /**
-     * Add a listener to this transition target.
-     *
-     * @param transitionTarget The <code>TransitionTarget</code> to
-     *                         attach listener to.
-     * @param listener The SCXMLListener.
-     */
-    public void addListener(final TransitionTarget transitionTarget,
-            final SCXMLListener listener) {
-        Object observable = transitionTarget;
-        scInstance.getNotificationRegistry().addListener(observable, listener);
-    }
-
-    /**
-     * Remove this listener for this transition target.
-     *
-     * @param transitionTarget The <code>TransitionTarget</code>.
-     * @param listener The SCXMLListener to be removed.
-     */
-    public void removeListener(final TransitionTarget transitionTarget,
-            final SCXMLListener listener) {
-        Object observable = transitionTarget;
-        scInstance.getNotificationRegistry().removeListener(observable,
-            listener);
-    }
-
-    /**
-     * Add a listener to this transition.
-     *
-     * @param transition The <code>Transition</code> to attach listener to.
-     * @param listener The SCXMLListener.
-     */
-    public void addListener(final Transition transition,
-            final SCXMLListener listener) {
-        Object observable = transition;
-        scInstance.getNotificationRegistry().addListener(observable, listener);
-    }
-
-    /**
-     * Remove this listener for this transition.
-     *
-     * @param transition The <code>Transition</code>.
-     * @param listener The SCXMLListener to be removed.
-     */
-    public void removeListener(final Transition transition,
-            final SCXMLListener listener) {
-        Object observable = transition;
         scInstance.getNotificationRegistry().removeListener(observable,
             listener);
     }

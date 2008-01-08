@@ -25,7 +25,7 @@ import java.util.List;
  * &lt;target&gt; for a &lt;transition&gt;, such as State or Parallel.
  *
  */
-public abstract class TransitionTarget implements Serializable {
+public abstract class TransitionTarget implements Serializable, Observable {
 
     /**
      * Identifier for this transition target. Other parts of the SCXML

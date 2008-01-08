@@ -28,7 +28,7 @@ import java.util.Map;
  *
  */
 public class Transition extends Executable
-        implements NamespacePrefixesHolder {
+        implements NamespacePrefixesHolder, Observable {
 
     /**
      * Serial version UID.

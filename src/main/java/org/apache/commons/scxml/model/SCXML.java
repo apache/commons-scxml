@@ -29,7 +29,7 @@ import org.apache.commons.scxml.SCXMLHelper;
  * root&quot;.
  *
  */
-public class SCXML implements Serializable {
+public class SCXML implements Serializable, Observable {
 
     /**
      * Serial version UID.
