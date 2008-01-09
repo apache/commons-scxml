@@ -69,6 +69,8 @@ public class JexlContext extends SimpleContext
      * @see org.apache.commons.scxml.env.SimpleContext#setVars(Map<String,Object>)
      */
     @Override
+    @SuppressWarnings("unchecked")
+    // Accomodate legacy signature org.apache.commons.jexl.JexlContext#setVars(Map)
     public void setVars(final Map vars) {
         super.setVars(vars);
         getVars().put("_builtin", new Builtin());
