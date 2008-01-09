@@ -220,7 +220,7 @@ public abstract class TransitionTarget implements Serializable, Observable {
      *
      * @since 0.7
      */
-    public final List getHistory() {
+    public final List<History> getHistory() {
         return history;
     }
 

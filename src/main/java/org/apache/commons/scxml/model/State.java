@@ -205,7 +205,7 @@ public class State extends TransitionTarget {
      * @return Map Returns the transitions Map.
      * @deprecated Use {@link #getTransitionsList()} instead
      */
-    public final Map getTransitions() {
+    public final Map<String, List<Transition>> getTransitions() {
         Map<String, List<Transition>> transitionsMap = new HashMap<String, List<Transition>>();
         for (int i = 0; i < transitions.size(); i++) {
             Transition transition = transitions.get(i);
@@ -228,7 +228,7 @@ public class State extends TransitionTarget {
      * @param event The event
      * @return List Returns the candidate transitions for given event
      */
-    public final List getTransitionsList(final String event) {
+    public final List<Transition> getTransitionsList(final String event) {
         List<Transition> matchingTransitions = null; // since we returned null upto v0.6
         for (int i = 0; i < transitions.size(); i++) {
             Transition t = transitions.get(i);
@@ -260,7 +260,7 @@ public class State extends TransitionTarget {
      *
      * @return Map Returns the children.
      */
-    public final Map getChildren() {
+    public final Map<String, TransitionTarget> getChildren() {
         return children;
     }
 
@@ -295,7 +295,7 @@ public class State extends TransitionTarget {
      *
      * @return List Returns the transitions list.
      */
-    public final List getTransitionsList() {
+    public final List<Transition> getTransitionsList() {
         return transitions;
     }
 
