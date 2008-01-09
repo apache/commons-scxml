@@ -161,7 +161,7 @@ public class CustomActionTest extends TestCase {
         CustomAction ca2 =
             new CustomAction("http://my.custom-actions.domain/CUSTOM2",
                              "bar", Hello.class);
-        List customActions = new ArrayList();
+        List<CustomAction> customActions = new ArrayList<CustomAction>();
         customActions.add(ca1);
         customActions.add(ca2);
         // (2) Parse the document with a custom digester.
@@ -182,7 +182,7 @@ public class CustomActionTest extends TestCase {
         CustomAction ca =
             new CustomAction("http://my.custom-actions.domain/CUSTOM",
                              "hello", Hello.class);
-        List customActions = new ArrayList();
+        List<CustomAction> customActions = new ArrayList<CustomAction>();
         customActions.add(ca);
         // (2) Parse the document with a custom digester.
         SCXML scxml = SCXMLTestHelper.digest(external01, customActions);
@@ -200,7 +200,7 @@ public class CustomActionTest extends TestCase {
         CustomAction ca =
             new CustomAction("http://my.custom-actions.domain/CUSTOM",
                              "send", Hello.class);
-        List customActions = new ArrayList();
+        List<CustomAction> customActions = new ArrayList<CustomAction>();
         customActions.add(ca);
         // (2) Parse the document with a custom digester.
         SCXML scxml = SCXMLTestHelper.digest(override01, customActions);
@@ -225,7 +225,7 @@ public class CustomActionTest extends TestCase {
         CustomAction ca =
             new CustomAction("http://my.custom-actions.domain/CUSTOM",
                              "hello", Hello.class);
-        List customActions = new ArrayList();
+        List<CustomAction> customActions = new ArrayList<CustomAction>();
         customActions.add(ca);
         // (2) Parse the document with a custom digester.
         SCXML scxml = SCXMLTestHelper.digest(payload01, customActions);
@@ -257,7 +257,7 @@ public class CustomActionTest extends TestCase {
         CustomAction ca =
             new CustomAction("http://my.custom-actions.domain/CUSTOM",
                              "hello", Hello.class);
-        List customActions = new ArrayList();
+        List<CustomAction> customActions = new ArrayList<CustomAction>();
         customActions.add(ca);
         // (2) Parse the document with a custom digester.
         SCXML scxml = SCXMLTestHelper.digest(payload02, customActions);

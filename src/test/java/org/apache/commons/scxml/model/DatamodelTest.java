@@ -122,7 +122,7 @@ public class DatamodelTest extends TestCase {
         assertEquals(1, currentStates.size());
         assertEquals("ten", ((State)currentStates.iterator().
             next()).getId());
-        Map payload = new HashMap();
+        Map<String, Object> payload = new HashMap<String, Object>();
         payload.put("one", "1");
         payload.put("two", "2");
         TriggerEvent te = new TriggerEvent("ten.done", TriggerEvent.SIGNAL_EVENT, payload);
