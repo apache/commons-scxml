@@ -16,6 +16,8 @@
  */
 package org.apache.commons.scxml.semantics;
 
+import java.util.Comparator;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -39,10 +41,10 @@ public class TransitionTargetComparatorTest extends TestCase {
         junit.textui.TestRunner.main(testCaseName);
     }
 
-    private TransitionTargetComparator comparator;
+    private Comparator<TransitionTarget> comparator;
     
     public void setUp() {
-        comparator = new TransitionTargetComparator();
+        comparator = new TransitionTargetComparator<TransitionTarget>();
     }
     
     public void testComparatorEquals() {
