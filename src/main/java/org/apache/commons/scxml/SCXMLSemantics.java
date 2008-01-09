@@ -21,6 +21,7 @@ import java.util.Set;
 
 import org.apache.commons.scxml.model.ModelException;
 import org.apache.commons.scxml.model.SCXML;
+import org.apache.commons.scxml.model.TransitionTarget;
 
 /**
  * <p>The purpose of this interface is to separate the interpretation algorithm
@@ -73,8 +74,8 @@ public interface SCXMLSemantics {
      * @throws ModelException
      *             in case there is a fatal SCXML object model problem.
      */
-    void determineInitialStates(final SCXML input, final Set states,
-            final List entryList, final ErrorReporter errRep,
+    void determineInitialStates(final SCXML input, final Set<TransitionTarget> states,
+            final List<TransitionTarget> entryList, final ErrorReporter errRep,
             final SCInstance scInstance)
     throws ModelException;
 
