@@ -30,10 +30,10 @@ import javax.servlet.jsp.el.VariableResolver;
  */
 public class MockJspContext extends JspContext
         implements VariableResolver {
-    private Map vars;
+    private Map<String, Object> vars;
     public MockJspContext() {
         super();
-        vars = new HashMap();
+        vars = new HashMap<String, Object>();
     }
     public void setAttribute(String name, Object value) {
         vars.put(name, value);

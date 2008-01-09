@@ -45,7 +45,7 @@ public class SimpleContextTest extends TestCase {
     }
     
     public void testHasTrue() {
-        Map vars = new HashMap();
+        Map<String, Object> vars = new HashMap<String, Object>();
         vars.put("key", "value");
         
         context.setVars(vars);
@@ -54,7 +54,7 @@ public class SimpleContextTest extends TestCase {
     }
 
     public void testHasNullParent() {
-        Map vars = new HashMap();
+        Map<String, Object> vars = new HashMap<String, Object>();
         vars.put("key", "value");
         
         context.setVars(vars);
@@ -63,12 +63,12 @@ public class SimpleContextTest extends TestCase {
     }
     
     public void testHasParentWrongKey() {
-        Map parentVars = new HashMap();
+        Map<String, Object> parentVars = new HashMap<String, Object>();
         parentVars.put("key", "value");
         
         SimpleContext parentContext = new SimpleContext(parentVars);
         
-        Map vars = new HashMap();
+        Map<String, Object> vars = new HashMap<String, Object>();
         vars.put("key", "value");
         
         context.setVars(vars);
@@ -78,12 +78,12 @@ public class SimpleContextTest extends TestCase {
     }
 
     public void testHasParentCorrectKey() {
-        Map parentVars = new HashMap();
+        Map<String, Object> parentVars = new HashMap<String, Object>();
         parentVars.put("differentKey", "value");
         
         SimpleContext parentContext = new SimpleContext(parentVars);
         
-        Map vars = new HashMap();
+        Map<String, Object> vars = new HashMap<String, Object>();
         vars.put("key", "value");
         
         context.setVars(vars);
@@ -99,7 +99,7 @@ public class SimpleContextTest extends TestCase {
     }
     
     public void testGetValue() {
-        Map vars = new HashMap();
+        Map<String, Object> vars = new HashMap<String, Object>();
         vars.put("key", "value");
         
         context.setVars(vars);
@@ -108,12 +108,12 @@ public class SimpleContextTest extends TestCase {
     }
     
     public void testGetParentValue() {
-        Map parentVars = new HashMap();
+        Map<String, Object> parentVars = new HashMap<String, Object>();
         parentVars.put("differentKey", "differentValue");
         
         SimpleContext parentContext = new SimpleContext(parentVars);
         
-        Map vars = new HashMap();
+        Map<String, Object> vars = new HashMap<String, Object>();
         vars.put("key", "value");
         
         context.setVars(vars);
@@ -123,7 +123,7 @@ public class SimpleContextTest extends TestCase {
     }
     
     public void testGetParentNull() {
-        Map vars = new HashMap();
+        Map<String, Object> vars = new HashMap<String, Object>();
         vars.put("key", "value");
         
         context.setVars(vars);
@@ -132,12 +132,12 @@ public class SimpleContextTest extends TestCase {
     }
     
     public void testGetParentWrongValue() {
-        Map parentVars = new HashMap();
+        Map<String, Object> parentVars = new HashMap<String, Object>();
         parentVars.put("differentKey", "differentValue");
         
         SimpleContext parentContext = new SimpleContext(parentVars);
         
-        Map vars = new HashMap();
+        Map<String, Object> vars = new HashMap<String, Object>();
         vars.put("key", "value");
         
         context.setVars(vars);
@@ -147,7 +147,7 @@ public class SimpleContextTest extends TestCase {
     }
 
     public void testSetVarsChangeValue() {
-        Map vars = new HashMap();
+        Map<String, Object> vars = new HashMap<String, Object>();
         vars.put("key", "value");
         
         context.setVars(vars);
@@ -158,7 +158,7 @@ public class SimpleContextTest extends TestCase {
     }
 
     public void testSetVarsEmpty() {
-        Map vars = new HashMap();
+        Map<String, Object> vars = new HashMap<String, Object>();
         context.setVars(vars);
         
         context.set("key", "newValue");
@@ -167,12 +167,12 @@ public class SimpleContextTest extends TestCase {
     }
     
     public void testSetVarsParent() {
-        Map parentVars = new HashMap();
+        Map<String, Object> parentVars = new HashMap<String, Object>();
         parentVars.put("differentKey", "differentValue");
         
         SimpleContext parentContext = new SimpleContext(parentVars);
         
-        Map vars = new HashMap();
+        Map<String, Object> vars = new HashMap<String, Object>();
         vars.put("key", "value");
         
         context.setVars(vars);
