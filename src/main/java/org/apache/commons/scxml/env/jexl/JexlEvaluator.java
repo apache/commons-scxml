@@ -167,17 +167,17 @@ public class JexlEvaluator implements Evaluator, Serializable {
      *         document root.
      */
     private JexlContext getEffectiveContext(final JexlContext nodeCtx) {
-        List contexts = new ArrayList();
+        List<JexlContext> contexts = new ArrayList<JexlContext>();
         // trace path to root
         JexlContext currentCtx = nodeCtx;
         while (currentCtx != null) {
             contexts.add(currentCtx);
             currentCtx = (JexlContext) currentCtx.getParent();
         }
-        Map vars = new HashMap();
+        Map<String, Object> vars = new HashMap<String, Object>();
         // summation of the contexts, parent first, child wins
         for (int i = contexts.size() - 1; i > -1; i--) {
-            vars.putAll(((JexlContext) contexts.get(i)).getVars());
+            vars.putAll(contexts.get(i).getVars());
         }
         return new JexlContext(vars);
     }
