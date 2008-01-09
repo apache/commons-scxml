@@ -38,6 +38,7 @@ import org.apache.commons.scxml.env.Tracer;
 import org.apache.commons.scxml.env.jexl.JexlEvaluator;
 import org.apache.commons.scxml.io.SCXMLDigester;
 import org.apache.commons.scxml.io.SCXMLParser;
+import org.apache.commons.scxml.model.CustomAction;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.State;
 import org.apache.commons.scxml.model.TransitionTarget;
@@ -61,7 +62,7 @@ public class SCXMLTestHelper {
         return digest(url, null, null);
     }
 
-    public static SCXML digest(final URL url, final List customActions) {
+    public static SCXML digest(final URL url, final List<CustomAction> customActions) {
         return digest(url, null, customActions);
     }
 
@@ -70,7 +71,7 @@ public class SCXMLTestHelper {
     }
 
     public static SCXML digest(final URL url, final ErrorHandler errHandler,
-            final List customActions) {
+            final List<CustomAction> customActions) {
         Assert.assertNotNull(url);
         // SAX ErrorHandler may be null
         SCXML scxml = null;
@@ -91,7 +92,7 @@ public class SCXMLTestHelper {
         return parse(url, null, null);
     }
 
-    public static SCXML parse(final URL url, final List customActions) {
+    public static SCXML parse(final URL url, final List<CustomAction> customActions) {
         return parse(url, null, customActions);
     }
 
@@ -100,7 +101,7 @@ public class SCXMLTestHelper {
     }
 
     public static SCXML parse(final URL url, final ErrorHandler errHandler,
-            final List customActions) {
+            final List<CustomAction> customActions) {
         Assert.assertNotNull(url);
         // SAX ErrorHandler may be null
         SCXML scxml = null;
@@ -224,7 +225,7 @@ public class SCXMLTestHelper {
         return exec.getSCInstance().lookupContext(tt);
     }
 
-    public static Set fireEvent(SCXMLExecutor exec, String name) {
+    public static Set<TransitionTarget> fireEvent(SCXMLExecutor exec, String name) {
         TriggerEvent[] evts = {new TriggerEvent(name,
                 TriggerEvent.SIGNAL_EVENT, null)};
         try {
@@ -237,7 +238,7 @@ public class SCXMLTestHelper {
         return exec.getCurrentStatus().getStates();
     }
 
-    public static Set fireEvent(SCXMLExecutor exec, TriggerEvent te) {
+    public static Set<TransitionTarget> fireEvent(SCXMLExecutor exec, TriggerEvent te) {
         try {
             exec.triggerEvent(te);
         } catch (Exception e) {
@@ -248,7 +249,7 @@ public class SCXMLTestHelper {
         return exec.getCurrentStatus().getStates();
     }
 
-    public static Set fireEvents(SCXMLExecutor exec, TriggerEvent[] evts) {
+    public static Set<TransitionTarget> fireEvents(SCXMLExecutor exec, TriggerEvent[] evts) {
         try {
             exec.triggerEvents(evts);
         } catch (Exception e) {
