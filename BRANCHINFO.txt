@@ -24,7 +24,7 @@ To improve the Commons SCXML codebase using JDK 5 features.
 
                     -- STATUS --
 
-Under active development.
+Under active development (see TASKS section at the end).
 
                     -- DETAILS --
 
@@ -40,3 +40,10 @@ a "distributed manner"), it may be possible to use them for lesser tasks
 within the library.
 
 Other JDK 5 language improvements may come handy as well.
+
+                    -- TASKS --
+
+ * Type safety improvements - Mostly DONE
+ * @Override, @SuppressWarnings etc. - Mostly DONE
+ * Enhanced for, Iterator usage - TODO
+ * Static imports - WONTFIX
