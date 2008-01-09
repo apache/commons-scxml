@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.scxml.model.Transition;
+import org.apache.commons.scxml.model.TransitionTarget;
+
 /**
  * A logical unit of progression in the execution of a SCXML model.
  *
@@ -30,12 +33,12 @@ public class Step {
      * Constructor.
       */
     public Step() {
-        this.externalEvents = new ArrayList();
+        this.externalEvents = new ArrayList<TriggerEvent>();
         this.beforeStatus = new Status();
         this.afterStatus = new Status();
-        this.exitList = new ArrayList();
-        this.entryList = new ArrayList();
-        this.transitList = new ArrayList();
+        this.exitList = new ArrayList<TransitionTarget>();
+        this.entryList = new ArrayList<TransitionTarget>();
+        this.transitList = new ArrayList<Transition>();
     }
 
     /**
@@ -43,11 +46,11 @@ public class Step {
      *     unit of progression
      * @param beforeStatus The before status
      */
-    public Step(final Collection externalEvents, final Status beforeStatus) {
+    public Step(final Collection<TriggerEvent> externalEvents, final Status beforeStatus) {
         if (externalEvents != null) {
             this.externalEvents = externalEvents;
         } else {
-            this.externalEvents = new ArrayList();
+            this.externalEvents = new ArrayList<TriggerEvent>();
         }
         if (beforeStatus != null) {
             this.beforeStatus = beforeStatus;
@@ -55,15 +58,15 @@ public class Step {
             this.beforeStatus = new Status();
         }
         this.afterStatus = new Status();
-        this.exitList = new ArrayList();
-        this.entryList = new ArrayList();
-        this.transitList = new ArrayList();
+        this.exitList = new ArrayList<TransitionTarget>();
+        this.entryList = new ArrayList<TransitionTarget>();
+        this.transitList = new ArrayList<Transition>();
     }
 
     /**
      * The external events in this step.
      */
-    private Collection externalEvents;
+    private Collection<TriggerEvent> externalEvents;
 
     /**
      * The status before this step.
@@ -78,17 +81,17 @@ public class Step {
     /**
      * The list of TransitionTargets that were exited during this step.
      */
-    private List exitList;
+    private List<TransitionTarget> exitList;
 
     /**
      * The list of TransitionTargets that were entered during this step.
      */
-    private List entryList;
+    private List<TransitionTarget> entryList;
 
     /**
      * The list of Transitions taken during this step.
      */
-    private List transitList;
+    private List<Transition> transitList;
 
     /**
      * @return Returns the afterStatus.
@@ -121,28 +124,28 @@ public class Step {
     /**
      * @return Returns the entryList.
      */
-    public List getEntryList() {
+    public List<TransitionTarget> getEntryList() {
         return entryList;
     }
 
     /**
      * @return Returns the exitList.
      */
-    public List getExitList() {
+    public List<TransitionTarget> getExitList() {
         return exitList;
     }
 
     /**
      * @return Returns the externalEvents.
      */
-    public Collection getExternalEvents() {
+    public Collection<TriggerEvent> getExternalEvents() {
         return externalEvents;
     }
 
     /**
      * @return Returns the transitList.
      */
-    public List getTransitList() {
+    public List<Transition> getTransitList() {
         return transitList;
     }
 
