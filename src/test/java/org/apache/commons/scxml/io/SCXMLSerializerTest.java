@@ -23,6 +23,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import org.apache.commons.scxml.model.Action;
 import org.apache.commons.scxml.model.Assign;
 import org.apache.commons.scxml.model.Cancel;
 import org.apache.commons.scxml.model.Else;
@@ -106,7 +107,7 @@ public class SCXMLSerializerTest extends TestCase {
         var.setName("newName");
         var.setExpr("newExpression");
         
-        List values = new ArrayList();
+        List<Action> values = new ArrayList<Action>();
         values.add(var);
         
         String actualValue = " <var name=\"newName\" expr=\"newExpression\"/>\n";
@@ -123,7 +124,7 @@ public class SCXMLSerializerTest extends TestCase {
         assign.setName("newName");
         assign.setExpr("newExpression");
         
-        List values = new ArrayList();
+        List<Action> values = new ArrayList<Action>();
         values.add(assign);
         
         String actualValue = " <assign name=\"newName\" expr=\"newExpression\"/>\n";
@@ -139,7 +140,7 @@ public class SCXMLSerializerTest extends TestCase {
         Cancel cancel = new Cancel();
         cancel.setSendid("1");
         
-        List values = new ArrayList();
+        List<Action> values = new ArrayList<Action>();
         values.add(cancel);
         
         String actualValue = " <cancel sendid=\"1\"/>\n";
@@ -155,7 +156,7 @@ public class SCXMLSerializerTest extends TestCase {
         Log log = new Log();
         log.setExpr("newExpression");
         
-        List values = new ArrayList();
+        List<Action> values = new ArrayList<Action>();
         values.add(log);
         
         String actualValue = " <log expr=\"newExpression\"/>\n";
@@ -172,7 +173,7 @@ public class SCXMLSerializerTest extends TestCase {
         exit.setExpr("newExpression");
         exit.setNamelist("names");
         
-        List values = new ArrayList();
+        List<Action> values = new ArrayList<Action>();
         values.add(exit);
         
         String actualValue = " <exit expr=\"newExpression\" namelist=\"names\"/>\n";
@@ -187,7 +188,7 @@ public class SCXMLSerializerTest extends TestCase {
     public void testSerializeActionsElse() {
         Else elseValue = new Else();
         
-        List values = new ArrayList();
+        List<Action> values = new ArrayList<Action>();
         values.add(elseValue);
         
         String actualValue = " <else/>\n";
@@ -203,7 +204,7 @@ public class SCXMLSerializerTest extends TestCase {
         ElseIf elseIf = new ElseIf();
         elseIf.setCond("newCondition");
         
-        List values = new ArrayList();
+        List<Action> values = new ArrayList<Action>();
         values.add(elseIf);
         
         String actualValue = " <elseif cond=\"newCondition\" />\n";
@@ -219,7 +220,7 @@ public class SCXMLSerializerTest extends TestCase {
         If ifValue = new If();
         ifValue.setCond("newCondition");
         
-        List values = new ArrayList();
+        List<Action> values = new ArrayList<Action>();
         values.add(ifValue);
         
         String actualValue = " <if cond=\"newCondition\">\n </if>\n";
