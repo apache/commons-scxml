@@ -1277,7 +1277,7 @@ public final class SCXMLParser {
         public final void end(final String namespace, final String name) {
             Element bodyElement = (Element) getDigester().pop();
             NodeList childNodes = bodyElement.getChildNodes();
-            List externalNodes = ((ExternalContent) getDigester().
+            List<Node> externalNodes = ((ExternalContent) getDigester().
                 peek()).getExternalNodes();
             for (int i = 0; i < childNodes.getLength(); i++) {
                 externalNodes.add(childNodes.item(i));
@@ -1551,6 +1551,8 @@ public final class SCXMLParser {
         /**
          * @see Rule#begin(String, String, Attributes)
          */
+        @SuppressWarnings("unchecked")
+        // Accomodate legacy code org.apache.commons.digester.Digester#getCurrentNamespaces()
         public final void begin(final String namespace, final String name,
                 final Attributes attributes) {
             NamespacePrefixesHolder nsHolder =
