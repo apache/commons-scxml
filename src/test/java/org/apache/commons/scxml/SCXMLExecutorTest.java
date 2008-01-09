@@ -203,7 +203,7 @@ public class SCXMLExecutorTest extends TestCase {
         try {
             Set currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
             assertEquals(3, currentStates.size());
-            Set expected = new HashSet();
+            Set<String> expected = new HashSet<String>();
             expected.add("twenty_one_2");
             expected.add("twenty_two_2");
             expected.add("twenty_three_2");
@@ -228,7 +228,7 @@ public class SCXMLExecutorTest extends TestCase {
         try {
             Set currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
             assertEquals(3, currentStates.size());
-            Set expected = new HashSet();
+            Set<String> expected = new HashSet<String>();
             expected.add("twenty_one_1");
             expected.add("twenty_two_1");
             expected.add("twenty_three_1");
