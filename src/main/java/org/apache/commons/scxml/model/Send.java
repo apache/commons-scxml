@@ -266,6 +266,7 @@ public class Send extends Action implements ExternalContent {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void execute(final EventDispatcher evtDispatcher,
             final ErrorReporter errRep, final SCInstance scInstance,
             final Log appLog, final Collection<TriggerEvent> derivedEvents)
