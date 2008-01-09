@@ -30,7 +30,7 @@ import org.apache.commons.scxml.model.TransitionTarget;
  * A comparator for TransitionTarget instances.
  *
  */
-final class TransitionTargetComparator implements Comparator, Serializable {
+final class TransitionTargetComparator<T> implements Comparator<T>, Serializable {
 
     /**
      * Serial version UID.
@@ -58,7 +58,7 @@ final class TransitionTargetComparator implements Comparator, Serializable {
      * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
      * @see TransitionTarget
      */
-    public int compare(final Object o1, final Object o2) {
+    public int compare(final T o1, final T o2) {
         TransitionTarget tt1 = (TransitionTarget) o1;
         TransitionTarget tt2 = (TransitionTarget) o2;
         if (tt1 == tt2) {
