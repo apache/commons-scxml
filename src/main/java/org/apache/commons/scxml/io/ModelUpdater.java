@@ -69,11 +69,11 @@ final class ModelUpdater {
                initialstate });
        }
        scxml.setInitialTarget(initialTarget);
-       Map targets = scxml.getTargets();
-       Map children = scxml.getChildren();
+       Map<String, TransitionTarget> targets = scxml.getTargets();
+       Map<String, TransitionTarget> children = scxml.getChildren();
        Iterator i = children.keySet().iterator();
        while (i.hasNext()) {
-           TransitionTarget tt = (TransitionTarget) children.get(i.next());
+           TransitionTarget tt = children.get(i.next());
            if (tt instanceof State) {
                updateState((State) tt, targets);
            } else {
@@ -90,12 +90,12 @@ final class ModelUpdater {
       * @param targets The global Map of all transition targets
       * @throws ModelException If the object model is flawed
       */
-    private static void updateState(final State s, final Map targets)
+    private static void updateState(final State s, final Map<String, TransitionTarget> targets)
     throws ModelException {
         //initialize next / inital
         Initial ini = s.getInitial();
         Map c = s.getChildren();
-        List initialStates = null;
+        List<TransitionTarget> initialStates = null;
         if (!c.isEmpty()) {
             if (ini == null) {
                 logAndThrowModelError(ERR_STATE_NO_INIT,
@@ -111,8 +111,7 @@ final class ModelUpdater {
                     new Object[] {getStateName(s)});
             } else {
                 for (int i = 0; i < initialStates.size(); i++) {
-                    TransitionTarget initialState = (TransitionTarget)
-                        initialStates.get(i);
+                    TransitionTarget initialState = initialStates.get(i);
                     if (!SCXMLHelper.isDescendant(initialState, s)) {
                         logAndThrowModelError(ERR_STATE_BAD_INIT,
                             new Object[] {getStateName(s)});
@@ -120,14 +119,14 @@ final class ModelUpdater {
                 }
             }
         }
-        List histories = s.getHistory();
-        Iterator histIter = histories.iterator();
+        List<History> histories = s.getHistory();
+        Iterator<History> histIter = histories.iterator();
         while (histIter.hasNext()) {
             if (s.isSimple()) {
                 logAndThrowModelError(ERR_HISTORY_SIMPLE_STATE,
                     new Object[] {getStateName(s)});
             }
-            History h = (History) histIter.next();
+            History h = histIter.next();
             Transition historyTransition = h.getTransition();
             if (historyTransition == null) {
                 // try to assign initial as default
@@ -147,14 +146,13 @@ final class ModelUpdater {
                 }
             }
             updateTransition(historyTransition, targets);
-            List historyStates = historyTransition.getTargets();
+            List<TransitionTarget> historyStates = historyTransition.getTargets();
             if (historyStates.size() == 0) {
                 logAndThrowModelError(ERR_STATE_NO_HIST,
                     new Object[] {getStateName(s)});
             }
             for (int i = 0; i < historyStates.size(); i++) {
-                TransitionTarget historyState = (TransitionTarget)
-                    historyStates.get(i);
+                TransitionTarget historyState = historyStates.get(i);
                 if (!h.isDeep()) {
                     if (!c.containsValue(historyState)) {
                         logAndThrowModelError(ERR_STATE_BAD_SHALLOW_HIST,
@@ -168,9 +166,9 @@ final class ModelUpdater {
                 }
             }
         }
-        List t = s.getTransitionsList();
+        List<Transition> t = s.getTransitionsList();
         for (int i = 0; i < t.size(); i++) {
-            Transition trn = (Transition) t.get(i);
+            Transition trn = t.get(i);
             updateTransition(trn, targets);
         }
         Parallel p = s.getParallel(); //TODO: Remove in v1.0
@@ -217,7 +215,7 @@ final class ModelUpdater {
       * @param targets The global Map of all transition targets
       * @throws ModelException If the object model is flawed
       */
-    private static void updateParallel(final Parallel p, final Map targets)
+    private static void updateParallel(final Parallel p, final Map<String, TransitionTarget> targets)
     throws ModelException {
         Iterator i = p.getChildren().iterator();
         while (i.hasNext()) {
@@ -233,18 +231,18 @@ final class ModelUpdater {
       * @throws ModelException If the object model is flawed
       */
     private static void updateTransition(final Transition t,
-            final Map targets) throws ModelException {
+            final Map<String, TransitionTarget> targets) throws ModelException {
         String next = t.getNext();
         if (next == null) { // stay transition
             return;
         }
-        List tts = t.getTargets();
+        List<TransitionTarget> tts = t.getTargets();
         if (tts.size() == 0) {
             // 'next' is a space separated list of transition target IDs
             StringTokenizer ids = new StringTokenizer(next);
             while (ids.hasMoreTokens()) {
                 String id = ids.nextToken();
-                TransitionTarget tt = (TransitionTarget) targets.get(id);
+                TransitionTarget tt = targets.get(id);
                 if (tt == null) {
                     logAndThrowModelError(ERR_TARGET_NOT_FOUND, new Object[] {
                         id });
@@ -305,19 +303,18 @@ final class ModelUpdater {
      * @param tts The transition targets
      * @return Whether this is a legal configuration
      */
-    private static boolean verifyTransitionTargets(final List tts) {
+    private static boolean verifyTransitionTargets(final List<TransitionTarget> tts) {
         if (tts.size() <= 1) { // No contention
             return true;
         }
-        TransitionTarget lca = SCXMLHelper.getLCA((TransitionTarget)
-            tts.get(0), (TransitionTarget) tts.get(1));
+        TransitionTarget lca = SCXMLHelper.getLCA(tts.get(0), tts.get(1));
         if (lca == null || !(lca instanceof Parallel)) {
             return false; // Must have a Parallel LCA
         }
         Parallel p = (Parallel) lca;
-        Set regions = new HashSet();
+        Set<TransitionTarget> regions = new HashSet<TransitionTarget>();
         for (int i = 0; i < tts.size(); i++) {
-            TransitionTarget tt = (TransitionTarget) tts.get(i);
+            TransitionTarget tt = tts.get(i);
             while (tt.getParent() != p) {
                 tt = tt.getParent();
             }
