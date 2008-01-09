@@ -244,7 +244,7 @@ public final class SCXMLParser {
      * @see PathResolver
      */
     public static SCXML parse(final URL scxmlURL,
-            final ErrorHandler errHandler, final List customActions)
+            final ErrorHandler errHandler, final List<CustomAction> customActions)
     throws IOException, SAXException, ModelException {
 
         SCXML scxml = null;
@@ -301,7 +301,7 @@ public final class SCXMLParser {
      */
     public static SCXML parse(final String documentRealPath,
             final ErrorHandler errHandler, final PathResolver pathResolver,
-            final List customActions)
+            final List<CustomAction> customActions)
     throws IOException, SAXException, ModelException {
 
         if (documentRealPath == null) {
@@ -364,7 +364,7 @@ public final class SCXMLParser {
      * @see ErrorHandler
      */
     public static SCXML parse(final InputSource documentInputSource,
-            final ErrorHandler errHandler, final List customActions)
+            final ErrorHandler errHandler, final List<CustomAction> customActions)
     throws IOException, SAXException, ModelException {
 
         Digester scxmlParser = SCXMLParser.newInstance(null, null,
@@ -480,7 +480,7 @@ public final class SCXMLParser {
      * @see SCXMLParser#updateSCXML(SCXML)
      */
     public static Digester newInstance(final SCXML scxml,
-            final PathResolver pr, final List customActions) {
+            final PathResolver pr, final List<CustomAction> customActions) {
 
         Digester digester = new Digester();
         digester.setNamespaceAware(true);
@@ -691,7 +691,7 @@ public final class SCXMLParser {
      * @return scxmlRules The rule set to be used for digestion
      */
     private static ExtendedBaseRules initRules(final SCXML scxml,
-            final PathResolver pr, final List customActions) {
+            final PathResolver pr, final List<CustomAction> customActions) {
 
         ExtendedBaseRules scxmlRules = new ExtendedBaseRules();
         scxmlRules.setNamespaceURI(NAMESPACE_SCXML);
@@ -753,7 +753,7 @@ public final class SCXMLParser {
      * @param pr The PathResolver
      */
     private static void addStateRules(final String xp,
-            final ExtendedBaseRules scxmlRules, final List customActions,
+            final ExtendedBaseRules scxmlRules, final List<CustomAction> customActions,
             final SCXML scxml, final PathResolver pr) {
         scxmlRules.add(xp, new ObjectCreateRule(State.class));
         addStatePropertiesRules(xp, scxmlRules, customActions, pr, scxml);
@@ -780,7 +780,7 @@ public final class SCXMLParser {
      * @param scxml The parent SCXML document (or null)
      */
     private static void addParallelRules(final String xp,
-            final ExtendedBaseRules scxmlRules, final List customActions,
+            final ExtendedBaseRules scxmlRules, final List<CustomAction> customActions,
             final SCXML scxml, final PathResolver pr) {
         addSimpleRulesTuple(xp, scxmlRules, Parallel.class, null, null,
                 "addChild");
@@ -801,7 +801,7 @@ public final class SCXMLParser {
      * @param pr The {@link PathResolver} for this document
      */
     private static void addFinalRules(final String xp,
-            final ExtendedBaseRules scxmlRules, final List customActions,
+            final ExtendedBaseRules scxmlRules, final List<CustomAction> customActions,
             final SCXML scxml, final PathResolver pr) {
         addSimpleRulesTuple(xp, scxmlRules, Final.class, null, null,
             "addChild");
@@ -821,7 +821,7 @@ public final class SCXMLParser {
      * @param scxml The root document, if this one is src'ed in
      */
     private static void addStatePropertiesRules(final String xp,
-            final ExtendedBaseRules scxmlRules, final List customActions,
+            final ExtendedBaseRules scxmlRules, final List<CustomAction> customActions,
             final PathResolver pr, final SCXML scxml) {
         scxmlRules.add(xp, new SetPropertiesRule());
         scxmlRules.add(xp, new DigestSrcAttributeRule(scxml,
@@ -867,7 +867,7 @@ public final class SCXMLParser {
      * @param scxml The parent SCXML document (or null)
      */
     private static void addInvokeRules(final String xp,
-            final ExtendedBaseRules scxmlRules, final List customActions,
+            final ExtendedBaseRules scxmlRules, final List<CustomAction> customActions,
             final PathResolver pr, final SCXML scxml) {
         scxmlRules.add(xp, new ObjectCreateRule(Invoke.class));
         scxmlRules.add(xp, new SetPropertiesRule());
@@ -896,7 +896,7 @@ public final class SCXMLParser {
      * @param scxml The parent SCXML document (or null)
      */
     private static void addInitialRules(final String xp,
-            final ExtendedBaseRules scxmlRules, final List customActions,
+            final ExtendedBaseRules scxmlRules, final List<CustomAction> customActions,
             final PathResolver pr, final SCXML scxml) {
         scxmlRules.add(xp, new ObjectCreateRule(Initial.class));
         addPseudoStatePropertiesRules(xp, scxmlRules, customActions, pr,
@@ -919,7 +919,7 @@ public final class SCXMLParser {
      * @param scxml The parent SCXML document (or null)
      */
     private static void addHistoryRules(final String xp,
-            final ExtendedBaseRules scxmlRules, final List customActions,
+            final ExtendedBaseRules scxmlRules, final List<CustomAction> customActions,
             final PathResolver pr, final SCXML scxml) {
         scxmlRules.add(xp, new ObjectCreateRule(History.class));
         addPseudoStatePropertiesRules(xp, scxmlRules, customActions, pr,
@@ -945,7 +945,7 @@ public final class SCXMLParser {
      * @param scxml The root document, if this one is src'ed in
      */
     private static void addPseudoStatePropertiesRules(final String xp,
-            final ExtendedBaseRules scxmlRules, final List customActions,
+            final ExtendedBaseRules scxmlRules, final List<CustomAction> customActions,
             final PathResolver pr, final SCXML scxml) {
         scxmlRules.add(xp, new SetPropertiesRule(new String[] {"id"},
             new String[] {"id"}));
@@ -967,7 +967,7 @@ public final class SCXMLParser {
      */
     private static void addTransitionRules(final String xp,
             final ExtendedBaseRules scxmlRules, final String setNextMethod,
-            final PathResolver pr, final List customActions) {
+            final PathResolver pr, final List<CustomAction> customActions) {
         scxmlRules.add(xp, new ObjectCreateRule(Transition.class));
         scxmlRules.add(xp, new SetPropertiesRule(
             new String[] {"event", "cond", "target"},
@@ -1003,7 +1003,7 @@ public final class SCXMLParser {
      */
     private static void addHandlerRules(final String xp,
             final ExtendedBaseRules scxmlRules, final PathResolver pr,
-            final List customActions) {
+            final List<CustomAction> customActions) {
         scxmlRules.add(xp + XPF_ONEN, new ObjectCreateRule(OnEntry.class));
         addActionRules(xp + XPF_ONEN, scxmlRules, pr, customActions);
         scxmlRules.add(xp + XPF_ONEN, new SetNextRule("setOnEntry"));
@@ -1024,7 +1024,7 @@ public final class SCXMLParser {
      */
     private static void addActionRules(final String xp,
             final ExtendedBaseRules scxmlRules, final PathResolver pr,
-            final List customActions) {
+            final List<CustomAction> customActions) {
         // Actions in SCXML namespace
         addActionRulesTuple(xp + XPF_ASN, scxmlRules, Assign.class);
         scxmlRules.add(xp + XPF_ASN, new SetPathResolverRule(pr));
@@ -1053,18 +1053,17 @@ public final class SCXMLParser {
      *                      to be able to process
      */
     private static void addCustomActionRules(final String xp,
-            final ExtendedBaseRules scxmlRules, final List customActions) {
+            final ExtendedBaseRules scxmlRules, final List<CustomAction> customActions) {
         if (customActions == null || customActions.size() == 0) {
             return;
         }
         for (int i = 0; i < customActions.size(); i++) {
-            Object item = customActions.get(i);
-            if (item == null || !(item instanceof CustomAction)) {
+            CustomAction ca = customActions.get(i);
+            if (ca == null) {
                 org.apache.commons.logging.Log log = LogFactory.
                     getLog(SCXMLParser.class);
                 log.warn(ERR_CUSTOM_ACTION_TYPE);
             } else {
-                CustomAction ca = (CustomAction) item;
                 scxmlRules.setNamespaceURI(ca.getNamespaceURI());
                 String xpfLocalName = STR_SLASH + ca.getLocalName();
                 Class klass = ca.getActionClass();
@@ -1138,7 +1137,7 @@ public final class SCXMLParser {
      */
     private static void addIfRules(final String xp,
             final ExtendedBaseRules scxmlRules, final PathResolver pr,
-            final List customActions) {
+            final List<CustomAction> customActions) {
         addActionRulesTuple(xp, scxmlRules, If.class);
         addActionRules(xp, scxmlRules, pr, customActions);
         addActionRulesTuple(xp + XPF_EIF, scxmlRules, ElseIf.class);
@@ -1394,7 +1393,7 @@ public final class SCXMLParser {
          * processing (and hence, the child should be, by transitivity).
          * @see CustomAction
          */
-        private List customActions;
+        private List<CustomAction> customActions;
 
         /**
          * Constructor.
@@ -1405,7 +1404,7 @@ public final class SCXMLParser {
          * @see PathResolver
          * @see CustomAction
          */
-        DigestSrcAttributeRule(final List customActions,
+        DigestSrcAttributeRule(final List<CustomAction> customActions,
                 final PathResolver pr) {
             super();
             this.customActions = customActions;
@@ -1423,7 +1422,7 @@ public final class SCXMLParser {
          * @see CustomAction
          */
         DigestSrcAttributeRule(final SCXML root,
-                final List customActions, final PathResolver pr) {
+                final List<CustomAction> customActions, final PathResolver pr) {
             super();
             this.root = root;
             this.customActions = customActions;
