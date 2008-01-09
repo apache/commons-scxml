@@ -359,7 +359,7 @@ public class SCInstance implements Serializable {
      *
      * @return The map of invokers.
      */
-    public Map getInvokers() {
+    public Map<TransitionTarget, Invoker> getInvokers() {
         return invokers;
     }
 
