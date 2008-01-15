@@ -255,9 +255,9 @@ public class Transition extends Executable
     public final List<Path> getPaths() {
         if (paths.size() == 0) {
             if (targets.size() > 0) {
-                for (int i = 0; i < targets.size(); i++) {
-                    paths.add(i, new Path(getParent(),
-                        (TransitionTarget) targets.get(i)));
+                int i = 0;
+                for (TransitionTarget tt : targets) {
+                    paths.add(i++, new Path(getParent(), tt));
                 }
             } else {
                 paths.add(new Path(getParent(), null));
