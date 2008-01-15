@@ -20,7 +20,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -224,9 +223,7 @@ public class SCXMLExecutor implements Serializable {
                 scInstance.getEvaluator(), log);
         }
         // all states and parallels, only states have variable contexts
-        for (Iterator i = stateMachine.getTargets().values().iterator();
-                i.hasNext();) {
-            TransitionTarget tt = (TransitionTarget) i.next();
+        for (TransitionTarget tt : stateMachine.getTargets().values()) {
             if (tt instanceof State) {
                 Context context = scInstance.lookupContext(tt);
                 if (context != null) {
@@ -462,16 +459,12 @@ public class SCXMLExecutor implements Serializable {
      */
     private void logState() {
         if (log.isDebugEnabled()) {
-            Iterator si = currentStatus.getStates().iterator();
-            StringBuffer sb = new StringBuffer("Current States: [");
-            while (si.hasNext()) {
-                State s = (State) si.next();
-                sb.append(s.getId());
-                if (si.hasNext()) {
-                    sb.append(", ");
-                }
+            StringBuffer sb = new StringBuffer("Current States: [ ");
+            for (TransitionTarget tt : currentStatus.getStates()) {
+                sb.append(tt.getId()).append(", ");
             }
-            sb.append(']');
+            int length = sb.length();
+            sb.delete(length - 2, length).append(" ]");
             log.debug(sb.toString());
         }
     }
@@ -499,8 +492,7 @@ public class SCXMLExecutor implements Serializable {
         if (len > 0) { // 0 has retry semantics (eg: see usage in reset())
             Object eventData = null;
             Map<String, Object> payloadMap = new HashMap<String, Object>();
-            for (int i = 0; i < len; i++) {
-                TriggerEvent te = evts[i];
+            for (TriggerEvent te : evts) {
                 payloadMap.put(te.getName(), te.getPayload());
             }
             if (len == 1) {
