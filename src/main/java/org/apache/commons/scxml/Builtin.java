@@ -17,7 +17,6 @@
 package org.apache.commons.scxml;
 
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -61,8 +60,7 @@ public class Builtin implements Serializable {
      */
     public static boolean isMember(final Set<TransitionTarget> allStates,
             final String state) {
-        for (Iterator<TransitionTarget> i = allStates.iterator(); i.hasNext();) {
-            TransitionTarget tt = i.next();
+        for (TransitionTarget tt : allStates) {
             if (state.equals(tt.getId())) {
                 return true;
             }
