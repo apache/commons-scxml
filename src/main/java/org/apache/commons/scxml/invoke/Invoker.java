@@ -93,7 +93,7 @@ public interface Invoker {
      * @throws InvokerException In case there is a fatal problem with
      *                          invoking the source.
      */
-    void invoke(String source, Map params)
+    void invoke(String source, Map<String, Object> params)
     throws InvokerException;
 
     /**
