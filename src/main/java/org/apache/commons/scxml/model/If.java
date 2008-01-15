@@ -18,7 +18,6 @@ package org.apache.commons.scxml.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -125,8 +124,7 @@ public class If extends Action {
         execute = eval.evalCond(ctx, cond).booleanValue();
         ctx.setLocal(getNamespacesKey(), null);
         // The "if" statement is a "container"
-        for (Iterator ifiter = actions.iterator(); ifiter.hasNext();) {
-            Action aa = (Action) ifiter.next();
+        for (Action aa : actions) {
             if (execute && !(aa instanceof ElseIf)
                     && !(aa instanceof Else)) {
                 aa.execute(evtDispatcher, errRep, scInstance, appLog,
