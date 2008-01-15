@@ -20,7 +20,6 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -98,8 +97,7 @@ public final class NotificationRegistry implements Serializable {
             final TransitionTarget state) {
         Set<SCXMLListener> entries = regs.get(source);
         if (entries != null) {
-            for (Iterator<SCXMLListener> iter = entries.iterator(); iter.hasNext();) {
-                SCXMLListener lst = iter.next();
+            for (SCXMLListener lst : entries) {
                 lst.onEntry(state);
             }
         }
@@ -116,8 +114,7 @@ public final class NotificationRegistry implements Serializable {
             final TransitionTarget state) {
         Set<SCXMLListener> entries = regs.get(source);
         if (entries != null) {
-            for (Iterator<SCXMLListener> iter = entries.iterator(); iter.hasNext();) {
-                SCXMLListener lst = iter.next();
+            for (SCXMLListener lst : entries) {
                 lst.onExit(state);
             }
         }
@@ -136,8 +133,7 @@ public final class NotificationRegistry implements Serializable {
             final Transition transition) {
         Set<SCXMLListener> entries = regs.get(source);
         if (entries != null) {
-            for (Iterator<SCXMLListener> iter = entries.iterator(); iter.hasNext();) {
-                SCXMLListener lst = iter.next();
+            for (SCXMLListener lst : entries) {
                 lst.onTransition(from, to, transition);
             }
         }
