@@ -18,7 +18,6 @@ package org.apache.commons.scxml;
 
 import java.net.URL;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import junit.framework.Test;
@@ -201,14 +200,13 @@ public class SCXMLExecutorTest extends TestCase {
         exec = SCXMLTestHelper.getExecutor(transitions03);
         assertNotNull(exec);
         try {
-            Set currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
+            Set<TransitionTarget> currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
             assertEquals(3, currentStates.size());
             Set<String> expected = new HashSet<String>();
             expected.add("twenty_one_2");
             expected.add("twenty_two_2");
             expected.add("twenty_three_2");
-            for (Iterator i = currentStates.iterator(); i.hasNext(); ) {
-                TransitionTarget tt = (TransitionTarget) i.next();
+            for (TransitionTarget tt : currentStates) {
                 if (!expected.remove(tt.getId())) {
                     fail("'" + tt.getId()
                         + "' is not an expected current state ID");
@@ -226,14 +224,13 @@ public class SCXMLExecutorTest extends TestCase {
         exec = SCXMLTestHelper.getExecutor(scxml);
         assertNotNull(exec);
         try {
-            Set currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
+            Set<TransitionTarget> currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
             assertEquals(3, currentStates.size());
             Set<String> expected = new HashSet<String>();
             expected.add("twenty_one_1");
             expected.add("twenty_two_1");
             expected.add("twenty_three_1");
-            for (Iterator i = currentStates.iterator(); i.hasNext(); ) {
-                TransitionTarget tt = (TransitionTarget) i.next();
+            for (TransitionTarget tt : currentStates) {
                 if (!expected.remove(tt.getId())) {
                     fail("'" + tt.getId()
                         + "' is not an expected current state ID");
