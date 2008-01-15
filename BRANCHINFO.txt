@@ -45,5 +45,6 @@ Other JDK 5 language improvements may come handy as well.
 
  * Type safety improvements - Mostly DONE
  * @Override, @SuppressWarnings etc. - Mostly DONE
- * Enhanced for, Iterator usage - TODO
+ * Enhanced for, Iterator usage - Mostly DONE
+ * Switch to javax.xml.xpath - TODO
  * Static imports - WONTFIX
