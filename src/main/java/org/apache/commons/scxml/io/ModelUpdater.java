@@ -18,7 +18,6 @@ package org.apache.commons.scxml.io;
 
 import java.text.MessageFormat;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -71,9 +70,7 @@ final class ModelUpdater {
        scxml.setInitialTarget(initialTarget);
        Map<String, TransitionTarget> targets = scxml.getTargets();
        Map<String, TransitionTarget> children = scxml.getChildren();
-       Iterator i = children.keySet().iterator();
-       while (i.hasNext()) {
-           TransitionTarget tt = children.get(i.next());
+       for (TransitionTarget tt : children.values()) {
            if (tt instanceof State) {
                updateState((State) tt, targets);
            } else {
@@ -94,7 +91,7 @@ final class ModelUpdater {
     throws ModelException {
         //initialize next / inital
         Initial ini = s.getInitial();
-        Map c = s.getChildren();
+        Map<String, TransitionTarget> c = s.getChildren();
         List<TransitionTarget> initialStates = null;
         if (!c.isEmpty()) {
             if (ini == null) {
@@ -110,8 +107,7 @@ final class ModelUpdater {
                 logAndThrowModelError(ERR_STATE_BAD_INIT,
                     new Object[] {getStateName(s)});
             } else {
-                for (int i = 0; i < initialStates.size(); i++) {
-                    TransitionTarget initialState = initialStates.get(i);
+                for (TransitionTarget initialState : initialStates) {
                     if (!SCXMLHelper.isDescendant(initialState, s)) {
                         logAndThrowModelError(ERR_STATE_BAD_INIT,
                             new Object[] {getStateName(s)});
@@ -120,19 +116,17 @@ final class ModelUpdater {
             }
         }
         List<History> histories = s.getHistory();
-        Iterator<History> histIter = histories.iterator();
-        while (histIter.hasNext()) {
+        for (History h : histories) {
             if (s.isSimple()) {
                 logAndThrowModelError(ERR_HISTORY_SIMPLE_STATE,
                     new Object[] {getStateName(s)});
             }
-            History h = histIter.next();
             Transition historyTransition = h.getTransition();
             if (historyTransition == null) {
                 // try to assign initial as default
                 if (initialStates != null && initialStates.size() > 0) {
-                    for (int i = 0; i < initialStates.size(); i++) {
-                        if (initialStates.get(i) instanceof History) {
+                    for (TransitionTarget tt : initialStates) {
+                        if (tt instanceof History) {
                             logAndThrowModelError(ERR_HISTORY_BAD_DEFAULT,
                                 new Object[] {h.getId(), getStateName(s)});
                         }
@@ -151,8 +145,7 @@ final class ModelUpdater {
                 logAndThrowModelError(ERR_STATE_NO_HIST,
                     new Object[] {getStateName(s)});
             }
-            for (int i = 0; i < historyStates.size(); i++) {
-                TransitionTarget historyState = historyStates.get(i);
+            for (TransitionTarget historyState : historyStates) {
                 if (!h.isDeep()) {
                     if (!c.containsValue(historyState)) {
                         logAndThrowModelError(ERR_STATE_BAD_SHALLOW_HIST,
@@ -166,9 +159,7 @@ final class ModelUpdater {
                 }
             }
         }
-        List<Transition> t = s.getTransitionsList();
-        for (int i = 0; i < t.size(); i++) {
-            Transition trn = t.get(i);
+        for (Transition trn : s.getTransitionsList()) {
             updateTransition(trn, targets);
         }
         Parallel p = s.getParallel(); //TODO: Remove in v1.0
@@ -201,9 +192,8 @@ final class ModelUpdater {
                     new Object[] {getStateName(s)});
             }
         } else {
-            Iterator j = c.keySet().iterator();
-            while (j.hasNext()) {
-                updateState((State) c.get(j.next()), targets);
+            for (TransitionTarget tt : c.values()) {
+                updateState((State) tt, targets);
             }
         }
     }
@@ -217,9 +207,8 @@ final class ModelUpdater {
       */
     private static void updateParallel(final Parallel p, final Map<String, TransitionTarget> targets)
     throws ModelException {
-        Iterator i = p.getChildren().iterator();
-        while (i.hasNext()) {
-            updateState((State) i.next(), targets);
+        for (TransitionTarget tt : p.getChildren()) {
+            updateState((State) tt, targets);
         }
     }
 
@@ -313,8 +302,7 @@ final class ModelUpdater {
         }
         Parallel p = (Parallel) lca;
         Set<TransitionTarget> regions = new HashSet<TransitionTarget>();
-        for (int i = 0; i < tts.size(); i++) {
-            TransitionTarget tt = tts.get(i);
+        for (TransitionTarget tt : tts) {
             while (tt.getParent() != p) {
                 tt = tt.getParent();
             }
