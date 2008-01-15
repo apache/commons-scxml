@@ -21,6 +21,7 @@ import java.net.URL;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -1025,8 +1026,7 @@ public final class SCXMLDigester {
         if (customActions == null || customActions.size() == 0) {
             return;
         }
-        for (int i = 0; i < customActions.size(); i++) {
-            CustomAction ca = customActions.get(i);
+        for (CustomAction ca : customActions) {
             if (ca == null) {
                 org.apache.commons.logging.Log log = LogFactory.
                     getLog(SCXMLDigester.class);
@@ -1461,10 +1461,10 @@ public final class SCXMLDigester {
             Initial ini = new Initial();
             ini.setTransition(t);
             s.setInitial(ini);
-            Map children = externalSCXML.getStates();
-            Object[] ids = children.keySet().toArray();
-            for (int i = 0; i < ids.length; i++) {
-                s.addChild((State) children.get(ids[i]));
+            Map<String, TransitionTarget> children = externalSCXML.getStates();
+            Set<String> ids = children.keySet();
+            for (String id : ids) {
+                s.addChild(children.get(id));
             }
             s.setDatamodel(externalSCXML.getDatamodel());
         }
