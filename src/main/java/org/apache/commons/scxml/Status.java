@@ -20,7 +20,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.commons.scxml.model.State;
@@ -57,8 +56,8 @@ public class Status implements Serializable {
      */
     public boolean isFinal() {
         boolean rslt = true;
-        for (Iterator i = states.iterator(); i.hasNext();) {
-            State s = (State) i.next();
+        for (TransitionTarget tt : states) {
+            State s = (State) tt;
             if (!s.isFinal()) {
                 rslt = false;
                 break;
