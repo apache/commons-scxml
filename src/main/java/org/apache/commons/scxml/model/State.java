@@ -207,8 +207,7 @@ public class State extends TransitionTarget {
      */
     public final Map<String, List<Transition>> getTransitions() {
         Map<String, List<Transition>> transitionsMap = new HashMap<String, List<Transition>>();
-        for (int i = 0; i < transitions.size(); i++) {
-            Transition transition = transitions.get(i);
+        for (Transition transition : transitions) {
             String event = transition.getEvent();
             if (!transitionsMap.containsKey(event)) {
                 List<Transition> eventTransitions = new ArrayList<Transition>();
@@ -230,8 +229,7 @@ public class State extends TransitionTarget {
      */
     public final List<Transition> getTransitionsList(final String event) {
         List<Transition> matchingTransitions = null; // since we returned null upto v0.6
-        for (int i = 0; i < transitions.size(); i++) {
-            Transition t = transitions.get(i);
+        for (Transition t : transitions) {
             if ((event == null && t.getEvent() == null)
                     || (event != null && event.equals(t.getEvent()))) {
                 if (matchingTransitions == null) {
