@@ -17,7 +17,6 @@
 package org.apache.commons.scxml;
 
 import java.net.URL;
-import java.util.Iterator;
 import java.util.Set;
 
 import junit.framework.Test;
@@ -26,6 +25,7 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.apache.commons.scxml.model.State;
+import org.apache.commons.scxml.model.TransitionTarget;
 /**
  * Unit tests for testing conflict resolution amongst multiple transitions
  * within the {@link org.apache.commons.scxml.SCXMLExecutor}'s default
@@ -138,21 +138,17 @@ public class TieBreakerTest extends TestCase {
     public void testTieBreaker05() {
         exec = SCXMLTestHelper.getExecutor(tiebreaker05);
         assertNotNull(exec);
-        Set currentStates = exec.getCurrentStatus().getStates();
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
         assertEquals(3, currentStates.size());
-        String id = ((State) currentStates.iterator().next()).getId();
-        Iterator iter = currentStates.iterator();
-        while (iter.hasNext()) {
-            id = ((State) iter.next()).getId();
+        for (TransitionTarget tt : currentStates) {
+            String id = tt.getId();
             assertTrue(id.equals("s11") || id.equals("s212")
                 || id.equals("s2111"));
         }
         currentStates = SCXMLTestHelper.fireEvent(exec, "event1");
         assertEquals(3, currentStates.size());
-        id = ((State) currentStates.iterator().next()).getId();
-        iter = currentStates.iterator();
-        while (iter.hasNext()) {
-            id = ((State) iter.next()).getId();
+        for (TransitionTarget tt : currentStates) {
+            String id = tt.getId();
             assertTrue(id.equals("s12") || id.equals("s212")
                 || id.equals("s2112"));
         }
