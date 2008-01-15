@@ -19,7 +19,6 @@ package org.apache.commons.scxml.invoke;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.scxml.Context;
@@ -83,7 +82,7 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
     /**
      * {@inheritDoc}.
      */
-    public void invoke(final String source, final Map params)
+    public void invoke(final String source, final Map<String, Object> params)
     throws InvokerException {
         SCXML scxml = null;
         try {
@@ -100,9 +99,8 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
         executor = new SCXMLExecutor(eval,
             new SimpleDispatcher(), new SimpleErrorReporter());
         Context rootCtx = eval.newContext(null);
-        for (Iterator iter = params.entrySet().iterator(); iter.hasNext();) {
-            Map.Entry entry = (Map.Entry) iter.next();
-            rootCtx.setLocal((String) entry.getKey(), entry.getValue());
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+            rootCtx.setLocal(entry.getKey(), entry.getValue());
         }
         executor.setRootContext(rootCtx);
         executor.setStateMachine(scxml);
