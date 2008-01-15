@@ -17,7 +17,6 @@
 package org.apache.commons.scxml.io;
 
 import java.io.StringWriter;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -104,9 +103,7 @@ public class SCXMLSerializer {
             serializeDatamodel(b, dm, INDENT);
         }
         Map<String, TransitionTarget> c = scxml.getChildren();
-        Iterator i = c.keySet().iterator();
-        while (i.hasNext()) {
-            TransitionTarget tt = c.get(i.next());
+        for (TransitionTarget tt : c.values()) {
             if (tt instanceof State) {
                 serializeState(b, (State) tt, INDENT);
             } else {
@@ -146,9 +143,8 @@ public class SCXMLSerializer {
             serializeDatamodel(b, dm, indent + INDENT);
         }
         serializeOnEntry(b, s, indent + INDENT);
-        List<Transition> t = s.getTransitionsList();
-        for (int i = 0; i < t.size(); i++) {
-            serializeTransition(b, t.get(i), indent + INDENT);
+        for (Transition t : s.getTransitionsList()) {
+            serializeTransition(b, t, indent + INDENT);
         }
         Parallel p = s.getParallel();
         Invoke inv = s.getInvoke();
@@ -158,9 +154,8 @@ public class SCXMLSerializer {
             serializeInvoke(b , inv, indent + INDENT);
         } else {
             Map<String, TransitionTarget> c = s.getChildren();
-            Iterator<String> j = c.keySet().iterator();
-            while (j.hasNext()) {
-                State cs = (State) c.get(j.next());
+            for (TransitionTarget tt : c.values()) {
+                State cs = (State) tt;
                 serializeState(b, cs, indent + INDENT);
             }
         }
@@ -182,9 +177,8 @@ public class SCXMLSerializer {
         b.append(">\n");
         serializeOnEntry(b, p, indent + INDENT);
         Set<TransitionTarget> s = p.getChildren();
-        Iterator<TransitionTarget> i = s.iterator();
-        while (i.hasNext()) {
-            serializeState(b, (State) i.next(), indent + INDENT);
+        for (TransitionTarget tt : s) {
+            serializeState(b, (State) tt, indent + INDENT);
         }
         serializeOnExit(b, p, indent + INDENT);
         b.append(indent).append("</parallel>\n");
@@ -214,8 +208,7 @@ public class SCXMLSerializer {
         }
         b.append(">\n");
         List<Param> params = i.params();
-        for (Iterator<Param> iter = params.iterator(); iter.hasNext();) {
-            Param p = iter.next();
+        for (Param p : params) {
             b.append(indent).append(INDENT).append("<param name=\"").
                 append(p.getName()).append("\" expr=\"").
                 append(p.getExpr()).append("\"/>\n");
@@ -255,8 +248,7 @@ public class SCXMLSerializer {
     public static void serializeHistory(final StringBuffer b, final List<History> l,
             final String indent) {
         if (l.size() > 0) {
-            for (int i = 0; i < l.size(); i++) {
-                History h = l.get(i);
+            for (History h : l) {
                 b.append(indent).append("<history");
                 serializeTransitionTargetAttributes(b, h);
                  if (h.isDeep()) {
@@ -338,8 +330,7 @@ public class SCXMLSerializer {
                 b.append(indent).append("</datamodel>\n");
                 return;
             }
-            for (Iterator<Data> iter = data.iterator(); iter.hasNext();) {
-                Data datum = iter.next();
+            for (Data datum : data) {
                 Node dataNode = datum.getNode();
                 if (dataNode != null) {
                     StringWriter out = new StringWriter();
@@ -413,9 +404,7 @@ public class SCXMLSerializer {
             return false;
         }
         boolean exit = false;
-        Iterator<Action> i = l.iterator();
-        while (i.hasNext()) {
-            Action a = i.next();
+        for (Action a : l) {
             if (a instanceof Var) {
                 Var v = (Var) a;
                 b.append(indent).append("<var name=\"").append(v.getName())
@@ -508,8 +497,8 @@ public class SCXMLSerializer {
             buf.append("<!-- Body content was not serialized -->\n");
             return buf.toString();
         }
-        for (int i = 0; i < externalNodes.size(); i++) {
-            Source input = new DOMSource(externalNodes.get(i));
+        for (Node n : externalNodes) {
+            Source input = new DOMSource(n);
             StringWriter out = new StringWriter();
             Result output = new StreamResult(out);
             try {
