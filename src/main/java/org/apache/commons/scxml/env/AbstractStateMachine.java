@@ -196,7 +196,7 @@ public abstract class AbstractStateMachine {
      */
     public boolean fireEvent(final String event) {
         TriggerEvent[] evts = {new TriggerEvent(event,
-                TriggerEvent.SIGNAL_EVENT, null)};
+                TriggerEvent.SIGNAL_EVENT)};
         try {
             engine.triggerEvents(evts);
         } catch (ModelException me) {
