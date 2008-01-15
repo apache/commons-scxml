@@ -18,7 +18,6 @@ package org.apache.commons.scxml;
 
 import java.util.HashSet;
 import java.util.IdentityHashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -90,8 +89,7 @@ public final class SCXMLHelper {
     public static Set<TransitionTarget> getAncestorClosure(final Set<TransitionTarget> states,
             final Set<TransitionTarget> upperBounds) {
         Set<TransitionTarget> closure = new HashSet<TransitionTarget>(states.size() * 2);
-        for (Iterator i = states.iterator(); i.hasNext();) {
-            TransitionTarget tt = (TransitionTarget) i.next();
+        for (TransitionTarget tt : states) {
             while (tt != null) {
                 if (!closure.add(tt)) {
                     //tt is already a part of the closure
@@ -131,8 +129,7 @@ public final class SCXMLHelper {
         Map<TransitionTarget, Set<TransitionTarget>> counts =
             new IdentityHashMap<TransitionTarget, Set<TransitionTarget>>();
         Set<TransitionTarget> scxmlCount = new HashSet<TransitionTarget>();
-        for (Iterator i = states.iterator(); i.hasNext();) {
-            TransitionTarget tt = (TransitionTarget) i.next();
+        for (TransitionTarget tt : states) {
             TransitionTarget parent = null;
             while ((parent = tt.getParent()) != null) {
                 Set<TransitionTarget> cnt = counts.get(parent);
@@ -147,10 +144,9 @@ public final class SCXMLHelper {
             scxmlCount.add(tt);
         }
         //Validate counts:
-        for (Iterator i = counts.entrySet().iterator(); i.hasNext();) {
-            Map.Entry entry = (Map.Entry) i.next();
-            TransitionTarget tt = (TransitionTarget) entry.getKey();
-            Set count = (Set) entry.getValue();
+        for (Map.Entry<TransitionTarget, Set<TransitionTarget>> entry : counts.entrySet()) {
+            TransitionTarget tt = entry.getKey();
+            Set<TransitionTarget> count = entry.getValue();
             if (tt instanceof Parallel) {
                 Parallel p = (Parallel) tt;
                 if (count.size() < p.getChildren().size()) {
@@ -236,8 +232,7 @@ public final class SCXMLHelper {
         //the easy part
         allStates.addAll(p.getUpwardSegment());
         TransitionTarget source = t.getParent();
-        for (Iterator act = currentStates.iterator(); act.hasNext();) {
-            TransitionTarget a = (TransitionTarget) act.next();
+        for (TransitionTarget a : currentStates) {
             if (isDescendant(a, source)) {
                 boolean added = false;
                 added = allStates.add(a);
@@ -248,17 +243,12 @@ public final class SCXMLHelper {
             }
         }
         if (p.isCrossRegion()) {
-            for (Iterator regions = p.getRegionsExited().iterator();
-                    regions.hasNext();) {
-                Parallel par = ((Parallel) ((State) regions.next()).
-                    getParent());
+            for (State region : p.getRegionsExited()) {
+                Parallel par = (Parallel) region.getParent();
                 //let's find affected states in sibling regions
-                for (Iterator siblings = par.getChildren().iterator();
-                        siblings.hasNext();) {
-                    State s = (State) siblings.next();
-                    for (Iterator act = currentStates.iterator();
-                            act.hasNext();) {
-                        TransitionTarget a = (TransitionTarget) act.next();
+                for (TransitionTarget tt : par.getChildren()) {
+                    State s = (State) tt;
+                    for (TransitionTarget a : currentStates) {
                         if (isDescendant(a, s)) {
                             //a is affected
                             boolean added = false;
@@ -433,12 +423,11 @@ public final class SCXMLHelper {
         if (datamodel == null) {
             return;
         }
-        List data = datamodel.getData();
+        List<Data> data = datamodel.getData();
         if (data == null) {
             return;
         }
-        for (Iterator iter = data.iterator(); iter.hasNext();) {
-            Data datum = (Data) iter.next();
+        for (Data datum : data) {
             Node datumNode = datum.getNode();
             Node valueNode = null;
             if (datumNode != null) {
