@@ -18,7 +18,6 @@ package org.apache.commons.scxml.semantics;
 
 import java.io.Serializable;
 import java.util.Comparator;
-import java.util.Iterator;
 
 import org.apache.commons.scxml.SCXMLHelper;
 import org.apache.commons.scxml.model.Parallel;
@@ -85,9 +84,8 @@ final class TransitionTargetComparator<T> implements Comparator<T>, Serializable
                 while (parent2.getParent() != lca) {
                     parent2 = parent2.getParent();
                 }
-                for (Iterator iter = lca.getChildren().iterator();
-                        iter.hasNext();) {
-                    State s = (State) iter.next();
+                for (TransitionTarget tt : lca.getChildren()) {
+                    State s = (State) tt;
                     if (s == parent1) {
                         return 1;
                     } else if (s == parent2) {
