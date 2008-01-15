@@ -25,7 +25,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -289,16 +288,15 @@ public class SCXMLTestHelper {
             Assert.fail("Must specify an array of one or more "
                 + "expected state IDs");
         }
-        Set currentStates = fireEvent(exec, triggerEvent);
+        Set<TransitionTarget> currentStates = fireEvent(exec, triggerEvent);
         int n = expectedStateIds.length;
         Assert.assertEquals("Expected " + n + " simple (leaf) state(s) "
             + " on firing event " + triggerEvent + " but found "
             + currentStates.size() + " states instead.",
             n, currentStates.size());
         List expectedStateIdList = Arrays.asList(expectedStateIds);
-        Iterator iter = currentStates.iterator();
-        while (iter.hasNext()) {
-            String stateId = ((State) iter.next()).getId();
+        for (TransitionTarget tt : currentStates) {
+            String stateId = tt.getId();
             if(!expectedStateIdList.remove(stateId)) {
                 Assert.fail("Expected state with id '" + stateId
                     + "' in current states on firing event "
