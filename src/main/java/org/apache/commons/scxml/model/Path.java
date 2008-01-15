@@ -18,7 +18,6 @@ package org.apache.commons.scxml.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -129,10 +128,9 @@ public class Path implements Serializable {
      */
     public final List<State> getRegionsExited() {
         List<State> ll = new LinkedList<State>();
-        for (Iterator i = upSeg.iterator(); i.hasNext();) {
-            Object o = i.next();
-            if (o instanceof State) {
-                State st = (State) o;
+        for (TransitionTarget tt : upSeg) {
+            if (tt instanceof State) {
+                State st = (State) tt;
                 if (st.isRegion()) {
                     ll.add(st);
                 }
@@ -150,10 +148,9 @@ public class Path implements Serializable {
      */
     public final List<State> getRegionsEntered() {
         List<State> ll = new LinkedList<State>();
-        for (Iterator i = downSeg.iterator(); i.hasNext();) {
-            Object o = i.next();
-            if (o instanceof State) {
-                State st = (State) o;
+        for (TransitionTarget tt : downSeg) {
+            if (tt instanceof State) {
+                State st = (State) tt;
                 if (st.isRegion()) {
                     ll.add(st);
                 }
