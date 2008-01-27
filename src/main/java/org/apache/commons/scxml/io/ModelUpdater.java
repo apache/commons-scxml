@@ -259,6 +259,7 @@ final class ModelUpdater {
                 }
             }
         }
+        t.getPaths(); // init paths
     }
 
     /**
