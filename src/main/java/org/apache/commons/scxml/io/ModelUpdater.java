@@ -205,7 +205,12 @@ final class ModelUpdater {
         } else {
             Iterator j = c.keySet().iterator();
             while (j.hasNext()) {
-                updateState((State) c.get(j.next()), targets);
+                TransitionTarget tt = (TransitionTarget) c.get(j.next());
+                if (tt instanceof State) {
+                    updateState((State) tt, targets);
+                } else if (tt instanceof Parallel) {
+                    updateParallel((Parallel) tt, targets);
+                }
             }
         }
     }

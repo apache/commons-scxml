@@ -51,7 +51,7 @@ public class SCXMLExecutorTest extends TestCase {
 
     // Test data
     private URL microwave01jsp, microwave02jsp, microwave01jexl,
-        microwave02jexl, microwave03jexl, microwave04jexl, transitions01,
+        microwave02jexl, microwave03jexl, microwave04jexl, microwave05jexl, transitions01,
         transitions02, transitions03, transitions04, prefix01, send01, send02;
     private SCXMLExecutor exec;
 
@@ -71,6 +71,8 @@ public class SCXMLExecutorTest extends TestCase {
             getResource("org/apache/commons/scxml/env/jexl/microwave-03.xml");
         microwave04jexl = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/env/jexl/microwave-04.xml");
+        microwave05jexl = this.getClass().getClassLoader().
+            getResource("org/apache/commons/scxml/env/jexl/microwave-05.xml");
         transitions01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/transitions-01.xml");
         transitions02 = this.getClass().getClassLoader().
@@ -92,7 +94,7 @@ public class SCXMLExecutorTest extends TestCase {
      */
     public void tearDown() {
         microwave01jsp = microwave02jsp = microwave01jexl = microwave02jexl =
-            microwave04jexl = transitions01 = transitions02 = transitions03 =
+            microwave04jexl = microwave05jexl = transitions01 = transitions02 = transitions03 =
             transitions04 = prefix01 = send01 = send02 = null;
     }
 
@@ -143,6 +145,15 @@ public class SCXMLExecutorTest extends TestCase {
         checkMicrowave02Sample();
     }
 
+    // Uses SCXMLParser (latest WD)
+    public void testSCXMLExecutorMicrowave05JexlSample() {
+        SCXML scxml = SCXMLTestHelper.parse(microwave05jexl);
+        assertNotNull(scxml);
+        exec = SCXMLTestHelper.getExecutor(scxml);
+        assertNotNull(exec);
+        checkMicrowave02Sample();
+    }
+    
     public void testSCXMLExecutorPrefix01Sample() {
         exec = SCXMLTestHelper.getExecutor(prefix01);
         assertNotNull(exec);

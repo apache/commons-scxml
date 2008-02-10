@@ -160,8 +160,12 @@ public class SCXMLSerializer {
             Map c = s.getChildren();
             Iterator j = c.keySet().iterator();
             while (j.hasNext()) {
-                State cs = (State) c.get(j.next());
-                serializeState(b, cs, indent + INDENT);
+            	TransitionTarget tt = (TransitionTarget) c.get(j.next());
+                if (tt instanceof State) {
+                    serializeState(b, (State) tt, indent + INDENT);
+                } else if (tt instanceof Parallel) {
+                    serializeParallel(b, (Parallel) tt, indent + INDENT);
+                }
             }
         }
         serializeOnExit(b, s, indent + INDENT);
