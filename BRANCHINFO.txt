@@ -50,5 +50,5 @@ J5
  * Switch to javax.xml.xpath - TODO
  * Static imports - WONTFIX
 J6
- * Use javax.script for more pluggable ELs
+ * Use javax.script for more pluggable ELs - Added env.javascript package
 

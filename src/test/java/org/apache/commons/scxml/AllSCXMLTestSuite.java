@@ -23,6 +23,7 @@ import junit.textui.TestRunner;
 
 import org.apache.commons.scxml.env.EnvTestSuite;
 import org.apache.commons.scxml.env.faces.EnvFacesTestSuite;
+import org.apache.commons.scxml.env.javascript.EnvJavaScriptTestSuite;
 import org.apache.commons.scxml.env.jexl.EnvJexlTestSuite;
 import org.apache.commons.scxml.env.jsp.EnvJspTestSuite;
 import org.apache.commons.scxml.env.servlet.EnvServletTestSuite;
@@ -61,6 +62,7 @@ public class AllSCXMLTestSuite extends TestCase {
         TestSuite suite = new TestSuite();
         suite.setName("Commons-SCXML (all) Tests");
         suite.addTest(EnvFacesTestSuite.suite());
+        suite.addTest(EnvJavaScriptTestSuite.suite());
         suite.addTest(EnvJexlTestSuite.suite());
         suite.addTest(EnvJspTestSuite.suite());
         suite.addTest(EnvServletTestSuite.suite());

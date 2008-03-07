@@ -127,6 +127,8 @@
           </include>
           <include name="org/apache/commons/scxml/env/faces/EnvFacesTestSuite.java">
           </include>
+          <include name="org/apache/commons/scxml/env/javascript/EnvJavaScriptTestSuite.java">
+          </include>
           <include name="org/apache/commons/scxml/env/jexl/EnvJexlTestSuite.java">
           </include>
           <include name="org/apache/commons/scxml/env/jsp/EnvJspTestSuite.java">

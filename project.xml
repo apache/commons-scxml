@@ -141,6 +141,9 @@
     <contributor>
       <name>Ross Yakulis</name>
     </contributor>
+    <contributor>
+      <name>Tony Seebregts</name>
+    </contributor>
   </contributors>
   
   <dependencies>
@@ -288,6 +291,7 @@
         <include>org/apache/commons/scxml/SCXMLTestSuite.java</include>
         <include>org/apache/commons/scxml/env/EnvTestSuite.java</include>
         <include>org/apache/commons/scxml/env/faces/EnvFacesTestSuite.java</include>
+        <include>org/apache/commons/scxml/env/javascript/EnvJavaScriptTestSuite.java</include>
         <include>org/apache/commons/scxml/env/jexl/EnvJexlTestSuite.java</include>
         <include>org/apache/commons/scxml/env/jsp/EnvJspTestSuite.java</include>
         <include>org/apache/commons/scxml/env/servlet/EnvServletTestSuite.java</include>
