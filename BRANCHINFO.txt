@@ -20,7 +20,7 @@ $Id$
 
                     -- PURPOSE --
 
-To improve the Commons SCXML codebase using JDK 5 features.
+To improve the Commons SCXML codebase using JDK 5 and 6 features.
 
                     -- STATUS --
 
@@ -29,7 +29,7 @@ Under active development (see TASKS section at the end).
                     -- DETAILS --
 
 This is an experimental branch to explore improvements to the Commons
-SCXML codebase using JDK 5 features (originally authored for JDK 1.4).
+SCXML codebase using JDK 5 and 6 features (originally authored for JDK 1.4).
 
 Commons SCXML uses JDK Collections extensively as part of the implementation
 details. Generics can pretty some of that implementation.
@@ -43,8 +43,12 @@ Other JDK 5 language improvements may come handy as well.
 
                     -- TASKS --
 
+J5
  * Type safety improvements - Mostly DONE
  * @Override, @SuppressWarnings etc. - Mostly DONE
  * Enhanced for, Iterator usage - Mostly DONE
  * Switch to javax.xml.xpath - TODO
  * Static imports - WONTFIX
+J6
+ * Use javax.script for more pluggable ELs
+
