@@ -193,7 +193,11 @@ final class ModelUpdater {
             }
         } else {
             for (TransitionTarget tt : c.values()) {
-                updateState((State) tt, targets);
+                if (tt instanceof State) {
+                    updateState((State) tt, targets);
+                } else if (tt instanceof Parallel) {
+                    updateParallel((Parallel) tt, targets);
+                }
             }
         }
     }

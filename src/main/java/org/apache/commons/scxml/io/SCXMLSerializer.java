@@ -155,8 +155,11 @@ public class SCXMLSerializer {
         } else {
             Map<String, TransitionTarget> c = s.getChildren();
             for (TransitionTarget tt : c.values()) {
-                State cs = (State) tt;
-                serializeState(b, cs, indent + INDENT);
+                if (tt instanceof State) {
+                    serializeState(b, (State) tt, indent + INDENT);
+                } else if (tt instanceof Parallel) {
+                    serializeParallel(b, (Parallel) tt, indent + INDENT);
+                }
             }
         }
         serializeOnExit(b, s, indent + INDENT);
