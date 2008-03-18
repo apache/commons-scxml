@@ -235,9 +235,9 @@
       </properties>
     </dependency>
     <dependency> 
-      <groupId>myfaces</groupId>
-      <artifactId>myfaces-all</artifactId> 
-      <version>1.1.0</version>
+      <groupId>org.apache.myfaces.core</groupId>
+      <artifactId>myfaces-api</artifactId> 
+      <version>1.1.5</version>
       <url>http://myfaces.apache.org/</url>
       <properties>
         <comment>&lt;b&gt;Usecases&lt;/b&gt;
