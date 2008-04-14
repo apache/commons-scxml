@@ -51,4 +51,5 @@ J5
  * Static imports - WONTFIX
 J6
  * Use javax.script for more pluggable ELs - Added env.javascript package
-
+ * Rewrite parser: switch to javax.xml.stream and eliminate dependency on
+   Commons Digester (and thereby, Commons BeanUtils as well)
