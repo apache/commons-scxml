@@ -16,7 +16,7 @@
 $Id$
 
                      COMMONS SCXML
-                       J5 BRANCH
+                       J6 BRANCH
 
                     -- PURPOSE --
 
