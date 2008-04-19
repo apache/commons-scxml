@@ -274,6 +274,7 @@ public class SCXMLExecutor implements Serializable {
 
     /**
      * Set the expression evaluator.
+     * <b>NOTE:</b> Should only be used before the executor is set in motion.
      *
      * @param evaluator The evaluator to set.
      */
@@ -292,6 +293,7 @@ public class SCXMLExecutor implements Serializable {
 
     /**
      * Set the root context for this execution.
+     * <b>NOTE:</b> Should only be used before the executor is set in motion.
      *
      * @param rootContext The Context that ties to the host environment.
      */
@@ -319,6 +321,7 @@ public class SCXMLExecutor implements Serializable {
 
     /**
      * Set the state machine to be executed.
+     * <b>NOTE:</b> Should only be used before the executor is set in motion.
      *
      * @param stateMachine The stateMachine to set.
      */
