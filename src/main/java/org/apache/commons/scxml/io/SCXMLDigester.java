@@ -19,6 +19,7 @@ package org.apache.commons.scxml.io;
 import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -1419,55 +1420,137 @@ public final class SCXMLDigester {
             if (SCXMLHelper.isStringEmpty(src)) {
                 return;
             }
+
+            // 1) Digest the external SCXML file
             Digester digester = getDigester();
             SCXML scxml = (SCXML) digester.peek(digester.getCount() - 1);
-            // 1) Digest the external SCXML file
-            SCXML externalSCXML = null;
+            SCXML parent = root;
+            if (parent == null) {
+                parent = scxml;
+            }
             String path;
-            Digester externalSrcDigester;
+            PathResolver nextpr = null;
             if (pr == null) {
                 path = src;
-                if (root != null) {
-                    externalSrcDigester = newInstance(root, null,
-                        customActions);
-                } else {
-                    externalSrcDigester = newInstance(scxml, null,
-                        customActions);
-                }
             } else {
                 path = pr.resolvePath(src);
-                if (root != null) {
-                    externalSrcDigester = newInstance(root,
-                        pr.getResolver(src), customActions);
-                } else {
-                    externalSrcDigester = newInstance(scxml,
-                        pr.getResolver(src), customActions);
-                }
+                nextpr = pr.getResolver(src);
             }
-
+            String[] fragments = path.split("#", 2);
+            String location = fragments[0];
+            String fragment = null;
+            if (fragments.length > 1) {
+                fragment = fragments[1];
+            }
+            Digester externalSrcDigester;
+            if (fragment != null) {
+                // Cannot pull in all targets just yet, i.e. null parent
+                externalSrcDigester = newInstance(null, nextpr,
+                    customActions);
+            } else {
+                externalSrcDigester = newInstance(parent, nextpr,
+                    customActions);
+            }
+            SCXML externalSCXML = null;
             try {
-                externalSCXML = (SCXML) externalSrcDigester.parse(path);
+                externalSCXML = (SCXML) externalSrcDigester.parse(location);
             } catch (Exception e) {
                 org.apache.commons.logging.Log log = LogFactory.
                     getLog(SCXMLDigester.class);
                 log.error(e.getMessage(), e);
             }
+
             // 2) Adopt the children and datamodel
             if (externalSCXML == null) {
                 return;
             }
             State s = (State) digester.peek();
-            Transition t = new Transition();
-            t.setNext(externalSCXML.getInitialstate());
-            Initial ini = new Initial();
-            ini.setTransition(t);
-            s.setInitial(ini);
-            Map children = externalSCXML.getStates();
-            Object[] ids = children.keySet().toArray();
-            for (int i = 0; i < ids.length; i++) {
-                s.addChild((State) children.get(ids[i]));
+            if (fragment == null) {
+                // All targets pulled in since its not a src fragment
+                Initial ini = new Initial();
+                Transition t = new Transition();
+                t.setNext(externalSCXML.getInitialstate());
+                ini.setTransition(t);
+                s.setInitial(ini);
+                Map children = externalSCXML.getChildren();
+                Iterator childIter = children.values().iterator();
+                while (childIter.hasNext()) {
+                    s.addChild((TransitionTarget) childIter.next());
+                }
+                s.setDatamodel(externalSCXML.getDatamodel());
+            } else {
+                // Need to pull in descendent targets
+                Object source = externalSCXML.getTargets().get(fragment);
+                if (source == null) {
+                    org.apache.commons.logging.Log log = LogFactory.
+                        getLog(SCXMLDigester.class);
+                    log.error("Unknown fragment in <state src=\"" + path +
+                        "\">");
+                    return;
+                }
+                if (source instanceof State) {
+                    State include = (State) source;
+                    s.setOnEntry(include.getOnEntry());
+                    s.setOnExit(include.getOnExit());
+                    s.setDatamodel(include.getDatamodel());
+                    List histories = include.getHistory();
+                    for (int i = 0; i < histories.size(); i++) {
+                        History h = (History) histories.get(i);
+                        s.addHistory(h);
+                        parent.addTarget(h);
+                    }
+                    Iterator childIter = include.getChildren().values().iterator();
+                    while (childIter.hasNext()) {
+                        TransitionTarget tt = (TransitionTarget) childIter.next();
+                        s.addChild(tt);
+                        parent.addTarget(tt);
+                        addTargets(parent, tt);
+                    }
+                    s.setInvoke(include.getInvoke());
+                    s.setFinal(include.isFinal());
+                    if (include.getInitial() != null) {
+                        s.setInitial(include.getInitial());
+                    }
+                    Iterator transIter = include.getTransitionsList().iterator();
+                    while (transIter.hasNext()) {
+                        s.addTransition((Transition) transIter.next());
+                    }
+                } else {
+                    org.apache.commons.logging.Log log = LogFactory.
+                        getLog(SCXMLDigester.class);
+                    log.error("Fragment in <state src=\"" + path +
+                        "\"> is not a <state> or <final>");
+                }
             }
-            s.setDatamodel(externalSCXML.getDatamodel());
+        }
+
+        /**
+         * Add all the nested targets from given target to given parent state machine.
+         *
+         * @param parent The state machine
+         * @param tt The transition target to import
+         */
+        private static void addTargets(final SCXML parent, final TransitionTarget tt) {
+            Iterator histIter = tt.getHistory().iterator();
+            while (histIter.hasNext()) {
+                History h = (History) histIter.next();
+                parent.addTarget(h);
+            }
+            if (tt instanceof State) {
+                Iterator childIter = ((State) tt).getChildren().values().iterator();
+                while (childIter.hasNext()) {
+                    TransitionTarget child = (TransitionTarget) childIter.next();
+                    parent.addTarget(child);
+                    addTargets(parent, child);
+                }
+            } else if (tt instanceof Parallel) {
+                Iterator childIter = ((Parallel) tt).getChildren().iterator();
+                while (childIter.hasNext()) {
+                    TransitionTarget child = (TransitionTarget) childIter.next();
+                    parent.addTarget(child);
+                    addTargets(parent, child);
+                }
+            }
         }
     }
 
