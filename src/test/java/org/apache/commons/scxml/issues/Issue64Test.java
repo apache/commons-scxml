@@ -63,12 +63,12 @@ public class Issue64Test extends TestCase {
         exec = null;
     }
 
-    public void test01() {
+    public void test01issue64() {
         exec = SCXMLTestHelper.getExecutor(SCXMLTestHelper.parse(works));
         SCXMLTestHelper.assertPostTriggerState(exec, "show.bug", "end");
     }
 
-    public void test02() {
+    public void test02issue64() {
         exec = SCXMLTestHelper.getExecutor(SCXMLTestHelper.parse(fails));
         SCXMLTestHelper.assertPostTriggerState(exec, "show.bug", "end");
     }
