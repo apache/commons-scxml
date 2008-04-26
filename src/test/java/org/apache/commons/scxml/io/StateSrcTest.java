@@ -27,7 +27,7 @@ import junit.textui.TestRunner;
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
 import org.apache.commons.scxml.model.SCXML;
-import org.apache.commons.scxml.model.State;
+import org.apache.commons.scxml.model.TransitionTarget;
 /**
  * Unit tests {@link org.apache.commons.scxml.SCXMLDigester}
  * Test white box nature of <state> element "src" attribute.
@@ -77,12 +77,12 @@ public class StateSrcTest extends TestCase {
         assertNotNull(scxml);
         exec = SCXMLTestHelper.getExecutor(scxml);
         assertNotNull(exec);
-        Set states = exec.getCurrentStatus().getStates();
+        Set<TransitionTarget> states = exec.getCurrentStatus().getStates();
         assertEquals(1, states.size());
-        assertEquals("srctest3", ((State) states.iterator().next()).getId());
+        assertEquals("srctest3", states.iterator().next().getId());
         states = SCXMLTestHelper.fireEvent(exec, "src.test");
         assertEquals(1, states.size());
-        assertEquals("srctest1end", ((State) states.iterator().next()).getId());
+        assertEquals("srctest1end", states.iterator().next().getId());
         assertTrue(exec.getCurrentStatus().isFinal());
     }
 

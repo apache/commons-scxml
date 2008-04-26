@@ -25,6 +25,7 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.apache.commons.scxml.SCXMLTestHelper;
+import org.apache.commons.scxml.model.Action;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.Send;
 import org.apache.commons.scxml.model.State;
@@ -113,10 +114,10 @@ public class SCXMLDigesterTest extends TestCase {
         scxml = SCXMLTestHelper.digest(send01);
         State ten = (State) scxml.getInitialTarget();
         assertEquals("ten", ten.getId());
-        List ten_done = ten.getTransitionsList("ten.done");
+        List<Transition> ten_done = ten.getTransitionsList("ten.done");
         assertEquals(1, ten_done.size());
         Transition ten2twenty = (Transition) ten_done.get(0);
-        List actions = ten2twenty.getActions();
+        List<Action> actions = ten2twenty.getActions();
         assertEquals(1, actions.size());
         Send send = (Send) actions.get(0);
         assertEquals("send1", send.getSendid());
