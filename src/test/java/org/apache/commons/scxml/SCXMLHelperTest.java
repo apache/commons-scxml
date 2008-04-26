@@ -94,7 +94,7 @@ public class SCXMLHelperTest extends TestCase {
     public void testGetAncestorClosureEmptySet() {
         Set<TransitionTarget> states = new HashSet<TransitionTarget>();
         
-        Set returnValue = SCXMLHelper.getAncestorClosure(states, new HashSet<TransitionTarget>());
+        Set<TransitionTarget> returnValue = SCXMLHelper.getAncestorClosure(states, new HashSet<TransitionTarget>());
         
         assertEquals(0, returnValue.size());
     }
@@ -108,7 +108,7 @@ public class SCXMLHelperTest extends TestCase {
         Set<TransitionTarget> upperBounds = new HashSet<TransitionTarget>();
         upperBounds.add(state);
         
-        Set returnValue = SCXMLHelper.getAncestorClosure(states, upperBounds);
+        Set<TransitionTarget> returnValue = SCXMLHelper.getAncestorClosure(states, upperBounds);
         
         assertEquals(1, returnValue.size());
         assertEquals("1", ((TransitionTarget)returnValue.toArray()[0]).getId());
@@ -123,7 +123,7 @@ public class SCXMLHelperTest extends TestCase {
         
         Set<TransitionTarget> upperBounds = new HashSet<TransitionTarget>();
         
-        Set returnValue = SCXMLHelper.getAncestorClosure(states, upperBounds);
+        Set<TransitionTarget> returnValue = SCXMLHelper.getAncestorClosure(states, upperBounds);
         
         assertEquals(1, returnValue.size());
         assertEquals("1", ((TransitionTarget)returnValue.toArray()[0]).getId());

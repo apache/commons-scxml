@@ -121,7 +121,7 @@ public class SCInstanceTest extends TestCase {
     public void testGetLastConfigurationNull() {
         History history = new History();
         
-        Set returnConfiguration = instance.getLastConfiguration(history);
+        Set<TransitionTarget> returnConfiguration = instance.getLastConfiguration(history);
         
         assertEquals(0, returnConfiguration.size());
     }
@@ -139,7 +139,7 @@ public class SCInstanceTest extends TestCase {
         
         instance.setLastConfiguration(history, configuration);  
         
-        Set returnConfiguration = instance.getLastConfiguration(history);
+        Set<TransitionTarget> returnConfiguration = instance.getLastConfiguration(history);
         
         assertEquals(2, returnConfiguration.size());
         assertTrue(returnConfiguration.contains(tt1));

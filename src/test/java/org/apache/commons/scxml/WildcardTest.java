@@ -24,7 +24,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import org.apache.commons.scxml.model.State;
+import org.apache.commons.scxml.model.TransitionTarget;
 /**
  * Unit tests {@link org.apache.commons.scxml.SCXMLExecutor}.
  * Testing wildcard event matching (*)
@@ -72,15 +72,13 @@ public class WildcardTest extends TestCase {
     	exec = SCXMLTestHelper.getExecutor(wildcard01);
         assertNotNull(exec);
         try {
-            Set currentStates = exec.getCurrentStatus().getStates();
+            Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
             assertEquals(1, currentStates.size());
-            assertEquals("state1", ((State)currentStates.iterator().
-                next()).getId());
+            assertEquals("state1", currentStates.iterator().next().getId());
             exec = SCXMLTestHelper.testExecutorSerializability(exec);
             currentStates = SCXMLTestHelper.fireEvent(exec, "foo.bar.baz");
             assertEquals(1, currentStates.size());
-            assertEquals("state4", ((State)currentStates.iterator().
-                next()).getId());
+            assertEquals("state4", currentStates.iterator().next().getId());
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -90,10 +88,9 @@ public class WildcardTest extends TestCase {
         exec = SCXMLTestHelper.getExecutor(SCXMLTestHelper.parse(wildcard02));
         assertNotNull(exec);
         try {
-            Set currentStates = exec.getCurrentStatus().getStates();
+            Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
             assertEquals(1, currentStates.size());
-            assertEquals("state2", ((State)currentStates.iterator().
-                next()).getId());
+            assertEquals("state2", currentStates.iterator().next().getId());
         } catch (Exception e) {
             fail(e.getMessage());
         }

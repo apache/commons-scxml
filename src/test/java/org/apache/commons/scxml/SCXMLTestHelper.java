@@ -39,7 +39,6 @@ import org.apache.commons.scxml.io.SCXMLDigester;
 import org.apache.commons.scxml.io.SCXMLParser;
 import org.apache.commons.scxml.model.CustomAction;
 import org.apache.commons.scxml.model.SCXML;
-import org.apache.commons.scxml.model.State;
 import org.apache.commons.scxml.model.TransitionTarget;
 import org.xml.sax.ErrorHandler;
 /**
@@ -273,13 +272,13 @@ public class SCXMLTestHelper {
 
     public static void assertPostTriggerState(SCXMLExecutor exec,
             TriggerEvent triggerEvent, String expectedStateId) {
-        Set currentStates = fireEvent(exec, triggerEvent);
+        Set<TransitionTarget> currentStates = fireEvent(exec, triggerEvent);
         Assert.assertEquals("Expected 1 simple (leaf) state with id '"
             + expectedStateId + "' on firing event " + triggerEvent
             + " but found " + currentStates.size() + " states instead.",
             1, currentStates.size());
-        Assert.assertEquals(expectedStateId, ((State)currentStates.iterator().
-            next()).getId());
+        Assert.assertEquals(expectedStateId, currentStates.iterator().
+            next().getId());
     }
 
     public static void assertPostTriggerStates(SCXMLExecutor exec,
@@ -294,7 +293,7 @@ public class SCXMLTestHelper {
             + " on firing event " + triggerEvent + " but found "
             + currentStates.size() + " states instead.",
             n, currentStates.size());
-        List expectedStateIdList = Arrays.asList(expectedStateIds);
+        List<String> expectedStateIdList = Arrays.asList(expectedStateIds);
         for (TransitionTarget tt : currentStates) {
             String stateId = tt.getId();
             if(!expectedStateIdList.remove(stateId)) {

@@ -27,6 +27,7 @@ import junit.textui.TestRunner;
 import org.apache.commons.scxml.env.jsp.ELContext;
 import org.apache.commons.scxml.env.jsp.ELEvaluator;
 import org.apache.commons.scxml.model.State;
+import org.apache.commons.scxml.model.TransitionTarget;
 
 /**
  * Unit tests for namespace prefixes in XPaths pointing bits in a &lt;data&gt;.
@@ -90,16 +91,14 @@ public class NamespacePrefixedXPathsTest extends TestCase {
         try {
 
             // must be in state "ten" at the onset
-            Set currentStates = exec.getCurrentStatus().getStates();
+            Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
             assertEquals(1, currentStates.size());
-            assertEquals("ten", ((State)currentStates.iterator().
-                next()).getId());
+            assertEquals("ten", currentStates.iterator().next().getId());
 
             // should move to "twenty"
             currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
             assertEquals(1, currentStates.size());
-            assertEquals("twenty", ((State)currentStates.iterator().
-                next()).getId());
+            assertEquals("twenty", currentStates.iterator().next().getId());
 
             // This is set while exiting "ten"
             Double retval = (Double) exec.getRootContext().get("retval");
@@ -108,8 +107,7 @@ public class NamespacePrefixedXPathsTest extends TestCase {
             // On to "thirty"
             currentStates = SCXMLTestHelper.fireEvent(exec, "twenty.done");
             assertEquals(1, currentStates.size());
-            assertEquals("thirty", ((State)currentStates.iterator().
-                next()).getId());
+            assertEquals("thirty", currentStates.iterator().next().getId());
             exec = SCXMLTestHelper.testExecutorSerializability(exec);
 
             // Tests XPath on SCXML actions, set while exiting "twenty"
@@ -119,13 +117,11 @@ public class NamespacePrefixedXPathsTest extends TestCase {
             // and so on ...
             currentStates = SCXMLTestHelper.fireEvent(exec, "thirty.done");
             assertEquals(1, currentStates.size());
-            assertEquals("forty", ((State)currentStates.iterator().
-                next()).getId());
+            assertEquals("forty", currentStates.iterator().next().getId());
 
             currentStates = SCXMLTestHelper.fireEvent(exec, "forty.done");
             assertEquals(1, currentStates.size());
-            assertEquals("fifty", ((State)currentStates.iterator().
-                next()).getId());
+            assertEquals("fifty", currentStates.iterator().next().getId());
 
             currentStates = SCXMLTestHelper.fireEvent(exec, "fifty.done");
             assertEquals(1, currentStates.size());
@@ -134,8 +130,7 @@ public class NamespacePrefixedXPathsTest extends TestCase {
 
             currentStates = SCXMLTestHelper.fireEvent(exec, "sixty.done");
             assertEquals(1, currentStates.size());
-            assertEquals("seventy", ((State)currentStates.iterator().
-                next()).getId());
+            assertEquals("seventy", currentStates.iterator().next().getId());
 
             // done
             assertTrue(exec.getCurrentStatus().isFinal());
