@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.scxml.invoke.Invoker;
 import org.apache.commons.scxml.model.Datamodel;
 import org.apache.commons.scxml.model.History;
 import org.apache.commons.scxml.model.ModelException;
@@ -433,7 +434,7 @@ public class SCXMLExecutor implements Serializable {
      * @param invokerClass The <code>Invoker</code> <code>Class</code>.
      */
     public void registerInvokerClass(final String targettype,
-            final Class invokerClass) {
+            final Class<? extends Invoker> invokerClass) {
         scInstance.registerInvokerClass(targettype, invokerClass);
     }
 

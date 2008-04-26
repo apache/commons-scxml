@@ -68,7 +68,7 @@ public class SCInstance implements Serializable {
      * The <code>Invoker</code> classes <code>Map</code>, keyed by
      * &lt;invoke&gt; target types (specified using "targettype" attribute).
      */
-    private final Map<String, Class> invokerClasses;
+    private final Map<String, Class<? extends Invoker>> invokerClasses;
 
     /**
      * The <code>Map</code> of active <code>Invoker</code>s, keyed by
@@ -100,7 +100,7 @@ public class SCInstance implements Serializable {
         this.notificationRegistry = new NotificationRegistry();
         this.contexts = Collections.synchronizedMap(new HashMap<TransitionTarget, Context>());
         this.histories = Collections.synchronizedMap(new HashMap<History, Set<TransitionTarget>>());
-        this.invokerClasses = Collections.synchronizedMap(new HashMap<String, Class>());
+        this.invokerClasses = Collections.synchronizedMap(new HashMap<String, Class<? extends Invoker>>());
         this.invokers = Collections.synchronizedMap(new HashMap<TransitionTarget, Invoker>());
         this.completions = Collections.synchronizedMap(new HashMap<TransitionTarget, Boolean>());
         this.evaluator = null;
@@ -284,7 +284,7 @@ public class SCInstance implements Serializable {
      * @param invokerClass The <code>Invoker</code> <code>Class</code>.
      */
     void registerInvokerClass(final String targettype,
-            final Class invokerClass) {
+            final Class<? extends Invoker> invokerClass) {
         invokerClasses.put(targettype, invokerClass);
     }
 
@@ -314,14 +314,14 @@ public class SCInstance implements Serializable {
      */
     public Invoker newInvoker(final String targettype)
     throws InvokerException {
-        Class invokerClass = invokerClasses.get(targettype);
+        Class<? extends Invoker> invokerClass = invokerClasses.get(targettype);
         if (invokerClass == null) {
             throw new InvokerException("No Invoker registered for "
                 + "targettype \"" + targettype + "\"");
         }
         Invoker invoker = null;
         try {
-            invoker = (Invoker) invokerClass.newInstance();
+            invoker = invokerClass.newInstance();
         } catch (InstantiationException ie) {
             throw new InvokerException(ie.getMessage(), ie.getCause());
         } catch (IllegalAccessException iae) {
