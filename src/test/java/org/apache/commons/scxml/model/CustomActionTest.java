@@ -120,19 +120,9 @@ public class CustomActionTest extends TestCase {
     }
 
     public void testAddBadCustomAction05() {
-        try {
-            new CustomAction("http://my.actions.domain/CUSTOM", "foo",
-                this.getClass());
-            fail("Added custom action which is not an Action class subtype");
-        } catch (IllegalArgumentException iae) {
-            // Expected
-        }
-    }
-
-    public void testAddBadCustomAction06() {
-        try {
+        try {            
             new CustomAction("http://www.w3.org/2005/07/scxml", "foo",
-                this.getClass());
+                Hello.class);
             fail("Added custom action in the SCXML namespace");
         } catch (IllegalArgumentException iae) {
             // Expected

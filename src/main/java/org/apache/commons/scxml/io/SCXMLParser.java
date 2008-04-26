@@ -1065,7 +1065,7 @@ public final class SCXMLParser {
             } else {
                 scxmlRules.setNamespaceURI(ca.getNamespaceURI());
                 String xpfLocalName = STR_SLASH + ca.getLocalName();
-                Class klass = ca.getActionClass();
+                Class<? extends Action> klass = ca.getActionClass();
                 if (SCXMLHelper.implementationOf(klass,
                         ExternalContent.class)) {
                     addCustomActionRulesTuple(xp + xpfLocalName, scxmlRules,
@@ -1110,8 +1110,8 @@ public final class SCXMLParser {
      *              <code>NodeCreateRule</code>
      */
     private static void addCustomActionRulesTuple(final String xp,
-            final ExtendedBaseRules scxmlRules, final Class klass,
-            final boolean bodyContent) {
+            final ExtendedBaseRules scxmlRules,
+            final Class<? extends Action> klass, final boolean bodyContent) {
         addActionRulesTuple(xp, scxmlRules, klass);
         if (bodyContent) {
             try {
@@ -1153,7 +1153,8 @@ public final class SCXMLParser {
      *              in the ObjectCreateRule for this action
      */
     private static void addActionRulesTuple(final String xp,
-            final ExtendedBaseRules scxmlRules, final Class klass) {
+            final ExtendedBaseRules scxmlRules,
+            final Class<? extends Action> klass) {
         addSimpleRulesTuple(xp, scxmlRules, klass, null, null, "addAction");
         scxmlRules.add(xp, new SetExecutableParentRule());
         scxmlRules.add(xp, new SetCurrentNamespacesRule());
@@ -1172,7 +1173,7 @@ public final class SCXMLParser {
      * @param addMethod The method that the SetNextRule should call
      */
     private static void addSimpleRulesTuple(final String xp,
-            final ExtendedBaseRules scxmlRules, final Class klass,
+            final ExtendedBaseRules scxmlRules, final Class<?> klass,
             final String[] args, final String[] props,
             final String addMethod) {
         scxmlRules.add(xp, new ObjectCreateRule(klass));
