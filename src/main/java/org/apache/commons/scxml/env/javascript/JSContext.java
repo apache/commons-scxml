@@ -30,26 +30,29 @@ import org.apache.commons.scxml.env.SimpleContext;
  */
 public class JSContext extends SimpleContext {
 
-       // CONSTRUCTORS
+    /** Serial version UID. */
+    private static final long serialVersionUID = 1L;
 
-       /**
-        * Default constructor - just invokes the SimpleContext default
-        * constructor.
-        */
-       public JSContext() {
-           super();
-       }
+    // CONSTRUCTORS
 
-       /**
-        * Child constructor. Just invokes the identical SimpleContext
-	* constructor.
-        *
-        * @param parent Parent context for this context.
-        *
-        */
-       public JSContext(Context parent) {
-           super(parent);
-       }
+    /**
+     * Default constructor - just invokes the SimpleContext default
+     * constructor.
+     */
+    public JSContext() {
+       super();
+    }
+
+    /**
+     * Child constructor. Just invokes the identical SimpleContext
+     * constructor.
+     *
+     * @param parent Parent context for this context.
+     *
+     */
+    public JSContext(Context parent) {
+       super(parent);
+   }
 
 }
 
