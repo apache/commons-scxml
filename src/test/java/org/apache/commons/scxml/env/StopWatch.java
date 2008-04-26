@@ -20,7 +20,7 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.apache.commons.scxml.env.AbstractStateMachine;
+import org.apache.commons.scxml.model.TransitionTarget;
 
 /**
  * A SCXML document driven stop watch.
@@ -94,9 +94,8 @@ public class StopWatch extends AbstractStateMachine {
 
     // used by the demonstration (see StopWatchDisplay usecase)
     public String getCurrentState() {
-        Set states = getEngine().getCurrentStatus().getStates();
-        return ((org.apache.commons.scxml.model.State) states.iterator().
-            next()).getId();
+        Set<TransitionTarget> states = getEngine().getCurrentStatus().getStates();
+        return states.iterator().next().getId();
     }
 
     private void increment() {

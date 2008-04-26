@@ -68,7 +68,7 @@ public class MockJspContext extends JspContext
     public int getAttributesScope(String name) {
         return 1;
     }
-    public Enumeration getAttributeNamesInScope(int scope) {
+    public Enumeration<String> getAttributeNamesInScope(int scope) {
         return null;
     }
     public JspWriter getOut() {

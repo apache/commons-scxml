@@ -26,7 +26,7 @@ import junit.framework.TestSuite;
 import org.apache.commons.scxml.Context;
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
-import org.apache.commons.scxml.model.State;
+import org.apache.commons.scxml.model.TransitionTarget;
 
 public class StaticMethodTest extends TestCase {
 
@@ -65,10 +65,9 @@ public class StaticMethodTest extends TestCase {
         jc.set("System", System.class);
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor(staticmethod,
                 jc, new JexlEvaluator());
-        Set currentStates = exec.getCurrentStatus().getStates();
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
-        assertEquals("static", ((State)currentStates.iterator().
-            next()).getId());
+        assertEquals("static", currentStates.iterator().next().getId());
     }
 
 }

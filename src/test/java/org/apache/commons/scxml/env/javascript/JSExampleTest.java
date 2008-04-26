@@ -29,7 +29,7 @@ import org.apache.commons.scxml.Evaluator;
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
 import org.apache.commons.scxml.model.SCXML;
-import org.apache.commons.scxml.model.State;
+import org.apache.commons.scxml.model.TransitionTarget;
 
 /**
  * SCXML application for the example JavaScript scripts.
@@ -77,10 +77,9 @@ public class JSExampleTest extends TestCase {
 
         assertNotNull(exec);
         try {
-            Set currentStates = exec.getCurrentStatus().getStates();
+            Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
             assertEquals(1, currentStates.size());
-            assertEquals("end", ((State)currentStates.iterator().
-                next()).getId());
+            assertEquals("end", currentStates.iterator().next().getId());
         } catch (Exception e) {
             fail(e.getMessage());
         }
