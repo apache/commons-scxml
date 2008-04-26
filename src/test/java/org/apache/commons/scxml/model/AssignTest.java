@@ -67,10 +67,9 @@ public class AssignTest extends TestCase {
      * Test the implementation
      */
     public void testAssignSrc() {
-        Set currentStates = exec.getCurrentStatus().getStates();
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
-        assertEquals("assign3", ((State)currentStates.iterator().
-            next()).getId());
+        assertEquals("assign3", currentStates.iterator().next().getId());
         assertTrue(exec.getCurrentStatus().isFinal());
     }
 
