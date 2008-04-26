@@ -70,10 +70,10 @@ public class JSExampleTest extends TestCase {
 
     public void testExample01Sample() {
         
-		SCXML scxml = SCXMLTestHelper.parse(example01);
-		Evaluator evaluator = new JSEvaluator();
+        SCXML scxml = SCXMLTestHelper.parse(example01);
+        Evaluator evaluator = new JSEvaluator();
         Context context = new JSContext();
-		exec = SCXMLTestHelper.getExecutor(scxml, context, evaluator);
+        exec = SCXMLTestHelper.getExecutor(scxml, context, evaluator);
 
         assertNotNull(exec);
         try {
