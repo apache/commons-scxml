@@ -19,6 +19,8 @@ package org.apache.commons.scxml;
 import java.util.List;
 import java.util.Map;
 
+import org.w3c.dom.Node;
+
 /**
  * The event controller interface used to send messages containing
  * events or other information directly to another SCXML Interpreter,
@@ -52,8 +54,8 @@ public interface EventDispatcher {
      *  the &lt;send&gt; element.
      */
     void send(String sendId, String target, String targetType,
-            String event, Map params, Object hints, long delay,
-            List externalNodes);
+            String event, Map<String, Object> params, Object hints,
+            long delay, List<Node> externalNodes);
 
 }
 
