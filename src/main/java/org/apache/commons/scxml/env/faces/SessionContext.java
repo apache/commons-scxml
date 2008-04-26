@@ -37,7 +37,7 @@ public class SessionContext extends SimpleContext {
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
     /** The map of session scoped variables. */
-    private Map sessionMap;
+    private Map<String, Object> sessionMap;
     /** Bark if FacesContext is null. */
     private static final String ERR_HOST_FACES_CTX_NULL =
         "Host FacesContext cannot be null";
@@ -57,13 +57,15 @@ public class SessionContext extends SimpleContext {
      * @param fc The current FacesContext
      * @param parent A parent Context, can be null
      */
+    @SuppressWarnings("unchecked")
     public SessionContext(final FacesContext fc, final Context parent) {
         super(parent);
         if (fc == null) {
             throw new IllegalArgumentException(ERR_HOST_FACES_CTX_NULL);
         } else {
-          // only retain the session map
-          this.sessionMap = fc.getExternalContext().getSessionMap();
+            // only retain the session map
+            // legacy code, suppress warning
+            this.sessionMap = fc.getExternalContext().getSessionMap();
         }
 
     }

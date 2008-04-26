@@ -66,7 +66,7 @@ public interface Context {
      * To get variables in parent Context, call getParent().getVars().
      * @see #getParent()
      */
-    Map getVars();
+    Map<String, Object> getVars();
 
     /**
      * Clear this Context.
