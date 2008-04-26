@@ -83,7 +83,7 @@ public abstract class AbstractStateMachine {
      * The method signature for the activities corresponding to each
      * state in the SCXML document.
      */
-    private static final Class[] SIGNATURE = new Class[0];
+    private static final Class<?>[] SIGNATURE = new Class[0];
 
     /**
      * The method parameters for the activities corresponding to each
@@ -250,7 +250,7 @@ public abstract class AbstractStateMachine {
      * @return Whether the invoke was successful.
      */
     public boolean invoke(final String methodName) {
-        Class clas = this.getClass();
+        Class<?> clas = this.getClass();
         try {
             Method method = clas.getDeclaredMethod(methodName, SIGNATURE);
             method.invoke(this, PARAMETERS);
