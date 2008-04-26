@@ -40,7 +40,7 @@ public class JSContext extends SimpleContext {
      * constructor.
      */
     public JSContext() {
-       super();
+        super();
     }
 
     /**
@@ -51,8 +51,8 @@ public class JSContext extends SimpleContext {
      *
      */
     public JSContext(Context parent) {
-       super(parent);
-   }
+        super(parent);
+    }
 
 }
 
