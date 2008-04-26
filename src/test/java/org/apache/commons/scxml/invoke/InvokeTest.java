@@ -33,7 +33,7 @@ import org.apache.commons.scxml.env.jexl.JexlContext;
 import org.apache.commons.scxml.env.jexl.JexlEvaluator;
 import org.apache.commons.scxml.io.SCXMLParser;
 import org.apache.commons.scxml.model.SCXML;
-import org.apache.commons.scxml.model.State;
+import org.apache.commons.scxml.model.TransitionTarget;
 
 /**
  * Unit tests {@link org.apache.commons.scxml.SCXMLExecutor}.
@@ -91,10 +91,9 @@ public class InvokeTest extends TestCase {
             exec.setStateMachine(scxml);
             exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
             exec.go();
-            Set currentStates = exec.getCurrentStatus().getStates();
+            Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
             assertEquals(1, currentStates.size());
-            assertEquals("invoker", ((State)currentStates.iterator().
-                next()).getId());
+            assertEquals("invoker", currentStates.iterator().next().getId());
         } catch (Exception e) {
             e.printStackTrace();
             fail(e.getMessage());
@@ -112,7 +111,7 @@ public class InvokeTest extends TestCase {
             exec.setStateMachine(scxml);
             exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
             exec.go();
-            Set currentStates = exec.getCurrentStatus().getStates();
+            Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
             assertEquals(1, currentStates.size());
         } catch (Exception e) {
             e.printStackTrace();
@@ -131,7 +130,7 @@ public class InvokeTest extends TestCase {
             exec.setStateMachine(scxml);
             exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
             exec.go();
-            Set currentStates = exec.getCurrentStatus().getStates();
+            Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
             assertEquals(1, currentStates.size());
             SCXMLTestHelper.fireEvent(exec, "s1.next");
             SCXMLTestHelper.fireEvent(exec, "state1.next");
