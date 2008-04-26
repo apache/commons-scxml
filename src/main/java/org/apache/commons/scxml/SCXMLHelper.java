@@ -293,11 +293,11 @@ public final class SCXMLHelper {
      * @param parent The supertype
      * @return true if child is subtype of parent, otherwise false
      */
-    public static boolean subtypeOf(final Class child, final Class parent) {
+    public static boolean subtypeOf(final Class<?> child, final Class<?> parent) {
         if (child == null || parent == null) {
             return false;
         }
-        for (Class current = child; current != Object.class;
+        for (Class<?> current = child; current != Object.class;
                 current = current.getSuperclass()) {
             if (current == parent) {
                 return true;
@@ -313,14 +313,14 @@ public final class SCXMLHelper {
      * @param interfayce The interface
      * @return true if clas implements interfayce, otherwise false
      */
-    public static boolean implementationOf(final Class clas,
-            final Class interfayce) {
+    public static boolean implementationOf(final Class<?> clas,
+            final Class<?> interfayce) {
         if (clas == null || interfayce == null || !interfayce.isInterface()) {
             return false;
         }
-        for (Class current = clas; current != Object.class;
+        for (Class<?> current = clas; current != Object.class;
                 current = current.getSuperclass()) {
-            Class[] implementedInterfaces = current.getInterfaces();
+            Class<?>[] implementedInterfaces = current.getInterfaces();
             for (int i = 0; i < implementedInterfaces.length; i++) {
                 if (implementedInterfaces[i] == interfayce) {
                     return true;
