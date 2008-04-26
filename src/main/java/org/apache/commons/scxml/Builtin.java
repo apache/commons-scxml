@@ -256,25 +256,25 @@ public class Builtin implements Serializable {
     private static class DataPrefixResolver implements PrefixResolver {
 
         /** Cached namespaces. */
-        private Map namespaces;
+        private Map<String, String> namespaces;
 
         /**
          * Constructor.
          * @param namespaces The prefix to namespace URI map.
          */
-        private DataPrefixResolver(final Map namespaces) {
+        private DataPrefixResolver(final Map<String, String> namespaces) {
             this.namespaces = namespaces;
         }
 
         /** {@inheritDoc} */
         public String getNamespaceForPrefix(final String prefix) {
-            return (String) namespaces.get(prefix);
+            return namespaces.get(prefix);
         }
 
         /** {@inheritDoc} */
         public String getNamespaceForPrefix(final String prefix,
                 final Node nsContext) {
-            return (String) namespaces.get(prefix);
+            return namespaces.get(prefix);
         }
 
         /** {@inheritDoc} */
