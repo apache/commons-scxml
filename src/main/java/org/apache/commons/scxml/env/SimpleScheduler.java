@@ -31,6 +31,7 @@ import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLHelper;
 import org.apache.commons.scxml.TriggerEvent;
 import org.apache.commons.scxml.model.ModelException;
+import org.w3c.dom.Node;
 
 /**
  * <p>EventDispatcher implementation that can schedule <code>delay</code>ed
@@ -101,8 +102,9 @@ public class SimpleScheduler implements EventDispatcher, Serializable {
     @see EventDispatcher#send(String,String,String,String,Map,Object,long,List)
      */
     public void send(final String sendId, final String target,
-            final String targettype, final String event, final Map params,
-            final Object hints, final long delay, final List externalNodes) {
+            final String targettype, final String event,
+            final Map<String, Object> params, final Object hints, final long delay,
+            final List<Node> externalNodes) {
         // Log callback
         if (log.isInfoEnabled()) {
             StringBuffer buf = new StringBuffer();
@@ -168,7 +170,7 @@ public class SimpleScheduler implements EventDispatcher, Serializable {
      *
      * @return The currently scheduled timers
      */
-    protected Map getTimers() {
+    protected Map<String, Timer> getTimers() {
         return timers;
     }
 
