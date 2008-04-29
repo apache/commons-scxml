@@ -168,11 +168,21 @@
     </dependency>
   </dependencies>
 
+  <distributionManagement>
+    <!-- Cannot define in parent ATM, see COMMONSSITE-26 -->
+    <site>
+      <id>apache.website</id>
+      <name>Apache Commons Site</name>
+      <url>${commons.deployment.protocol}://people.apache.org/www/commons.apache.org/scxml</url>
+    </site>
+  </distributionManagement>
+
   <properties>
     <maven.compile.source>1.6</maven.compile.source>
     <maven.compile.target>1.6</maven.compile.target>
     <commons.componentid>scxml</commons.componentid>
     <commons.release.version>0.7</commons.release.version>
+    <commons.rc.version>RC1</commons.rc.version>
     <commons.binary.suffix></commons.binary.suffix>
     <commons.jira.id>SCXML</commons.jira.id>
     <commons.jira.pid>12310492</commons.jira.pid>
@@ -252,4 +262,19 @@
       </plugin>
     </plugins>
   </reporting>
+
+  <profiles>
+    <profile>
+      <id>rc</id>
+      <distributionManagement>
+        <!-- Cannot define in parent ATM, see COMMONSSITE-26 -->
+        <site>
+          <id>apache.website</id>
+          <name>Apache Commons Release Candidate Staging Site</name>
+          <url>${commons.deployment.protocol}://people.apache.org/www/people.apache.org/builds/commons/${commons.componentid}/${commons.release.version}/${commons.rc.version}/site</url>
+        </site>
+      </distributionManagement>
+    </profile>
+  </profiles>
+
 </project>
