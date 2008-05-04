@@ -15,17 +15,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 -->
-<!-- Bad SCXML document -->
+<!-- Bad SCXML document, many elements will be ignored with warnings from parser -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
+       xmlns:my="http://my.foo.example/"
        version="1.0"
        initialstate="tranbug">
+
+    <datamodel>
+        <data name="foo">
+            <alpha xmlns="">
+                <beta/>
+            </alpha>
+        </data>
+        <misplaced/>
+    </datamodel>
 
     <state id="tranbug">
         <onentry>
             <log expr="'Begin transition bug test ...'" />
+            <foo/>
+            <my:bar/>
         </onentry>
         <transition event="show.bug" target="end">
-         <!-- FOLLOWING datamodel IS MISPLACED -->
+         <!-- For example, FOLLOWING datamodel IS MISPLACED -->
          <datamodel>
  			<data name="dummy" expr="'somedata'"/>
          </datamodel>
@@ -33,6 +45,8 @@
          <log expr="'*****' + dummy" />
         </transition>
     </state>
+
+    <my:baz/>
     
     <state id="end" final="true" />
 

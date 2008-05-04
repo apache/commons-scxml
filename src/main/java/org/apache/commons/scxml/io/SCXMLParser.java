@@ -34,6 +34,7 @@ import org.apache.commons.digester.ObjectCreateRule;
 import org.apache.commons.digester.Rule;
 import org.apache.commons.digester.SetNextRule;
 import org.apache.commons.digester.SetPropertiesRule;
+import org.apache.commons.digester.WithDefaultsRulesWrapper;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml.PathResolver;
 import org.apache.commons.scxml.SCXMLHelper;
@@ -76,6 +77,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.Attributes;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
+import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 /**
@@ -487,7 +489,10 @@ public final class SCXMLParser {
         digester.setNamespaceAware(true);
         //Uncomment next line after SCXML DTD is available
         //digester.setValidating(true);
-        digester.setRules(initRules(scxml, pr, customActions));
+        WithDefaultsRulesWrapper rules =
+            new WithDefaultsRulesWrapper(initRules(scxml, pr, customActions));
+        rules.addDefault(new IgnoredElementRule());
+        digester.setRules(rules);
         return digester;
     }
 
@@ -1639,6 +1644,34 @@ public final class SCXMLParser {
             NamespacePrefixesHolder nsHolder =
                 (NamespacePrefixesHolder) getDigester().peek();
             nsHolder.setNamespaces(getDigester().getCurrentNamespaces());
+        }
+    }
+
+    /**
+     * Custom digestion rule logging ignored elements.
+     */
+    private static class IgnoredElementRule extends Rule {
+
+        /**
+         * @see Rule#begin(String, String, Attributes)
+         */
+        public final void begin(final String namespace, final String name,
+                final Attributes attributes) {
+            org.apache.commons.logging.Log log = LogFactory.
+                getLog(SCXMLParser.class);
+            Locator l = digester.getDocumentLocator();
+            String identifier = l.getSystemId();
+            if (identifier == null) {
+                identifier = l.getPublicId();
+            }
+            StringBuffer sb = new StringBuffer();
+            sb.append("Ignoring element <").append(name).
+                append("> in namespace \"").append(namespace).
+                append("\" at ").append(identifier).append(":").
+                append(l.getLineNumber()).append(":").
+                append(l.getColumnNumber()).append(" and digester match \"").
+                append(digester.getMatch()).append("\"");
+            log.warn(sb.toString());
         }
     }
 
