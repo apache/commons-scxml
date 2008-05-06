@@ -33,8 +33,37 @@
       </ul>
     </section>
 
-    <release version="0.8" date="In SVN"
+    <release version="1.0" date="In SVN branch"
      description="Latest unreleased code">
+
+     <action dev="rahul" type="add" issue="SCXML-68" due-to="Tony Seebregts">
+       [03-07-2008] Enable JavaScript as one of the pluggable ELs in SCXML
+       documents.
+     </action>
+
+    </release>
+
+    <release version="0.8" date="In SVN trunk"
+     description="Latest unreleased code">
+
+     <action dev="rahul" type="add" issue="SCXML-64">
+       [05-03-2008] Better error reporting for ignored or misplaced elements
+       by parser (SCXMLParser class).
+     </action>
+
+     <action dev="rahul" type="add" issue="SCXML-62">
+       [04-25-2008] Enhancement request for supporting fragment URLs in
+       &lt;state&gt; element's src attribute.
+     </action>
+
+     <action dev="rahul" type="fix" issue="SCXML-67" due-to="SeongSoo Park">
+       [02-09-2008] Process &lt;parallel&gt; child of &lt;state&gt; correctly.
+     </action>
+
+     <action dev="rahul" type="fix" issue="SCXML-66">
+       [01-26-2008] Improve first-hit performance for following transitions
+       by working out the paths at parse-time.
+     </action>
 
      <action dev="rahul" type="update">
        [01-03-2008] Clarify via Javadocs that the SCXMLParser assumes the
