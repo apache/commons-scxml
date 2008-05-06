@@ -310,6 +310,13 @@ public class SCXMLExecutor implements Serializable {
 
     /**
      * Get the state machine that is being executed.
+     * <b>NOTE:</b> This is the state machine definition or model used by this
+     * executor instance. It may be shared across multiple executor instances
+     * and as a best practice, should not be altered. Also note that
+     * manipulation of instance data for the executor should happen through
+     * its root context or state contexts only, never through the direct
+     * manipulation of any {@link Datamodel}s associated with this state
+     * machine definition.
      *
      * @return Returns the stateMachine.
      */
