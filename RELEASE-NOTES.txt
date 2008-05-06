@@ -17,122 +17,34 @@
 $Id$
 
                          Commons SCXML Package
-                          Version 0.8-SNAPSHOT
+                          Version 1.0-SNAPSHOT
                             Release Notes
 
 INTRODUCTION:
 
-Commons SCXML 0.7 primarily contains new features, along with a
-handful of bug fixes. See about section at the end for general information
-on Commons SCXML.
+Commons SCXML 1.0 is a major release. It contains non backwards compatible
+changes from the 0.x releases. See about section at the end for general
+information on Commons SCXML.
 
 IMPORTANT NOTES:
 
- o State IDs can no longer contain whitespace. Any IDs that contain spaces
-   must be changed to conform before switching to v0.7.
-
- o Behavior related to wild card event name handling for transitions has
-   changed (now aligns with latest Working Draft).
-
- o org.apache.commons.scxml.io.SCXMLDigester has been deprecated in favor
-   of SCXMLParser in same package. See Javadocs for changes before switching.
+ o
 
 NEW FEATURES:
 
- o Conflicts between transitions are now resolved based on document order
-   of the transitions.
-
- o Transition targets can now be specified as a space separated list of
-   state IDs. When more than one targets are specified, they must belong
-   to regions of the same parallel.
-
- o <final> is supported (by org.apache.commons.scxml.io.SCXMLParser).
-
- o <event> is supported (by org.apache.commons.scxml.io.SCXMLParser).
-
-DEPRECATIONS:
-
-See Javadocs of each item for details. All deprecated items are scheduled for
-removal in v1.0.
-
- o org.apache.commons.scxml.env.AbstractStateMachine#getStateMachine()
-
- o org.apache.commons.scxml.io.SCXMLDigester
-
- o org.apache.commons.scxml.io.SCXMLSerializer#serializeTarget(StringBuffer,
-           Transition,String)
-
- o org.apache.commons.scxml.model.Parallel#addState(State)
-   org.apache.commons.scxml.model.Parallel#getStates()
-
- o org.apache.commons.scxml.model.SCXML#addState(State)
-   org.apache.commons.scxml.model.SCXML#getInitialState()
-   org.apache.commons.scxml.model.SCXML#getStates()
-   org.apache.commons.scxml.model.SCXML#setInitialState(State)
-
- o org.apache.commons.scxml.model.State#addChild(State)
-   org.apache.commons.scxml.model.State#getIsFinal()
-   org.apache.commons.scxml.model.State#getParallel()
-   org.apache.commons.scxml.model.State#getTransitions()
-   org.apache.commons.scxml.model.State#isDone()
-   org.apache.commons.scxml.model.State#isOrthogonal()
-   org.apache.commons.scxml.model.State#setDone(boolean)
-   org.apache.commons.scxml.model.State#setIsFinal(boolean)
-   org.apache.commons.scxml.model.State#setParallel(Parallel)
-
- o org.apache.commons.scxml.model.Transition#getPath()
-   org.apache.commons.scxml.model.Transition#getRuntimeTarget()
-   org.apache.commons.scxml.model.Transition#getTarget()
-   org.apache.commons.scxml.model.Transition#setTarget(TransitionTarget)
-
- o org.apache.commons.scxml.semantics.ErrorConstants#NON_DETERMINISTIC
+ o
 
 BUG FIXES:
 
- o [SCXML-45] - Payload of events sent to current scxml session using <send>
-                tag not injected into engine
- o [SCXML-48] - Cannot create more than one subclass of AbstractStateMachine
- o [SCXML-49] - SimpleSCXMLInvoker may miss transition to final state
- o [SCXML-51] - <assign> with location and expr both containing datamodel
-                expressions concatenates old and new values
- o [SCXML-52] - Error on resolving conflicting transitions for compound states
- o [SCXML-53] - Wild card event name handling on transitions is not in line
-                with W3C WD
- o [SCXML-54] - Events from custom actions missing payload
- o [SCXML-56] - onentry and onexit child elements of parallel do not have
-                parent
- o [SCXML-58] - SCXML not stateless because of State class
- o [SCXML-60] - Possible race condition in AsyncTrigger
- o [SCXML-61] - Clarify interaction patterns for Invoker implementations with
-                parent state machine executor
+ o
 
 IMPROVEMENTS:
 
- o [SCXML-41] - Adding information about original expression to evaluation
-                error messages
- o [SCXML-46] - Provide a SCXMLListener abstract adapter class
- o [SCXML-55] - Add support for <event> tag
+ o
 
 OTHER CHANGES:
 
- o SCXMLExecutor logs state at a lower severity (changed from log level
-   'info' to log level 'debug')
-
- o The LCA of two states belonging to sibling regions is now the enclosing
-   Parallel, rather than the orthogonal State.
-
- o The regions of a parallel are entered in document order. This is
-   implementation-specific behavior and users should not rely on it.
-
- o AbstractStateMachine and SimpleSCXMLListener classes, as well as the two
-   standalone testing classes in the test package, have switched to the new
-   SCXMLParser class.
-
- o Recommended version of Commons Logging has been upgraded to v1.1.1.
-
- o Recommended version of JUnit has been upgraded to v3.8.2.
-
- o An experimental Maven2 build has been added in v0.7.
+ o
 
 ABOUT COMMONS SCXML:
 
