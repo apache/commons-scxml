@@ -27,14 +27,14 @@
 
     <section name="About this document">
       <ul>
-        <li>The latest release of Commons SCXML is version 0.7.</li>
+        <li>The latest release of Commons SCXML is version 0.8.</li>
         <li>If you are interested in helping the project, join us on the
             <a href="mail-lists.html">commons-dev mailing list</a>.</li>
       </ul>
     </section>
 
-    <release version="0.8" date="In SVN"
-     description="Latest unreleased code">
+    <release version="0.8" date="May 2008"
+     description="Latest release">
 
      <action dev="rahul" type="add" issue="SCXML-64">
        [05-03-2008] Better error reporting for ignored or misplaced elements
@@ -85,7 +85,7 @@
     </release>
 
     <release version="0.7" date="December 2007"
-     description="Latest release">
+     description="Release">
 
      <action dev="rahul" type="add">
        [12-12-2007] Add experimental Maven2 pom.xml to source distro.
