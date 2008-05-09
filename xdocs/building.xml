@@ -30,7 +30,25 @@
 </p>
 </section>
 <!-- ================================================== -->
-<section name="Maven Goals">
+<section name="Maven 2 Goals">
+  <p>
+    To build a jar file, change into SCXML's root directory and run "mvn package".
+    The result will be in the "target" subdirectory.
+  </p>
+  <p>
+    To build the Javadocs, run "mvn javadoc:javadoc".
+    The result will be in "target/docs/apidocs".
+  </p>
+  <p>
+    To build the full website, including Javadocs, run "mvn site".
+  </p>
+  <p>
+    Maven 2.0.8 and above is recommended.
+  </p>
+
+</section>
+<!-- ================================================== -->
+<section name="Maven 1 Goals">
   <p>
     To build a jar file, change into SCXML's root directory and run "maven jar".
     The result will be in the "target" subdirectory.

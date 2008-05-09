@@ -15,9 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <parent>
     <groupId>org.apache.commons</groupId>
@@ -29,7 +27,7 @@
   <name>Commons SCXML</name>
   <groupId>commons-scxml</groupId>
   <artifactId>commons-scxml</artifactId>
-  <version>0.8-SNAPSHOT</version>
+  <version>0.8</version>
 
   <inceptionYear>2005</inceptionYear>
   <description>A Java Implementation of a State Chart XML Engine</description>
@@ -37,9 +35,9 @@
   <url>http://commons.apache.org/scxml/</url>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/scxml/trunk</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/scxml/trunk</developerConnection>
-    <url>http://svn.apache.org/viewvc/commons/proper/scxml/trunk</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/scxml/tags/SCXML_0_8_RC1</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/scxml/tags/SCXML_0_8_RC1</developerConnection>
+    <url>http://svn.apache.org/viewvc/commons/proper/scxml/tags/SCXML_0_8_RC1</url>
   </scm>
 
   <developers>
@@ -181,9 +179,9 @@
     <maven.compile.source>1.4</maven.compile.source>
     <maven.compile.target>1.4</maven.compile.target>
     <commons.componentid>scxml</commons.componentid>
-    <commons.release.version>0.7</commons.release.version>
+    <commons.release.version>0.8</commons.release.version>
     <commons.rc.version>RC1</commons.rc.version>
-    <commons.binary.suffix></commons.binary.suffix>
+    <commons.binary.suffix />
     <commons.jira.id>SCXML</commons.jira.id>
     <commons.jira.pid>12310492</commons.jira.pid>
   </properties> 
