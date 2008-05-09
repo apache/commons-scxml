@@ -15,9 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <parent>
     <groupId>org.apache.commons</groupId>
@@ -183,7 +181,7 @@
     <commons.componentid>scxml</commons.componentid>
     <commons.release.version>0.8</commons.release.version>
     <commons.rc.version>RC1</commons.rc.version>
-    <commons.binary.suffix></commons.binary.suffix>
+    <commons.binary.suffix />
     <commons.jira.id>SCXML</commons.jira.id>
     <commons.jira.pid>12310492</commons.jira.pid>
   </properties> 
