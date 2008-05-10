@@ -181,7 +181,6 @@
     <commons.componentid>scxml</commons.componentid>
     <commons.release.version>0.8</commons.release.version>
     <commons.rc.version>RC1</commons.rc.version>
-    <commons.binary.suffix />
     <commons.jira.id>SCXML</commons.jira.id>
     <commons.jira.pid>12310492</commons.jira.pid>
   </properties> 
