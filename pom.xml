@@ -27,7 +27,7 @@
   <name>Commons SCXML</name>
   <groupId>commons-scxml</groupId>
   <artifactId>commons-scxml</artifactId>
-  <version>0.8-SNAPSHOT</version>
+  <version>0.8</version>
 
   <inceptionYear>2005</inceptionYear>
   <description>A Java Implementation of a State Chart XML Engine</description>
@@ -35,9 +35,9 @@
   <url>http://commons.apache.org/scxml/</url>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/scxml/trunk</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/scxml/trunk</developerConnection>
-    <url>http://svn.apache.org/viewvc/commons/proper/scxml/trunk</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/scxml/tags/SCXML_0_8_RC2</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/scxml/tags/SCXML_0_8_RC2</developerConnection>
+    <url>http://svn.apache.org/viewvc/commons/proper/scxml/tags/SCXML_0_8_RC2</url>
   </scm>
 
   <developers>
