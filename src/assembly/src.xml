@@ -20,7 +20,7 @@
         <format>tar.gz</format>
         <format>zip</format>
     </formats>
-    <baseDirectory>${project.artifactId}-${project.version}-src</baseDirectory>
+    <baseDirectory>${project.artifactId}-0.8-src</baseDirectory>
     <fileSets>
         <fileSet>
             <includes>
