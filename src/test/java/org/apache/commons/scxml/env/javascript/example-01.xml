@@ -133,10 +133,21 @@
 
                debug("This is the Javascript println() function")' />
    </onentry>
-   <transition target='end' />
+   <transition target='javascript.eventdatamap.example' />
   </state>
 
  </state>
+
+  <!-- _eventdatamap USAGE -->
+
+  <state id='javascript.eventdatamap.example'>
+   <onentry>
+    <scxml:eventdatamaptest />
+   </onentry>
+   <transition target='end' event='ok' >
+    <log expr='"_eventdatamap[ok]=\"" + _eventdatamap.get("ok") + "\""' />
+   </transition>
+  </state>
 
  <!-- DONE -->
 

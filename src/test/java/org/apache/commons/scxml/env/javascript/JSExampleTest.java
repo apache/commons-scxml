@@ -18,17 +18,30 @@
 package org.apache.commons.scxml.env.javascript;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import org.apache.commons.logging.Log;
 import org.apache.commons.scxml.Context;
+import org.apache.commons.scxml.ErrorReporter;
 import org.apache.commons.scxml.Evaluator;
+import org.apache.commons.scxml.EventDispatcher;
+import org.apache.commons.scxml.SCInstance;
 import org.apache.commons.scxml.SCXMLExecutor;
+import org.apache.commons.scxml.SCXMLExpressionException;
 import org.apache.commons.scxml.SCXMLTestHelper;
+import org.apache.commons.scxml.TriggerEvent;
+import org.apache.commons.scxml.model.Action;
+import org.apache.commons.scxml.model.CustomAction;
+import org.apache.commons.scxml.model.ModelException;
 import org.apache.commons.scxml.model.SCXML;
+import org.apache.commons.scxml.model.State;
 import org.apache.commons.scxml.model.TransitionTarget;
 
 /**
@@ -69,8 +82,12 @@ public class JSExampleTest extends TestCase {
     // TEST METHODS
 
     public void testExample01Sample() {
-        
-        SCXML scxml = SCXMLTestHelper.parse(example01);
+
+        List<CustomAction> actions  = new ArrayList<CustomAction>();        
+        actions.add(new CustomAction("http://commons.apache.org/scxml",
+            "eventdatamaptest", EventDataMapTest.class));
+
+        SCXML scxml = SCXMLTestHelper.parse(example01,actions);
         Evaluator evaluator = new JSEvaluator();
         Context context = new JSContext();
         exec = SCXMLTestHelper.getExecutor(scxml, context, evaluator);
@@ -79,11 +96,24 @@ public class JSExampleTest extends TestCase {
         try {
             Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
             assertEquals(1, currentStates.size());
-            assertEquals("end", currentStates.iterator().next().getId());
+            assertEquals("end", ((State)currentStates.iterator().
+                next()).getId());
         } catch (Exception e) {
             fail(e.getMessage());
         }
-   }
+    }
+
+    // INNER CLASSES
+    
+    public static class EventDataMapTest extends Action {
+        private static final long serialVersionUID = 1L;
+
+        public void execute(EventDispatcher dispatcher, ErrorReporter reporter,
+                SCInstance instance, Log log, Collection<TriggerEvent> events)
+        throws ModelException,SCXMLExpressionException { 
+            events.add(new TriggerEvent("ok",TriggerEvent.SIGNAL_EVENT,"and its ok with me to"));
+        }
+    }
 
 }
 
