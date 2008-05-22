@@ -111,7 +111,7 @@
                   href="http://svn.apache.org/viewvc/commons/proper/scxml/trunk/"/>
 
       <item       name="Download"
-                  href="http://commons.apache.org/downloads/download_scxml.cgi"/>
+                  href="/download_scxml.cgi"/>
 
     </menu>
 
