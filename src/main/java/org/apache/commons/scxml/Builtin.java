@@ -17,18 +17,21 @@
 package org.apache.commons.scxml;
 
 import java.io.Serializable;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.transform.TransformerException;
+import javax.xml.namespace.NamespaceContext;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml.model.TransitionTarget;
-import org.apache.xml.utils.PrefixResolver;
-import org.apache.xpath.XPath;
-import org.apache.xpath.XPathAPI;
-import org.apache.xpath.XPathContext;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -92,6 +95,7 @@ public class Builtin implements Serializable {
         Node dataNode = (Node) data;
         NodeList result = null;
         try {
+            XPath xpath = XPathFactory.newInstance().newXPath();
             if (namespaces == null || namespaces.size() == 0) {
                 Log log = LogFactory.getLog(Builtin.class);
                 if (log.isDebugEnabled()) {
@@ -99,20 +103,14 @@ public class Builtin implements Serializable {
                         + "no namespace information is available for path: "
                         + path);
                 }
-                result = XPathAPI.selectNodeList(dataNode, path);
             } else {
-                XPathContext xpathSupport = new XPathContext();
-                PrefixResolver prefixResolver =
-                    new DataPrefixResolver(namespaces);
-                XPath xpath = new XPath(path, null, prefixResolver,
-                    XPath.SELECT);
-                int ctxtNode = xpathSupport.getDTMHandleFromNode(dataNode);
-                result = xpath.execute(xpathSupport, ctxtNode,
-                    prefixResolver).nodelist();
+                xpath.setNamespaceContext(new ExpressionNSContext(namespaces));
             }
-        } catch (TransformerException te) {
+            result = (NodeList) xpath.evaluate(path, dataNode,
+                XPathConstants.NODESET);
+        } catch (XPathExpressionException xee) {
             Log log = LogFactory.getLog(Builtin.class);
-            log.error(te.getMessage(), te);
+            log.error(xee.getMessage(), xee);
             return null;
         }
         int length = result.getLength();
@@ -169,40 +167,86 @@ public class Builtin implements Serializable {
     }
 
     /**
-     * Prefix resolver for XPaths pointing to &lt;data&gt; nodes.
+     * XPath {@link NamespaceContext} for Commons SCXML expressions.
      */
-    private static class DataPrefixResolver implements PrefixResolver {
+    private static final class ExpressionNSContext
+    implements Serializable, NamespaceContext {
 
-        /** Cached namespaces. */
-        private Map<String, String> namespaces;
+        /** Serial version UID. */
+        private static final long serialVersionUID = 8620558582288851315L;
+        /** Map supplied by digester. */
+        private final Map<String, String> namespaces;
 
         /**
          * Constructor.
-         * @param namespaces The prefix to namespace URI map.
+         *
+         * @param namespaces The current namespace map.
          */
-        private DataPrefixResolver(final Map<String, String> namespaces) {
+        ExpressionNSContext(final Map<String, String> namespaces) {
             this.namespaces = namespaces;
         }
 
-        /** {@inheritDoc} */
-        public String getNamespaceForPrefix(final String prefix) {
+        /**
+         * @see NamespaceContext#getNamespaceURI(String)
+         */
+        @Override
+        public String getNamespaceURI(final String prefix) {
             return namespaces.get(prefix);
         }
 
-        /** {@inheritDoc} */
-        public String getNamespaceForPrefix(final String prefix,
-                final Node nsContext) {
-            return namespaces.get(prefix);
+        /**
+         * @see NamespaceContext#getPrefix(String)
+         *
+         * First matching key in iteration order is returned, and the
+         * iteration order depends on the underlying <code>namespaces</code>
+         * {@link Map} implementation.
+         */
+        @Override
+        public String getPrefix(final String namespaceURI) {
+            return (String) getKeys(namespaceURI, true);
         }
 
-        /** {@inheritDoc} */
-        public String getBaseIdentifier() {
-            return null;
+        /**
+         * @see NamespaceContext#getPrefixes(String)
+         *
+         * The iteration order depends on the underlying <code>namespaces</code>
+         * {@link Map} implementation.
+         */
+        @Override
+        @SuppressWarnings("unchecked")
+        public Iterator<String> getPrefixes(final String namespaceURI) {
+            return (Iterator<String>) getKeys(namespaceURI, false);
         }
 
-        /** {@inheritDoc} */
-        public boolean handlesNullPrefixes() {
-            return false;
+        /**
+         * Get prefix key(s) for given namespaceURI value.
+         *
+         * If <code>one</code>, first matching key in iteration order is
+         * returned, and the iteration order depends on the underlying
+         * <code>namespaces</code> {@link Map} implementation.
+         * Otherwise, an iterator to all matching keys is returned.
+         *
+         * @param value The value whose key is required
+         * @param one At most one matching key is returned
+         * @return The required prefix key(s)
+         */
+        private Object getKeys(final String value, final boolean one) {
+            List<String> prefixes = new LinkedList<String>();
+            if (namespaces.containsValue(value)) {
+                for (Map.Entry<String, String> entry : namespaces.entrySet()) {
+                    String v = entry.getValue();
+                    if ((value == null && v == null) ||
+                            (value != null && value.equals(v))) {
+                        String prefix = entry.getKey();
+                        if (one) {
+                            return prefix;
+                        } else {
+                            prefixes.add(prefix);
+                        }
+                    }
+                }
+            }
+            return one ? null : prefixes.iterator();
         }
 
     }
