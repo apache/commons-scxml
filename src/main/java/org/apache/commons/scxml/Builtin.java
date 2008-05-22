@@ -168,6 +168,10 @@ public class Builtin implements Serializable {
 
     /**
      * XPath {@link NamespaceContext} for Commons SCXML expressions.
+     *
+     * <b>Code duplication:</b> Also in XPathEvaluator.java. Class is not
+     * meant to be part of any public API and will be removed when parser
+     * is no longer using Commons Digester.
      */
     private static final class ExpressionNSContext
     implements Serializable, NamespaceContext {

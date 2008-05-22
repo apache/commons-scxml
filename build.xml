@@ -135,6 +135,8 @@
           </include>
           <include name="org/apache/commons/scxml/env/servlet/EnvServletTestSuite.java">
           </include>
+          <include name="org/apache/commons/scxml/env/xpath/EnvXPathTestSuite.java">
+          </include>
           <include name="org/apache/commons/scxml/invoke/InvokeTestSuite.java">
           </include>
           <include name="org/apache/commons/scxml/io/IOTestSuite.java">
