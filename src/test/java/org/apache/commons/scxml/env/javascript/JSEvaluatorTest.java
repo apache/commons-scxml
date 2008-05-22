@@ -23,21 +23,21 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
 import org.apache.commons.scxml.Context;
 import org.apache.commons.scxml.Evaluator;
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLExpressionException;
+import org.apache.commons.scxml.env.SimpleErrorHandler;
 import org.apache.commons.scxml.io.SCXMLParser;
 import org.apache.commons.scxml.model.SCXML;
-import org.apache.xml.utils.DefaultErrorHandler;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /** JUnit 3 test case for the JSEvaluator expression evaluator
  *  class. Includes basic tests for:
@@ -116,7 +116,7 @@ public class JSEvaluatorTest extends TestCase {
     protected void setUp() throws Exception {
             StringReader reader = new StringReader(SCRIPT);
             InputSource  source = new InputSource (reader);
-            ErrorHandler errors = new DefaultErrorHandler();
+            ErrorHandler errors = new SimpleErrorHandler();
 
             scxml     = SCXMLParser.parse(source,errors);
             context   = new JSContext();
