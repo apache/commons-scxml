@@ -28,7 +28,9 @@ information on Commons SCXML.
 
 IMPORTANT NOTES:
 
- o
+ o The minimum JDK version required is now 1.6.
+
+ o All deprecated methods and classes from any of the 0.x releases are removed.
 
 NEW FEATURES:
 
