@@ -17,33 +17,26 @@
 $Id$
 
                          Commons SCXML Package
-                             Version 0.8
+                         Version 0.9-SNAPSHOT
                             Release Notes
 
 INTRODUCTION:
 
-Commons SCXML 0.8 is a minor release containing a few enhancements and
+Commons SCXML 0.9 is a minor release containing a few enhancements and
 bug fixes. See about section at the end for general information on
 Commons SCXML.
 
 NEW FEATURES:
 
- o [SCXML-62] - Fragment URLs are now supported by the src attribute of the
-                <state> element
-
- o [SCXML-64] - Better error reporting for ignored or misplaced elements by
-                parser (SCXMLParser class)
+ o
 
 BUG FIXES:
 
- o [SCXML-66] - Potential race condition while getting path segments for
-                transitions
-
- o [SCXML-67] - <state> does not process <parallel> children correctly
+ o
 
 OTHER COMMENTS:
 
- o This is the first release of Commons SCXML using Maven 2.
+ o
 
 ABOUT COMMONS SCXML:
 

@@ -20,7 +20,7 @@
   <name>SCXML</name>
   <groupId>commons-scxml</groupId> 
   <artifactId>commons-scxml</artifactId>
-  <currentVersion>0.8</currentVersion>
+  <currentVersion>0.9-SNAPSHOT</currentVersion>
 
   <inceptionYear>2005</inceptionYear>
   <shortDescription>Commons SCXML</shortDescription>
@@ -84,6 +84,11 @@
       <id>0.7</id>
       <name>0.7</name>
       <tag>SCXML_0_7</tag>
+    </version>
+    <version>
+      <id>0.8</id>
+      <name>0.8</name>
+      <tag>SCXML_0_8</tag>
     </version>
   </versions>
 
