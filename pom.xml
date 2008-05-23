@@ -259,8 +259,9 @@
         <artifactId>maven-checkstyle-plugin</artifactId>
         <version>2.1</version>
         <configuration>
-          <configLocation>scxml-checks.xml</configLocation>
+          <configLocation>${basedir}/scxml-checks.xml</configLocation>
           <enableRulesSummary>false</enableRulesSummary>
+          <headerFile>${basedir}/scxml-asl-header.txt</headerFile>
         </configuration>
       </plugin>
     </plugins>
