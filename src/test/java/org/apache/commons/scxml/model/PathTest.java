@@ -38,13 +38,13 @@ public class PathTest extends TestCase {
     public void testConstructorNull() {
         Path path = new Path(null, null);
         
-        assertNull(path.getScope());
+        assertNull(path.getPathScope());
     }
 
     public void testConstructorNullState() {
         Path path = new Path(new State(), null);
         
-        assertTrue(path.getScope() instanceof State);
+        assertTrue(path.getPathScope() instanceof State);
     }
 
     public void testConstructorStates() {
@@ -56,7 +56,7 @@ public class PathTest extends TestCase {
         
         Path path = new Path(source, target);
         
-        assertNull(path.getScope());
+        assertNull(path.getPathScope());
         assertEquals(1, path.getUpwardSegment().size());
         assertEquals("1", ((State)path.getUpwardSegment().get(0)).getId());
 
@@ -107,7 +107,7 @@ public class PathTest extends TestCase {
 
         Path path = new Path(source, target);
 
-        assertNull(path.getScope());
+        assertNull(path.getPathScope());
     }
 
     public void testConstructorParentSource() {
@@ -121,7 +121,7 @@ public class PathTest extends TestCase {
 
         Path path = new Path(source, target);
 
-        assertNull(path.getScope());
+        assertNull(path.getPathScope());
     }
     
     public void testConstructorParent() {
@@ -139,7 +139,7 @@ public class PathTest extends TestCase {
 
         Path path = new Path(source, target);
 
-        assertEquals("parentid", path.getScope().getId());
+        assertEquals("parentid", path.getPathScope().getId());
     }
     
     public void testConstructorParentParallel() {
@@ -157,7 +157,7 @@ public class PathTest extends TestCase {
 
         Path path = new Path(source, target);
 
-        assertNull(path.getScope());
+        assertNull(path.getPathScope());
     }
     
     public void testConstructorParentParallelParent() {
@@ -180,7 +180,7 @@ public class PathTest extends TestCase {
 
         Path path = new Path(source, target);
 
-        assertEquals("superParent", path.getScope().getId());
+        assertEquals("superParent", path.getPathScope().getId());
     }
     
     public void testGetRegionsExitedNull() {
