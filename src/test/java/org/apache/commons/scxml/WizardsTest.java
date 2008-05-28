@@ -102,7 +102,7 @@ public class WizardsTest extends TestCase {
     }
 
     public void testWizard02Sample() {
-        SCXML scxml = SCXMLTestHelper.digest(wizard02);
+        SCXML scxml = SCXMLTestHelper.parse(wizard02);
         exec = SCXMLTestHelper.getExecutor(new JexlContext(),
             new JexlEvaluator(), scxml, new TestEventDispatcher(),
             new Tracer());

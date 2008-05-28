@@ -16,6 +16,7 @@
  * limitations under the License.
 -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
+       xmlns:cs="http://commons.apache.org/scxml"
        version="1.0"
        initialstate="rootCtxTest">
   
@@ -23,7 +24,7 @@
     <onentry>
       <!-- 'foo' must exist in host JSP context -->
       <assign name="foo" expr="${foo+1}" />
-      <var name="bar" expr="a brand new value" />
+      <cs:var name="bar" expr="a brand new value" />
     </onentry>
   </state>
 

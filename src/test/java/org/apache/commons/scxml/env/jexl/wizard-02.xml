@@ -16,8 +16,9 @@
  * limitations under the License.
 -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
-      version="1.0"
-      initialstate="state1">
+       xmlns:cs="http://commons.apache.org/scxml"
+       version="1.0"
+       initialstate="state1">
      <state id="state1">
            <onentry>
                  <!-- Send without a targettype causes the
@@ -32,7 +33,7 @@
      </state>
      <state id="state2">
            <onentry>
-                 <var name="aValue" expr="2"/>
+                 <cs:var name="aValue" expr="2"/>
                  <!-- Send with a non-empty (and not "scxml")
                       targettype causes the callback on the
                       EventDispatcher implementation. See
@@ -46,7 +47,7 @@
      </state>
      <state id="state3">
            <onentry>
-                 <var name="aValue" expr="3"/>
+                 <cs:var name="aValue" expr="3"/>
                  <send namelist="aValue" targettype="'foo'" />
            </onentry>
            <transition event="event1" target="state1"/>
@@ -55,7 +56,7 @@
      </state>
      <state id="state4">
            <onentry>
-                 <var name="aValue" expr="4"/>
+                 <cs:var name="aValue" expr="4"/>
                  <send namelist="aValue" targettype="'foo'" />
            </onentry>
            <transition event="event1" target="state1"/>

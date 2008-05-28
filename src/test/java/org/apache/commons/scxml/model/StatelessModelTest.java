@@ -28,6 +28,7 @@ import junit.textui.TestRunner;
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
 import org.apache.commons.scxml.TriggerEvent;
+import org.apache.commons.scxml.env.SimpleSCXMLListener;
 import org.apache.commons.scxml.env.jsp.ELContext;
 import org.apache.commons.scxml.env.jsp.ELEvaluator;
 /**
@@ -63,10 +64,10 @@ public class StatelessModelTest extends TestCase {
             getResource("org/apache/commons/scxml/env/jsp/stateless-01.xml");
         stateless01par = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/model/stateless-parallel-01.xml");
-        scxml01jexl = SCXMLTestHelper.digest(stateless01jexl);
-        scxml01jsp = SCXMLTestHelper.digest(stateless01jsp);
-        scxml01par = SCXMLTestHelper.digest(stateless01par);
-        scxml02par = SCXMLTestHelper.digest(stateless01par);
+        scxml01jexl = SCXMLTestHelper.parse(stateless01jexl);
+        scxml01jsp = SCXMLTestHelper.parse(stateless01jsp);
+        scxml01par = SCXMLTestHelper.parse(stateless01par);
+        scxml02par = SCXMLTestHelper.parse(stateless01par);
     }
 
     /**
@@ -172,6 +173,7 @@ public class StatelessModelTest extends TestCase {
         currentStates = fireEvent("state1.event", exec01);
         checkParallelStates(currentStates, "state1.final", "state2.init", "exec01");
         exec01.setStateMachine(scxml02par);
+        exec01.addListener(scxml02par, new SimpleSCXMLListener());
 
         currentStates = fireEvent("state2.event", exec01);
         checkParallelStates(currentStates, "next", null, "exec01");

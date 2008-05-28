@@ -35,7 +35,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml.env.SimpleDispatcher;
 import org.apache.commons.scxml.env.Tracer;
 import org.apache.commons.scxml.env.jexl.JexlEvaluator;
-import org.apache.commons.scxml.io.SCXMLDigester;
 import org.apache.commons.scxml.io.SCXMLParser;
 import org.apache.commons.scxml.model.CustomAction;
 import org.apache.commons.scxml.model.SCXML;
@@ -55,36 +54,6 @@ public class SCXMLTestHelper {
     public static final String SERIALIZATION_FILE_PREFIX =
         SERIALIZATION_DIR + "/scxml";
     public static final String SERIALIZATION_FILE_SUFFIX = ".ser";
-
-    public static SCXML digest(final URL url) {
-        return digest(url, null, null);
-    }
-
-    public static SCXML digest(final URL url, final List<CustomAction> customActions) {
-        return digest(url, null, customActions);
-    }
-
-    public static SCXML digest(final URL url, final ErrorHandler errHandler) {
-        return digest(url, errHandler, null);
-    }
-
-    public static SCXML digest(final URL url, final ErrorHandler errHandler,
-            final List<CustomAction> customActions) {
-        Assert.assertNotNull(url);
-        // SAX ErrorHandler may be null
-        SCXML scxml = null;
-        try {
-            scxml = SCXMLDigester.digest(url, errHandler, customActions);
-        } catch (Exception e) {
-            Log log = LogFactory.getLog(SCXMLTestHelper.class);
-            log.error(e.getMessage(), e);
-            Assert.fail(e.getMessage());
-        }
-        Assert.assertNotNull(scxml);
-        SCXML roundtrip = testModelSerializability(scxml);
-        Assert.assertNotNull(roundtrip);
-        return roundtrip;
-    }
 
     public static SCXML parse(final URL url) {
         return parse(url, null, null);
@@ -116,20 +85,20 @@ public class SCXMLTestHelper {
     }
 
     public static SCXMLExecutor getExecutor(final URL url) {
-        SCXML scxml = digest(url);
+        SCXML scxml = parse(url);
         Evaluator evaluator = new JexlEvaluator();
         return getExecutor(evaluator, scxml);
     }
 
     public static SCXMLExecutor getExecutor(final URL url,
             final Evaluator evaluator) {
-        SCXML scxml = digest(url);
+        SCXML scxml = parse(url);
         return getExecutor(evaluator, scxml);
     }
 
     public static SCXMLExecutor getExecutor(final URL url,
             final ErrorHandler errHandler) {
-        SCXML scxml = digest(url, errHandler);
+        SCXML scxml = parse(url, errHandler);
         Evaluator evaluator = new JexlEvaluator();
         return getExecutor(evaluator, scxml);
     }
@@ -157,7 +126,7 @@ public class SCXMLTestHelper {
 
     public static SCXMLExecutor getExecutor(final URL url, final Context ctx,
             final Evaluator evaluator) {
-        SCXML scxml = digest(url);
+        SCXML scxml = parse(url);
         EventDispatcher ed = new SimpleDispatcher();
         Tracer trc = new Tracer();
         return getExecutor(ctx, evaluator, scxml, ed, trc);

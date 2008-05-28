@@ -19,6 +19,7 @@
    This document uses JSP 2.0 EL as the expressions language.
 -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
+       xmlns:cs="http://commons.apache.org/scxml"
        version="1.0"
        initialstate="off">
   
@@ -38,15 +39,15 @@
       <!-- we assume the cook_time is passed in as a context parameter -->
       <if cond="${empty cook_time}">
         <!-- default setting -->
-        <var name="cook_time" expr="${5}"/>
+        <cs:var name="cook_time" expr="${5}"/>
       </if>
       <!-- again, door_closed should be a part of a global context -->
       <if cond="${empty door_closed}">
         <!-- default setting -->
-        <var name="door_closed" expr="${true}"/>
+        <cs:var name="door_closed" expr="${true}"/>
       </if>
       <!-- timer variable -->
-      <var name="timer" expr="${0}"/>
+      <cs:var name="timer" expr="${0}"/>
     </onentry>
 
     <transition event="turn_off" target="off"/>

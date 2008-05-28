@@ -155,7 +155,7 @@ public class CustomActionTest extends TestCase {
         customActions.add(ca1);
         customActions.add(ca2);
         // (2) Parse the document with a custom digester.
-        SCXML scxml = SCXMLTestHelper.digest(custom01, customActions);
+        SCXML scxml = SCXMLTestHelper.parse(custom01, customActions);
         // (3) Get a SCXMLExecutor
         exec = SCXMLTestHelper.getExecutor(scxml);
         // (4) Single, final state
@@ -175,7 +175,7 @@ public class CustomActionTest extends TestCase {
         List<CustomAction> customActions = new ArrayList<CustomAction>();
         customActions.add(ca);
         // (2) Parse the document with a custom digester.
-        SCXML scxml = SCXMLTestHelper.digest(external01, customActions);
+        SCXML scxml = SCXMLTestHelper.parse(external01, customActions);
         // (3) Get a SCXMLExecutor
         exec = SCXMLTestHelper.getExecutor(scxml);
         // (4) Single, final state
@@ -193,7 +193,7 @@ public class CustomActionTest extends TestCase {
         List<CustomAction> customActions = new ArrayList<CustomAction>();
         customActions.add(ca);
         // (2) Parse the document with a custom digester.
-        SCXML scxml = SCXMLTestHelper.digest(override01, customActions);
+        SCXML scxml = SCXMLTestHelper.parse(override01, customActions);
         // (3) Get a SCXMLExecutor
         exec = SCXMLTestHelper.getExecutor(scxml);
         // (4) Single, final state
@@ -218,7 +218,7 @@ public class CustomActionTest extends TestCase {
         List<CustomAction> customActions = new ArrayList<CustomAction>();
         customActions.add(ca);
         // (2) Parse the document with a custom digester.
-        SCXML scxml = SCXMLTestHelper.digest(payload01, customActions);
+        SCXML scxml = SCXMLTestHelper.parse(payload01, customActions);
         // (3) Get a SCXMLExecutor
         exec = SCXMLTestHelper.getExecutor(scxml);
         // (4) Single, final state
@@ -250,7 +250,7 @@ public class CustomActionTest extends TestCase {
         List<CustomAction> customActions = new ArrayList<CustomAction>();
         customActions.add(ca);
         // (2) Parse the document with a custom digester.
-        SCXML scxml = SCXMLTestHelper.digest(payload02, customActions);
+        SCXML scxml = SCXMLTestHelper.parse(payload02, customActions);
         // (3) Get a SCXMLExecutor
         exec = SCXMLTestHelper.getExecutor(new ELEvaluator(), scxml);
         // (4) Single, final state

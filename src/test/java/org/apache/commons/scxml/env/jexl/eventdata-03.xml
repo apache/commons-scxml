@@ -16,8 +16,9 @@
  * limitations under the License.
 -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
-      version="1.0"
-      initialstate="ten">
+       xmlns:cs="http://commons.apache.org/scxml"
+       version="1.0"
+       initialstate="ten">
 
     <datamodel>
         <data name="rootdata">
@@ -34,8 +35,8 @@
 
     <state id="twenty">
         <onentry>
-            <var name="one" expr="Data(rootdata,'root/one')"/>
-            <var name="two" expr="Data(rootdata,'root/two')"/>
+            <cs:var name="one" expr="Data(rootdata,'root/one')"/>
+            <cs:var name="two" expr="Data(rootdata,'root/two')"/>
             <send event="event.bar" namelist="one two"/>
         </onentry>
         <transition event="event.bar"

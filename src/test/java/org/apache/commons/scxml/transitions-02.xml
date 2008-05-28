@@ -16,13 +16,14 @@
  * limitations under the License.
 -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
+       xmlns:cs="http://commons.apache.org/scxml"
        version="1.0"
        initialstate="ten">
 
     <state id="ten">
 
         <onentry>
-            <var name="foo" expr="1" />
+            <cs:var name="foo" expr="1" />
             <log expr="'Foo is:' + foo" />
         </onentry>
 

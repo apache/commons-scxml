@@ -19,35 +19,31 @@
        version="1.0"
        initialstate="main">
 
-    <state id="main">
+    <parallel id="main">
 
-        <parallel id="main.parallel">
-
-            <state id="state1">
-                <initial>
-                    <transition target="state1.init"/>
-                </initial>
-                <state id="state1.init">
-                    <transition event="state1.event" target="state1.final" />
-                </state>
-                <state id="state1.final" final="true" />
+        <state id="state1">
+            <initial>
+                <transition target="state1.init"/>
+            </initial>
+            <state id="state1.init">
+                <transition event="state1.event" target="state1.final" />
             </state>
+            <state id="state1.final" final="true" />
+        </state>
 
-            <state id="state2">
-                <initial>
-                    <transition target="state2.init"/>
-                </initial>
-                <state id="state2.init">
-                    <transition event="state2.event" target="state2.final" />
-                </state>
-                <state id="state2.final" final="true" />
+        <state id="state2">
+            <initial>
+                <transition target="state2.init"/>
+            </initial>
+            <state id="state2.init">
+                <transition event="state2.event" target="state2.final" />
             </state>
+            <state id="state2.final" final="true" />
+        </state>
 
-        </parallel>
+        <transition event="main.done" target="next" />
 
-        <transition event="main.parallel.done" target="next" />
-
-    </state>
+    </parallel>
 
     <state id="next" final="true"/>
 

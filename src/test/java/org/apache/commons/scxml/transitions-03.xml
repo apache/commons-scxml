@@ -24,67 +24,63 @@
          target="twenty_one_2 twenty_two_2 twenty_three_2" />
     </state>
 
-    <state id="twenty">
+    <parallel id="twenty">
 
-        <parallel id="twenties_parallel">
+        <state id="twenty_one">
 
-            <state id="twenty_one">
+            <initial>
+                <transition target="twenty_one_1"/>
+            </initial>
 
-                <initial>
-                    <transition target="twenty_one_1"/>
-                </initial>
-
-                <state id="twenty_one_1">
-                    <transition event="foo" target="twenty_one_2"/>
-                </state>
-
-                <state id="twenty_one_2">
-                    <onexit>
-                        <log expr="'Exiting twenty_two_2'" />
-                    </onexit>
-                </state>
-
+            <state id="twenty_one_1">
+                <transition event="foo" target="twenty_one_2"/>
             </state>
 
-            <state id="twenty_two">
-
-                <initial>
-                    <transition target="twenty_two_1"/>
-                </initial>
-
-                <state id="twenty_two_1">
-                    <transition event="foo" target="twenty_two_2"/>
-                </state>
-
-                <state id="twenty_two_2">
-                    <onexit>
-                        <log expr="'Exiting twenty_two_2'" />
-                    </onexit>
-                </state>
-
+            <state id="twenty_one_2">
+                <onexit>
+                    <log expr="'Exiting twenty_two_2'" />
+                </onexit>
             </state>
 
-            <state id="twenty_three">
+        </state>
 
-                <initial>
-                    <transition target="twenty_three_1"/>
-                </initial>
+        <state id="twenty_two">
 
-                <state id="twenty_three_1">
-                    <transition event="foo" target="twenty_three_2"/>
-                </state>
+            <initial>
+                <transition target="twenty_two_1"/>
+            </initial>
 
-                <state id="twenty_three_2">
-                    <onexit>
-                        <log expr="'Exiting twenty_three_2'" />
-                    </onexit>
-                </state>
-
+            <state id="twenty_two_1">
+                <transition event="foo" target="twenty_two_2"/>
             </state>
 
-        </parallel>
+            <state id="twenty_two_2">
+                <onexit>
+                    <log expr="'Exiting twenty_two_2'" />
+                </onexit>
+            </state>
 
-    </state>
+        </state>
+
+        <state id="twenty_three">
+
+            <initial>
+                <transition target="twenty_three_1"/>
+            </initial>
+
+            <state id="twenty_three_1">
+                <transition event="foo" target="twenty_three_2"/>
+            </state>
+
+            <state id="twenty_three_2">
+                <onexit>
+                    <log expr="'Exiting twenty_three_2'" />
+                </onexit>
+            </state>
+
+        </state>
+
+    </parallel>
 
     <state id="thirty" final="true" />
 

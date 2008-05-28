@@ -107,11 +107,11 @@ public class TransitionTargetComparatorTest extends TestCase {
         State target1 = new State();
         Parallel parent = new Parallel();
         target1.setParent(parent);
-        parent.addChild(target1);
+        parent.addChild((TransitionTarget) target1);
         
         State target2 = new State();
         target2.setParent(parent);
-        parent.addChild(target2);
+        parent.addChild((TransitionTarget) target2);
         
         assertEquals(1, comparator.compare(target1, target2));
     }
