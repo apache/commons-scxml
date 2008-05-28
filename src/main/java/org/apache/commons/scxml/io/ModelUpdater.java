@@ -214,6 +214,9 @@ final class ModelUpdater {
         for (TransitionTarget tt : p.getChildren()) {
             updateState((State) tt, targets);
         }
+        for (Transition trn : p.getTransitionsList()) {
+            updateTransition(trn, targets);
+        }
     }
 
     /**

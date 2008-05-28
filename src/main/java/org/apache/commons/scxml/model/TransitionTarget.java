@@ -51,6 +51,11 @@ public abstract class TransitionTarget implements Serializable, Observable {
     private Datamodel datamodel;
 
     /**
+     * A list of outgoing Transitions from this state, by document order.
+     */
+    private List<Transition> transitions;
+
+    /**
      * The parent of this transition target (may be null, if the parent
      * is the SCXML document root).
      */
@@ -71,6 +76,7 @@ public abstract class TransitionTarget implements Serializable, Observable {
         onEntry.setParent(this);
         onExit = new OnExit();   //empty defaults
         onExit.setParent(this);
+        transitions = new ArrayList<Transition>();
         parent = null;
         history = new ArrayList<History>();
     }
@@ -147,6 +153,48 @@ public abstract class TransitionTarget implements Serializable, Observable {
      */
     public final void setDatamodel(final Datamodel datamodel) {
         this.datamodel = datamodel;
+    }
+
+    /**
+     * Get the list of all outgoing transitions from this state, that
+     * will be candidates for being fired on the given event.
+     *
+     * @param event The event
+     * @return List Returns the candidate transitions for given event
+     */
+    public final List<Transition> getTransitionsList(final String event) {
+        List<Transition> matchingTransitions = null; // since we returned null upto v0.6
+        for (Transition t : transitions) {
+            if ((event == null && t.getEvent() == null)
+                    || (event != null && event.equals(t.getEvent()))) {
+                if (matchingTransitions == null) {
+                    matchingTransitions = new ArrayList<Transition>();
+                }
+                matchingTransitions.add(t);
+            }
+        }
+        return matchingTransitions;
+    }
+
+    /**
+     * Add a transition to the map of all outgoing transitions for
+     * this state.
+     *
+     * @param transition
+     *            The transitions to set.
+     */
+    public final void addTransition(final Transition transition) {
+        transitions.add(transition);
+        transition.setParent(this);
+    }
+
+    /**
+     * Get the outgoing transitions for this state as a java.util.List.
+     *
+     * @return List Returns the transitions list.
+     */
+    public final List<Transition> getTransitionsList() {
+        return transitions;
     }
 
     /**

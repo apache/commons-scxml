@@ -790,6 +790,8 @@ public final class SCXMLParser {
         addSimpleRulesTuple(xp, scxmlRules, Parallel.class, null, null,
                 "addChild");
         addDatamodelRules(xp + XPF_DM, scxmlRules, scxml, pr);
+        addTransitionRules(xp + XPF_TR, scxmlRules, "addTransition",
+            pr, customActions);
         addHandlerRules(xp, scxmlRules, pr, customActions);
         scxmlRules.add(xp, new UpdateModelRule(scxml));
     }

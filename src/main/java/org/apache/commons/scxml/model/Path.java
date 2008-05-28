@@ -51,10 +51,10 @@ public class Path implements Serializable {
     private List<TransitionTarget> downSeg = new ArrayList<TransitionTarget>();
 
     /**
-     * &quot;Lowest&quot; state which is not being exited nor entered by
-     * the transition.
+     * &quot;Lowest&quot; transition target which is not being exited nor
+     * entered by the transition.
      */
-    private State scope = null;
+    private TransitionTarget scope = null;
 
     /**
      * Whether the path crosses region border(s).
@@ -70,18 +70,14 @@ public class Path implements Serializable {
     Path(final TransitionTarget source, final TransitionTarget target) {
         if (target == null) {
             //a local "stay" transition
-            scope = (State) source;
+            scope = source;
             //all segments remain empty
         } else {
             TransitionTarget tt = SCXMLHelper.getLCA(source, target);
             if (tt != null) {
-                if (tt instanceof State) {
-                    scope = (State) tt;
-                } else {
-                    scope = tt.getParentState();
-                }
+                scope = tt;
                 if (scope == source || scope == target) {
-                    scope = scope.getParentState();
+                    scope = scope.getParent();
                 }
             }
             tt = source;
@@ -160,14 +156,14 @@ public class Path implements Serializable {
     }
 
     /**
-     * Get the farthest state from root which is not being exited
+     * Get the farthest transition target from root which is not being exited
      * nor entered by the transition (null if scope is document root).
      *
-     * @return State scope of the transition path, null means global transition
-     *         (SCXML document level) Scope is the least state which is not
-     *         being exited nor entered by the transition.
+     * @return Scope of the transition path, null means global transition
+     *         (SCXML document level). Scope is the least transition target
+     *         which is not being exited nor entered by the transition.
      */
-    public final State getScope() {
+    public final TransitionTarget getPathScope() {
         return scope;
     }
 

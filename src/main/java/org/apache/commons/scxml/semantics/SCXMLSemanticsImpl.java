@@ -274,11 +274,8 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                             te = new TriggerEvent(p.getId() + ".done",
                                         TriggerEvent.CHANGE_EVENT);
                             internalEvents.add(te);
-                            te = new TriggerEvent(p.getParent().getId()
-                                + ".done", TriggerEvent.CHANGE_EVENT);
-                            internalEvents.add(te);
                             //this is not in the specs, but is makes sense
-                            scInstance.setDone(p.getParentState(), true);
+                            scInstance.setDone(p, true);
                         }
                     }
                 }
@@ -304,14 +301,14 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
         // breath-first search to-do list
         LinkedList<TransitionTarget> todoList = new LinkedList<TransitionTarget>(stateSet);
         while (!todoList.isEmpty()) {
-            State st = (State) todoList.removeFirst();
-            for (Transition t : st.getTransitionsList()) {
+            TransitionTarget tt = todoList.removeFirst();
+            for (Transition t : tt.getTransitionsList()) {
                 if (!transSet.contains(t)) {
                     transSet.add(t);
                     step.getTransitList().add(t);
                 }
             }
-            State parent = st.getParentState();
+            TransitionTarget parent = tt.getParent();
             if (parent != null && !stateSet.contains(parent)) {
                 stateSet.add(parent);
                 todoList.addLast(parent);
