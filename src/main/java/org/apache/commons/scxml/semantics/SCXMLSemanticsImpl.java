@@ -274,7 +274,6 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                             te = new TriggerEvent(p.getId() + ".done",
                                         TriggerEvent.CHANGE_EVENT);
                             internalEvents.add(te);
-                            //this is not in the specs, but is makes sense
                             scInstance.setDone(p, true);
                         }
                     }

@@ -86,14 +86,14 @@ public class SCXMLParserTest extends TestCase {
     /**
      * Test the implementation
      */
-    public void testSCXMLDigesterMicrowave01Sample() {
+    public void testSCXMLParserMicrowave01Sample() {
         scxml = SCXMLTestHelper.parse(microwave01);
         assertNotNull(scxml);
         scxmlAsString = serialize(scxml);
         assertNotNull(scxmlAsString);
     }
 
-    public void testSCXMLDigesterMicrowave02Sample() {
+    public void testSCXMLParserMicrowave02Sample() {
         scxml = SCXMLTestHelper.parse(microwave02);
         assertNotNull(scxml);
         scxmlAsString = serialize(scxml);
@@ -114,21 +114,21 @@ public class SCXMLParserTest extends TestCase {
         assertNotNull(scxmlAsString);
     }
 
-    public void testSCXMLDigesterTransitions01Sample() {
+    public void testSCXMLParserTransitions01Sample() {
         scxml = SCXMLTestHelper.parse(transitions01);
         assertNotNull(scxml);
         scxmlAsString = serialize(scxml);
         assertNotNull(scxmlAsString);
     }
 
-    public void testSCXMLDigesterPrefix01Sample() {
+    public void testSCXMLParserPrefix01Sample() {
         scxml = SCXMLTestHelper.parse(prefix01);
         assertNotNull(scxml);
         scxmlAsString = serialize(scxml);
         assertNotNull(scxmlAsString);
     }
 
-    public void testSCXMLDigesterSend01Sample() {
+    public void testSCXMLParserSend01Sample() {
         // Digest
         scxml = SCXMLTestHelper.parse(send01);
         State ten = (State) scxml.getInitialTarget();
