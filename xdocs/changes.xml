@@ -33,6 +33,21 @@
       </ul>
     </section>
 
+    <release version="0.9" date="In SVN"
+     description="Unreleased code">
+
+     <action dev="rahul" type="fix" issue="SCXML-73" due-to="Elaine Wong">
+       [06-17-2008] The "delay" attribute of the &lt;send&gt; element
+       should be a value expression.
+     </action>
+
+     <action dev="rahul" type="add">
+       [06-17-2008] Support the "initial" attribute of the &lt;scxml&gt;
+       element, added in the 4th Working Draft.
+     </action>
+
+    </release>
+
     <release version="0.8" date="May 2008"
      description="Latest release">
 
