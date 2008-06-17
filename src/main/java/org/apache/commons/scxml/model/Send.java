@@ -316,7 +316,14 @@ public class Send extends Action implements ExternalContent {
                 params.put(varName, varObj);
             }
         }
-        long wait = parseDelay(appLog);
+        long wait = 0L;
+        if (!SCXMLHelper.isStringEmpty(delay)) {
+            Object delayValue = eval.eval(ctx, delay);
+            if (delayValue != null) {
+                String delayString = delayValue.toString();
+                wait = parseDelay(delayString, appLog);
+            }
+        }
         // Lets see if we should handle it ourselves
         if (targettypeValue != null
               && targettypeValue.trim().equalsIgnoreCase(TARGETTYPE_SCXML)) {
@@ -359,26 +366,27 @@ public class Send extends Action implements ExternalContent {
     /**
      * Parse delay.
      *
+     * @param delayString The String value of the delay, in CSS2 format
      * @param appLog The application log
      * @return The parsed delay in milliseconds
      * @throws SCXMLExpressionException If the delay cannot be parsed
      */
-    private long parseDelay(final Log appLog)
+    private long parseDelay(final String delayString, final Log appLog)
     throws SCXMLExpressionException {
 
         long wait = 0L;
         long multiplier = 1L;
 
-        if (!SCXMLHelper.isStringEmpty(delay)) {
+        if (!SCXMLHelper.isStringEmpty(delayString)) {
 
-            String trimDelay = delay.trim();
+            String trimDelay = delayString.trim();
             String numericDelay = trimDelay;
             if (trimDelay.endsWith(MILLIS)) {
                 numericDelay = trimDelay.substring(0, trimDelay.length() - 2);
             } else if (trimDelay.endsWith(SECONDS)) {
                 multiplier = MILLIS_IN_A_SECOND;
                 numericDelay = trimDelay.substring(0, trimDelay.length() - 1);
-            } else if (trimDelay.endsWith(MINUTES)) {
+            } else if (trimDelay.endsWith(MINUTES)) { // Not CSS2
                 multiplier = MILLIS_IN_A_MINUTE;
                 numericDelay = trimDelay.substring(0, trimDelay.length() - 1);
             }
