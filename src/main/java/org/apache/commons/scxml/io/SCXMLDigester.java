@@ -1469,7 +1469,7 @@ public final class SCXMLDigester {
                 // All targets pulled in since its not a src fragment
                 Initial ini = new Initial();
                 Transition t = new Transition();
-                t.setNext(externalSCXML.getInitialstate());
+                t.setNext(externalSCXML.getInitial());
                 ini.setTransition(t);
                 s.setInitial(ini);
                 Map children = externalSCXML.getChildren();
