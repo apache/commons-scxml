@@ -60,7 +60,7 @@ public class SCXML implements Serializable, Observable {
     /**
      * The initial transition target ID (used by XML Digester only).
      */
-    private String initialstate;
+    private String initial;
 
     /**
      * Optional property holding the data model for this SCXML document.
@@ -261,20 +261,44 @@ public class SCXML implements Serializable, Observable {
      * Get the ID of the initial state.
      *
      * @return String Returns the initial state ID (used by XML Digester only).
-     * @see #getInitialState()
+     * @see #getInitialTarget()
+     * @deprecated Use {@link #getInitial()} instead.
      */
     public final String getInitialstate() {
-        return initialstate;
+        return initial;
     }
 
     /**
      * Set the ID of the initial state.
      *
      * @param initialstate The initial state ID (used by XML Digester only).
-     * @see #setInitialState(State)
+     * @see #setInitialTarget(TransitionTarget)
+     * @deprecated Use {@link #setInitial(String)} instead.
      */
     public final void setInitialstate(final String initialstate) {
-        this.initialstate = initialstate;
+        this.initial = initialstate;
+    }
+
+    /**
+     * Get the ID of the initial transition target.
+     *
+     * @return String Returns the initial transition target ID
+     *     (used by XML Digester only).
+     * @see #getInitialTarget()
+     */
+    public final String getInitial() {
+        return initial;
+    }
+
+    /**
+     * Set the ID of the initial transition target.
+     *
+     * @param initial The initial transition target ID
+     *     (used by XML Digester only).
+     * @see #setInitialTarget(TransitionTarget)
+     */
+    public final void setInitial(final String initial) {
+        this.initial = initial;
     }
 
 }

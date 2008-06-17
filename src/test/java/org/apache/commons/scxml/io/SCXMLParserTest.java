@@ -26,6 +26,7 @@ import junit.textui.TestRunner;
 
 import org.apache.commons.scxml.SCXMLTestHelper;
 import org.apache.commons.scxml.model.Action;
+import org.apache.commons.scxml.model.Final;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.Send;
 import org.apache.commons.scxml.model.State;
@@ -50,7 +51,7 @@ public class SCXMLParserTest extends TestCase {
 
     // Test data
     private URL microwave01, microwave02, transitions01, prefix01, send01,
-        microwave03, microwave04;
+        microwave03, microwave04, scxmlinitialattr;
     private SCXML scxml;
     private String scxmlAsString;
 
@@ -72,6 +73,8 @@ public class SCXMLParserTest extends TestCase {
             getResource("org/apache/commons/scxml/send-01.xml");
         prefix01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/prefix-01.xml");
+        scxmlinitialattr = this.getClass().getClassLoader().
+            getResource("org/apache/commons/scxml/io/scxml-initial-attr.xml");
     }
 
     /**
@@ -149,6 +152,15 @@ public class SCXMLParserTest extends TestCase {
             + " an example.</prompt></foo>";
         assertFalse(scxmlAsString.indexOf(expectedFoo2Serialization) == -1);
         */
+    }
+
+    public void testSCXMLParserInitialAttr() {
+        scxml = SCXMLTestHelper.parse(scxmlinitialattr);
+        assertNotNull(scxml);
+        scxmlAsString = serialize(scxml);
+        assertNotNull(scxmlAsString);
+        Final foo = (Final) scxml.getInitialTarget();
+        assertEquals("foo", foo.getId());
     }
 
     private String serialize(final SCXML scxml) {

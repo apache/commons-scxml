@@ -89,7 +89,7 @@ public class SCXMLSerializer {
             new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n").
                 append("<scxml xmlns=\"").append(NAMESPACE_SCXML).
                 append("\" version=\"").append(scxml.getVersion()).
-                append("\" initialstate=\"").append(scxml.getInitialstate()).
+                append("\" initial=\"").append(scxml.getInitial()).
                 append("\">\n");
         if (XFORMER == null) {
             org.apache.commons.logging.Log log = LogFactory.

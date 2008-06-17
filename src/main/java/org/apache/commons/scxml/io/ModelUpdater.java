@@ -56,16 +56,15 @@ final class ModelUpdater {
      * @throws ModelException If the object model is flawed
      */
    static void updateSCXML(final SCXML scxml) throws ModelException {
-       // Watch case, slightly unfortunate naming ;-)
-       String initialstate = scxml.getInitialstate();
-       //we have to use getTargets() here since the initialState can be
+       String initial = scxml.getInitial();
+       //we have to use getTargets() here since the initialTarget can be
        //an indirect descendant
        TransitionTarget initialTarget = (TransitionTarget) scxml.getTargets().
-           get(initialstate);
+           get(initial);
        if (initialTarget == null) {
            // Where do we, where do we go?
            logAndThrowModelError(ERR_SCXML_NO_INIT, new Object[] {
-               initialstate });
+               initial });
        }
        scxml.setInitialTarget(initialTarget);
        Map<String, TransitionTarget> targets = scxml.getTargets();
