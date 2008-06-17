@@ -36,7 +36,7 @@
       <cs:var name="eat" expr="flies" />
       <send sendid="send12345" target="freddy" targettype="frog"
        event="croak" namelist="drink eat" hints="h2o bzz"
-       delay="1000" />
+       delay="${1000+500}" />
       <cancel sendId="send12345"/>
       <log expr="leaving" label="entry001" />
       <event name="event.test"/>
