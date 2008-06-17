@@ -43,8 +43,23 @@
 
     </release>
 
-    <release version="0.8" date="In SVN trunk"
-     description="Latest unreleased code">
+    <release version="0.9" date="In SVN"
+     description="Unreleased code">
+
+     <action dev="rahul" type="fix" issue="SCXML-73" due-to="Elaine Wong">
+       [06-17-2008] The "delay" attribute of the &lt;send&gt; element
+       should be a value expression.
+     </action>
+
+     <action dev="rahul" type="add">
+       [06-17-2008] Support the "initial" attribute of the &lt;scxml&gt;
+       element, added in the 4th Working Draft.
+     </action>
+
+    </release>
+
+    <release version="0.8" date="May 2008"
+     description="Latest release">
 
      <action dev="rahul" type="add" issue="SCXML-64">
        [05-03-2008] Better error reporting for ignored or misplaced elements
@@ -95,7 +110,7 @@
     </release>
 
     <release version="0.7" date="December 2007"
-     description="Latest release">
+     description="Minor release">
 
      <action dev="rahul" type="add">
        [12-12-2007] Add experimental Maven2 pom.xml to source distro.
