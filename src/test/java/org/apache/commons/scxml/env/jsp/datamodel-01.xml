@@ -24,7 +24,7 @@
 
     <!-- Root or document datamodel -->
     <datamodel>
-        <data name="docdata">
+        <data id="docdata">
             <root xmlns="">
                 <foo>foo</foo>
             </root>
@@ -39,8 +39,8 @@
 
         <!-- datamodel scoped to state "main" -->
         <datamodel>
-            <data name="mainvar" expr="${0}" />
-            <data name="maindata">
+            <data id="mainvar" expr="${0}" />
+            <data id="maindata">
                 <root xmlns="">
                     <foo>
                         <bar>bar</bar>
@@ -103,4 +103,5 @@
     </state>
 
 </scxml>
+
 

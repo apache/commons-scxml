@@ -24,7 +24,7 @@
 
     <!-- Root or document datamodel -->
     <datamodel>
-        <data name="payload"/>
+        <data id="payload"/>
     </datamodel>
 
     <state id="ten">
@@ -44,4 +44,5 @@
     <state id="thirty" final="true"/>
 
 </scxml>
+
 

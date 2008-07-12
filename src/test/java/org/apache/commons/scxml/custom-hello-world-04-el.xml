@@ -20,7 +20,7 @@
        xmlns:my="http://my.custom-actions.domain/CUSTOM"
        version="1.0" initialstate="init">
     <datamodel>
-        <data name="helloName1" />
+        <data id="helloName1" />
     </datamodel>
 
     <state id="init">        
@@ -40,4 +40,5 @@
     <state id="custom" final="true"/>
 
 </scxml>
+
 

@@ -360,8 +360,8 @@ public class SCXMLSerializer {
                     }
                     b.append(indent).append(INDENT).append(out.toString());
                 } else {
-                    b.append(indent).append(INDENT).append("<data name=\"").
-                        append(datum.getName()).append("\" expr=\"").
+                    b.append(indent).append(INDENT).append("<data id=\"").
+                        append(datum.getId()).append("\" expr=\"").
                         append(datum.getExpr()).append("\" />\n");
                 }
             }

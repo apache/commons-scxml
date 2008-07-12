@@ -22,7 +22,7 @@
 
     <state id="tranbug">
          <datamodel>
- 			<data name="dummy" expr="'somedata'"/>
+ 			<data id="dummy" expr="'somedata'"/>
          </datamodel>
         <onentry>
             <log expr="'Begin transition bug test ...'" />
@@ -35,4 +35,5 @@
     <state id="end" final="true" />
 
 </scxml>
+
 

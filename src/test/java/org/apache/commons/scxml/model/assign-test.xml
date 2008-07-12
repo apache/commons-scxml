@@ -24,12 +24,12 @@
   <state id="assign1" final="true">
 
     <datamodel>
-        <data name="foo">
+        <data id="foo">
             <root xmlns="">
                 <foo/>
             </root>
         </data>
-        <data name="bar">
+        <data id="bar">
             <root xmlns="">
                 <bar>5</bar>
             </root>
@@ -48,10 +48,10 @@
   <state id="assign2">
 
     <datamodel>
-      <data name="jira51data1">
+      <data id="jira51data1">
           <rad:timeout>10</rad:timeout>
       </data> 
-      <data name="jira51data2">
+      <data id="jira51data2">
           <rad:short xmlns="">20</rad:short>
       </data>
     </datamodel>
