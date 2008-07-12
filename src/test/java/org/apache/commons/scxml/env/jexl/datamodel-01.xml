@@ -24,7 +24,7 @@
 
     <!-- Root or document datamodel -->
     <datamodel>
-        <data name="docdata">
+        <data id="docdata">
             <root xmlns="">
                 <foo>
                     <bar>alpha</bar>
@@ -42,9 +42,9 @@
         <!-- datamodel scoped to state "main" -->
         <datamodel>
             <!-- Degenerate usage, similar to the <var> element -->
-            <data name="mainvar" expr="0" />
+            <data id="mainvar" expr="0" />
             <!-- Usage where the value is an XML data tree -->
-            <data name="maindata">
+            <data id="maindata">
                 <root xmlns="">
                     <a>
                         <b>

@@ -34,9 +34,10 @@ public class Data implements NamespacePrefixesHolder, Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * The name of this data instance, that is used as its identifier.
+     * The identifier of this data instance.
+     * For backwards compatibility this is also the name.
      */
-    private String name;
+    private String id;
 
     /**
      * The URL to get the XML data tree from.
@@ -65,7 +66,7 @@ public class Data implements NamespacePrefixesHolder, Serializable {
      * Constructor.
      */
     public Data() {
-        this.name = null;
+        this.id = null;
         this.src = null;
         this.expr = null;
         this.node = null;
@@ -75,18 +76,39 @@ public class Data implements NamespacePrefixesHolder, Serializable {
      * Get the name.
      *
      * @return String The name.
+     * @deprecated Use {@link #getId()} instead.
      */
     public final String getName() {
-        return name;
+        return id;
     }
 
     /**
      * Set the name.
      *
      * @param name The name.
+     * @deprecated Use {@link #setId(String)} instead.
      */
     public final void setName(final String name) {
-        this.name = name;
+    	System.err.println("\n\n" + name + "\n\n"); 
+        this.id = name;
+    }
+
+    /**
+     * Get the id.
+     *
+     * @return String An identifier.
+     */
+    public final String getId() {
+        return id;
+    }
+
+    /**
+     * Set the id.
+     *
+     * @param id The identifier.
+     */
+    public final void setId(final String id) {
+        this.id = id;
     }
 
     /**

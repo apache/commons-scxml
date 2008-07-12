@@ -22,7 +22,7 @@
        initialstate="tranbug">
 
     <datamodel>
-        <data name="foo">
+        <data id="foo">
             <alpha xmlns="">
                 <beta/>
             </alpha>
@@ -39,7 +39,7 @@
         <transition event="show.bug" target="end">
          <!-- For example, FOLLOWING datamodel IS MISPLACED -->
          <datamodel>
- 			<data name="dummy" expr="'somedata'"/>
+ 			<data id="dummy" expr="'somedata'"/>
          </datamodel>
          <log expr="dummy" />
          <log expr="'*****' + dummy" />

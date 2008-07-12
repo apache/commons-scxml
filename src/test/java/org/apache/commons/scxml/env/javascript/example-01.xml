@@ -24,7 +24,7 @@
  <!-- DATA MODEL -->
 
  <datamodel>
-  <data name='jungle'>
+  <data id='jungle'>
    <animals xmlns=''>
     <lion>
      <name>Simba</name>

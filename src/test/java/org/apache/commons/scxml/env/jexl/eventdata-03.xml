@@ -21,7 +21,7 @@
        initialstate="ten">
 
     <datamodel>
-        <data name="rootdata">
+        <data id="rootdata">
             <root xmlns="">
                 <one>1</one>
                 <two>2</two>

@@ -61,7 +61,7 @@ public class JSEvaluatorTest extends TestCase {
                                                         "initialstate = 'start' "  +
                                                         "version      = '1.0'>" +
                                                   "<datamodel>"           +
-                                                  "<data name='forest'>"  +
+                                                  "<data id='forest'>"  +
                                                    "<tree xmlns=''>"      +
                                                    "<branch>"             +
                                                    "<twig>leaf</twig>"    +

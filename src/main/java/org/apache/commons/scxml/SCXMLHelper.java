@@ -435,7 +435,7 @@ public final class SCXMLHelper {
             }
             // prefer "src" over "expr" over "inline"
             if (!SCXMLHelper.isStringEmpty(datum.getSrc())) {
-                ctx.setLocal(datum.getName(), valueNode);
+                ctx.setLocal(datum.getId(), valueNode);
             } else if (!SCXMLHelper.isStringEmpty(datum.
                     getExpr())) {
                 Object value = null;
@@ -451,9 +451,9 @@ public final class SCXMLHelper {
                         defaultLog.error(see.getMessage(), see);
                     }
                 }
-                ctx.setLocal(datum.getName(), value);
+                ctx.setLocal(datum.getId(), value);
             } else {
-                ctx.setLocal(datum.getName(), valueNode);
+                ctx.setLocal(datum.getId(), valueNode);
             }
         }
     }

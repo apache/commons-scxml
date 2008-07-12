@@ -25,7 +25,7 @@
     <state id="ten">
 
         <datamodel>
-            <data name="data10" xmlns:ns1="http://namespace.test.domain/1">
+            <data id="data10" xmlns:ns1="http://namespace.test.domain/1">
                 <root xmlns="">
                     <ns1:foo>
                       <bar>10</bar>
@@ -48,7 +48,7 @@
 
         <datamodel>
             <!-- Start with a prefixless XPath -->
-            <data name="data20">
+            <data id="data20">
                 <ns1:root>
                     <ns2:foo>20</ns2:foo>
                 </ns1:root>
@@ -65,7 +65,7 @@
 
         <datamodel>
             <!-- Start with a prefixless XPath -->
-            <data name="data30">
+            <data id="data30">
                 <root xmlns="http://namespace.test.domain/1">
                     <foo xmlns="http://namespace.test.domain/2"
                          xmlns:ns1="http://namespace.test.domain/3"

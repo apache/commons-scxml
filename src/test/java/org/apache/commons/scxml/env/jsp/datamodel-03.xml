@@ -29,7 +29,7 @@
      <datamodel>
 
         <!-- We'll use this for XPaths -->
-        <data name="rootdata"
+        <data id="rootdata"
               xmlns:ns1="scheme://namespace.test.domain/1"
               xmlns:ns2="scheme://namespace.test.domain/2"
               xmlns:ns3="scheme://namespace.test.domain/3">
@@ -42,7 +42,7 @@
 
         <!-- We'll use this for the JUnit test
              NamespacePrefixedPathsTest.java (scxml package) -->
-        <data name="retval" />
+        <data id="retval" />
 
     </datamodel>
 
@@ -51,7 +51,7 @@
 
         <datamodel>
 
-            <data name="data10" xmlns:ns4="scheme://namespace.test.domain/1">
+            <data id="data10" xmlns:ns4="scheme://namespace.test.domain/1">
                 <root xmlns="">
                     <ns4:foo>
                       <bar>10</bar>
@@ -87,7 +87,7 @@
 
         <datamodel>
 
-            <data name="data20">
+            <data id="data20">
                 <ns1:root>
                     <ns2:foo>20</ns2:foo>
                 </ns1:root>
@@ -136,7 +136,7 @@
 
         <datamodel>
 
-            <data name="data30">
+            <data id="data30">
                 <root xmlns="scheme://namespace.test.domain/1">
                     <foo xmlns="scheme://namespace.test.domain/2"
                          xmlns:ns1="scheme://namespace.test.domain/3"
@@ -163,13 +163,13 @@
 
         <datamodel>
 
-            <data name="data40">
+            <data id="data40">
                 <root xmlns="">
                     <ns1:foo ns2:attfoo="40"/>
                 </root>
             </data>
 
-            <data name="data41">
+            <data id="data41">
                 <ns3:root>
                     <ns4:foo>41</ns4:foo>
                 </ns3:root>
@@ -188,7 +188,7 @@
 
         <datamodel>
 
-            <data name="data50"  xmlns:ns1="scheme://namespace.test.domain/1"
+            <data id="data50"  xmlns:ns1="scheme://namespace.test.domain/1"
                                  xmlns:ns2="scheme://namespace.test.domain/2"
                                  xmlns:ns3="scheme://namespace.test.domain/3">
                 <ns1:root>
@@ -196,7 +196,7 @@
                 </ns1:root>
             </data>
 
-            <data name="data51" xmlns:ns3="scheme://namespace.test.domain/3"
+            <data id="data51" xmlns:ns3="scheme://namespace.test.domain/3"
                                 xmlns:ns4="scheme://namespace.test.domain/4">
                 <ns3:root>
                     <ns4:foo attfoo="51"/>
@@ -223,13 +223,13 @@
                    xmlns:ns3="scheme://namespace.test.domain/3"
                    xmlns:ns4="scheme://namespace.test.domain/4">
 
-            <data name="data60">
+            <data id="data60">
                 <root xmlns="">
                     <ns1:foo ns2:attfoo="60"/>
                 </root>
             </data>
 
-            <data name="data61">
+            <data id="data61">
                 <ns3:root>
                     <ns4:foo attfoo="61"/>
                 </ns3:root>
