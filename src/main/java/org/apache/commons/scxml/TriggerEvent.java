@@ -16,19 +16,27 @@
  */
 package org.apache.commons.scxml;
 
+import java.io.Serializable;
+
 /**
  * A class representing an event. Specific event types have been
  * defined in reference to SCXML.
  *
+ * <b>NOTE:</b> Instances are {@link Serializable} as long as the associated
+ * payload, if any, is {@link Serializable}.
+ *
  */
-public class TriggerEvent {
+public class TriggerEvent implements Serializable {
+
+    /** Serial version UID. */
+    private static final long serialVersionUID = 1L;
 
     /**
      * Constructor.
      *
      * @param name The event name
      * @param type The event type
-     * @param payload The event payload
+     * @param payload The event payload, must be {@link Serializable}
      */
     public TriggerEvent(final String name, final int type,
             final Object payload) {
