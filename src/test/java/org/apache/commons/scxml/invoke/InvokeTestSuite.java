@@ -48,6 +48,7 @@ public class InvokeTestSuite extends TestCase {
         TestSuite suite = new TestSuite();
         suite.setName("Commons-SCXML Invoke Tests");
         suite.addTest(InvokeTest.suite());
+        suite.addTest(InvokeParamNameTest.suite());
         return suite;
     }
 }
