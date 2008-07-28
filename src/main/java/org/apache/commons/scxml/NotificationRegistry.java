@@ -18,8 +18,8 @@ package org.apache.commons.scxml;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -65,7 +65,7 @@ public final class NotificationRegistry implements Serializable {
             final SCXMLListener lst) {
         Set entries = (Set) regs.get(source);
         if (entries == null) {
-            entries = new HashSet();
+            entries = new LinkedHashSet();
             regs.put(source, entries);
         }
         entries.add(lst);
