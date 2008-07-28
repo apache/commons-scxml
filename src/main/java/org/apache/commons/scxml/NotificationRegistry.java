@@ -19,7 +19,7 @@ package org.apache.commons.scxml;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -64,7 +64,7 @@ public final class NotificationRegistry implements Serializable {
     synchronized void addListener(final Observable source, final SCXMLListener lst) {
         Set<SCXMLListener> entries = regs.get(source);
         if (entries == null) {
-            entries = new HashSet<SCXMLListener>();
+            entries = new LinkedHashSet<SCXMLListener>();
             regs.put(source, entries);
         }
         entries.add(lst);
