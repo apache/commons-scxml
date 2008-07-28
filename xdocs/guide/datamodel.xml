@@ -37,9 +37,15 @@
     <p>SCXML gives authors the ability to define a first-class data model as
     part of the SCXML document. A data model consists of a &lt;datamodel&gt;
     element containing one or more &lt;data&gt; element, each of which may
-    contain a XML data tree. For example, the document level data model for a
-    SCXML document defining the states in a travel reservation system may look
-    like this:</p>
+    contain an XML data tree (i.e. it is recommended that each &lt;data&gt;
+    element contain <b>only one child element</b>).</p>
+
+    <p>Also, SCXML documents are <b>namespace-aware</b>. Therefore, the root
+    of the data tree should define one or more namespaces as needed, and must
+    <b>not</b> itself be in the SCXML namespace.</p>
+
+    <p>For example, the document level data model for a SCXML document
+    defining the states in a travel reservation system may look like this:</p>
 
     <pre>
      &lt;scxml xmlns="http://www.w3.org/2005/07/scxml"
@@ -48,7 +54,8 @@
 
       &lt;datamodel&gt;
         &lt;data name="airlineticket"&gt;
-          &lt;flight&gt;
+          &lt;!-- Note namespace declaration in line below --&gt;
+          &lt;flight xmlns=""&gt;
             &lt;origin/&gt;
             &lt;destination/&gt;
             &lt;!-- default values for trip and class --&gt;
@@ -58,7 +65,7 @@
           &lt;/flight&gt;
         &lt;/data&gt;
         &lt;data name="hotelbooking"&gt;
-          &lt;hotel&gt;
+          &lt;hotel xmlns=""&gt;
             &lt;stay&gt;
               &lt;startdate/&gt;
               &lt;enddate/&gt;
@@ -134,7 +141,7 @@
       &lt;state id="airline-ticket"&gt;
         &lt;datamodel&gt;
           &lt;data name="airlineticket"&gt;
-            &lt;flight&gt;
+            &lt;flight xmlns=""&gt;
               &lt;origin/&gt;
               &lt;destination/&gt;
               &lt;!-- default values for trip and class --&gt;
@@ -156,7 +163,7 @@
       &lt;state id="hotel-booking"&gt;
         &lt;datamodel&gt;
           &lt;data name="hotelbooking"&gt;
-            &lt;hotel&gt;
+            &lt;hotel xmlns=""&gt;
               &lt;stay&gt;
                 &lt;startdate/&gt;
                 &lt;enddate/&gt;
