@@ -527,3 +527,4 @@ public final class SCXMLHelper {
     private static final String NAMESPACES_KEY = "_ALL_NAMESPACES";
 
 }
+
