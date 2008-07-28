@@ -35,6 +35,7 @@ import org.apache.commons.scxml.model.OnExit;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.Send;
 import org.apache.commons.scxml.model.State;
+import org.apache.commons.scxml.model.Transition;
 import org.apache.commons.scxml.model.TransitionTarget;
 import org.apache.commons.scxml.model.Var;
 
@@ -284,6 +285,20 @@ public class SCXMLSerializerTest extends TestCase {
         StringBuffer returnValue = new StringBuffer();
         SCXMLSerializer.serializeOnExit(returnValue, target, " ");
         
+        assertEquals(actualValue, returnValue.toString());
+    }
+
+    public void testSerializeTransitionEscapeXML() {
+        Transition t = new Transition();
+
+        // note: the '<' char has to be escaped to "&lt;" to create valid XML
+        t.setCond("i < 3");
+
+        String actualValue = "<transition cond=\"i &lt; 3\">\n</transition>\n";
+
+        StringBuffer returnValue = new StringBuffer();
+        SCXMLSerializer.serializeTransition(returnValue, t, "");
+
         assertEquals(actualValue, returnValue.toString());
     }
 

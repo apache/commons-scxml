@@ -16,6 +16,7 @@
  */
 package org.apache.commons.scxml;
 
+import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
@@ -466,6 +467,60 @@ public final class SCXMLHelper {
                 ctx.setLocal(datum.getId(), valueNode);
             }
         }
+    }
+
+    /**
+     * Escape XML strings for serialization.
+     * The basic algorithm is taken from Commons Lang (see oacl.Entities.java)
+     *
+     * @param str A string to be escaped
+     * @return The escaped string
+     */
+    public static String escapeXML(final String str) {
+        if (str == null) {
+            return null;
+        }
+
+        // Make the writer an arbitrary bit larger than the source string
+        int len = str.length();
+        StringWriter stringWriter = new StringWriter(len + 8);
+
+        for (int i = 0; i < len; i++) {
+            char c = str.charAt(i);
+            String entityName = null; // Look for XML 1.0 predefined entities
+            switch (c) {
+                case '"':
+                    entityName = "quot";
+                    break;
+                case '&':
+                    entityName = "amp";
+                    break;
+                case '\'':
+                    entityName = "apos";
+                    break;
+                case '<':
+                    entityName = "lt";
+                    break;
+                case '>':
+                    entityName = "gt";
+                    break;
+            }
+            if (entityName == null) {
+                if (c > 0x7F) {
+                    stringWriter.write("&#");
+                    stringWriter.write(Integer.toString(c));
+                    stringWriter.write(';');
+                } else {
+                    stringWriter.write(c);
+                }
+            } else {
+                stringWriter.write('&');
+                stringWriter.write(entityName);
+                stringWriter.write(';');
+            }
+        }
+
+        return stringWriter.toString();
     }
 
     /**
