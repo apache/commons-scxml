@@ -76,6 +76,9 @@ public class SCXMLSerializer {
     /** The SCXML namespace. */
     private static final String NAMESPACE_SCXML =
         "http://www.w3.org/2005/07/scxml";
+    /** The Commons SCXML namespace. */
+    private static final String NAMESPACE_COMMONS_SCXML =
+        "http://commons.apache.org/scxml";
 
     /**
      * Serialize this SCXML object (primarily for debugging).
@@ -88,6 +91,7 @@ public class SCXMLSerializer {
         StringBuffer b =
             new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n").
                 append("<scxml xmlns=\"").append(NAMESPACE_SCXML).
+                append("\" xmlns:cs=\"").append(NAMESPACE_COMMONS_SCXML).
                 append("\" version=\"").append(scxml.getVersion()).
                 append("\" initial=\"").append(scxml.getInitial()).
                 append("\">\n");
@@ -412,7 +416,7 @@ public class SCXMLSerializer {
         for (Action a : l) {
             if (a instanceof Var) {
                 Var v = (Var) a;
-                b.append(indent).append("<var name=\"").append(v.getName())
+                b.append(indent).append("<cs:var name=\"").append(v.getName())
                     .append("\" expr=\"")
                     .append(SCXMLHelper.escapeXML(v.getExpr()))
                     .append("\"/>\n");
@@ -446,7 +450,7 @@ public class SCXMLSerializer {
                     append("\"/>\n");
             } else if (a instanceof Exit) {
                 Exit e = (Exit) a;
-                b.append(indent).append("<exit");
+                b.append(indent).append("<cs:exit");
                 String expr = SCXMLHelper.escapeXML(e.getExpr());
                 String nl = e.getNamelist();
                 if (expr != null) {
