@@ -555,13 +555,6 @@ public class SCXMLSerializer {
         if (id != null) {
             b.append(" id=\"").append(id).append("\"");
         }
-        TransitionTarget pt = t.getParent();
-        if (pt != null) {
-            String pid = pt.getId();
-            if (pid != null) {
-                b.append(" parentid=\"").append(pid).append("\"");
-            }
-        }
     }
 
     /**
