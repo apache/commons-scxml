@@ -490,7 +490,7 @@ public class SCXMLSerializer {
             .append(send.getTarget()).append("\" targetType=\"")
             .append(send.getTargettype()).append("\" namelist=\"")
             .append(send.getNamelist()).append("\" delay=\"")
-            .append(send.getDelay()).append("\" events=\"")
+            .append(send.getDelay()).append("\" event=\"")
             .append(send.getEvent()).append("\" hints=\"")
             .append(send.getHints()).append("\">\n")
             .append(getBodyContent(send))
