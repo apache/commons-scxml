@@ -74,7 +74,7 @@ public class SCXMLSerializerTest extends TestCase {
         send.setTarget("newTarget");
         send.setTargettype("newTargetType");
         send.setNamelist("names");
-        send.setDelay("4 secs");
+        send.setDelay("4s");
         send.setEvent("turnoff");
         send.setHints("guess");
         
@@ -82,8 +82,8 @@ public class SCXMLSerializerTest extends TestCase {
                 "target=\"newTarget\" " +
                 "targetType=\"newTargetType\" " +
                 "namelist=\"names\" " +
-                "delay=\"4 secs\" " +
-                "events=\"turnoff\" " +
+                "delay=\"4s\" " +
+                "event=\"turnoff\" " +
                 "hints=\"guess\">\n </send>\n";
         
         StringBuffer returnValue = new StringBuffer(); 
