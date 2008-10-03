@@ -49,7 +49,7 @@
   <section name="Android Background">
     <p>Android is a mobile operating system that is developed and released by the
     Open Handset Alliance. First handsets are expected to enter the market 
-    by October '09. Android is based on Linux and runs a virtual machine called
+    by October '08. Android is based on Linux and runs a virtual machine called
     the Dalvik VM. The SDK provides tools for transferring java bytecode to dalvik
     compatible bytecode.
     </p>
