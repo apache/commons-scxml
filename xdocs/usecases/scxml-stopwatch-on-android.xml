@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+
+<document>
+
+ <properties>
+  <title>Commons SCXML Usecase - Stopwatch on Android</title>
+  <author email="jakobsa@gmail.com">Jakob Sachse</author>
+ </properties>
+
+ <body>
+ 
+  <section name="Purpose of this document">
+   <p>This document wants to show a possible approach aimed at using 
+      SCXML on <a href="http://code.google.com/android/">Google Android</a>.
+	  That is why the focus lies rather 
+      on the steps necessary for successfully deploying the statemachine than
+      the application itself.</p>
+     <subsection name="Stopwatch">
+      <p>This usecase is based on the stopwatch example. If you should not be
+      acquainted with the stopwatch usecase you would probably want to read this
+      first. The modeling of the statemachine as well as the scxml markup 
+      will not be covered here.</p>
+     </subsection>
+     <subsection name="Motivation">
+      <ul>
+       <li>Demonstrate steps to run a Commons SCXML Statemachine on Android.</li>
+       <li>Demonstrate what dependencies are not covered by Android and how
+           to cut those ties.</li>
+      </ul>
+     </subsection>
+  </section>
+  
+  <section name="Android Background">
+    <p>Android is a mobile operating system that is developed and released by the
+    Open Handset Alliance. First handsets are expected to enter the market 
+    by October '09. Android is based on Linux and runs a virtual machine called
+    the Dalvik VM. The SDK provides tools for transferring java bytecode to dalvik
+    compatible bytecode.
+    </p>
+    <p>Android comes with a subset of J2SE packages but also provides own libraries
+    and other third party libraries. Interesting is the use of apache harmony as the
+    implementation of its J2SE modules. 
+    </p>
+    <subsection name="Prerequisites for building the Android Application">
+     <ul>
+      <li>an installation of Android SDK 1.0 r1</li>
+      <li>good to have: ADT Plugin for Eclipse installed</li>
+      <li>knowing about the folder structure of an Android project.</li>
+      <li>knowing about the Role of Activities in Android applications.</li>
+      <li>understanding UI Layouts created by using Androids xml layout scheme.</li>
+      <li>being aware of Services, Intents and ContentProviders is an advantage</li>
+     </ul>
+    </subsection>
+  </section>
+  
+  <section name="Building the Android Application">
+   <subsection name="The Stopwatch Logic">
+    <p>As already mentioned this usecase is based on the stopwatch example. It uses 
+    both the <a href="http://svn.apache.org/repos/asf/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml/env/stopwatch.xml">stopwatch.xml</a> 
+    and the <a href="../xref-test/org/apache/commons/scxml/env/StopWatch.html">StopWatch.java</a>.</p>
+   </subsection>
+   <subsection name="The Stopwatch UI">
+    <p>Here is the UI definition for the stopwatch: <a href="scxml-stopwatch-on-android/stopwatch_display.xml">stopwatch_display.xml</a>.
+       Place it into /res/layout/ from the root of your project. Note how id's are declared and referenced. Declared
+       id's will be available through the automatically generated R.java.
+    </p>
+   </subsection>
+   <subsection name="The Stopwatch Activity">
+    <p>Here is the Activity class <a href="scxml-stopwatch-on-android/StopWatchActivity.java.txt">StopWatchActivity.java</a> 
+    which is the entry point of the application. That is also where the instance of StopWatch resides.
+    Note how UI Elements are being referenced by using the R.java class. See also how a handler is used to display
+    changes to the StopWatch from another Thread.
+    </p>
+   </subsection>
+   <subsection name="Resources">
+    <p>Commonly used strings are declared inside a <a href="scxml-stopwatch-on-android/strings.xml">strings.xml</a>
+     in /res/values/. Once you put it there the R.java gets updated and you can reference the strings using that class.
+    </p>
+    <p>If you wish to have a non standard icon you can replace /res/drawable/icon.png with this icon.png: <a href="scxml-stopwatch-on-android/icon.png"><img src="scxml-stopwatch-on-android/icon.png"/></a>
+    </p> 
+   </subsection>
+   <subsection name="Manifest">
+    <p>Each Android application has a <a href="scxml-stopwatch-on-android/AndroidManifest.xml">AndroidManifest.xml</a>. It resides inside
+    the root directory and is used to declare the overall structure of the application.
+    </p> 
+   </subsection>
+  </section>
+  
+  <section name="Handling unmet dependencies">
+   <p>The real challenge of running a commons.scxml statemachine on Android are it's dependencies. After adding all
+   needed libraries to the build path build errors will still occur. The reason is that the dependencies are based on
+   a standard J2SE. In contrast Android uses a subset of J2SE, meaning that several packages are missing. Dependencies to J2SE 
+   are shown in this <a href="scxml-stopwatch-on-android/scxml-dependencies-on-android.png">UML Package Diagram</a>.
+   Reviewing <a href="http://code.google.com/android/reference/packages.html">available packages on Android</a> results 
+   in the conclusion that <code>java.beans</code>, <code>java.awt</code> and <code>javax.swing</code> are missing on Android. The dependency between Commons Beanutils 
+   and <code>java.beans</code> is strong. For meeting this putting the <code>java.beans</code> module (<a href="http://harmony.apache.org/">Apache Harmony</a>) on the build path is a possibility. 
+   That module in turn has a dependency to <code>harmony.kernel</code> that needs to be removed. The yellow color of some of the packages 
+   in the diagram marks the places where code changes happened. These modifications removed the dependence to not available 
+   yet disposable J2SE packages. For a better documentation take a look at the <a href="scxml-stopwatch-on-android/diff.txt">diff file</a>. 
+   </p>
+  </section>
+  
+  <section name="Building the .apk">
+   <p>Building the application is a bit tricky as well. You will notice that ADT will break up with the following error:
+   <code>"Conversion to Dalvik format failed with error 1"</code>. You will also find a detailed message that explains that
+   you have tried to build a core library which is not recommended. To do so anyway you can pass <code>dx</code> (the java bytecode - dalvik bytecode transformer) 
+   the <code>--core-library option</code>. Concluding that by core-library <code>java.*</code> packages where meant, and having in mind what is about to be added 
+   there is no reason for giving up. The problem in passing the <code>--core-library</code> option is that there is no such possibility from within ADT. 
+   That problem can be met by using the activityCreator tool (to be found inside the tools directory of the SDK). This tool will 
+   create an empty project for you. This is meant for developers who are not using eclipse. Alongside with the project structure the 
+   tool generates an ant build script. Putting that <code>build.xml</code> to the original eclipse project enables you to pass the <code>--core-library</code>
+   option to <code>dx</code> when using <a href="http://ant.apache.org/">Apache Ant</a>.</p>
+   <pre>
+    &lt;target name="dex" depends="compile"&gt;
+     &lt;echo&gt;Converting compiled files and external libraries into ${outdir}/${dex-file}...&lt;/echo&gt;
+      &lt;apply executable="${dx}" failonerror="true" parallel="true"&gt;
+      &lt;arg value="--dex" /&gt;
+      &lt;arg value="--core-library" /&gt;
+      &lt;arg value="--output=${intermediate-dex-ospath}" /&gt;
+      &lt;arg path="${outdir-classes-ospath}" /&gt;
+      &lt;fileset dir="${external-libs}" includes="*.jar"/&gt;
+     &lt;/apply&gt;
+    &lt;/target&gt;
+   </pre>
+   <p>Now its time to build and install the project on your emulator.</p>
+  </section>
+  
+   <section name="The result">
+    <p>
+       <img src="scxml-stopwatch-on-android/android_1.jpg" style="width:191px;height:365px;"/><br/>
+       (Figure 1: Begin in state "reset")<br/><br/>
+       <img src="scxml-stopwatch-on-android/android_2.jpg" style="width:191px;height:365px;"/><br/>
+       (Figure 2: Start puts the stopwatch in "running" state)<br/><br/>
+       <img src="scxml-stopwatch-on-android/android_3.jpg" style="width:191px;height:365px;"/><br/>
+       (Figure 3: Split causes the stopwatch to be "paused")<br/><br/>
+       <img src="scxml-stopwatch-on-android/android_4.jpg" style="width:191px;height:365px;"/><br/>
+       (Figure 4: The stopwatch in "stopped")<br/><br/>
+    </p>
+   </section>
+
+ </body>
+
+</document>

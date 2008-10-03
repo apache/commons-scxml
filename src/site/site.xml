@@ -85,6 +85,9 @@
         <item     name="SCXML in Shale dialogs"        
                   href="/usecases/scxml-in-shale-dialogs.html" />
 
+        <item     name="SCXML in Google Android"
+                  href="/usecases/scxml-stopwatch-on-android.html" />
+
       </item>
 
       <item       name="Building"                      

@@ -65,6 +65,9 @@
         container.</li>
         <li><a href="usecases/scxml-in-shale-dialogs.html">Usecase 3</a> -
         Use in <a href="http://shale.apache.org/">Shale</a> dialogs</li>
+        <li><a href="usecases/scxml-stopwatch-on-android.html">Usecase 4</a> -
+        SCXML stopwatch example in <a href="http://code.google.com/android/">Google Android</a>
+        </li>
        </ul>
     </p>
    </subsection>
