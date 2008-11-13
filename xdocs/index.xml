@@ -113,6 +113,8 @@
         taking part in a voice interaction bounded by a RDC group container.</li>
     <li><a href="http://shale.apache.org/">Apache Shale</a> - For managing the flow of control in
         web based applications, using <a href="http://shale.apache.org/shale-dialog/">Shale dialogs</a>.</li>
+    <li><a href="http://www.softwaredemo.de/en">Softwaredemo</a> - A platform for online live testing of software.
+        SCXML is responsible for managing all resources like VMs, storage and virtual desktop components.</li>
    </ul>
   </p>
  </section>
