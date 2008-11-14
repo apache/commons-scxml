@@ -89,7 +89,6 @@ public class Data implements NamespacePrefixesHolder, Serializable {
      * @deprecated Use {@link #setId(String)} instead.
      */
     public final void setName(final String name) {
-    	System.err.println("\n\n" + name + "\n\n"); 
         this.id = name;
     }
 

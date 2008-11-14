@@ -26,8 +26,10 @@ import junit.textui.TestRunner;
 
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
+import org.apache.commons.scxml.env.SimpleErrorHandler;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.TransitionTarget;
+import org.xml.sax.SAXException;
 /**
  * Unit tests {@link org.apache.commons.scxml.SCXMLDigester}
  * Test white box nature of <state> element "src" attribute.
@@ -48,7 +50,7 @@ public class StateSrcTest extends TestCase {
     }
 
     // Test data
-    private URL src01;
+    private URL src01, src04, src05;
     private SCXML scxml;
     private SCXMLExecutor exec;
 
@@ -58,13 +60,17 @@ public class StateSrcTest extends TestCase {
     public void setUp() {
         src01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/io/src-test-1.xml");
+        src04 = this.getClass().getClassLoader().
+            getResource("org/apache/commons/scxml/io/src-test-4.xml");
+        src05 = this.getClass().getClassLoader().
+            getResource("org/apache/commons/scxml/io/src-test-5.xml");
     }
 
     /**
      * Tear down instance variables required by this test case.
      */
     public void tearDown() {
-        src01 = null;
+        src01 = src04 = src05 = null;
         scxml = null;
         exec = null;
     }
@@ -86,7 +92,33 @@ public class StateSrcTest extends TestCase {
         assertTrue(exec.getCurrentStatus().isFinal());
     }
 
-     public static void main(String args[]) {
+    public void testBadSrcInclude() {
+        try {
+            scxml = SCXMLParser.parse(src04, new SimpleErrorHandler());
+            fail("Document with bad <state> src attribute shouldn't be parsed!");
+        } catch (SAXException me) {
+            assertTrue("Unexpected error message for bad <state> 'src' URI",
+                me.getMessage() != null && me.getMessage().contains("Source attribute in <state src="));
+        } catch (Exception e) {
+            fail("Unexpected exception [" + e.getClass().getName() + ":" +
+                e.getMessage());
+        }
+    }
+
+    public void testBadSrcFragmentInclude() {
+        try {
+            scxml = SCXMLParser.parse(src05, new SimpleErrorHandler());
+            fail("Document with bad <state> src attribute shouldn't be parsed!");
+        } catch (SAXException me) {
+            assertTrue("Unexpected error message for bad <state> 'src' URI fragment",
+                me.getMessage() != null && me.getMessage().contains("URI Fragment in <state src="));
+        } catch (Exception e) {
+            fail("Unexpected exception [" + e.getClass().getName() + ":" +
+                e.getMessage());
+        }
+    }
+
+    public static void main(String args[]) {
         TestRunner.run(suite());
     }
 }
