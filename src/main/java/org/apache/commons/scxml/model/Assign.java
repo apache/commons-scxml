@@ -197,10 +197,11 @@ public class Assign extends Action implements PathResolverHolder {
                         newNode = eval.evalLocation(ctx, expr);
                     }
                     // Remove all children
-                    for (Node child = oldNode.getFirstChild();
-                            child != null;
-                            child = child.getNextSibling()) {
-                        oldNode.removeChild(child);
+                    Node removeChild = oldNode.getFirstChild();
+                    while (removeChild != null) {
+                        Node nextChild = removeChild.getNextSibling();
+                        oldNode.removeChild(removeChild);
+                        removeChild = nextChild;
                     }
                     if (newNode != null) {
                         // Adopt new children
