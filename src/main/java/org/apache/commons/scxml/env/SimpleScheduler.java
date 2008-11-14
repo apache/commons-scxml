@@ -139,7 +139,7 @@ public class SimpleScheduler implements EventDispatcher, Serializable {
             if (delay > 0L) {
                 // Need to schedule this one
                 Timer timer = new Timer(true);
-                timer.schedule(new DelayedEventTask(sendId, event), delay);
+                timer.schedule(new DelayedEventTask(sendId, event, params), delay);
                 timers.put(sendId, timer);
                 if (log.isDebugEnabled()) {
                     log.debug("Scheduled event '" + event + "' with delay "
@@ -197,15 +197,33 @@ public class SimpleScheduler implements EventDispatcher, Serializable {
         private String event;
 
         /**
+         * The event payload, if any.
+         */
+        private Map payload;
+
+        /**
          * Constructor.
          *
          * @param sendId The ID of the send element.
          * @param event The name of the event to be triggered.
          */
         DelayedEventTask(final String sendId, final String event) {
+            this(sendId, event, null);
+        }
+
+        /**
+         * Constructor for events with payload.
+         *
+         * @param sendId The ID of the send element.
+         * @param event The name of the event to be triggered.
+         * @param payload The event payload, if any.
+         */
+        DelayedEventTask(final String sendId, final String event,
+                final Map payload) {
             super();
             this.sendId = sendId;
             this.event = event;
+            this.payload = payload;
         }
 
         /**
@@ -214,7 +232,7 @@ public class SimpleScheduler implements EventDispatcher, Serializable {
         public void run() {
             try {
                 executor.triggerEvent(new TriggerEvent(event,
-                    TriggerEvent.SIGNAL_EVENT));
+                    TriggerEvent.SIGNAL_EVENT, payload));
             } catch (ModelException me) {
                 log.error(me.getMessage(), me);
             }
