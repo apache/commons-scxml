@@ -678,6 +678,29 @@ public final class SCXMLParser {
     private static final String ERR_CUSTOM_ACTION_TYPE = "Custom actions list"
         + " contained unknown object (not a Commons SCXML Action subtype)";
 
+    /**
+     * Error message when the URI in a &lt;state&gt;'s &quot;src&quot;
+     * attribute does not point to a valid SCXML document, and thus cannot be
+     * parsed.
+     */
+    private static final String ERR_STATE_SRC =
+        "Source attribute in <state src=\"{0}\"> cannot be parsed";
+
+    /**
+     * Error message when the target of the URI fragment in a &lt;state&gt;'s
+     * &quot;src&quot; attribute is not defined in the referenced document.
+     */
+    private static final String ERR_STATE_SRC_FRAGMENT = "URI Fragment in "
+        + "<state src=\"{0}\"> is an unknown state in referenced document";
+
+    /**
+     * Error message when the target of the URI fragment in a &lt;state&gt;'s
+     * &quot;src&quot; attribute is not a &lt;state&gt; or &lt;final&gt; in
+     * the referenced document.
+     */
+    private static final String ERR_STATE_SRC_FRAGMENT_TARGET = "URI Fragment"
+        + " in <state src=\"{0}\"> does not point to a <state> or <final>";
+
     // String constants
     /** Slash. */
     private static final String STR_SLASH = "/";
@@ -1440,7 +1463,7 @@ public final class SCXMLParser {
          * @see Rule#begin(String, String, Attributes)
          */
         public final void begin(final String namespace, final String name,
-                final Attributes attributes) {
+                final Attributes attributes) throws ModelException {
             String src = attributes.getValue("src");
             if (SCXMLHelper.isStringEmpty(src)) {
                 return;
@@ -1480,9 +1503,12 @@ public final class SCXMLParser {
             try {
                 externalSCXML = (SCXML) externalSrcDigester.parse(location);
             } catch (Exception e) {
-                org.apache.commons.logging.Log log = LogFactory.
-                    getLog(SCXMLParser.class);
-                log.error(e.getMessage(), e);
+                MessageFormat msgFormat =
+                    new MessageFormat(ERR_STATE_SRC);
+                String errMsg = msgFormat.format(new Object[] {
+                    path
+                });
+                throw new ModelException(errMsg + " : " + e.getMessage(), e);
             }
 
             // 2) Adopt the children and datamodel
@@ -1507,11 +1533,12 @@ public final class SCXMLParser {
                 // Need to pull in descendent targets
                 Object source = externalSCXML.getTargets().get(fragment);
                 if (source == null) {
-                    org.apache.commons.logging.Log log = LogFactory.
-                        getLog(SCXMLParser.class);
-                    log.error("Unknown fragment in <state src=\"" + path +
-                        "\">");
-                    return;
+                    MessageFormat msgFormat =
+                        new MessageFormat(ERR_STATE_SRC_FRAGMENT);
+                    String errMsg = msgFormat.format(new Object[] {
+                        path
+                    });
+                    throw new ModelException(errMsg);
                 }
                 if (source instanceof State) {
                     State include = (State) source;
@@ -1541,10 +1568,12 @@ public final class SCXMLParser {
                         s.addTransition((Transition) transIter.next());
                     }
                 } else {
-                    org.apache.commons.logging.Log log = LogFactory.
-                        getLog(SCXMLParser.class);
-                    log.error("Fragment in <state src=\"" + path +
-                        "\"> is not a <state> or <final>");
+                    MessageFormat msgFormat =
+                        new MessageFormat(ERR_STATE_SRC_FRAGMENT_TARGET);
+                    String errMsg = msgFormat.format(new Object[] {
+                        path
+                    });
+                    throw new ModelException(errMsg);
                 }
             }
         }
