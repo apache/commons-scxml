@@ -24,6 +24,10 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
+import org.apache.commons.scxml.env.SimpleScheduler;
+import org.apache.commons.scxml.env.Tracer;
+import org.apache.commons.scxml.env.jexl.JexlEvaluator;
+import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.TransitionTarget;
 /**
  * Unit tests {@link org.apache.commons.scxml.SCXMLExecutor}.
@@ -45,7 +49,7 @@ public class EventDataTest extends TestCase {
     }
 
     // Test data
-    private URL eventdata01, eventdata02, eventdata03;
+    private URL eventdata01, eventdata02, eventdata03, eventdata04;
     private SCXMLExecutor exec;
 
     /**
@@ -58,13 +62,15 @@ public class EventDataTest extends TestCase {
             getResource("org/apache/commons/scxml/env/jexl/eventdata-02.xml");
         eventdata03 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/env/jexl/eventdata-03.xml");
+        eventdata04 = this.getClass().getClassLoader().
+            getResource("org/apache/commons/scxml/env/jexl/eventdata-04.xml");
     }
 
     /**
      * Tear down instance variables required by this test case.
      */
     public void tearDown() {
-        eventdata01 = eventdata02 = eventdata03 = null;
+        eventdata01 = eventdata02 = eventdata03 = eventdata04 = null;
     }
 
     /**
@@ -136,6 +142,22 @@ public class EventDataTest extends TestCase {
         } catch (Exception e) {
             fail(e.getMessage());
         }
+    }
+
+    public void testEventdata04Sample() throws InterruptedException {
+        SCXML scxml = SCXMLTestHelper.parse(eventdata04);
+        Tracer trc = new Tracer();
+        try {
+            exec = new SCXMLExecutor(new JexlEvaluator(), null, trc);
+            exec.setEventdispatcher(new SimpleScheduler(exec));
+            exec.addListener(scxml, trc);
+            exec.setStateMachine(scxml);
+            exec.go();
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+        assertNotNull(exec);
+        Thread.sleep(200); // let the 100 delay lapse
     }
 
     public static class ConnectionAlertingPayload {
