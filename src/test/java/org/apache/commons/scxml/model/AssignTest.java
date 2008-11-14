@@ -45,21 +45,24 @@ public class AssignTest extends TestCase {
     }
 
     // Test data
+    private URL assign01, assign02;
     private SCXMLExecutor exec;
 
     /**
      * Set up instance variables required by this test case.
      */
     public void setUp() {
-        URL assignSample = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml/model/assign-test.xml");
-        exec = SCXMLTestHelper.getExecutor(assignSample);
+        assign01 = this.getClass().getClassLoader().
+            getResource("org/apache/commons/scxml/model/assign-test-01.xml");
+        assign02 = this.getClass().getClassLoader().
+            getResource("org/apache/commons/scxml/model/assign-test-02.xml");
     }
 
     /**
      * Tear down instance variables required by this test case.
      */
     public void tearDown() {
+        assign01 = assign02 = null;
         exec = null;
     }
 
@@ -67,6 +70,7 @@ public class AssignTest extends TestCase {
      * Test the implementation
      */
     public void testAssignSrc() {
+        exec = SCXMLTestHelper.getExecutor(assign01);
         Set currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
         assertEquals("assign3", ((State)currentStates.iterator().
@@ -74,7 +78,16 @@ public class AssignTest extends TestCase {
         assertTrue(exec.getCurrentStatus().isFinal());
     }
 
-     public static void main(String args[]) {
+    public void testAssignDeep() {
+        exec = SCXMLTestHelper.getExecutor(assign02);
+        Set currentStates = exec.getCurrentStatus().getStates();
+        assertEquals(1, currentStates.size());
+        assertEquals("assign3", ((State)currentStates.iterator().
+            next()).getId());
+        assertTrue(exec.getCurrentStatus().isFinal());
+    }
+
+    public static void main(String args[]) {
         TestRunner.run(suite());
     }
 }
