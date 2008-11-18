@@ -93,6 +93,19 @@ public class SCXMLSerializerTest extends TestCase {
         assertEquals(assertValue.toString(), returnValue.toString());
     }
 
+    public void testSerializeSendEmptyAttributes() {
+        // test a <send event="foo"/>, i.e.most attributes are empty
+        Send send = new Send();
+        send.setEvent("foo");
+
+        String assertValue = " <send event=\"foo\">\n </send>\n";
+
+        StringBuffer returnValue = new StringBuffer();
+        SCXMLSerializer.serializeSend(returnValue, send, " ");
+
+        assertEquals(assertValue.toString(), returnValue.toString());
+    }
+
     public void testSerializeActionsListNull() {
         TransitionTarget target = new State();
         target.setId("1");
