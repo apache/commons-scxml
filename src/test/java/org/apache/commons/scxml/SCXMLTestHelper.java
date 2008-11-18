@@ -24,6 +24,7 @@ import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -262,7 +263,7 @@ public class SCXMLTestHelper {
             + " on firing event " + triggerEvent + " but found "
             + currentStates.size() + " states instead.",
             n, currentStates.size());
-        List<String> expectedStateIdList = Arrays.asList(expectedStateIds);
+        List<String> expectedStateIdList = new ArrayList<String>(Arrays.asList(expectedStateIds));
         for (TransitionTarget tt : currentStates) {
             String stateId = tt.getId();
             if(!expectedStateIdList.remove(stateId)) {
