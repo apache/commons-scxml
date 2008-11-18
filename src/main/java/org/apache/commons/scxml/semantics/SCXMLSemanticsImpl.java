@@ -279,11 +279,14 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                             te = new TriggerEvent(p.getId() + ".done",
                                         TriggerEvent.CHANGE_EVENT);
                             internalEvents.add(te);
-                            te = new TriggerEvent(p.getParent().getId()
-                                + ".done", TriggerEvent.CHANGE_EVENT);
-                            internalEvents.add(te);
-                            //this is not in the specs, but is makes sense
-                            scInstance.setDone(p.getParentState(), true);
+                            scInstance.setDone(p, true);
+                            if (stateMachine.isLegacy()) {
+                                te = new TriggerEvent(p.getParent().getId()
+                                    + ".done", TriggerEvent.CHANGE_EVENT);
+                                internalEvents.add(te);
+                                //this is not in the specs, but is makes sense
+                                scInstance.setDone(p.getParentState(), true);
+                            }
                         }
                     }
                 }
@@ -309,8 +312,8 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
         // breath-first search to-do list
         LinkedList todoList = new LinkedList(stateSet);
         while (!todoList.isEmpty()) {
-            State st = (State) todoList.removeFirst();
-            for (Iterator i = st.getTransitionsList().iterator();
+            TransitionTarget tt = (TransitionTarget) todoList.removeFirst();
+            for (Iterator i = tt.getTransitionsList().iterator();
                     i.hasNext();) {
                 Transition t = (Transition) i.next();
                 if (!transSet.contains(t)) {
@@ -318,7 +321,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                     step.getTransitList().add(t);
                 }
             }
-            State parent = st.getParentState();
+            TransitionTarget parent = tt.getParent();
             if (parent != null && !stateSet.contains(parent)) {
                 stateSet.add(parent);
                 todoList.addLast(parent);

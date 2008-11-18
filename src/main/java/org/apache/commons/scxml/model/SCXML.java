@@ -81,6 +81,12 @@ public class SCXML implements Serializable {
     private Map targets;
 
     /**
+     * Indicates whether the legacy parser
+     * ({@link org.apache.commons.scxml.io.SCXMLDigester}) was used.
+     */
+    private boolean legacy = false;
+
+    /**
      * Constructor.
      */
     public SCXML() {
@@ -299,6 +305,30 @@ public class SCXML implements Serializable {
      */
     public final void setInitial(final String initial) {
         this.initial = initial;
+    }
+
+    /**
+     * Whether the legacy parser was used.
+     *
+     * @return True, if legacy parser was used.
+     *
+     * @since 0.9
+     * @deprecated Will be removed in v1.0
+     */
+    public final boolean isLegacy() {
+        return legacy;
+    }
+
+    /**
+     * Set whether the legacy parser was used.
+     *
+     * @param legacy True, if legacy parser was used.
+     *
+     * @since 0.9
+     * @deprecated Will be removed in v1.0
+     */
+    public final void setLegacy(final boolean legacy) {
+        this.legacy = legacy;
     }
 
 }

@@ -157,7 +157,7 @@ public class PathTest extends TestCase {
 
         Path path = new Path(source, target);
 
-        assertNull(path.getPathScope());
+        assertEquals("parentid", path.getPathScope().getId());
     }
     
     public void testConstructorParentParallelParent() {
@@ -180,7 +180,7 @@ public class PathTest extends TestCase {
 
         Path path = new Path(source, target);
 
-        assertEquals("superParent", path.getPathScope().getId());
+        assertEquals("parentid", path.getPathScope().getId());
     }
     
     public void testGetRegionsExitedNull() {

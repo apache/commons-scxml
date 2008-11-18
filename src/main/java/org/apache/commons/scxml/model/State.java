@@ -16,10 +16,7 @@
  */
 package org.apache.commons.scxml.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -70,11 +67,6 @@ public class State extends TransitionTarget {
     private Initial initial;
 
     /**
-     * A list of outgoing Transitions from this state, by document order.
-     */
-    private List transitions;
-
-    /**
      * Applies to composite states only. If one of its final children is
      * active, its parent is marked done. This property is reset upon
      * re-entry.
@@ -88,7 +80,6 @@ public class State extends TransitionTarget {
      */
     public State() {
         this.children = new LinkedHashMap();
-        this.transitions = new ArrayList();
     }
 
     /**
@@ -200,62 +191,6 @@ public class State extends TransitionTarget {
     }
 
     /**
-     * Get the map of all outgoing transitions from this state.
-     *
-     * @return Map Returns the transitions Map.
-     * @deprecated Use {@link #getTransitionsList()} instead
-     */
-    public final Map getTransitions() {
-        Map transitionsMap = new HashMap();
-        for (int i = 0; i < transitions.size(); i++) {
-            Transition transition = (Transition) transitions.get(i);
-            String event = transition.getEvent();
-            if (!transitionsMap.containsKey(event)) {
-                List eventTransitions = new ArrayList();
-                eventTransitions.add(transition);
-                transitionsMap.put(event, eventTransitions);
-            } else {
-                ((List) transitionsMap.get(event)).add(transition);
-            }
-        }
-        return transitionsMap;
-    }
-
-    /**
-     * Get the list of all outgoing transitions from this state, that
-     * will be candidates for being fired on the given event.
-     *
-     * @param event The event
-     * @return List Returns the candidate transitions for given event
-     */
-    public final List getTransitionsList(final String event) {
-        List matchingTransitions = null; // since we returned null upto v0.6
-        for (int i = 0; i < transitions.size(); i++) {
-            Transition t = (Transition) transitions.get(i);
-            if ((event == null && t.getEvent() == null)
-                    || (event != null && event.equals(t.getEvent()))) {
-                if (matchingTransitions == null) {
-                    matchingTransitions = new ArrayList();
-                }
-                matchingTransitions.add(t);
-            }
-        }
-        return matchingTransitions;
-    }
-
-    /**
-     * Add a transition to the map of all outgoing transitions for
-     * this state.
-     *
-     * @param transition
-     *            The transitions to set.
-     */
-    public final void addTransition(final Transition transition) {
-        transitions.add(transition);
-        transition.setParent(this);
-    }
-
-    /**
      * Get the map of child states (may be empty).
      *
      * @return Map Returns the children.
@@ -288,15 +223,6 @@ public class State extends TransitionTarget {
     public final void addChild(final TransitionTarget tt) {
         this.children.put(tt.getId(), tt);
         tt.setParent(this);
-    }
-
-    /**
-     * Get the outgoing transitions for this state as a java.util.List.
-     *
-     * @return List Returns the transitions list.
-     */
-    public final List getTransitionsList() {
-        return transitions;
     }
 
     /**

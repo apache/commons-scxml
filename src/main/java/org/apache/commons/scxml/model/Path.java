@@ -52,10 +52,10 @@ public class Path implements Serializable {
     private List downSeg = new ArrayList();
 
     /**
-     * &quot;Lowest&quot; state which is not being exited nor entered by
-     * the transition.
+     * &quot;Lowest&quot; transition target which is not being exited nor
+     * entered by the transition.
      */
-    private State scope = null;
+    private TransitionTarget scope = null;
 
     /**
      * Whether the path crosses region border(s).
@@ -71,18 +71,14 @@ public class Path implements Serializable {
     Path(final TransitionTarget source, final TransitionTarget target) {
         if (target == null) {
             //a local "stay" transition
-            scope = (State) source;
+            scope = source;
             //all segments remain empty
         } else {
             TransitionTarget tt = SCXMLHelper.getLCA(source, target);
             if (tt != null) {
-                if (tt instanceof State) {
-                    scope = (State) tt;
-                } else {
-                    scope = tt.getParentState();
-                }
+                scope = tt;
                 if (scope == source || scope == target) {
-                    scope = scope.getParentState();
+                    scope = scope.getParent();
                 }
             }
             tt = source;
@@ -167,13 +163,16 @@ public class Path implements Serializable {
      * nor entered by the transition (null if scope is document root).
      *
      * @return State scope of the transition path, null means global transition
-     *         (SCXML document level) Scope is the least state which is not
-     *         being exited nor entered by the transition.
+     *         (SCXML document level) or parent parallel. Scope is the least
+     *         state which is not being exited nor entered by the transition.
      *
      * @deprecated Use {@link #getPathScope()} instead.
      */
     public final State getScope() {
-        return scope;
+        if (scope instanceof State) {
+            return (State) scope;
+        }
+        return null;
     }
 
     /**
@@ -183,6 +182,8 @@ public class Path implements Serializable {
      * @return Scope of the transition path, null means global transition
      *         (SCXML document level). Scope is the least transition target
      *         which is not being exited nor entered by the transition.
+     *
+     * @since 0.9
      */
     public final TransitionTarget getPathScope() {
         return scope;

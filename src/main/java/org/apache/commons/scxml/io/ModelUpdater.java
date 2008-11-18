@@ -227,6 +227,10 @@ final class ModelUpdater {
         while (i.hasNext()) {
             updateState((State) i.next(), targets);
         }
+        Iterator j = p.getTransitionsList().iterator();
+        while (j.hasNext()) {
+            updateTransition((Transition) j.next(), targets);
+        }
     }
 
     /**

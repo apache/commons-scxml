@@ -18,7 +18,9 @@ package org.apache.commons.scxml.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * An abstract base class for elements in SCXML that can serve as a
@@ -57,6 +59,11 @@ public abstract class TransitionTarget implements Serializable {
     private TransitionTarget parent;
 
     /**
+     * A list of outgoing Transitions from this target, by document order.
+     */
+    private List transitions;
+
+    /**
      * List of history states owned by a given state (applies to non-leaf
      * states).
      */
@@ -72,6 +79,7 @@ public abstract class TransitionTarget implements Serializable {
         onExit = new OnExit();   //empty defaults
         onExit.setParent(this);
         parent = null;
+        transitions = new ArrayList();
         history = new ArrayList();
     }
 
@@ -172,6 +180,7 @@ public abstract class TransitionTarget implements Serializable {
      * Get the parent State.
      *
      * @return The parent State
+     * @deprecated Will be removed in v1.0
      */
     public final State getParentState() {
         TransitionTarget tt = this.getParent();
@@ -184,6 +193,71 @@ public abstract class TransitionTarget implements Serializable {
                 return tt.getParentState();
             }
         }
+    }
+
+    /**
+     * Get the map of all outgoing transitions from this state.
+     *
+     * @return Map Returns the transitions Map.
+     * @deprecated Use {@link #getTransitionsList()} instead
+     */
+    public final Map getTransitions() {
+        Map transitionsMap = new HashMap();
+        for (int i = 0; i < transitions.size(); i++) {
+            Transition transition = (Transition) transitions.get(i);
+            String event = transition.getEvent();
+            if (!transitionsMap.containsKey(event)) {
+                List eventTransitions = new ArrayList();
+                eventTransitions.add(transition);
+                transitionsMap.put(event, eventTransitions);
+            } else {
+                ((List) transitionsMap.get(event)).add(transition);
+            }
+        }
+        return transitionsMap;
+    }
+
+    /**
+     * Get the list of all outgoing transitions from this target, that
+     * will be candidates for being fired on the given event.
+     *
+     * @param event The event
+     * @return List Returns the candidate transitions for given event
+     */
+    public final List getTransitionsList(final String event) {
+        List matchingTransitions = null; // TODO v1.0 we returned null <= v0.6
+        for (int i = 0; i < transitions.size(); i++) {
+            Transition t = (Transition) transitions.get(i);
+            if ((event == null && t.getEvent() == null)
+                    || (event != null && event.equals(t.getEvent()))) {
+                if (matchingTransitions == null) {
+                    matchingTransitions = new ArrayList();
+                }
+                matchingTransitions.add(t);
+            }
+        }
+        return matchingTransitions;
+    }
+
+    /**
+     * Add a transition to the map of all outgoing transitions for
+     * this transition target.
+     *
+     * @param transition
+     *            The transitions to set.
+     */
+    public final void addTransition(final Transition transition) {
+        transitions.add(transition);
+        transition.setParent(this);
+    }
+
+    /**
+     * Get the outgoing transitions for this target as a java.util.List.
+     *
+     * @return List Returns the transitions list.
+     */
+    public final List getTransitionsList() {
+        return transitions;
     }
 
     /**

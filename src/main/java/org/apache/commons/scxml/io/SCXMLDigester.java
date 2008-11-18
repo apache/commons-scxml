@@ -251,6 +251,7 @@ public final class SCXMLDigester {
         if (scxml != null) {
             ModelUpdater.updateSCXML(scxml);
         }
+        scxml.setLegacy(true);
 
         return scxml;
 
