@@ -101,6 +101,8 @@ public abstract class Action implements NamespacePrefixesHolder,
      *
      * @return The parent State
      * @throws ModelException For an unknown TransitionTarget subclass
+     *
+     * @deprecated Use {@link #getParentTransitionTarget()} instead.
      */
     public final State getParentState() throws ModelException {
         TransitionTarget tt = parent.getParent();
@@ -110,6 +112,28 @@ public abstract class Action implements NamespacePrefixesHolder,
         } else if (tt instanceof Parallel || tt instanceof History) {
             State st = (State) tt.getParent();
             return st;
+        } else {
+            throw new ModelException("Unknown TransitionTarget subclass:"
+                    + tt.getClass().getName());
+        }
+    }
+
+    /**
+     * Return the {@link TransitionTarget} whose {@link Context} this action
+     * executes in.
+     *
+     * @return The parent {@link TransitionTarget}
+     * @throws ModelException For an unknown TransitionTarget subclass
+     *
+     * @since 0.9
+     */
+    public final TransitionTarget getParentTransitionTarget()
+    throws ModelException {
+        TransitionTarget tt = parent.getParent();
+        if (tt instanceof State || tt instanceof Parallel) {
+            return tt;
+        } else if (tt instanceof History) {
+            return tt.getParent();
         } else {
             throw new ModelException("Unknown TransitionTarget subclass:"
                     + tt.getClass().getName());

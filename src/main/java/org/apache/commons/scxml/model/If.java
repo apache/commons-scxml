@@ -116,8 +116,8 @@ public class If extends Action {
             final ErrorReporter errRep, final SCInstance scInstance,
             final Log appLog, final Collection derivedEvents)
     throws ModelException, SCXMLExpressionException {
-        State parentState = getParentState();
-        Context ctx = scInstance.getContext(parentState);
+        TransitionTarget parentTarget = getParentTransitionTarget();
+        Context ctx = scInstance.getContext(parentTarget);
         Evaluator eval = scInstance.getEvaluator();
         ctx.setLocal(getNamespacesKey(), getNamespaces());
         execute = eval.evalCond(ctx, cond).booleanValue();
