@@ -49,6 +49,7 @@ import org.apache.commons.scxml.invoke.InvokerException;
 import org.apache.commons.scxml.model.Action;
 import org.apache.commons.scxml.model.Finalize;
 import org.apache.commons.scxml.model.History;
+import org.apache.commons.scxml.model.Initial;
 import org.apache.commons.scxml.model.Invoke;
 import org.apache.commons.scxml.model.ModelException;
 import org.apache.commons.scxml.model.OnEntry;
@@ -247,9 +248,22 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
             TriggerEvent te = new TriggerEvent(tt.getId() + ".entry",
                     TriggerEvent.CHANGE_EVENT);
             internalEvents.add(te);
-            //3.2.1 and 3.4 (.done events)
+            // actions in initial transition (if any) and .done events
             if (tt instanceof State) {
                 State ts = (State) tt;
+                Initial ini = ts.getInitial();
+                if (ts.isComposite() && ini != null) {
+                    try {
+                        for (Iterator iniIter = ini.getTransition().
+                                getActions().iterator(); iniIter.hasNext();) {
+                            ((Action) iniIter.next()).execute(evtDispatcher,
+                                errRep, scInstance, appLog, internalEvents);
+                        }
+                    } catch (SCXMLExpressionException e) {
+                        errRep.onError(ErrorConstants.EXPRESSION_ERROR,
+                            e.getMessage(), ini);
+                    }
+                }
                 if (ts.isFinal()) {
                     State parent = (State) ts.getParent();
                     String prefix = "";

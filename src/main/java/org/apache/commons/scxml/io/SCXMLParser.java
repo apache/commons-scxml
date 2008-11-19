@@ -1011,9 +1011,17 @@ public final class SCXMLParser {
         scxmlRules.add(xp + XPF_EXT, new Rule() {
             public void end(final String namespace, final String name) {
                 Transition t = (Transition) getDigester().peek(1);
-                State exitState = new State();
-                exitState.setFinal(true);
-                t.getTargets().add(exitState);
+                TransitionTarget tt = (TransitionTarget) getDigester().
+                    peek(2);
+                if (tt instanceof Initial) {
+                    org.apache.commons.logging.Log log = LogFactory.
+                        getLog(SCXMLParser.class);
+                    log.warn("Ignored <exit> action in <initial>");
+                } else {
+                    State exitState = new State();
+                    exitState.setFinal(true);
+                    t.getTargets().add(exitState);
+                }
             }
         });
         scxmlRules.setNamespaceURI(NAMESPACE_SCXML);
