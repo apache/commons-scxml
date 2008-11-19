@@ -71,7 +71,7 @@ public class ActionTest extends TestCase {
 
         TransitionTarget returnValue = action.getParentTransitionTarget();
         
-        assertEquals("off", returnValue.getId());
+        assertEquals("on", returnValue.getId());
     }
     
     public void testGetParentStateIsHistory() throws Exception {
@@ -93,21 +93,22 @@ public class ActionTest extends TestCase {
         assertEquals("off", returnValue.getId());
     }
 
-    public void testGetParentStateIsInitial() {
+    public void testGetParentStateIsInitial() throws Exception {
         Transition transition = new Transition();
         
         Initial initial = new Initial();
         initial.setId("on");
- 
+
+        State state = new State();
+        state.setId("off");
+
+        initial.setParent(state);
+
         transition.setParent(initial);
         action.setParent(transition);
 
-        try{
-            action.getParentTransitionTarget();
-            fail("Unknown TransitionTarget subclass:Initial");
-        }
-        catch( ModelException e ){
-        	//ignore
-        }
+        TransitionTarget returnValue = action.getParentTransitionTarget();
+
+        assertEquals("off", returnValue.getId());
     }
 }

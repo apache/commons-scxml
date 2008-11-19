@@ -54,6 +54,7 @@ public class ModelTestSuite extends TestCase {
         suite.addTest(CustomActionTest.suite());
         suite.addTest(DatamodelTest.suite());
         suite.addTest(HistoryTest.suite());
+        suite.addTest(ParallelTest.suite());
         suite.addTest(PathTest.suite());
         suite.addTest(StateTest.suite());
         suite.addTest(StatelessModelTest.suite());

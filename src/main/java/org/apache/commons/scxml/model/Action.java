@@ -111,7 +111,7 @@ public abstract class Action implements NamespacePrefixesHolder,
         TransitionTarget tt = parent.getParent();
         if (tt instanceof State || tt instanceof Parallel) {
             return tt;
-        } else if (tt instanceof History) {
+        } else if (tt instanceof History || tt instanceof Initial) {
             return tt.getParent();
         } else {
             throw new ModelException("Unknown TransitionTarget subclass:"

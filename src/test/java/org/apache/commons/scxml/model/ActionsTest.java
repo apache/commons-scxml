@@ -54,7 +54,7 @@ public class ActionsTest extends TestCase {
     }
 
     // Test data
-    private URL actionsSample01, actionsSample02;
+    private URL actionsSample01, actionsSample02, actionsSample03;
     private ELEvaluator evaluator;
     private ELContext ctx;
     private SCXMLExecutor exec;
@@ -67,6 +67,8 @@ public class ActionsTest extends TestCase {
             getResource("org/apache/commons/scxml/model/actions-state-test.xml");
         actionsSample02 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/model/actions-parallel-test.xml");
+        actionsSample03 = this.getClass().getClassLoader().
+            getResource("org/apache/commons/scxml/model/actions-initial-test.xml");
         evaluator = new ELEvaluator();
         ctx = new ELContext();
     }
@@ -75,7 +77,7 @@ public class ActionsTest extends TestCase {
      * Tear down instance variables required by this test case.
      */
     public void tearDown() {
-        actionsSample01 = actionsSample02 = null;
+        actionsSample01 = actionsSample02 = actionsSample03 = null;
         evaluator = null;
         ctx = null;
         exec = null;
@@ -86,16 +88,20 @@ public class ActionsTest extends TestCase {
      */
     public void testStateActions() {
         SCXML scxml = SCXMLTestHelper.parse(actionsSample01);
-        exec = SCXMLTestHelper.getExecutor(scxml, ctx, evaluator);
-        ELContext ctx = (ELContext) SCXMLTestHelper.lookupContext(exec,
-            "actionsTest");
-        assertEquals((String) ctx.get("foo"), "foobar");
-        assertEquals("Missed event transition",
-            "true", (String) ctx.get("eventsent"));
+        runTest(scxml);
     }
 
     public void testParallelActions() {
         SCXML scxml = SCXMLTestHelper.parse(actionsSample02);
+        runTest(scxml);
+    }
+
+    public void testInitialActions() {
+        SCXML scxml = SCXMLTestHelper.parse(actionsSample03);
+        runTest(scxml);
+    }
+
+    private void runTest(SCXML scxml) {
         exec = SCXMLTestHelper.getExecutor(scxml, ctx, evaluator);
         ELContext ctx = (ELContext) SCXMLTestHelper.lookupContext(exec,
             "actionsTest");
