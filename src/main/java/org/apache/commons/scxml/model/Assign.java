@@ -179,8 +179,8 @@ public class Assign extends Action implements PathResolverHolder {
             final ErrorReporter errRep, final SCInstance scInstance,
             final Log appLog, final Collection<TriggerEvent> derivedEvents)
     throws ModelException, SCXMLExpressionException {
-        State parentState = getParentState();
-        Context ctx = scInstance.getContext(parentState);
+        TransitionTarget parentTarget = getParentTransitionTarget();
+        Context ctx = scInstance.getContext(parentTarget);
         Evaluator eval = scInstance.getEvaluator();
         ctx.setLocal(getNamespacesKey(), getNamespaces());
         // "location" gets preference over "name"
@@ -233,7 +233,7 @@ public class Assign extends Action implements PathResolverHolder {
             // lets try "name" (usage as in Sep '05 WD, useful with <var>)
             if (!ctx.has(name)) {
                 errRep.onError(ErrorConstants.UNDEFINED_VARIABLE, name
-                    + " = null", parentState);
+                    + " = null", parentTarget);
             } else {
                 Object varObj = null;
                 if (src != null && src.trim().length() > 0) {
