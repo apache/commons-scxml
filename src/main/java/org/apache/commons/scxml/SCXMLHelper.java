@@ -494,6 +494,7 @@ public final class SCXMLHelper {
                 case '>':
                     entityName = "gt";
                     break;
+                default:
             }
             if (entityName == null) {
                 if (c > 0x7F) {

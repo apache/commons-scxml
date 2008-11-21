@@ -589,6 +589,7 @@ public class SCXMLSerializer {
      * Serialize namespace declarations for the root SCXML element.
      *
      * @param holder The {@link NamespacePrefixesHolder} object
+     * @return The serialized namespace declarations
      */
     private static String serializeNamespaceDeclarations(
             final NamespacePrefixesHolder holder) {
@@ -601,16 +602,16 @@ public class SCXMLSerializer {
                 if (prefix.length() == 0 && !nsURI.equals(NAMESPACE_SCXML)) {
                     org.apache.commons.logging.Log log = LogFactory.
                         getLog(SCXMLSerializer.class);
-                    log.warn("When using the SCXMLSerializer, the default " +
-                        "namespace must be the SCXML namespace:" +
-                        NAMESPACE_SCXML);
+                    log.warn("When using the SCXMLSerializer, the default "
+                        + "namespace must be the SCXML namespace:"
+                        + NAMESPACE_SCXML);
                 } if (prefix.equals("cs") &&
                         !nsURI.equals(NAMESPACE_COMMONS_SCXML)) {
                     org.apache.commons.logging.Log log = LogFactory.
                         getLog(SCXMLSerializer.class);
-                    log.warn("When using the SCXMLSerializer, the namespace" +
-                        "prefix \"cs\" must bind to the Commons SCXML " +
-                        "namespace:" + NAMESPACE_COMMONS_SCXML);
+                    log.warn("When using the SCXMLSerializer, the namespace"
+                        + "prefix \"cs\" must bind to the Commons SCXML "
+                        + "namespace:" + NAMESPACE_COMMONS_SCXML);
                 } else if (prefix.length() > 0) {
                     b.append(" xmlns:").append(prefix).append("=\"").
                         append(nsURI).append("\"");

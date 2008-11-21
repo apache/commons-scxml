@@ -93,9 +93,9 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
      */
     private static final String NAMESPACES_KEY = "_ALL_NAMESPACES";
 
-    /** 
-     * Suffix for error event that are triggered in reaction to invalid data 
-     * model locations. 
+    /**
+     * Suffix for error event that are triggered in reaction to invalid data
+     * model locations.
      */
     private static final String ERR_ILLEGAL_ALLOC = ".error.illegalalloc";
 
