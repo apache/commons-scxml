@@ -17,7 +17,7 @@
 $Id$
 
                          Commons SCXML Package
-                         Version 0.9-SNAPSHOT
+                             Version 0.9
                             Release Notes
 
 INTRODUCTION:
@@ -38,15 +38,33 @@ BREAKING CHANGES:
 
 NEW FEATURES:
 
- o
+ o [SCXML-74] - <data> should support use of id attribute
+ o [SCXML-75] - TriggerEvent should be Serializable
+ o [SCXML-78] - SCXMLListeners are not be processed in a defined order
+ o [SCXML-80] - SCXMLParser should throw exception if it fails to resolve the
+                src attribute of the <state> element
+ o [SCXML-81] - <parallel> does not support <onentry> and <onexit>
+ o [SCXML-82] - <transition> element as an child of <parallel> ignored
+ o [SCXML-84] - Add SCXML on Android usecase to website
+ o [SCXML-86] - Support initial attribute of <state>
 
 BUG FIXES:
 
- o
+ o [SCXML-76] - Serialization of expressions may produce invalid XML
+ o [SCXML-77] - <param> semantics for using name attribute by itself are
+                not correct
+ o [SCXML-79] - SCXMLSerializer produces nested states with a parentid
+                attribute
+ o [SCXML-83] - Errors on serialization of <send>
+ o [SCXML-87] - Delayed events not passing payload
+ o [SCXML-88] - SCXMLSerializer does not serialize custom namespace
+                declarations
+ o [SCXML-89] - <assign> does not remove all previous children at location
+ o [SCXML-90] - event attribute of <send> is not evaluated as an expression
 
 OTHER COMMENTS:
 
- o
+ o This is a Maven 2 release.
 
 ABOUT COMMONS SCXML:
 
