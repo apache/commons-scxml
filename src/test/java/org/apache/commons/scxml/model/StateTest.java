@@ -16,7 +16,11 @@
  */
 package org.apache.commons.scxml.model;
 
+import java.net.URL;
 import java.util.List;
+
+import org.apache.commons.scxml.SCXMLExecutor;
+import org.apache.commons.scxml.SCXMLTestHelper;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -36,13 +40,23 @@ public class StateTest extends TestCase {
         String[] testCaseName = { StateTest.class.getName()};
         junit.textui.TestRunner.main(testCaseName);
     }
-    
+
+    // Test data
     private State state;
-    
+    private URL state01;
+    private SCXMLExecutor exec;
+
     public void setUp() {
         state = new State();
+        state01 = this.getClass().getClassLoader().
+            getResource("org/apache/commons/scxml/model/state-01.xml");
     }
-    
+
+    public void tearDown() {
+        state01 = null;
+        exec = null;
+    }
+
     public void testGetTransitionsListNull() {
         assertNull(state.getTransitionsList("event"));
     }
@@ -155,5 +169,13 @@ public class StateTest extends TestCase {
         
         assertFalse(state.isRegion());
     }
-    
+
+    public void testInitialAttribute() {
+        SCXML scxml = SCXMLTestHelper.parse(state01);
+        assertNotNull(scxml);
+        exec = SCXMLTestHelper.getExecutor(scxml);
+        assertNotNull(exec);
+        assertEquals("s11", ((State) exec.getCurrentStatus().getStates().iterator().next()).getId());
+    }
+
 }

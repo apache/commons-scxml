@@ -855,7 +855,9 @@ public final class SCXMLParser {
     private static void addStatePropertiesRules(final String xp,
             final ExtendedBaseRules scxmlRules, final List customActions,
             final PathResolver pr, final SCXML scxml) {
-        scxmlRules.add(xp, new SetPropertiesRule());
+        scxmlRules.add(xp, new SetPropertiesRule(
+                new String[] {"id", "final", "initial"},
+                new String[] {"id", "final", "first"}));
         scxmlRules.add(xp, new DigestSrcAttributeRule(scxml,
             customActions, pr));
     }

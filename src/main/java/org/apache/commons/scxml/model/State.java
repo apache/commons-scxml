@@ -191,6 +191,33 @@ public class State extends TransitionTarget {
     }
 
     /**
+     * Get the initial state's ID.
+     *
+     * @return The initial state's string ID.
+     */
+    public final String getFirst() {
+        if (initial != null) {
+            return initial.getTransition().getNext();
+        }
+        return null;
+    }
+
+    /**
+     * Set the initial state by its ID string.
+     *
+     * @param target
+     *            The initial target's ID to set.
+     */
+    public final void setFirst(final String target) {
+        Transition t = new Transition();
+        t.setNext(target);
+        Initial ini = new Initial();
+        ini.setTransition(t);
+        ini.setParent(this);
+        this.initial = ini;
+    }
+
+    /**
      * Get the map of child states (may be empty).
      *
      * @return Map Returns the children.
