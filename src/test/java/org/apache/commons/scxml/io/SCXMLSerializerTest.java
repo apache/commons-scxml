@@ -17,7 +17,9 @@
 package org.apache.commons.scxml.io;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -57,13 +59,21 @@ public class SCXMLSerializerTest extends TestCase {
     
     public void testSerializeSCXMLNoStates() {
         SCXML scxml = new SCXML();
+        Map namespaces = new LinkedHashMap();
+        namespaces.put("", "http://www.w3.org/2005/07/scxml");
+        namespaces.put("cs", "http://commons.apache.org/scxml");
+        namespaces.put("foo", "http://f.o.o");
+        namespaces.put("bar", "http://b.a.r");
+        scxml.setNamespaces(namespaces);
         scxml.setVersion("version1");
         scxml.setInitial("off");
         scxml.addChild(new State());
         
         String assertValue = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
             + "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" xmlns:cs=\"http://commons.apache.org/scxml\" "
-            + "version=\"version1\" initial=\"off\">\n <state>\n </state>\n</scxml>\n";
+            + "xmlns:foo=\"http://f.o.o\" xmlns:bar=\"http://b.a.r\" "
+            + "version=\"version1\" initial=\"off\">\n <!-- http://commons.apache.org/scxml -->\n <state>\n "
+            + "</state>\n</scxml>\n";
         
         assertEquals(assertValue, SCXMLSerializer.serialize(scxml));
     }
@@ -327,8 +337,9 @@ public class SCXMLSerializerTest extends TestCase {
         scxml.addChild(s1);
 
         String assertValue = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-            + "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" xmlns:cs=\"http://commons.apache.org/scxml\" "
-            + "version=\"1.0\" initial=\"S1\">\n <state id=\"S1\">\n </state>\n</scxml>\n";
+            + "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" "
+            + "version=\"1.0\" initial=\"S1\">\n <!-- http://commons.apache.org/scxml -->\n"
+            + " <state id=\"S1\">\n </state>\n</scxml>\n";
 
         assertEquals(assertValue, SCXMLSerializer.serialize(scxml));
     }
@@ -364,8 +375,9 @@ public class SCXMLSerializerTest extends TestCase {
         scxml.addChild(par);
 
         String assertValue = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-            + "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" xmlns:cs=\"http://commons.apache.org/scxml\" "
+            + "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" "
             + "version=\"1.0\" initial=\"par\">\n"
+            + " <!-- http://commons.apache.org/scxml -->\n"
             + " <parallel id=\"par\">\n"
             + "  <state id=\"S1\">\n"
             + "   <state id=\"S11\">\n"
