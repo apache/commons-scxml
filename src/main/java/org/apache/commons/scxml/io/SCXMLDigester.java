@@ -1485,8 +1485,8 @@ public final class SCXMLDigester {
                 if (source == null) {
                     org.apache.commons.logging.Log log = LogFactory.
                         getLog(SCXMLDigester.class);
-                    log.error("Unknown fragment in <state src=\"" + path +
-                        "\">");
+                    log.error("Unknown fragment in <state src=\"" + path
+                        + "\">");
                     return;
                 }
                 if (source instanceof State) {
@@ -1519,8 +1519,8 @@ public final class SCXMLDigester {
                 } else {
                     org.apache.commons.logging.Log log = LogFactory.
                         getLog(SCXMLDigester.class);
-                    log.error("Fragment in <state src=\"" + path +
-                        "\"> is not a <state> or <final>");
+                    log.error("Fragment in <state src=\"" + path
+                        + "\"> is not a <state> or <final>");
                 }
             }
         }
