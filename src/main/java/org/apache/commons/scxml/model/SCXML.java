@@ -29,7 +29,8 @@ import org.apache.commons.scxml.SCXMLHelper;
  * root&quot;.
  *
  */
-public class SCXML implements Serializable, Observable {
+public class SCXML implements Serializable, Observable,
+                              NamespacePrefixesHolder {
 
     /**
      * Serial version UID.
@@ -79,6 +80,12 @@ public class SCXML implements Serializable, Observable {
      * state machine, keyed by their id.
      */
     private Map<String, TransitionTarget> targets;
+
+    /**
+     * The XML namespaces defined on the SCXML document root node,
+     * preserved primarily for serialization.
+     */
+    private Map<String, String> namespaces;
 
     /**
      * Constructor.
@@ -255,6 +262,27 @@ public class SCXML implements Serializable, Observable {
      */
     public final void setXmlns(final String xmlns) {
         this.xmlns = xmlns;
+    }
+
+    /**
+     * Get the namespace definitions specified on the SCXML element.
+     * May be <code>null</code>.
+     *
+     * @return The namespace definitions specified on the SCXML element,
+     *         may be <code>null</code>.
+     */
+    public final Map<String, String> getNamespaces() {
+        return namespaces;
+    }
+
+    /**
+     * Set the namespace definitions specified on the SCXML element.
+     *
+     * @param namespaces The namespace definitions specified on the
+     *                   SCXML element.
+     */
+    public final void setNamespaces(final Map<String, String> namespaces) {
+        this.namespaces = namespaces;
     }
 
     /**

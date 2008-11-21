@@ -48,6 +48,7 @@ import org.apache.commons.scxml.model.If;
 import org.apache.commons.scxml.model.Initial;
 import org.apache.commons.scxml.model.Invoke;
 import org.apache.commons.scxml.model.Log;
+import org.apache.commons.scxml.model.NamespacePrefixesHolder;
 import org.apache.commons.scxml.model.OnEntry;
 import org.apache.commons.scxml.model.OnExit;
 import org.apache.commons.scxml.model.Parallel;
@@ -61,11 +62,22 @@ import org.apache.commons.scxml.model.Var;
 import org.w3c.dom.Node;
 
 /**
- * Utility class for serializing the Commons SCXML Java object
+ * <p>Utility class for serializing the Commons SCXML Java object
  * model. Class uses the visitor pattern to trace through the
  * object heirarchy. Used primarily for testing, debugging and
- * visual verification.
+ * visual verification.</p>
  *
+ * <b>NOTE:</b> This serializer makes the following assumptions about the
+ * original SCXML document(s) parsed to create the object model:
+ * <ul>
+ *  <li>The default document namespace is the SCXML namespace:
+ *      <i>http://www.w3.org/2005/07/scxml</i></li>
+ *  <li>The Commons SCXML namespace
+ *      ( <i>http://commons.apache.org/scxml</i> ), if needed, uses the
+ *      &quot;<i>cs</i>&quot; prefix</li>
+ *  <li>All namespace prefixes needed throughout the document are
+ *      declared on the document root element (&lt;scxml&gt;)</li>
+ * </ul>
  */
 public class SCXMLSerializer {
 
@@ -91,8 +103,8 @@ public class SCXMLSerializer {
         StringBuffer b =
             new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n").
                 append("<scxml xmlns=\"").append(NAMESPACE_SCXML).
-                append("\" xmlns:cs=\"").append(NAMESPACE_COMMONS_SCXML).
-                append("\" version=\"").append(scxml.getVersion()).
+                append("\"").append(serializeNamespaceDeclarations(scxml)).
+                append(" version=\"").append(scxml.getVersion()).
                 append("\" initial=\"").append(scxml.getInitial()).
                 append("\">\n");
         if (XFORMER == null) {
@@ -102,6 +114,7 @@ public class SCXMLSerializer {
                 + " the document will be skipped since a suitable"
                 + " JAXP Transformer could not be instantiated.");
         }
+        b.append(INDENT).append("<!-- http://commons.apache.org/scxml -->\n");
         Datamodel dm = scxml.getDatamodel();
         if (dm != null) {
             serializeDatamodel(b, dm, INDENT);
@@ -570,6 +583,41 @@ public class SCXMLSerializer {
         if (id != null) {
             b.append(" id=\"").append(id).append("\"");
         }
+    }
+
+    /**
+     * Serialize namespace declarations for the root SCXML element.
+     *
+     * @param holder The {@link NamespacePrefixesHolder} object
+     */
+    private static String serializeNamespaceDeclarations(
+            final NamespacePrefixesHolder holder) {
+        Map<String, String> namespaces = holder.getNamespaces();
+        StringBuffer b = new StringBuffer();
+        if (namespaces != null) {
+            for (Map.Entry<String, String> entry : namespaces.entrySet()) {
+                String prefix = entry.getKey();
+                String nsURI = entry.getValue();
+                if (prefix.length() == 0 && !nsURI.equals(NAMESPACE_SCXML)) {
+                    org.apache.commons.logging.Log log = LogFactory.
+                        getLog(SCXMLSerializer.class);
+                    log.warn("When using the SCXMLSerializer, the default " +
+                        "namespace must be the SCXML namespace:" +
+                        NAMESPACE_SCXML);
+                } if (prefix.equals("cs") &&
+                        !nsURI.equals(NAMESPACE_COMMONS_SCXML)) {
+                    org.apache.commons.logging.Log log = LogFactory.
+                        getLog(SCXMLSerializer.class);
+                    log.warn("When using the SCXMLSerializer, the namespace" +
+                        "prefix \"cs\" must bind to the Commons SCXML " +
+                        "namespace:" + NAMESPACE_COMMONS_SCXML);
+                } else if (prefix.length() > 0) {
+                    b.append(" xmlns:").append(prefix).append("=\"").
+                        append(nsURI).append("\"");
+                }
+            }
+        }
+        return b.toString();
     }
 
     /**

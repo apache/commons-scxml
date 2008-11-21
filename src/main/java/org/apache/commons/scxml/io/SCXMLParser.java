@@ -727,6 +727,7 @@ public final class SCXMLParser {
         //// SCXML
         scxmlRules.add(XP_SM, new ObjectCreateRule(SCXML.class));
         scxmlRules.add(XP_SM, new SetPropertiesRule());
+        scxmlRules.add(XP_SM, new SetCurrentNamespacesRule());
 
         //// Datamodel at document root i.e. <scxml> datamodel
         addDatamodelRules(XP_SM + XPF_DM, scxmlRules, scxml, pr);
