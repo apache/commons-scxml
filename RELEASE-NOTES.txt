@@ -32,6 +32,10 @@ BREAKING CHANGES:
  o The "event" attribute of the <send> element is now correctly evaluated
    as an expression, rather than a String.
 
+ o In line with the rest of the logs used in the library, the default
+   SCXMLSemantics implementation now uses SCXMLSemantics.class to derive
+   its log name, instead of the previous logical name "scxml.app.log".
+
 NEW FEATURES:
 
  o

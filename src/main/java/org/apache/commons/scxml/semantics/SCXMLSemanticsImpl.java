@@ -80,7 +80,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
     /**
      * SCXML Logger for the application.
      */
-    private Log appLog = LogFactory.getLog("scxml.app.log");
+    private Log appLog = LogFactory.getLog(SCXMLSemantics.class);
 
     /**
      * The TransitionTarget comparator.
