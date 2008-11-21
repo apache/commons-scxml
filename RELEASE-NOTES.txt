@@ -23,8 +23,14 @@ $Id$
 INTRODUCTION:
 
 Commons SCXML 0.9 is a minor release containing a few enhancements and
-bug fixes. See about section at the end for general information on
-Commons SCXML.
+bug fixes. Changes to SCXML documents may be necessary before upgrading
+from 0.8, see detailed changes list below. See about section at the end
+for general information on Commons SCXML.
+
+BREAKING CHANGES:
+
+ o The "event" attribute of the <send> element is now correctly evaluated
+   as an expression, rather than a String.
 
 NEW FEATURES:
 

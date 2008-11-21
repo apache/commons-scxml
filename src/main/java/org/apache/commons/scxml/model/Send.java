@@ -324,6 +324,15 @@ public class Send extends Action implements ExternalContent {
                 wait = parseDelay(delayString, appLog);
             }
         }
+        String eventValue = event;
+        if (!SCXMLHelper.isStringEmpty(event)) {
+            eventValue = (String) eval.eval(ctx, event);
+            if (SCXMLHelper.isStringEmpty(eventValue)
+                    && appLog.isWarnEnabled()) {
+                appLog.warn("<send>: event expression \"" + event
+                    + "\" evaluated to null or empty String");
+            }
+        }
         // Lets see if we should handle it ourselves
         if (targettypeValue != null
               && targettypeValue.trim().equalsIgnoreCase(TARGETTYPE_SCXML)) {
@@ -331,10 +340,10 @@ public class Send extends Action implements ExternalContent {
                 // TODO: Remove both short-circuit passes in v1.0
                 if (wait == 0L) {
                     if (appLog.isDebugEnabled()) {
-                        appLog.debug("<send>: Enqueued event '" + event
+                        appLog.debug("<send>: Enqueued event '" + eventValue
                             + "' with no delay");
                     }
-                    derivedEvents.add(new TriggerEvent(event,
+                    derivedEvents.add(new TriggerEvent(eventValue,
                         TriggerEvent.SIGNAL_EVENT, params));
                     return;
                 }
@@ -353,13 +362,13 @@ public class Send extends Action implements ExternalContent {
         }
         ctx.setLocal(getNamespacesKey(), null);
         if (appLog.isDebugEnabled()) {
-            appLog.debug("<send>: Dispatching event '" + event
+            appLog.debug("<send>: Dispatching event '" + eventValue
                 + "' to target '" + targetValue + "' of target type '"
                 + targettypeValue + "' with suggested delay of " + wait
                 + "ms");
         }
         // Else, let the EventDispatcher take care of it
-        evtDispatcher.send(sendid, targetValue, targettypeValue, event,
+        evtDispatcher.send(sendid, targetValue, targettypeValue, eventValue,
             params, hintsValue, wait, externalNodes);
     }
 

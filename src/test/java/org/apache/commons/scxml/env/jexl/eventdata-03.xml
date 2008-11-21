@@ -36,7 +36,7 @@
         <onentry>
             <var name="one" expr="Data(rootdata,'root/one')"/>
             <var name="two" expr="Data(rootdata,'root/two')"/>
-            <send event="event.bar" namelist="one two"/>
+            <send event="'event.bar'" namelist="one two"/>
         </onentry>
         <transition event="event.bar"
             cond="_eventdatamap['event.bar'].one + _eventdatamap['event.bar'].two eq 3"
