@@ -50,6 +50,7 @@ NEW FEATURES:
 
 BUG FIXES:
 
+ o [SCXML-73] - <send> delay attribute should be a value expression
  o [SCXML-76] - Serialization of expressions may produce invalid XML
  o [SCXML-77] - <param> semantics for using name attribute by itself are
                 not correct
