@@ -27,7 +27,7 @@
 
     <section name="About this document">
       <ul>
-        <li>The latest release of Commons SCXML is version 0.7.</li>
+        <li>The latest release of Commons SCXML is version 0.8.</li>
         <li>If you are interested in helping the project, join us on the
             <a href="mail-lists.html">commons-dev mailing list</a>.</li>
       </ul>
@@ -43,8 +43,114 @@
 
     </release>
 
-    <release version="0.9" date="In SVN"
-     description="Unreleased code">
+    <release version="0.9" date="December 2008"
+     description="Latest release">
+
+     <action dev="rahul" type="fix">
+       [11-21-2008] Added clirr plugin report, cleaned up some checkstyle
+       errors.
+     </action>
+
+     <action dev="rahul" type="add" issue="SCXML-86">
+       [11-21-2008] Support "initial" attribute of &lt;state&gt;.
+     </action>
+
+     <action dev="rahul" type="fix" issue="SCXML-88">
+       [11-21-2008] SCXMLSerializer does not serialize custom namespace
+       declarations.
+     </action>
+
+     <action dev="rahul" type="fix" issue="SCXML-88">
+       [11-21-2008] SCXMLSerializer does not serialize custom namespace
+       declarations.
+     </action>
+
+     <action dev="rahul" type="fix">
+       [11-21-2008] Change "appLog" name to be derived from
+       "SCXMLSemantics.class" rather than the arbitrary "scxml.app.log"
+     </action>
+
+     <action dev="rahul" type="fix" issue="SCXML-90">
+       [11-21-2008] "event" attribute of &lt;send&gt; is not evaluated
+     </action>
+
+     <action dev="rahul" type="add">
+       [11-19-2008] Support executable content in &lt;transition&gt;
+       child of &lt;initial&gt;
+     </action>
+
+     <action dev="rahul" type="add" issue="SCXML-81">
+       [11-19-2008] Support for &lt;onentry&gt; and &lt;onexit&gt; children
+       for &lt;parallel&gt; states.
+     </action>
+
+     <action dev="rahul" type="add" issue="SCXML-82">
+       [11-18-2008] Support for &lt;transition&gt; children for
+       &lt;parallel&gt; states.
+     </action>
+
+     <action dev="rahul" type="fix" issue="SCXML-89" due-to="Joel Truher">
+       [11-14-2008] &lt;assign&gt; doesn't remove all existing children
+       from location.
+     </action>
+
+     <action dev="rahul" type="add" issue="SCXML-80">
+       [11-14-2008] SCXMLParser should throw an exception for parsing
+       failures on bad URIs in &lt;state&gt;'s "src" attribute.
+     </action>
+
+     <action dev="rahul" type="fix" issue="SCXML-87" due-to="Roger Hoover">
+       [11-13-2008] Delayed events not passing payload.
+     </action>
+
+     <action dev="rahul" type="fix" issue="SCXML-85">
+       [11-13-2008] Added Softwaredemo to "Who is using it?"
+     </action>
+
+     <action dev="rahul" type="fix" issue="SCXML-84" due-to="Jakob Sachse">
+       [10-03-2008] Added a tutorial about using Commons SCXML on
+       Google Android.
+     </action>
+
+     <action dev="rahul" type="fix" issue="SCXML-83" due-to="Ingmar Kliche">
+       [08-01-2008] Improvements in &lt;send&gt; serialization.
+     </action>
+
+     <action dev="rahul" type="fix" issue="SCXML-79">
+       [07-30-2008] Stop rendering non-standard "parentid" attribute during
+       serialization.
+     </action>
+
+     <action dev="rahul" type="fix">
+       [07-28-2008] Update datamodel section of the guide to stress namespace
+       awareness of document.
+     </action>
+
+     <action dev="rahul" type="fix">
+       [07-28-2008] &lt;var&gt; and &lt;exit&gt; should be serialized in the
+       Commons SCXML namespace.
+     </action>
+
+     <action dev="rahul" type="fix" issue="SCXML-78" due-to="Daniel Schwager">
+       [07-28-2008] SCXMLListeners will not processed in defined order.
+     </action>
+
+     <action dev="rahul" type="fix" issue="SCXML-77" due-to="Edzard Hoefig">
+       [07-28-2008] Correct semantics for &lt;param&gt; with only the "name"
+       attribute specified.
+     </action>
+
+     <action dev="rahul" type="fix" issue="SCXML-76" due-to="Ingmar Kliche">
+       [07-28-2008] Serialization of expressions may produce invalid XML.
+     </action>
+
+     <action dev="rahul" type="add" issue="SCXML-75" due-to="Daniel Schwager">
+       [07-11-2008] Make TriggerEvent class Serializable.
+     </action>
+
+     <action dev="rahul" type="add" issue="SCXML-74" due-to="Edzard Hoefig">
+       [07-11-2008] &lt;data&gt; should support the "id" attribute.
+     </action>
 
      <action dev="rahul" type="fix" issue="SCXML-73" due-to="Elaine Wong">
        [06-17-2008] The "delay" attribute of the &lt;send&gt; element
@@ -59,7 +165,7 @@
     </release>
 
     <release version="0.8" date="May 2008"
-     description="Latest release">
+     description="Release">
 
      <action dev="rahul" type="add" issue="SCXML-64">
        [05-03-2008] Better error reporting for ignored or misplaced elements
@@ -110,7 +216,7 @@
     </release>
 
     <release version="0.7" date="December 2007"
-     description="Minor release">
+     description="Release">
 
      <action dev="rahul" type="add">
        [12-12-2007] Add experimental Maven2 pom.xml to source distro.

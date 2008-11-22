@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+
+<document>
+
+ <properties>
+  <title>Commons SCXML v0.9</title>
+  <author email="dev@commons.apache.org">Commons Documentation Team</author>
+ </properties>
+
+ <body>
+
+ <section name="Commons SCXML 0.9 release documentation">
+
+  <p>
+  The following documentation on the v0.9 release is available online:
+  </p>
+
+  <p>
+    <ul>
+      <li>The v0.9 <a href="apidocs/index.html">Javadoc</a>.</li>
+      <li>The v0.9 <a href="http://svn.apache.org/viewvc/commons/proper/scxml/tags/SCXML_0_9/RELEASE-NOTES.txt?view=markup">release notes</a>.</li>
+      <li>The v0.9 <a href="http://svn.apache.org/viewvc/commons/proper/scxml/tags/SCXML_0_9/">source tree</a>.</li>
+    </ul>
+  </p>
+
+ </section>
+
+ </body>
+
+</document>

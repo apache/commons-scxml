@@ -75,7 +75,7 @@
       </item>
 
       <item       name="Javadoc"
-                  href="/0.8/apidocs/index.html"/>
+                  href="/0.9/apidocs/index.html"/>
 
       <item       name="FAQ"
                   href="faq.html"/>
@@ -119,6 +119,21 @@
     </menu>
 
     <menu         name="Releases">
+
+      <item       name="Version 0.9"
+                  href="/0.9/index.html"
+                  collapse="true">
+
+        <item     name="Javadoc"
+                  href="/0.9/apidocs/index.html" />
+
+        <item     name="Release notes"
+                  href="http://svn.apache.org/viewvc/commons/proper/scxml/tags/SCXML_0_9/RELEASE-NOTES.txt?view=markup" />
+
+        <item     name="Source"
+                  href="http://svn.apache.org/viewvc/commons/proper/scxml/tags/SCXML_0_9/" />
+
+      </item>
 
       <item       name="Version 0.8"
                   href="/0.8/index.html"

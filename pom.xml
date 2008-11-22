@@ -275,6 +275,14 @@
           <headerFile>${basedir}/scxml-asl-header.txt</headerFile>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>clirr-maven-plugin</artifactId>
+        <version>2.2.1</version>
+        <configuration>
+          <comparisonVersion>0.8</comparisonVersion>
+        </configuration>
+      </plugin>
     </plugins>
   </reporting>
 
