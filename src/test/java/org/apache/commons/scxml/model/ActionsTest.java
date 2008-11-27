@@ -31,7 +31,7 @@ import org.apache.commons.scxml.env.jsp.ELEvaluator;
  * Unit tests {@link org.apache.commons.scxml.model.Assign}.
  * Unit tests {@link org.apache.commons.scxml.model.Cancel}.
  * Unit tests {@link org.apache.commons.scxml.model.Else}.
- * Unit tests {@link org.apache.commons.scxml.model.Elseif}.
+ * Unit tests {@link org.apache.commons.scxml.model.ElseIf}.
  * Unit tests {@link org.apache.commons.scxml.model.Exit}.
  * Unit tests {@link org.apache.commons.scxml.model.If}.
  * Unit tests {@link org.apache.commons.scxml.model.Log}.

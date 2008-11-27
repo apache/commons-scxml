@@ -74,7 +74,7 @@ public class StateTest extends TestCase {
         
         state.addTransition(transition);
         
-        List events = (List)state.getTransitionsList("event");
+        List events = state.getTransitionsList("event");
         
         assertEquals(1, events.size());
         assertEquals("event", ((Transition)events.get(0)).getEvent());
@@ -90,7 +90,7 @@ public class StateTest extends TestCase {
         state.addTransition(transition1);
         state.addTransition(transition2);
         
-        List events = (List)state.getTransitionsList("event");
+        List events = state.getTransitionsList("event");
         
         assertEquals(2, events.size());
     }

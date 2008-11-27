@@ -30,7 +30,7 @@ import org.apache.commons.scxml.model.Send;
 import org.apache.commons.scxml.model.State;
 import org.apache.commons.scxml.model.Transition;
 /**
- * Unit tests {@link org.apache.commons.scxml.SCXMLDigester}.
+ * Unit tests {@link org.apache.commons.scxml.io.SCXMLDigester}.
  */
 public class SCXMLDigesterTest extends TestCase {
     /**

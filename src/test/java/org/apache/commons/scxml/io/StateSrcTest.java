@@ -31,7 +31,7 @@ import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.State;
 import org.xml.sax.SAXException;
 /**
- * Unit tests {@link org.apache.commons.scxml.SCXMLDigester}
+ * Unit tests {@link org.apache.commons.scxml.io.SCXMLDigester}
  * Test white box nature of <state> element "src" attribute.
  */
 public class StateSrcTest extends TestCase {

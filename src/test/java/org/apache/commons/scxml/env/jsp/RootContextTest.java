@@ -29,7 +29,7 @@ import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
 
 /**
- * Unit tests {@link org.apache.commons.scxml.env.RootContext}.
+ * Unit tests {@link org.apache.commons.scxml.env.jsp.RootContext}.
  */
 public class RootContextTest extends TestCase {
     /**

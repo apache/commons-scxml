@@ -119,7 +119,7 @@ public abstract class Action implements NamespacePrefixesHolder,
     }
 
     /**
-     * Return the {@link TransitionTarget} whose {@link Context} this action
+     * Return the {@link TransitionTarget} whose {@link org.apache.commons.scxml.Context} this action
      * executes in.
      *
      * @return The parent {@link TransitionTarget}

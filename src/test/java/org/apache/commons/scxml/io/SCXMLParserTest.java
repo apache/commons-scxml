@@ -27,7 +27,7 @@ import org.apache.commons.scxml.SCXMLTestHelper;
 import org.apache.commons.scxml.model.Final;
 import org.apache.commons.scxml.model.SCXML;
 /**
- * Unit tests {@link org.apache.commons.scxml.SCXMLParser}.
+ * Unit tests {@link org.apache.commons.scxml.io.SCXMLParser}.
  */
 public class SCXMLParserTest extends TestCase {
     /**
