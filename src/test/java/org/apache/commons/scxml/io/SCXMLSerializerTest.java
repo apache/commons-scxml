@@ -100,7 +100,7 @@ public class SCXMLSerializerTest extends TestCase {
         StringBuffer returnValue = new StringBuffer(); 
         SCXMLSerializer.serializeSend(returnValue, send, " "); 
         
-        assertEquals(assertValue.toString(), returnValue.toString());
+        assertEquals(assertValue, returnValue.toString());
     }
 
     public void testSerializeSendEmptyAttributes() {
@@ -113,7 +113,7 @@ public class SCXMLSerializerTest extends TestCase {
         StringBuffer returnValue = new StringBuffer();
         SCXMLSerializer.serializeSend(returnValue, send, " ");
 
-        assertEquals(assertValue.toString(), returnValue.toString());
+        assertEquals(assertValue, returnValue.toString());
     }
 
     public void testSerializeActionsListNull() {
