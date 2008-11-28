@@ -82,7 +82,6 @@ public class JSEvaluator implements Evaluator {
     /**
      * Creates a child context.
      *
-     * @param  context FSM parent context.
      * @return Returns a new child JSContext.
      *
      */

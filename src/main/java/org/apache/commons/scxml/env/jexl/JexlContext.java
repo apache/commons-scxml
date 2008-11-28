@@ -66,7 +66,7 @@ public class JexlContext extends SimpleContext
      * @param vars The new variables map.
      *
      * @see org.apache.commons.jexl.JexlContext#setVars(Map)
-     * @see org.apache.commons.scxml.env.SimpleContext#setVars(Map<String,Object>)
+     * @see org.apache.commons.scxml.env.SimpleContext#setVars(Map)
      */
     @Override
     @SuppressWarnings("unchecked")

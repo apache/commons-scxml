@@ -18,7 +18,7 @@ package org.apache.commons.scxml.model;
 
 /**
  * Marker interface to flag elements of the SCXML object model whose progress
- * can be observed using the {@link NotificationRegistry}. These include
+ * can be observed using the {@link org.apache.commons.scxml.NotificationRegistry}. These include
  * individual {@link TransitionTarget}s, {@link Transition}s or entire state
  * machines, {@link SCXML}.
  *
