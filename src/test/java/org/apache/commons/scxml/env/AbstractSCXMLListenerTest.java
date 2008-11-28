@@ -27,7 +27,7 @@ import org.apache.commons.scxml.model.Transition;
 import org.apache.commons.scxml.model.TransitionTarget;
 
 /**
- * Unit tests {@link org.apache.commons.scxml.AbstractSCXMLListener}.
+ * Unit tests {@link org.apache.commons.scxml.env.AbstractSCXMLListener}.
  */
 public class AbstractSCXMLListenerTest extends TestCase {
     /**
