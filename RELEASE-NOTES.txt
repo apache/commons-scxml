@@ -17,51 +17,27 @@
 $Id$
 
                          Commons SCXML Package
-                             Version 0.9
+                         Version 0.10-SNAPSHOT
                             Release Notes
 
 INTRODUCTION:
 
-Commons SCXML 0.9 is a minor release containing a few enhancements and
+Commons SCXML 0.10 is a minor release containing a few enhancements and
 bug fixes. Changes to SCXML documents may be necessary before upgrading
-from 0.8, see detailed changes list below. See about section at the end
+from 0.9, see detailed changes list below. See about section at the end
 for general information on Commons SCXML.
 
 BREAKING CHANGES:
 
- o The "event" attribute of the <send> element is now correctly evaluated
-   as an expression, rather than a String.
-
- o In line with the rest of the logs used in the library, the default
-   SCXMLSemantics implementation now uses SCXMLSemantics.class to derive
-   its log name, instead of the previous logical name "scxml.app.log".
+ o
 
 NEW FEATURES:
 
- o [SCXML-74] - <data> should support use of id attribute
- o [SCXML-75] - TriggerEvent should be Serializable
- o [SCXML-78] - SCXMLListeners are not be processed in a defined order
- o [SCXML-80] - SCXMLParser should throw exception if it fails to resolve the
-                src attribute of the <state> element
- o [SCXML-81] - <parallel> does not support <onentry> and <onexit>
- o [SCXML-82] - <transition> element as an child of <parallel> ignored
- o [SCXML-84] - Add SCXML on Android usecase to website
- o [SCXML-86] - Support initial attribute of <state>
+ o
 
 BUG FIXES:
 
- o [SCXML-73] - <send> delay attribute should be a value expression
- o [SCXML-76] - Serialization of expressions may produce invalid XML
- o [SCXML-77] - <param> semantics for using name attribute by itself are
-                not correct
- o [SCXML-79] - SCXMLSerializer produces nested states with a parentid
-                attribute
- o [SCXML-83] - Errors on serialization of <send>
- o [SCXML-87] - Delayed events not passing payload
- o [SCXML-88] - SCXMLSerializer does not serialize custom namespace
-                declarations
- o [SCXML-89] - <assign> does not remove all previous children at location
- o [SCXML-90] - event attribute of <send> is not evaluated as an expression
+ o
 
 OTHER COMMENTS:
 
