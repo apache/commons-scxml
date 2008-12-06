@@ -334,9 +334,9 @@ public class SCXMLTestHelper {
                 + " in use is not serializable");
             return scxml;
         } catch(IOException ex) {
-            ex.printStackTrace();
+            throw new RuntimeException(ex);
         } catch(ClassNotFoundException ex) {
-            ex.printStackTrace();
+            throw new RuntimeException(ex);
         }
         return roundtrip;
     }
@@ -366,9 +366,9 @@ public class SCXMLTestHelper {
                 + " in use is not serializable");
             return exec;
         } catch(IOException ex) {
-            ex.printStackTrace();
+            throw new RuntimeException(ex);
         } catch(ClassNotFoundException ex) {
-            ex.printStackTrace();
+            throw new RuntimeException(ex);
         }
         return roundtrip;
     }
