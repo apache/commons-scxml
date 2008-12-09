@@ -56,6 +56,13 @@ public class SCXMLTestHelper {
         SERIALIZATION_DIR + "/scxml";
     public static final String SERIALIZATION_FILE_SUFFIX = ".ser";
 
+    // Generate a unique sequence number for the serialization files
+    private static int sequence=0;
+
+    private synchronized static String getSequenceNumber(){
+        return Integer.toString(++sequence);
+    }
+
     public static SCXML parse(final URL url) {
         return parse(url, null, null);
     }
@@ -284,7 +291,7 @@ public class SCXMLTestHelper {
             return scxml;
         }
         String filename = SERIALIZATION_FILE_PREFIX
-            + System.currentTimeMillis() + SERIALIZATION_FILE_SUFFIX;
+            + getSequenceNumber() + SERIALIZATION_FILE_SUFFIX;
         SCXML roundtrip = null;
         try {
             ObjectOutputStream out =
@@ -315,7 +322,7 @@ public class SCXMLTestHelper {
             return exec;
         }
         String filename = SERIALIZATION_FILE_PREFIX
-            + System.currentTimeMillis() + SERIALIZATION_FILE_SUFFIX;
+            + getSequenceNumber() + SERIALIZATION_FILE_SUFFIX;
         SCXMLExecutor roundtrip = null;
         try {
             ObjectOutputStream out =
