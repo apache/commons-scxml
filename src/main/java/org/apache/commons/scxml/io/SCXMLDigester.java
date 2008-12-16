@@ -250,8 +250,8 @@ public final class SCXMLDigester {
 
         if (scxml != null) {
             ModelUpdater.updateSCXML(scxml);
+            scxml.setLegacy(true);
         }
-        scxml.setLegacy(true);
 
         return scxml;
 
@@ -312,6 +312,7 @@ public final class SCXMLDigester {
 
         if (scxml != null) {
             ModelUpdater.updateSCXML(scxml);
+            scxml.setLegacy(true);
         }
 
         return scxml;
@@ -367,6 +368,7 @@ public final class SCXMLDigester {
 
         if (scxml != null) {
             ModelUpdater.updateSCXML(scxml);
+            scxml.setLegacy(true);
         }
 
         return scxml;
