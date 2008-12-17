@@ -46,92 +46,88 @@
     </state>
 
     <!-- Finally, try an orthogonal state -->
-    <state id="thirty">
+    <parallel id="thirty">
 
-        <parallel id="thirties_parallel">
+        <!-- The first (of three) regions in thirties_parallel -->
+        <state id="thirty_one">
 
-            <!-- The first (of three) regions in thirties_parallel -->
-            <state id="thirty_one">
+            <initial>
+                <transition target="thirty_one_child_one"/>
+            </initial>
+            <onentry>
+                <log expr="'Entering thirty_one'" />
+            </onentry>
+            <transition event="thirty_one.done" target="forty"/>
 
-                <initial>
-                    <transition target="thirty_one_child_one"/>
-                </initial>
-                <onentry>
-                    <log expr="'Entering thirty_one'" />
-                </onentry>
-                <transition event="thirty_one.done" target="forty"/>
-
-                <state id="thirty_one_child_one">
-                    <onexit>
-                        <log expr="'Exiting thirty_one_child_one'" />
-                    </onexit>
-                    <transition event="thirty_one_child_one.done"
-                                target="thirty_one_child_two"/>
-                </state>
-
-                <state id="thirty_one_child_two">
-                    <onexit>
-                        <log expr="'Exiting thirty_one_child_two'" />
-                    </onexit>
-                </state>
-
+            <state id="thirty_one_child_one">
+                <onexit>
+                    <log expr="'Exiting thirty_one_child_one'" />
+                </onexit>
+                <transition event="thirty_one_child_one.done"
+                            target="thirty_one_child_two"/>
             </state>
 
-            <!-- The second (of three) regions in thirties_parallel -->
-            <state id="thirty_two">
-
-                <initial>
-                    <transition target="thirty_two_child_one"/>
-                </initial>
-                <onentry>
-                    <log expr="'Entering thirty_two'" />
-                </onentry>
-
-                <state id="thirty_two_child_one">
-                    <onexit>
-                        <log expr="'Exiting thirty_two_child_one'" />
-                    </onexit>
-                    <transition event="thirty_two_child_one.done"
-                                target="thirty_two_child_two"/>
-                </state>
-
-                <state id="thirty_two_child_two">
-                    <onexit>
-                        <log expr="'Exiting thirty_two_child_two'" />
-                    </onexit>
-                </state>
-
+            <state id="thirty_one_child_two">
+                <onexit>
+                    <log expr="'Exiting thirty_one_child_two'" />
+                </onexit>
             </state>
 
-            <!-- The third (of three) regions in thirties_parallel -->
-            <state id="thirty_three">
+        </state>
 
-                <initial>
-                    <transition target="thirty_three_child_one"/>
-                </initial>
-                <onentry>
-                    <log expr="'Entering thirty_three'" />
-                </onentry>
+        <!-- The second (of three) regions in thirties_parallel -->
+        <state id="thirty_two">
 
-                <state id="thirty_three_child_one">
-                    <onexit>
-                        <log expr="'Exiting thirty_three_child_one'" />
-                    </onexit>
-                    <transition event="thirty_three_child_one.done"
-                                target="thirty_three_child_two"/>
-                </state>
+            <initial>
+                <transition target="thirty_two_child_one"/>
+            </initial>
+            <onentry>
+                <log expr="'Entering thirty_two'" />
+            </onentry>
 
-                <state id="thirty_three_child_two">
-                    <onexit>
-                        <log expr="'Exiting thirty_three_child_two'" />
-                    </onexit>
-                </state>
-
+            <state id="thirty_two_child_one">
+                <onexit>
+                    <log expr="'Exiting thirty_two_child_one'" />
+                </onexit>
+                <transition event="thirty_two_child_one.done"
+                            target="thirty_two_child_two"/>
             </state>
 
-        </parallel>
+            <state id="thirty_two_child_two">
+                <onexit>
+                    <log expr="'Exiting thirty_two_child_two'" />
+                </onexit>
+            </state>
 
-    </state>
+        </state>
+
+        <!-- The third (of three) regions in thirties_parallel -->
+        <state id="thirty_three">
+
+            <initial>
+                <transition target="thirty_three_child_one"/>
+            </initial>
+            <onentry>
+                <log expr="'Entering thirty_three'" />
+            </onentry>
+
+            <state id="thirty_three_child_one">
+                <onexit>
+                    <log expr="'Exiting thirty_three_child_one'" />
+                </onexit>
+                <transition event="thirty_three_child_one.done"
+                            target="thirty_three_child_two"/>
+            </state>
+
+            <state id="thirty_three_child_two">
+                <onexit>
+                    <log expr="'Exiting thirty_three_child_two'" />
+                </onexit>
+            </state>
+
+        </state>
+
+    </parallel>
 
     <!-- Declare victory -->
     <state id="forty" final="true" />

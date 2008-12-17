@@ -15,54 +15,50 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 -->
-<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" initialstate="main">
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" initialstate="para">
 
 <!-- 
   Testing dispute resolution in regions
   {s11,s2111,s212} -event1-> {s12,s2112,s212}
 -->
 
-    <state id="main">
-        <parallel id="para"> <!-- Outer parallel -->
+    <parallel id="para"> <!-- Outer parallel -->
 
-            <state id="s1">
-                <initial>
-                    <transition target="s11"/>
-                </initial>
-                <state id="s11">
-                    <transition event="event1" target="s12"/>
-                    <transition event="event1" target="s13"/>
-                </state>
-                <state id="s12"/>
-                <state id="s13"/>
+        <state id="s1">
+            <initial>
+                <transition target="s11"/>
+            </initial>
+            <state id="s11">
+                <transition event="event1" target="s12"/>
+                <transition event="event1" target="s13"/>
             </state>
+            <state id="s12"/>
+            <state id="s13"/>
+        </state>
 
-            <state id="s2">
-                <initial>
-                    <transition target="s21"/>
-                </initial>
-                <state id="s21">
+        <state id="s2">
+            <initial>
+                <transition target="para1"/>
+            </initial>
 
-                    <parallel id="para1"> <!-- Inner parallel -->
-                        <state id="s211">
-                            <initial>
-                                <transition target="s2111"/>
-                            </initial>
-                            <state id="s2111">
-                                <transition event="event1" target="s2112"/>
-                                <transition event="event1" target="s2113"/>
-                            </state>
-                            <state id="s2112"/>
-                            <state id="s2113"/>
-                        </state>
-                        <state id="s212"/>                                          
-                    </parallel>
-
+            <parallel id="para1"> <!-- Inner parallel -->
+                <state id="s211">
+                    <initial>
+                        <transition target="s2111"/>
+                    </initial>
+                    <state id="s2111">
+                        <transition event="event1" target="s2112"/>
+                        <transition event="event1" target="s2113"/>
+                    </state>
+                    <state id="s2112"/>
+                    <state id="s2113"/>
                 </state>
-                <state id="s22"/>
-            </state>
+                <state id="s212"/>                                          
+            </parallel>
 
-        </parallel>
-    </state>
+            <state id="s22"/>
+        </state>
+
+    </parallel>
 
 </scxml>

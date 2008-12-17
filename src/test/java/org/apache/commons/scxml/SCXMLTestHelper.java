@@ -125,20 +125,20 @@ public class SCXMLTestHelper {
     }
 
     public static SCXMLExecutor getExecutor(final URL url) {
-        SCXML scxml = digest(url);
+        SCXML scxml = parse(url);
         Evaluator evaluator = new JexlEvaluator();
         return getExecutor(evaluator, scxml);
     }
 
     public static SCXMLExecutor getExecutor(final URL url,
             final Evaluator evaluator) {
-        SCXML scxml = digest(url);
+        SCXML scxml = parse(url);
         return getExecutor(evaluator, scxml);
     }
 
     public static SCXMLExecutor getExecutor(final URL url,
             final ErrorHandler errHandler) {
-        SCXML scxml = digest(url, errHandler);
+        SCXML scxml = parse(url, errHandler);
         Evaluator evaluator = new JexlEvaluator();
         return getExecutor(evaluator, scxml);
     }
@@ -166,7 +166,7 @@ public class SCXMLTestHelper {
 
     public static SCXMLExecutor getExecutor(final URL url, final Context ctx,
             final Evaluator evaluator) {
-        SCXML scxml = digest(url);
+        SCXML scxml = parse(url);
         EventDispatcher ed = new SimpleDispatcher();
         Tracer trc = new Tracer();
         return getExecutor(ctx, evaluator, scxml, ed, trc);

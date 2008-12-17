@@ -16,11 +16,12 @@
  * limitations under the License.
 -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
-      version="1.0"
-      initialstate="state1">
+       xmlns:cs="http://commons.apache.org/scxml"
+       version="1.0"
+       initialstate="state1">
      <state id="state1">
            <onentry>
-               <var name="switch" expr="4" />
+               <cs:var name="switch" expr="4" />
            </onentry>
            <!-- We'll trigger 'foo.bar.baz' event,
                 and therefore, must end up in state4 -->

@@ -21,6 +21,7 @@
      Also serves as testing the underlying functionality of the
      underlying parsing technology (here, Digester 1.8) -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
+       xmlns:cs="http://commons.apache.org/scxml"
        version="1.0"
        initialstate="ten">
 
@@ -61,7 +62,7 @@
         </datamodel>
 
         <onentry>
-            <var xmlns:pre1="scheme://namespace.test.domain/1"
+            <cs:var xmlns:pre1="scheme://namespace.test.domain/1"
                  xmlns:pre2="scheme://namespace.test.domain/2"
                  xmlns:pre3="scheme://namespace.test.domain/3"
                  name="tentest"
