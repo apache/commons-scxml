@@ -198,6 +198,25 @@ public class JSEvaluator implements Evaluator {
     }
 
     /**
+     * Executes the script using a new Javascript engine obtained from
+     * factory instantiated in the constructor. The engine is supplied with
+     * a new JSBindings that includes the SCXML Context and
+     * <code>Data()</code> functions are replaced with an equivalent internal
+     * Javascript function.
+     *
+     * @param context    SCXML context.
+     * @param script Script to execute.
+     *
+     * @return Result of script execution or <code>null</code>.
+     *
+     * @throws SCXMLExpressionException Thrown if the script was invalid.
+     */
+    public Object evalScript(Context ctx, String script)
+    throws SCXMLExpressionException {
+        return eval(ctx, script);
+    }
+
+    /**
      * Implementation of Javascript function equivalent for the Data() function when
      * used in an SCXML <code>expr</code> attribute.
      * <p>

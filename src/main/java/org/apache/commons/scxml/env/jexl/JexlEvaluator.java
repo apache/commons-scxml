@@ -17,14 +17,16 @@
 package org.apache.commons.scxml.env.jexl;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.AbstractMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.apache.commons.jexl.Expression;
 import org.apache.commons.jexl.ExpressionFactory;
+import org.apache.commons.jexl.Script;
+import org.apache.commons.jexl.ScriptFactory;
 import org.apache.commons.scxml.Context;
 import org.apache.commons.scxml.Evaluator;
 import org.apache.commons.scxml.SCXMLExpressionException;
@@ -147,6 +149,34 @@ public class JexlEvaluator implements Evaluator, Serializable {
     }
 
     /**
+     * @see Evaluator#evalScript(Context, String)
+     */
+    public Object evalScript(Context ctx, String script)
+    throws SCXMLExpressionException {
+        if (script == null) {
+            return null;
+        }
+        JexlContext jexlCtx = null;
+        if (ctx instanceof JexlContext) {
+            jexlCtx = (JexlContext) ctx;
+        } else {
+            throw new SCXMLExpressionException(ERR_CTX_TYPE);
+        }
+        Script jexlScript = null;
+        try {
+            String scriptStr = inFct.matcher(script).
+                replaceAll("_builtin.isMember(_ALL_STATES, ");
+            scriptStr = dataFct.matcher(scriptStr).
+                replaceAll("_builtin.data(_ALL_NAMESPACES, ");
+            jexlScript = ScriptFactory.createScript(scriptStr);
+            return jexlScript.execute(getEffectiveContext(jexlCtx));
+        } catch (Exception e) {
+            throw new SCXMLExpressionException("evalScript('" + script + "'):"
+                + e.getMessage(), e);
+        }
+    }
+
+    /**
      * Create a new child context.
      *
      * @param parent parent context
@@ -167,19 +197,68 @@ public class JexlEvaluator implements Evaluator, Serializable {
      *         document root.
      */
     private JexlContext getEffectiveContext(final JexlContext nodeCtx) {
-        List<JexlContext> contexts = new ArrayList<JexlContext>();
-        // trace path to root
-        JexlContext currentCtx = nodeCtx;
-        while (currentCtx != null) {
-            contexts.add(currentCtx);
-            currentCtx = (JexlContext) currentCtx.getParent();
+        return new JexlContext(new EffectiveContextMap(nodeCtx));
+    }
+
+    /**
+     * The map that will back the effective context for the
+     * {@link JexlEvaluator}. The effective context enables the chaining of
+     * {@link Context}s all the way from the current state node to the root.
+     *
+     */
+    private static final class EffectiveContextMap extends AbstractMap<String, Object> {
+
+        /** The {@link Context} for the current state. */
+        final Context leaf;
+
+        /** Constructor. */
+        public EffectiveContextMap(JexlContext ctx) {
+            super();
+            this.leaf = ctx;
         }
-        Map<String, Object> vars = new HashMap<String, Object>();
-        // summation of the contexts, parent first, child wins
-        for (int i = contexts.size() - 1; i > -1; i--) {
-            vars.putAll(contexts.get(i).getVars());
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Set<Map.Entry<String, Object>> entrySet() {
+            Set<Map.Entry<String, Object>> entrySet = new HashSet<Map.Entry<String, Object>>();
+            Context current = leaf;
+            while (current != null) {
+                entrySet.addAll(current.getVars().entrySet());
+                current = current.getParent();
+            }
+            return entrySet;
         }
-        return new JexlContext(vars);
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Object put(String key, Object value) {
+        	Object old = leaf.get(key);
+            if (leaf.has(key)) {
+                leaf.set(key, value);
+            } else {
+                leaf.setLocal(key, value);
+            }
+            return old;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Object get(Object key) {
+            Context current = leaf;
+            while (current != null) {
+                if (current.getVars().containsKey(key)) {
+                    return current.getVars().get(key);
+                }
+                current = current.getParent();
+            }
+            return null;
+        }
     }
 
 }

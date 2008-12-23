@@ -37,8 +37,11 @@ import org.apache.commons.scxml.SCXMLExpressionException;
 import org.w3c.dom.Node;
 
 /**
- * Evaluator implementation enabling use of EL expressions in
- * SCXML documents.
+ * <p>Evaluator implementation enabling use of EL expressions in
+ * SCXML documents.</p>
+ *
+ * <p>Does not support the &lt;script&gt; module, throws
+ * {@link UnsupportedOperationException} if attempted.</p>
  *
  */
 public class ELEvaluator implements Evaluator, Serializable {
@@ -177,6 +180,14 @@ public class ELEvaluator implements Evaluator, Serializable {
             throw new SCXMLExpressionException("eval('" + expr + "'):"
                 + e.getMessage(), e);
         }
+    }
+
+    /**
+     * @see Evaluator#evalScript(Context, String)
+     */
+    public Object evalScript(Context ctx, String script)
+    throws SCXMLExpressionException {
+        throw new UnsupportedOperationException("Scripts are not supported by the EL evaluators");
     }
 
     /**

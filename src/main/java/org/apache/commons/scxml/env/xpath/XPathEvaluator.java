@@ -39,8 +39,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 /**
- * An {@link Evaluator} implementation for XPath environments.
+ * <p>An {@link Evaluator} implementation for XPath environments.</p>
  *
+ * <p>Does not support the &lt;script&gt; module, throws
+ * {@link UnsupportedOperationException} if attempted.</p>
  */
 public class XPathEvaluator implements Evaluator, Serializable {
 
@@ -120,6 +122,14 @@ public class XPathEvaluator implements Evaluator, Serializable {
         } catch (XPathExpressionException xee) {
             throw new SCXMLExpressionException(xee.getMessage(), xee);
         }
+    }
+
+    /**
+     * @see Evaluator#evalScript(Context, String)
+     */
+    public Object evalScript(Context ctx, String script)
+    throws SCXMLExpressionException {
+        throw new UnsupportedOperationException("Scripts are not supported by the XPathEvaluator");
     }
 
     /**

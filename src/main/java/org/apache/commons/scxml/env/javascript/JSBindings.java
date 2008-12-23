@@ -193,14 +193,27 @@ public class JSBindings implements Bindings {
     }
 
     /**
-     * Delegates to the wrapped Bindings <code>put</code> method i.e. does
-     * not store variables in the SCXML context. Not entirely sure what it
-     * should return if shadowing a variable name in the SCXML context though.
+     * The following delegation model is used to set values:
+     * <ol>
+     *   <li>Delegates to {@link Context#set(String,Object)} if the
+     *       {@link Context} contains the key (name), else</li>
+     *   <li>Delegates to the wrapped {@link Bindings#put(String, Object)}
+     *       if the {@link Bindings} contains the key (name), else</li>
+     *   <li>Delegates to {@link Context#setLocal(String, Object)}</li>
+     * </ol>
      *
      */
     @Override
     public Object put(String name, Object value) {
+        Object old = context.get(name);
+        if (context.has(name)) {
+            context.set(name, value);
+        } else if (bindings.containsKey(name)) {
             return bindings.put(name,value);
+        } else {
+            context.setLocal(name, value);
+        }
+        return old;
     }
 
     /**

@@ -40,6 +40,7 @@ import org.apache.commons.scxml.SCXMLHelper;
 import org.apache.commons.scxml.env.URLResolver;
 import org.apache.commons.scxml.model.Action;
 import org.apache.commons.scxml.model.Assign;
+import org.apache.commons.scxml.model.BodyContainer;
 import org.apache.commons.scxml.model.Cancel;
 import org.apache.commons.scxml.model.CustomAction;
 import org.apache.commons.scxml.model.Data;
@@ -65,6 +66,7 @@ import org.apache.commons.scxml.model.Parallel;
 import org.apache.commons.scxml.model.Param;
 import org.apache.commons.scxml.model.PathResolverHolder;
 import org.apache.commons.scxml.model.SCXML;
+import org.apache.commons.scxml.model.Script;
 import org.apache.commons.scxml.model.Send;
 import org.apache.commons.scxml.model.State;
 import org.apache.commons.scxml.model.Transition;
@@ -622,6 +624,9 @@ public final class SCXMLParser {
     /** &lt;log&gt; child element. */
     private static final String XPF_LOG = "/log";
 
+    /** &lt;script&gt; child element. */
+    private static final String XPF_SCRIPT = "/script";
+
     //// Other constants
     // Error messages
     /**
@@ -1073,6 +1078,9 @@ public final class SCXMLParser {
         addSendRulesTuple(xp + XPF_SND, scxmlRules);
         addActionRulesTuple(xp + XPF_CAN, scxmlRules, Cancel.class);
         addActionRulesTuple(xp + XPF_LOG, scxmlRules, Log.class);
+        // Script
+        addActionRulesTuple(xp + XPF_SCRIPT, scxmlRules, Script.class);
+        scxmlRules.add(xp + XPF_SCRIPT, new SetBodyRule());
 
         // Actions in Commons SCXML namespace
         scxmlRules.setNamespaceURI(NAMESPACE_COMMONS_SCXML);
@@ -1713,5 +1721,22 @@ public final class SCXMLParser {
             log.warn(sb.toString());
         }
     }
+
+    /**
+     * Custom digestion rule for saving the body content in the object model.
+     */
+    private static class SetBodyRule extends Rule {
+
+        /**
+         * @see Rule#body(String, String, String)
+         */
+        @Override
+        public final void body(final String namespace, final String name,
+                final String body) {
+            BodyContainer bc = (BodyContainer) getDigester().peek();
+            bc.setBody(body);
+        }
+    }
+
 }
 
