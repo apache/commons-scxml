@@ -360,7 +360,7 @@ public class SCXMLSerializerTest extends TestCase {
         State s11 = new State();
         s11.setId("S11");
 
-        s1.addChild((TransitionTarget)s11);
+        s1.addChild(s11);
 
         State s2 = new State();
         s2.setId("S2");
@@ -368,10 +368,10 @@ public class SCXMLSerializerTest extends TestCase {
         State s21 = new State();
         s21.setId("S21");
 
-        s2.addChild((TransitionTarget)s21);
+        s2.addChild(s21);
 
-        par.addChild((TransitionTarget)s1);
-        par.addChild((TransitionTarget)s2);
+        par.addChild(s1);
+        par.addChild(s2);
 
         scxml.addChild(par);
 

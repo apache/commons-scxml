@@ -133,7 +133,7 @@ public class StateTest extends TestCase {
         
         // redundant cast to remove deprecation warning
         // could be removed in v1.0
-        state.addChild((TransitionTarget) state1);
+        state.addChild(state1);
         
         assertFalse(state.isSimple());
     }
@@ -145,7 +145,7 @@ public class StateTest extends TestCase {
     public void testIsCompositeParallel() {
         State child = new State();
         
-        state.addChild((TransitionTarget) child);
+        state.addChild(child);
         
         assertTrue(state.isComposite());
     }
@@ -155,7 +155,7 @@ public class StateTest extends TestCase {
         
         // redundant cast to remove deprecation warning
         // could be removed in v1.0
-        state.addChild((TransitionTarget) state1);
+        state.addChild(state1);
         
         assertTrue(state.isComposite());
     }

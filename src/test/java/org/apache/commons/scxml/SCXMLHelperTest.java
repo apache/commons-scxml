@@ -147,8 +147,8 @@ public class SCXMLHelperTest extends TestCase {
         State state2 = new State();
         state2.setId("2");
         
-        parent.addChild((TransitionTarget) state1);
-        parent.addChild((TransitionTarget) state2);
+        parent.addChild(state1);
+        parent.addChild(state2);
         
         parallel.setParent(parent);
         
