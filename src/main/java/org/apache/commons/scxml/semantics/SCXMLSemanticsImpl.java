@@ -150,7 +150,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
             //set of ALL entered states (even if initialState is a jump-over)
             Set<TransitionTarget> onEntry = SCXMLHelper.getAncestorClosure(targets, null);
             // sort onEntry according state hierarchy
-            TransitionTarget[] oen = (TransitionTarget[]) onEntry.toArray(TT_ARR0);
+            TransitionTarget[] oen = onEntry.toArray(TT_ARR0);
             onEntry.clear();
             Arrays.sort(oen, getTTComparator());
             // we need to impose reverse order for the onEntry list
@@ -426,7 +426,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
         // only if there are multiple enabled transitions
         if (step.getTransitList().size() > 1) {
             // global transition precedence check
-            Transition[] trans = (Transition[]) step.getTransitList().toArray(TR_ARR0);
+            Transition[] trans = step.getTransitList().toArray(TR_ARR0);
             // non-determinism candidates
             Set<Transition> nonDeterm = new LinkedHashSet<Transition>();
             for (int i = 0; i < trans.length; i++) {
@@ -676,9 +676,9 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
             throw new ModelException("Illegal state machine configuration!");
         }
         // sort onEntry and onExit according state hierarchy
-        TransitionTarget[] oex = (TransitionTarget[]) exitedStates.toArray(TT_ARR0);
+        TransitionTarget[] oex = exitedStates.toArray(TT_ARR0);
         exitedStates.clear();
-        TransitionTarget[] oen = (TransitionTarget[]) entered.toArray(TT_ARR0);
+        TransitionTarget[] oen = entered.toArray(TT_ARR0);
         entered.clear();
         Arrays.sort(oex, getTTComparator());
         Arrays.sort(oen, getTTComparator());

@@ -59,8 +59,7 @@ final class ModelUpdater {
        String initial = scxml.getInitial();
        //we have to use getTargets() here since the initialTarget can be
        //an indirect descendant
-       TransitionTarget initialTarget = (TransitionTarget) scxml.getTargets().
-           get(initial);
+       TransitionTarget initialTarget = scxml.getTargets().get(initial);
        if (initialTarget == null) {
            // Where do we, where do we go?
            logAndThrowModelError(ERR_SCXML_NO_INIT, new Object[] {

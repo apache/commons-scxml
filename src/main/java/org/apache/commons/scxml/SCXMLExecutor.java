@@ -487,8 +487,7 @@ public class SCXMLExecutor implements Serializable {
         currentStatus = step.getAfterStatus();
         scInstance.getRootContext().setLocal("_ALL_STATES",
             SCXMLHelper.getAncestorClosure(currentStatus.getStates(), null));
-        setEventData((TriggerEvent[]) currentStatus.getEvents().
-            toArray(new TriggerEvent[0]));
+        setEventData(currentStatus.getEvents().toArray(new TriggerEvent[0]));
     }
 
     /**
