@@ -48,34 +48,6 @@ public class Parallel extends TransitionTarget {
     }
 
     /**
-     * Get the set of parallel state machines contained in this Parallel.
-     *
-     * @return Returns the state.
-     *
-     * @deprecated Use getChildren() instead.
-     */
-    @Deprecated
-    public final Set<TransitionTarget> getStates() {
-        return children;
-    }
-
-    /**
-     * Add a State to the list of parallel state machines contained
-     * in this Parallel.
-     *
-     * @param state The state to add.
-     *
-     * @deprecated Use addChild(TransitionTarget) instead.
-     */
-    @Deprecated
-    public final void addState(final State state) {
-        if (state != null) {
-            this.children.add(state);
-            state.setParent(this);
-        }
-    }
-
-    /**
      * Get the set of child transition targets (may be empty).
      *
      * @return Set Returns the children.

@@ -96,34 +96,6 @@ public class SCXML implements Serializable, Observable,
     }
 
     /**
-     * Get the initial State.
-     *
-     * @return State Returns the initialstate.
-     *
-     * @deprecated Use getInitialTarget() instead. Returns <code>null</code>
-     *             if the initial target is a Parallel.
-     */
-    @Deprecated
-    public final State getInitialState() {
-        if (initialTarget != null && initialTarget instanceof State) {
-            return (State) initialTarget;
-        }
-        return null;
-    }
-
-    /**
-     * Set the initial State.
-     *
-     * @param initialState The initialstate to set.
-     *
-     * @deprecated Use setInitialTarget(TransitionTarget) instead.
-     */
-    @Deprecated
-    public final void setInitialState(final State initialState) {
-        this.initialTarget = initialState;
-    }
-
-    /**
      * Get the initial TransitionTarget.
      *
      * @return Returns the initial target for this state machine.
@@ -161,30 +133,6 @@ public class SCXML implements Serializable, Observable,
      */
     public final void setDatamodel(final Datamodel datamodel) {
         this.datamodel = datamodel;
-    }
-
-    /**
-     * Get the children states.
-     *
-     * @return Map Returns map of the child states.
-     *
-     * @deprecated Use getChildren() instead.
-     */
-    @Deprecated
-    public final Map<String, TransitionTarget> getStates() {
-        return children;
-    }
-
-    /**
-     * Add a child state.
-     *
-     * @param state The state to be added to the states Map.
-     *
-     * @deprecated Use addChild(TransitionTarget) instead.
-     */
-    @Deprecated
-    public final void addState(final State state) {
-        children.put(state.getId(), state);
     }
 
     /**
@@ -287,30 +235,6 @@ public class SCXML implements Serializable, Observable,
      */
     public final void setNamespaces(final Map<String, String> namespaces) {
         this.namespaces = namespaces;
-    }
-
-    /**
-     * Get the ID of the initial state.
-     *
-     * @return String Returns the initial state ID (used by XML Digester only).
-     * @see #getInitialTarget()
-     * @deprecated Use {@link #getInitial()} instead.
-     */
-    @Deprecated
-    public final String getInitialstate() {
-        return initial;
-    }
-
-    /**
-     * Set the ID of the initial state.
-     *
-     * @param initialstate The initial state ID (used by XML Digester only).
-     * @see #setInitialTarget(TransitionTarget)
-     * @deprecated Use {@link #setInitial(String)} instead.
-     */
-    @Deprecated
-    public final void setInitialstate(final String initialstate) {
-        this.initial = initialstate;
     }
 
     /**

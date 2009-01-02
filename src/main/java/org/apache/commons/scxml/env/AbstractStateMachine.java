@@ -206,17 +206,6 @@ public abstract class AbstractStateMachine {
     }
 
     /**
-     * Get the SCXML object representing this state machine.
-     *
-     * @return Returns the stateMachine.
-     * @deprecated Returns null, use getEngine().getStateMachine() instead
-     */
-    @Deprecated
-    public static SCXML getStateMachine() {
-        return null;
-    }
-
-    /**
      * Get the SCXML engine driving the &quot;lifecycle&quot; of the
      * instances of this class.
      *

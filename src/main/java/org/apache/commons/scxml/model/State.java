@@ -67,43 +67,10 @@ public class State extends TransitionTarget {
     private Initial initial;
 
     /**
-     * Applies to composite states only. If one of its final children is
-     * active, its parent is marked done. This property is reset upon
-     * re-entry.
-     *
-     * @deprecated Will be removed in v1.0
-     */
-    @Deprecated
-    private boolean done = false;
-
-    /**
      * Constructor.
      */
     public State() {
         this.children = new LinkedHashMap<String, TransitionTarget>();
-    }
-
-    /**
-     * Is this state a &quot;final&quot; state.
-     *
-     * @return boolean Returns the isFinal.
-     * @deprecated Use {@link #isFinal()} instead
-     */
-    @Deprecated
-    public final boolean getIsFinal() {
-        return isFinal;
-    }
-
-    /**
-     * Set whether this is a &quot;final&quot; state.
-     *
-     * @param isFinal
-     *            The isFinal to set.
-     * @deprecated Use {@link #setFinal(boolean)} instead
-     */
-    @Deprecated
-    public final void setIsFinal(final boolean isFinal) {
-        this.isFinal = isFinal;
     }
 
     /**
@@ -140,20 +107,6 @@ public class State extends TransitionTarget {
     @Deprecated
     public final Parallel getParallel() {
         return parallel;
-    }
-
-    /**
-     * Set the Parallel child.
-     *
-     * @param parallel
-     *            The parallel to set.
-     *
-     * @deprecated &lt;parallel&gt; no longer needs an enclosing
-     *             &lt;state&gt; element.
-     */
-    @Deprecated
-    public final void setParallel(final Parallel parallel) {
-        this.parallel = parallel;
     }
 
     /**
@@ -232,20 +185,6 @@ public class State extends TransitionTarget {
     }
 
     /**
-     * Add a child state.
-     *
-     * @param state
-     *            a child state
-     *
-     * @deprecated Use {@link #addChild(TransitionTarget)} instead.
-     */
-    @Deprecated
-    public final void addChild(final State state) {
-        this.children.put(state.getId(), state);
-        state.setParent(this);
-    }
-
-    /**
      * Add a child transition target.
      *
      * @param tt
@@ -313,30 +252,5 @@ public class State extends TransitionTarget {
         return false;
     }
 
-    /**
-     * In case this is a parallel state, check if one its final states
-     * is active.
-     *
-     * @return Returns the done.
-     * @deprecated Will be removed in v1.0, in favor of
-     *             <code>SCInstance#isDone(TransitionTarget)</code>
-     */
-    @Deprecated
-    public final boolean isDone() {
-        return done;
-    }
-
-    /**
-     * Update the done property, which is set if this is a parallel state,
-     * and one its final states is active.
-     *
-     * @param done The done to set.
-     * @deprecated Will be removed in v1.0, in favor of
-     *             <code>SCInstance#setDone(TransitionTarget)</code>
-     */
-    @Deprecated
-    public final void setDone(final boolean done) {
-        this.done = done;
-    }
 }
 

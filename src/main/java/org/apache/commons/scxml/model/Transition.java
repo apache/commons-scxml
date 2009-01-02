@@ -168,23 +168,6 @@ public class Transition extends Executable
     }
 
     /**
-     * Get the runtime transition target, which always resolves to
-     * a TransitionTarget instance.
-     *
-     * @return Returns the actual target of a transition at runtime.
-     * <p>Remarks: For both the &quot;stay&quot; and &quot;self&quot;
-     * transitions it returns parent (the source node). This method should
-     * never return <code>null</code>.</p>
-     *
-     * @deprecated A transition may have multiple targets,
-     *             use getRuntimeTargets() instead.
-     */
-    @Deprecated
-    public final TransitionTarget getRuntimeTarget() {
-        return getRuntimeTargets().get(0);
-    }
-
-    /**
      * Get the list of runtime transition target, which always contains
      * atleast one TransitionTarget instance.
      *
@@ -202,17 +185,6 @@ public class Transition extends Executable
             return runtimeTargets;
         }
         return targets;
-    }
-
-    /**
-     * Set the transition target.
-     *
-     * @param target The target to set.
-     * @deprecated Use setTargets(List) instead.
-     */
-    @Deprecated
-    public final void setTarget(final TransitionTarget target) {
-        this.targets.add(0, target);
     }
 
     /**
@@ -234,18 +206,6 @@ public class Transition extends Executable
      */
     public final void setNext(final String next) {
         this.next = next;
-    }
-
-    /**
-     * Get the path of this transiton.
-     *
-     * @see Path
-     * @return Path returns the transition path
-     * @deprecated Use getPaths() instead.
-     */
-    @Deprecated
-    public final Path getPath() {
-        return getPaths().get(0);
     }
 
     /**

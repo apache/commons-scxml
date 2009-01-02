@@ -73,28 +73,6 @@ public class Data implements NamespacePrefixesHolder, Serializable {
     }
 
     /**
-     * Get the name.
-     *
-     * @return String The name.
-     * @deprecated Use {@link #getId()} instead.
-     */
-    @Deprecated
-    public final String getName() {
-        return id;
-    }
-
-    /**
-     * Set the name.
-     *
-     * @param name The name.
-     * @deprecated Use {@link #setId(String)} instead.
-     */
-    @Deprecated
-    public final void setName(final String name) {
-        this.id = name;
-    }
-
-    /**
      * Get the id.
      *
      * @return String An identifier.
