@@ -58,6 +58,7 @@ public class DatamodelTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
+    @Override
     public void setUp() {
         datamodel01jexl = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/env/jexl/datamodel-01.xml");
@@ -74,6 +75,7 @@ public class DatamodelTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
+    @Override
     public void tearDown() {
         datamodel01jexl = datamodel02jexl = datamodel01jsp = datamodel02jsp = null;
     }
@@ -81,7 +83,7 @@ public class DatamodelTest extends TestCase {
     /**
      * Test the stateless model, simultaneous executions
      */
-    public void testDatamodelSimultaneousJexl() {
+    public void testDatamodelSimultaneousJexl() throws Exception {
         exec01 = SCXMLTestHelper.getExecutor(datamodel01jexl,
             new JexlContext(), new JexlEvaluator());
         assertNotNull(exec01);
@@ -92,7 +94,7 @@ public class DatamodelTest extends TestCase {
         runtest();
     }
 
-    public void testDatamodelSimultaneousJsp() {
+    public void testDatamodelSimultaneousJsp() throws Exception {
         exec01 = SCXMLTestHelper.getExecutor(datamodel01jsp,
             new ELContext(), new ELEvaluator());
         assertNotNull(exec01);
@@ -103,7 +105,7 @@ public class DatamodelTest extends TestCase {
         runtest();
     }
 
-    public void testDatamodelNamespacePrefixedXPaths() {
+    public void testDatamodelNamespacePrefixedXPaths() throws Exception {
         exec01 = SCXMLTestHelper.getExecutor(datamodel02jexl,
             new JexlContext(), new JexlEvaluator());
         assertNotNull(exec01);
@@ -135,54 +137,46 @@ public class DatamodelTest extends TestCase {
         assertEquals("thirty", currentStates.iterator().next().getId());
     }
 
-    private void runtest() {
-        try {
-            //// Interleaved
-            // exec01
-            Set<TransitionTarget> currentStates = exec01.getCurrentStatus().getStates();
-            assertEquals(1, currentStates.size());
-            assertEquals("ten", currentStates.iterator().next().getId());
-            exec01 = SCXMLTestHelper.testExecutorSerializability(exec01);
-            currentStates = fireEvent("ten.done", exec01);
-            assertEquals(1, currentStates.size());
-            assertEquals("twenty", currentStates.iterator().next().getId());
-            // exec02
-            currentStates = exec02.getCurrentStatus().getStates();
-            assertEquals(1, currentStates.size());
-            assertEquals("ten", currentStates.iterator().next().getId());
-            // exec01
-            currentStates = fireEvent("twenty.done", exec01);
-            assertEquals(1, currentStates.size());
-            assertEquals("thirty", currentStates.iterator().next().getId());
-            exec01 = SCXMLTestHelper.testExecutorSerializability(exec01);
-            // exec02
-            currentStates = fireEvent("ten.done", exec02);
-            assertEquals(1, currentStates.size());
-            assertEquals("twenty", currentStates.iterator().next().getId());
-            exec02 = SCXMLTestHelper.testExecutorSerializability(exec02);
-            currentStates = fireEvent("twenty.done", exec02);
-            assertEquals(1, currentStates.size());
-            assertEquals("thirty", currentStates.iterator().next().getId());
-            currentStates = fireEvent("thirty.done", exec02);
-            assertEquals(1, currentStates.size());
-            assertEquals("forty", currentStates.iterator().next().getId());
-            // exec01
-            currentStates = fireEvent("thirty.done", exec01);
-            assertEquals(1, currentStates.size());
-            assertEquals("forty", currentStates.iterator().next().getId());
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+    private void runtest() throws Exception {
+        //// Interleaved
+        // exec01
+        Set<TransitionTarget> currentStates = exec01.getCurrentStatus().getStates();
+        assertEquals(1, currentStates.size());
+        assertEquals("ten", currentStates.iterator().next().getId());
+        exec01 = SCXMLTestHelper.testExecutorSerializability(exec01);
+        currentStates = fireEvent("ten.done", exec01);
+        assertEquals(1, currentStates.size());
+        assertEquals("twenty", currentStates.iterator().next().getId());
+        // exec02
+        currentStates = exec02.getCurrentStatus().getStates();
+        assertEquals(1, currentStates.size());
+        assertEquals("ten", currentStates.iterator().next().getId());
+        // exec01
+        currentStates = fireEvent("twenty.done", exec01);
+        assertEquals(1, currentStates.size());
+        assertEquals("thirty", currentStates.iterator().next().getId());
+        exec01 = SCXMLTestHelper.testExecutorSerializability(exec01);
+        // exec02
+        currentStates = fireEvent("ten.done", exec02);
+        assertEquals(1, currentStates.size());
+        assertEquals("twenty", currentStates.iterator().next().getId());
+        exec02 = SCXMLTestHelper.testExecutorSerializability(exec02);
+        currentStates = fireEvent("twenty.done", exec02);
+        assertEquals(1, currentStates.size());
+        assertEquals("thirty", currentStates.iterator().next().getId());
+        currentStates = fireEvent("thirty.done", exec02);
+        assertEquals(1, currentStates.size());
+        assertEquals("forty", currentStates.iterator().next().getId());
+        // exec01
+        currentStates = fireEvent("thirty.done", exec01);
+        assertEquals(1, currentStates.size());
+        assertEquals("forty", currentStates.iterator().next().getId());
     }
 
-    private Set<TransitionTarget> fireEvent(String name, SCXMLExecutor exec) {
+    private Set<TransitionTarget> fireEvent(String name, SCXMLExecutor exec) throws Exception {
         TriggerEvent[] evts = {new TriggerEvent(name,
                 TriggerEvent.SIGNAL_EVENT, null)};
-        try {
-            exec.triggerEvents(evts);
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+        exec.triggerEvents(evts);
         return exec.getCurrentStatus().getStates();
     }
 

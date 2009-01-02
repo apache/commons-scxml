@@ -57,6 +57,7 @@ public class SCXMLExecutorTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
+    @Override
     public void setUp() {
         microwave01jsp = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/env/jsp/microwave-01.xml");
@@ -91,6 +92,7 @@ public class SCXMLExecutorTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
+    @Override
     public void tearDown() {
         microwave01jsp = microwave02jsp = microwave01jexl = microwave02jexl =
             microwave04jexl = microwave05jexl = transitions01 = transitions02 = transitions03 =
@@ -100,34 +102,34 @@ public class SCXMLExecutorTest extends TestCase {
     /**
      * Test the implementation
      */
-    public void testSCXMLExecutorMicrowave01JspSample() {
+    public void testSCXMLExecutorMicrowave01JspSample() throws Exception {
         exec = SCXMLTestHelper.getExecutor(microwave01jsp,
             new SimpleContext(), new ELEvaluator());
         assertNotNull(exec);
         checkMicrowave01Sample();
     }
 
-    public void testSCXMLExecutorMicrowave02JspSample() {
+    public void testSCXMLExecutorMicrowave02JspSample() throws Exception {
         exec = SCXMLTestHelper.getExecutor(microwave02jsp,
             new SimpleContext(), new ELEvaluator());
         assertNotNull(exec);
         checkMicrowave02Sample();
     }
 
-    public void testSCXMLExecutorMicrowave01JexlSample() {
+    public void testSCXMLExecutorMicrowave01JexlSample() throws Exception {
         exec = SCXMLTestHelper.getExecutor(microwave01jexl);
         assertNotNull(exec);
         checkMicrowave01Sample();
     }
 
-    public void testSCXMLExecutorMicrowave02JexlSample() {
+    public void testSCXMLExecutorMicrowave02JexlSample() throws Exception {
         exec = SCXMLTestHelper.getExecutor(microwave02jexl);
         assertNotNull(exec);
         checkMicrowave02Sample();
     }
 
     // Uses SCXMLParser (latest WD)
-    public void testSCXMLExecutorMicrowave03JexlSample() {
+    public void testSCXMLExecutorMicrowave03JexlSample() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse(microwave03jexl);
         assertNotNull(scxml);
         exec = SCXMLTestHelper.getExecutor(scxml);
@@ -136,7 +138,7 @@ public class SCXMLExecutorTest extends TestCase {
     }
 
     // Uses SCXMLParser (latest WD)
-    public void testSCXMLExecutorMicrowave04JexlSample() {
+    public void testSCXMLExecutorMicrowave04JexlSample() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse(microwave04jexl);
         assertNotNull(scxml);
         exec = SCXMLTestHelper.getExecutor(scxml);
@@ -145,7 +147,7 @@ public class SCXMLExecutorTest extends TestCase {
     }
 
     // Uses SCXMLParser (latest WD)
-    public void testSCXMLExecutorMicrowave05JexlSample() {
+    public void testSCXMLExecutorMicrowave05JexlSample() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse(microwave05jexl);
         assertNotNull(scxml);
         exec = SCXMLTestHelper.getExecutor(scxml);
@@ -164,138 +166,106 @@ public class SCXMLExecutorTest extends TestCase {
         assertEquals("twenty", currentStates.iterator().next().getId());
     }
 
-    public void testSCXMLExecutorTransitions01Sample() {
+    public void testSCXMLExecutorTransitions01Sample() throws Exception {
         exec = SCXMLTestHelper.getExecutor(transitions01);
         assertNotNull(exec);
-        try {
-            Set<TransitionTarget> currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
-            assertEquals(1, currentStates.size());
-            assertEquals("twenty_one", currentStates.iterator().next().getId());
-            currentStates = SCXMLTestHelper.fireEvent(exec, "twenty_one.done");
-            assertEquals(1, currentStates.size());
-            assertEquals("twenty_two", currentStates.iterator().next().getId());
-            currentStates = SCXMLTestHelper.fireEvent(exec, "twenty_two.done");
-            assertEquals(3, exec.getCurrentStatus().getStates().size());
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+        Set<TransitionTarget> currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
+        assertEquals(1, currentStates.size());
+        assertEquals("twenty_one", currentStates.iterator().next().getId());
+        currentStates = SCXMLTestHelper.fireEvent(exec, "twenty_one.done");
+        assertEquals(1, currentStates.size());
+        assertEquals("twenty_two", currentStates.iterator().next().getId());
+        currentStates = SCXMLTestHelper.fireEvent(exec, "twenty_two.done");
+        assertEquals(3, exec.getCurrentStatus().getStates().size());
     }
 
-    public void testSCXMLExecutorTransitions02Sample() {
+    public void testSCXMLExecutorTransitions02Sample() throws Exception {
         exec = SCXMLTestHelper.getExecutor(transitions02);
         assertNotNull(exec);
-        try {
-            Set<TransitionTarget> currentStates = SCXMLTestHelper.fireEvent(exec, "ten.stay");
-            assertEquals(1, currentStates.size());
-            assertEquals("ten", currentStates.iterator().next().getId());
-            exec = SCXMLTestHelper.testExecutorSerializability(exec);
-            currentStates = SCXMLTestHelper.fireEvent(exec, "ten.self");
-            assertEquals(1, currentStates.size());
-            assertEquals("ten", currentStates.iterator().next().getId());
-            currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
-            assertEquals(1, currentStates.size());
-            assertEquals("twenty", currentStates.iterator().next().getId());
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+        Set<TransitionTarget> currentStates = SCXMLTestHelper.fireEvent(exec, "ten.stay");
+        assertEquals(1, currentStates.size());
+        assertEquals("ten", currentStates.iterator().next().getId());
+        exec = SCXMLTestHelper.testExecutorSerializability(exec);
+        currentStates = SCXMLTestHelper.fireEvent(exec, "ten.self");
+        assertEquals(1, currentStates.size());
+        assertEquals("ten", currentStates.iterator().next().getId());
+        currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
+        assertEquals(1, currentStates.size());
+        assertEquals("twenty", currentStates.iterator().next().getId());
     }
 
-    public void testSCXMLExecutorTransitions03Sample() {
+    public void testSCXMLExecutorTransitions03Sample() throws Exception {
         exec = SCXMLTestHelper.getExecutor(transitions03);
         assertNotNull(exec);
-        try {
-            Set<TransitionTarget> currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
-            assertEquals(3, currentStates.size());
-            Set<String> expected = new HashSet<String>();
-            expected.add("twenty_one_2");
-            expected.add("twenty_two_2");
-            expected.add("twenty_three_2");
-            for (TransitionTarget tt : currentStates) {
-                if (!expected.remove(tt.getId())) {
-                    fail("'" + tt.getId()
-                        + "' is not an expected current state ID");
-                }
+        Set<TransitionTarget> currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
+        assertEquals(3, currentStates.size());
+        Set<String> expected = new HashSet<String>();
+        expected.add("twenty_one_2");
+        expected.add("twenty_two_2");
+        expected.add("twenty_three_2");
+        for (TransitionTarget tt : currentStates) {
+            if (!expected.remove(tt.getId())) {
+                fail("'" + tt.getId()
+                    + "' is not an expected current state ID");
             }
-        } catch (Exception e) {
-            fail(e.getMessage());
         }
     }
 
     // Uses SCXMLParser (latest WD)
-    public void testSCXMLExecutorTransitions04Sample() {
+    public void testSCXMLExecutorTransitions04Sample() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse(transitions04);
         assertNotNull(scxml);
         exec = SCXMLTestHelper.getExecutor(scxml);
         assertNotNull(exec);
-        try {
-            Set<TransitionTarget> currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
-            assertEquals(3, currentStates.size());
-            Set<String> expected = new HashSet<String>();
-            expected.add("twenty_one_1");
-            expected.add("twenty_two_1");
-            expected.add("twenty_three_1");
-            for (TransitionTarget tt : currentStates) {
-                if (!expected.remove(tt.getId())) {
-                    fail("'" + tt.getId()
-                        + "' is not an expected current state ID");
-                }
+        Set<TransitionTarget> currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
+        assertEquals(3, currentStates.size());
+        Set<String> expected = new HashSet<String>();
+        expected.add("twenty_one_1");
+        expected.add("twenty_two_1");
+        expected.add("twenty_three_1");
+        for (TransitionTarget tt : currentStates) {
+            if (!expected.remove(tt.getId())) {
+                fail("'" + tt.getId()
+                    + "' is not an expected current state ID");
             }
-            currentStates = SCXMLTestHelper.fireEvent(exec, "bar");
-            assertEquals(1, currentStates.size());
-            assertEquals("thirty", ((State)currentStates.iterator().
-                next()).getId());
-        } catch (Exception e) {
-            fail(e.getMessage());
         }
+        currentStates = SCXMLTestHelper.fireEvent(exec, "bar");
+        assertEquals(1, currentStates.size());
+        assertEquals("thirty", ((State)currentStates.iterator().
+            next()).getId());
     }
 
-    public void testSend01Sample() {
+    public void testSend01Sample() throws Exception {
         exec = SCXMLTestHelper.getExecutor(send01);
         assertNotNull(exec);
-        try {
-            Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
-            assertEquals(1, currentStates.size());
-            assertEquals("ten", currentStates.iterator().next().getId());
-            currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
-            assertEquals(1, currentStates.size());
-            assertEquals("twenty", currentStates.iterator().next().getId());
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        assertEquals(1, currentStates.size());
+        assertEquals("ten", currentStates.iterator().next().getId());
+        currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
+        assertEquals(1, currentStates.size());
+        assertEquals("twenty", currentStates.iterator().next().getId());
     }
 
-    public void testSend02TargettypeSCXMLSample() {
+    public void testSend02TargettypeSCXMLSample() throws Exception {
         exec = SCXMLTestHelper.getExecutor(send02);
         assertNotNull(exec);
-        try {
-            Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
-            assertEquals(1, currentStates.size());
-            assertEquals("ninety", currentStates.iterator().next().getId());
-            assertTrue(exec.getCurrentStatus().isFinal());
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        assertEquals(1, currentStates.size());
+        assertEquals("ninety", currentStates.iterator().next().getId());
+        assertTrue(exec.getCurrentStatus().isFinal());
     }
 
-    private void checkMicrowave01Sample() {
-        try {
-            Set<TransitionTarget> currentStates = SCXMLTestHelper.fireEvent(exec, "turn_on");
-            assertEquals(1, currentStates.size());
-            assertEquals("cooking", currentStates.iterator().next().getId());
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+    private void checkMicrowave01Sample() throws Exception {
+        Set<TransitionTarget> currentStates = SCXMLTestHelper.fireEvent(exec, "turn_on");
+        assertEquals(1, currentStates.size());
+        assertEquals("cooking", currentStates.iterator().next().getId());
     }
 
-    private void checkMicrowave02Sample() {
-        try {
-            Set<TransitionTarget> currentStates = SCXMLTestHelper.fireEvent(exec, "turn_on");
-            assertEquals(2, currentStates.size());
-            String id = ((State)currentStates.iterator().next()).getId();
-            assertTrue(id.equals("closed") || id.equals("cooking"));
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+    private void checkMicrowave02Sample() throws Exception {
+        Set<TransitionTarget> currentStates = SCXMLTestHelper.fireEvent(exec, "turn_on");
+        assertEquals(2, currentStates.size());
+        String id = ((State)currentStates.iterator().next()).getId();
+        assertTrue(id.equals("closed") || id.equals("cooking"));
     }
 
     public static void main(String args[]) {

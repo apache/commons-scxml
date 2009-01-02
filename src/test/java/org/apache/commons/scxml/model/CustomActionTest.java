@@ -72,13 +72,9 @@ public class CustomActionTest extends TestCase {
         exec = null;
     }
 
-    public void testAddGoodCustomAction01() {
-        try {
-            new CustomAction("http://my.actions.domain/CUSTOM", "hello",
-                Hello.class);
-        } catch (IllegalArgumentException iae) {
-            fail("Failed to add custom action &quot;Hello&quot;");
-        }
+    public void testAddGoodCustomAction01() throws Exception {
+        new CustomAction("http://my.actions.domain/CUSTOM", "hello",
+            Hello.class);
     }
 
     public void testAddBadCustomAction01() {

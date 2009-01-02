@@ -54,6 +54,7 @@ public class JSBindingsTest extends TestCase {
     /**
      * Creates and initializes an SCXML data model in the context.
      */
+    @Override
     protected void setUp() throws Exception {
     }
 
@@ -101,6 +102,7 @@ public class JSBindingsTest extends TestCase {
              fail("JSBindings constructor accepted invalid SCXML context");
 
         } catch (IllegalArgumentException x) {
+             // expected, ignore
         }
     }
 
@@ -113,6 +115,7 @@ public class JSBindingsTest extends TestCase {
              fail("JSBindings constructor accepted invalid Javascript bindings");
 
         } catch (IllegalArgumentException x) {
+             // expected, ignore
         }
     }
 

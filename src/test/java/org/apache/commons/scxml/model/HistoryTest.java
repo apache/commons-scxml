@@ -52,6 +52,7 @@ public class HistoryTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */   
+    @Override
     public void setUp() {
         history = new History();
         shallow01 = this.getClass().getClassLoader().
@@ -65,6 +66,7 @@ public class HistoryTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
+    @Override
     public void tearDown() {
         history = null;
         shallow01 = deep01 = defaults01 = null;
@@ -86,12 +88,12 @@ public class HistoryTest extends TestCase {
         assertFalse(history.isDeep());
     }
 
-    public void testShallowHistory01() {
+    public void testShallowHistory01() throws Exception {
         exec = SCXMLTestHelper.getExecutor(shallow01);
         runHistoryFlow();
     }
 
-    public void testDeepHistory01() {
+    public void testDeepHistory01() throws Exception {
         exec = SCXMLTestHelper.getExecutor(deep01);
         runHistoryFlow();
     }
@@ -109,7 +111,7 @@ public class HistoryTest extends TestCase {
         assertEquals("state31", currentStates.iterator().next().getId());
     }
 
-    private void runHistoryFlow() {
+    private void runHistoryFlow() throws Exception {
         Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
         assertEquals("phase1", currentStates.iterator().next().getId());
@@ -120,11 +122,7 @@ public class HistoryTest extends TestCase {
         assertEquals("phase2", pauseAndResume());
         assertEquals("phase3", nextPhase());
         assertEquals("phase3", pauseAndResume());
-        try {
-            exec.reset();
-        } catch (ModelException me) {
-            fail(me.getMessage());
-        }
+        exec.reset();
         currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
         assertEquals("phase1", ((State)currentStates.iterator().

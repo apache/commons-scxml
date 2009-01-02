@@ -51,6 +51,7 @@ public class WildcardTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
+    @Override
     public void setUp() {
         wildcard01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/env/jexl/wildcard-01.xml");
@@ -61,6 +62,7 @@ public class WildcardTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
+    @Override
     public void tearDown() {
         wildcard01 = wildcard02 = null;
     }
@@ -68,32 +70,24 @@ public class WildcardTest extends TestCase {
     /**
      * Test the SCXML documents, usage of "_eventdata"
      */
-    public void testWildcard01Sample() {
+    public void testWildcard01Sample() throws Exception {
     	exec = SCXMLTestHelper.getExecutor(wildcard01);
         assertNotNull(exec);
-        try {
-            Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
-            assertEquals(1, currentStates.size());
-            assertEquals("state1", currentStates.iterator().next().getId());
-            exec = SCXMLTestHelper.testExecutorSerializability(exec);
-            currentStates = SCXMLTestHelper.fireEvent(exec, "foo.bar.baz");
-            assertEquals(1, currentStates.size());
-            assertEquals("state4", currentStates.iterator().next().getId());
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        assertEquals(1, currentStates.size());
+        assertEquals("state1", currentStates.iterator().next().getId());
+        exec = SCXMLTestHelper.testExecutorSerializability(exec);
+        currentStates = SCXMLTestHelper.fireEvent(exec, "foo.bar.baz");
+        assertEquals(1, currentStates.size());
+        assertEquals("state4", currentStates.iterator().next().getId());
     }
 
-    public void testWildcard02Sample() {
+    public void testWildcard02Sample() throws Exception {
         exec = SCXMLTestHelper.getExecutor(SCXMLTestHelper.parse(wildcard02));
         assertNotNull(exec);
-        try {
-            Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
-            assertEquals(1, currentStates.size());
-            assertEquals("state2", currentStates.iterator().next().getId());
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        assertEquals(1, currentStates.size());
+        assertEquals("state2", currentStates.iterator().next().getId());
     }
 
     public static void main(String args[]) {

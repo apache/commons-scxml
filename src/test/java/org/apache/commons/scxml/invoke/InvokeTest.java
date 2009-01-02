@@ -61,6 +61,7 @@ public class InvokeTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
+    @Override
     public void setUp() {
         invoke01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/invoke/invoker-01.xml");
@@ -73,6 +74,7 @@ public class InvokeTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
+    @Override
     public void tearDown() {
         invoke01 = invoke02 = invoke03 = null;
     }
@@ -80,64 +82,49 @@ public class InvokeTest extends TestCase {
     /**
      * Test the SCXML documents, usage of &lt;invoke&gt;
      */
-    public void testInvoke01Sample() {
-        try {
-            SCXML scxml = SCXMLParser.parse(invoke01,
-                new SimpleErrorHandler());
-            exec = new SCXMLExecutor(new JexlEvaluator(), new SimpleDispatcher(),
-                new SimpleErrorReporter());
-            assertNotNull(exec);
-            exec.setRootContext(new JexlContext());
-            exec.setStateMachine(scxml);
-            exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
-            exec.go();
-            Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
-            assertEquals(1, currentStates.size());
-            assertEquals("invoker", currentStates.iterator().next().getId());
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail(e.getMessage());
-        }
+    public void testInvoke01Sample() throws Exception {
+        SCXML scxml = SCXMLParser.parse(invoke01,
+            new SimpleErrorHandler());
+        exec = new SCXMLExecutor(new JexlEvaluator(), new SimpleDispatcher(),
+            new SimpleErrorReporter());
+        assertNotNull(exec);
+        exec.setRootContext(new JexlContext());
+        exec.setStateMachine(scxml);
+        exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
+        exec.go();
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        assertEquals(1, currentStates.size());
+        assertEquals("invoker", currentStates.iterator().next().getId());
     }
 
-    public void testInvoke02Sample() {
-        try {
-            SCXML scxml = SCXMLParser.parse(invoke02,
-                new SimpleErrorHandler());
-            exec = new SCXMLExecutor(new JexlEvaluator(), new SimpleDispatcher(),
-                new SimpleErrorReporter());
-            assertNotNull(exec);
-            exec.setRootContext(new JexlContext());
-            exec.setStateMachine(scxml);
-            exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
-            exec.go();
-            Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
-            assertEquals(1, currentStates.size());
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail(e.getMessage());
-        }
+    public void testInvoke02Sample() throws Exception {
+        SCXML scxml = SCXMLParser.parse(invoke02,
+            new SimpleErrorHandler());
+        exec = new SCXMLExecutor(new JexlEvaluator(), new SimpleDispatcher(),
+            new SimpleErrorReporter());
+        assertNotNull(exec);
+        exec.setRootContext(new JexlContext());
+        exec.setStateMachine(scxml);
+        exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
+        exec.go();
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        assertEquals(1, currentStates.size());
     }
 
-    public void testInvoke03Sample() {
-        try {
-            SCXML scxml = SCXMLParser.parse(invoke03,
-                new SimpleErrorHandler());
-            exec = new SCXMLExecutor(new JexlEvaluator(), new SimpleDispatcher(),
-                new SimpleErrorReporter());
-            assertNotNull(exec);
-            exec.setRootContext(new JexlContext());
-            exec.setStateMachine(scxml);
-            exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
-            exec.go();
-            Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
-            assertEquals(1, currentStates.size());
-            SCXMLTestHelper.fireEvent(exec, "s1.next");
-            SCXMLTestHelper.fireEvent(exec, "state1.next");
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail(e.getMessage());
-        }
+    public void testInvoke03Sample() throws Exception {
+        SCXML scxml = SCXMLParser.parse(invoke03,
+            new SimpleErrorHandler());
+        exec = new SCXMLExecutor(new JexlEvaluator(), new SimpleDispatcher(),
+            new SimpleErrorReporter());
+        assertNotNull(exec);
+        exec.setRootContext(new JexlContext());
+        exec.setStateMachine(scxml);
+        exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
+        exec.go();
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        assertEquals(1, currentStates.size());
+        SCXMLTestHelper.fireEvent(exec, "s1.next");
+        SCXMLTestHelper.fireEvent(exec, "state1.next");
     }
 
     public static void main(String args[]) {

@@ -67,6 +67,7 @@ public class JSExampleTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
+    @Override
     public void setUp() {
         example01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/env/javascript/example-01.xml");
@@ -75,13 +76,14 @@ public class JSExampleTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
+    @Override
     public void tearDown() {
         example01 = null;
     }
 
     // TEST METHODS
 
-    public void testExample01Sample() {
+    public void testExample01Sample() throws Exception {
 
         List<CustomAction> actions  = new ArrayList<CustomAction>();        
         actions.add(new CustomAction("http://commons.apache.org/scxml",
@@ -93,14 +95,10 @@ public class JSExampleTest extends TestCase {
         exec = SCXMLTestHelper.getExecutor(scxml, context, evaluator);
 
         assertNotNull(exec);
-        try {
-            Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
-            assertEquals(1, currentStates.size());
-            assertEquals("end", ((State)currentStates.iterator().
-                next()).getId());
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        assertEquals(1, currentStates.size());
+        assertEquals("end", ((State)currentStates.iterator().
+            next()).getId());
     }
 
     // INNER CLASSES
@@ -108,6 +106,7 @@ public class JSExampleTest extends TestCase {
     public static class EventDataMapTest extends Action {
         private static final long serialVersionUID = 1L;
 
+        @Override
         public void execute(EventDispatcher dispatcher, ErrorReporter reporter,
                 SCInstance instance, Log log, Collection<TriggerEvent> events)
         throws ModelException,SCXMLExpressionException { 

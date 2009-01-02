@@ -113,6 +113,7 @@ public class JSEvaluatorTest extends TestCase {
      * Creates and initialises an SCXML data model in the context.
      *
      */
+    @Override
     protected void setUp() throws Exception {
             StringReader reader = new StringReader(SCRIPT);
             InputSource  source = new InputSource (reader);
@@ -198,16 +199,11 @@ public class JSEvaluatorTest extends TestCase {
      * Tests evaluation with simple standard expressions.
      *
      */
-    public void testStandardExpressions() {
-        try {
-            for (TestItem item: SIMPLE_EXPRESSIONS) {
-                assertEquals("Invalid result: " + item.expression,
-                             item.result,
-                             evaluator.eval(context,item.expression));
-            }
-
-        } catch (Exception x) {
-            fail(x.getMessage());
+    public void testStandardExpressions() throws Exception {
+        for (TestItem item: SIMPLE_EXPRESSIONS) {
+            assertEquals("Invalid result: " + item.expression,
+                         item.result,
+                         evaluator.eval(context,item.expression));
         }
     }
 
@@ -215,19 +211,15 @@ public class JSEvaluatorTest extends TestCase {
      * Tests evaluation with SCXML context variables.
      *
      */
-    public void testVarExpressions() {
-        try {
-            context.set("fibonacci",12);
+    public void testVarExpressions() throws Exception {
+        context.set("fibonacci",12);
 
-            for (TestItem item: VAR_EXPRESSIONS) {
-                assertNotNull(context.get("fibonacci"));
-                assertEquals (12,context.get("fibonacci"));
-                assertEquals ("Invalid result: " + item.expression,
-                              item.result,
-                              evaluator.eval(context,item.expression));
-            }
-        } catch (Exception x) {
-            fail(x.getMessage());
+        for (TestItem item: VAR_EXPRESSIONS) {
+            assertNotNull(context.get("fibonacci"));
+            assertEquals (12,context.get("fibonacci"));
+            assertEquals ("Invalid result: " + item.expression,
+                          item.result,
+                          evaluator.eval(context,item.expression));
         }
     }
 
@@ -243,6 +235,7 @@ public class JSEvaluatorTest extends TestCase {
                 fail          ("Evaluated invalid <var... expression: " + item.expression);
 
             } catch (SCXMLExpressionException x) {
+                // expected, ignore
             }
         }
     }
@@ -251,15 +244,10 @@ public class JSEvaluatorTest extends TestCase {
      * Tests evaluation with SCXML data model expressions.
      *
      */
-    public void testDataModelExpressions() {
-        try {
-            assertEquals("Invalid result: " + "Data(forest,'tree/branch/twig')",
-                         "leaf",
-                         evaluator.eval(context,"Data(forest,'tree/branch/twig')"));
-
-        } catch (Exception x) {
-            fail(x.getMessage());
-        }
+    public void testDataModelExpressions() throws Exception {
+        assertEquals("Invalid result: " + "Data(forest,'tree/branch/twig')",
+                     "leaf",
+                     evaluator.eval(context,"Data(forest,'tree/branch/twig')"));
     }
 
     /**
@@ -274,6 +262,7 @@ public class JSEvaluatorTest extends TestCase {
             fail          ("Evaluated invalid Data() expression: " + "Data(forestx,'tree/branch/twig')");
 
         } catch (SCXMLExpressionException x) {
+            // expected, ignore
         }
     }
 
@@ -281,56 +270,38 @@ public class JSEvaluatorTest extends TestCase {
      * Tests evaluation of SCXML data model locations.
      *
      */
-    public void testDataModelLocations() {
+    public void testDataModelLocations() throws Exception {
             assertNotNull(context.get("forest"));
+            XPath  xpath = XPathFactory.newInstance().newXPath();
+            Node   node  = (Node)   context.get("forest");
+            Node   twig  = (Node)   xpath.evaluate("tree/branch/twig",        node,XPathConstants.NODE);
 
-            try {
-                XPath  xpath = XPathFactory.newInstance().newXPath();
-                Node   node  = (Node)   context.get("forest");
-                Node   twig  = (Node)   xpath.evaluate("tree/branch/twig",        node,XPathConstants.NODE);
+            assertTrue  ("Invalid result: " + "Data(forest,'tree/branch/twig')",
+                          evaluator.evalLocation(context,"Data(forest,'tree/branch/twig')") instanceof Element);
 
-                assertTrue  ("Invalid result: " + "Data(forest,'tree/branch/twig')",
-                              evaluator.evalLocation(context,"Data(forest,'tree/branch/twig')") instanceof Element);
-
-                assertSame ("Incorrect node returned: " + "Data(forest,'tree/branch/twig')",
-                             twig,
-                             evaluator.evalLocation(context,"Data(forest,'tree/branch/twig')"));
-
-            } catch (Exception x) {
-                fail(x.getMessage());
-            }
+            assertSame ("Incorrect node returned: " + "Data(forest,'tree/branch/twig')",
+                         twig,
+                         evaluator.evalLocation(context,"Data(forest,'tree/branch/twig')"));
     }
 
     /**
      * Tests evaluation of invalid SCXML data model locations.
      *
      */
-    public void testInvalidDataModelLocations() {
+    public void testInvalidDataModelLocations() throws Exception {
             assertNotNull(context.get("forest"));
-
-            try {
-                assertNull("Invalid result: " + "Data(forest,'tree/branch/twigx')",
-                           evaluator.evalLocation(context,"Data(forest,'tree/branch/twigx')"));
-
-            } catch (Exception x) {
-                fail(x.getMessage());
-            }
+            assertNull("Invalid result: " + "Data(forest,'tree/branch/twigx')",
+                       evaluator.evalLocation(context,"Data(forest,'tree/branch/twigx')"));
     }
 
     /**
      * Tests evaluation of Javascript functions with variables from SCXML context.
      *
      */
-    public void testScriptFunctions() {
-            context.set("FIVE",5);
-
-        try {
-            assertEquals(5,context.get("FIVE"));
-            assertEquals("Invalid function result",120.0,evaluator.eval(context,FUNCTION));
-
-        } catch (Exception x) {
-            fail(x.getMessage());
-        }
+    public void testScriptFunctions() throws Exception {
+        context.set("FIVE",5);
+        assertEquals(5,context.get("FIVE"));
+        assertEquals("Invalid function result",120.0,evaluator.eval(context,FUNCTION));
     }
 
 

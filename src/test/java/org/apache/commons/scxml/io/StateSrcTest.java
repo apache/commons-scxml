@@ -57,6 +57,7 @@ public class StateSrcTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
+    @Override
     public void setUp() {
         src01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/io/src-test-1.xml");
@@ -69,6 +70,7 @@ public class StateSrcTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
+    @Override
     public void tearDown() {
         src01 = src04 = src05 = null;
         scxml = null;
@@ -92,29 +94,23 @@ public class StateSrcTest extends TestCase {
         assertTrue(exec.getCurrentStatus().isFinal());
     }
 
-    public void testBadSrcInclude() {
+    public void testBadSrcInclude() throws Exception {
         try {
             scxml = SCXMLParser.parse(src04, new SimpleErrorHandler());
             fail("Document with bad <state> src attribute shouldn't be parsed!");
         } catch (SAXException me) {
             assertTrue("Unexpected error message for bad <state> 'src' URI",
                 me.getMessage() != null && me.getMessage().contains("Source attribute in <state src="));
-        } catch (Exception e) {
-            fail("Unexpected exception [" + e.getClass().getName() + ":" +
-                e.getMessage());
         }
     }
 
-    public void testBadSrcFragmentInclude() {
+    public void testBadSrcFragmentInclude() throws Exception {
         try {
             scxml = SCXMLParser.parse(src05, new SimpleErrorHandler());
             fail("Document with bad <state> src attribute shouldn't be parsed!");
         } catch (SAXException me) {
             assertTrue("Unexpected error message for bad <state> 'src' URI fragment",
                 me.getMessage() != null && me.getMessage().contains("URI Fragment in <state src="));
-        } catch (Exception e) {
-            fail("Unexpected exception [" + e.getClass().getName() + ":" +
-                e.getMessage());
         }
     }
 

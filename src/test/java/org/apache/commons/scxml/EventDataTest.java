@@ -55,6 +55,7 @@ public class EventDataTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
+    @Override
     public void setUp() {
         eventdata01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/env/jexl/eventdata-01.xml");
@@ -69,6 +70,7 @@ public class EventDataTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
+    @Override
     public void tearDown() {
         eventdata01 = eventdata02 = eventdata03 = eventdata04 = null;
     }
@@ -76,87 +78,71 @@ public class EventDataTest extends TestCase {
     /**
      * Test the SCXML documents, usage of "_eventdata"
      */
-    public void testEventdata01Sample() {
+    public void testEventdata01Sample() throws Exception {
     	exec = SCXMLTestHelper.getExecutor(eventdata01);
         assertNotNull(exec);
-        try {
-            Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
-            assertEquals(1, currentStates.size());
-            assertEquals("state1", currentStates.iterator().next().getId());
-            TriggerEvent te = new TriggerEvent("event.foo",
-                TriggerEvent.SIGNAL_EVENT, new Integer(3));
-            currentStates = SCXMLTestHelper.fireEvent(exec, te);
-            assertEquals(1, currentStates.size());
-            assertEquals("state3", currentStates.iterator().next().getId());
-            TriggerEvent[] evts = new TriggerEvent[] { te,
-                new TriggerEvent("event.bar", TriggerEvent.SIGNAL_EVENT,
-                new Integer(6))};
-            currentStates = SCXMLTestHelper.fireEvents(exec, evts);
-            assertEquals(1, currentStates.size());
-            assertEquals("state6", currentStates.iterator().next().getId());
-            te = new TriggerEvent("event.baz",
-                TriggerEvent.SIGNAL_EVENT, new Integer(7));
-            currentStates = SCXMLTestHelper.fireEvent(exec, te);
-            assertEquals(1, currentStates.size());
-            assertEquals("state7", currentStates.iterator().next().getId());
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        assertEquals(1, currentStates.size());
+        assertEquals("state1", currentStates.iterator().next().getId());
+        TriggerEvent te = new TriggerEvent("event.foo",
+            TriggerEvent.SIGNAL_EVENT, new Integer(3));
+        currentStates = SCXMLTestHelper.fireEvent(exec, te);
+        assertEquals(1, currentStates.size());
+        assertEquals("state3", currentStates.iterator().next().getId());
+        TriggerEvent[] evts = new TriggerEvent[] { te,
+            new TriggerEvent("event.bar", TriggerEvent.SIGNAL_EVENT,
+            new Integer(6))};
+        currentStates = SCXMLTestHelper.fireEvents(exec, evts);
+        assertEquals(1, currentStates.size());
+        assertEquals("state6", currentStates.iterator().next().getId());
+        te = new TriggerEvent("event.baz",
+            TriggerEvent.SIGNAL_EVENT, new Integer(7));
+        currentStates = SCXMLTestHelper.fireEvent(exec, te);
+        assertEquals(1, currentStates.size());
+        assertEquals("state7", currentStates.iterator().next().getId());
     }
 
-    public void testEventdata02Sample() {
+    public void testEventdata02Sample() throws Exception {
     	exec = SCXMLTestHelper.getExecutor(eventdata02);
         assertNotNull(exec);
-        try {
-            Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
-            assertEquals(1, currentStates.size());
-            assertEquals("state0", currentStates.iterator().next().getId());
-            TriggerEvent te1 = new TriggerEvent("connection.alerting",
-                TriggerEvent.SIGNAL_EVENT, "line2");
-            currentStates = SCXMLTestHelper.fireEvent(exec, te1);
-            assertEquals(1, currentStates.size());
-            assertEquals("state2", currentStates.iterator().next().getId());
-            TriggerEvent te2 = new TriggerEvent("connection.alerting",
-                TriggerEvent.SIGNAL_EVENT,
-                new ConnectionAlertingPayload(4));
-            currentStates = SCXMLTestHelper.fireEvent(exec, te2);
-            assertEquals(1, currentStates.size());
-            assertEquals("state4", currentStates.iterator().next().getId());
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        assertEquals(1, currentStates.size());
+        assertEquals("state0", currentStates.iterator().next().getId());
+        TriggerEvent te1 = new TriggerEvent("connection.alerting",
+            TriggerEvent.SIGNAL_EVENT, "line2");
+        currentStates = SCXMLTestHelper.fireEvent(exec, te1);
+        assertEquals(1, currentStates.size());
+        assertEquals("state2", currentStates.iterator().next().getId());
+        TriggerEvent te2 = new TriggerEvent("connection.alerting",
+            TriggerEvent.SIGNAL_EVENT,
+            new ConnectionAlertingPayload(4));
+        currentStates = SCXMLTestHelper.fireEvent(exec, te2);
+        assertEquals(1, currentStates.size());
+        assertEquals("state4", currentStates.iterator().next().getId());
     }
 
-    public void testEventdata03Sample() {
+    public void testEventdata03Sample() throws Exception {
         exec = SCXMLTestHelper.getExecutor(eventdata03);
         assertNotNull(exec);
-        try {
-            Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
-            assertEquals(1, currentStates.size());
-            assertEquals("ten", currentStates.iterator().next().getId());
-            TriggerEvent te = new TriggerEvent("event.foo",
-                TriggerEvent.SIGNAL_EVENT);
-            currentStates = SCXMLTestHelper.fireEvent(exec, te);
-            assertEquals(1, currentStates.size());
-            assertEquals("thirty", currentStates.iterator().next().getId());
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        assertEquals(1, currentStates.size());
+        assertEquals("ten", currentStates.iterator().next().getId());
+        TriggerEvent te = new TriggerEvent("event.foo",
+            TriggerEvent.SIGNAL_EVENT);
+        currentStates = SCXMLTestHelper.fireEvent(exec, te);
+        assertEquals(1, currentStates.size());
+        assertEquals("thirty", currentStates.iterator().next().getId());
     }
 
-    public void testEventdata04Sample() throws InterruptedException {
+    public void testEventdata04Sample() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse(eventdata04);
         Tracer trc = new Tracer();
-        try {
-            exec = new SCXMLExecutor(new JexlEvaluator(), null, trc);
-            exec.setEventdispatcher(new SimpleScheduler(exec));
-            exec.addListener(scxml, trc);
-            exec.setStateMachine(scxml);
-            exec.go();
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+        exec = new SCXMLExecutor(new JexlEvaluator(), null, trc);
         assertNotNull(exec);
+        exec.setEventdispatcher(new SimpleScheduler(exec));
+        exec.addListener(scxml, trc);
+        exec.setStateMachine(scxml);
+        exec.go();
         Thread.sleep(200); // let the 100 delay lapse
     }
 

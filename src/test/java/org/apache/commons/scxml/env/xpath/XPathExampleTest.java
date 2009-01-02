@@ -55,6 +55,7 @@ public class XPathExampleTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
+    @Override
     public void setUp() {
         example01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/env/xpath/example-01.xml");
@@ -63,33 +64,26 @@ public class XPathExampleTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
+    @Override
     public void tearDown() {
         example01 = null;
     }
 
     // TEST METHODS
 
-    public void testExample01Sample() {
+    public void testExample01Sample() throws Exception {
 
         SCXML scxml = SCXMLTestHelper.parse(example01);
         Evaluator evaluator = null;
-        try {
-            evaluator = new XPathEvaluator();
-        } catch (InstantiationException ie) {
-            fail(ie.getMessage());
-        }
+        evaluator = new XPathEvaluator();
         Context context = new XPathContext(null);
         exec = SCXMLTestHelper.getExecutor(scxml, context, evaluator);
 
         assertNotNull(exec);
-        try {
-            Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
-            assertEquals(1, currentStates.size());
-            assertEquals("end", ((State)currentStates.iterator().
-                next()).getId());
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        assertEquals(1, currentStates.size());
+        assertEquals("end", ((State)currentStates.iterator().
+            next()).getId());
     }
 
 }
