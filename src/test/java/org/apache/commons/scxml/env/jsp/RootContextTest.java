@@ -79,7 +79,7 @@ public class RootContextTest extends TestCase {
     /**
      * Test the implementation
      */
-    public void testRootContext() {
+    public void testRootContext() throws Exception {
         assertEquals("1", String.valueOf(rootCtx.get("foo")));
         exec = SCXMLTestHelper.getExecutor(rootCtxSample, rootCtx, evaluator);
         assertEquals("1", String.valueOf(jspCtx.getAttribute("foo")));
@@ -89,13 +89,9 @@ public class RootContextTest extends TestCase {
             "rootCtxTest");
         assertNotNull(ctx);
         assertNotNull(ctx.get("bar"));
-        try {
-            assertNull(jspCtx.getVariableResolver().resolveVariable("bar"));
-            assertNotNull(ctx.resolveVariable("bar"));
-            assertEquals(ctx.resolveVariable("bar"), "a brand new value");
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+        assertNull(jspCtx.getVariableResolver().resolveVariable("bar"));
+        assertNotNull(ctx.resolveVariable("bar"));
+        assertEquals(ctx.resolveVariable("bar"), "a brand new value");
         assertNotNull(ctx.getVars());
     }
 

@@ -75,75 +75,67 @@ public class NamespacePrefixedXPathsTest extends TestCase {
      * Test the XPath evaluation
      */
     // JEXL
-    public void testNamespacePrefixedXPathsJexl() {
+    public void testNamespacePrefixedXPathsJexl() throws Exception {
         runtest(exec01);
     }
 
     // EL
-    public void testNamespacePrefixedXPathsEL() {
+    public void testNamespacePrefixedXPathsEL() throws Exception {
         runtest(exec02);
     }
 
     // Same test, since same documents (different expression languages)
-    private void runtest(SCXMLExecutor exec) {
+    private void runtest(SCXMLExecutor exec) throws Exception {
+        // must be in state "ten" at the onset
+        Set currentStates = exec.getCurrentStatus().getStates();
+        assertEquals(1, currentStates.size());
+        assertEquals("ten", ((State)currentStates.iterator().
+            next()).getId());
 
-        try {
+        // should move to "twenty"
+        currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
+        assertEquals(1, currentStates.size());
+        assertEquals("twenty", ((State)currentStates.iterator().
+            next()).getId());
 
-            // must be in state "ten" at the onset
-            Set currentStates = exec.getCurrentStatus().getStates();
-            assertEquals(1, currentStates.size());
-            assertEquals("ten", ((State)currentStates.iterator().
-                next()).getId());
+        // This is set while exiting "ten"
+        Double retval = (Double) exec.getRootContext().get("retval");
+        assertEquals(Double.valueOf("11"), retval);
 
-            // should move to "twenty"
-            currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
-            assertEquals(1, currentStates.size());
-            assertEquals("twenty", ((State)currentStates.iterator().
-                next()).getId());
+        // On to "thirty"
+        currentStates = SCXMLTestHelper.fireEvent(exec, "twenty.done");
+        assertEquals(1, currentStates.size());
+        assertEquals("thirty", ((State)currentStates.iterator().
+            next()).getId());
+        exec = SCXMLTestHelper.testExecutorSerializability(exec);
 
-            // This is set while exiting "ten"
-            Double retval = (Double) exec.getRootContext().get("retval");
-            assertEquals(Double.valueOf("11"), retval);
+        // Tests XPath on SCXML actions, set while exiting "twenty"
+        String retvalstr = (String) exec.getRootContext().get("retval");
+        assertEquals("Equal to 20", retvalstr);
 
-            // On to "thirty"
-            currentStates = SCXMLTestHelper.fireEvent(exec, "twenty.done");
-            assertEquals(1, currentStates.size());
-            assertEquals("thirty", ((State)currentStates.iterator().
-                next()).getId());
-            exec = SCXMLTestHelper.testExecutorSerializability(exec);
+        // and so on ...
+        currentStates = SCXMLTestHelper.fireEvent(exec, "thirty.done");
+        assertEquals(1, currentStates.size());
+        assertEquals("forty", ((State)currentStates.iterator().
+            next()).getId());
 
-            // Tests XPath on SCXML actions, set while exiting "twenty"
-            String retvalstr = (String) exec.getRootContext().get("retval");
-            assertEquals("Equal to 20", retvalstr);
+        currentStates = SCXMLTestHelper.fireEvent(exec, "forty.done");
+        assertEquals(1, currentStates.size());
+        assertEquals("fifty", ((State)currentStates.iterator().
+            next()).getId());
 
-            // and so on ...
-            currentStates = SCXMLTestHelper.fireEvent(exec, "thirty.done");
-            assertEquals(1, currentStates.size());
-            assertEquals("forty", ((State)currentStates.iterator().
-                next()).getId());
+        currentStates = SCXMLTestHelper.fireEvent(exec, "fifty.done");
+        assertEquals(1, currentStates.size());
+        assertEquals("sixty", ((State)currentStates.iterator().
+            next()).getId());
 
-            currentStates = SCXMLTestHelper.fireEvent(exec, "forty.done");
-            assertEquals(1, currentStates.size());
-            assertEquals("fifty", ((State)currentStates.iterator().
-                next()).getId());
+        currentStates = SCXMLTestHelper.fireEvent(exec, "sixty.done");
+        assertEquals(1, currentStates.size());
+        assertEquals("seventy", ((State)currentStates.iterator().
+            next()).getId());
 
-            currentStates = SCXMLTestHelper.fireEvent(exec, "fifty.done");
-            assertEquals(1, currentStates.size());
-            assertEquals("sixty", ((State)currentStates.iterator().
-                next()).getId());
-
-            currentStates = SCXMLTestHelper.fireEvent(exec, "sixty.done");
-            assertEquals(1, currentStates.size());
-            assertEquals("seventy", ((State)currentStates.iterator().
-                next()).getId());
-
-            // done
-            assertTrue(exec.getCurrentStatus().isFinal());
-
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-
+        // done
+        assertTrue(exec.getCurrentStatus().isFinal());
     }
 
     public static void main(String args[]) {

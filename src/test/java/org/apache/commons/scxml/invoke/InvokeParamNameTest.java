@@ -78,43 +78,31 @@ public class InvokeParamNameTest extends TestCase {
     }
     
     // Tests "param" element with "name" and "expr" attribute
-    public void testNameAndExpr() {
-        try {
-            trigger();
-            assertTrue(lastSource.endsWith("TestSrc"));
-            final Map.Entry e = (Map.Entry)lastParams.entrySet().iterator().next();
-            assertEquals("ding", e.getKey());
-            assertEquals("foo", e.getValue());
-        } catch (ModelException e) {
-           fail("ModelException: " + e.getMessage());
-        }
+    public void testNameAndExpr() throws Exception {
+        trigger();
+        assertTrue(lastSource.endsWith("TestSrc"));
+        final Map.Entry e = (Map.Entry)lastParams.entrySet().iterator().next();
+        assertEquals("ding", e.getKey());
+        assertEquals("foo", e.getValue());
     }
 
     // Tests "param" element with only a "name" attribute 
-    public void testSoleNameLocation() {
-        try {
-            trigger(); trigger();
-            final Element e = (Element)lastParams.values().iterator().next();
-            assertNotNull(e);
-            assertEquals("bar", e.getNodeName());
-            assertEquals(Node.TEXT_NODE, e.getFirstChild().getNodeType());
-            assertEquals("foo", e.getFirstChild().getNodeValue());
-        } catch (ModelException e) {
-           fail("ModelException: " + e.getMessage());
-        }
+    public void testSoleNameLocation() throws Exception {
+        trigger(); trigger();
+        final Element e = (Element)lastParams.values().iterator().next();
+        assertNotNull(e);
+        assertEquals("bar", e.getNodeName());
+        assertEquals(Node.TEXT_NODE, e.getFirstChild().getNodeType());
+        assertEquals("foo", e.getFirstChild().getNodeValue());
     }
 
     // Tests "param" element with a single, wrong "name" attribute
-    public void testWrongNameLocation() {
-        try {
-            trigger(); trigger(); trigger();
-            assertEquals(1, exec.getCurrentStatus().getEvents().size());
-            final TriggerEvent evt = (TriggerEvent) 
-                exec.getCurrentStatus().getEvents().iterator().next(); 
-            assertTrue(evt.getName().endsWith("error.illegalalloc"));
-        } catch (ModelException e) {
-           fail("ModelException: " + e.getMessage());
-        }
+    public void testWrongNameLocation() throws Exception {
+        trigger(); trigger(); trigger();
+        assertEquals(1, exec.getCurrentStatus().getEvents().size());
+        final TriggerEvent evt = (TriggerEvent) 
+            exec.getCurrentStatus().getEvents().iterator().next(); 
+        assertTrue(evt.getName().endsWith("error.illegalalloc"));
     }
 
     public static class DummyInvoker implements Invoker {

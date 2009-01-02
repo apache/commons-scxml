@@ -68,35 +68,27 @@ public class WildcardTest extends TestCase {
     /**
      * Test the SCXML documents, usage of "_eventdata"
      */
-    public void testWildcard01Sample() {
+    public void testWildcard01Sample() throws Exception {
     	exec = SCXMLTestHelper.getExecutor(wildcard01);
         assertNotNull(exec);
-        try {
-            Set currentStates = exec.getCurrentStatus().getStates();
-            assertEquals(1, currentStates.size());
-            assertEquals("state1", ((State)currentStates.iterator().
-                next()).getId());
-            exec = SCXMLTestHelper.testExecutorSerializability(exec);
-            currentStates = SCXMLTestHelper.fireEvent(exec, "foo.bar.baz");
-            assertEquals(1, currentStates.size());
-            assertEquals("state4", ((State)currentStates.iterator().
-                next()).getId());
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+        Set currentStates = exec.getCurrentStatus().getStates();
+        assertEquals(1, currentStates.size());
+        assertEquals("state1", ((State)currentStates.iterator().
+            next()).getId());
+        exec = SCXMLTestHelper.testExecutorSerializability(exec);
+        currentStates = SCXMLTestHelper.fireEvent(exec, "foo.bar.baz");
+        assertEquals(1, currentStates.size());
+        assertEquals("state4", ((State)currentStates.iterator().
+            next()).getId());
     }
 
-    public void testWildcard02Sample() {
+    public void testWildcard02Sample() throws Exception {
         exec = SCXMLTestHelper.getExecutor(SCXMLTestHelper.parse(wildcard02));
         assertNotNull(exec);
-        try {
-            Set currentStates = exec.getCurrentStatus().getStates();
-            assertEquals(1, currentStates.size());
-            assertEquals("state2", ((State)currentStates.iterator().
-                next()).getId());
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+        Set currentStates = exec.getCurrentStatus().getStates();
+        assertEquals(1, currentStates.size());
+        assertEquals("state2", ((State)currentStates.iterator().
+            next()).getId());
     }
 
     public static void main(String args[]) {

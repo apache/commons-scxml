@@ -86,12 +86,12 @@ public class HistoryTest extends TestCase {
         assertFalse(history.isDeep());
     }
 
-    public void testShallowHistory01() {
+    public void testShallowHistory01() throws Exception {
         exec = SCXMLTestHelper.getExecutor(shallow01);
         runHistoryFlow();
     }
 
-    public void testDeepHistory01() {
+    public void testDeepHistory01() throws Exception {
         exec = SCXMLTestHelper.getExecutor(deep01);
         runHistoryFlow();
     }
@@ -112,7 +112,7 @@ public class HistoryTest extends TestCase {
             next()).getId());
     }
 
-    private void runHistoryFlow() {
+    private void runHistoryFlow() throws Exception {
         Set currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
         assertEquals("phase1", ((State)currentStates.iterator().
@@ -124,11 +124,7 @@ public class HistoryTest extends TestCase {
         assertEquals("phase2", pauseAndResume());
         assertEquals("phase3", nextPhase());
         assertEquals("phase3", pauseAndResume());
-        try {
-            exec.reset();
-        } catch (ModelException me) {
-            fail(me.getMessage());
-        }
+        exec.reset();
         currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
         assertEquals("phase1", ((State)currentStates.iterator().

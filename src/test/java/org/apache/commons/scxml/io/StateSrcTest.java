@@ -92,29 +92,23 @@ public class StateSrcTest extends TestCase {
         assertTrue(exec.getCurrentStatus().isFinal());
     }
 
-    public void testBadSrcInclude() {
+    public void testBadSrcInclude() throws Exception {
         try {
             scxml = SCXMLParser.parse(src04, new SimpleErrorHandler());
             fail("Document with bad <state> src attribute shouldn't be parsed!");
         } catch (SAXException me) {
             assertTrue("Unexpected error message for bad <state> 'src' URI",
                 me.getMessage() != null && me.getMessage().indexOf("Source attribute in <state src=") != -1);
-        } catch (Exception e) {
-            fail("Unexpected exception [" + e.getClass().getName() + ":" +
-                e.getMessage() + "]");
         }
     }
 
-    public void testBadSrcFragmentInclude() {
+    public void testBadSrcFragmentInclude() throws Exception {
         try {
             scxml = SCXMLParser.parse(src05, new SimpleErrorHandler());
             fail("Document with bad <state> src attribute shouldn't be parsed!");
         } catch (SAXException me) {
             assertTrue("Unexpected error message for bad <state> 'src' URI fragment",
                 me.getMessage() != null && me.getMessage().indexOf("URI Fragment in <state src=") != -1);
-        } catch (Exception e) {
-            fail("Unexpected exception [" + e.getClass().getName() + ":" +
-                e.getMessage() + "]");
         }
     }
 

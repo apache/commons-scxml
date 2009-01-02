@@ -62,52 +62,40 @@ public class ParallelTest extends TestCase {
         exec = null;
     }
 
-    public void testParallel01() {
+    public void testParallel01() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse(parallel01);
         assertNotNull(scxml);
         exec = SCXMLTestHelper.getExecutor(scxml);
         assertNotNull(exec);
-        try {
-            SCXMLTestHelper.assertPostTriggerState(exec, "foo", "end");
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+        SCXMLTestHelper.assertPostTriggerState(exec, "foo", "end");
     }
 
-    public void testParallel02() {
+    public void testParallel02() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse(parallel02);
         assertNotNull(scxml);
         exec = SCXMLTestHelper.getExecutor(scxml);
         assertNotNull(exec);
-        try {
-            SCXMLTestHelper.assertPostTriggerStates(exec, "dummy.event", new String[] { "state01", "state02" });
-            SCXMLTestHelper.assertPostTriggerState(exec, "event1", "state1");
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+        SCXMLTestHelper.assertPostTriggerStates(exec, "dummy.event", new String[] { "state01", "state02" });
+        SCXMLTestHelper.assertPostTriggerState(exec, "event1", "state1");
     }
 
-    public void testParallel03() {
+    public void testParallel03() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse(parallel03);
         assertNotNull(scxml);
         exec = SCXMLTestHelper.getExecutor(scxml);
         assertNotNull(exec);
-        try {
-            SCXMLTestHelper.assertPostTriggerStates(exec, "dummy.event", new String[] { "para11", "para21" });
-            Node data = (Node) exec.getRootContext().get("root");
-            Map namespaces = new HashMap();
-            namespaces.put("", "http://www.w3.org/2005/07/scxml");
-            Object count = Builtin.data(namespaces, data, "root/count");
-            assertEquals("5.0", count.toString());
-            SCXMLTestHelper.assertPostTriggerStates(exec, "foo", new String[] { "para12", "para21" });
-            count = Builtin.data(namespaces, data, "root/count");
-            assertEquals("7.0", count.toString());
-            SCXMLTestHelper.assertPostTriggerState(exec, "bar", "end");
-            count = Builtin.data(namespaces, data, "root/count");
-            assertEquals("14.0", count.toString());
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+        SCXMLTestHelper.assertPostTriggerStates(exec, "dummy.event", new String[] { "para11", "para21" });
+        Node data = (Node) exec.getRootContext().get("root");
+        Map namespaces = new HashMap();
+        namespaces.put("", "http://www.w3.org/2005/07/scxml");
+        Object count = Builtin.data(namespaces, data, "root/count");
+        assertEquals("5.0", count.toString());
+        SCXMLTestHelper.assertPostTriggerStates(exec, "foo", new String[] { "para12", "para21" });
+        count = Builtin.data(namespaces, data, "root/count");
+        assertEquals("7.0", count.toString());
+        SCXMLTestHelper.assertPostTriggerState(exec, "bar", "end");
+        count = Builtin.data(namespaces, data, "root/count");
+        assertEquals("14.0", count.toString());
     }
 
 }
