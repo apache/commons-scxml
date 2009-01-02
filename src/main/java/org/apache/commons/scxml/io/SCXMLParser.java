@@ -1016,6 +1016,7 @@ public final class SCXMLParser {
         // Add <exit> custom action rule in Commons SCXML namespace
         scxmlRules.setNamespaceURI(NAMESPACE_COMMONS_SCXML);
         scxmlRules.add(xp + XPF_EXT, new Rule() {
+            @Override
             public void end(final String namespace, final String name) {
                 Transition t = (Transition) getDigester().peek(1);
                 TransitionTarget tt = (TransitionTarget) getDigester().
@@ -1267,6 +1268,7 @@ public final class SCXMLParser {
         /**
          * @see Rule#end(String, String)
          */
+        @Override
         public final void end(final String namespace, final String name) {
             if (scxml == null) {
                 scxml = (SCXML) getDigester()
@@ -1292,6 +1294,7 @@ public final class SCXMLParser {
         /**
          * @see Rule#end(String, String)
          */
+        @Override
         public final void end(final String namespace, final String name) {
             Action child = (Action) getDigester().peek();
             for (int i = 1; i < getDigester().getCount() - 1; i++) {
@@ -1322,6 +1325,7 @@ public final class SCXMLParser {
         /**
          * @see Rule#end(String, String)
          */
+        @Override
         public final void end(final String namespace, final String name) {
             Element bodyElement = (Element) getDigester().pop();
             NodeList childNodes = bodyElement.getChildNodes();
@@ -1376,6 +1380,7 @@ public final class SCXMLParser {
         /**
          * @see Rule#begin(String, String, Attributes)
          */
+        @Override
         public final void begin(final String namespace, final String name,
                 final Attributes attributes) throws Exception {
             super.begin(namespace, name, attributes);
@@ -1405,6 +1410,7 @@ public final class SCXMLParser {
         /**
          * @see Rule#end(String, String)
          */
+        @Override
         public final void end(final String namespace, final String name) {
             Node bodyNode = (Node) getDigester().pop();
             Data data = ((Data) getDigester().peek());
@@ -1481,6 +1487,7 @@ public final class SCXMLParser {
         /**
          * @see Rule#begin(String, String, Attributes)
          */
+        @Override
         public final void begin(final String namespace, final String name,
                 final Attributes attributes) throws ModelException {
             String src = attributes.getValue("src");
@@ -1649,6 +1656,7 @@ public final class SCXMLParser {
         /**
          * @see Rule#begin(String, String, Attributes)
          */
+        @Override
         public final void begin(final String namespace, final String name,
                 final Attributes attributes) {
             PathResolverHolder prHolder = (PathResolverHolder) getDigester().
@@ -1665,6 +1673,7 @@ public final class SCXMLParser {
         /**
          * @see Rule#begin(String, String, Attributes)
          */
+        @Override
         public final void begin(final String namespace, final String name,
                 final Attributes attributes) {
             Finalize finalize = (Finalize) getDigester().peek();
@@ -1684,6 +1693,7 @@ public final class SCXMLParser {
         /**
          * @see Rule#begin(String, String, Attributes)
          */
+        @Override
         @SuppressWarnings("unchecked")
         // Accomodate legacy code org.apache.commons.digester.Digester#getCurrentNamespaces()
         public final void begin(final String namespace, final String name,
@@ -1702,6 +1712,7 @@ public final class SCXMLParser {
         /**
          * @see Rule#begin(String, String, Attributes)
          */
+        @Override
         public final void begin(final String namespace, final String name,
                 final Attributes attributes) {
             org.apache.commons.logging.Log log = LogFactory.

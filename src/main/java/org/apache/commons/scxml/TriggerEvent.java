@@ -129,6 +129,7 @@ public class TriggerEvent implements Serializable {
      *
      * @see java.lang.Object#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(final Object obj) {
         if (obj instanceof TriggerEvent) {
             TriggerEvent te2 = (TriggerEvent) obj;
@@ -146,6 +147,7 @@ public class TriggerEvent implements Serializable {
      *
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
         StringBuffer buf = new StringBuffer("TriggerEvent{name=");
         buf.append(name).append(",type=").append(type);
@@ -161,6 +163,7 @@ public class TriggerEvent implements Serializable {
      *
      * @see java.lang.Object#hashCode()
      */
+    @Override
     public int hashCode() {
         return String.valueOf(this).hashCode();
     }

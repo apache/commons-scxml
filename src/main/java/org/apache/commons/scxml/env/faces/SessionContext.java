@@ -77,6 +77,7 @@ public class SessionContext extends SimpleContext {
      * @return The value (or null)
      * @see org.apache.commons.scxml.Context#get(java.lang.String)
      */
+    @Override
     public Object get(final String name) {
         Object value = getVars().get(name);
         if (value == null) {
@@ -92,6 +93,7 @@ public class SessionContext extends SimpleContext {
      * @return boolean true if the variable exists
      * @see org.apache.commons.scxml.Context#has(java.lang.String)
      */
+    @Override
     public boolean has(final String name) {
         return (sessionMap.containsKey(name) || getVars().containsKey(name));
     }

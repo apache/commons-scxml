@@ -87,7 +87,7 @@ public class SimpleScheduler implements EventDispatcher, Serializable {
         if (!timers.containsKey(sendId)) {
             return; // done, we don't track this one or its already expired
         }
-        Timer timer = (Timer) timers.get(sendId);
+        Timer timer = timers.get(sendId);
         if (timer != null) {
             timer.cancel();
             if (log.isDebugEnabled()) {
@@ -231,6 +231,7 @@ public class SimpleScheduler implements EventDispatcher, Serializable {
         /**
          * What to do when timer expires.
          */
+        @Override
         public void run() {
             try {
                 executor.triggerEvent(new TriggerEvent(event,
