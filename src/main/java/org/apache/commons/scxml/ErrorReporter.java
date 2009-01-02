@@ -48,6 +48,7 @@ public interface ErrorReporter {
      *
      * @deprecated Use {@link ErrorConstants#NO_INITIAL} instead.
      */
+    @Deprecated
     String NO_INITIAL = "NO_INITIAL";
 
     /**
@@ -56,6 +57,7 @@ public interface ErrorReporter {
      *
      * @deprecated Use {@link ErrorConstants#ILLEGAL_INITIAL} instead.
      */
+    @Deprecated
     String ILLEGAL_INITIAL = "ILLEGAL_INITIAL";
 
     /**
@@ -64,6 +66,7 @@ public interface ErrorReporter {
      *
      * @deprecated Use {@link ErrorConstants#UNKNOWN_ACTION} instead.
      */
+    @Deprecated
     String UNKNOWN_ACTION = "UNKNOWN_ACTION";
 
     /**
@@ -73,6 +76,7 @@ public interface ErrorReporter {
      *
      * @deprecated Use {@link ErrorConstants#ILLEGAL_CONFIG} instead.
      */
+    @Deprecated
     String ILLEGAL_CONFIG = "ILLEGAL_CONFIG";
 
     /**
@@ -82,6 +86,7 @@ public interface ErrorReporter {
      * @deprecated No longer necessary, non determinism is solved based
      *             on state heirarchy and document order priorities.
      */
+    @Deprecated
     String NON_DETERMINISTIC = "NON_DETERMINISTIC";
 
     /**
@@ -89,6 +94,7 @@ public interface ErrorReporter {
      *
      * @deprecated Use {@link ErrorConstants#UNDEFINED_VARIABLE} instead.
      */
+    @Deprecated
     String UNDEFINED_VARIABLE = "UNDEFINED_VARIABLE";
 
     /**
@@ -96,6 +102,7 @@ public interface ErrorReporter {
      *
      * @deprecated Use {@link ErrorConstants#EXPRESSION_ERROR} instead.
      */
+    @Deprecated
     String EXPRESSION_ERROR = "EXPRESSION_ERROR";
 
 }

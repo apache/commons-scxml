@@ -103,6 +103,7 @@ public class SCXML implements Serializable, Observable,
      * @deprecated Use getInitialTarget() instead. Returns <code>null</code>
      *             if the initial target is a Parallel.
      */
+    @Deprecated
     public final State getInitialState() {
         if (initialTarget != null && initialTarget instanceof State) {
             return (State) initialTarget;
@@ -117,6 +118,7 @@ public class SCXML implements Serializable, Observable,
      *
      * @deprecated Use setInitialTarget(TransitionTarget) instead.
      */
+    @Deprecated
     public final void setInitialState(final State initialState) {
         this.initialTarget = initialState;
     }
@@ -168,6 +170,7 @@ public class SCXML implements Serializable, Observable,
      *
      * @deprecated Use getChildren() instead.
      */
+    @Deprecated
     public final Map<String, TransitionTarget> getStates() {
         return children;
     }
@@ -179,6 +182,7 @@ public class SCXML implements Serializable, Observable,
      *
      * @deprecated Use addChild(TransitionTarget) instead.
      */
+    @Deprecated
     public final void addState(final State state) {
         children.put(state.getId(), state);
     }
@@ -292,6 +296,7 @@ public class SCXML implements Serializable, Observable,
      * @see #getInitialTarget()
      * @deprecated Use {@link #getInitial()} instead.
      */
+    @Deprecated
     public final String getInitialstate() {
         return initial;
     }
@@ -303,6 +308,7 @@ public class SCXML implements Serializable, Observable,
      * @see #setInitialTarget(TransitionTarget)
      * @deprecated Use {@link #setInitial(String)} instead.
      */
+    @Deprecated
     public final void setInitialstate(final String initialstate) {
         this.initial = initialstate;
     }

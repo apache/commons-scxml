@@ -211,6 +211,7 @@ public abstract class AbstractStateMachine {
      * @return Returns the stateMachine.
      * @deprecated Returns null, use getEngine().getStateMachine() instead
      */
+    @Deprecated
     public static SCXML getStateMachine() {
         return null;
     }

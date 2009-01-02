@@ -54,6 +54,7 @@ public class Parallel extends TransitionTarget {
      *
      * @deprecated Use getChildren() instead.
      */
+    @Deprecated
     public final Set<TransitionTarget> getStates() {
         return children;
     }
@@ -66,6 +67,7 @@ public class Parallel extends TransitionTarget {
      *
      * @deprecated Use addChild(TransitionTarget) instead.
      */
+    @Deprecated
     public final void addState(final State state) {
         if (state != null) {
             this.children.add(state);

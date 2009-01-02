@@ -323,6 +323,7 @@ public class SCXMLSerializer {
      * @deprecated Inline &lt;target&gt; element has been deprecated
      *             in the SCXML WD
      */
+    @Deprecated
     public static void serializeTarget(final StringBuffer b,
             final Transition t, final String indent) {
         if (t.getTarget() != null) {

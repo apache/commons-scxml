@@ -152,6 +152,7 @@ public class Invoke implements NamespacePrefixesHolder, PathResolverHolder,
      * @return Map The params map.
      * @deprecated Remove in v1.0, use params() instead
      */
+    @Deprecated
     public final Map<String, String> getParams() {
         return params;
     }

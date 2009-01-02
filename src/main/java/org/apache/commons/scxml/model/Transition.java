@@ -146,6 +146,7 @@ public class Transition extends Executable
      * @deprecated A transition may have multiple targets,
      *             use getTargets() instead.
      */
+    @Deprecated
     public final TransitionTarget getTarget() {
         if (targets.size() > 0) {
             return targets.get(0);
@@ -178,6 +179,7 @@ public class Transition extends Executable
      * @deprecated A transition may have multiple targets,
      *             use getRuntimeTargets() instead.
      */
+    @Deprecated
     public final TransitionTarget getRuntimeTarget() {
         return getRuntimeTargets().get(0);
     }
@@ -208,6 +210,7 @@ public class Transition extends Executable
      * @param target The target to set.
      * @deprecated Use setTargets(List) instead.
      */
+    @Deprecated
     public final void setTarget(final TransitionTarget target) {
         this.targets.add(0, target);
     }
@@ -240,6 +243,7 @@ public class Transition extends Executable
      * @return Path returns the transition path
      * @deprecated Use getPaths() instead.
      */
+    @Deprecated
     public final Path getPath() {
         return getPaths().get(0);
     }

@@ -57,6 +57,7 @@ public class ErrorConstants {
      * @deprecated Non deterministic behavior is now resolved using
      *             state heirarchy and document order priorities.
      */
+    @Deprecated
     public static final String NON_DETERMINISTIC = "NON_DETERMINISTIC";
 
     /**

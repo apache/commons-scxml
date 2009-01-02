@@ -73,6 +73,7 @@ public class State extends TransitionTarget {
      *
      * @deprecated Will be removed in v1.0
      */
+    @Deprecated
     private boolean done = false;
 
     /**
@@ -88,6 +89,7 @@ public class State extends TransitionTarget {
      * @return boolean Returns the isFinal.
      * @deprecated Use {@link #isFinal()} instead
      */
+    @Deprecated
     public final boolean getIsFinal() {
         return isFinal;
     }
@@ -99,6 +101,7 @@ public class State extends TransitionTarget {
      *            The isFinal to set.
      * @deprecated Use {@link #setFinal(boolean)} instead
      */
+    @Deprecated
     public final void setIsFinal(final boolean isFinal) {
         this.isFinal = isFinal;
     }
@@ -134,6 +137,7 @@ public class State extends TransitionTarget {
      * @deprecated &lt;parallel&gt; no longer needs an enclosing
      *             &lt;state&gt; element.
      */
+    @Deprecated
     public final Parallel getParallel() {
         return parallel;
     }
@@ -147,6 +151,7 @@ public class State extends TransitionTarget {
      * @deprecated &lt;parallel&gt; no longer needs an enclosing
      *             &lt;state&gt; element.
      */
+    @Deprecated
     public final void setParallel(final Parallel parallel) {
         this.parallel = parallel;
     }
@@ -234,6 +239,7 @@ public class State extends TransitionTarget {
      *
      * @deprecated Use {@link #addChild(TransitionTarget)} instead.
      */
+    @Deprecated
     public final void addChild(final State state) {
         this.children.put(state.getId(), state);
         state.setParent(this);
@@ -299,6 +305,7 @@ public class State extends TransitionTarget {
      *             than denoting that the enclosing state is orthogonal, as
      *             it did in previous SCXML WDs.
      */
+    @Deprecated
     public final boolean isOrthogonal() {
         if (parallel != null) {
             return true;
@@ -314,6 +321,7 @@ public class State extends TransitionTarget {
      * @deprecated Will be removed in v1.0, in favor of
      *             <code>SCInstance#isDone(TransitionTarget)</code>
      */
+    @Deprecated
     public final boolean isDone() {
         return done;
     }
@@ -326,6 +334,7 @@ public class State extends TransitionTarget {
      * @deprecated Will be removed in v1.0, in favor of
      *             <code>SCInstance#setDone(TransitionTarget)</code>
      */
+    @Deprecated
     public final void setDone(final boolean done) {
         this.done = done;
     }

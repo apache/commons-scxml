@@ -78,6 +78,7 @@ public class Data implements NamespacePrefixesHolder, Serializable {
      * @return String The name.
      * @deprecated Use {@link #getId()} instead.
      */
+    @Deprecated
     public final String getName() {
         return id;
     }
@@ -88,6 +89,7 @@ public class Data implements NamespacePrefixesHolder, Serializable {
      * @param name The name.
      * @deprecated Use {@link #setId(String)} instead.
      */
+    @Deprecated
     public final void setName(final String name) {
         this.id = name;
     }
