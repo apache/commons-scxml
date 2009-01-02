@@ -46,12 +46,14 @@ public class StateTest extends TestCase {
     private URL state01;
     private SCXMLExecutor exec;
 
+    @Override
     public void setUp() {
         state = new State();
         state01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/model/state-01.xml");
     }
 
+    @Override
     public void tearDown() {
         state01 = null;
         exec = null;

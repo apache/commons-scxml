@@ -58,6 +58,7 @@ public class SCXMLParserTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
+    @Override
     public void setUp() {
         microwave01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/env/jsp/microwave-01.xml");
@@ -80,6 +81,7 @@ public class SCXMLParserTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
+    @Override
     public void tearDown() {
         microwave01 = microwave02 = microwave03 = microwave04 = transitions01 = prefix01 = send01 = null;
         scxml = null;
@@ -138,7 +140,7 @@ public class SCXMLParserTest extends TestCase {
         assertEquals("ten", ten.getId());
         List<Transition> ten_done = ten.getTransitionsList("ten.done");
         assertEquals(1, ten_done.size());
-        Transition ten2twenty = (Transition) ten_done.get(0);
+        Transition ten2twenty = ten_done.get(0);
         List<Action> actions = ten2twenty.getActions();
         assertEquals(1, actions.size());
         Send send = (Send) actions.get(0);

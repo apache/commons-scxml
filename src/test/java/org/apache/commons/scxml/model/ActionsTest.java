@@ -62,6 +62,7 @@ public class ActionsTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
+    @Override
     public void setUp() {
         actionsSample01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/model/actions-state-test.xml");
@@ -76,6 +77,7 @@ public class ActionsTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
+    @Override
     public void tearDown() {
         actionsSample01 = actionsSample02 = actionsSample03 = null;
         evaluator = null;

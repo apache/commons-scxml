@@ -48,6 +48,7 @@ public class StaticMethodTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
+    @Override
     public void setUp() {
         staticmethod = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/env/jexl/static-method.xml");
@@ -56,6 +57,7 @@ public class StaticMethodTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
+    @Override
     public void tearDown() {
         staticmethod = null;
     }

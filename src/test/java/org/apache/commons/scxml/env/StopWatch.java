@@ -67,6 +67,7 @@ public class StopWatch extends AbstractStateMachine {
         if (timer == null) {
             timer = new Timer(true);
             timer.scheduleAtFixedRate(new TimerTask() {
+                @Override
                 public void run() {
                     increment();
                 }

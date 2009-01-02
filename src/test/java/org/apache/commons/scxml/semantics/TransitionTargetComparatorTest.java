@@ -43,6 +43,7 @@ public class TransitionTargetComparatorTest extends TestCase {
 
     private Comparator<TransitionTarget> comparator;
     
+    @Override
     public void setUp() {
         comparator = new TransitionTargetComparator<TransitionTarget>();
     }

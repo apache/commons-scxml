@@ -35,42 +35,54 @@ public class MockJspContext extends JspContext
         super();
         vars = new HashMap<String, Object>();
     }
+    @Override
     public void setAttribute(String name, Object value) {
         vars.put(name, value);
     }
+    @Override
     public void setAttribute(String name, Object value, int scope) {
         setAttribute(name, value);
     }
+    @Override
     public Object getAttribute(String name) {
         return vars.get(name);
     }
+    @Override
     public Object getAttribute(String name, int scope) {
         return getAttribute(name);
     }
+    @Override
     public void removeAttribute(String name) {
         vars.remove(name);
     }
+    @Override
     public void removeAttribute(String name, int scope) {
         removeAttribute(name);
     }
+    @Override
     public Object findAttribute(String name) {
         return getAttribute(name);
     }
+    @Override
     public VariableResolver getVariableResolver() {
         return this;
     }
     public Object resolveVariable(String name) {
         return getAttribute(name);
     }
+    @Override
     public ExpressionEvaluator getExpressionEvaluator() {
         return null;
     }
+    @Override
     public int getAttributesScope(String name) {
         return 1;
     }
+    @Override
     public Enumeration<String> getAttributeNamesInScope(int scope) {
         return null;
     }
+    @Override
     public JspWriter getOut() {
         return null;
     }

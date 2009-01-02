@@ -41,6 +41,7 @@ public class StatusTest extends TestCase {
 
     private Status status;
     
+    @Override
     public void setUp() {
         status = new Status();
     }

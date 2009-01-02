@@ -47,6 +47,7 @@ public class SCInstanceTest extends TestCase {
     
     private SCInstance instance;
     
+    @Override
     public void setUp() {
         instance = new SCInstance(null);
     }

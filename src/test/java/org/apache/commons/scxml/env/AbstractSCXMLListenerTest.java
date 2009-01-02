@@ -48,6 +48,7 @@ public class AbstractSCXMLListenerTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
+    @Override
     public void setUp() {
         to = new State();
         from = new State();
@@ -60,6 +61,7 @@ public class AbstractSCXMLListenerTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
+    @Override
     public void tearDown() {
         to = null;
         from = null;
@@ -71,6 +73,7 @@ public class AbstractSCXMLListenerTest extends TestCase {
                 /**
                  * @see SCXMLListener#onEntry(TransitionTarget)
                  */
+                @Override
                 public void onEntry(TransitionTarget state) {
                     heardOnEntry = true;
                 }
@@ -78,6 +81,7 @@ public class AbstractSCXMLListenerTest extends TestCase {
                 /**
                  * @see SCXMLListener#onExit(TransitionTarget)
                  */
+                @Override
                 public void onExit(TransitionTarget state) {
                     heardOnExit = true;
                 }
@@ -85,6 +89,7 @@ public class AbstractSCXMLListenerTest extends TestCase {
                 /**
                  * @see SCXMLListener#onTransition(TransitionTarget,TransitionTarget,Transition)
                  */
+                @Override
                 public void onTransition(TransitionTarget from, TransitionTarget to,
                                          Transition transition) {
                     heardOnTransition = true;
@@ -107,6 +112,7 @@ public class AbstractSCXMLListenerTest extends TestCase {
                 /**
                  * @see SCXMLListener#onEntry(TransitionTarget)
                  */
+                @Override
                 public void onEntry(TransitionTarget state) {
                     heardOnEntry = true;
                 }
@@ -114,6 +120,7 @@ public class AbstractSCXMLListenerTest extends TestCase {
                 /**
                  * @see SCXMLListener#onExit(TransitionTarget)
                  */
+                @Override
                 public void onExit(TransitionTarget state) {
                     heardOnExit = true;
                 }
@@ -135,6 +142,7 @@ public class AbstractSCXMLListenerTest extends TestCase {
                 /**
                  * @see SCXMLListener#onEntry(TransitionTarget)
                  */
+                @Override
                 public void onEntry(TransitionTarget state) {
                     heardOnEntry = true;
                 }

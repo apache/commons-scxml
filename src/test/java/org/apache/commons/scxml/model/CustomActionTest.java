@@ -49,6 +49,7 @@ public class CustomActionTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
+    @Override
     public void setUp() {
         hello01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/hello-world.xml");
@@ -67,6 +68,7 @@ public class CustomActionTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
+    @Override
     public void tearDown() {
         hello01 = custom01 = external01 = payload01 = payload02 = null;
         exec = null;

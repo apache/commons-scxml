@@ -50,6 +50,7 @@ public class Issue62Test extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
+    @Override
     public void setUp() {
         test01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/issues/issue62-01.xml");
@@ -62,6 +63,7 @@ public class Issue62Test extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
+    @Override
     public void tearDown() {
         test01 = test02 = null;
         exec = null;

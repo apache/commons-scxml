@@ -112,6 +112,7 @@ public class StopWatchDisplay extends JFrame
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         Timer displayTimer = new Timer();
         displayTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
             public void run() {
                 display.setText(DISPLAY_PREFIX + stopWatch.getDisplay()
                     + DISPLAY_SUFFIX);
@@ -134,6 +135,7 @@ public class StopWatchDisplay extends JFrame
     class WatchPanel extends JPanel {
         private static final long serialVersionUID = 1L;
 
+        @Override
         public void paintComponent(Graphics g) {
             if(watchImage != null) {
                 g.drawImage(watchImage,0,0,this.getWidth(),this.getHeight(),this);

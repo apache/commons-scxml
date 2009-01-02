@@ -40,6 +40,7 @@ public class SimpleContextTest extends TestCase {
 
     private SimpleContext context;
 
+    @Override
     protected void setUp() throws Exception {
         context = new SimpleContext();
     }

@@ -183,7 +183,7 @@ public class SCXMLTestHelper {
 
     public static TransitionTarget lookupTransitionTarget(SCXMLExecutor exec,
             String id) {
-        return (TransitionTarget) exec.getStateMachine().getTargets().get(id);
+        return exec.getStateMachine().getTargets().get(id);
     }
 
     public static Context lookupContext(SCXMLExecutor exec,

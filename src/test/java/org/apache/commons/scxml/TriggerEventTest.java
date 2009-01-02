@@ -49,6 +49,7 @@ public class TriggerEventTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
+    @Override
     public void setUp() {
         payloadData = new HashMap<String, String>();
         payloadData.put("property1", "value1");
@@ -66,6 +67,7 @@ public class TriggerEventTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
+    @Override
     public void tearDown() {
         payloadData.clear();
         payloadData = null;

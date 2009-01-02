@@ -60,6 +60,7 @@ public class TieBreakerTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
+    @Override
     public void setUp() {
         tiebreaker01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/tie-breaker-01.xml");
@@ -78,6 +79,7 @@ public class TieBreakerTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
+    @Override
     public void tearDown() {
         tiebreaker01 = tiebreaker02 = tiebreaker03 = tiebreaker04 =
             tiebreaker05 = tiebreaker06 = null;

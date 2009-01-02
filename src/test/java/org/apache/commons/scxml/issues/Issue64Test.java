@@ -48,6 +48,7 @@ public class Issue64Test extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
+    @Override
     public void setUp() {
         works = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/issues/issue64-01.xml");
@@ -58,6 +59,7 @@ public class Issue64Test extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
+    @Override
     public void tearDown() {
         works = fails = null;
         exec = null;

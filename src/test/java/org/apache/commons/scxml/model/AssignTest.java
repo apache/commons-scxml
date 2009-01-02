@@ -51,6 +51,7 @@ public class AssignTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
+    @Override
     public void setUp() {
         assign01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/model/assign-test-01.xml");
@@ -61,6 +62,7 @@ public class AssignTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
+    @Override
     public void tearDown() {
         assign01 = assign02 = null;
         exec = null;
