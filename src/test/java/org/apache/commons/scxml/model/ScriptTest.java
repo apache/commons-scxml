@@ -48,6 +48,7 @@ public class ScriptTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
+    @Override
     public void setUp() {
         script01jexl = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/env/jexl/script-01.xml");
@@ -58,6 +59,7 @@ public class ScriptTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
+    @Override
     public void tearDown() {
         script01jexl = script01js = null;
     }
