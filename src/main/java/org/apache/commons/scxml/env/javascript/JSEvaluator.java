@@ -204,7 +204,7 @@ public class JSEvaluator implements Evaluator {
      * <code>Data()</code> functions are replaced with an equivalent internal
      * Javascript function.
      *
-     * @param context    SCXML context.
+     * @param ctx    SCXML context.
      * @param script Script to execute.
      *
      * @return Result of script execution or <code>null</code>.
