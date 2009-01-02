@@ -25,7 +25,7 @@ public class ErrorConstants {
     /**
      * Missing initial state for a composite state or for the scxml root.
      *
-     * @see org.apache.commons.scxml.model.SCXML#getInitialState()
+     * @see org.apache.commons.scxml.model.SCXML#getInitialTarget()
      * @see org.apache.commons.scxml.model.State#getInitial()
      */
     public static final String NO_INITIAL = "NO_INITIAL";
@@ -49,16 +49,6 @@ public class ErrorConstants {
      * active or there are multiple enabled OR states on the same level.
      */
     public static final String ILLEGAL_CONFIG = "ILLEGAL_CONFIG";
-
-    /**
-     * Non-deterministic situation has occured - there are more than
-     * one enabled transitions in conflict.
-     *
-     * @deprecated Non deterministic behavior is now resolved using
-     *             state heirarchy and document order priorities.
-     */
-    @Deprecated
-    public static final String NON_DETERMINISTIC = "NON_DETERMINISTIC";
 
     /**
      * A variable referred to by assign name attribute is undefined.
