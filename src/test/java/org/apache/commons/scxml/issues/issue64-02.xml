@@ -19,7 +19,7 @@
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
        xmlns:my="http://my.foo.example/"
        version="1.0"
-       initialstate="tranbug">
+       initial="tranbug">
 
     <datamodel>
         <data id="foo">

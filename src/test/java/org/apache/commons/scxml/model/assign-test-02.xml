@@ -16,7 +16,7 @@
    * limitations under the License.
 -->
 <!-- Regress JIRA 89, incomplete child removal -->
-<scxml xmlns="http://www.w3.org/2005/07/scxml" xmlns:rad="http://foo/bar" version="1.0" initialstate="assign1">
+<scxml xmlns="http://www.w3.org/2005/07/scxml" xmlns:rad="http://foo/bar" version="1.0" initial="assign1">
    <datamodel>
        <data name="source">
            <rad:foo>

@@ -20,7 +20,7 @@
      and the Commons SCXML Data() function -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
        version="1.0"
-       initialstate="main">
+       initial="main">
 
     <!-- Root or document datamodel -->
     <datamodel>

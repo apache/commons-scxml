@@ -17,7 +17,7 @@
 -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
      version="1.0"
-     initialstate="start">
+     initial="start">
 
    <parallel id="start">
 

@@ -18,7 +18,7 @@
 <!-- Used for CustomActionTest.java in model package -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
        xmlns:my="http://my.custom-actions.domain/CUSTOM"
-       version="1.0" initialstate="init">
+       version="1.0" initial="init">
     <datamodel>
         <data id="helloName1" />
     </datamodel>

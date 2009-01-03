@@ -16,7 +16,7 @@
  * limitations under the License.
 -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0"
-       initialstate="e1">
+       initial="e1">
 
     <state id="e1">
         <initial>

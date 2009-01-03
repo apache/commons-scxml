@@ -18,7 +18,7 @@
 <!-- SCXML Javascript environment: example script -->
 <scxml xmlns        = 'http://www.w3.org/2005/07/scxml'
        xmlns:scxml  = 'http://commons.apache.org/scxml'
-       initialstate = 'start'
+       initial = 'start'
        version      = '1.0'>
 
  <!-- DATA MODEL -->

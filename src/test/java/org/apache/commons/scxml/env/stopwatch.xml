@@ -17,7 +17,7 @@
 -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
        version="1.0"
-       initialstate="reset">
+       initial="reset">
 
     <state id="reset">
         <transition event="watch.start"   target="running"/>

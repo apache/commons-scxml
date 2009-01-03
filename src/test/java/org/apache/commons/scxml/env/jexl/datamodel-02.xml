@@ -19,7 +19,7 @@
      prefixed XPath expressions in the Commons SCXML Data() function -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
        version="1.0"
-       initialstate="ten">
+       initial="ten">
 
     <!-- Start with same prefixes, defined in two different places -->
     <state id="ten">

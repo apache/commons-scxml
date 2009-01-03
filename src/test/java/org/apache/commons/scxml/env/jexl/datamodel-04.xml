@@ -20,7 +20,7 @@
      to persist some _eventdata -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
        version="1.0"
-       initialstate="ten">
+       initial="ten">
 
     <!-- Root or document datamodel -->
     <datamodel>

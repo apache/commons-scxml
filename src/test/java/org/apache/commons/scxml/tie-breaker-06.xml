@@ -17,7 +17,7 @@
 -->
 <!-- A fictitious state machine used by test cases.
      <send>s in the same executable content block -->
-<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" initialstate="main">
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" initial="main">
 
   <state id="main">
 

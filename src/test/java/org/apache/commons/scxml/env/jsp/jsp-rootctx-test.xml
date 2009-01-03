@@ -18,7 +18,7 @@
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
        xmlns:cs="http://commons.apache.org/scxml"
        version="1.0"
-       initialstate="rootCtxTest">
+       initial="rootCtxTest">
   
   <state id="rootCtxTest" final="true">
     <onentry>

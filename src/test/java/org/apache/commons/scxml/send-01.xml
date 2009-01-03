@@ -17,7 +17,7 @@
 -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
        version="1.0"
-       initialstate="ten">
+       initial="ten">
 
     <state id="ten">
         <transition event="ten.done" target="twenty">
