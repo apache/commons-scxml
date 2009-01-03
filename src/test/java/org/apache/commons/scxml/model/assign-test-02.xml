@@ -18,13 +18,13 @@
 <!-- Regress JIRA 89, incomplete child removal -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml" xmlns:rad="http://foo/bar" version="1.0" initial="assign1">
    <datamodel>
-       <data name="source">
+       <data id="source">
            <rad:foo>
                <rad:a>1</rad:a>
                <rad:b>2</rad:b>
            </rad:foo>
        </data>
-       <data name="destination">
+       <data id="destination">
            <rad:bar>
                <rad:a>3</rad:a>
                <rad:b>4</rad:b>

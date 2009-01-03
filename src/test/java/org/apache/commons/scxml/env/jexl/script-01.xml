@@ -20,12 +20,12 @@
        initial="script">
 
     <datamodel>
-        <data name="x" expr="1"/>
+        <data id="x" expr="1"/>
     </datamodel>
 
     <state id="script">
         <datamodel>
-            <data name="y" expr="2"/>
+            <data id="y" expr="2"/>
         </datamodel>
         <onentry>
             <script>
