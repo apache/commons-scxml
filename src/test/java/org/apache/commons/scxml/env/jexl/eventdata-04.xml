@@ -23,8 +23,8 @@
 
        <state id="simulatedUser">
            <datamodel>
-               <data name="one" expr="1" />
-               <data name="two" expr="2" />
+               <data id="one" expr="1" />
+               <data id="two" expr="2" />
            </datamodel>
 
            <onentry>
