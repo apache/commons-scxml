@@ -31,7 +31,7 @@
 -->
 
 <scxml xmlns="http://www.w3.org/2005/01/SCXML" version="1.0"  
-       initialstate="edit">
+       initial="edit">
 
   <state                id="edit">
 

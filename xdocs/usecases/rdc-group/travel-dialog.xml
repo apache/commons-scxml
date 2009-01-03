@@ -17,7 +17,7 @@
 -->
 <scxml              xmlns="http://www.w3.org/2005/01/SCXML"
                   version="1.0" 
-             initialstate="tripType">
+                  initial="tripType">
 
   <state               id="tripType">
     <transition     event="tripType.done">
