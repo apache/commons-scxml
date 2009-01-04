@@ -116,7 +116,7 @@ public class DatamodelTest extends TestCase {
         runtest();
     }
 
-    public void testDatamodel04Jexl() {
+    public void testDatamodel04Jexl() throws Exception {
         exec01 = SCXMLTestHelper.getExecutor(datamodel04jexl,
             new JexlContext(), new JexlEvaluator());
         assertNotNull(exec01);

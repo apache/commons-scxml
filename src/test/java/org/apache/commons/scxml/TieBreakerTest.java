@@ -88,7 +88,7 @@ public class TieBreakerTest extends TestCase {
     /**
      * Test the implementation
      */
-    public void testTieBreaker01() {
+    public void testTieBreaker01() throws Exception {
         exec = SCXMLTestHelper.getExecutor(tiebreaker01);
         assertNotNull(exec);
         Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
@@ -99,7 +99,7 @@ public class TieBreakerTest extends TestCase {
         assertEquals("twenty", currentStates.iterator().next().getId());
     }
 
-    public void testTieBreaker02() {
+    public void testTieBreaker02() throws Exception {
         exec = SCXMLTestHelper.getExecutor(tiebreaker02);
         assertNotNull(exec);
         Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
@@ -110,7 +110,7 @@ public class TieBreakerTest extends TestCase {
         assertEquals("thirty", currentStates.iterator().next().getId());
     }
 
-    public void testTieBreaker03() {
+    public void testTieBreaker03() throws Exception {
         exec = SCXMLTestHelper.getExecutor(tiebreaker03);
         assertNotNull(exec);
         Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
@@ -121,7 +121,7 @@ public class TieBreakerTest extends TestCase {
         assertEquals("forty", currentStates.iterator().next().getId());
     }
 
-    public void testTieBreaker04() {
+    public void testTieBreaker04() throws Exception {
         exec = SCXMLTestHelper.getExecutor(tiebreaker04);
         assertNotNull(exec);
         Set<TransitionTarget> currentStates = SCXMLTestHelper.fireEvent(exec, "event_2");
@@ -130,7 +130,7 @@ public class TieBreakerTest extends TestCase {
         assertEquals(1, currentStates.size());
     }
 
-    public void testTieBreaker05() {
+    public void testTieBreaker05() throws Exception {
         exec = SCXMLTestHelper.getExecutor(tiebreaker05);
         assertNotNull(exec);
         Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
@@ -149,7 +149,7 @@ public class TieBreakerTest extends TestCase {
         }
     }
 
-    public void testTieBreaker06() {
+    public void testTieBreaker06() throws Exception {
         exec = SCXMLTestHelper.getExecutor(SCXMLTestHelper.parse(tiebreaker06));
         assertNotNull(exec);
         Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();

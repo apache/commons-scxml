@@ -98,7 +98,7 @@ public class HistoryTest extends TestCase {
         runHistoryFlow();
     }
 
-    public void testHistoryDefaults01() {
+    public void testHistoryDefaults01() throws Exception {
         exec = SCXMLTestHelper.getExecutor(defaults01);
         Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
@@ -129,7 +129,7 @@ public class HistoryTest extends TestCase {
             next()).getId());
     }
 
-    private String pauseAndResume() {
+    private String pauseAndResume() throws Exception {
         Set<TransitionTarget> currentStates = SCXMLTestHelper.fireEvent(exec, "flow.pause");
         assertEquals(1, currentStates.size());
         assertEquals("interrupted", currentStates.iterator().next().getId());
@@ -140,7 +140,7 @@ public class HistoryTest extends TestCase {
         return ((State)currentStates.iterator().next()).getId();
     }
 
-    private String nextPhase() {
+    private String nextPhase() throws Exception {
         Set<TransitionTarget> currentStates = SCXMLTestHelper.fireEvent(exec, "phase.done");
         assertEquals(1, currentStates.size());
         return ((State)currentStates.iterator().next()).getId();

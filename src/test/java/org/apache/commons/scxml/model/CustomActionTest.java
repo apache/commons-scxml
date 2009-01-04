@@ -128,7 +128,7 @@ public class CustomActionTest extends TestCase {
     }
 
     // Hello World example using the SCXML <log> action
-    public void testHelloWorld() {
+    public void testHelloWorld() throws Exception {
         // (1) Get a SCXMLExecutor
         exec = SCXMLTestHelper.getExecutor(hello01);
         // (2) Single, final state
@@ -138,7 +138,7 @@ public class CustomActionTest extends TestCase {
     }
 
     // Hello World example using a custom <hello> action
-    public void testCustomActionHelloWorld() {
+    public void testCustomActionHelloWorld() throws Exception {
         // (1) Form a list of custom actions defined in the SCXML
         //     document (and any included documents via "src" attributes)
         CustomAction ca1 =
@@ -164,7 +164,7 @@ public class CustomActionTest extends TestCase {
 
     // Hello World example using custom <my:hello> action
     // as part of an external state source (src attribute)
-    public void testCustomActionExternalSrcHelloWorld() {
+    public void testCustomActionExternalSrcHelloWorld() throws Exception {
         // (1) Form a list of custom actions defined in the SCXML
         //     document (and any included documents via "src" attributes)
         CustomAction ca =
@@ -183,7 +183,7 @@ public class CustomActionTest extends TestCase {
 
     // Hello World example using custom <my:send> action
     // (overriding SCXML local name "send")
-    public void testCustomActionOverrideLocalName() {
+    public void testCustomActionOverrideLocalName() throws Exception {
         // (1) List of custom actions, use same local name as SCXML action
         CustomAction ca =
             new CustomAction("http://my.custom-actions.domain/CUSTOM",
@@ -207,7 +207,7 @@ public class CustomActionTest extends TestCase {
 
     // Hello World example using custom <my:hello> action that generates an
     // event which has the payload examined with JEXL expressions
-    public void testCustomActionEventPayloadHelloWorldJexl() {
+    public void testCustomActionEventPayloadHelloWorldJexl() throws Exception {
         // (1) Form a list of custom actions defined in the SCXML
         //     document (and any included documents via "src" attributes)
         CustomAction ca =
@@ -239,7 +239,7 @@ public class CustomActionTest extends TestCase {
 
     // Hello World example using custom <my:hello> action that generates an
     // event which has the payload examined with EL expressions
-    public void testCustomActionEventPayloadHelloWorldEL() {
+    public void testCustomActionEventPayloadHelloWorldEL() throws Exception {
         // (1) Form a list of custom actions defined in the SCXML
         //     document (and any included documents via "src" attributes)
         CustomAction ca =

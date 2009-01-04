@@ -155,7 +155,7 @@ public class SCXMLExecutorTest extends TestCase {
         checkMicrowave02Sample();
     }
 
-    public void testSCXMLExecutorPrefix01Sample() {
+    public void testSCXMLExecutorPrefix01Sample() throws Exception {
         exec = SCXMLTestHelper.getExecutor(prefix01);
         assertNotNull(exec);
         Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();

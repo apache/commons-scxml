@@ -91,49 +91,49 @@ public class SCXMLParserTest extends TestCase {
     /**
      * Test the implementation
      */
-    public void testSCXMLParserMicrowave01Sample() {
+    public void testSCXMLParserMicrowave01Sample() throws Exception {
         scxml = SCXMLTestHelper.parse(microwave01);
         assertNotNull(scxml);
         scxmlAsString = serialize(scxml);
         assertNotNull(scxmlAsString);
     }
 
-    public void testSCXMLParserMicrowave02Sample() {
+    public void testSCXMLParserMicrowave02Sample() throws Exception {
         scxml = SCXMLTestHelper.parse(microwave02);
         assertNotNull(scxml);
         scxmlAsString = serialize(scxml);
         assertNotNull(scxmlAsString);
     }
 
-    public void testSCXMLParserMicrowave03Sample() {
+    public void testSCXMLParserMicrowave03Sample() throws Exception {
         scxml = SCXMLTestHelper.parse(microwave03);
         assertNotNull(scxml);
         scxmlAsString = serialize(scxml);
         assertNotNull(scxmlAsString);
     }
 
-    public void testSCXMLParserMicrowave04Sample() {
+    public void testSCXMLParserMicrowave04Sample() throws Exception {
         scxml = SCXMLTestHelper.parse(microwave04);
         assertNotNull(scxml);
         scxmlAsString = serialize(scxml);
         assertNotNull(scxmlAsString);
     }
 
-    public void testSCXMLParserTransitions01Sample() {
+    public void testSCXMLParserTransitions01Sample() throws Exception {
         scxml = SCXMLTestHelper.parse(transitions01);
         assertNotNull(scxml);
         scxmlAsString = serialize(scxml);
         assertNotNull(scxmlAsString);
     }
 
-    public void testSCXMLParserPrefix01Sample() {
+    public void testSCXMLParserPrefix01Sample() throws Exception {
         scxml = SCXMLTestHelper.parse(prefix01);
         assertNotNull(scxml);
         scxmlAsString = serialize(scxml);
         assertNotNull(scxmlAsString);
     }
 
-    public void testSCXMLParserSend01Sample() {
+    public void testSCXMLParserSend01Sample() throws Exception {
         // Digest
         scxml = SCXMLTestHelper.parse(send01);
         State ten = (State) scxml.getInitialTarget();
@@ -156,7 +156,7 @@ public class SCXMLParserTest extends TestCase {
         */
     }
 
-    public void testSCXMLParserInitialAttr() {
+    public void testSCXMLParserInitialAttr() throws Exception {
         scxml = SCXMLTestHelper.parse(scxmlinitialattr);
         assertNotNull(scxml);
         scxmlAsString = serialize(scxml);

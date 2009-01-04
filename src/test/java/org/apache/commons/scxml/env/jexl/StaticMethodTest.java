@@ -62,7 +62,7 @@ public class StaticMethodTest extends TestCase {
         staticmethod = null;
     }
 
-    public void testJexlStaticMethodInvocation() {
+    public void testJexlStaticMethodInvocation() throws Exception {
         Context jc = new JexlContext();
         jc.set("System", System.class);
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor(staticmethod,
