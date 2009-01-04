@@ -19,8 +19,6 @@ package org.apache.commons.scxml;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.URL;
@@ -31,8 +29,6 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml.env.SimpleDispatcher;
 import org.apache.commons.scxml.env.Tracer;
 import org.apache.commons.scxml.env.jexl.JexlEvaluator;
@@ -63,60 +59,54 @@ public class SCXMLTestHelper {
         return Integer.toString(++sequence);
     }
 
-    public static SCXML parse(final URL url) {
+    public static SCXML parse(final URL url) throws Exception {
         return parse(url, null, null);
     }
 
-    public static SCXML parse(final URL url, final List<CustomAction> customActions) {
+    public static SCXML parse(final URL url, final List<CustomAction> customActions) throws Exception {
         return parse(url, null, customActions);
     }
 
-    public static SCXML parse(final URL url, final ErrorHandler errHandler) {
+    public static SCXML parse(final URL url, final ErrorHandler errHandler) throws Exception {
         return parse(url, errHandler, null);
     }
 
     public static SCXML parse(final URL url, final ErrorHandler errHandler,
-            final List<CustomAction> customActions) {
+            final List<CustomAction> customActions) throws Exception {
         Assert.assertNotNull(url);
         // SAX ErrorHandler may be null
         SCXML scxml = null;
-        try {
-            scxml = SCXMLParser.parse(url, errHandler, customActions);
-        } catch (Exception e) {
-            Log log = LogFactory.getLog(SCXMLTestHelper.class);
-            log.error(e.getMessage(), e);
-            Assert.fail(e.getMessage());
-        }
+        scxml = SCXMLParser.parse(url, errHandler, customActions);
         Assert.assertNotNull(scxml);
         SCXML roundtrip = testModelSerializability(scxml);
         return roundtrip;
     }
 
-    public static SCXMLExecutor getExecutor(final URL url) {
+    public static SCXMLExecutor getExecutor(final URL url) throws Exception {
         SCXML scxml = parse(url);
         Evaluator evaluator = new JexlEvaluator();
         return getExecutor(evaluator, scxml);
     }
 
     public static SCXMLExecutor getExecutor(final URL url,
-            final Evaluator evaluator) {
+            final Evaluator evaluator) throws Exception {
         SCXML scxml = parse(url);
         return getExecutor(evaluator, scxml);
     }
 
     public static SCXMLExecutor getExecutor(final URL url,
-            final ErrorHandler errHandler) {
+            final ErrorHandler errHandler) throws Exception {
         SCXML scxml = parse(url, errHandler);
         Evaluator evaluator = new JexlEvaluator();
         return getExecutor(evaluator, scxml);
     }
 
-    public static SCXMLExecutor getExecutor(SCXML scxml) {
+    public static SCXMLExecutor getExecutor(SCXML scxml) throws Exception {
         return getExecutor(scxml, null);
     }
 
     public static SCXMLExecutor getExecutor(SCXML scxml,
-            SCXMLSemantics semantics) {
+            SCXMLSemantics semantics) throws Exception {
         Evaluator evaluator = new JexlEvaluator();
         Context context = evaluator.newContext(null);
         EventDispatcher ed = new SimpleDispatcher();
@@ -124,7 +114,7 @@ public class SCXMLTestHelper {
         return getExecutor(context, evaluator, scxml, ed, trc, semantics);
     }
 
-    public static SCXMLExecutor getExecutor(Evaluator evaluator, SCXML scxml) {
+    public static SCXMLExecutor getExecutor(Evaluator evaluator, SCXML scxml) throws Exception {
         EventDispatcher ed = new SimpleDispatcher();
         Tracer trc = new Tracer();
         Assert.assertNotNull("Null evaluator", evaluator);
@@ -133,7 +123,7 @@ public class SCXMLTestHelper {
     }
 
     public static SCXMLExecutor getExecutor(final URL url, final Context ctx,
-            final Evaluator evaluator) {
+            final Evaluator evaluator) throws Exception {
         SCXML scxml = parse(url);
         EventDispatcher ed = new SimpleDispatcher();
         Tracer trc = new Tracer();
@@ -141,42 +131,36 @@ public class SCXMLTestHelper {
     }
 
     public static SCXMLExecutor getExecutor(final SCXML scxml,
-            final Context ctx, final Evaluator evaluator) {
+            final Context ctx, final Evaluator evaluator) throws Exception {
         EventDispatcher ed = new SimpleDispatcher();
         Tracer trc = new Tracer();
         return getExecutor(ctx, evaluator, scxml, ed, trc);
     }
 
     public static SCXMLExecutor getExecutor(Context context,
-            Evaluator evaluator, SCXML scxml, EventDispatcher ed, Tracer trc) {
+            Evaluator evaluator, SCXML scxml, EventDispatcher ed, Tracer trc) throws Exception {
         return getExecutor(context, evaluator, scxml, ed, trc, null);
     }
 
     public static SCXMLExecutor getExecutor(Context context,
             Evaluator evaluator, SCXML scxml, EventDispatcher ed,
-            Tracer trc, SCXMLSemantics semantics) {
+            Tracer trc, SCXMLSemantics semantics) throws Exception {
         Assert.assertNotNull(evaluator);
         Assert.assertNotNull(context);
         Assert.assertNotNull(scxml);
         Assert.assertNotNull(ed);
         Assert.assertNotNull(trc);
         SCXMLExecutor exec = null;
-        try {
-            if (semantics == null) {
-                exec = new SCXMLExecutor(evaluator, ed, trc);
-            } else {
-                exec = new SCXMLExecutor(evaluator, ed, trc, semantics);
-            }
-            exec.addListener(scxml, trc);
-            exec.setRootContext(context);
-            exec.setSuperStep(true);
-            exec.setStateMachine(scxml);
-            exec.go();
-        } catch (Exception e) {
-            Log log = LogFactory.getLog(SCXMLTestHelper.class);
-            log.error(e.getMessage(), e);
-            Assert.fail(e.getMessage());
+        if (semantics == null) {
+            exec = new SCXMLExecutor(evaluator, ed, trc);
+        } else {
+            exec = new SCXMLExecutor(evaluator, ed, trc, semantics);
         }
+        exec.addListener(scxml, trc);
+        exec.setRootContext(context);
+        exec.setSuperStep(true);
+        exec.setStateMachine(scxml);
+        exec.go();
         Assert.assertNotNull(exec);
         return exec;
     }
@@ -200,55 +184,37 @@ public class SCXMLTestHelper {
         return exec.getSCInstance().lookupContext(tt);
     }
 
-    public static Set<TransitionTarget> fireEvent(SCXMLExecutor exec, String name) {
+    public static Set<TransitionTarget> fireEvent(SCXMLExecutor exec, String name) throws Exception {
         TriggerEvent[] evts = {new TriggerEvent(name,
                 TriggerEvent.SIGNAL_EVENT, null)};
-        try {
-            exec.triggerEvents(evts);
-        } catch (Exception e) {
-            Log log = LogFactory.getLog(SCXMLTestHelper.class);
-            log.error(e.getMessage(), e);
-            Assert.fail(e.getMessage() + " while firing event named " + name);
-        }
+        exec.triggerEvents(evts);
         return exec.getCurrentStatus().getStates();
     }
 
-    public static Set<TransitionTarget> fireEvent(SCXMLExecutor exec, TriggerEvent te) {
-        try {
-            exec.triggerEvent(te);
-        } catch (Exception e) {
-            Log log = LogFactory.getLog(SCXMLTestHelper.class);
-            log.error(e.getMessage(), e);
-            Assert.fail(e.getMessage() + " while firing event " + te);
-        }
+    public static Set<TransitionTarget> fireEvent(SCXMLExecutor exec, TriggerEvent te) throws Exception {
+        exec.triggerEvent(te);
         return exec.getCurrentStatus().getStates();
     }
 
-    public static Set<TransitionTarget> fireEvents(SCXMLExecutor exec, TriggerEvent[] evts) {
-        try {
-            exec.triggerEvents(evts);
-        } catch (Exception e) {
-            Log log = LogFactory.getLog(SCXMLTestHelper.class);
-            log.error(e.getMessage(), e);
-            Assert.fail(e.getMessage() + " while firing events " + evts);
-        }
+    public static Set<TransitionTarget> fireEvents(SCXMLExecutor exec, TriggerEvent[] evts) throws Exception {
+        exec.triggerEvents(evts);
         return exec.getCurrentStatus().getStates();
     }
 
     public static void assertPostTriggerState(SCXMLExecutor exec,
-            String triggerEventName, String expectedStateId) {
+            String triggerEventName, String expectedStateId) throws Exception {
         assertPostTriggerState(exec, new TriggerEvent(triggerEventName,
                 TriggerEvent.SIGNAL_EVENT), expectedStateId);
     }
 
     public static void assertPostTriggerStates(SCXMLExecutor exec,
-            String triggerEventName, String[] expectedStateIds) {
+            String triggerEventName, String[] expectedStateIds) throws Exception {
         assertPostTriggerStates(exec, new TriggerEvent(triggerEventName,
                 TriggerEvent.SIGNAL_EVENT), expectedStateIds);
     }
 
     public static void assertPostTriggerState(SCXMLExecutor exec,
-            TriggerEvent triggerEvent, String expectedStateId) {
+            TriggerEvent triggerEvent, String expectedStateId) throws Exception {
         Set<TransitionTarget> currentStates = fireEvent(exec, triggerEvent);
         Assert.assertEquals("Expected 1 simple (leaf) state with id '"
             + expectedStateId + "' on firing event " + triggerEvent
@@ -259,7 +225,7 @@ public class SCXMLTestHelper {
     }
 
     public static void assertPostTriggerStates(SCXMLExecutor exec,
-            TriggerEvent triggerEvent, String[] expectedStateIds) {
+            TriggerEvent triggerEvent, String[] expectedStateIds) throws Exception {
         if (expectedStateIds == null || expectedStateIds.length == 0) {
             Assert.fail("Must specify an array of one or more "
                 + "expected state IDs");
@@ -284,7 +250,7 @@ public class SCXMLTestHelper {
             + "'", 0, expectedStateIdList.size());
     }
 
-    public static SCXML testModelSerializability(final SCXML scxml) {
+    public static SCXML testModelSerializability(final SCXML scxml) throws Exception {
         File fileDir = new File(SERIALIZATION_DIR);
         if (!fileDir.exists() && !fileDir.mkdir()) {
             System.err.println("SKIPPED SERIALIZATION: Failed directory creation");
@@ -293,29 +259,18 @@ public class SCXMLTestHelper {
         String filename = SERIALIZATION_FILE_PREFIX
             + getSequenceNumber() + SERIALIZATION_FILE_SUFFIX;
         SCXML roundtrip = null;
-        try {
-            ObjectOutputStream out =
-                new ObjectOutputStream(new FileOutputStream(filename));
-            out.writeObject(scxml);
-            out.close();
-            ObjectInputStream in =
-                new ObjectInputStream(new FileInputStream(filename));
-            roundtrip = (SCXML) in.readObject();
-            in.close();
-        } catch (NotSerializableException nse) {
-            // <data> nodes failed serialization
-            System.err.println("SERIALIZATION ERROR: The DOM implementation"
-                + " in use is not serializable");
-            return scxml;
-        } catch(IOException ex) {
-            throw new RuntimeException(ex);
-        } catch(ClassNotFoundException ex) {
-            throw new RuntimeException(ex);
-        }
+        ObjectOutputStream out =
+            new ObjectOutputStream(new FileOutputStream(filename));
+        out.writeObject(scxml);
+        out.close();
+        ObjectInputStream in =
+            new ObjectInputStream(new FileInputStream(filename));
+        roundtrip = (SCXML) in.readObject();
+        in.close();
         return roundtrip;
     }
 
-    public static SCXMLExecutor testExecutorSerializability(final SCXMLExecutor exec) {
+    public static SCXMLExecutor testExecutorSerializability(final SCXMLExecutor exec) throws Exception {
         File fileDir = new File(SERIALIZATION_DIR);
         if (!fileDir.exists() && !fileDir.mkdir()) {
             System.err.println("SKIPPED SERIALIZATION: Failed directory creation");
@@ -324,26 +279,14 @@ public class SCXMLTestHelper {
         String filename = SERIALIZATION_FILE_PREFIX
             + getSequenceNumber() + SERIALIZATION_FILE_SUFFIX;
         SCXMLExecutor roundtrip = null;
-        try {
-            ObjectOutputStream out =
-                new ObjectOutputStream(new FileOutputStream(filename));
-            out.writeObject(exec);
-            out.close();
-            ObjectInputStream in =
-                new ObjectInputStream(new FileInputStream(filename));
-            roundtrip = (SCXMLExecutor) in.readObject();
-            in.close();
-        } catch (NotSerializableException nse) {
-            // <data> nodes failed serialization, test cases do not add
-            // other non-serializable context data
-            System.err.println("SERIALIZATION ERROR: The DOM implementation"
-                + " in use is not serializable");
-            return exec;
-        } catch(IOException ex) {
-            throw new RuntimeException(ex);
-        } catch(ClassNotFoundException ex) {
-            throw new RuntimeException(ex);
-        }
+        ObjectOutputStream out =
+            new ObjectOutputStream(new FileOutputStream(filename));
+        out.writeObject(exec);
+        out.close();
+        ObjectInputStream in =
+            new ObjectInputStream(new FileInputStream(filename));
+        roundtrip = (SCXMLExecutor) in.readObject();
+        in.close();
         return roundtrip;
     }
 
@@ -355,4 +298,3 @@ public class SCXMLTestHelper {
     }
 
 }
-
