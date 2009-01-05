@@ -236,6 +236,11 @@
             <include>org/apache/commons/scxml/semantics/SemanticsTestSuite.java</include>
             <include>org/apache/commons/scxml/test/TestingTestSuite.java</include>
           </includes>
+          <systemProperties>
+              <!-- Reduce logging output -->
+              <property><name>org.apache.commons.logging.Log</name><value>org.apache.commons.logging.impl.SimpleLog</value></property>
+              <property><name>org.apache.commons.logging.simplelog.defaultlog</name><value>warn</value></property>
+          </systemProperties>
         </configuration>
       </plugin>
       <plugin>
