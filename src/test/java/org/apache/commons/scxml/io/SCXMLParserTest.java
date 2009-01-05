@@ -73,21 +73,21 @@ public class SCXMLParserTest extends TestCase {
     /**
      * Test the implementation
      */
-    public void testSCXMLParserMicrowave03Sample() {
+    public void testSCXMLParserMicrowave03Sample() throws Exception {
         scxml = SCXMLTestHelper.parse(microwave03);
         assertNotNull(scxml);
         scxmlAsString = serialize(scxml);
         assertNotNull(scxmlAsString);
     }
 
-    public void testSCXMLParserMicrowave04Sample() {
+    public void testSCXMLParserMicrowave04Sample() throws Exception {
         scxml = SCXMLTestHelper.parse(microwave04);
         assertNotNull(scxml);
         scxmlAsString = serialize(scxml);
         assertNotNull(scxmlAsString);
     }
 
-    public void testSCXMLParserInitialAttr() {
+    public void testSCXMLParserInitialAttr() throws Exception {
         scxml = SCXMLTestHelper.parse(scxmlinitialattr);
         assertNotNull(scxml);
         scxmlAsString = serialize(scxml);

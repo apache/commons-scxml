@@ -80,35 +80,35 @@ public class SCXMLDigesterTest extends TestCase {
     /**
      * Test the implementation
      */
-    public void testSCXMLDigesterMicrowave01Sample() {
+    public void testSCXMLDigesterMicrowave01Sample() throws Exception {
         scxml = SCXMLTestHelper.digest(microwave01);
         assertNotNull(scxml);
         scxmlAsString = serialize(scxml);
         assertNotNull(scxmlAsString);
     }
 
-    public void testSCXMLDigesterMicrowave02Sample() {
+    public void testSCXMLDigesterMicrowave02Sample() throws Exception {
         scxml = SCXMLTestHelper.digest(microwave02);
         assertNotNull(scxml);
         scxmlAsString = serialize(scxml);
         assertNotNull(scxmlAsString);
     }
 
-    public void testSCXMLDigesterTransitions01Sample() {
+    public void testSCXMLDigesterTransitions01Sample() throws Exception {
         scxml = SCXMLTestHelper.digest(transitions01);
         assertNotNull(scxml);
         scxmlAsString = serialize(scxml);
         assertNotNull(scxmlAsString);
     }
 
-    public void testSCXMLDigesterPrefix01Sample() {
+    public void testSCXMLDigesterPrefix01Sample() throws Exception {
         scxml = SCXMLTestHelper.digest(prefix01);
         assertNotNull(scxml);
         scxmlAsString = serialize(scxml);
         assertNotNull(scxmlAsString);
     }
 
-    public void testSCXMLDigesterSend01Sample() {
+    public void testSCXMLDigesterSend01Sample() throws Exception {
         // Digest
         scxml = SCXMLTestHelper.digest(send01);
         State ten = (State) scxml.getInitialTarget();

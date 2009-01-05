@@ -78,7 +78,7 @@ public class StateSrcTest extends TestCase {
     /**
      * Test the implementation
      */
-    public void testRecursiveSrcInclude() {
+    public void testRecursiveSrcInclude() throws Exception {
         scxml = SCXMLTestHelper.digest(src01);
         assertNotNull(scxml);
         exec = SCXMLTestHelper.getExecutor(scxml);

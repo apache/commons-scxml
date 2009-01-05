@@ -69,7 +69,7 @@ public class AssignTest extends TestCase {
     /**
      * Test the implementation
      */
-    public void testAssignSrc() {
+    public void testAssignSrc() throws Exception {
         exec = SCXMLTestHelper.getExecutor(assign01);
         Set currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
@@ -78,7 +78,7 @@ public class AssignTest extends TestCase {
         assertTrue(exec.getCurrentStatus().isFinal());
     }
 
-    public void testAssignDeep() {
+    public void testAssignDeep() throws Exception {
         exec = SCXMLTestHelper.getExecutor(assign02);
         Set currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());

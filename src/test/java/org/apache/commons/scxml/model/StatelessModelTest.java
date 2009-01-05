@@ -56,7 +56,7 @@ public class StatelessModelTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
-    public void setUp() {
+    public void setUp() throws Exception {
         stateless01jexl = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/env/jexl/stateless-01.xml");
         stateless01jsp = this.getClass().getClassLoader().

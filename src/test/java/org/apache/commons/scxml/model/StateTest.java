@@ -170,7 +170,7 @@ public class StateTest extends TestCase {
         assertFalse(state.isRegion());
     }
 
-    public void testInitialAttribute() {
+    public void testInitialAttribute() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse(state01);
         assertNotNull(scxml);
         exec = SCXMLTestHelper.getExecutor(scxml);

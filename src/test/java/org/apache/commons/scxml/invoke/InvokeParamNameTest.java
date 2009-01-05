@@ -57,7 +57,7 @@ public class InvokeParamNameTest extends TestCase {
     static String lastSource;
     static Map lastParams;
     
-    public void setUp() {
+    public void setUp() throws Exception {
         invoker04 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/invoke/invoker-04.xml");
         exec = SCXMLTestHelper.getExecutor(invoker04,

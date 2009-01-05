@@ -67,7 +67,7 @@ public class Issue62Test extends TestCase {
         exec = null;
     }
 
-    public void test01issue62() {
+    public void test01issue62() throws Exception {
         exec = SCXMLTestHelper.getExecutor(test01);
         Set currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
@@ -76,17 +76,17 @@ public class Issue62Test extends TestCase {
         SCXMLTestHelper.assertPostTriggerState(exec, "foo", "s1.1");
     }
 
-    public void test02issue62() {
+    public void test02issue62() throws Exception {
         exec = SCXMLTestHelper.getExecutor(test02);
         fragmenttest();
     }
 
-    public void test03issue62() {
+    public void test03issue62() throws Exception {
         exec = SCXMLTestHelper.getExecutor(SCXMLTestHelper.parse(test03));
         fragmenttest();
     }
 
-    private void fragmenttest() {
+    private void fragmenttest() throws Exception {
         Set currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
         assertEquals("s1", ((State)currentStates.iterator().

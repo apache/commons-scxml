@@ -86,22 +86,22 @@ public class ActionsTest extends TestCase {
     /**
      * Test the implementation
      */
-    public void testStateActions() {
+    public void testStateActions() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse(actionsSample01);
         runTest(scxml);
     }
 
-    public void testParallelActions() {
+    public void testParallelActions() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse(actionsSample02);
         runTest(scxml);
     }
 
-    public void testInitialActions() {
+    public void testInitialActions() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse(actionsSample03);
         runTest(scxml);
     }
 
-    private void runTest(SCXML scxml) {
+    private void runTest(SCXML scxml) throws Exception {
         exec = SCXMLTestHelper.getExecutor(scxml, ctx, evaluator);
         ELContext ctx = (ELContext) SCXMLTestHelper.lookupContext(exec,
             "actionsTest");

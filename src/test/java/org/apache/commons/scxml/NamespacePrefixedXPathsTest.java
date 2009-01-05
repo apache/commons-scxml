@@ -54,7 +54,7 @@ public class NamespacePrefixedXPathsTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
-    public void setUp() {
+    public void setUp() throws Exception {
         datamodel03jexl = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/env/jexl/datamodel-03.xml");
         datamodel03jsp = this.getClass().getClassLoader().
