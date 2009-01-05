@@ -280,7 +280,7 @@ public class SCXMLTestHelper {
 
     public static SCXML testModelSerializability(final SCXML scxml) throws Exception {
         File fileDir = new File(SERIALIZATION_DIR);
-        if (!fileDir.exists() && !fileDir.mkdir()) {
+        if (!fileDir.exists() && !fileDir.mkdirs()) {
             System.err.println("SKIPPED SERIALIZATION: Failed directory creation");
             return scxml;
         }
@@ -315,7 +315,7 @@ public class SCXMLTestHelper {
 
     public static SCXMLExecutor testExecutorSerializability(final SCXMLExecutor exec) throws Exception {
         File fileDir = new File(SERIALIZATION_DIR);
-        if (!fileDir.exists() && !fileDir.mkdir()) {
+        if (!fileDir.exists() && !fileDir.mkdirs()) {
             System.err.println("SKIPPED SERIALIZATION: Failed directory creation");
             return exec;
         }
