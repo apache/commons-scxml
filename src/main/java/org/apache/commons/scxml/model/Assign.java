@@ -16,9 +16,12 @@
  */
 package org.apache.commons.scxml.model;
 
+import java.io.IOException;
 import java.util.Collection;
 
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,6 +37,7 @@ import org.apache.commons.scxml.TriggerEvent;
 import org.apache.commons.scxml.semantics.ErrorConstants;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 /**
  * The class in this SCXML object model that corresponds to the
@@ -267,15 +271,27 @@ public class Assign extends Action implements PathResolverHolder {
         try {
             doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().
                 parse(resolvedSrc);
-        } catch (Throwable t) {
-            org.apache.commons.logging.Log log = LogFactory.
-                getLog(Assign.class);
-            log.error(t.getMessage(), t);
+        } catch (FactoryConfigurationError t) {
+            logError(t);
+        } catch (SAXException t) {
+            logError(t);
+        } catch (IOException t) {
+            logError(t);
+        } catch (ParserConfigurationException t) {
+            logError(t);
         }
         if (doc == null) {
             return null;
         }
         return doc.getDocumentElement();
+    }
+
+    /**
+     * @param throwable
+     */
+    private void logError(Throwable throwable) {
+        org.apache.commons.logging.Log log = LogFactory.getLog(Assign.class);
+        log.error(throwable.getMessage(), throwable);
     }
 
 }

@@ -25,6 +25,7 @@ import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.digester.Digester;
@@ -1325,13 +1326,25 @@ public final class SCXMLDigester {
                         newInstance();
                     DocumentBuilder db = dbFactory.newDocumentBuilder();
                     attrNode = db.parse(path);
-                } catch (Throwable t) { // you read that correctly
-                    org.apache.commons.logging.Log log = LogFactory.
-                        getLog(SCXMLDigester.class);
-                    log.error(t.getMessage(), t);
+                } catch (FactoryConfigurationError t) {
+                    logError(t);
+                } catch (ParserConfigurationException t) {
+                    logError(t);
+                } catch (SAXException t) {
+                    logError(t);
+                } catch (IOException t) {
+                    logError(t);
                 }
                 return;
             }
+        }
+
+        /**
+         * @param throwable
+         */
+        private void logError(Throwable throwable) {
+            org.apache.commons.logging.Log log = LogFactory.getLog(SCXMLDigester.class);
+            log.error(throwable.getMessage(), throwable);
         }
 
         /**
