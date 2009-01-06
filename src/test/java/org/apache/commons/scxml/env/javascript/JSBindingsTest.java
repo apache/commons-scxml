@@ -508,9 +508,10 @@ public class JSBindingsTest extends TestCase {
         assertNull("Invalid JSbindings",         jsx.get     ("bear"));
 
         jsx.put       ("bear","koala");
-        assertNull    ("Invalid SCXML context",        context.get ("bear"));
-        assertNotNull ("Invalid Javascript bindings",  bindings.get("bear"));
-        assertEquals  ("Invalid Javascript","koala",   bindings.get("bear"));
+        assertNotNull ("Invalid SCXML context",        context.get ("bear"));
+        assertEquals  ("Invalid SCXML context","koala",context.get("bear"));
+        assertNotNull ("Invalid JSbindings",           jsx.get ("bear"));
+        assertNull    ("Invalid Javascript bindings",  bindings.get("bear"));
     }
 
     /**
