@@ -58,7 +58,7 @@ public class JSEvaluatorTest extends TestCase {
     private static final String SCRIPT         = "<?xml version='1.0'?>" +
                                                  "<scxml xmlns        = 'http://www.w3.org/2005/07/scxml' " +
                                                         "xmlns:scxml  = 'http://commons.apache.org/scxml' " +
-                                                        "initialstate = 'start' "  +
+                                                        "initial = 'start' "  +
                                                         "version      = '1.0'>" +
                                                   "<datamodel>"           +
                                                   "<data id='forest'>"  +
