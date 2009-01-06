@@ -25,6 +25,7 @@ import javax.script.Bindings;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 
 import org.apache.commons.scxml.Builtin;
 import org.apache.commons.scxml.Context;
@@ -126,7 +127,7 @@ public class JSEvaluator implements Evaluator {
             // ... evaluate
 
             return engine.eval(buffer.toString(),new JSBindings(context,bindings));
-        } catch (Throwable x) {
+        } catch (ScriptException x) {
             throw new SCXMLExpressionException("Error evaluating ['" + expression + "'] " + x);
         }
     }
@@ -192,7 +193,7 @@ public class JSEvaluator implements Evaluator {
             // ... evaluate
 
             return (Node) engine.eval(buffer.toString(),new JSBindings(context,bindings));
-        } catch (Throwable x) {
+        } catch (ScriptException x) {
             throw new SCXMLExpressionException("Error evaluating ['" + expression + "'] " + x);
         }
     }
