@@ -52,9 +52,9 @@
     <pre>
     java -classpath
 
-    commons-digester-1.7.jar;commons-beanutils-1.7.0.jar;
-    commons-logging-1.0.4.jar;commons-scxml-0.9.jar;
-    commons-jexl-1.0.jar
+    commons-digester-2.0.jar;commons-beanutils-1.8.0.jar;
+    commons-logging-1.1.1.jar;commons-scxml-0.9.jar;
+    commons-jexl-1.1.jar
 
     <a href="../xref/org/apache/commons/scxml/test/StandaloneJexlExpressions.html">org.apache.commons.scxml.test.StandaloneJexlExpressions</a>
 

@@ -188,7 +188,7 @@
     <dependency> 
       <groupId>commons-digester</groupId>
       <artifactId>commons-digester</artifactId>
-      <version>1.8</version>
+      <version>2.0</version>
       <url>http://commons.apache.org/digester/</url>
       <properties>
         <comment>&lt;b&gt;Core&lt;/b&gt;
@@ -198,7 +198,7 @@
     <dependency> 
       <groupId>commons-beanutils</groupId>
       <artifactId>commons-beanutils</artifactId>
-      <version>1.7.0</version>
+      <version>1.8.0</version>
       <url>http://commons.apache.org/beanutils/</url>
       <properties>
         <comment>&lt;b&gt;Transitive&lt;/b&gt;
