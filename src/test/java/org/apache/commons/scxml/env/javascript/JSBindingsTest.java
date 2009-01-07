@@ -25,7 +25,6 @@ import javax.script.Bindings;
 import javax.script.SimpleBindings;
 
 import org.apache.commons.scxml.Context;
-import org.apache.commons.scxml.SCXMLExpressionException;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -89,14 +88,14 @@ public class JSBindingsTest extends TestCase {
     /**
      * Tests implementation of JSBindings constructor.
      */
-    public void testConstructor() throws SCXMLExpressionException {
+    public void testConstructor() {
         assertNotNull(new JSBindings(new JSContext(),new SimpleBindings()));
     }
 
     /**
      * Test implementation of JSBindings constructor with invalid SCXML context.
      */
-    public void testInvalidContextConstructor() throws SCXMLExpressionException {
+    public void testInvalidContextConstructor() {
         try {
              assertNotNull(new JSBindings(null,new SimpleBindings()));
              fail("JSBindings constructor accepted invalid SCXML context");
@@ -109,7 +108,7 @@ public class JSBindingsTest extends TestCase {
     /**
      * Test implementation of JSBindings constructor with invalid Javascript bindings.
      */
-    public void testInvalidBindingsConstructor() throws SCXMLExpressionException {
+    public void testInvalidBindingsConstructor() {
         try {
              assertNotNull(new JSBindings(new JSContext(),null));
              fail("JSBindings constructor accepted invalid Javascript bindings");
