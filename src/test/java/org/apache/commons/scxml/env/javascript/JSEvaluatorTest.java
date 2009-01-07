@@ -212,11 +212,11 @@ public class JSEvaluatorTest extends TestCase {
      *
      */
     public void testVarExpressions() throws Exception {
-        context.set("fibonacci",12);
+        context.set("fibonacci",Integer.valueOf(12));
 
         for (TestItem item: VAR_EXPRESSIONS) {
             assertNotNull(context.get("fibonacci"));
-            assertEquals (12,context.get("fibonacci"));
+            assertEquals (Integer.valueOf(12),context.get("fibonacci"));
             assertEquals ("Invalid result: " + item.expression,
                           item.result,
                           evaluator.eval(context,item.expression));
@@ -299,9 +299,9 @@ public class JSEvaluatorTest extends TestCase {
      *
      */
     public void testScriptFunctions() throws Exception {
-        context.set("FIVE",5);
-        assertEquals(5,context.get("FIVE"));
-        assertEquals("Invalid function result",120.0,evaluator.eval(context,FUNCTION));
+        context.set("FIVE",Integer.valueOf(5));
+        assertEquals(Integer.valueOf(5),context.get("FIVE"));
+        assertEquals("Invalid function result",Double.valueOf(120.0),evaluator.eval(context,FUNCTION));
     }
 
 
