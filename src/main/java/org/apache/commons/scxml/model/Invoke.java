@@ -19,7 +19,6 @@ package org.apache.commons.scxml.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -55,13 +54,6 @@ public class Invoke implements NamespacePrefixesHolder, PathResolverHolder,
     private String srcexpr;
 
     /**
-     * The Map of the params to be sent to the invoked process.
-     *
-     * Remove with deprecated getParams() in 1.0
-     */
-    private final Map<String, String> params;
-
-    /**
      * The List of the params to be sent to the invoked process.
      */
     private final List<Param> paramsList;
@@ -86,7 +78,6 @@ public class Invoke implements NamespacePrefixesHolder, PathResolverHolder,
      * Default no-args constructor for Digester.
      */
     public Invoke() {
-        params = Collections.synchronizedMap(new HashMap<String, String>());
         paramsList = Collections.synchronizedList(new ArrayList<Param>());
     }
 
@@ -161,7 +152,6 @@ public class Invoke implements NamespacePrefixesHolder, PathResolverHolder,
      * @param param The invoke parameter.
      */
     public final void addParam(final Param param) {
-        params.put(param.getName(), param.getExpr());
         paramsList.add(param);
     }
 
