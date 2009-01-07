@@ -220,7 +220,8 @@
             <include>org/apache/commons/scxml/SCXMLTestSuite.java</include>
             <include>org/apache/commons/scxml/env/EnvTestSuite.java</include>
             <include>org/apache/commons/scxml/env/faces/EnvFacesTestSuite.java</include>
-            <include>org/apache/commons/scxml/env/javascript/EnvJavaScriptTestSuite.java</include>
+            <!-- Avoid bug in Surefire 2.4.3 which stops when java is found in a directory name -->
+            <include>org/apache/commons/scxml/env/j*avascript/EnvJavaScriptTestSuite.java</include>
             <include>org/apache/commons/scxml/env/jexl/EnvJexlTestSuite.java</include>
             <include>org/apache/commons/scxml/env/jsp/EnvJspTestSuite.java</include>
             <include>org/apache/commons/scxml/env/servlet/EnvServletTestSuite.java</include>
