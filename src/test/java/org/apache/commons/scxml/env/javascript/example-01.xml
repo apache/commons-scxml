@@ -88,8 +88,7 @@
    <onentry>
     <log expr='"Lion : " + Data(jungle,"animals/lion/name")  + "," + Data(jungle,"animals/lion/age")'  />
     <log expr='"Tiger: " + Data(jungle,"animals/tiger/name") + "," + Data(jungle,"animals/tiger/age")' />
-    <assign location='Data(jungle,"animals/lion/age")'  expr='new Number(Data(jungle,"animals/lion/age")) + 3'     />
-    <assign location='Data(jungle,"animals/tiger/age")' expr='new Number(Data(jungle,"animals/lion/age")) + 4'     />
+    <assign location='Data(jungle,"animals/lion/age")'  expr='Data(jungle,"animals/tiger/age")'        />
     <log expr='"Lion : " + Data(jungle,"animals/lion/name")  + "," + Data(jungle,"animals/lion/age")'  />
     <log expr='"Tiger: " + Data(jungle,"animals/tiger/name") + "," + Data(jungle,"animals/tiger/age")' />
    </onentry>
