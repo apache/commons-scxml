@@ -245,7 +245,7 @@ public class JSBindings implements Bindings {
         if (context.has(key.toString()))
            return context.getVars().remove(key);
 
-        return false;
+        return Boolean.FALSE;
     }
 
     /**
