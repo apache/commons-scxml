@@ -127,7 +127,7 @@ public class JSEvaluator implements Evaluator {
             // ... evaluate
 
             return engine.eval(buffer.toString(),new JSBindings(context,bindings));
-        } catch (ScriptException x) {
+        } catch (Exception x) {
             throw new SCXMLExpressionException("Error evaluating ['" + expression + "'] " + x);
         }
     }
@@ -149,7 +149,7 @@ public class JSEvaluator implements Evaluator {
         Object object;
 
         if ((object = eval(context,expression)) == null) {
-           return null;
+           return Boolean.FALSE;
         }
 
         if (object instanceof Boolean) {
@@ -184,7 +184,7 @@ public class JSEvaluator implements Evaluator {
 
             // ... replace Data() function
 
-            while (matcher.find()) {
+            if (matcher.find()) {
                   matcher.appendReplacement(buffer,"xpath.node(_ALL_NAMESPACES," + matcher.group(1) + "," + matcher.group(2) + ")");
             }
 
@@ -193,7 +193,7 @@ public class JSEvaluator implements Evaluator {
             // ... evaluate
 
             return (Node) engine.eval(buffer.toString(),new JSBindings(context,bindings));
-        } catch (ScriptException x) {
+        } catch (Exception x) {
             throw new SCXMLExpressionException("Error evaluating ['" + expression + "'] " + x);
         }
     }
