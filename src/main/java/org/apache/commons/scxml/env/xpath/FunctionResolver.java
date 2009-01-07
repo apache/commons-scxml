@@ -111,7 +111,7 @@ public class FunctionResolver implements XPathFunctionResolver, Serializable {
          * @see Builtin#isMember(Set, String)
          */
         @Override
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings({ "unchecked", "boxing" })
         public Object evaluate(final List args) throws XPathFunctionException {
             Set<TransitionTarget> allStates =
                 (Set<TransitionTarget>) xctx.get(STATES);

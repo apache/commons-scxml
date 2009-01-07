@@ -372,6 +372,7 @@ public class SCInstance implements Serializable {
      *
      * @since 0.7
      */
+    @SuppressWarnings("boxing")
     public boolean isDone(final TransitionTarget transitionTarget) {
         if (completions.containsKey(transitionTarget)) {
             return completions.get(transitionTarget);
@@ -388,6 +389,7 @@ public class SCInstance implements Serializable {
      *
      * @since 0.7
      */
+    @SuppressWarnings("boxing")
     public void setDone(final TransitionTarget transitionTarget,
             final boolean done) {
         completions.put(transitionTarget, done);
