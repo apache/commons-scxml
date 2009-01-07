@@ -1708,8 +1708,6 @@ public final class SCXMLParser {
          * @see Rule#begin(String, String, Attributes)
          */
         @Override
-        @SuppressWarnings("unchecked")
-        // Accomodate legacy code org.apache.commons.digester.Digester#getCurrentNamespaces()
         public final void begin(final String namespace, final String name,
                 final Attributes attributes) {
             NamespacePrefixesHolder nsHolder =

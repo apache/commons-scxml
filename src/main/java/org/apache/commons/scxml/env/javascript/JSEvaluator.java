@@ -25,8 +25,6 @@ import javax.script.Bindings;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-
 import org.apache.commons.scxml.Builtin;
 import org.apache.commons.scxml.Context;
 import org.apache.commons.scxml.Evaluator;
@@ -105,7 +103,6 @@ public class JSEvaluator implements Evaluator {
      *
      * @throws SCXMLExpressionException Thrown if the expression was invalid.
      */
-    @SuppressWarnings("unchecked")
     @Override
     public Object eval(Context context,String expression) throws SCXMLExpressionException {
         try {
@@ -171,7 +168,6 @@ public class JSEvaluator implements Evaluator {
      *
      * @throws SCXMLExpressionException Thrown if the expression was invalid.
      */
-    @SuppressWarnings("unchecked")
     @Override
     public Node evalLocation(Context context,String expression) throws SCXMLExpressionException {
         try {

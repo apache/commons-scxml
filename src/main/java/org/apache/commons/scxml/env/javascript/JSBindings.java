@@ -52,7 +52,6 @@ public class JSBindings implements Bindings {
      *         or <code>bindings</code> is <code>null</code>.
      *
      */
-    @SuppressWarnings("unchecked")
     public JSBindings(Context context,Bindings bindings) {
         // ... validate
 
@@ -93,7 +92,6 @@ public class JSBindings implements Bindings {
      * NOTE: doesn't seem to be invoked ever. Not thread-safe.
      *
      */
-    @SuppressWarnings("unchecked")
     @Override
     public Set<String> keySet() {
         Set<String> keys = new HashSet<String>();
@@ -112,7 +110,6 @@ public class JSBindings implements Bindings {
      *       context. Not thread-safe.
      *
      */
-    @SuppressWarnings("unchecked")
     @Override
     public int size() {
         Set<String> keys = new HashSet<String>();
@@ -145,7 +142,6 @@ public class JSBindings implements Bindings {
      * NOTE: doesn't seem to be invoked ever so not sure if it works in
      *       context. Not thread-safe.
      */
-    @SuppressWarnings("unchecked")
     @Override
     public Set<Map.Entry<String,Object>> entrySet() {
         return union().entrySet();
@@ -158,7 +154,6 @@ public class JSBindings implements Bindings {
      * NOTE: doesn't seem to be invoked ever so not sure if it works in
      *       context. Not thread-safe.
      */
-    @SuppressWarnings("unchecked")
     @Override
     public Collection<Object> values() {
         return union().values();
@@ -265,7 +260,6 @@ public class JSBindings implements Bindings {
      * Bindings. Does a heavyweight copy - and so far only invoked by the
      * not used methods.
      */
-    @SuppressWarnings("unchecked")
     private Bindings union() {
         Bindings set = new SimpleBindings();
 
