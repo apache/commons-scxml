@@ -160,17 +160,8 @@ final class ModelUpdater {
         for (Transition trn : s.getTransitionsList()) {
             updateTransition(trn, targets);
         }
-        Parallel p = s.getParallel(); //TODO: Remove in v1.0
         Invoke inv = s.getInvoke();
-        if ((inv != null && p != null)
-                || (inv != null && !c.isEmpty())
-                || (p != null && !c.isEmpty())) {
-            logAndThrowModelError(ERR_STATE_BAD_CONTENTS,
-                new Object[] {getStateName(s)});
-        }
-        if (p != null) {
-            updateParallel(p, targets);
-        } else if (inv != null) {
+        if (inv != null) {
             String ttype = inv.getTargettype();
             if (ttype == null || ttype.trim().length() == 0) {
                 logAndThrowModelError(ERR_INVOKE_NO_TARGETTYPE,
@@ -349,15 +340,6 @@ final class ModelUpdater {
      */
     private static final String ERR_STATE_BAD_INIT = "Initial state "
         + "null or not a descendant of {0}";
-
-    /**
-     * Error message when a state element contains anything other than
-     * one &lt;parallel&gt;, one &lt;invoke&gt; or any number of
-     * &lt;state&gt; children.
-     */
-    private static final String ERR_STATE_BAD_CONTENTS = "{0} should "
-        + "contain either one <parallel>, one <invoke> or any number of "
-        + "<state> children.";
 
     /**
      * Error message when a referenced history state cannot be found.

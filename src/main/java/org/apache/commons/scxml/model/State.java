@@ -97,19 +97,6 @@ public class State extends TransitionTarget {
     }
 
     /**
-     * Get the Parallel child (may be null).
-     *
-     * @return Parallel Returns the parallel.
-     *
-     * @deprecated &lt;parallel&gt; no longer needs an enclosing
-     *             &lt;state&gt; element.
-     */
-    @Deprecated
-    public final Parallel getParallel() {
-        return parallel;
-    }
-
-    /**
      * Get the Invoke child (may be null).
      *
      * @return Invoke Returns the invoke.
@@ -230,23 +217,6 @@ public class State extends TransitionTarget {
      */
     public final boolean isRegion() {
         if (getParent() instanceof Parallel) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Checks whether it is a orthogonal state, that is, it owns a parallel
-     * (UML terminology).
-     *
-     * @return true if this is a orthogonal state, otherwise false
-     * @deprecated &lt;parallel&gt; now represents an orthogonal state, rather
-     *             than denoting that the enclosing state is orthogonal, as
-     *             it did in previous SCXML WDs.
-     */
-    @Deprecated
-    public final boolean isOrthogonal() {
-        if (parallel != null) {
             return true;
         }
         return false;

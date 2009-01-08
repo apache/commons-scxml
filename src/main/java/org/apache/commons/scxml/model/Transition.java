@@ -137,24 +137,6 @@ public class Transition extends Executable
     }
 
     /**
-     * Get the transition target (may be null).
-     *
-     * @return Returns the target as specified in SCXML markup.
-     * <p>Remarks: Is <code>null</code> for &quot;stay&quot; transitions.
-     *  Returns parent (the source node) for &quot;self&quot; transitions.</p>
-     *
-     * @deprecated A transition may have multiple targets,
-     *             use getTargets() instead.
-     */
-    @Deprecated
-    public final TransitionTarget getTarget() {
-        if (targets.size() > 0) {
-            return targets.get(0);
-        }
-        return null;
-    }
-
-    /**
      * Get the list of transition targets (may be an empty list).
      *
      * @return Returns the target(s) as specified in SCXML markup.

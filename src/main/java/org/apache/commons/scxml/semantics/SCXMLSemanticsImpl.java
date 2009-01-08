@@ -542,8 +542,6 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                 // NOTE: Digester has to verify this precondition!
                 if (st.isSimple()) {
                     states.add(st); //leaf
-                } else if (st.isOrthogonal()) { //TODO: Remove else if in v1.0
-                    wrkSet.addLast(st.getParallel()); //parallel
                 } else {
                     // composite state
                     List<TransitionTarget> initialStates = st.getInitial().getTransition().

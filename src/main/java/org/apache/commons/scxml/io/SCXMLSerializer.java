@@ -165,11 +165,8 @@ public class SCXMLSerializer {
         for (Transition t : s.getTransitionsList()) {
             serializeTransition(b, t, indent + INDENT);
         }
-        Parallel p = s.getParallel();
         Invoke inv = s.getInvoke();
-        if (p != null) {
-            serializeParallel(b, p, indent + INDENT);
-        } else if (inv != null) {
+        if (inv != null) {
             serializeInvoke(b , inv, indent + INDENT);
         } else {
             Map<String, TransitionTarget> c = s.getChildren();
@@ -302,38 +299,9 @@ public class SCXMLSerializer {
             b.append(" cond=\"").append(SCXMLHelper.escapeXML(t.getCond())).
                 append("\"");
         }
-        boolean next = !SCXMLHelper.isStringEmpty(t.getNext());
-        if (next) {
-            b.append(" target=\"" + t.getNext() + "\"");
-        }
         b.append(">\n");
-        boolean exit = serializeActions(b, t.getActions(), indent + INDENT);
-        if (!next && !exit) {
-            serializeTarget(b, t, indent + INDENT);
-        }
+        serializeActions(b, t.getActions(), indent + INDENT);
         b.append(indent).append("</transition>\n");
-    }
-
-    /**
-     * Serialize this Transition's Target.
-     *
-     *
-     * @param b The buffer to append the serialization to
-     * @param t The Transition whose Target needs to be serialized
-     * @param indent The indent for this XML element
-     *
-     * @deprecated Inline &lt;target&gt; element has been deprecated
-     *             in the SCXML WD
-     */
-    @Deprecated
-    public static void serializeTarget(final StringBuffer b,
-            final Transition t, final String indent) {
-        if (t.getTarget() != null) {
-            b.append(indent).append("<target>");
-            // The inline transition target can only be a state
-            serializeState(b, (State) t.getTarget(), indent + INDENT);
-            b.append(indent).append("</target>");
-        }
     }
 
     /**
