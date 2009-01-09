@@ -162,6 +162,7 @@ public abstract class AbstractStateMachine {
      */
     public AbstractStateMachine(final SCXML stateMachine,
             final Context rootCtx, final Evaluator evaluator) {
+        log = LogFactory.getLog(this.getClass());
         initialize(stateMachine, rootCtx, evaluator);
     }
 
