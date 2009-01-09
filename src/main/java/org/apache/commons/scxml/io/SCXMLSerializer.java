@@ -299,6 +299,10 @@ public class SCXMLSerializer {
             b.append(" cond=\"").append(SCXMLHelper.escapeXML(t.getCond())).
                 append("\"");
         }
+        if (!SCXMLHelper.isStringEmpty(t.getNext())) {
+            b.append(" target=\"").append(SCXMLHelper.escapeXML(t.getNext())).
+                append("\"");
+        }
         b.append(">\n");
         serializeActions(b, t.getActions(), indent + INDENT);
         b.append(indent).append("</transition>\n");

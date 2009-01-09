@@ -161,6 +161,9 @@ final class ModelUpdater {
             updateTransition(trn, targets);
         }
         Invoke inv = s.getInvoke();
+        if (inv != null && !c.isEmpty()) {
+            logAndThrowModelError(ERR_STATE_BAD_CONTENTS, new Object[] {getStateName(s)});
+        }
         if (inv != null) {
             String ttype = inv.getTargettype();
             if (ttype == null || ttype.trim().length() == 0) {
@@ -340,6 +343,13 @@ final class ModelUpdater {
      */
     private static final String ERR_STATE_BAD_INIT = "Initial state "
         + "null or not a descendant of {0}";
+
+    /**
+     * Error message when a state element contains anything other than
+     * an &lt;invoke&gt; or any number of &lt;state&gt; children.
+     */
+    private static final String ERR_STATE_BAD_CONTENTS = "{0} should "
+        + "contain either one <invoke> or any number of <state> children.";
 
     /**
      * Error message when a referenced history state cannot be found.

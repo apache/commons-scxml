@@ -313,6 +313,21 @@ public class SCXMLSerializerTest extends TestCase {
         assertEquals(actualValue, returnValue.toString());
     }
 
+    public void testSerializeTransition() {
+        Transition t = new Transition();
+
+        t.setEvent("foo.bar");
+        t.setCond("i == 3");
+        t.setNext("next");
+
+        String actualValue = "<transition event=\"foo.bar\" cond=\"i == 3\" target=\"next\">\n</transition>\n";
+
+        StringBuffer returnValue = new StringBuffer();
+        SCXMLSerializer.serializeTransition(returnValue, t, "");
+
+        assertEquals(actualValue, returnValue.toString());
+    }
+
     public void testSerializeTransitionEscapeXML() {
         Transition t = new Transition();
 
