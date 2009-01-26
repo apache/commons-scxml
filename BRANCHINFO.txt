@@ -53,7 +53,7 @@ J6
  * Use javax.script for more pluggable ELs - DONE
    (added env.javascript package)
  * Rewrite parser: switch to javax.xml.stream and eliminate dependency on
-   Commons Digester (and thereby, Commons BeanUtils as well) - TODO
+   Commons Digester (and thereby, Commons BeanUtils as well) - DONE
 Misc:
- * Remove deprecations - TODO
+ * Remove deprecations - Mostly DONE
  
