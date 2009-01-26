@@ -18,7 +18,8 @@
 <!-- SCXML Javascript environment: example script -->
 <scxml xmlns        = 'http://www.w3.org/2005/07/scxml'
        xmlns:scxml  = 'http://commons.apache.org/scxml'
-       initial = 'start'
+       xmlns:my     = 'http://my.custom-actions.domain'
+       initial      = 'start'
        version      = '1.0'>
 
  <!-- DATA MODEL -->
@@ -141,7 +142,7 @@
 
   <state id='javascript.eventdatamap.example'>
    <onentry>
-    <scxml:eventdatamaptest />
+    <my:eventdatamaptest />
    </onentry>
    <transition target='end' event='ok' >
     <log expr='"_eventdatamap[ok]=\"" + _eventdatamap.get("ok") + "\""' />

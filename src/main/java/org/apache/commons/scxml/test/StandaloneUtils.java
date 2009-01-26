@@ -23,6 +23,8 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.StringTokenizer;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.apache.commons.scxml.Context;
 import org.apache.commons.scxml.Evaluator;
 import org.apache.commons.scxml.EventDispatcher;
@@ -32,11 +34,10 @@ import org.apache.commons.scxml.TriggerEvent;
 import org.apache.commons.scxml.env.SimpleScheduler;
 import org.apache.commons.scxml.env.Tracer;
 import org.apache.commons.scxml.invoke.SimpleSCXMLInvoker;
-import org.apache.commons.scxml.io.SCXMLParser;
-import org.apache.commons.scxml.io.SCXMLSerializer;
+import org.apache.commons.scxml.io.SCXMLReader;
+import org.apache.commons.scxml.io.SCXMLWriter;
 import org.apache.commons.scxml.model.ModelException;
 import org.apache.commons.scxml.model.SCXML;
-import org.xml.sax.SAXException;
 
 /**
  * Utility methods used by command line SCXML execution, useful for
@@ -76,13 +77,13 @@ public final class StandaloneUtils {
             String documentURI = getCanonicalURI(uri);
             Context rootCtx = evaluator.newContext(null);
             Tracer trc = new Tracer();
-            SCXML doc = SCXMLParser.parse(new URL(documentURI), trc);
+            SCXML doc = SCXMLReader.read(new URL(documentURI));
             if (doc == null) {
                 System.err.println("The SCXML document " + uri
                         + " can not be parsed!");
                 System.exit(-1);
             }
-            System.out.println(SCXMLSerializer.serialize(doc));
+            System.out.println(SCXMLWriter.write(doc));
             SCXMLExecutor exec = new SCXMLExecutor(evaluator, null, trc);
             EventDispatcher ed = new SimpleScheduler(exec);
             exec.setEventdispatcher(ed);
@@ -141,8 +142,8 @@ public final class StandaloneUtils {
             e.printStackTrace();
         } catch (ModelException e) {
             e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
+        } catch (XMLStreamException e) {
+        	e.printStackTrace();
         }
     }
 

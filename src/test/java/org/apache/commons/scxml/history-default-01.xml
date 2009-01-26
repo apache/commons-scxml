@@ -30,7 +30,7 @@
         <!-- shallow history, explicit default transition -->
 
         <history id="history1">
-            <transition next="state11"/>
+            <transition target="state11"/>
         </history>
 
         <state id="state11">
@@ -47,7 +47,7 @@
         <!-- deep history, explicit default transition -->
 
         <history id="history2" type="deep">
-            <transition next="state211"/>
+            <transition target="state211"/>
         </history>
 
         <state id="state21">

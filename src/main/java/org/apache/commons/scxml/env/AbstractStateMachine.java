@@ -21,6 +21,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml.Context;
@@ -30,13 +32,11 @@ import org.apache.commons.scxml.SCXMLListener;
 import org.apache.commons.scxml.TriggerEvent;
 import org.apache.commons.scxml.env.jexl.JexlContext;
 import org.apache.commons.scxml.env.jexl.JexlEvaluator;
-import org.apache.commons.scxml.io.SCXMLParser;
+import org.apache.commons.scxml.io.SCXMLReader;
 import org.apache.commons.scxml.model.ModelException;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.Transition;
 import org.apache.commons.scxml.model.TransitionTarget;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.SAXException;
 
 /**
  * <p>This class demonstrates one approach for providing the base
@@ -118,14 +118,12 @@ public abstract class AbstractStateMachine {
     public AbstractStateMachine(final URL scxmlDocument,
             final Context rootCtx, final Evaluator evaluator) {
         log = LogFactory.getLog(this.getClass());
-        ErrorHandler errHandler = new SimpleErrorHandler();
         try {
-            stateMachine = SCXMLParser.parse(scxmlDocument,
-                errHandler);
+            stateMachine = SCXMLReader.read(scxmlDocument);
         } catch (IOException ioe) {
             logError(ioe);
-        } catch (SAXException sae) {
-            logError(sae);
+        } catch (XMLStreamException xse) {
+            logError(xse);
         } catch (ModelException me) {
             logError(me);
         }

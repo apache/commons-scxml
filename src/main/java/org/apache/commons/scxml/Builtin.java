@@ -122,7 +122,7 @@ public class Builtin implements Serializable {
         } else {
             if (length > 1) {
                 Log log = LogFactory.getLog(Builtin.class);
-                log.warn("Data(): Multiple nodes matching XPath expression \""
+                log.warn("Data(): Multiple (" + length + ") nodes matching XPath expression \""
                     + path + "\", returning first");
             }
             return result.item(0);

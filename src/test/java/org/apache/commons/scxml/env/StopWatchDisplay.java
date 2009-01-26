@@ -144,7 +144,7 @@ public class StopWatchDisplay extends JFrame
     }
 
     public static void main(String[] args) {
-        StopWatchDisplay stopWatchDisplay = new StopWatchDisplay();
+        new StopWatchDisplay();
     }
 
     private JLabel display, state;

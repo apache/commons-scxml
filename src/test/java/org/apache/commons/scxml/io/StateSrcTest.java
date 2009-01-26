@@ -26,10 +26,9 @@ import junit.textui.TestRunner;
 
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
-import org.apache.commons.scxml.env.SimpleErrorHandler;
+import org.apache.commons.scxml.model.ModelException;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.TransitionTarget;
-import org.xml.sax.SAXException;
 /**
  * Unit tests {@link org.apache.commons.scxml.io.SCXMLDigester}
  * Test white box nature of <state> element "src" attribute.
@@ -96,9 +95,9 @@ public class StateSrcTest extends TestCase {
 
     public void testBadSrcInclude() throws Exception {
         try {
-            scxml = SCXMLParser.parse(src04, new SimpleErrorHandler());
+            scxml = SCXMLReader.read(src04);
             fail("Document with bad <state> src attribute shouldn't be parsed!");
-        } catch (SAXException me) {
+        } catch (ModelException me) {
             assertTrue("Unexpected error message for bad <state> 'src' URI",
                 me.getMessage() != null && me.getMessage().contains("Source attribute in <state src="));
         }
@@ -106,9 +105,9 @@ public class StateSrcTest extends TestCase {
 
     public void testBadSrcFragmentInclude() throws Exception {
         try {
-            scxml = SCXMLParser.parse(src05, new SimpleErrorHandler());
+            scxml = SCXMLReader.read(src05);
             fail("Document with bad <state> src attribute shouldn't be parsed!");
-        } catch (SAXException me) {
+        } catch (ModelException me) {
             assertTrue("Unexpected error message for bad <state> 'src' URI fragment",
                 me.getMessage() != null && me.getMessage().contains("URI Fragment in <state src="));
         }

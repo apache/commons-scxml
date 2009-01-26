@@ -16,8 +16,11 @@
  */
 package org.apache.commons.scxml.io;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+
+import javax.xml.stream.XMLStreamException;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -32,19 +35,19 @@ import org.apache.commons.scxml.model.Send;
 import org.apache.commons.scxml.model.State;
 import org.apache.commons.scxml.model.Transition;
 /**
- * Unit tests {@link org.apache.commons.scxml.io.SCXMLParser}.
+ * Unit tests {@link org.apache.commons.scxml.io.SCXMLReader}.
  */
-public class SCXMLParserTest extends TestCase {
+public class SCXMLReaderTest extends TestCase {
     /**
      * Construct a new instance of SCXMLDigesterTest with
      * the specified name
      */
-    public SCXMLParserTest(String name) {
+    public SCXMLReaderTest(String name) {
         super(name);
     }
 
     public static Test suite() {
-        TestSuite suite = new TestSuite(SCXMLParserTest.class);
+        TestSuite suite = new TestSuite(SCXMLReaderTest.class);
         suite.setName("SCXML Parser Tests");
         return suite;
     }
@@ -165,8 +168,8 @@ public class SCXMLParserTest extends TestCase {
         assertEquals("foo", foo.getId());
     }
 
-    private String serialize(final SCXML scxml) {
-        scxmlAsString = SCXMLSerializer.serialize(scxml);
+    private String serialize(final SCXML scxml) throws IOException, XMLStreamException {
+        scxmlAsString = SCXMLWriter.write(scxml);
         assertNotNull(scxmlAsString);
         return scxmlAsString;
     }

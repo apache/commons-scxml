@@ -48,8 +48,9 @@ public class IOTestSuite extends TestCase {
     public static Test suite() {
         TestSuite suite = new TestSuite();
         suite.setName("Commons-SCXML IO Tests");
-        suite.addTest(SCXMLParserTest.suite());
+        suite.addTest(SCXMLReaderTest.suite());
         suite.addTest(SCXMLSerializerTest.suite());
+        suite.addTest(SCXMLWriterTest.suite());
         suite.addTest(StateSrcTest.suite());
         return suite;
     }

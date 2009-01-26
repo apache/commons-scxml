@@ -86,7 +86,7 @@ public class JSExampleTest extends TestCase {
     public void testExample01Sample() throws Exception {
 
         List<CustomAction> actions  = new ArrayList<CustomAction>();        
-        actions.add(new CustomAction("http://commons.apache.org/scxml",
+        actions.add(new CustomAction("http://my.custom-actions.domain",
             "eventdatamaptest", EventDataMapTest.class));
 
         SCXML scxml = SCXMLTestHelper.parse(example01,actions);

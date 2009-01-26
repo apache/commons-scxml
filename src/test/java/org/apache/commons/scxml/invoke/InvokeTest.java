@@ -27,11 +27,10 @@ import junit.textui.TestRunner;
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
 import org.apache.commons.scxml.env.SimpleDispatcher;
-import org.apache.commons.scxml.env.SimpleErrorHandler;
 import org.apache.commons.scxml.env.SimpleErrorReporter;
 import org.apache.commons.scxml.env.jexl.JexlContext;
 import org.apache.commons.scxml.env.jexl.JexlEvaluator;
-import org.apache.commons.scxml.io.SCXMLParser;
+import org.apache.commons.scxml.io.SCXMLReader;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.TransitionTarget;
 
@@ -83,8 +82,7 @@ public class InvokeTest extends TestCase {
      * Test the SCXML documents, usage of &lt;invoke&gt;
      */
     public void testInvoke01Sample() throws Exception {
-        SCXML scxml = SCXMLParser.parse(invoke01,
-            new SimpleErrorHandler());
+        SCXML scxml = SCXMLReader.read(invoke01);
         exec = new SCXMLExecutor(new JexlEvaluator(), new SimpleDispatcher(),
             new SimpleErrorReporter());
         assertNotNull(exec);
@@ -98,8 +96,7 @@ public class InvokeTest extends TestCase {
     }
 
     public void testInvoke02Sample() throws Exception {
-        SCXML scxml = SCXMLParser.parse(invoke02,
-            new SimpleErrorHandler());
+        SCXML scxml = SCXMLReader.read(invoke02);
         exec = new SCXMLExecutor(new JexlEvaluator(), new SimpleDispatcher(),
             new SimpleErrorReporter());
         assertNotNull(exec);
@@ -112,8 +109,7 @@ public class InvokeTest extends TestCase {
     }
 
     public void testInvoke03Sample() throws Exception {
-        SCXML scxml = SCXMLParser.parse(invoke03,
-            new SimpleErrorHandler());
+        SCXML scxml = SCXMLReader.read(invoke03);
         exec = new SCXMLExecutor(new JexlEvaluator(), new SimpleDispatcher(),
             new SimpleErrorReporter());
         assertNotNull(exec);

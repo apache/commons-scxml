@@ -32,11 +32,11 @@ import junit.framework.Assert;
 import org.apache.commons.scxml.env.SimpleDispatcher;
 import org.apache.commons.scxml.env.Tracer;
 import org.apache.commons.scxml.env.jexl.JexlEvaluator;
-import org.apache.commons.scxml.io.SCXMLParser;
+import org.apache.commons.scxml.io.SCXMLReader;
+import org.apache.commons.scxml.io.SCXMLReader.Configuration;
 import org.apache.commons.scxml.model.CustomAction;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.TransitionTarget;
-import org.xml.sax.ErrorHandler;
 /**
  * Helper methods for running SCXML unit tests.
  */
@@ -60,23 +60,14 @@ public class SCXMLTestHelper {
     }
 
     public static SCXML parse(final URL url) throws Exception {
-        return parse(url, null, null);
+        return parse(url, null);
     }
 
     public static SCXML parse(final URL url, final List<CustomAction> customActions) throws Exception {
-        return parse(url, null, customActions);
-    }
-
-    public static SCXML parse(final URL url, final ErrorHandler errHandler) throws Exception {
-        return parse(url, errHandler, null);
-    }
-
-    public static SCXML parse(final URL url, final ErrorHandler errHandler,
-            final List<CustomAction> customActions) throws Exception {
         Assert.assertNotNull(url);
-        // SAX ErrorHandler may be null
         SCXML scxml = null;
-        scxml = SCXMLParser.parse(url, errHandler, customActions);
+        Configuration configuration = new Configuration(null, null, customActions);
+        scxml = SCXMLReader.read(url, configuration);
         Assert.assertNotNull(scxml);
         SCXML roundtrip = testModelSerializability(scxml);
         return roundtrip;
@@ -91,13 +82,6 @@ public class SCXMLTestHelper {
     public static SCXMLExecutor getExecutor(final URL url,
             final Evaluator evaluator) throws Exception {
         SCXML scxml = parse(url);
-        return getExecutor(evaluator, scxml);
-    }
-
-    public static SCXMLExecutor getExecutor(final URL url,
-            final ErrorHandler errHandler) throws Exception {
-        SCXML scxml = parse(url, errHandler);
-        Evaluator evaluator = new JexlEvaluator();
         return getExecutor(evaluator, scxml);
     }
 
@@ -286,6 +270,17 @@ public class SCXMLTestHelper {
         roundtrip = (SCXMLExecutor) in.readObject();
         in.close();
         return roundtrip;
+    }
+
+    public static String removeCarriageReturns(final String original) {
+        StringBuffer buf = new StringBuffer();
+        for (int i = 0; i < original.length(); i++) {
+            char c = original.charAt(i);
+            if (c != '\r') {
+                buf.append(c);
+            }
+        }
+        return buf.toString();
     }
 
     /**

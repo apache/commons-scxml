@@ -21,7 +21,7 @@
        version="1.0"
        initial="assign1">
   
-  <state id="assign1" final="true">
+  <state id="assign1">
 
     <datamodel>
         <data id="foo">

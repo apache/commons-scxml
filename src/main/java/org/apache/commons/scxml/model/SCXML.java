@@ -64,6 +64,21 @@ public class SCXML implements Serializable, Observable,
     private String initial;
 
     /**
+     * The name for this state machine.
+     */
+    private String name;
+
+    /**
+     * The profile in use.
+     */
+    private String profile;
+
+    /**
+     * The exmode for this document.
+     */
+    private String exmode;
+
+    /**
      * Optional property holding the data model for this SCXML document.
      * This gets merged with the root context and potentially hides any
      * (namesake) variables in the root context.
@@ -258,6 +273,60 @@ public class SCXML implements Serializable, Observable,
     public final void setInitial(final String initial) {
         this.initial = initial;
     }
+
+    /**
+     * Get the name for this state machine.
+     *
+     * @return The name for this state machine.
+     */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * Set the name for this state machine.
+	 *
+	 * @param name The name for this state machine.
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * Get the profile in use for this state machine.
+	 *
+	 * @return The profile in use.
+	 */
+	public String getProfile() {
+		return profile;
+	}
+
+	/**
+	 * Set the profile in use for this state machine.
+	 *
+	 * @param profile The profile to be used.
+	 */
+	public void setProfile(String profile) {
+		this.profile = profile;
+	}
+
+	/**
+	 * Get the exmode in use for this state machine.
+	 *
+	 * @return The exmode in use.
+	 */
+	public String getExmode() {
+		return exmode;
+	}
+
+	/**
+	 * Set the exmode to be used for this state machine.
+	 *
+	 * @param exmode The exmode to be used.
+	 */
+	public void setExmode(String exmode) {
+		this.exmode = exmode;
+	}
 
 }
 

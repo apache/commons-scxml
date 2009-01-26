@@ -574,22 +574,26 @@ public class SCXMLSerializer {
             for (Map.Entry<String, String> entry : namespaces.entrySet()) {
                 String prefix = entry.getKey();
                 String nsURI = entry.getValue();
-                if (prefix.length() == 0 && !nsURI.equals(NAMESPACE_SCXML)) {
-                    org.apache.commons.logging.Log log = LogFactory.
-                        getLog(SCXMLSerializer.class);
-                    log.warn("When using the SCXMLSerializer, the default "
-                        + "namespace must be the SCXML namespace:"
-                        + NAMESPACE_SCXML);
-                } if (prefix.equals("cs") &&
-                        !nsURI.equals(NAMESPACE_COMMONS_SCXML)) {
-                    org.apache.commons.logging.Log log = LogFactory.
-                        getLog(SCXMLSerializer.class);
-                    log.warn("When using the SCXMLSerializer, the namespace"
-                        + "prefix \"cs\" must bind to the Commons SCXML "
-                        + "namespace:" + NAMESPACE_COMMONS_SCXML);
-                } else if (prefix.length() > 0) {
-                    b.append(" xmlns:").append(prefix).append("=\"").
-                        append(nsURI).append("\"");
+                if (prefix == null || prefix.length() == 0) {
+                    if (!nsURI.equals(NAMESPACE_SCXML)) {
+                        org.apache.commons.logging.Log log = LogFactory.
+                            getLog(SCXMLSerializer.class);
+                        log.warn("When using the SCXMLSerializer, the default "
+                            + "namespace must be the SCXML namespace:"
+                            + NAMESPACE_SCXML);
+                    }
+                } else {
+                    if (prefix.equals("cs") &&
+                            !nsURI.equals(NAMESPACE_COMMONS_SCXML)) {
+                        org.apache.commons.logging.Log log = LogFactory.
+                            getLog(SCXMLSerializer.class);
+                        log.warn("When using the SCXMLSerializer, the namespace"
+                            + "prefix \"cs\" must bind to the Commons SCXML "
+                            + "namespace:" + NAMESPACE_COMMONS_SCXML);
+                    } else if (prefix.length() > 0) {
+                        b.append(" xmlns:").append(prefix).append("=\"").
+                            append(nsURI).append("\"");
+                    }
                 }
             }
         }

@@ -31,13 +31,10 @@ import org.apache.commons.scxml.Context;
 import org.apache.commons.scxml.Evaluator;
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLExpressionException;
-import org.apache.commons.scxml.env.SimpleErrorHandler;
-import org.apache.commons.scxml.io.SCXMLParser;
+import org.apache.commons.scxml.io.SCXMLReader;
 import org.apache.commons.scxml.model.SCXML;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.InputSource;
 
 /** JUnit 3 test case for the JSEvaluator expression evaluator
  *  class. Includes basic tests for:
@@ -116,10 +113,8 @@ public class JSEvaluatorTest extends TestCase {
     @Override
     protected void setUp() throws Exception {
             StringReader reader = new StringReader(SCRIPT);
-            InputSource  source = new InputSource (reader);
-            ErrorHandler errors = new SimpleErrorHandler();
 
-            scxml     = SCXMLParser.parse(source,errors);
+            scxml     = SCXMLReader.read(reader);
             context   = new JSContext();
             evaluator = new JSEvaluator();
             fsm       = new SCXMLExecutor();
