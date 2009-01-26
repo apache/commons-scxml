@@ -51,7 +51,7 @@ public class SCXMLExecutorTest extends TestCase {
     // Test data
     private URL microwave01jsp, microwave02jsp, microwave01jexl,
         microwave02jexl, microwave03jexl, microwave04jexl, microwave05jexl, transitions01,
-        transitions02, transitions03, transitions04, prefix01, send01, send02;
+        transitions02, transitions03, transitions04, transitions05, prefix01, send01, send02;
     private SCXMLExecutor exec;
 
     /**
@@ -81,6 +81,8 @@ public class SCXMLExecutorTest extends TestCase {
             getResource("org/apache/commons/scxml/transitions-03.xml");
         transitions04 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/transitions-04.xml");
+        transitions05 = this.getClass().getClassLoader().
+            getResource("org/apache/commons/scxml/transitions-05.xml");
         prefix01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/prefix-01.xml");
         send01 = this.getClass().getClassLoader().
@@ -96,7 +98,7 @@ public class SCXMLExecutorTest extends TestCase {
     public void tearDown() {
         microwave01jsp = microwave02jsp = microwave01jexl = microwave02jexl =
             microwave04jexl = microwave05jexl = transitions01 = transitions02 = transitions03 =
-            transitions04 = prefix01 = send01 = send02 = null;
+            transitions04 = transitions05 = prefix01 = send01 = send02 = null;
     }
 
     /**
@@ -233,6 +235,14 @@ public class SCXMLExecutorTest extends TestCase {
         assertEquals(1, currentStates.size());
         assertEquals("thirty", ((State)currentStates.iterator().
             next()).getId());
+    }
+
+    public void testSCXMLExecutorTransitions05Sample() throws Exception {
+        SCXML scxml = SCXMLTestHelper.parse(transitions05);
+        assertNotNull(scxml);
+        exec = SCXMLTestHelper.getExecutor(scxml);
+        assertNotNull(exec);
+        SCXMLTestHelper.assertPostTriggerState(exec, "foo", "end");
     }
 
     public void testSend01Sample() throws Exception {
