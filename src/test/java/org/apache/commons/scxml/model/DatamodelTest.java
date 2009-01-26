@@ -52,7 +52,7 @@ public class DatamodelTest extends TestCase {
     }
 
     // Test data
-    private URL datamodel01jexl, datamodel02jexl, datamodel04jexl, datamodel01jsp, datamodel02jsp;
+    private URL datamodel01jexl, datamodel02jexl, datamodel04jexl, datamodel05jexl, datamodel01jsp, datamodel02jsp;
     private SCXMLExecutor exec01, exec02;
 
     /**
@@ -63,9 +63,11 @@ public class DatamodelTest extends TestCase {
         datamodel01jexl = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/env/jexl/datamodel-01.xml");
         datamodel02jexl = this.getClass().getClassLoader().
-           getResource("org/apache/commons/scxml/env/jexl/datamodel-02.xml");
+            getResource("org/apache/commons/scxml/env/jexl/datamodel-02.xml");
         datamodel04jexl = this.getClass().getClassLoader().
-           getResource("org/apache/commons/scxml/env/jexl/datamodel-04.xml");
+            getResource("org/apache/commons/scxml/env/jexl/datamodel-04.xml");
+        datamodel05jexl = this.getClass().getClassLoader().
+            getResource("org/apache/commons/scxml/env/jexl/datamodel-05.xml");
         datamodel01jsp = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/env/jsp/datamodel-01.xml");
         datamodel02jsp = this.getClass().getClassLoader().
@@ -77,7 +79,7 @@ public class DatamodelTest extends TestCase {
      */
     @Override
     public void tearDown() {
-        datamodel01jexl = datamodel02jexl = datamodel01jsp = datamodel02jsp = null;
+        datamodel01jexl = datamodel02jexl = datamodel04jexl = datamodel05jexl = datamodel01jsp = datamodel02jsp = null;
     }
 
     /**
@@ -135,6 +137,12 @@ public class DatamodelTest extends TestCase {
         currentStates = exec01.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
         assertEquals("thirty", currentStates.iterator().next().getId());
+    }
+
+    public void testDatamodel05Jexl() throws Exception {
+        exec01 = SCXMLTestHelper.getExecutor(datamodel05jexl);
+        assertNotNull(exec01);
+        SCXMLTestHelper.assertState(exec01, "end");
     }
 
     private void runtest() throws Exception {
