@@ -168,6 +168,16 @@ public class SCXMLTestHelper {
         return exec.getSCInstance().lookupContext(tt);
     }
 
+    public static void assertState(SCXMLExecutor exec,
+            String expectedStateId) throws Exception {
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        Assert.assertEquals("Expected 1 simple (leaf) state with id '"
+            + expectedStateId + "' but found " + currentStates.size() + " states instead.",
+            1, currentStates.size());
+        Assert.assertEquals(expectedStateId, currentStates.iterator().
+            next().getId());
+    }
+
     public static Set<TransitionTarget> fireEvent(SCXMLExecutor exec, String name) throws Exception {
         TriggerEvent[] evts = {new TriggerEvent(name,
                 TriggerEvent.SIGNAL_EVENT, null)};
