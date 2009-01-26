@@ -83,8 +83,7 @@ public class AssignTest extends TestCase {
         exec = SCXMLTestHelper.getExecutor(assign02);
         Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
-        assertEquals("assign3", ((State)currentStates.iterator().
-            next()).getId());
+        assertEquals("assign3", currentStates.iterator().next().getId());
         assertTrue(exec.getCurrentStatus().isFinal());
     }
 
