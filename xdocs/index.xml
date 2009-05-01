@@ -115,6 +115,9 @@
         web based applications, using <a href="http://shale.apache.org/shale-dialog/">Shale dialogs</a>.</li>
     <li><a href="http://www.softwaredemo.de/en">Softwaredemo</a> - A platform for online live testing of software.
         SCXML is responsible for managing all resources like VMs, storage and virtual desktop components.</li>
+    <li><a href="http://mymobileweb.morfeo-project.org/">MyMobileWeb project</a> - Open source software platform
+        for simplifying development of mobile web applications. Flow manager uses SCXML to control mobile
+        application flow.</li>
    </ul>
   </p>
  </section>
