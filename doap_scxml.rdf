@@ -70,7 +70,7 @@
       <Version>
         <name>Commons SCXML</name>
         <created>2008-12-01</created>
-        <revision>0.9<revision>
+        <revision>0.9</revision>
       </Version>
     </release>
     <mailing-list rdf:resource="http://commons.apache.org/mail-lists.html"/>
