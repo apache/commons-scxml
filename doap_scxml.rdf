@@ -42,35 +42,35 @@
       <Version>
         <name>Commons SCXML</name>
         <created>2006-07-28</created>
-        <revision>0.5</revision>
+        <revision>0.5</Version>
       </Version>
     </release>
     <release>
       <Version>
         <name>Commons SCXML</name>
         <created>2006-12-18</created>
-        <revision>0.6</revision>
+        <revision>0.6</Version>
       </Version>
     </release>
     <release>
       <Version>
         <name>Commons SCXML</name>
         <created>2007-12-20</created>
-        <revision>0.7</revision>
+        <revision>0.7</Version>
       </Version>
     </release>
     <release>
       <Version>
         <name>Commons SCXML</name>
         <created>2008-05-20</created>
-        <revision>0.8</revision>
+        <revision>0.8</Version>
       </Version>
     </release>
     <release>
       <Version>
         <name>Commons SCXML</name>
         <created>2008-12-01</created>
-        <revision>0.9</revision>
+        <revision>0.9</Version>
       </Version>
     </release>
     <mailing-list rdf:resource="http://commons.apache.org/mail-lists.html"/>
