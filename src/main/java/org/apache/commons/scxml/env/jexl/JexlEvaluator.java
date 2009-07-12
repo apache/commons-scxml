@@ -112,8 +112,8 @@ public class JexlEvaluator implements Evaluator, Serializable {
                 replaceAll("_builtin.data(_ALL_NAMESPACES, ");
             exp = ExpressionFactory.createExpression(evalExpr);
             return (Boolean) exp.evaluate(getEffectiveContext(jexlCtx));
-        } catch (Exception e) {
-            throw new SCXMLExpressionException("eval('" + expr + "'):"
+        } catch (Exception e) {e.printStackTrace();
+            throw new SCXMLExpressionException("evalCond('" + expr + "'):"
                 + e.getMessage(), e);
         }
     }
@@ -143,7 +143,7 @@ public class JexlEvaluator implements Evaluator, Serializable {
             exp = ExpressionFactory.createExpression(evalExpr);
             return (Node) exp.evaluate(getEffectiveContext(jexlCtx));
         } catch (Exception e) {
-            throw new SCXMLExpressionException("eval('" + expr + "'):"
+            throw new SCXMLExpressionException("evalLocation('" + expr + "'):"
                 + e.getMessage(), e);
         }
     }
