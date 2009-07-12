@@ -1061,6 +1061,8 @@ public final class SCXMLReader {
 
         Data datum = new Data();
         datum.setId(readAV(reader, ATTR_ID));
+        datum.setExpr(readAV(reader, ATTR_EXPR));
+        readNamespaces(configuration, datum);
         datum.setNode(readNode(reader, configuration, XMLNS_SCXML, ELEM_DATA, new String[] {"id"}));
         dm.addData(datum);
 
@@ -1710,6 +1712,7 @@ public final class SCXMLReader {
 
         Script script = new Script();
         readNamespaces(configuration, script);
+        script.setBody(readBody(reader, configuration, XMLNS_SCXML, ELEM_SCRIPT));
         script.setParent(executable);
         if (iff != null) {
             iff.addAction(script);
@@ -1967,6 +1970,60 @@ public final class SCXMLReader {
             }
         }
         return root;
+    }
+
+    /**
+     * Read the following body contents into a String.
+     *
+     * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
+     * @param configuration The {@link Configuration} to use while parsing.
+     * @param namespaceURI The namespace URI of the parent element (we will stop reading content when we reach
+     *                     the corresponding end tag)
+     * @param localName The local name of the parent element (we will stop reading content when we reach the
+     *                  corresponding end tag)
+     *
+     * @return The body content read into a String.
+     *
+     * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
+     */
+    private static String readBody(final XMLStreamReader reader, final Configuration configuration,
+            final String namespaceURI, final String localName)
+    throws XMLStreamException {
+
+        StringBuffer body = new StringBuffer();
+        org.apache.commons.logging.Log log;
+
+        // Add all body content to StringBuffer
+        loop : while (reader.hasNext()) {
+            String name, nsURI;
+            switch (reader.next()) {
+                case XMLStreamConstants.START_ELEMENT:
+                    log = LogFactory.getLog(SCXMLReader.class);
+                    log.warn("Ignoring XML content in <script> element, encountered start tag with local name: "
+                        + reader.getLocalName());
+                    break;
+                case XMLStreamConstants.SPACE:
+                case XMLStreamConstants.CHARACTERS:
+                case XMLStreamConstants.ENTITY_REFERENCE:
+                case XMLStreamConstants.CDATA:
+                case XMLStreamConstants.COMMENT:
+                    body.append(reader.getText());
+                    break;
+                case XMLStreamConstants.END_ELEMENT:
+                    nsURI = reader.getNamespaceURI();
+                    name = reader.getLocalName();
+                    if (namespaceURI.equals(nsURI) && localName.equals(name)) {
+                        popNamespaces(reader, configuration);
+                        break loop;
+                    }
+                    log = LogFactory.getLog(SCXMLReader.class);
+                    log.warn("Ignoring XML content in <script> element, encountered end tag with local name: "
+                        + reader.getLocalName());
+                    break;
+                default: // rest is ignored
+            }
+        }
+        return body.toString();
     }
 
     /**
