@@ -144,8 +144,17 @@
    <onentry>
     <my:eventdatamaptest />
    </onentry>
-   <transition target='end' event='ok' >
+   <transition target='in.test' event='ok' >
     <log expr='"_eventdatamap[ok]=\"" + _eventdatamap.get("ok") + "\""' />
+   </transition>
+  </state>
+
+  <!-- In() FUNCTION USAGE -->
+
+  <state id='in.test'>
+   <transition cond="In('foo.bar')" /> <!-- stay -->
+   <transition target='end' cond="!In('foo.bar')" >
+    <log label="In(foo.bar)" expr='In("foo.bar")' />
    </transition>
   </state>
 

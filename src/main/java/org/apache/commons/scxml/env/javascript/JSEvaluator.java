@@ -17,19 +17,17 @@
 
 package org.apache.commons.scxml.env.javascript;
 
-import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.script.Bindings;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+
 import org.apache.commons.scxml.Builtin;
 import org.apache.commons.scxml.Context;
 import org.apache.commons.scxml.Evaluator;
 import org.apache.commons.scxml.SCXMLExpressionException;
-import org.apache.commons.scxml.SCXMLHelper;
 import org.w3c.dom.Node;
 
 /**
@@ -58,8 +56,10 @@ public class JSEvaluator implements Evaluator {
 
     // CONSTANTS
 
-    private static final Pattern XPATH =
-        Pattern.compile("Data\\s*\\(\\s*(\\w+)\\s*,\\s*((?:'.*?')|(?:\".*?\"))\\s*\\)");
+    /** Pattern for recognizing the SCXML In() special predicate. */
+    private static final Pattern IN_FN = Pattern.compile("In\\(");
+    /** Pattern for recognizing the Commons SCXML Data() builtin function. */
+    private static final Pattern DATA_FN = Pattern.compile("Data\\(");
 
     // INSTANCE VARIABLES
 
@@ -72,8 +72,7 @@ public class JSEvaluator implements Evaluator {
      */
     public JSEvaluator() {
         factory = new ScriptEngineManager();
-
-        factory.put("xpath",this);
+        factory.put("_builtin", new Builtin());
     }
 
     // INSTANCE METHODS
@@ -106,24 +105,18 @@ public class JSEvaluator implements Evaluator {
     @Override
     public Object eval(Context context,String expression) throws SCXMLExpressionException {
         try {
-            // ... initialise
 
-            Matcher      matcher  = XPATH.matcher   (expression);
-            StringBuffer buffer   = new StringBuffer();
+            // ... initialize
             ScriptEngine engine   = factory.getEngineByName("JavaScript");
             Bindings     bindings = engine.getBindings     (ScriptContext.ENGINE_SCOPE);
 
-            // ... replace Data() functions
-
-            while (matcher.find()) {
-                  matcher.appendReplacement(buffer,"xpath.evaluate(_ALL_NAMESPACES," + matcher.group(1) + "," + matcher.group(2) + ")");
-            }
-
-            matcher.appendTail(buffer);
+            // ... replace built-in functions
+            String jsExpression = IN_FN.matcher(expression).replaceAll("_builtin.isMember(_ALL_STATES, ");
+            jsExpression = DATA_FN.matcher(jsExpression).replaceAll("_builtin.data(_ALL_NAMESPACES, ");
 
             // ... evaluate
+            return engine.eval(jsExpression,new JSBindings(context,bindings));
 
-            return engine.eval(buffer.toString(),new JSBindings(context,bindings));
         } catch (Exception x) {
             throw new SCXMLExpressionException("Error evaluating ['" + expression + "'] " + x);
         }
@@ -171,24 +164,19 @@ public class JSEvaluator implements Evaluator {
     @Override
     public Node evalLocation(Context context,String expression) throws SCXMLExpressionException {
         try {
-            // ... initialise
 
-            Matcher        matcher  = XPATH.matcher   (expression);
-            StringBuffer   buffer   = new StringBuffer();
-            ScriptEngine   engine   = factory.getEngineByName("JavaScript");
-            Bindings       bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
+            // ... initialize
+            ScriptEngine engine   = factory.getEngineByName("JavaScript");
+            Bindings     bindings = engine.getBindings     (ScriptContext.ENGINE_SCOPE);
 
-            // ... replace Data() function
-
-            if (matcher.find()) {
-                  matcher.appendReplacement(buffer,"xpath.node(_ALL_NAMESPACES," + matcher.group(1) + "," + matcher.group(2) + ")");
-            }
-
-            matcher.appendTail(buffer);
+            // ... replace built-in functions
+            String jsExpression = IN_FN.matcher(expression).replaceAll("_builtin.isMember(_ALL_STATES, ");
+            jsExpression = DATA_FN.matcher(jsExpression).replaceFirst("_builtin.dataNode(_ALL_NAMESPACES, ");
+            jsExpression = DATA_FN.matcher(jsExpression).replaceAll("_builtin.data(_ALL_NAMESPACES, ");
 
             // ... evaluate
+            return (Node) engine.eval(jsExpression,new JSBindings(context,bindings));
 
-            return (Node) engine.eval(buffer.toString(),new JSBindings(context,bindings));
         } catch (Exception x) {
             throw new SCXMLExpressionException("Error evaluating ['" + expression + "'] " + x);
         }
@@ -211,44 +199,6 @@ public class JSEvaluator implements Evaluator {
     public Object evalScript(Context ctx, String script)
     throws SCXMLExpressionException {
         return eval(ctx, script);
-    }
-
-    /**
-     * Implementation of Javascript function equivalent for the Data() function when
-     * used in an SCXML <code>expr</code> attribute.
-     * <p>
-     * NOTE: Only declared public for access by script engine - not intended to be
-     *       used by anything else.
-     *
-     * @param namespaces SCXML namespace map.
-     * @param node       Data() function root node.
-     * @param query      Data() function expression.
-     *
-     * @return Value stored at SCXML data model node represented by the <code>query</code>
-     *         expression or <code>null</code>.
-     */
-    @SuppressWarnings("unchecked")
-    public Object evaluate(Map namespaces,Object node,String query) {
-        return SCXMLHelper.getNodeValue(node(namespaces,node,query));
-    }
-
-    /**
-     * Implementation of Javascript function equivalent for the Data() function when used
-     * in an SCXML <code>location</code> attribute.
-     * <p>
-     * NOTE: Only declared public for access by script engine - not intended to be
-     *       used by anything else.
-     *
-     * @param namespaces SCXML namespace map.
-     * @param node       Data() function root node.
-     * @param query      Data() function expression.
-     *
-     * @return Node at SCXML data model node represented by the <code>query</code>
-     *         expression or <code>null</code>.
-     */
-    @SuppressWarnings("unchecked")
-    public Node node(Map namespaces,Object node,String query) {
-        return Builtin.dataNode(namespaces,node,query);
     }
 
 }
