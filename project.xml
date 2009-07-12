@@ -238,6 +238,28 @@
       </properties>
     </dependency>
     <dependency>
+      <groupId>rhino</groupId>
+      <artifactId>js</artifactId>
+      <version>1.6R7</version>
+      <url>http://www.mozilla.org/rhino/</url>
+      <properties>
+        <comment>&lt;b&gt;Usecases&lt;/b&gt;
+        (Rhino/E4X environments)</comment>
+        <optional>true</optional>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.xmlbeans</groupId>
+      <artifactId>xmlbeans</artifactId>
+      <version>2.3.0</version>
+      <url>http://xmlbeans.apache.org/</url>
+      <properties>
+        <comment>&lt;b&gt;Usecases&lt;/b&gt;
+        (Rhino/E4X environments)</comment>
+        <optional>true</optional>
+      </properties>
+    </dependency>
+    <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
       <version>2.4</version>
@@ -311,6 +333,7 @@
         <include>org/apache/commons/scxml/env/javascript/EnvJavaScriptTestSuite.java</include>
         <include>org/apache/commons/scxml/env/jexl/EnvJexlTestSuite.java</include>
         <include>org/apache/commons/scxml/env/jsp/EnvJspTestSuite.java</include>
+        <include>org/apache/commons/scxml/env/rhino/EnvRhinoTestSuite.java</include>
         <include>org/apache/commons/scxml/env/servlet/EnvServletTestSuite.java</include>
         <include>org/apache/commons/scxml/env/xpath/EnvXPathTestSuite.java</include>
         <include>org/apache/commons/scxml/invoke/InvokeTestSuite.java</include>

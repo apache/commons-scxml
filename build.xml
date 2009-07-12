@@ -133,6 +133,8 @@
           </include>
           <include name="org/apache/commons/scxml/env/jsp/EnvJspTestSuite.java">
           </include>
+          <include name="org/apache/commons/scxml/env/rhino/EnvRhinoTestSuite.java">
+          </include>
           <include name="org/apache/commons/scxml/env/servlet/EnvServletTestSuite.java">
           </include>
           <include name="org/apache/commons/scxml/env/xpath/EnvXPathTestSuite.java">
@@ -216,6 +218,10 @@
     <get dest="${libdir}/commons-jexl-1.1.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven2/commons-jexl/commons-jexl/1.1/commons-jexl-1.1.jar">
     </get>
     <get dest="${libdir}/commons-logging-1.1.1.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven2/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar">
+    </get>
+    <get dest="${libdir}/js-1.6R7.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven2/rhino/js/1.6R7/js-1.6R7.jar">
+    </get>
+    <get dest="${libdir}/xmlbeans-2.3.0.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven2/org/apache/xmlbeans/xmlbeans/2.3.0/xmlbeans-2.3.0.jar">
     </get>
     <get dest="${libdir}/servletapi-2.4.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven2/javax/servlet/servlet-api/2.4/servlet-api-2.4.jar">
     </get>
