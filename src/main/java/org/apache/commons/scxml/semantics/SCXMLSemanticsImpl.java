@@ -762,10 +762,10 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                 if (pr != null) {
                     source = i.getPathResolver().resolvePath(src);
                 }
-                String ttype = i.getTargettype();
+                String type = i.getType();
                 Invoker inv = null;
                 try {
-                    inv = scInstance.newInvoker(ttype);
+                    inv = scInstance.newInvoker(type);
                 } catch (InvokerException ie) {
                     TriggerEvent te = new TriggerEvent(s.getId()
                         + ".invoke.failed", TriggerEvent.ERROR_EVENT);

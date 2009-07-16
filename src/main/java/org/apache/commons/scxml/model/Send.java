@@ -48,13 +48,13 @@ public class Send extends Action implements ExternalContent {
     private static final long serialVersionUID = 1L;
 
     /**
-     * The default targettype.
+     * The default target type.
      */
-    private static final String TARGETTYPE_SCXML = "scxml";
+    private static final String TYPE_SCXML = "scxml";
 
     /**
      * The spec mandated derived event when target cannot be reached
-     * for TARGETTYPE_SCXML.
+     * for TYPE_SCXML.
      */
     private static final String EVENT_ERR_SEND_TARGETUNAVAILABLE =
         "error.send.targetunavailable";
@@ -73,7 +73,7 @@ public class Send extends Action implements ExternalContent {
      * The type of the Event I/O Processor that the event.
      * should be dispatched to
      */
-    private String targettype;
+    private String type;
 
     /**
      * The event is dispatched after the delay interval elapses.
@@ -230,19 +230,39 @@ public class Send extends Action implements ExternalContent {
     /**
      * Get the target type for this &lt;send&gt; element.
      *
-     * @return String Returns the targettype.
+     * @return String Returns the type.
+     * @deprecated Use {@link #getType()} instead.
      */
     public final String getTargettype() {
-        return targettype;
+        return type;
     }
 
     /**
      * Set the target type for this &lt;send&gt; element.
      *
-     * @param targettype The targettype to set.
+     * @param type The type to set.
+     * @deprecated Use {@link #setType(String)} instead.
      */
     public final void setTargettype(final String targettype) {
-        this.targettype = targettype;
+        this.type = targettype;
+    }
+
+    /**
+     * Get the type for this &lt;send&gt; element.
+     *
+     * @return String Returns the type.
+     */
+    public final String getType() {
+        return type;
+    }
+
+    /**
+     * Set the type for this &lt;send&gt; element.
+     *
+     * @param type The type to set.
+     */
+    public final void setType(final String type) {
+        this.type = type;
     }
 
     /**
@@ -291,17 +311,17 @@ public class Send extends Action implements ExternalContent {
                     + "\" evaluated to null or empty String");
             }
         }
-        String targettypeValue = targettype;
-        if (!SCXMLHelper.isStringEmpty(targettype)) {
-            targettypeValue = (String) eval.eval(ctx, targettype);
-            if (SCXMLHelper.isStringEmpty(targettypeValue)
+        String typeValue = type;
+        if (!SCXMLHelper.isStringEmpty(type)) {
+            typeValue = (String) eval.eval(ctx, type);
+            if (SCXMLHelper.isStringEmpty(typeValue)
                     && appLog.isWarnEnabled()) {
-                appLog.warn("<send>: targettype expression \"" + targettype
+                appLog.warn("<send>: type expression \"" + type
                     + "\" evaluated to null or empty String");
             }
         } else {
             // must default to 'scxml' when unspecified
-            targettypeValue = TARGETTYPE_SCXML;
+            typeValue = TYPE_SCXML;
         }
         Map<String, Object> params = null;
         if (!SCXMLHelper.isStringEmpty(namelist)) {
@@ -336,8 +356,8 @@ public class Send extends Action implements ExternalContent {
             }
         }
         // Lets see if we should handle it ourselves
-        if (targettypeValue != null
-              && targettypeValue.trim().equalsIgnoreCase(TARGETTYPE_SCXML)) {
+        if (typeValue != null
+              && typeValue.trim().equalsIgnoreCase(TYPE_SCXML)) {
             if (SCXMLHelper.isStringEmpty(targetValue)) {
                 // TODO: Remove both short-circuit passes in v1.0
                 if (wait == 0L) {
@@ -366,11 +386,11 @@ public class Send extends Action implements ExternalContent {
         if (appLog.isDebugEnabled()) {
             appLog.debug("<send>: Dispatching event '" + eventValue
                 + "' to target '" + targetValue + "' of target type '"
-                + targettypeValue + "' with suggested delay of " + wait
+                + typeValue + "' with suggested delay of " + wait
                 + "ms");
         }
         // Else, let the EventDispatcher take care of it
-        evtDispatcher.send(sendid, targetValue, targettypeValue, eventValue,
+        evtDispatcher.send(sendid, targetValue, typeValue, eventValue,
             params, hintsValue, wait, externalNodes);
     }
 

@@ -239,7 +239,6 @@ public final class SCXMLReader {
     private static final String ATTR_SENDID = "sendid";
     private static final String ATTR_SRC = "src";
     private static final String ATTR_TARGET = "target";
-    private static final String ATTR_TARGETTYPE = "targettype";
     private static final String ATTR_TYPE = "type";
     private static final String ATTR_VERSION = "version";
 
@@ -1083,7 +1082,7 @@ public final class SCXMLReader {
 
         Invoke invoke = new Invoke();
         invoke.setSrc(readAV(reader, ATTR_SRC));
-        invoke.setTargettype(readAV(reader, ATTR_TARGETTYPE));
+        invoke.setType(readAV(reader, ATTR_TYPE));
         invoke.setPathResolver(configuration.pathResolver);
         readNamespaces(configuration, invoke);
 
@@ -1650,7 +1649,7 @@ public final class SCXMLReader {
         send.setNamelist(readAV(reader, ATTR_NAMELIST));
         send.setSendid(readAV(reader, ATTR_SENDID));
         send.setTarget(readAV(reader, ATTR_TARGET));
-        send.setTargettype(readAV(reader, ATTR_TARGETTYPE));
+        send.setType(readAV(reader, ATTR_TYPE));
         readNamespaces(configuration, send);
 
         Node body = readNode(reader, configuration, XMLNS_SCXML, ELEM_SEND, new String [] {});

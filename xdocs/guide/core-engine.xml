@@ -69,7 +69,7 @@
      <p>Commons SCXML provides an
      <a href="../apidocs/org/apache/commons/scxml/EventDispatcher.html">EventDispatcher</a>
      interface for wiring the behavior of SCXML &lt;send&gt; and
-     &lt;cancel&gt; actions. This allows users to define custom "targettypes"
+     &lt;cancel&gt; actions. This allows users to define custom target "types"
      as long as they handle the callbacks on the <code>EventDispatcher</code>
      implementation provided to the executor. The introductory section on
      using Commons SCXML has a brief discussion on

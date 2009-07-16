@@ -172,7 +172,6 @@ public class SCXMLWriter {
     private static final String ATTR_SENDID = "sendid";
     private static final String ATTR_SRC = "src";
     private static final String ATTR_TARGET = "target";
-    private static final String ATTR_TARGETTYPE = "targettype";
     private static final String ATTR_TYPE = "type";
     private static final String ATTR_VERSION = "version";
 
@@ -724,7 +723,7 @@ public class SCXMLWriter {
 
         writer.writeStartElement(ELEM_INVOKE);
         writeAV(writer, ATTR_SRC, invoke.getSrc());
-        writeAV(writer, ATTR_TARGETTYPE, invoke.getTargettype());
+        writeAV(writer, ATTR_TYPE, invoke.getType());
 
         for (Param p : invoke.params()) {
             writer.writeStartElement(ELEM_PARAM);
@@ -847,7 +846,7 @@ public class SCXMLWriter {
         writeAV(writer, ATTR_SENDID, send.getSendid());
         writeAV(writer, ATTR_EVENT, send.getEvent());
         writeAV(writer, ATTR_TARGET, send.getTarget());
-        writeAV(writer, ATTR_TARGETTYPE, send.getTargettype());
+        writeAV(writer, ATTR_TYPE, send.getType());
         writeAV(writer, ATTR_DELAY, send.getDelay());
         writeAV(writer, ATTR_NAMELIST, send.getNamelist());
         writeAV(writer, ATTR_HINTS, send.getHints());

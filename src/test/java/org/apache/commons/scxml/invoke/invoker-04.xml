@@ -34,21 +34,21 @@
     </state>
     
     <state id="first">
-        <invoke src="FirstTestSrc" targettype="x-test">
+        <invoke src="FirstTestSrc" type="x-test">
             <param name="ding" expr="Data(foo,'node()')"/>   
         </invoke>
         <transition event="test.trigger" target="second"/>
     </state>
 
     <state id="second">
-        <invoke src="SecondTestSrc" targettype="x-test">
+        <invoke src="SecondTestSrc" type="x-test">
             <param name="Data(foo,'node()')"/>   
         </invoke>
         <transition event="test.trigger" target="third"/>
     </state>
     
     <state id="third">
-        <invoke src="ThirdTestSrc" targettype="x-test">
+        <invoke src="ThirdTestSrc" type="x-test">
             <param name="Data(foo,'gibberish')"/>   
         </invoke>
     </state>

@@ -32,21 +32,21 @@
 
     <state id="twenty">
         <onentry>
-            <send event="'twenty.done'" targettype="'scxml'" />
+            <send event="'twenty.done'" type="'scxml'" />
         </onentry>
         <transition event="twenty.done" target="thirty" />
     </state>
 
     <state id="thirty">
         <onentry>
-            <send event="'thirty.done'" targettype="' sCxML  '" />
+            <send event="'thirty.done'" type="' sCxML  '" />
         </onentry>
         <transition event="thirty.done" target="forty" />
     </state>
 
     <state id="forty">
         <onentry>
-            <send event="'forty.done'" targettype=" " target=" " />
+            <send event="'forty.done'" type=" " target=" " />
         </onentry>
         <transition event="forty.done" target="fifty" />
     </state>
@@ -60,14 +60,14 @@
 
     <state id="sixty">
         <onentry>
-            <send event="'sixty.done'" targettype="'scxml'" target=" " />
+            <send event="'sixty.done'" type="'scxml'" target=" " />
         </onentry>
         <transition event="sixty.done" target="seventy" />
     </state>
 
     <state id="seventy">
         <onentry>
-            <send event="'seventy.done'" targettype="'scxml'" target="'foo'" />
+            <send event="'seventy.done'" type="'scxml'" target="'foo'" />
         </onentry>
 
         <!-- This transition should not be followed since

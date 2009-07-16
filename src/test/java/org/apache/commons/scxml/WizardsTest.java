@@ -120,7 +120,7 @@ public class WizardsTest extends TestCase {
         private static final long serialVersionUID = 1L;
         // If you change this, you must also change testWizard02Sample()
         int callback = 0;
-        public void send(String sendId, String target, String targetType,
+        public void send(String sendId, String target, String type,
                 String event, Map<String, Object> params, Object hints, long delay,
                 List<Node> externalNodes) {
             int i = ((Integer) params.get("aValue")).intValue();

@@ -22,7 +22,7 @@
     <state id="ten">
         <transition event="ten.done" target="twenty">
             <send sendid="send1" delay="'0'"
-             target="'http://localhost:8080/VXMLInterpreter'" targettype="'v3'"
+             target="'http://localhost:8080/VXMLInterpreter'" type="'v3'"
              xmlns:v3="http://foo.bar.com/vxml3"
              xmlns:test="http://my.test.namespace">
                 <v3:form id="Confirm">

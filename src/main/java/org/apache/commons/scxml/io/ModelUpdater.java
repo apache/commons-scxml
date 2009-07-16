@@ -165,9 +165,9 @@ final class ModelUpdater {
             logAndThrowModelError(ERR_STATE_BAD_CONTENTS, new Object[] {getStateName(s)});
         }
         if (inv != null) {
-            String ttype = inv.getTargettype();
-            if (ttype == null || ttype.trim().length() == 0) {
-                logAndThrowModelError(ERR_INVOKE_NO_TARGETTYPE,
+            String type = inv.getType();
+            if (type == null || type.trim().length() == 0) {
+                logAndThrowModelError(ERR_INVOKE_NO_TYPE,
                     new Object[] {getStateName(s)});
             }
             String src = inv.getSrc();
@@ -403,11 +403,11 @@ final class ModelUpdater {
         + " belonging to \"{1}\" is also a history";
 
     /**
-     * Error message when an &lt;invoke&gt; does not specify a "targettype"
+     * Error message when an &lt;invoke&gt; does not specify a "type"
      * attribute.
      */
-    private static final String ERR_INVOKE_NO_TARGETTYPE = "{0} contains "
-        + "<invoke> with no \"targettype\" attribute specified.";
+    private static final String ERR_INVOKE_NO_TYPE = "{0} contains "
+        + "<invoke> with no \"type\" attribute specified.";
 
     /**
      * Error message when an &lt;invoke&gt; does not specify a "src"
