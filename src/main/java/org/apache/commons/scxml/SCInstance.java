@@ -66,7 +66,7 @@ public class SCInstance implements Serializable {
 
     /**
      * The <code>Invoker</code> classes <code>Map</code>, keyed by
-     * &lt;invoke&gt; target types (specified using "targettype" attribute).
+     * &lt;invoke&gt; target types (specified using "type" attribute).
      */
     private Map invokerClasses;
 
@@ -279,24 +279,23 @@ public class SCInstance implements Serializable {
     /**
      * Register an {@link Invoker} class for this target type.
      *
-     * @param targettype The target type (specified by "targettype"
-     *                   attribute of &lt;invoke&gt; tag).
+     * @param type The target type (specified by "type" attribute of
+     *             &lt;invoke&gt; tag).
      * @param invokerClass The <code>Invoker</code> <code>Class</code>.
      */
-    void registerInvokerClass(final String targettype,
-            final Class invokerClass) {
-        invokerClasses.put(targettype, invokerClass);
+    void registerInvokerClass(final String type, final Class invokerClass) {
+        invokerClasses.put(type, invokerClass);
     }
 
     /**
      * Remove the {@link Invoker} class registered for this target
      * type (if there is one registered).
      *
-     * @param targettype The target type (specified by "targettype"
-     *                   attribute of &lt;invoke&gt; tag).
+     * @param type The target type (specified by "type" attribute of
+     *             &lt;invoke&gt; tag).
      */
-    void unregisterInvokerClass(final String targettype) {
-        invokerClasses.remove(targettype);
+    void unregisterInvokerClass(final String type) {
+        invokerClasses.remove(type);
     }
 
     /**
@@ -305,19 +304,19 @@ public class SCInstance implements Serializable {
      * returned if and only if the <code>TransitionTarget</code> is
      * currently active and contains an &lt;invoke&gt; child.
      *
-     * @param targettype The type of the target being invoked.
+     * @param type The type of the target being invoked.
      * @return An {@link Invoker} for the specified type, if an
      *         invoker class is registered against that type,
      *         <code>null</code> otherwise.
      * @throws InvokerException When a suitable {@link Invoker} cannot
      *                          be instantiated.
      */
-    public Invoker newInvoker(final String targettype)
+    public Invoker newInvoker(final String type)
     throws InvokerException {
-        Class invokerClass = (Class) invokerClasses.get(targettype);
+        Class invokerClass = (Class) invokerClasses.get(type);
         if (invokerClass == null) {
-            throw new InvokerException("No Invoker registered for "
-                + "targettype \"" + targettype + "\"");
+            throw new InvokerException("No Invoker registered for type \""
+                    + type + "\"");
         }
         Invoker invoker = null;
         try {
@@ -396,4 +395,3 @@ public class SCInstance implements Serializable {
     }
 
 }
-

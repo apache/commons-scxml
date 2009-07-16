@@ -23,7 +23,7 @@
         <onentry>
             <log expr="'Begin invoke test ...'" />
         </onentry>
-        <invoke targettype="scxml" src="invoked-01.xml">
+        <invoke type="scxml" src="invoked-01.xml">
             <param name="foo" expr="'foo'" />
             <param name="bar" expr="'bar'" />
             <finalize>
@@ -36,4 +36,3 @@
     <state id="end" final="true" />
 
 </scxml>
-

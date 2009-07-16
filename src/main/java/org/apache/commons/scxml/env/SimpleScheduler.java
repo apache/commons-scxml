@@ -34,15 +34,15 @@ import org.apache.commons.scxml.model.ModelException;
 
 /**
  * <p>EventDispatcher implementation that can schedule <code>delay</code>ed
- * &lt;send&gt; events for the &quot;scxml&quot; <code>targettype</code>
+ * &lt;send&gt; events for the &quot;scxml&quot; <code>type</code>
  * attribute value (which is also the default). This implementation uses
  * J2SE <code>Timer</code>s.</p>
  *
- * <p>No other <code>targettype</code>s are processed. Subclasses may support
- * additional <code>targettype</code>s by overriding the
+ * <p>No other <code>type</code>s are processed. Subclasses may support
+ * additional <code>type</code>s by overriding the
  * <code>send(...)</code> and <code>cancel(...)</code> methods and
  * delegating to their <code>super</code> counterparts for the
- * &quot;scxml&quot; <code>targettype</code>.</p>
+ * &quot;scxml&quot; <code>type</code>.</p>
  *
  */
 public class SimpleScheduler implements EventDispatcher, Serializable {
@@ -101,14 +101,14 @@ public class SimpleScheduler implements EventDispatcher, Serializable {
     @see EventDispatcher#send(String,String,String,String,Map,Object,long,List)
      */
     public void send(final String sendId, final String target,
-            final String targettype, final String event, final Map params,
+            final String type, final String event, final Map params,
             final Object hints, final long delay, final List externalNodes) {
         // Log callback
         if (log.isInfoEnabled()) {
             StringBuffer buf = new StringBuffer();
             buf.append("send ( sendId: ").append(sendId);
             buf.append(", target: ").append(target);
-            buf.append(", targetType: ").append(targettype);
+            buf.append(", type: ").append(type);
             buf.append(", event: ").append(event);
             buf.append(", params: ").append(String.valueOf(params));
             buf.append(", hints: ").append(String.valueOf(hints));
@@ -117,9 +117,9 @@ public class SimpleScheduler implements EventDispatcher, Serializable {
             log.info(buf.toString());
         }
 
-        // We only handle the "scxml" targettype (which is the default too)
-        if (SCXMLHelper.isStringEmpty(targettype)
-                || targettype.trim().equalsIgnoreCase(TARGETTYPE_SCXML)) {
+        // We only handle the "scxml" type (which is the default too)
+        if (SCXMLHelper.isStringEmpty(type)
+                || type.trim().equalsIgnoreCase(TYPE_SCXML)) {
 
             if (!SCXMLHelper.isStringEmpty(target)) {
                 // We know of no other target
@@ -246,9 +246,9 @@ public class SimpleScheduler implements EventDispatcher, Serializable {
     }
 
     /**
-     * The default targettype.
+     * The default target type.
      */
-    private static final String TARGETTYPE_SCXML = "scxml";
+    private static final String TYPE_SCXML = "scxml";
 
     /**
      * The spec mandated derived event when target cannot be reached.
@@ -257,4 +257,3 @@ public class SimpleScheduler implements EventDispatcher, Serializable {
         "error.send.targetunavailable";
 
 }
-

@@ -82,7 +82,7 @@ public class SCXMLSerializerTest extends TestCase {
         Send send = new Send();
         send.setSendid("1");
         send.setTarget("newTarget");
-        send.setTargettype("newTargetType");
+        send.setType("newType");
         send.setNamelist("names");
         send.setDelay("4s");
         send.setEvent("turnoff");
@@ -90,7 +90,7 @@ public class SCXMLSerializerTest extends TestCase {
         
         String assertValue = " <send sendid=\"1\" " +
                 "target=\"newTarget\" " +
-                "targetType=\"newTargetType\" " +
+                "type=\"newType\" " +
                 "namelist=\"names\" " +
                 "delay=\"4s\" " +
                 "event=\"turnoff\" " +

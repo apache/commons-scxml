@@ -116,8 +116,8 @@
 
     <p>SCXML includes the &lt;send&gt; action to "dispatch" an event of choice
     (including whatever payload) to a specified target (of a specified
-    targettype). The payload is delivered in the form of a namelist,
-    which can be considered as params for the event target.</p>
+    type). The payload is delivered in the form of a namelist, which can be
+    considered as params for the event target.</p>
 
     <p>The callbacks are received on the
     <a href="../apidocs/org/apache/commons/scxml/EventDispatcher.html">EventDispatcher</a>
@@ -177,4 +177,3 @@
  </body>
 
 </document>
-

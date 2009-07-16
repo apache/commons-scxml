@@ -40,7 +40,7 @@ public class Invoke implements NamespacePrefixesHolder, PathResolverHolder,
     /**
      * The type of target to be invoked.
      */
-    private String targettype;
+    private String type;
 
     /**
      * The source URL for the external service.
@@ -93,18 +93,38 @@ public class Invoke implements NamespacePrefixesHolder, PathResolverHolder,
      * Get the target type for this &lt;invoke&gt; element.
      *
      * @return String Returns the targettype.
+     * @deprecated Use {@link #getType()} instead.
      */
     public final String getTargettype() {
-        return targettype;
+        return type;
     }
 
     /**
      * Set the target type for this &lt;invoke&gt; element.
      *
      * @param targettype The targettype to set.
+     * @deprecated Use {@link #setType(String)} instead.
      */
     public final void setTargettype(final String targettype) {
-        this.targettype = targettype;
+        this.type = targettype;
+    }
+
+    /**
+     * Get the type for this &lt;invoke&gt; element.
+     *
+     * @return String Returns the type.
+     */
+    public final String getType() {
+        return type;
+    }
+
+    /**
+     * Set the type for this &lt;invoke&gt; element.
+     *
+     * @param type The type to set.
+     */
+    public final void setType(final String type) {
+        this.type = type;
     }
 
     /**
@@ -229,4 +249,3 @@ public class Invoke implements NamespacePrefixesHolder, PathResolverHolder,
     }
 
 }
-

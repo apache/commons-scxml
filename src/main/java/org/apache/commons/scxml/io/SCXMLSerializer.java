@@ -223,11 +223,11 @@ public class SCXMLSerializer {
     public static void serializeInvoke(final StringBuffer b,
             final Invoke i, final String indent) {
         b.append(indent).append("<invoke");
-        String ttype = i.getTargettype();
+        String type = i.getType();
         String src = i.getSrc();
         String srcexpr = i.getSrcexpr();
-        if (ttype != null) {
-            b.append(" targettype=\"").append(ttype).append("\"");
+        if (type != null) {
+            b.append(" type=\"").append(type).append("\"");
         }
         // Prefer src
         if (src != null) {
@@ -519,8 +519,8 @@ public class SCXMLSerializer {
         if (send.getTarget() != null) {
             b.append(" target=\"").append(send.getTarget()).append("\"");
         }
-        if (send.getTargettype() != null) {
-            b.append(" targetType=\"").append(send.getTargettype()).append("\"");
+        if (send.getType() != null) {
+            b.append(" type=\"").append(send.getType()).append("\"");
         }
         if (send.getNamelist() != null) {
             b.append(" namelist=\"").append(send.getNamelist()).append("\"");
@@ -671,4 +671,3 @@ public class SCXMLSerializer {
     }
 
 }
-

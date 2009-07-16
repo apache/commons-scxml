@@ -418,7 +418,7 @@
      description="Release">
 
       <action dev="rahul" type="fix" issue="SCXML-16" due-to="Sitthichai Rernglertpricha">
-       [12-12-2006] target and targettype attributes of &lt;send&gt; element
+       [12-12-2006] target and type attributes of &lt;send&gt; element
        are now evaluated as expressions.
       </action>
 
@@ -475,7 +475,7 @@
       <action dev="rahul" type="fix" issue="SCXML-21">
        [10-17-2006] New EventDispatcher implementation (SimpleScheduler)
        that provides the ability to deal with delayed events for the
-       "scxml" &lt;send&gt; targettype.
+       "scxml" &lt;send&gt; type.
       </action>
 
       <action dev="rahul" type="fix" issue="SCXML-2">

@@ -491,24 +491,24 @@ public class SCXMLExecutor implements Serializable {
     /**
      * Register an <code>Invoker</code> for this target type.
      *
-     * @param targettype The target type (specified by "targettype"
-     *                   attribute of &lt;invoke&gt; tag).
+     * @param type The target type (specified by "type"
+     *             attribute of &lt;invoke&gt; tag).
      * @param invokerClass The <code>Invoker</code> <code>Class</code>.
      */
-    public void registerInvokerClass(final String targettype,
+    public void registerInvokerClass(final String type,
             final Class invokerClass) {
-        scInstance.registerInvokerClass(targettype, invokerClass);
+        scInstance.registerInvokerClass(type, invokerClass);
     }
 
     /**
      * Remove the <code>Invoker</code> registered for this target
      * type (if there is one registered).
      *
-     * @param targettype The target type (specified by "targettype"
-     *                   attribute of &lt;invoke&gt; tag).
+     * @param type The target type (specified by "type"
+     *             attribute of &lt;invoke&gt; tag).
      */
-    public void unregisterInvokerClass(final String targettype) {
-        scInstance.unregisterInvokerClass(targettype);
+    public void unregisterInvokerClass(final String type) {
+        scInstance.unregisterInvokerClass(type);
     }
 
     /**
@@ -602,4 +602,3 @@ public class SCXMLExecutor implements Serializable {
         "SCXMLExecutor: State machine not set";
 
 }
-

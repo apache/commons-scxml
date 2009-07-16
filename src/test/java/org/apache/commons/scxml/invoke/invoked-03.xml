@@ -24,7 +24,7 @@
         <onentry>
             <log expr="'  Outer invoke ...'"/>
         </onentry>
-        <invoke targettype="scxml" src="invoked-03-01.xml"/>
+        <invoke type="scxml" src="invoked-03-01.xml"/>
         <transition event="state1.next" target="end1" />
     </state>
 
@@ -35,4 +35,3 @@
     </state>
 
 </scxml>
-

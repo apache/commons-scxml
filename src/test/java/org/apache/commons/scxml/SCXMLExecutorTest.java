@@ -256,7 +256,7 @@ public class SCXMLExecutorTest extends TestCase {
             next()).getId());
     }
 
-    public void testSend02TargettypeSCXMLSample() throws Exception {
+    public void testSend02TypeSCXMLSample() throws Exception {
         exec = SCXMLTestHelper.getExecutor(send02);
         assertNotNull(exec);
         Set currentStates = exec.getCurrentStatus().getStates();
@@ -284,4 +284,3 @@ public class SCXMLExecutorTest extends TestCase {
         TestRunner.run(suite());
     }
 }
-

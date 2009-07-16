@@ -20,11 +20,10 @@
        initialstate="invoker">
 
     <state id="invoker">
-        <invoke targettype="scxml" src="invoked-02.xml"/>
+        <invoke type="scxml" src="invoked-02.xml"/>
         <transition event="invoker.invoke.done" target="end" />
     </state>
 
     <state id="end" final="true" />
 
 </scxml>
-
