@@ -49,6 +49,7 @@ public class IssuesTestSuite extends TestCase {
         suite.setName("Commons SCXML Issues Tests");
         suite.addTest(Issue62Test.suite());
         suite.addTest(Issue64Test.suite());
+        suite.addTest(Issue112Test.suite());
         return suite;
     }
 }
