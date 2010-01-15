@@ -583,19 +583,18 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
             final ErrorReporter errRep, final SCInstance scInstance) {
         Set<TransitionTarget> oldStates = step.getBeforeStatus().getStates();
         for (TransitionTarget tt : step.getExitList()) {
-            if (tt instanceof State) {
-                State s = (State) tt;
-                if (s.hasHistory()) {
+            if (tt instanceof State || tt instanceof Parallel) {
+                if (tt.hasHistory()) {
                     Set<TransitionTarget> shallow = null;
                     Set<TransitionTarget> deep = null;
-                    for (History h : s.getHistory()) {
+                    for (History h : tt.getHistory()) {
                         if (h.isDeep()) {
                             if (deep == null) {
                                 //calculate deep history for a given state once
                                 deep = new HashSet<TransitionTarget>();
                                 for (TransitionTarget ott : oldStates) {
                                     State os = (State) ott;
-                                    if (SCXMLHelper.isDescendant(os, s)) {
+                                    if (SCXMLHelper.isDescendant(os, tt)) {
                                         deep.add(os);
                                     }
                                 }
@@ -606,7 +605,15 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                                 //calculate shallow history for a given state
                                 // once
                                 shallow = new HashSet<TransitionTarget>();
-                                shallow.addAll(s.getChildren().values());
+                                Collection<TransitionTarget> children =
+                                    new HashSet<TransitionTarget>();
+                                if (tt instanceof State) {
+                                    children = ((State) tt).getChildren().
+                                        values();
+                                } else if (tt instanceof Parallel) {
+                                    children = ((Parallel) tt).getChildren();
+                                }
+                                shallow.addAll(children);
                                 shallow.retainAll(SCXMLHelper
                                         .getAncestorClosure(oldStates, null));
                             }

@@ -46,7 +46,7 @@ public class HistoryTest extends TestCase {
 
     // Test data
     private History history;
-    private URL shallow01, deep01, defaults01;
+    private URL shallow01, deep01, defaults01, parallel01;
     private SCXMLExecutor exec;
 
     /**
@@ -61,6 +61,8 @@ public class HistoryTest extends TestCase {
             getResource("org/apache/commons/scxml/history-deep-01.xml");
         defaults01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/history-default-01.xml");
+        parallel01 = this.getClass().getClassLoader().
+            getResource("org/apache/commons/scxml/history-parallel-01.xml");
     }
 
     /**
@@ -69,7 +71,7 @@ public class HistoryTest extends TestCase {
     @Override
     public void tearDown() {
         history = null;
-        shallow01 = deep01 = defaults01 = null;
+        shallow01 = deep01 = defaults01 = parallel01 = null;
         exec = null;
     }
 
@@ -109,6 +111,22 @@ public class HistoryTest extends TestCase {
         currentStates = SCXMLTestHelper.fireEvent(exec, "state.next");
         assertEquals(1, currentStates.size());
         assertEquals("state31", currentStates.iterator().next().getId());
+    }
+
+    public void testHistoryParallel01() throws Exception {
+        exec = SCXMLTestHelper.getExecutor(parallel01);
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        assertEquals(1, currentStates.size());
+        SCXMLTestHelper.assertState(exec, "off_call");
+        SCXMLTestHelper.assertPostTriggerStates(exec, "dial", new String[] { "talking", "on_call" });
+        SCXMLTestHelper.assertPostTriggerStates(exec, "consult", new String[] { "consult_talking", "on_consult" });
+        // Next line uses history to go back to on call and talking
+        SCXMLTestHelper.assertPostTriggerStates(exec, "alternate", new String[] { "talking", "on_call" });
+        // Hold
+        SCXMLTestHelper.assertPostTriggerStates(exec, "hold", new String[] { "held", "on_call" });
+        SCXMLTestHelper.assertPostTriggerStates(exec, "consult", new String[] { "consult_talking", "on_consult" });
+        // Next line uses history to go back to on call and on hold
+        SCXMLTestHelper.assertPostTriggerStates(exec, "alternate", new String[] { "held", "on_call" });
     }
 
     private void runHistoryFlow() throws Exception {
