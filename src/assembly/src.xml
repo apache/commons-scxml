@@ -27,11 +27,8 @@
                 <include>build.properties.sample</include>
                 <include>build.xml</include>
                 <include>LICENSE.txt</include>
-                <include>maven.xml</include>
                 <include>NOTICE.txt</include>
                 <include>pom.xml</include>
-                <include>project.properties</include>
-                <include>project.xml</include>
                 <include>RELEASE-NOTES.txt</include>
                 <include>scxml-asl-header.txt</include>
                 <include>scxml-checks.xml</include>
