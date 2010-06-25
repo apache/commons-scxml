@@ -36,6 +36,7 @@ import org.apache.commons.scxml.env.Tracer;
 import org.apache.commons.scxml.env.jexl.JexlEvaluator;
 import org.apache.commons.scxml.io.SCXMLDigester;
 import org.apache.commons.scxml.io.SCXMLParser;
+import org.apache.commons.scxml.model.ModelException;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.State;
 import org.apache.commons.scxml.model.TransitionTarget;
@@ -343,6 +344,46 @@ public class SCXMLTestHelper {
             }
         }
         return roundtrip;
+    }
+
+    /**
+     * Get the active leaf state for this executor instance.
+     * Assumes no usage of &lt;parallel&gt;.
+     *
+     * @param exec The {@link SCXMLExecutor} instance whose active state is
+     *             being queried.
+     * @return The <code>id</code> of the active state.
+     */
+    public static String getCurrentState(SCXMLExecutor exec) {
+        Set current = exec.getCurrentStatus().getStates();
+        TransitionTarget active = (TransitionTarget) current.iterator().next();
+        return active.getId();
+    }
+
+    /**
+     * Set the active leaf state for this executor instance.
+     * Assumes no usage of &lt;parallel&gt;.
+     *
+     * @param exec The {@link SCXMLExecutor} instance whose active state is
+     *             to be set.
+     * @param id The <code>id</code> of the state to be made active.
+     */
+    public static void setCurrentState(SCXMLExecutor exec, final String id) {
+        try {
+            exec.reset();
+        } catch (ModelException me) {
+            throw new IllegalArgumentException("Provided SCXMLExecutor "
+                + "instance cannot be reset.");
+        }
+        TransitionTarget active = (TransitionTarget) exec.getStateMachine().
+            getTargets().get(id);
+        if (active == null) {
+            throw new IllegalArgumentException("No target with id '" + id
+                + "' present in state machine.");
+        }
+        Set current = exec.getCurrentStatus().getStates();
+        current.clear();
+        current.add(active);
     }
 
     /**
