@@ -122,6 +122,24 @@
   </p>
  </section>
 
+ <section name="Related Projects">
+  <p>
+   Related projects providing some SCXML-related functionality:
+   <ul>
+    <li>
+     <a href="http://commons.apache.org/sandbox/gsoc/2010/scxml-eclipse/">Commons SCXML - Eclipse</a> -
+     This project aims to provide an Eclipse and GMF based visual editor and debugger for SCXML, which can
+     also be used to generate SCXML documents and code from a state chart.
+    </li>
+    <li>
+     <a href="http://commons.apache.org/sandbox/gsoc/2010/scxml-js/">Commons SCXML - JavaScript</a> -
+     This project aims develop an SCXML-to-JavaScript compiler optimized for User Interface development on
+     the World Wide Web and generate graphical depictions of statecharts for testing and simulation.
+    </li>
+   </ul>
+  </p>
+ </section>
+
  </body>
 
 </document>
