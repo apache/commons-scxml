@@ -136,6 +136,10 @@
      This project aims develop an SCXML-to-JavaScript compiler optimized for User Interface development on
      the World Wide Web and generate graphical depictions of statecharts for testing and simulation.
     </li>
+    <li>
+     <a href="http://code.google.com/p/scxmlgui/">scxmlgui</a> -
+     This project aims to provide a simple GUI to edit SCXML state charts.
+    </li>
    </ul>
   </p>
  </section>
