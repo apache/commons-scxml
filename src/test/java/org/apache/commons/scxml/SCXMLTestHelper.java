@@ -21,11 +21,14 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.StringReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import junit.framework.Assert;
 
@@ -38,6 +41,8 @@ import org.apache.commons.scxml.model.CustomAction;
 import org.apache.commons.scxml.model.ModelException;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.TransitionTarget;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 /**
  * Helper methods for running SCXML unit tests.
  */
@@ -283,6 +288,22 @@ public class SCXMLTestHelper {
         roundtrip = (SCXMLExecutor) in.readObject();
         in.close();
         return roundtrip;
+    }
+
+    /**
+     * Parses a String containing XML source into a {@link Document}.
+     *
+     * @param xml The XML source as a String.
+     * @return The parsed {@link Document}.
+     */
+    public static Document stringToXMLDocument(final String xml) {
+        try {
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            dbf.setNamespaceAware(true);
+            return dbf.newDocumentBuilder().parse(new InputSource(new StringReader(xml)));
+        } catch (Exception e) {
+            throw new RuntimeException("Exception parsing String to Node:\n" + xml);
+        }
     }
 
     /**
