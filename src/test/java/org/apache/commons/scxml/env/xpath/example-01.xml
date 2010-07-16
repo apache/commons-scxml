@@ -41,15 +41,19 @@
                  expr="cs:Data('jungle','animals/lion/name')" />
         </onentry>
         <transition cond="cs:Data('jungle','animals/lion/age') = 12"
-                    target="end" />
+                    target="mid" />
     </state>
 
-    <final id="end">
+    <state id="mid">
         <onentry>
             <log label="Total age"
                 expr="cs:Data('jungle','animals/lion/age') +
                       cs:Data('jungle','animals/tiger/age')" />
         </onentry>
-    </final>
+        <transition event="foo" cond="$_eventdata/test/status = 'complete'"
+                    target="end" />
+    </state>
+
+    <final id="end"/>
 
 </scxml>

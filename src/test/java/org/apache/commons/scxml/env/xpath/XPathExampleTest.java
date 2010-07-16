@@ -28,6 +28,7 @@ import org.apache.commons.scxml.Context;
 import org.apache.commons.scxml.Evaluator;
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
+import org.apache.commons.scxml.TriggerEvent;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.State;
 import org.apache.commons.scxml.model.TransitionTarget;
@@ -82,8 +83,15 @@ public class XPathExampleTest extends TestCase {
         assertNotNull(exec);
         Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
-        assertEquals("end", ((State)currentStates.iterator().
+        assertEquals("mid", ((State)currentStates.iterator().
             next()).getId());
+
+        String payload = "<test xmlns=''><status>complete</status></test>";
+        SCXMLTestHelper.assertPostTriggerState(exec,
+            new TriggerEvent("foo", TriggerEvent.SIGNAL_EVENT,
+                SCXMLTestHelper.stringToXMLDocument(payload)),
+            "end");
+
     }
 
 }
