@@ -249,17 +249,11 @@
             <include>org/apache/commons/scxml/semantics/SemanticsTestSuite.java</include>
             <include>org/apache/commons/scxml/test/TestingTestSuite.java</include>
           </includes>
-          <systemProperties>
-              <!-- Suppress most logging output -->
-              <property>
-                  <name>org.apache.commons.logging.Log</name>
-                  <value>org.apache.commons.logging.impl.SimpleLog</value>
-              </property>
-              <property>
-                  <name>org.apache.commons.logging.simplelog.defaultlog</name>
-                  <value>fatal</value>
-              </property>
-          </systemProperties>
+          <systemPropertyVariables>
+            <!-- Suppress most logging output -->
+            <org.apache.commons.logging.Log>org.apache.commons.logging.impl.SimpleLog</org.apache.commons.logging.Log>
+            <org.apache.commons.logging.simplelog.defaultlog>fatal</org.apache.commons.logging.simplelog.defaultlog>
+          </systemPropertyVariables>
         </configuration>
       </plugin>
       <plugin>
