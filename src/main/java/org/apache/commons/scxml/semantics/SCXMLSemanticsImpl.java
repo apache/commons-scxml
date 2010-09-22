@@ -453,7 +453,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                         removeList.add(t);
                         break; //it makes no sense to waste cycles with t
                     } else if (SCXMLHelper.isDescendant(tsrc, t2src)) {
-                        //t takes precendence over t2
+                        //t takes precedence over t2
                         removeList.add(t2);
                     } else {
                         //add both to the non-determinism candidates
@@ -467,6 +467,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
             if (nonDeterm.size() > 0) {
                 // if not, first one in each state / region (which is also
                 // first in document order) wins
+                // NOTE: Self or stay transitions are conflict-free
                 Set regions = new HashSet();
                 Iterator iter = nonDeterm.iterator();
                 while (iter.hasNext()) {
