@@ -50,7 +50,7 @@ public class XPathExampleTest extends TestCase {
     }
 
     // Test data
-    private URL example01;
+    private URL example01, example02;
     private SCXMLExecutor exec;
 
     /**
@@ -60,6 +60,8 @@ public class XPathExampleTest extends TestCase {
     public void setUp() {
         example01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/env/xpath/example-01.xml");
+        example02 = this.getClass().getClassLoader().
+            getResource("org/apache/commons/scxml/env/xpath/example-02.xml");
     }
 
     /**
@@ -67,7 +69,7 @@ public class XPathExampleTest extends TestCase {
      */
     @Override
     public void tearDown() {
-        example01 = null;
+        example01 = example02 = null;
     }
 
     // TEST METHODS
@@ -91,6 +93,22 @@ public class XPathExampleTest extends TestCase {
             new TriggerEvent("foo", TriggerEvent.SIGNAL_EVENT,
                 SCXMLTestHelper.stringToXMLDocument(payload)),
             "end");
+
+    }
+
+    public void testExample02Sample() throws Exception {
+
+        SCXML scxml = SCXMLTestHelper.parse(example02);
+        Evaluator evaluator = null;
+        evaluator = new XPathEvaluator();
+        Context context = new XPathContext(null);
+        exec = SCXMLTestHelper.getExecutor(scxml, context, evaluator);
+
+        assertNotNull(exec);
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        assertEquals(1, currentStates.size());
+        assertEquals("end", ((State)currentStates.iterator().
+            next()).getId());
 
     }
 
