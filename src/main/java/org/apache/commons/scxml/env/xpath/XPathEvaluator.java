@@ -89,7 +89,6 @@ public class XPathEvaluator implements Evaluator, Serializable {
         try {
             return xpath.evaluate(expr, dummyContextNode, XPathConstants.STRING);
         } catch (XPathExpressionException xee) {
-            xee.printStackTrace();
             throw new SCXMLExpressionException(xee.getMessage(), xee);
         }
     }
