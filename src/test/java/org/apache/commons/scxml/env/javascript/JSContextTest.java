@@ -17,11 +17,9 @@
 
 package org.apache.commons.scxml.env.javascript;
 
-import org.apache.commons.scxml.env.SimpleContext;
-
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
+
+import org.apache.commons.scxml.env.SimpleContext;
 
 /**
  * JUnit 3 test case for the JSContext SCXML Context implementation for
@@ -45,14 +43,6 @@ public class JSContextTest extends TestCase {
             String[] testCaseName = {JSContextTest.class.getName()};
 
             junit.textui.TestRunner.main(testCaseName);
-        }
-
-        /**
-         * Returns a JUnit test suite containing the JSContextTest class only.
-         *
-         */
-        public static Test suite() {
-                return new TestSuite(JSContextTest.class);
         }
 
         // CONSTRUCTORS

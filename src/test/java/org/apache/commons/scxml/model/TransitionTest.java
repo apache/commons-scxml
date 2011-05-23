@@ -16,9 +16,7 @@
  */
 package org.apache.commons.scxml.model;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 public class TransitionTest extends TestCase {
 
@@ -26,15 +24,6 @@ public class TransitionTest extends TestCase {
         super(testName);
     }
 
-    public static Test suite() {
-        return new TestSuite(TransitionTest.class);
-    }
-
-    public static void main(String args[]) {
-        String[] testCaseName = { TransitionTest.class.getName()};
-        junit.textui.TestRunner.main(testCaseName);
-    }
-    
     private Transition transition;
     
     @Override

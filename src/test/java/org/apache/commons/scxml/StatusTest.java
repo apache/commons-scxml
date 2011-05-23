@@ -16,27 +16,13 @@
  */
 package org.apache.commons.scxml;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.apache.commons.scxml.model.State;
 
 public class StatusTest extends TestCase {
 
     public StatusTest(String name) {
         super(name);
-    }
-
-    public static Test suite() {
-        TestSuite suite = new TestSuite(StatusTest.class);
-        suite.setName("TestStatus");
-        return suite;
-    }
-
-    public static void main(String args[]) {
-        String[] testCaseName = { StatusTest.class.getName()};
-        junit.textui.TestRunner.main(testCaseName);
     }
 
     private Status status;

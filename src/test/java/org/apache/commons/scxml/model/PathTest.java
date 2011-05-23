@@ -16,9 +16,7 @@
  */
 package org.apache.commons.scxml.model;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 public class PathTest extends TestCase {
 
@@ -26,15 +24,6 @@ public class PathTest extends TestCase {
         super(testName);
     }
 
-    public static Test suite() {
-        return new TestSuite(PathTest.class);
-    }
-
-    public static void main(String args[]) {
-        String[] testCaseName = { PathTest.class.getName()};
-        junit.textui.TestRunner.main(testCaseName);
-    }
-    
     public void testConstructorNull() {
         Path path = new Path(null, null);
         

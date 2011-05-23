@@ -19,9 +19,7 @@ package org.apache.commons.scxml.env.jexl;
 import java.net.URL;
 import java.util.Set;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.apache.commons.scxml.Context;
 import org.apache.commons.scxml.SCXMLExecutor;
@@ -34,15 +32,6 @@ public class StaticMethodTest extends TestCase {
     
     public StaticMethodTest(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(StaticMethodTest.class);
-    }
-
-    public static void main(String args[]) {
-        String[] testCaseName = {StaticMethodTest.class.getName()};
-        junit.textui.TestRunner.main(testCaseName);
     }
 
     /**

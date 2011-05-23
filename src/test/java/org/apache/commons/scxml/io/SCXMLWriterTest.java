@@ -22,9 +22,7 @@ import java.util.Map;
 
 import javax.xml.stream.XMLStreamException;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.apache.commons.scxml.SCXMLTestHelper;
 import org.apache.commons.scxml.model.Parallel;
@@ -37,15 +35,6 @@ public class SCXMLWriterTest extends TestCase {
         super(testName);
     }
 
-    public static Test suite() {
-        return new TestSuite(SCXMLWriterTest.class);
-    }
-
-    public static void main(String args[]) {
-        String[] testCaseName = { SCXMLWriterTest.class.getName()};
-        junit.textui.TestRunner.main(testCaseName);
-    }
-    
     public void testSerializeSCXMLNoStates() throws IOException, XMLStreamException {
         SCXML scxml = new SCXML();
         Map<String, String> namespaces = new LinkedHashMap<String, String>();

@@ -23,14 +23,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import junit.framework.Assert;
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.apache.commons.scxml.Context;
 import org.apache.commons.scxml.Evaluator;
-import org.apache.commons.scxml.env.rhino.RhinoContext;
-import org.apache.commons.scxml.env.rhino.RhinoEvaluator;
 import org.mozilla.javascript.Script;
 import org.mozilla.javascript.Scriptable;
 import org.w3c.dom.Document;
@@ -49,10 +45,6 @@ public class RhinoContextTest extends TestCase {
      */
     public RhinoContextTest(String name) {
         super(name);
-    }
-
-    public static Test suite() {
-        return new TestSuite(RhinoContextTest.class);
     }
 
     protected void setUp() throws Exception {

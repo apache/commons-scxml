@@ -19,11 +19,7 @@ package org.apache.commons.scxml;
 import java.net.URL;
 import java.util.Set;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-
 import org.apache.commons.scxml.env.jsp.ELContext;
 import org.apache.commons.scxml.env.jsp.ELEvaluator;
 import org.apache.commons.scxml.model.State;
@@ -40,12 +36,6 @@ public class NamespacePrefixedXPathsTest extends TestCase {
      */
     public NamespacePrefixedXPathsTest(String name) {
         super(name);
-    }
-
-    public static Test suite() {
-        TestSuite suite = new TestSuite(NamespacePrefixedXPathsTest.class);
-        suite.setName("Namespace Prefixed XPaths Tests");
-        return suite;
     }
 
     // Test data
@@ -134,10 +124,5 @@ public class NamespacePrefixedXPathsTest extends TestCase {
         // done
         assertTrue(exec.getCurrentStatus().isFinal());
     }
-
-    public static void main(String args[]) {
-        TestRunner.run(suite());
-    }
-
 }
 

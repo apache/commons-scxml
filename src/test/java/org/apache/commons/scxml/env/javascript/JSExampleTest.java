@@ -23,9 +23,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.scxml.Context;
@@ -52,12 +50,6 @@ public class JSExampleTest extends TestCase {
 
     public JSExampleTest(String name) {
         super(name);
-    }
-
-    public static Test suite() {
-        TestSuite suite = new TestSuite(JSExampleTest.class);
-        suite.setName("SCXML JavaScript Environment Example Tests");
-        return suite;
     }
 
     // Test data

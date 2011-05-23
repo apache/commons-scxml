@@ -22,11 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-
 import org.apache.commons.scxml.env.Tracer;
 import org.apache.commons.scxml.env.jexl.JexlContext;
 import org.apache.commons.scxml.env.jexl.JexlEvaluator;
@@ -43,12 +39,6 @@ public class WizardsTest extends TestCase {
      */
     public WizardsTest(String name) {
         super(name);
-    }
-
-    public static Test suite() {
-        TestSuite suite = new TestSuite(WizardsTest.class);
-        suite.setName("SCXML Executor Tests, Wizard Style documents");
-        return suite;
     }
 
     // Test data
@@ -141,9 +131,5 @@ public class WizardsTest extends TestCase {
             // should never be called
             fail("<cancel> TestEventDispatcher callback unexpected");
         }
-    }
-
-    public static void main(String args[]) {
-        TestRunner.run(suite());
     }
 }

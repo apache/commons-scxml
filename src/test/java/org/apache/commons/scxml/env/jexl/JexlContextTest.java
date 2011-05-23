@@ -19,9 +19,7 @@ package org.apache.commons.scxml.env.jexl;
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.apache.commons.scxml.Builtin;
 
@@ -29,15 +27,6 @@ public class JexlContextTest extends TestCase {
 
     public JexlContextTest(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(JexlContextTest.class);
-    }
-
-    public static void main(String args[]) {
-        String[] testCaseName = {JexlContextTest.class.getName()};
-        junit.textui.TestRunner.main(testCaseName);
     }
 
     public void testNew() {

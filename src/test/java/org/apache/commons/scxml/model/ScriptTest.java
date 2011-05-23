@@ -19,10 +19,7 @@ package org.apache.commons.scxml.model;
 import java.net.URL;
 import java.util.Set;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
 import org.apache.commons.scxml.env.javascript.JSEvaluator;
@@ -34,15 +31,6 @@ public class ScriptTest extends TestCase {
     
     public ScriptTest(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(ScriptTest.class);
-    }
-
-    public static void main(String args[]) {
-        String[] testCaseName = {ScriptTest.class.getName()};
-        junit.textui.TestRunner.main(testCaseName);
     }
 
     /**

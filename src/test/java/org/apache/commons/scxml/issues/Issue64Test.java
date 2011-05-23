@@ -18,10 +18,7 @@ package org.apache.commons.scxml.issues;
 
 import java.net.URL;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
 
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
@@ -34,12 +31,6 @@ public class Issue64Test extends TestCase {
 
     public Issue64Test(String name) {
         super(name);
-    }
-
-    public static Test suite() {
-        TestSuite suite = new TestSuite(Issue64Test.class);
-        suite.setName("SCXML Issue 64 Test");
-        return suite;
     }
 
     private URL works, fails;
@@ -73,10 +64,6 @@ public class Issue64Test extends TestCase {
     public void test02issue64() throws Exception {
         exec = SCXMLTestHelper.getExecutor(SCXMLTestHelper.parse(fails));
         SCXMLTestHelper.assertPostTriggerState(exec, "show.bug", "end");
-    }
-
-    public static void main(String args[]) {
-        TestRunner.run(suite());
     }
 }
 

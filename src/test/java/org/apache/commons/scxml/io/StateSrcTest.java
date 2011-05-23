@@ -19,10 +19,7 @@ package org.apache.commons.scxml.io;
 import java.net.URL;
 import java.util.Set;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
 
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
@@ -40,12 +37,6 @@ public class StateSrcTest extends TestCase {
      */
     public StateSrcTest(String name) {
         super(name);
-    }
-
-    public static Test suite() {
-        TestSuite suite = new TestSuite(StateSrcTest.class);
-        suite.setName("SCXML Digester Tests");
-        return suite;
     }
 
     // Test data
@@ -111,10 +102,6 @@ public class StateSrcTest extends TestCase {
             assertTrue("Unexpected error message for bad <state> 'src' URI fragment",
                 me.getMessage() != null && me.getMessage().contains("URI Fragment in <state src="));
         }
-    }
-
-    public static void main(String args[]) {
-        TestRunner.run(suite());
     }
 }
 

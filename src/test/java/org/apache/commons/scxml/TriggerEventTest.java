@@ -19,10 +19,7 @@ package org.apache.commons.scxml;
 import java.util.Map;
 import java.util.HashMap;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
 
 /**
  * Unit tests {@link org.apache.commons.scxml.TriggerEvent}.
@@ -33,12 +30,6 @@ public class TriggerEventTest extends TestCase {
      */
     public TriggerEventTest(String name) {
         super(name);
-    }
-
-    public static Test suite() {
-        TestSuite suite = new TestSuite(TriggerEventTest.class);
-        suite.setName("TriggerEvent Tests");
-        return suite;
     }
 
     // Test data
@@ -103,10 +94,6 @@ public class TriggerEventTest extends TestCase {
             te7.hashCode());
         assertEquals("TriggerEvent{name=name3,type=3}".hashCode(),
             te5.hashCode());
-    }
-
-    public static void main(String args[]) {
-        TestRunner.run(suite());
     }
 }
 

@@ -16,15 +16,11 @@
  */
 package org.apache.commons.scxml.env.rhino;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.apache.commons.scxml.Context;
 import org.apache.commons.scxml.Evaluator;
 import org.apache.commons.scxml.SCXMLExpressionException;
-import org.apache.commons.scxml.env.rhino.RhinoContext;
-import org.apache.commons.scxml.env.rhino.RhinoEvaluator;
 
 public class RhinoEvaluatorTest extends TestCase {
 
@@ -33,15 +29,6 @@ public class RhinoEvaluatorTest extends TestCase {
 
     public RhinoEvaluatorTest(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(RhinoEvaluatorTest.class);
-    }
-
-    public static void main(String args[]) {
-        String[] testCaseName = {RhinoEvaluatorTest.class.getName()};
-        junit.textui.TestRunner.main(testCaseName);
     }
 
     public void testPristine() throws SCXMLExpressionException {

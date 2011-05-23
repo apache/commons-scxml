@@ -20,11 +20,7 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.Set;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
 import org.apache.commons.scxml.TriggerEvent;
@@ -41,12 +37,6 @@ public class StatelessModelTest extends TestCase {
      */
     public StatelessModelTest(String name) {
         super(name);
-    }
-
-    public static Test suite() {
-        TestSuite suite = new TestSuite(StatelessModelTest.class);
-        suite.setName("SCXML Executor Tests");
-        return suite;
     }
 
     // Test data
@@ -256,10 +246,6 @@ public class StatelessModelTest extends TestCase {
                 TriggerEvent.SIGNAL_EVENT, null)};
         exec.triggerEvents(evts);
         return exec.getCurrentStatus().getStates();
-    }
-
-    public static void main(String args[]) {
-        TestRunner.run(suite());
     }
 }
 

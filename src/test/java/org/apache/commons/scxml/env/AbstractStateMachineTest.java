@@ -18,10 +18,7 @@ package org.apache.commons.scxml.env;
 
 import java.net.URL;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
 
 /**
  * Unit tests {@link org.apache.commons.scxml.env.AbstractStateMachine}.
@@ -78,15 +75,5 @@ public class AbstractStateMachineTest extends TestCase {
         public boolean barCalled() {
             return barCalled;
         }
-    }
-
-    public static Test suite() {
-        TestSuite suite = new TestSuite(AbstractStateMachineTest.class);
-        suite.setName("AbstractStateMachine Tests");
-        return suite;
-    }
-
-    public static void main(String args[]) {
-        TestRunner.run(suite());
     }
 }

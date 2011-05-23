@@ -19,10 +19,7 @@ package org.apache.commons.scxml;
 import java.util.HashSet;
 import java.util.Set;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.apache.commons.scxml.env.MockErrorReporter;
 import org.apache.commons.scxml.env.SimpleErrorReporter;
 import org.apache.commons.scxml.model.Parallel;
@@ -36,15 +33,6 @@ public class SCXMLHelperTest extends TestCase {
         super(testName);
     }
 
-    public static Test suite() {
-        return new TestSuite(SCXMLHelperTest.class);
-    }
-
-    public static void main(String args[]) {
-        String[] testCaseName = { SCXMLHelperTest.class.getName()};
-        junit.textui.TestRunner.main(testCaseName);
-    }
-    
     public void testIsStringEmptyNull() {
         assertTrue(SCXMLHelper.isStringEmpty(null));
     }

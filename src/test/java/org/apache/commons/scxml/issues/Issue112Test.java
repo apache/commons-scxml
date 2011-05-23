@@ -23,9 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.scxml.ErrorReporter;
@@ -49,15 +47,6 @@ public class Issue112Test extends TestCase {
 
     public Issue112Test(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(Issue112Test.class);
-    }
-
-    public static void main(String args[]) {
-        String[] testCaseName = { Issue112Test.class.getName() };
-        junit.textui.TestRunner.main(testCaseName);
     }
 
     private URL queue01;

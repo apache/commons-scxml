@@ -21,11 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
 import org.apache.commons.scxml.TriggerEvent;
@@ -43,12 +39,6 @@ public class DatamodelTest extends TestCase {
      */
     public DatamodelTest(String name) {
         super(name);
-    }
-
-    public static Test suite() {
-        TestSuite suite = new TestSuite(DatamodelTest.class);
-        suite.setName("SCXML Executor Tests");
-        return suite;
     }
 
     // Test data
@@ -186,10 +176,6 @@ public class DatamodelTest extends TestCase {
                 TriggerEvent.SIGNAL_EVENT, null)};
         exec.triggerEvents(evts);
         return exec.getCurrentStatus().getStates();
-    }
-
-    public static void main(String args[]) {
-        TestRunner.run(suite());
     }
 }
 

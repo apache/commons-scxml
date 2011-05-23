@@ -19,10 +19,7 @@ package org.apache.commons.scxml.model;
 import java.net.URL;
 import java.util.Set;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
 
@@ -33,15 +30,6 @@ public class HistoryTest extends TestCase {
      */
     public HistoryTest(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(HistoryTest.class);
-    }
-
-    public static void main(String args[]) {
-        String[] testCaseName = { HistoryTest.class.getName()};
-        junit.textui.TestRunner.main(testCaseName);
     }
 
     // Test data

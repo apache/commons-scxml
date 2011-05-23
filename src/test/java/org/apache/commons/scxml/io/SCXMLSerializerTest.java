@@ -21,9 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.apache.commons.scxml.model.Action;
 import org.apache.commons.scxml.model.Assign;
@@ -49,15 +47,6 @@ public class SCXMLSerializerTest extends TestCase {
         super(testName);
     }
 
-    public static Test suite() {
-        return new TestSuite(SCXMLSerializerTest.class);
-    }
-
-    public static void main(String args[]) {
-        String[] testCaseName = { SCXMLSerializerTest.class.getName()};
-        junit.textui.TestRunner.main(testCaseName);
-    }
-    
     public void testSerializeSCXMLNoStates() {
         SCXML scxml = new SCXML();
         Map<String, String> namespaces = new LinkedHashMap<String, String>();

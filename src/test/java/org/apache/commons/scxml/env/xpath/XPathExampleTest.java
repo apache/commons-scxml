@@ -20,9 +20,7 @@ package org.apache.commons.scxml.env.xpath;
 import java.net.URL;
 import java.util.Set;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.apache.commons.scxml.Context;
 import org.apache.commons.scxml.Evaluator;
@@ -41,12 +39,6 @@ public class XPathExampleTest extends TestCase {
 
     public XPathExampleTest(String name) {
         super(name);
-    }
-
-    public static Test suite() {
-        TestSuite suite = new TestSuite(XPathExampleTest.class);
-        suite.setName("SCXML XPath Environment Example Tests");
-        return suite;
     }
 
     // Test data

@@ -23,9 +23,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.apache.commons.scxml.Context;
 import org.apache.commons.scxml.Evaluator;
@@ -137,14 +135,6 @@ public class JSEvaluatorTest extends TestCase {
         String[] testCaseName = {JSEvaluatorTest.class.getName()};
 
         junit.textui.TestRunner.main(testCaseName);
-    }
-
-    /**
-     * Returns a JUnit test suite containing the JSEvaluatorTest class only.
-     *
-     */
-    public static Test suite() {
-            return new TestSuite(JSEvaluatorTest.class);
     }
 
     // CONSTRUCTORS

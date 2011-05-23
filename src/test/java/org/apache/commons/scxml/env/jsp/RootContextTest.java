@@ -20,10 +20,7 @@ import java.net.URL;
 
 import javax.servlet.jsp.JspContext;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
 
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
@@ -38,12 +35,6 @@ public class RootContextTest extends TestCase {
      */
     public RootContextTest(String name) {
         super(name);
-    }
-
-    public static Test suite() {
-        TestSuite suite = new TestSuite(RootContextTest.class);
-        suite.setName("SCXML Env RootContext (wraps JSP Context) Tests");
-        return suite;
     }
 
     // Test data
@@ -96,10 +87,5 @@ public class RootContextTest extends TestCase {
         assertEquals(ctx.resolveVariable("bar"), "a brand new value");
         assertNotNull(ctx.getVars());
     }
-
-     public static void main(String args[]) {
-        TestRunner.run(suite());
-    }
-
 }
 

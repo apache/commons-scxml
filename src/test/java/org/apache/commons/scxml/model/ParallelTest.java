@@ -20,10 +20,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.apache.commons.scxml.Builtin;
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
@@ -33,15 +30,6 @@ public class ParallelTest extends TestCase {
 
     public ParallelTest(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(ParallelTest.class);
-    }
-
-    public static void main(String args[]) {
-        String[] testCaseName = { ParallelTest.class.getName() };
-        junit.textui.TestRunner.main(testCaseName);
     }
 
     // Test data

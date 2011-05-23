@@ -24,11 +24,9 @@ import java.util.Map;
 import javax.script.Bindings;
 import javax.script.SimpleBindings;
 
-import org.apache.commons.scxml.Context;
-
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
+
+import org.apache.commons.scxml.Context;
 
 /**
  * JUnit 3 test case for the JSBinding implementation that imports
@@ -65,13 +63,6 @@ public class JSBindingsTest extends TestCase {
     public static void main(String args[]) {
         String[] testCaseName = {JSBindingsTest.class.getName()};
         junit.textui.TestRunner.main(testCaseName);
-    }
-
-    /**
-     * Returns a JUnit test suite containing the JSBindingsTest class only.
-     */
-    public static Test suite() {
-        return new TestSuite(JSBindingsTest.class);
     }
 
     // CONSTRUCTORS

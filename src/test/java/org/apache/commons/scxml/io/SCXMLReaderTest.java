@@ -24,11 +24,7 @@ import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.scxml.ErrorReporter;
 import org.apache.commons.scxml.EventDispatcher;
@@ -56,12 +52,6 @@ public class SCXMLReaderTest extends TestCase {
      */
     public SCXMLReaderTest(String name) {
         super(name);
-    }
-
-    public static Test suite() {
-        TestSuite suite = new TestSuite(SCXMLReaderTest.class);
-        suite.setName("SCXML Parser Tests");
-        return suite;
     }
 
     // Test data
@@ -202,11 +192,6 @@ public class SCXMLReaderTest extends TestCase {
         assertNotNull(scxmlAsString);
         return scxmlAsString;
     }
-
-    public static void main(String args[]) {
-        TestRunner.run(suite());
-    }
-
 
     public static class MyAction extends Action implements ExternalContent {
         private static final long serialVersionUID = 1L;

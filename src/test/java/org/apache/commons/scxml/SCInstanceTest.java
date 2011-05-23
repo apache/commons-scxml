@@ -26,9 +26,7 @@ import org.apache.commons.scxml.model.History;
 import org.apache.commons.scxml.model.State;
 import org.apache.commons.scxml.model.TransitionTarget;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 public class SCInstanceTest extends TestCase {
 
@@ -36,15 +34,6 @@ public class SCInstanceTest extends TestCase {
         super(testName);
     }
 
-    public static Test suite() {
-        return new TestSuite(SCInstanceTest.class);
-    }
-
-    public static void main(String args[]) {
-        String[] testCaseName = { SCInstanceTest.class.getName()};
-        junit.textui.TestRunner.main(testCaseName);
-    }
-    
     private SCInstance instance;
     
     @Override

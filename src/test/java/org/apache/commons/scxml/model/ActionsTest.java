@@ -18,10 +18,7 @@ package org.apache.commons.scxml.model;
 
 import java.net.URL;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
 
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
@@ -45,12 +42,6 @@ public class ActionsTest extends TestCase {
      */
     public ActionsTest(String name) {
         super(name);
-    }
-
-    public static Test suite() {
-        TestSuite suite = new TestSuite(ActionsTest.class);
-        suite.setName("SCXML Model Actions Tests");
-        return suite;
     }
 
     // Test data
@@ -110,10 +101,6 @@ public class ActionsTest extends TestCase {
         assertEquals((String) ctx.get("foo"), "foobar");
         assertEquals("Missed event transition",
             "true", (String) ctx.get("eventsent"));
-    }
-
-    public static void main(String args[]) {
-        TestRunner.run(suite());
     }
 }
 
