@@ -36,11 +36,13 @@ public class RhinoExampleTest extends TestCase {
     private URL example01;
     private SCXMLExecutor exec;
 
+    @Override
     protected void setUp() throws Exception {
         example01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/env/rhino/example-01.xml");
     }
 
+    @Override
     protected void tearDown() throws Exception {
         example01 = null;
     }
