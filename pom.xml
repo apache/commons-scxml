@@ -206,6 +206,8 @@
     <commons.rc.version>RC1</commons.rc.version>
     <commons.jira.id>SCXML</commons.jira.id>
     <commons.jira.pid>12310492</commons.jira.pid>
+    <!-- Allow override of the logging level -->
+    <simplelog.defaultlog>fatal</simplelog.defaultlog>
   </properties> 
 
   <build>
@@ -242,7 +244,7 @@
           <systemPropertyVariables>
             <!-- Suppress most logging output -->
             <org.apache.commons.logging.Log>org.apache.commons.logging.impl.SimpleLog</org.apache.commons.logging.Log>
-            <org.apache.commons.logging.simplelog.defaultlog>fatal</org.apache.commons.logging.simplelog.defaultlog>
+            <org.apache.commons.logging.simplelog.defaultlog>${simplelog.defaultlog}</org.apache.commons.logging.simplelog.defaultlog>
           </systemPropertyVariables>
         </configuration>
       </plugin>
