@@ -2278,7 +2278,7 @@ public final class SCXMLReader {
         final ClassLoader factoryClassLoader;
 
         /**
-         * @param allocator The {@link XMLEventAllocator} for the {@link XMLInputFactory}.
+         * The {@link XMLEventAllocator} for the {@link XMLInputFactory}.
          */
         final XMLEventAllocator allocator;
 
@@ -2289,12 +2289,12 @@ public final class SCXMLReader {
         final Map<String, Object> properties;
 
         /**
-         * @param resolver The {@link XMLResolver} for the {@link XMLInputFactory}.
+         * The {@link XMLResolver} for the {@link XMLInputFactory}.
          */
         final XMLResolver resolver;
 
         /**
-         * @param reporter The {@link XMLReporter} for the {@link XMLInputFactory}.
+         * The {@link XMLReporter} for the {@link XMLInputFactory}.
          */
         final XMLReporter reporter;
 
