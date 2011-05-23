@@ -19,10 +19,7 @@ package org.apache.commons.scxml.issues;
 import java.net.URL;
 import java.util.Set;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
 
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
@@ -36,12 +33,6 @@ public class Issue62Test extends TestCase {
 
     public Issue62Test(String name) {
         super(name);
-    }
-
-    public static Test suite() {
-        TestSuite suite = new TestSuite(Issue62Test.class);
-        suite.setName("SCXML Issue 62 Test");
-        return suite;
     }
 
     private URL test01, test02, test03;
@@ -95,10 +86,6 @@ public class Issue62Test extends TestCase {
         SCXMLTestHelper.assertPostTriggerState(exec, "bar", "e1.1.2");
         SCXMLTestHelper.assertPostTriggerState(exec, "baz", "s3");
         assertTrue(exec.getCurrentStatus().isFinal());
-    }
-
-    public static void main(String args[]) {
-        TestRunner.run(suite());
     }
 }
 

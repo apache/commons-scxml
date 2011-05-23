@@ -16,23 +16,12 @@
  */
 package org.apache.commons.scxml.env.faces;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 public class SessionContextTest extends TestCase {
 
     public SessionContextTest(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(SessionContextTest.class);
-    }
-
-    public static void main(String args[]) {
-        String[] testCaseName = {SessionContextTest.class.getName()};
-        junit.textui.TestRunner.main(testCaseName);
     }
 
     public void testIllegalInstance() {

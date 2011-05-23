@@ -16,13 +16,11 @@
  */
 package org.apache.commons.scxml.env;
 
+import junit.framework.TestCase;
+
 import org.apache.commons.scxml.model.State;
 import org.apache.commons.scxml.model.Transition;
 import org.apache.commons.scxml.model.TransitionTarget;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 public class LogUtilsTest extends TestCase {
 
@@ -30,15 +28,6 @@ public class LogUtilsTest extends TestCase {
         super(testName);
     }
 
-    public static Test suite() {
-        return new TestSuite(LogUtilsTest.class);
-    }
-
-    public static void main(String args[]) {
-        String[] testCaseName = {LogUtilsTest.class.getName()};
-        junit.textui.TestRunner.main(testCaseName);
-    }
-    
     public void testGetTTPathParentNull() {
         TransitionTarget target = new State();
         target.setId("ID");

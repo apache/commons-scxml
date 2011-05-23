@@ -19,9 +19,7 @@ package org.apache.commons.scxml.invoke;
 import java.net.URL;
 import java.util.Map;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.apache.commons.scxml.SCInstance;
 import org.apache.commons.scxml.SCXMLExecutor;
@@ -29,8 +27,6 @@ import org.apache.commons.scxml.SCXMLTestHelper;
 import org.apache.commons.scxml.TriggerEvent;
 import org.apache.commons.scxml.env.jexl.JexlContext;
 import org.apache.commons.scxml.env.jexl.JexlEvaluator;
-import org.apache.commons.scxml.invoke.Invoker;
-import org.apache.commons.scxml.invoke.InvokerException;
 import org.apache.commons.scxml.model.ModelException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -40,15 +36,6 @@ public class InvokeParamNameTest extends TestCase {
     
     public InvokeParamNameTest(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(InvokeParamNameTest.class);
-    }
-
-    public static void main(String args[]) {
-        String[] testCaseName = { InvokeParamNameTest.class.getName()};
-        junit.textui.TestRunner.main(testCaseName);
     }
 
     private URL invoker04;

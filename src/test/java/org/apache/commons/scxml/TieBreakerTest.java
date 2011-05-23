@@ -20,10 +20,7 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.Set;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
 
 import org.apache.commons.scxml.model.State;
 /**
@@ -45,12 +42,6 @@ public class TieBreakerTest extends TestCase {
      */
     public TieBreakerTest(String name) {
         super(name);
-    }
-
-    public static Test suite() {
-        TestSuite suite = new TestSuite(TieBreakerTest.class);
-        suite.setName("SCXML Executor Tie-Breaker Tests");
-        return suite;
     }
 
     // Test data
@@ -163,10 +154,6 @@ public class TieBreakerTest extends TestCase {
         assertNotNull(exec);
         Set currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
-    }
-
-    public static void main(String args[]) {
-        TestRunner.run(suite());
     }
 }
 

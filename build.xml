@@ -39,6 +39,7 @@
   </property>
   <property name="compile.source" value="1.4"/>
   <property name="compile.target" value="1.4"/>
+  <property name="simplelog.defaultlog" value="fatal"/>
   <path id="build.classpath">
     <fileset dir="${libdir}">
       <include name="**/*.jar">
@@ -106,50 +107,39 @@
   <target name="internal-test" if="Junit.present" depends="junit-present,compile-tests">
     <mkdir dir="${testreportdir}">
     </mkdir>
-    <junit dir="./" failureproperty="test.failure" printSummary="yes" fork="true" haltonerror="true">
-      <sysproperty key="basedir" value=".">
-      </sysproperty>
-      <formatter type="xml">
-      </formatter>
-      <formatter usefile="false" type="plain">
-      </formatter>
+    <junit printsummary="true"
+           errorProperty="test.failed"
+           failureProperty="test.failed"
+           fork="true"
+           showOutput="true">
+           <formatter type="brief"/>
+      <sysproperty key="basedir" value="."/>
+      <sysproperty key="org.apache.commons.logging.Log" value="org.apache.commons.logging.impl.SimpleLog"/>
+      <sysproperty key="org.apache.commons.logging.simplelog.defaultlog" value="${simplelog.defaultlog}"/>
       <classpath>
-        <path refid="build.classpath">
-        </path>
-        <pathelement path="${testclassesdir}">
-        </pathelement>
-        <pathelement path="${classesdir}">
-        </pathelement>
+        <path refid="build.classpath"/>
+        <pathelement path="${testclassesdir}"/>
+        <pathelement path="${classesdir}"/>
       </classpath>
-      <batchtest todir="${testreportdir}">
+      <!-- If test.entry is defined, run a single test, otherwise run all valid tests -->
+      <!-- N.B. test.entry must be the full path to the test class, for example:
+                ant test -Dtest.entry=org.apache.commons.math.util.FastMathTestPerformance
+      -->
+      <test name="${test.entry}" todir="${test.reports}" if="test.entry"/>
+      <batchtest todir="${testreportdir}" unless="test.entry">
         <fileset dir="src/test/java">
-          <include name="org/apache/commons/scxml/SCXMLTestSuite.java">
-          </include>
-          <include name="org/apache/commons/scxml/env/EnvTestSuite.java">
-          </include>
-          <include name="org/apache/commons/scxml/env/faces/EnvFacesTestSuite.java">
-          </include>
-          <include name="org/apache/commons/scxml/env/jexl/EnvJexlTestSuite.java">
-          </include>
-          <include name="org/apache/commons/scxml/env/jsp/EnvJspTestSuite.java">
-          </include>
-          <include name="org/apache/commons/scxml/env/servlet/EnvServletTestSuite.java">
-          </include>
-          <include name="org/apache/commons/scxml/invoke/InvokeTestSuite.java">
-          </include>
-          <include name="org/apache/commons/scxml/io/IOTestSuite.java">
-          </include>
-          <include name="org/apache/commons/scxml/issues/IssuesTestSuite.java">
-          </include>
-          <include name="org/apache/commons/scxml/model/ModelTestSuite.java">
-          </include>
-          <include name="org/apache/commons/scxml/semantics/SemanticsTestSuite.java">
-          </include>
-          <include name="org/apache/commons/scxml/test/TestingTestSuite.java">
-          </include>
+          <include name="**/*Test.java"/> 
         </fileset>
       </batchtest>
-    </junit>
+     </junit>
+     <fail message="There were test failures.">
+       <condition>
+         <and>
+           <istrue value="${test.failonerror}"/>
+           <isset property="test.failed"/>
+         </and>
+       </condition>
+     </fail>
   </target>
   <target name="junit-present" unless="Junit.present" depends="init">
     <echo>================================= WARNING ================================</echo>

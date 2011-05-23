@@ -16,9 +16,7 @@
  */
 package org.apache.commons.scxml.env.jexl;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.apache.commons.scxml.Context;
 import org.apache.commons.scxml.Evaluator;
@@ -31,15 +29,6 @@ public class JexlEvaluatorTest extends TestCase {
 
     public JexlEvaluatorTest(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(JexlEvaluatorTest.class);
-    }
-
-    public static void main(String args[]) {
-        String[] testCaseName = {JexlEvaluatorTest.class.getName()};
-        junit.textui.TestRunner.main(testCaseName);
     }
 
     public void testPristine() throws SCXMLExpressionException {

@@ -19,10 +19,7 @@ package org.apache.commons.scxml.model;
 import java.net.URL;
 import java.util.Set;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
 
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
@@ -36,12 +33,6 @@ public class AssignTest extends TestCase {
      */
     public AssignTest(String name) {
         super(name);
-    }
-
-    public static Test suite() {
-        TestSuite suite = new TestSuite(AssignTest.class);
-        suite.setName("SCXML Model Assign Tests");
-        return suite;
     }
 
     // Test data
@@ -85,10 +76,6 @@ public class AssignTest extends TestCase {
         assertEquals("assign3", ((State)currentStates.iterator().
             next()).getId());
         assertTrue(exec.getCurrentStatus().isFinal());
-    }
-
-    public static void main(String args[]) {
-        TestRunner.run(suite());
     }
 }
 

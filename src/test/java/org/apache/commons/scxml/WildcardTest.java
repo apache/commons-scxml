@@ -19,10 +19,7 @@ package org.apache.commons.scxml;
 import java.net.URL;
 import java.util.Set;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
 
 import org.apache.commons.scxml.model.State;
 /**
@@ -36,12 +33,6 @@ public class WildcardTest extends TestCase {
      */
     public WildcardTest(String name) {
         super(name);
-    }
-
-    public static Test suite() {
-        TestSuite suite = new TestSuite(WildcardTest.class);
-        suite.setName("SCXML Executor Tests, wildcard event match");
-        return suite;
     }
 
     // Test data
@@ -89,9 +80,5 @@ public class WildcardTest extends TestCase {
         assertEquals(1, currentStates.size());
         assertEquals("state2", ((State)currentStates.iterator().
             next()).getId());
-    }
-
-    public static void main(String args[]) {
-        TestRunner.run(suite());
     }
 }

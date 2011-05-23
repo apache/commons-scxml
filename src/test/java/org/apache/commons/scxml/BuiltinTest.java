@@ -19,12 +19,10 @@ package org.apache.commons.scxml;
 import java.util.HashSet;
 import java.util.Set;
 
+import junit.framework.TestCase;
+
 import org.apache.commons.scxml.model.State;
 import org.apache.commons.scxml.model.TransitionTarget;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 public class BuiltinTest extends TestCase {
 
@@ -32,15 +30,6 @@ public class BuiltinTest extends TestCase {
         super(testName);
     }
 
-    public static Test suite() {
-        return new TestSuite(BuiltinTest.class);
-    }
-
-    public static void main(String args[]) {
-        String[] testCaseName = { BuiltinTest.class.getName()};
-        junit.textui.TestRunner.main(testCaseName);
-    }
-    
     public void testIsMemberEmptySet() {
         Set set = new HashSet();
         

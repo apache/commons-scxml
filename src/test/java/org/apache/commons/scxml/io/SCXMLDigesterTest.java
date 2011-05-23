@@ -19,10 +19,7 @@ package org.apache.commons.scxml.io;
 import java.net.URL;
 import java.util.List;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
 
 import org.apache.commons.scxml.SCXMLTestHelper;
 import org.apache.commons.scxml.model.SCXML;
@@ -39,12 +36,6 @@ public class SCXMLDigesterTest extends TestCase {
      */
     public SCXMLDigesterTest(String name) {
         super(name);
-    }
-
-    public static Test suite() {
-        TestSuite suite = new TestSuite(SCXMLDigesterTest.class);
-        suite.setName("SCXML Digester Tests");
-        return suite;
     }
 
     // Test data
@@ -137,8 +128,5 @@ public class SCXMLDigesterTest extends TestCase {
         return scxmlAsString;
     }
 
-     public static void main(String args[]) {
-        TestRunner.run(suite());
-    }
 }
 

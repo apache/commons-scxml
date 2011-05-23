@@ -20,9 +20,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
@@ -32,15 +30,6 @@ public class CustomActionTest extends TestCase {
 
     public CustomActionTest(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(CustomActionTest.class);
-    }
-
-    public static void main(String args[]) {
-        String[] testCaseName = { CustomActionTest.class.getName()};
-        junit.textui.TestRunner.main(testCaseName);
     }
 
     private URL hello01, custom01, external01, override01, payload01, payload02;

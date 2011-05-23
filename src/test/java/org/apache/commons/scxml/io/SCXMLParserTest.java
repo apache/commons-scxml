@@ -18,10 +18,7 @@ package org.apache.commons.scxml.io;
 
 import java.net.URL;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
 
 import org.apache.commons.scxml.SCXMLTestHelper;
 import org.apache.commons.scxml.model.Final;
@@ -36,12 +33,6 @@ public class SCXMLParserTest extends TestCase {
      */
     public SCXMLParserTest(String name) {
         super(name);
-    }
-
-    public static Test suite() {
-        TestSuite suite = new TestSuite(SCXMLParserTest.class);
-        suite.setName("SCXML Parser Tests");
-        return suite;
     }
 
     // Test data
@@ -102,8 +93,5 @@ public class SCXMLParserTest extends TestCase {
         return scxmlAsString;
     }
 
-     public static void main(String args[]) {
-        TestRunner.run(suite());
-    }
 }
 

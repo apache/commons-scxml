@@ -21,10 +21,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
 
 import org.apache.commons.scxml.env.SimpleContext;
 import org.apache.commons.scxml.env.jsp.ELEvaluator;
@@ -41,12 +38,6 @@ public class SCXMLExecutorTest extends TestCase {
      */
     public SCXMLExecutorTest(String name) {
         super(name);
-    }
-
-    public static Test suite() {
-        TestSuite suite = new TestSuite(SCXMLExecutorTest.class);
-        suite.setName("SCXML Executor Tests");
-        return suite;
     }
 
     // Test data
@@ -278,9 +269,5 @@ public class SCXMLExecutorTest extends TestCase {
         assertEquals(2, currentStates.size());
         String id = ((State)currentStates.iterator().next()).getId();
         assertTrue(id.equals("closed") || id.equals("cooking"));
-    }
-
-    public static void main(String args[]) {
-        TestRunner.run(suite());
     }
 }

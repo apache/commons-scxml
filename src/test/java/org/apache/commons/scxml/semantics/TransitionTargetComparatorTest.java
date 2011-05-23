@@ -16,9 +16,7 @@
  */
 package org.apache.commons.scxml.semantics;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.apache.commons.scxml.model.Parallel;
 import org.apache.commons.scxml.model.State;
@@ -28,15 +26,6 @@ public class TransitionTargetComparatorTest extends TestCase {
 
     public TransitionTargetComparatorTest(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(TransitionTargetComparatorTest.class);
-    }
-
-    public static void main(String args[]) {
-        String[] testCaseName = { TransitionTargetComparatorTest.class.getName()};
-        junit.textui.TestRunner.main(testCaseName);
     }
 
     private TransitionTargetComparator comparator;

@@ -16,23 +16,12 @@
  */
 package org.apache.commons.scxml.env.servlet;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 public class ServletContextResolverTest extends TestCase {
 
     public ServletContextResolverTest(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(ServletContextResolverTest.class);
-    }
-
-    public static void main(String args[]) {
-        String[] testCaseName = {ServletContextResolverTest.class.getName()};
-        junit.textui.TestRunner.main(testCaseName);
     }
 
     public void testIllegalInstance() {

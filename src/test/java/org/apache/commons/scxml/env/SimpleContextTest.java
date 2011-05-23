@@ -19,23 +19,12 @@ package org.apache.commons.scxml.env;
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 public class SimpleContextTest extends TestCase {
 
     public SimpleContextTest(String testName) {
         super(testName);
-    }
-
-    public static Test suite() {
-        return new TestSuite(SimpleContextTest.class);
-    }
-
-    public static void main(String args[]) {
-        String[] testCaseName = { SimpleContextTest.class.getName()};
-        junit.textui.TestRunner.main(testCaseName);
     }
 
     private SimpleContext context;
