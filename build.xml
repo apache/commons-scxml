@@ -121,35 +121,7 @@
       </classpath>
       <batchtest todir="${testreportdir}">
         <fileset dir="src/test/java">
-          <include name="org/apache/commons/scxml/SCXMLTestSuite.java">
-          </include>
-          <include name="org/apache/commons/scxml/env/EnvTestSuite.java">
-          </include>
-          <include name="org/apache/commons/scxml/env/faces/EnvFacesTestSuite.java">
-          </include>
-          <include name="org/apache/commons/scxml/env/javascript/EnvJavaScriptTestSuite.java">
-          </include>
-          <include name="org/apache/commons/scxml/env/jexl/EnvJexlTestSuite.java">
-          </include>
-          <include name="org/apache/commons/scxml/env/jsp/EnvJspTestSuite.java">
-          </include>
-          <include name="org/apache/commons/scxml/env/rhino/EnvRhinoTestSuite.java">
-          </include>
-          <include name="org/apache/commons/scxml/env/servlet/EnvServletTestSuite.java">
-          </include>
-          <include name="org/apache/commons/scxml/env/xpath/EnvXPathTestSuite.java">
-          </include>
-          <include name="org/apache/commons/scxml/invoke/InvokeTestSuite.java">
-          </include>
-          <include name="org/apache/commons/scxml/io/IOTestSuite.java">
-          </include>
-          <include name="org/apache/commons/scxml/issues/IssuesTestSuite.java">
-          </include>
-          <include name="org/apache/commons/scxml/model/ModelTestSuite.java">
-          </include>
-          <include name="org/apache/commons/scxml/semantics/SemanticsTestSuite.java">
-          </include>
-          <include name="org/apache/commons/scxml/test/TestingTestSuite.java">
+          <include name="**/*Test.java">
           </include>
         </fileset>
       </batchtest>
