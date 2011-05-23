@@ -240,7 +240,7 @@ public class Send extends Action implements ExternalContent {
     /**
      * Set the target type for this &lt;send&gt; element.
      *
-     * @param type The type to set.
+     * @param targettype The type to set.
      * @deprecated Use {@link #setType(String)} instead.
      */
     public final void setTargettype(final String targettype) {

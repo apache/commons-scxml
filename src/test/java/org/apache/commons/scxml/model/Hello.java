@@ -60,9 +60,6 @@ public class Hello extends Action {
         this.name = name;
     }
 
-    /**
-     * @inheritDoc
-     */
     @Override
     public void execute(final EventDispatcher evtDispatcher,
             final ErrorReporter errRep, final SCInstance scInstance,
