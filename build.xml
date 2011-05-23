@@ -37,6 +37,8 @@
   </property>
   <property name="final.name" value="commons-scxml-0.10-SNAPSHOT">
   </property>
+  <property name="compile.source" value="1.4"/>
+  <property name="compile.target" value="1.4"/>
   <path id="build.classpath">
     <fileset dir="${libdir}">
       <include name="**/*.jar">
@@ -52,13 +54,13 @@
     </condition>
     <!--Test if JUNIT is present in ANT classpath-->
 
-    <available property="Junit.present" classname="junit.framework.Test">
+    <available property="Junit.present" classname="junit.framework.Test" classpath="${libdir}/junit-3.8.2.jar">
     </available>
   </target>
   <target name="compile" description="o Compile the code" depends="get-deps">
     <mkdir dir="${classesdir}">
     </mkdir>
-    <javac destdir="${classesdir}" deprecation="true" debug="true" optimize="false" excludes="**/package.html">
+    <javac source="${compile.source}" target="${compile.target}" destdir="${classesdir}" deprecation="true" debug="true" optimize="false" excludes="**/package.html">
       <src>
         <pathelement location="src/main/java">
         </pathelement>
@@ -151,13 +153,13 @@
   </target>
   <target name="junit-present" unless="Junit.present" depends="init">
     <echo>================================= WARNING ================================</echo>
-    <echo>Junit isn't present in your ${ANT_HOME}/lib directory. Tests not executed.</echo>
+    <echo>Junit isn't present on the classpath. Tests not executed.</echo>
     <echo>==========================================================================</echo>
   </target>
   <target name="compile-tests" if="Junit.present" depends="junit-present,compile">
     <mkdir dir="${testclassesdir}">
     </mkdir>
-    <javac destdir="${testclassesdir}" deprecation="true" debug="true" optimize="false" excludes="**/package.html">
+    <javac source="${compile.source}" target="${compile.target}" destdir="${testclassesdir}" deprecation="true" debug="true" optimize="false" excludes="**/package.html">
       <src>
         <pathelement location="src/test/java">
         </pathelement>
