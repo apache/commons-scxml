@@ -233,6 +233,7 @@ public class Send extends Action implements ExternalContent {
      * @return String Returns the type.
      * @deprecated Use {@link #getType()} instead.
      */
+    @Deprecated
     public final String getTargettype() {
         return type;
     }
@@ -243,6 +244,7 @@ public class Send extends Action implements ExternalContent {
      * @param targettype The type to set.
      * @deprecated Use {@link #setType(String)} instead.
      */
+    @Deprecated
     public final void setTargettype(final String targettype) {
         this.type = targettype;
     }

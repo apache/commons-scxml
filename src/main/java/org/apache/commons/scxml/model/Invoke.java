@@ -87,6 +87,7 @@ public class Invoke implements NamespacePrefixesHolder, PathResolverHolder,
      * @return String Returns the targettype.
      * @deprecated Use {@link #getType()} instead.
      */
+    @Deprecated
     public final String getTargettype() {
         return type;
     }
@@ -97,6 +98,7 @@ public class Invoke implements NamespacePrefixesHolder, PathResolverHolder,
      * @param targettype The targettype to set.
      * @deprecated Use {@link #setType(String)} instead.
      */
+    @Deprecated
     public final void setTargettype(final String targettype) {
         this.type = targettype;
     }
