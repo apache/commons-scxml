@@ -259,7 +259,7 @@ public final class SCXMLHelper {
                     for (Iterator act = currentStates.iterator();
                             act.hasNext();) {
                         TransitionTarget a = (TransitionTarget) act.next();
-                        if (isDescendant(a, s)) {
+                        if (isDescendant(a, s) || a == s) {
                             //a is affected
                             boolean added = false;
                             added = allStates.add(a);
