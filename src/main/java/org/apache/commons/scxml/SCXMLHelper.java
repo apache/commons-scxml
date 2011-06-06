@@ -250,7 +250,7 @@ public final class SCXMLHelper {
                 for (TransitionTarget tt : par.getChildren()) {
                     State s = (State) tt;
                     for (TransitionTarget a : currentStates) {
-                        if (isDescendant(a, s)) {
+                        if (isDescendant(a, s) || a == s) {
                             //a is affected
                             boolean added = false;
                             added = allStates.add(a);
