@@ -313,7 +313,7 @@ public class SCXMLSerializer {
         }
         boolean next = !SCXMLHelper.isStringEmpty(t.getNext());
         if (next) {
-            b.append(" target=\"" + t.getNext() + "\"");
+            b.append(" target=\"").append(t.getNext()).append("\"");
         }
         b.append(">\n");
         boolean exit = serializeActions(b, t.getActions(), indent + INDENT);
@@ -481,10 +481,10 @@ public class SCXMLSerializer {
                 String expr = SCXMLHelper.escapeXML(e.getExpr());
                 String nl = e.getNamelist();
                 if (expr != null) {
-                    b.append(" expr=\"" + expr + "\"");
+                    b.append(" expr=\"").append(expr).append("\"");
                 }
                 if (nl != null) {
-                    b.append(" namelist=\"" + nl + "\"");
+                    b.append(" namelist=\"").append(nl).append("\"");
                 }
                 b.append("/>\n");
                 exit = true;

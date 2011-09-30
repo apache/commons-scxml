@@ -64,18 +64,18 @@ public class SimpleErrorReporter implements ErrorReporter, Serializable {
             } else if (errCtx instanceof State) {
                 //determineInitialStates
                 //determineTargetStates
-                msg.append("State " + LogUtils.getTTPath((State) errCtx));
+                msg.append("State ").append(LogUtils.getTTPath((State) errCtx));
             }
         } else if (errCode == ErrorConstants.UNKNOWN_ACTION) {
             //executeActionList
-            msg.append("Action: " + errCtx.getClass().getName());
+            msg.append("Action: ").append(errCtx.getClass().getName());
         } else if (errCode == ErrorConstants.ILLEGAL_CONFIG) {
             //isLegalConfig
             if (errCtx instanceof Map.Entry) {
                 TransitionTarget tt = (TransitionTarget)
                     (((Map.Entry) errCtx).getKey());
                 Set vals = (Set) (((Map.Entry) errCtx).getValue());
-                msg.append(LogUtils.getTTPath(tt) + " : [");
+                msg.append(LogUtils.getTTPath(tt)).append(" : [");
                 for (Iterator i = vals.iterator(); i.hasNext();) {
                     TransitionTarget tx = (TransitionTarget) i.next();
                     msg.append(LogUtils.getTTPath(tx));
