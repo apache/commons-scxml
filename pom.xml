@@ -32,7 +32,7 @@
   <inceptionYear>2005</inceptionYear>
   <description>A Java Implementation of a State Chart XML Engine</description>
 
-  <url>http://commons.apache.org/scxml/</url>
+  <url>http://commons.apache.org/proper/commons-scxml/</url>
 
   <issueManagement>
     <system>jira</system>
