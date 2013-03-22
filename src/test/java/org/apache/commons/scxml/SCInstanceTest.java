@@ -21,7 +21,7 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.jexl.JexlContext;
+import org.apache.commons.jexl2.JexlContext;
 import org.apache.commons.scxml.env.SimpleContext;
 import org.apache.commons.scxml.env.jexl.JexlEvaluator;
 import org.apache.commons.scxml.model.History;

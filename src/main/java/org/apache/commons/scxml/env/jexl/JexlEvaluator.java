@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.apache.commons.jexl.Expression;
-import org.apache.commons.jexl.ExpressionFactory;
+import org.apache.commons.jexl2.Expression;
+import org.apache.commons.jexl2.JexlEngine;
 import org.apache.commons.scxml.Context;
 import org.apache.commons.scxml.Evaluator;
 import org.apache.commons.scxml.SCXMLExpressionException;
@@ -49,11 +49,6 @@ public class JexlEvaluator implements Evaluator, Serializable {
     /** Pattern for recognizing the Commons SCXML Data() builtin function. */
     private static Pattern dataFct = Pattern.compile("Data\\(");
 
-    /** Constructor. */
-    public JexlEvaluator() {
-        super();
-    }
-
     /**
      * Evaluate an expression.
      *
@@ -68,23 +63,20 @@ public class JexlEvaluator implements Evaluator, Serializable {
         if (expr == null) {
             return null;
         }
-        JexlContext jexlCtx = null;
+        JexlContext jexlCtx;
         if (ctx instanceof JexlContext) {
             jexlCtx = (JexlContext) ctx;
         } else {
             throw new SCXMLExpressionException(ERR_CTX_TYPE);
         }
-        Expression exp = null;
+        
         try {
-            String evalExpr = inFct.matcher(expr).
-                replaceAll("_builtin.isMember(_ALL_STATES, ");
-            evalExpr = dataFct.matcher(evalExpr).
-                replaceAll("_builtin.data(_ALL_NAMESPACES, ");
-            exp = ExpressionFactory.createExpression(evalExpr);
+            String evalExpr = inFct.matcher(expr).replaceAll("_builtin.isMember(_ALL_STATES, ");
+            evalExpr = dataFct.matcher(evalExpr).replaceAll("_builtin.data(_ALL_NAMESPACES, ");
+            Expression exp = new JexlEngine().createExpression(evalExpr);
             return exp.evaluate(getEffectiveContext(jexlCtx));
         } catch (Exception e) {
-            throw new SCXMLExpressionException("eval('" + expr + "'):"
-                + e.getMessage(), e);
+            throw new SCXMLExpressionException("eval('" + expr + "'):" + e.getMessage(), e);
         }
     }
 
@@ -96,23 +88,20 @@ public class JexlEvaluator implements Evaluator, Serializable {
         if (expr == null) {
             return null;
         }
-        JexlContext jexlCtx = null;
+        JexlContext jexlCtx;
         if (ctx instanceof JexlContext) {
             jexlCtx = (JexlContext) ctx;
         } else {
             throw new SCXMLExpressionException(ERR_CTX_TYPE);
         }
-        Expression exp = null;
+        
         try {
-            String evalExpr = inFct.matcher(expr).
-                replaceAll("_builtin.isMember(_ALL_STATES, ");
-            evalExpr = dataFct.matcher(evalExpr).
-                replaceAll("_builtin.data(_ALL_NAMESPACES, ");
-            exp = ExpressionFactory.createExpression(evalExpr);
+            String evalExpr = inFct.matcher(expr).replaceAll("_builtin.isMember(_ALL_STATES, ");
+            evalExpr = dataFct.matcher(evalExpr).replaceAll("_builtin.data(_ALL_NAMESPACES, ");
+            Expression exp = new JexlEngine().createExpression(evalExpr);
             return (Boolean) exp.evaluate(getEffectiveContext(jexlCtx));
         } catch (Exception e) {
-            throw new SCXMLExpressionException("eval('" + expr + "'):"
-                + e.getMessage(), e);
+            throw new SCXMLExpressionException("eval('" + expr + "'):" + e.getMessage(), e);
         }
     }
 
@@ -124,25 +113,21 @@ public class JexlEvaluator implements Evaluator, Serializable {
         if (expr == null) {
             return null;
         }
-        JexlContext jexlCtx = null;
+        JexlContext jexlCtx;
         if (ctx instanceof JexlContext) {
             jexlCtx = (JexlContext) ctx;
         } else {
             throw new SCXMLExpressionException(ERR_CTX_TYPE);
         }
-        Expression exp = null;
+        
         try {
-            String evalExpr = inFct.matcher(expr).
-                replaceAll("_builtin.isMember(_ALL_STATES, ");
-            evalExpr = dataFct.matcher(evalExpr).
-                replaceFirst("_builtin.dataNode(_ALL_NAMESPACES, ");
-            evalExpr = dataFct.matcher(evalExpr).
-                replaceAll("_builtin.data(_ALL_NAMESPACES, ");
-            exp = ExpressionFactory.createExpression(evalExpr);
+            String evalExpr = inFct.matcher(expr).replaceAll("_builtin.isMember(_ALL_STATES, ");
+            evalExpr = dataFct.matcher(evalExpr).replaceFirst("_builtin.dataNode(_ALL_NAMESPACES, ");
+            evalExpr = dataFct.matcher(evalExpr).replaceAll("_builtin.data(_ALL_NAMESPACES, ");
+            Expression exp = new JexlEngine().createExpression(evalExpr);
             return (Node) exp.evaluate(getEffectiveContext(jexlCtx));
         } catch (Exception e) {
-            throw new SCXMLExpressionException("eval('" + expr + "'):"
-                + e.getMessage(), e);
+            throw new SCXMLExpressionException("eval('" + expr + "'):" + e.getMessage(), e);
         }
     }
 
