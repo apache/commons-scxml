@@ -50,12 +50,12 @@
       <name>Rahul Akolkar</name>
       <id>rahul</id>
       <email>rahul AT apache.org</email>
-      <organization>Apache Software Foundation</organization>
+      <organization>The Apache Software Foundation</organization>
     </developer>
     <developer>
       <name>Martin Cooper</name>
       <id>martinc</id>
-      <organization>Apache Software Foundation</organization>
+      <organization>The Apache Software Foundation</organization>
     </developer>
   </developers>
 
