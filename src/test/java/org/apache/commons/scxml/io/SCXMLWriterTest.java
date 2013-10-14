@@ -24,7 +24,6 @@ import javax.xml.stream.XMLStreamException;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.scxml.SCXMLTestHelper;
 import org.apache.commons.scxml.model.Parallel;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.State;
@@ -47,13 +46,13 @@ public class SCXMLWriterTest extends TestCase {
         scxml.setInitial("off");
         scxml.addChild(new State());
         
-        String assertValue = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        String assertValue = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
             + "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" xmlns:cs=\"http://commons.apache.org/scxml\" "
             + "xmlns:foo=\"http://f.o.o\" xmlns:bar=\"http://b.a.r\" "
-            + "version=\"version1\" initial=\"off\">\n<!--http://commons.apache.org/scxml-->\n<state/>\n"
-            + "</scxml>\n";
+            + "version=\"version1\" initial=\"off\"><!--http://commons.apache.org/scxml--><state></state>"
+            + "</scxml>";
 
-        assertEquals(assertValue, SCXMLTestHelper.removeCarriageReturns(SCXMLWriter.write(scxml)));
+        assertEquals(assertValue, SCXMLWriter.write(scxml, new SCXMLWriter.Configuration(true, false)));
     }
 
     public void testSerializeSCXMLState() throws IOException, XMLStreamException {
@@ -68,12 +67,12 @@ public class SCXMLWriterTest extends TestCase {
 
         scxml.addChild(s1);
 
-        String assertValue = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        String assertValue = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
             + "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" "
-            + "xmlns:cs=\"http://commons.apache.org/scxml\" version=\"1.0\" initial=\"S1\">\n"
-            + "<!--http://commons.apache.org/scxml-->\n<state id=\"S1\"/>\n</scxml>\n";
+            + "xmlns:cs=\"http://commons.apache.org/scxml\" version=\"1.0\" initial=\"S1\">"
+            + "<!--http://commons.apache.org/scxml--><state id=\"S1\"></state></scxml>";
 
-        assertEquals(assertValue, SCXMLTestHelper.removeCarriageReturns(SCXMLWriter.write(scxml)));
+        assertEquals(assertValue, SCXMLWriter.write(scxml, new SCXMLWriter.Configuration(true, false)));
     }
 
     public void testSerializeParallel() throws IOException, XMLStreamException {
@@ -108,21 +107,21 @@ public class SCXMLWriterTest extends TestCase {
 
         scxml.addChild(par);
 
-        String assertValue = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        String assertValue = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
             + "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" xmlns:cs=\"http://commons.apache.org/scxml\" "
-            + "version=\"1.0\" initial=\"par\">\n"
-            + "<!--http://commons.apache.org/scxml-->\n"
-            + "<parallel id=\"par\">\n"
-            + "<state id=\"S1\">\n"
-            + "<state id=\"S11\"/>\n"
-            + "</state>\n"
-            + "<state id=\"S2\">\n"
-            + "<state id=\"S21\"/>\n"
-            + "</state>\n"
-            + "</parallel>\n"
-            + "</scxml>\n";
+            + "version=\"1.0\" initial=\"par\">"
+            + "<!--http://commons.apache.org/scxml-->"
+            + "<parallel id=\"par\">"
+            + "<state id=\"S1\">"
+            + "<state id=\"S11\"></state>"
+            + "</state>"
+            + "<state id=\"S2\">"
+            + "<state id=\"S21\"></state>"
+            + "</state>"
+            + "</parallel>"
+            + "</scxml>";
 
-        assertEquals(assertValue, SCXMLTestHelper.removeCarriageReturns(SCXMLWriter.write(scxml)));
+        assertEquals(assertValue, SCXMLWriter.write(scxml, new SCXMLWriter.Configuration(true, false)));
      }
 
 }
