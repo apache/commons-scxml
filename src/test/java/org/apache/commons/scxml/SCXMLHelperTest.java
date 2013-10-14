@@ -20,7 +20,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import junit.framework.TestCase;
-
 import org.apache.commons.scxml.env.MockErrorReporter;
 import org.apache.commons.scxml.env.SimpleErrorReporter;
 import org.apache.commons.scxml.model.Parallel;
@@ -81,51 +80,51 @@ public class SCXMLHelperTest extends TestCase {
     }
     
     public void testGetAncestorClosureEmptySet() {
-        Set states = new HashSet();
+        Set<TransitionTarget> states = new HashSet<TransitionTarget>();
         
-        Set returnValue = SCXMLHelper.getAncestorClosure(states, new HashSet());
+        Set<TransitionTarget> returnValue = SCXMLHelper.getAncestorClosure(states, new HashSet<TransitionTarget>());
         
         assertEquals(0, returnValue.size());
     }
     
     public void testGetAncestorClosureUpperBoundNotNullAndContains() {
-        Set states = new HashSet();
+        Set<TransitionTarget> states = new HashSet<TransitionTarget>();
         TransitionTarget state = new State();
         state.setId("1");
         states.add(state);
         
-        Set upperBounds = new HashSet();
+        Set<TransitionTarget> upperBounds = new HashSet<TransitionTarget>();
         upperBounds.add(state);
         
-        Set returnValue = SCXMLHelper.getAncestorClosure(states, upperBounds);
+        Set<TransitionTarget> returnValue = SCXMLHelper.getAncestorClosure(states, upperBounds);
         
         assertEquals(1, returnValue.size());
         assertEquals("1", ((TransitionTarget)returnValue.toArray()[0]).getId());
     }
     
     public void testGetAncestorClosureContainsParent() {
-        Set states = new HashSet();
+        Set<TransitionTarget> states = new HashSet<TransitionTarget>();
         TransitionTarget state = new State();
         state.setId("1");
         state.setParent(state);
         states.add(state);
         
-        Set upperBounds = new HashSet();
+        Set<TransitionTarget> upperBounds = new HashSet<TransitionTarget>();
         
-        Set returnValue = SCXMLHelper.getAncestorClosure(states, upperBounds);
+        Set<TransitionTarget> returnValue = SCXMLHelper.getAncestorClosure(states, upperBounds);
         
         assertEquals(1, returnValue.size());
         assertEquals("1", ((TransitionTarget)returnValue.toArray()[0]).getId());
     }
     
     public void testIsLegalConfigNoStates() {
-        Set states = new HashSet();
+        Set<TransitionTarget> states = new HashSet<TransitionTarget>();
         
         assertTrue(SCXMLHelper.isLegalConfig(states, new SimpleErrorReporter()));
     }
     
     public void testIsLegalConfigInvalidParallel() {
-        Set states = new HashSet();
+        Set<TransitionTarget> states = new HashSet<TransitionTarget>();
         Parallel parallel = new Parallel();
 
         Parallel parent = new Parallel();
@@ -151,7 +150,7 @@ public class SCXMLHelperTest extends TestCase {
     }
     
     public void testIsLegalConfigMultipleTopLevel() {
-        Set states = new HashSet();
+        Set<TransitionTarget> states = new HashSet<TransitionTarget>();
 
         State state1 = new State();
         state1.setId("1");
@@ -169,7 +168,7 @@ public class SCXMLHelperTest extends TestCase {
     }
     
     public void testIsLegalConfigMultipleStatesActive() {
-        Set states = new HashSet();
+        Set<TransitionTarget> states = new HashSet<TransitionTarget>();
 
         State state1 = new State();
         state1.setId("1");

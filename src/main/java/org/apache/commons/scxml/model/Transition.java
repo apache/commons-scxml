@@ -28,7 +28,7 @@ import java.util.Map;
  *
  */
 public class Transition extends Executable
-        implements NamespacePrefixesHolder {
+        implements NamespacePrefixesHolder, Observable {
 
     /**
      * Serial version UID.
@@ -51,7 +51,7 @@ public class Transition extends Executable
      * If multiple state(s) are specified, they must belong to the regions
      * of the same parallel.
      */
-    private List targets;
+    private List<TransitionTarget> targets;
 
     /**
      * The transition target ID (used by XML Digester only).
@@ -63,21 +63,21 @@ public class Transition extends Executable
      * as <code>targets</code>.
      * @see Path
      */
-    private List paths;
+    private List<Path> paths;
 
     /**
      * The current XML namespaces in the SCXML document for this action node,
      * preserved for deferred XPath evaluation.
      */
-    private Map namespaces;
+    private Map<String, String> namespaces;
 
     /**
      * Constructor.
      */
     public Transition() {
         super();
-        this.targets = new ArrayList();
-        this.paths = new ArrayList();
+        this.targets = new ArrayList<TransitionTarget>();
+        this.paths = new ArrayList<Path>();
     }
 
     /**
@@ -123,7 +123,7 @@ public class Transition extends Executable
      *
      * @return Returns the map of namespaces.
      */
-    public final Map getNamespaces() {
+    public final Map<String, String> getNamespaces() {
         return namespaces;
     }
 
@@ -132,25 +132,8 @@ public class Transition extends Executable
      *
      * @param namespaces The document namespaces.
      */
-    public final void setNamespaces(final Map namespaces) {
+    public final void setNamespaces(final Map<String, String> namespaces) {
         this.namespaces = namespaces;
-    }
-
-    /**
-     * Get the transition target (may be null).
-     *
-     * @return Returns the target as specified in SCXML markup.
-     * <p>Remarks: Is <code>null</code> for &quot;stay&quot; transitions.
-     *  Returns parent (the source node) for &quot;self&quot; transitions.</p>
-     *
-     * @deprecated A transition may have multiple targets,
-     *             use getTargets() instead.
-     */
-    public final TransitionTarget getTarget() {
-        if (targets.size() > 0) {
-            return (TransitionTarget) targets.get(0);
-        }
-        return null;
     }
 
     /**
@@ -162,24 +145,8 @@ public class Transition extends Executable
      *
      * @since 0.7
      */
-    public final List getTargets() {
+    public final List<TransitionTarget> getTargets() {
         return targets;
-    }
-
-    /**
-     * Get the runtime transition target, which always resolves to
-     * a TransitionTarget instance.
-     *
-     * @return Returns the actual target of a transition at runtime.
-     * <p>Remarks: For both the &quot;stay&quot; and &quot;self&quot;
-     * transitions it returns parent (the source node). This method should
-     * never return <code>null</code>.</p>
-     *
-     * @deprecated A transition may have multiple targets,
-     *             use getRuntimeTargets() instead.
-     */
-    public final TransitionTarget getRuntimeTarget() {
-        return (TransitionTarget) getRuntimeTargets().get(0);
     }
 
     /**
@@ -193,23 +160,13 @@ public class Transition extends Executable
      *
      * @since 0.7
      */
-    public final List getRuntimeTargets() {
+    public final List<TransitionTarget> getRuntimeTargets() {
         if (targets.size() == 0) {
-            List runtimeTargets = new ArrayList();
+            List<TransitionTarget> runtimeTargets = new ArrayList<TransitionTarget>();
             runtimeTargets.add(getParent());
             return runtimeTargets;
         }
         return targets;
-    }
-
-    /**
-     * Set the transition target.
-     *
-     * @param target The target to set.
-     * @deprecated Use setTargets(List) instead.
-     */
-    public final void setTarget(final TransitionTarget target) {
-        this.targets.add(0, target);
     }
 
     /**
@@ -234,17 +191,6 @@ public class Transition extends Executable
     }
 
     /**
-     * Get the path of this transiton.
-     *
-     * @see Path
-     * @return Path returns the transition path
-     * @deprecated Use getPaths() instead.
-     */
-    public final Path getPath() {
-        return (Path) getPaths().get(0);
-    }
-
-    /**
      * Get the path(s) of this transiton.
      *
      * @see Path
@@ -252,12 +198,12 @@ public class Transition extends Executable
      *
      * @since 0.7
      */
-    public final List getPaths() {
+    public final List<Path> getPaths() {
         if (paths.size() == 0) {
             if (targets.size() > 0) {
-                for (int i = 0; i < targets.size(); i++) {
-                    paths.add(i, new Path(getParent(),
-                        (TransitionTarget) targets.get(i)));
+                int i = 0;
+                for (TransitionTarget tt : targets) {
+                    paths.add(i++, new Path(getParent(), tt));
                 }
             } else {
                 paths.add(new Path(getParent(), null));

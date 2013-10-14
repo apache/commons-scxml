@@ -23,7 +23,7 @@
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
        xmlns:cs="http://commons.apache.org/scxml"
        version="1.0"
-       initialstate="ten">
+       initial="ten">
 
      <!-- Root data model -->
      <datamodel>
@@ -255,5 +255,4 @@
     <state id="seventy" final="true" />
 
 </scxml>
-
 

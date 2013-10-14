@@ -21,7 +21,7 @@
        xmlns:my="http://my.custom-actions.domain/CUSTOM1"
        xmlns:foo="http://my.custom-actions.domain/CUSTOM2"
        version="1.0"
-       initialstate="custom">
+       initial="custom">
 
     <state id="custom" final="true">
 

@@ -17,14 +17,14 @@
 -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
      version="1.0"
-     initialstate="start">
+     initial="start">
 
    <parallel id="start">
 
        <state id="simulatedUser">
            <datamodel>
-               <data name="one" expr="1" />
-               <data name="two" expr="2" />
+               <data id="one" expr="1" />
+               <data id="two" expr="2" />
            </datamodel>
 
            <onentry>

@@ -16,7 +16,7 @@
  * limitations under the License.
 -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0"
-       initialstate="s1">
+       initial="s1">
 
     <state id="s1">
         <transition event="foo" target="s2" />

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <!--
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -15,24 +15,56 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 -->
-<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" initial="init">
-       <state id="init">
-               <transition event="start" target="onetwo" />
-       </state>
-       <parallel id="onetwo">
-               <transition event="onetwo_three" target="three" />
-               <state id="one">
-               </state>
-               <state id="two">
-                       <transition event="two_four" target="four" />
-               </state>
-       </parallel>
-       <state id="three">
-               <transition event="three_one" target="one" />
-               <transition event="three_four" target="four" />
-       </state>
-       <state id="four">
-               <transition event="four_onetwo" target="onetwo" />
-               <transition event="four_three" target="three" />
-       </state>
+<!--
+    Uses SCXMLReader
+-->
+<scxml xmlns="http://www.w3.org/2005/07/scxml"
+       version="1.0"
+       initial="para">
+
+    <parallel id="para">
+
+        <state id="para1">
+
+            <initial>
+                <transition target="para11"/>
+            </initial>
+
+            <state id="para11">
+                <transition event="foo" target="para12"/>
+            </state>
+
+            <state id="para12">
+                <onexit>
+                    <log expr="'Exiting para12'" />
+                </onexit>
+            </state>
+
+        </state>
+
+        <state id="para2">
+
+            <initial>
+                <transition target="para21"/>
+            </initial>
+
+            <state id="para21">
+                <transition cond="In('para12')" target="para22"/>
+            </state>
+
+            <state id="para22">
+                <onexit>
+                    <log expr="'Exiting para22'" />
+                </onexit>
+
+                <transition target="end"/>
+            </state>
+
+        </state>
+
+    </parallel>
+
+    <state id="end" final="true" />
+
 </scxml>
+

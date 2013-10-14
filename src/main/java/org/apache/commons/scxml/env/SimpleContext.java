@@ -37,7 +37,7 @@ public class SimpleContext implements Context, Serializable {
     /** The parent Context to this Context. */
     private Context parent;
     /** The Map of variables and their values in this Context. */
-    private Map vars;
+    private Map<String, Object> vars;
 
     /**
      * Constructor.
@@ -60,7 +60,7 @@ public class SimpleContext implements Context, Serializable {
      *
      * @param initialVars A pre-populated initial variables map
      */
-    public SimpleContext(final Map initialVars) {
+    public SimpleContext(final Map<String, Object> initialVars) {
         this(null, initialVars);
     }
 
@@ -70,10 +70,10 @@ public class SimpleContext implements Context, Serializable {
      * @param parent A parent Context, can be null
      * @param initialVars A pre-populated initial variables map
      */
-    public SimpleContext(final Context parent, final Map initialVars) {
+    public SimpleContext(final Context parent, final Map<String, Object> initialVars) {
         this.parent = parent;
         if (initialVars == null) {
-            this.vars = new HashMap();
+            this.vars = new HashMap<String, Object>();
         } else {
             this.vars = initialVars;
         }
@@ -171,7 +171,7 @@ public class SimpleContext implements Context, Serializable {
      *
      * @param vars The new Map of variables.
      */
-    protected void setVars(final Map vars) {
+    protected void setVars(final Map<String, Object> vars) {
         this.vars = vars;
     }
 
@@ -180,7 +180,7 @@ public class SimpleContext implements Context, Serializable {
      *
      * @return Returns the vars.
      */
-    public Map getVars() {
+    public Map<String, Object> getVars() {
         return vars;
     }
 

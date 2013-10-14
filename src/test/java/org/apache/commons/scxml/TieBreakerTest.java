@@ -17,12 +17,10 @@
 package org.apache.commons.scxml;
 
 import java.net.URL;
-import java.util.Iterator;
 import java.util.Set;
 
 import junit.framework.TestCase;
-
-import org.apache.commons.scxml.model.State;
+import org.apache.commons.scxml.model.TransitionTarget;
 /**
  * Unit tests for testing conflict resolution amongst multiple transitions
  * within the {@link org.apache.commons.scxml.SCXMLExecutor}'s default
@@ -52,6 +50,7 @@ public class TieBreakerTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
+    @Override
     public void setUp() {
         tiebreaker01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/tie-breaker-01.xml");
@@ -70,6 +69,7 @@ public class TieBreakerTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
+    @Override
     public void tearDown() {
         tiebreaker01 = tiebreaker02 = tiebreaker03 = tiebreaker04 =
             tiebreaker05 = tiebreaker06 = null;
@@ -81,46 +81,40 @@ public class TieBreakerTest extends TestCase {
     public void testTieBreaker01() throws Exception {
         exec = SCXMLTestHelper.getExecutor(tiebreaker01);
         assertNotNull(exec);
-        Set currentStates = exec.getCurrentStatus().getStates();
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
-        assertEquals("ten", ((State)currentStates.iterator().
-            next()).getId());
+        assertEquals("ten", currentStates.iterator().next().getId());
         currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
         assertEquals(1, currentStates.size());
-        assertEquals("twenty", ((State)currentStates.iterator().
-            next()).getId());
+        assertEquals("twenty", currentStates.iterator().next().getId());
     }
 
     public void testTieBreaker02() throws Exception {
         exec = SCXMLTestHelper.getExecutor(tiebreaker02);
         assertNotNull(exec);
-        Set currentStates = exec.getCurrentStatus().getStates();
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
-        assertEquals("eleven", ((State)currentStates.iterator().
-            next()).getId());
+        assertEquals("eleven", currentStates.iterator().next().getId());
         currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
         assertEquals(1, currentStates.size());
-        assertEquals("thirty", ((State)currentStates.iterator().
-            next()).getId());
+        assertEquals("thirty", currentStates.iterator().next().getId());
     }
 
     public void testTieBreaker03() throws Exception {
         exec = SCXMLTestHelper.getExecutor(tiebreaker03);
         assertNotNull(exec);
-        Set currentStates = exec.getCurrentStatus().getStates();
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
-        assertEquals("eleven", ((State)currentStates.iterator().
-            next()).getId());
+        assertEquals("eleven", currentStates.iterator().next().getId());
         currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
         assertEquals(1, currentStates.size());
-        assertEquals("forty", ((State)currentStates.iterator().
-            next()).getId());
+        assertEquals("forty", currentStates.iterator().next().getId());
     }
 
     public void testTieBreaker04() throws Exception {
         exec = SCXMLTestHelper.getExecutor(tiebreaker04);
         assertNotNull(exec);
-        Set currentStates = SCXMLTestHelper.fireEvent(exec, "event_2");
+        Set<TransitionTarget> currentStates = SCXMLTestHelper.fireEvent(exec, "event_2");
         assertEquals(1, currentStates.size());
         currentStates = SCXMLTestHelper.fireEvent(exec, "event_1");
         assertEquals(1, currentStates.size());
@@ -129,21 +123,17 @@ public class TieBreakerTest extends TestCase {
     public void testTieBreaker05() throws Exception {
         exec = SCXMLTestHelper.getExecutor(tiebreaker05);
         assertNotNull(exec);
-        Set currentStates = exec.getCurrentStatus().getStates();
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
         assertEquals(3, currentStates.size());
-        String id = ((State) currentStates.iterator().next()).getId();
-        Iterator iter = currentStates.iterator();
-        while (iter.hasNext()) {
-            id = ((State) iter.next()).getId();
+        for (TransitionTarget tt : currentStates) {
+            String id = tt.getId();
             assertTrue(id.equals("s11") || id.equals("s212")
                 || id.equals("s2111"));
         }
         currentStates = SCXMLTestHelper.fireEvent(exec, "event1");
         assertEquals(3, currentStates.size());
-        id = ((State) currentStates.iterator().next()).getId();
-        iter = currentStates.iterator();
-        while (iter.hasNext()) {
-            id = ((State) iter.next()).getId();
+        for (TransitionTarget tt : currentStates) {
+            String id = tt.getId();
             assertTrue(id.equals("s12") || id.equals("s212")
                 || id.equals("s2112"));
         }
@@ -152,7 +142,7 @@ public class TieBreakerTest extends TestCase {
     public void testTieBreaker06() throws Exception {
         exec = SCXMLTestHelper.getExecutor(SCXMLTestHelper.parse(tiebreaker06));
         assertNotNull(exec);
-        Set currentStates = exec.getCurrentStatus().getStates();
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
     }
 }

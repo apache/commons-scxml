@@ -26,6 +26,7 @@ public class ActionTest extends TestCase {
 
     private Action action;
     
+    @Override
     public void setUp() {
         action = new Assign();
     }

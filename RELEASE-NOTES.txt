@@ -17,19 +17,20 @@
 $Id$
 
                          Commons SCXML Package
-                         Version 0.10-SNAPSHOT
+                          Version 1.0-SNAPSHOT
                             Release Notes
 
 INTRODUCTION:
 
-Commons SCXML 0.10 is a minor release containing a few enhancements and
-bug fixes. Changes to SCXML documents may be necessary before upgrading
-from 0.9, see detailed changes list below. See about section at the end
-for general information on Commons SCXML.
+Commons SCXML 1.0 is a major release. It contains non backwards compatible
+changes from the 0.x releases. See about section at the end for general
+information on Commons SCXML.
 
-BREAKING CHANGES:
+IMPORTANT NOTES:
 
- o
+ o The minimum JDK version required is now 1.6.
+
+ o All deprecated methods and classes from any of the 0.x releases are removed.
 
 NEW FEATURES:
 
@@ -39,9 +40,13 @@ BUG FIXES:
 
  o
 
-OTHER COMMENTS:
+IMPROVEMENTS:
 
- o This is a Maven 2 release.
+ o
+
+OTHER CHANGES:
+
+ o
 
 ABOUT COMMONS SCXML:
 

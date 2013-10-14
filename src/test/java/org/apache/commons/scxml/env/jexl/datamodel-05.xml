@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+<!-- A fictitious state machine used by test cases. -->
+<scxml xmlns="http://www.w3.org/2005/07/scxml"
+       version="1.0"
+       initial="start">
+
+    <datamodel>
+
+      <data id="airline">
+        <flight xmlns="">
+          <origin/>
+          <destination/>
+          <trip>round</trip>
+          <class>economy</class>
+          <meal/>
+          <dates>
+            <startdate>01/01/2009</startdate>
+            <enddate>01/05/2009</enddate>
+          </dates>
+          <dates>
+            <startdate>01/26/2009</startdate>
+            <enddate>01/31/2009</enddate>
+          </dates>
+        </flight>
+      </data>
+
+      <data id="hotel">
+        <hotel xmlns="">
+          <stay>
+            <delete>foo</delete>
+          </stay>
+          <adults>1</adults>
+          <children>0</children>
+          <rooms>1</rooms>
+          <rate/>
+        </hotel>
+      </data>
+
+    </datamodel>
+
+    <state id="start">
+        <onentry>
+            <log label="XML subtree copy - delete (should be foo)" expr="Data(hotel, 'hotel/stay/delete')"/>
+            <assign location="Data(hotel, 'hotel/stay')" expr="Data(airline, 'flight/dates[2]')"/>
+            <log label="XML subtree copy - delete (should be empty)" expr="Data(hotel, 'hotel/stay/delete')"/>
+        </onentry>
+        <transition cond="Data(hotel, 'hotel/stay/startdate') eq '01/26/2009'" target="end" />
+    </state>
+
+    <final id="end"/>
+
+</scxml>
+

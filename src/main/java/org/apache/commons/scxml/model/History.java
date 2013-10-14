@@ -82,7 +82,7 @@ public class History extends TransitionTarget {
      * &quot;deep&quot;
      */
     public final void setType(final String type) {
-        if (type.equals("deep")) {
+        if ("deep".equals(type)) {
             isDeep = true;
         }
         //shallow is by default

@@ -62,6 +62,18 @@ public interface Evaluator {
     throws SCXMLExpressionException;
 
     /**
+     * Evaluate a script.
+     * Manifests as &lt;script&gt; element.
+     *
+     * @param ctx variable context
+     * @param script The script
+     * @return The result of the script execution.
+     * @throws SCXMLExpressionException A malformed script
+     */
+    Object evalScript(Context ctx, String script)
+    throws SCXMLExpressionException;
+
+    /**
      * Create a new child context.
      *
      * @param parent parent context

@@ -19,7 +19,6 @@ package org.apache.commons.scxml;
 import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -88,11 +87,10 @@ public final class SCXMLHelper {
      * @param upperBounds The Set of upper bound States
      * @return transitive closure of a given state set
      */
-    public static Set getAncestorClosure(final Set states,
-            final Set upperBounds) {
-        Set closure = new HashSet(states.size() * 2);
-        for (Iterator i = states.iterator(); i.hasNext();) {
-            TransitionTarget tt = (TransitionTarget) i.next();
+    public static Set<TransitionTarget> getAncestorClosure(final Set<TransitionTarget> states,
+            final Set<TransitionTarget> upperBounds) {
+        Set<TransitionTarget> closure = new HashSet<TransitionTarget>(states.size() * 2);
+        for (TransitionTarget tt : states) {
             while (tt != null) {
                 if (!closure.add(tt)) {
                     //tt is already a part of the closure
@@ -118,7 +116,7 @@ public final class SCXMLHelper {
      *            ErrorReporter to report detailed error info if needed
      * @return true if a given state configuration is legal, false otherwise
      */
-    public static boolean isLegalConfig(final Set states,
+    public static boolean isLegalConfig(final Set<TransitionTarget> states,
             final ErrorReporter errRep) {
         /*
          * For every active state we add 1 to the count of its parent. Each
@@ -129,15 +127,15 @@ public final class SCXMLHelper {
          * states = active configuration.
          */
         boolean legalConfig = true; // let's be optimists
-        Map counts = new IdentityHashMap();
-        Set scxmlCount = new HashSet();
-        for (Iterator i = states.iterator(); i.hasNext();) {
-            TransitionTarget tt = (TransitionTarget) i.next();
+        Map<TransitionTarget, Set<TransitionTarget>> counts =
+            new IdentityHashMap<TransitionTarget, Set<TransitionTarget>>();
+        Set<TransitionTarget> scxmlCount = new HashSet<TransitionTarget>();
+        for (TransitionTarget tt : states) {
             TransitionTarget parent = null;
             while ((parent = tt.getParent()) != null) {
-                HashSet cnt = (HashSet) counts.get(parent);
+                Set<TransitionTarget> cnt = counts.get(parent);
                 if (cnt == null) {
-                    cnt = new HashSet();
+                    cnt = new HashSet<TransitionTarget>();
                     counts.put(parent, cnt);
                 }
                 cnt.add(tt);
@@ -147,10 +145,9 @@ public final class SCXMLHelper {
             scxmlCount.add(tt);
         }
         //Validate counts:
-        for (Iterator i = counts.entrySet().iterator(); i.hasNext();) {
-            Map.Entry entry = (Map.Entry) i.next();
-            TransitionTarget tt = (TransitionTarget) entry.getKey();
-            Set count = (Set) entry.getValue();
+        for (Map.Entry<TransitionTarget, Set<TransitionTarget>> entry : counts.entrySet()) {
+            TransitionTarget tt = entry.getKey();
+            Set<TransitionTarget> count = entry.getValue();
             if (tt instanceof Parallel) {
                 Parallel p = (Parallel) tt;
                 if (count.size() < p.getChildren().size()) {
@@ -196,7 +193,7 @@ public final class SCXMLHelper {
         } else if (isDescendant(tt2, tt1)) {
             return tt1;
         }
-        Set parents = new HashSet();
+        Set<TransitionTarget> parents = new HashSet<TransitionTarget>();
         TransitionTarget tmp = tt1;
         while ((tmp = tmp.getParent()) != null) {
             parents.add(tmp);
@@ -226,18 +223,17 @@ public final class SCXMLHelper {
      * @return a set of all states (including composite) which are exited if a
      *         given transition is taken
      */
-    public static Set getStatesExited(final Transition t,
-            final Set currentStates) {
-        Set allStates = new HashSet();
+    public static Set<TransitionTarget> getStatesExited(final Transition t,
+            final Set<TransitionTarget> currentStates) {
+        Set<TransitionTarget> allStates = new HashSet<TransitionTarget>();
         if (t.getTargets().size() == 0) {
             return allStates;
         }
-        Path p = (Path) t.getPaths().get(0); // all paths have same upseg
+        Path p = t.getPaths().get(0); // all paths have same upseg
         //the easy part
         allStates.addAll(p.getUpwardSegment());
         TransitionTarget source = t.getParent();
-        for (Iterator act = currentStates.iterator(); act.hasNext();) {
-            TransitionTarget a = (TransitionTarget) act.next();
+        for (TransitionTarget a : currentStates) {
             if (isDescendant(a, source)) {
                 boolean added = false;
                 added = allStates.add(a);
@@ -248,17 +244,12 @@ public final class SCXMLHelper {
             }
         }
         if (p.isCrossRegion()) {
-            for (Iterator regions = p.getRegionsExited().iterator();
-                    regions.hasNext();) {
-                Parallel par = ((Parallel) ((State) regions.next()).
-                    getParent());
+            for (State region : p.getRegionsExited()) {
+                Parallel par = (Parallel) region.getParent();
                 //let's find affected states in sibling regions
-                for (Iterator siblings = par.getChildren().iterator();
-                        siblings.hasNext();) {
-                    State s = (State) siblings.next();
-                    for (Iterator act = currentStates.iterator();
-                            act.hasNext();) {
-                        TransitionTarget a = (TransitionTarget) act.next();
+                for (TransitionTarget tt : par.getChildren()) {
+                    State s = (State) tt;
+                    for (TransitionTarget a : currentStates) {
                         if (isDescendant(a, s) || a == s) {
                             //a is affected
                             boolean added = false;
@@ -286,9 +277,9 @@ public final class SCXMLHelper {
      * @see #getStatesExited(Transition, Set)
      */
     public static boolean inConflict(final Transition t1,
-            final Transition t2, final Set currentStates) {
-        Set ts1 = getStatesExited(t1, currentStates);
-        Set ts2 = getStatesExited(t2, currentStates);
+            final Transition t2, final Set<TransitionTarget> currentStates) {
+        Set<TransitionTarget> ts1 = getStatesExited(t1, currentStates);
+        Set<TransitionTarget> ts2 = getStatesExited(t2, currentStates);
         ts1.retainAll(ts2);
         if (ts1.isEmpty()) {
             return false;
@@ -303,11 +294,11 @@ public final class SCXMLHelper {
      * @param parent The supertype
      * @return true if child is subtype of parent, otherwise false
      */
-    public static boolean subtypeOf(final Class child, final Class parent) {
+    public static boolean subtypeOf(final Class<?> child, final Class<?> parent) {
         if (child == null || parent == null) {
             return false;
         }
-        for (Class current = child; current != Object.class;
+        for (Class<?> current = child; current != Object.class;
                 current = current.getSuperclass()) {
             if (current == parent) {
                 return true;
@@ -323,14 +314,14 @@ public final class SCXMLHelper {
      * @param interfayce The interface
      * @return true if clas implements interfayce, otherwise false
      */
-    public static boolean implementationOf(final Class clas,
-            final Class interfayce) {
+    public static boolean implementationOf(final Class<?> clas,
+            final Class<?> interfayce) {
         if (clas == null || interfayce == null || !interfayce.isInterface()) {
             return false;
         }
-        for (Class current = clas; current != Object.class;
+        for (Class<?> current = clas; current != Object.class;
                 current = current.getSuperclass()) {
-            Class[] implementedInterfaces = current.getInterfaces();
+            Class<?>[] implementedInterfaces = current.getInterfaces();
             for (int i = 0; i < implementedInterfaces.length; i++) {
                 if (implementedInterfaces[i] == interfayce) {
                     return true;
@@ -433,12 +424,11 @@ public final class SCXMLHelper {
         if (datamodel == null) {
             return;
         }
-        List data = datamodel.getData();
+        List<Data> data = datamodel.getData();
         if (data == null) {
             return;
         }
-        for (Iterator iter = data.iterator(); iter.hasNext();) {
-            Data datum = (Data) iter.next();
+        for (Data datum : data) {
             Node datumNode = datum.getNode();
             Node valueNode = null;
             if (datumNode != null) {

@@ -16,8 +16,9 @@
  */
 package org.apache.commons.scxml.semantics;
 
-import junit.framework.TestCase;
+import java.util.Comparator;
 
+import junit.framework.TestCase;
 import org.apache.commons.scxml.model.Parallel;
 import org.apache.commons.scxml.model.State;
 import org.apache.commons.scxml.model.TransitionTarget;
@@ -28,10 +29,11 @@ public class TransitionTargetComparatorTest extends TestCase {
         super(testName);
     }
 
-    private TransitionTargetComparator comparator;
+    private Comparator<TransitionTarget> comparator;
     
+    @Override
     public void setUp() {
-        comparator = new TransitionTargetComparator();
+        comparator = new TransitionTargetComparator<TransitionTarget>();
     }
     
     public void testComparatorEquals() {

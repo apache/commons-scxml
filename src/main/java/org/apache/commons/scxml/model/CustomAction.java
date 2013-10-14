@@ -75,7 +75,7 @@ public class CustomAction {
     /**
      * The implementation of this custom action.
      */
-    private Class actionClass;
+    private Class<? extends Action> actionClass;
 
     /**
      * The log for this custom action.
@@ -93,7 +93,7 @@ public class CustomAction {
      *                    custom action.
      */
     public CustomAction(final String namespaceURI, final String localName,
-            final Class actionClass) {
+            final Class<? extends Action> actionClass) {
         this.log = LogFactory.getLog(CustomAction.class);
         if (SCXMLHelper.isStringEmpty(namespaceURI)) {
             log.error(ERR_NO_NAMESPACE);
@@ -122,7 +122,7 @@ public class CustomAction {
      *
      * @return Returns the action class.
      */
-    public Class getActionClass() {
+    public Class<? extends Action> getActionClass() {
         return actionClass;
     }
 

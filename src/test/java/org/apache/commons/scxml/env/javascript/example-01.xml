@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+<!-- SCXML Javascript environment: example script -->
+<scxml xmlns        = 'http://www.w3.org/2005/07/scxml'
+       xmlns:scxml  = 'http://commons.apache.org/scxml'
+       xmlns:my     = 'http://my.custom-actions.domain'
+       initial      = 'start'
+       version      = '1.0'>
+
+ <!-- DATA MODEL -->
+
+ <datamodel>
+  <data id='jungle'>
+   <animals xmlns=''>
+    <lion>
+     <name>Simba</name>
+     <age>12</age>
+    </lion>
+    <tiger>
+     <name>Sher Khan</name>
+     <age>13</age>
+    </tiger>
+   </animals>
+  </data>
+ </datamodel>
+
+ <!-- INITIALISATION -->
+
+ <state id='start'>
+  <onentry>
+   <log expr='"Starting Javascript sample script: " + new Date()' />
+  </onentry>
+  <transition target='javascript' />
+ </state>
+
+ <!-- JAVASCRIPT -->
+
+ <state id='javascript'>
+  <onentry>
+   <scxml:var name='factorial' expr='new Function("N","if (N == 1)
+                                                          return N;
+                                                          else
+                                                          return N * factorial(N-1)")' />
+  </onentry>
+  <initial>
+   <transition target='javascript.simple' />
+  </initial>
+
+  <!-- SIMPLE JAVASCRIPT EXPRESSIONS -->
+
+  <state id='javascript.simple'>
+   <onentry>
+    <log expr='"Arithmetic: " + (1 + 2 + 3 + 4 + 5)'    />
+    <log expr='"Boolean   : " + ((1 + 2) &lt; (3 + 4))' />
+    <log expr='"String    : " + "QWERTY"'               />
+   </onentry>
+   <transition target='javascript.var' />
+  </state>
+
+  <!-- SCXML VAR -->
+
+  <state id='javascript.var'>
+   <onentry>
+    <scxml:var name='snake_name' expr='"Kaa"' />
+    <scxml:var name='snake_age'  expr='"99"'  />
+    <log expr='"Snake: " + snake_name + "," + (snake_age + 1)'  />
+   </onentry>
+   <transition target='javascript.datamodel' />
+  </state>
+
+  <!-- SCXML DATA MODEL -->
+
+  <state id='javascript.datamodel'>
+   <onentry>
+    <log expr='"Lion : " + Data(jungle,"animals/lion/name")  + "," + Data(jungle,"animals/lion/age")'  />
+    <log expr='"Tiger: " + Data(jungle,"animals/tiger/name") + "," + Data(jungle,"animals/tiger/age")' />
+    <assign location='Data(jungle,"animals/lion/age")'  expr='Data(jungle,"animals/tiger/age")'        />
+    <log expr='"Lion : " + Data(jungle,"animals/lion/name")  + "," + Data(jungle,"animals/lion/age")'  />
+    <log expr='"Tiger: " + Data(jungle,"animals/tiger/name") + "," + Data(jungle,"animals/tiger/age")' />
+   </onentry>
+   <transition target='javascript.functions.inline' />
+  </state>
+
+  <!-- JAVASCRIPT FUNCTIONS -->
+
+  <state id='javascript.functions.inline'>
+   <onentry>
+    <log expr='function fibonacci()
+                        { return 1 + 1 + 2 + 3 + 5;
+                        };
+
+               "FIBONACCI(5) : " + fibonacci()' />
+   </onentry>
+   <transition target='javascript.functions.var' />
+  </state>
+
+  <state id='javascript.functions.var'>
+   <onentry>
+    <scxml:var name='fibonacci' expr='new Function("return 1 + 1 + 2 + 3 + 5 + 6")' />
+    <log expr='"FIBONACCI(6) : " + fibonacci()' />
+   </onentry>
+   <transition target='javascript.functions.global' />
+  </state>
+
+  <state id='javascript.functions.global'>
+   <onentry>
+    <log expr='"factorial: " + factorial(5)' />
+   </onentry>
+   <transition target='javascript.functions.print' />
+  </state>
+
+  <state id='javascript.functions.print'>
+   <onentry>
+    <log expr='function debug(msg)
+                        { println("** " + msg + " **");
+                          return "ok"
+                        }
+
+               debug("This is the Javascript println() function")' />
+   </onentry>
+   <transition target='javascript.eventdatamap.example' />
+  </state>
+
+ </state>
+
+  <!-- _eventdatamap USAGE -->
+
+  <state id='javascript.eventdatamap.example'>
+   <onentry>
+    <my:eventdatamaptest />
+   </onentry>
+   <transition target='in.test' event='ok' >
+    <log expr='"_eventdatamap[ok]=\"" + _eventdatamap.get("ok") + "\""' />
+   </transition>
+  </state>
+
+  <!-- In() FUNCTION USAGE -->
+
+  <state id='in.test'>
+   <transition cond="In('foo.bar')" /> <!-- stay -->
+   <transition target='end' cond="!In('foo.bar')" >
+    <log label="In(foo.bar)" expr='In("foo.bar")' />
+   </transition>
+  </state>
+
+ <!-- DONE -->
+
+ <state id='end' final='true' >
+  <onentry>
+   <log expr='"Ending Javascript sample script: " + new Date()' />
+  </onentry>
+ </state>
+
+</scxml>

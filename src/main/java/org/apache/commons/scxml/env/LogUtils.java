@@ -16,7 +16,6 @@
  */
 package org.apache.commons.scxml.env;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.apache.commons.scxml.model.Transition;
@@ -59,15 +58,14 @@ public final class LogUtils {
         if (parent == null) {
             return "/" + tt.getId();
         } else {
-            LinkedList pathElements = new LinkedList();
+            LinkedList<TransitionTarget> pathElements = new LinkedList<TransitionTarget>();
             pathElements.addFirst(tt);
             while (parent != null) {
                 pathElements.addFirst(parent);
                 parent = parent.getParent();
             }
             StringBuffer names = new StringBuffer();
-            for (Iterator i = pathElements.iterator(); i.hasNext();) {
-                TransitionTarget pathElement = (TransitionTarget) i.next();
+            for (TransitionTarget pathElement : pathElements) {
                 names.append('/').append(pathElement.getId());
             }
             return names.toString();

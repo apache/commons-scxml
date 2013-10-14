@@ -19,10 +19,10 @@ package org.apache.commons.scxml.model;
 import java.net.URL;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
+
+import junit.framework.TestCase;
 
 public class StateTest extends TestCase {
 
@@ -35,12 +35,14 @@ public class StateTest extends TestCase {
     private URL state01;
     private SCXMLExecutor exec;
 
+    @Override
     public void setUp() {
         state = new State();
         state01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/model/state-01.xml");
     }
 
+    @Override
     public void tearDown() {
         state01 = null;
         exec = null;
@@ -63,10 +65,10 @@ public class StateTest extends TestCase {
         
         state.addTransition(transition);
         
-        List events = state.getTransitionsList("event");
+        List<Transition> events = state.getTransitionsList("event");
         
         assertEquals(1, events.size());
-        assertEquals("event", ((Transition)events.get(0)).getEvent());
+        assertEquals("event", events.get(0).getEvent());
     }
     
     public void testAddTransitionContainKey() {
@@ -79,7 +81,7 @@ public class StateTest extends TestCase {
         state.addTransition(transition1);
         state.addTransition(transition2);
         
-        List events = state.getTransitionsList("event");
+        List<Transition> events = state.getTransitionsList("event");
         
         assertEquals(2, events.size());
     }
@@ -94,7 +96,7 @@ public class StateTest extends TestCase {
         state.addTransition(transition1);
         state.addTransition(transition2);
         
-        List events = state.getTransitionsList();
+        List<Transition> events = state.getTransitionsList();
         
         assertEquals(2, events.size());
     }
@@ -120,7 +122,7 @@ public class StateTest extends TestCase {
         
         // redundant cast to remove deprecation warning
         // could be removed in v1.0
-        state.addChild((TransitionTarget) state1);
+        state.addChild(state1);
         
         assertFalse(state.isSimple());
     }
@@ -132,7 +134,7 @@ public class StateTest extends TestCase {
     public void testIsCompositeParallel() {
         State child = new State();
         
-        state.addChild((TransitionTarget) child);
+        state.addChild(child);
         
         assertTrue(state.isComposite());
     }
@@ -142,7 +144,7 @@ public class StateTest extends TestCase {
         
         // redundant cast to remove deprecation warning
         // could be removed in v1.0
-        state.addChild((TransitionTarget) state1);
+        state.addChild(state1);
         
         assertTrue(state.isComposite());
     }
@@ -164,7 +166,7 @@ public class StateTest extends TestCase {
         assertNotNull(scxml);
         exec = SCXMLTestHelper.getExecutor(scxml);
         assertNotNull(exec);
-        assertEquals("s11", ((State) exec.getCurrentStatus().getStates().iterator().next()).getId());
+        assertEquals("s11", exec.getCurrentStatus().getStates().iterator().next().getId());
     }
 
 }

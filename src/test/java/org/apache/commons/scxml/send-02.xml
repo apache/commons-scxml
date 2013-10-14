@@ -19,7 +19,7 @@
      engine. -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
        version="1.0"
-       initialstate="ten">
+       initial="ten">
 
     <!-- We are expected to just fall all the way through down to
          the state "seventy", then hop over and end up in "ninety" -->
@@ -87,3 +87,4 @@
     <state id="ninety" final="true" />
 
 </scxml>
+

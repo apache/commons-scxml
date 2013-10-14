@@ -18,7 +18,7 @@
 <!-- Used by InvokeTest#testInvoke03Sample() -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
        version="1.0"
-       initialstate="invoker">
+       initial="invoker">
 
     <state id="invoker">
         <onentry>
@@ -37,3 +37,4 @@
     </state>
 
 </scxml>
+

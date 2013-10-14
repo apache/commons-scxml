@@ -215,7 +215,7 @@ public class PathTest extends TestCase {
         Path path = new Path(source, target);
         
         assertEquals(1, path.getRegionsExited().size());
-        assertEquals("1", ((State)path.getRegionsExited().get(0)).getId());
+        assertEquals("1", (path.getRegionsExited().get(0)).getId());
     }
 
     public void testGetRegionsEnteredNull() {
@@ -261,7 +261,7 @@ public class PathTest extends TestCase {
         Path path = new Path(source, target);
         
         assertEquals(1, path.getRegionsEntered().size());
-        assertEquals("2", ((State)path.getRegionsEntered().get(0)).getId());
+        assertEquals("2", (path.getRegionsEntered().get(0)).getId());
     }
 
 }

@@ -17,7 +17,6 @@
 package org.apache.commons.scxml;
 
 import junit.framework.TestCase;
-
 import org.apache.commons.scxml.model.State;
 
 public class StatusTest extends TestCase {
@@ -28,6 +27,7 @@ public class StatusTest extends TestCase {
 
     private Status status;
     
+    @Override
     public void setUp() {
         status = new Status();
     }

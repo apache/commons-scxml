@@ -18,6 +18,10 @@ package org.apache.commons.scxml.env;
 
 import java.io.Serializable;
 
+import javax.xml.stream.Location;
+import javax.xml.stream.XMLReporter;
+import javax.xml.stream.XMLStreamException;
+
 import org.apache.commons.scxml.ErrorReporter;
 import org.apache.commons.scxml.SCXMLListener;
 import org.apache.commons.scxml.model.Transition;
@@ -31,7 +35,7 @@ import org.xml.sax.SAXParseException;
  *
  */
 public class Tracer implements ErrorHandler, ErrorReporter,
-                               SCXMLListener, Serializable {
+                               SCXMLListener, Serializable, XMLReporter {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
@@ -41,6 +45,8 @@ public class Tracer implements ErrorHandler, ErrorReporter,
     private ErrorReporter errReporter;
     /** SCXMLListener delegate. */
     private SCXMLListener scxmlListener;
+    /** XMLReporter delegate. */
+    private XMLReporter xmlReporter;
 
     /**
      * Constructor.
@@ -50,6 +56,7 @@ public class Tracer implements ErrorHandler, ErrorReporter,
         errHandler = new SimpleErrorHandler();
         errReporter = new SimpleErrorReporter();
         scxmlListener = new SimpleSCXMLListener();
+        xmlReporter = new SimpleXMLReporter();
     }
 
     /**
@@ -99,12 +106,21 @@ public class Tracer implements ErrorHandler, ErrorReporter,
     }
 
     /**
-* @see SCXMLListener#onTransition(TransitionTarget,TransitionTarget,Transition)
+     * @see SCXMLListener#onTransition(TransitionTarget,TransitionTarget,Transition)
      */
     public void onTransition(final TransitionTarget from,
             final TransitionTarget to, final Transition transition) {
         scxmlListener.onTransition(from, to, transition);
     }
+
+    /**
+     * @see XMLReporter#report(String, String, Object, Location)
+     */
+	public void report(final String message, final String errorType, final Object relatedInformation,
+			final Location location)
+	throws XMLStreamException {
+		xmlReporter.report(message, errorType, relatedInformation, location);
+	}
 
 }
 

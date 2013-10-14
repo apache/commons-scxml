@@ -20,18 +20,18 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.scxml.invoke.Invoker;
 import org.apache.commons.scxml.model.Datamodel;
 import org.apache.commons.scxml.model.History;
 import org.apache.commons.scxml.model.ModelException;
+import org.apache.commons.scxml.model.Observable;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.State;
-import org.apache.commons.scxml.model.Transition;
 import org.apache.commons.scxml.model.TransitionTarget;
 import org.apache.commons.scxml.semantics.SCXMLSemanticsImpl;
 
@@ -111,7 +111,7 @@ public class SCXMLExecutor implements Serializable {
         // and finalize processing
         semantics.processInvokes(evts, errorReporter, scInstance);
 
-        List evs = new ArrayList(Arrays.asList(evts));
+        List<TriggerEvent> evs = new ArrayList<TriggerEvent>(Arrays.asList(evts));
         Step step = null;
 
         do {
@@ -224,9 +224,7 @@ public class SCXMLExecutor implements Serializable {
                 scInstance.getEvaluator(), log);
         }
         // all states and parallels, only states have variable contexts
-        for (Iterator i = stateMachine.getTargets().values().iterator();
-                i.hasNext();) {
-            TransitionTarget tt = (TransitionTarget) i.next();
+        for (TransitionTarget tt : stateMachine.getTargets().values()) {
             if (tt instanceof State) {
                 Context context = scInstance.lookupContext(tt);
                 if (context != null) {
@@ -414,76 +412,23 @@ public class SCXMLExecutor implements Serializable {
     }
 
     /**
-     * Add a listener to the document root.
+     * Add a listener to the {@link Observable}.
      *
-     * @param scxml The document root to attach listener to.
+     * @param observable The {@link Observable} to attach the listener to.
      * @param listener The SCXMLListener.
      */
-    public void addListener(final SCXML scxml, final SCXMLListener listener) {
-        Object observable = scxml;
+    public void addListener(final Observable observable, final SCXMLListener listener) {
         scInstance.getNotificationRegistry().addListener(observable, listener);
     }
 
     /**
-     * Remove this listener from the document root.
+     * Remove this listener from the {@link Observable}.
      *
-     * @param scxml The document root.
+     * @param observable The {@link Observable}.
      * @param listener The SCXMLListener to be removed.
      */
-    public void removeListener(final SCXML scxml,
+    public void removeListener(final Observable observable,
             final SCXMLListener listener) {
-        Object observable = scxml;
-        scInstance.getNotificationRegistry().removeListener(observable,
-            listener);
-    }
-
-    /**
-     * Add a listener to this transition target.
-     *
-     * @param transitionTarget The <code>TransitionTarget</code> to
-     *                         attach listener to.
-     * @param listener The SCXMLListener.
-     */
-    public void addListener(final TransitionTarget transitionTarget,
-            final SCXMLListener listener) {
-        Object observable = transitionTarget;
-        scInstance.getNotificationRegistry().addListener(observable, listener);
-    }
-
-    /**
-     * Remove this listener for this transition target.
-     *
-     * @param transitionTarget The <code>TransitionTarget</code>.
-     * @param listener The SCXMLListener to be removed.
-     */
-    public void removeListener(final TransitionTarget transitionTarget,
-            final SCXMLListener listener) {
-        Object observable = transitionTarget;
-        scInstance.getNotificationRegistry().removeListener(observable,
-            listener);
-    }
-
-    /**
-     * Add a listener to this transition.
-     *
-     * @param transition The <code>Transition</code> to attach listener to.
-     * @param listener The SCXMLListener.
-     */
-    public void addListener(final Transition transition,
-            final SCXMLListener listener) {
-        Object observable = transition;
-        scInstance.getNotificationRegistry().addListener(observable, listener);
-    }
-
-    /**
-     * Remove this listener for this transition.
-     *
-     * @param transition The <code>Transition</code>.
-     * @param listener The SCXMLListener to be removed.
-     */
-    public void removeListener(final Transition transition,
-            final SCXMLListener listener) {
-        Object observable = transition;
         scInstance.getNotificationRegistry().removeListener(observable,
             listener);
     }
@@ -496,7 +441,7 @@ public class SCXMLExecutor implements Serializable {
      * @param invokerClass The <code>Invoker</code> <code>Class</code>.
      */
     public void registerInvokerClass(final String type,
-            final Class invokerClass) {
+            final Class<? extends Invoker> invokerClass) {
         scInstance.registerInvokerClass(type, invokerClass);
     }
 
@@ -525,16 +470,12 @@ public class SCXMLExecutor implements Serializable {
      */
     private void logState() {
         if (log.isDebugEnabled()) {
-            Iterator si = currentStatus.getStates().iterator();
-            StringBuffer sb = new StringBuffer("Current States: [");
-            while (si.hasNext()) {
-                State s = (State) si.next();
-                sb.append(s.getId());
-                if (si.hasNext()) {
-                    sb.append(", ");
-                }
+            StringBuffer sb = new StringBuffer("Current States: [ ");
+            for (TransitionTarget tt : currentStatus.getStates()) {
+                sb.append(tt.getId()).append(", ");
             }
-            sb.append(']');
+            int length = sb.length();
+            sb.delete(length - 2, length).append(" ]");
             log.debug(sb.toString());
         }
     }
@@ -546,8 +487,7 @@ public class SCXMLExecutor implements Serializable {
         currentStatus = step.getAfterStatus();
         scInstance.getRootContext().setLocal("_ALL_STATES",
             SCXMLHelper.getAncestorClosure(currentStatus.getStates(), null));
-        setEventData((TriggerEvent[]) currentStatus.getEvents().
-            toArray(new TriggerEvent[0]));
+        setEventData(currentStatus.getEvents().toArray(new TriggerEvent[0]));
     }
 
     /**
@@ -561,9 +501,8 @@ public class SCXMLExecutor implements Serializable {
         int len = evts.length;
         if (len > 0) { // 0 has retry semantics (eg: see usage in reset())
             Object eventData = null;
-            Map payloadMap = new HashMap();
-            for (int i = 0; i < len; i++) {
-                TriggerEvent te = evts[i];
+            Map<String, Object> payloadMap = new HashMap<String, Object>();
+            for (TriggerEvent te : evts) {
                 payloadMap.put(te.getName(), te.getPayload());
             }
             if (len == 1) {
@@ -602,3 +541,4 @@ public class SCXMLExecutor implements Serializable {
         "SCXMLExecutor: State machine not set";
 
 }
+

@@ -37,8 +37,11 @@ import org.apache.commons.scxml.SCXMLExpressionException;
 import org.w3c.dom.Node;
 
 /**
- * Evaluator implementation enabling use of EL expressions in
- * SCXML documents.
+ * <p>Evaluator implementation enabling use of EL expressions in
+ * SCXML documents.</p>
+ *
+ * <p>Does not support the &lt;script&gt; module, throws
+ * {@link UnsupportedOperationException} if attempted.</p>
  *
  */
 public class ELEvaluator implements Evaluator, Serializable {
@@ -180,6 +183,14 @@ public class ELEvaluator implements Evaluator, Serializable {
     }
 
     /**
+     * @see Evaluator#evalScript(Context, String)
+     */
+    public Object evalScript(Context ctx, String script)
+    throws SCXMLExpressionException {
+        throw new UnsupportedOperationException("Scripts are not supported by the EL evaluators");
+    }
+
+    /**
      * Create a new child context.
      *
      * @param parent parent context
@@ -261,7 +272,7 @@ public class ELEvaluator implements Evaluator, Serializable {
         public Method resolveFunction(final String prefix,
                 final String localName) {
             if (localName.equals("In")) {
-                Class[] attrs = new Class[] {Set.class, String.class};
+                Class<?>[] attrs = new Class<?>[] {Set.class, String.class};
                 try {
                     return Builtin.class.getMethod("isMember", attrs);
                 } catch (SecurityException e) {
@@ -271,7 +282,7 @@ public class ELEvaluator implements Evaluator, Serializable {
                 }
             } else if (localName.equals("Data")) {
                 // rvalue in expressions, coerce to String
-                Class[] attrs =
+                Class<?>[] attrs =
                     new Class[] {Map.class, Object.class, String.class};
                 try {
                     return Builtin.class.getMethod("data", attrs);
@@ -282,7 +293,7 @@ public class ELEvaluator implements Evaluator, Serializable {
                 }
             } else if (localName.equals("LData")) {
                 // lvalue in expressions, retain as Node
-                Class[] attrs =
+                Class<?>[] attrs =
                     new Class[] {Map.class, Object.class, String.class};
                 try {
                     return Builtin.class.getMethod("dataNode", attrs);

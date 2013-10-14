@@ -20,7 +20,7 @@
    history states (if the parent state has never been visited before)
 -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0"
-       initialstate="state1">
+       initial="state1">
 
     <state id="state1">
         <initial>
@@ -30,7 +30,7 @@
         <!-- shallow history, explicit default transition -->
 
         <history id="history1">
-            <transition next="state11"/>
+            <transition target="state11"/>
         </history>
 
         <state id="state11">
@@ -47,7 +47,7 @@
         <!-- deep history, explicit default transition -->
 
         <history id="history2" type="deep">
-            <transition next="state211"/>
+            <transition target="state211"/>
         </history>
 
         <state id="state21">

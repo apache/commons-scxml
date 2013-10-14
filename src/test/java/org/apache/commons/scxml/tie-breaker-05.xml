@@ -15,14 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 -->
-<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" initialstate="para">
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" initial="main">
 
 <!-- 
   Testing dispute resolution in regions
   {s11,s2111,s212} -event1-> {s12,s2112,s212}
 -->
 
-    <parallel id="para"> <!-- Outer parallel -->
+    <parallel id="main"> <!-- Outer parallel -->
 
         <state id="s1">
             <initial>
@@ -38,10 +38,10 @@
 
         <state id="s2">
             <initial>
-                <transition target="para1"/>
+                <transition target="s21"/>
             </initial>
 
-            <parallel id="para1"> <!-- Inner parallel -->
+            <parallel id="s21"> <!-- Inner parallel -->
                 <state id="s211">
                     <initial>
                         <transition target="s2111"/>

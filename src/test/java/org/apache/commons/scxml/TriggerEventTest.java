@@ -16,8 +16,8 @@
  */
 package org.apache.commons.scxml;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.HashMap;
 
 import junit.framework.TestCase;
 
@@ -33,15 +33,16 @@ public class TriggerEventTest extends TestCase {
     }
 
     // Test data
-    private Map payloadData;
+    private Map<String, String> payloadData;
     private Object payload1, payload2;
     private TriggerEvent te1, te2, te3, te4, te5, te6, te7;
 
     /**
      * Set up instance variables required by this test case.
      */
+    @Override
     public void setUp() {
-        payloadData = new HashMap();
+        payloadData = new HashMap<String, String>();
         payloadData.put("property1", "value1");
         payload1 = payloadData;
         payload2 = new Object();
@@ -57,6 +58,7 @@ public class TriggerEventTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
+    @Override
     public void tearDown() {
         payloadData.clear();
         payloadData = null;

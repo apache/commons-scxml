@@ -45,7 +45,7 @@ public class Param implements NamespacePrefixesHolder, Serializable {
      * The current XML namespaces in the SCXML document for this action node,
      * preserved for deferred XPath evaluation.
      */
-    private Map namespaces;
+    private Map<String, String> namespaces;
 
     /**
      * Default no-args constructor for Digester.
@@ -95,7 +95,7 @@ public class Param implements NamespacePrefixesHolder, Serializable {
      *
      * @return Returns the map of namespaces.
      */
-    public final Map getNamespaces() {
+    public final Map<String, String> getNamespaces() {
         return namespaces;
     }
 
@@ -104,7 +104,7 @@ public class Param implements NamespacePrefixesHolder, Serializable {
      *
      * @param namespaces The document namespaces.
      */
-    public final void setNamespaces(final Map namespaces) {
+    public final void setNamespaces(final Map<String, String> namespaces) {
         this.namespaces = namespaces;
     }
 

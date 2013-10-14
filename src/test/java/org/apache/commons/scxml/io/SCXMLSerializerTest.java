@@ -23,6 +23,7 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.scxml.model.Action;
 import org.apache.commons.scxml.model.Assign;
 import org.apache.commons.scxml.model.Cancel;
 import org.apache.commons.scxml.model.Else;
@@ -48,7 +49,7 @@ public class SCXMLSerializerTest extends TestCase {
 
     public void testSerializeSCXMLNoStates() {
         SCXML scxml = new SCXML();
-        Map namespaces = new LinkedHashMap();
+        Map<String, String> namespaces = new LinkedHashMap<String, String>();
         namespaces.put("", "http://www.w3.org/2005/07/scxml");
         namespaces.put("cs", "http://commons.apache.org/scxml");
         namespaces.put("foo", "http://f.o.o");
@@ -79,7 +80,7 @@ public class SCXMLSerializerTest extends TestCase {
         
         String assertValue = " <send sendid=\"1\" " +
                 "target=\"newTarget\" " +
-                "type=\"newType\" " +
+                "targetType=\"newType\" " +
                 "namelist=\"names\" " +
                 "delay=\"4s\" " +
                 "event=\"turnoff\" " +
@@ -120,7 +121,7 @@ public class SCXMLSerializerTest extends TestCase {
         var.setName("newName");
         var.setExpr("newExpression");
         
-        List values = new ArrayList();
+        List<Action> values = new ArrayList<Action>();
         values.add(var);
         
         String actualValue = " <cs:var name=\"newName\" expr=\"newExpression\"/>\n";
@@ -137,7 +138,7 @@ public class SCXMLSerializerTest extends TestCase {
         assign.setName("newName");
         assign.setExpr("newExpression");
         
-        List values = new ArrayList();
+        List<Action> values = new ArrayList<Action>();
         values.add(assign);
         
         String actualValue = " <assign name=\"newName\" expr=\"newExpression\"/>\n";
@@ -153,7 +154,7 @@ public class SCXMLSerializerTest extends TestCase {
         Cancel cancel = new Cancel();
         cancel.setSendid("1");
         
-        List values = new ArrayList();
+        List<Action> values = new ArrayList<Action>();
         values.add(cancel);
         
         String actualValue = " <cancel sendid=\"1\"/>\n";
@@ -169,7 +170,7 @@ public class SCXMLSerializerTest extends TestCase {
         Log log = new Log();
         log.setExpr("newExpression");
         
-        List values = new ArrayList();
+        List<Action> values = new ArrayList<Action>();
         values.add(log);
         
         String actualValue = " <log expr=\"newExpression\"/>\n";
@@ -186,7 +187,7 @@ public class SCXMLSerializerTest extends TestCase {
         exit.setExpr("newExpression");
         exit.setNamelist("names");
         
-        List values = new ArrayList();
+        List<Action> values = new ArrayList<Action>();
         values.add(exit);
         
         String actualValue = " <cs:exit expr=\"newExpression\" namelist=\"names\"/>\n";
@@ -201,7 +202,7 @@ public class SCXMLSerializerTest extends TestCase {
     public void testSerializeActionsElse() {
         Else elseValue = new Else();
         
-        List values = new ArrayList();
+        List<Action> values = new ArrayList<Action>();
         values.add(elseValue);
         
         String actualValue = " <else/>\n";
@@ -217,7 +218,7 @@ public class SCXMLSerializerTest extends TestCase {
         ElseIf elseIf = new ElseIf();
         elseIf.setCond("newCondition");
         
-        List values = new ArrayList();
+        List<Action> values = new ArrayList<Action>();
         values.add(elseIf);
         
         String actualValue = " <elseif cond=\"newCondition\" />\n";
@@ -233,7 +234,7 @@ public class SCXMLSerializerTest extends TestCase {
         If ifValue = new If();
         ifValue.setCond("newCondition");
         
-        List values = new ArrayList();
+        List<Action> values = new ArrayList<Action>();
         values.add(ifValue);
         
         String actualValue = " <if cond=\"newCondition\">\n </if>\n";
@@ -301,6 +302,21 @@ public class SCXMLSerializerTest extends TestCase {
         assertEquals(actualValue, returnValue.toString());
     }
 
+    public void testSerializeTransition() {
+        Transition t = new Transition();
+
+        t.setEvent("foo.bar");
+        t.setCond("i == 3");
+        t.setNext("next");
+
+        String actualValue = "<transition event=\"foo.bar\" cond=\"i == 3\" target=\"next\">\n</transition>\n";
+
+        StringBuffer returnValue = new StringBuffer();
+        SCXMLSerializer.serializeTransition(returnValue, t, "");
+
+        assertEquals(actualValue, returnValue.toString());
+    }
+
     public void testSerializeTransitionEscapeXML() {
         Transition t = new Transition();
 
@@ -348,7 +364,7 @@ public class SCXMLSerializerTest extends TestCase {
         State s11 = new State();
         s11.setId("S11");
 
-        s1.addChild((TransitionTarget)s11);
+        s1.addChild(s11);
 
         State s2 = new State();
         s2.setId("S2");
@@ -356,10 +372,10 @@ public class SCXMLSerializerTest extends TestCase {
         State s21 = new State();
         s21.setId("S21");
 
-        s2.addChild((TransitionTarget)s21);
+        s2.addChild(s21);
 
-        par.addChild((TransitionTarget)s1);
-        par.addChild((TransitionTarget)s2);
+        par.addChild(s1);
+        par.addChild(s2);
 
         scxml.addChild(par);
 

@@ -26,6 +26,7 @@ public class TransitionTest extends TestCase {
 
     private Transition transition;
     
+    @Override
     public void setUp() {
         transition = new Transition();
     }
@@ -40,8 +41,7 @@ public class TransitionTest extends TestCase {
         
         transition.setParent(state);
         
-        assertEquals("1", ((TransitionTarget) transition.
-            getRuntimeTargets().get(0)).getId());
+        assertEquals("1", (transition.getRuntimeTargets().get(0)).getId());
     }
     
     public void testGetRuntimeTarget() {
@@ -50,8 +50,7 @@ public class TransitionTest extends TestCase {
         
         transition.getTargets().add(state);
         
-        assertEquals("2", ((TransitionTarget) transition.
-            getRuntimeTargets().get(0)).getId());
+        assertEquals("2", (transition.getRuntimeTargets().get(0)).getId());
     }
     
     public void testGetPath() {

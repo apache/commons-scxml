@@ -17,7 +17,7 @@
 -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
        version="1.0"
-       initialstate="invoker">
+       initial="invoker">
 
     <state id="invoker">
         <invoke type="scxml" src="invoked-02.xml"/>
@@ -27,3 +27,4 @@
     <state id="end" final="true" />
 
 </scxml>
+

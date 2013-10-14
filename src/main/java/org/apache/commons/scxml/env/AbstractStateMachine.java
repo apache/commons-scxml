@@ -21,6 +21,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml.Context;
@@ -30,13 +32,11 @@ import org.apache.commons.scxml.SCXMLListener;
 import org.apache.commons.scxml.TriggerEvent;
 import org.apache.commons.scxml.env.jexl.JexlContext;
 import org.apache.commons.scxml.env.jexl.JexlEvaluator;
-import org.apache.commons.scxml.io.SCXMLParser;
+import org.apache.commons.scxml.io.SCXMLReader;
 import org.apache.commons.scxml.model.ModelException;
 import org.apache.commons.scxml.model.SCXML;
 import org.apache.commons.scxml.model.Transition;
 import org.apache.commons.scxml.model.TransitionTarget;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.SAXException;
 
 /**
  * <p>This class demonstrates one approach for providing the base
@@ -83,7 +83,7 @@ public abstract class AbstractStateMachine {
      * The method signature for the activities corresponding to each
      * state in the SCXML document.
      */
-    private static final Class[] SIGNATURE = new Class[0];
+    private static final Class<?>[] SIGNATURE = new Class[0];
 
     /**
      * The method parameters for the activities corresponding to each
@@ -118,14 +118,12 @@ public abstract class AbstractStateMachine {
     public AbstractStateMachine(final URL scxmlDocument,
             final Context rootCtx, final Evaluator evaluator) {
         log = LogFactory.getLog(this.getClass());
-        ErrorHandler errHandler = new SimpleErrorHandler();
         try {
-            stateMachine = SCXMLParser.parse(scxmlDocument,
-                errHandler);
+            stateMachine = SCXMLReader.read(scxmlDocument);
         } catch (IOException ioe) {
             logError(ioe);
-        } catch (SAXException sae) {
-            logError(sae);
+        } catch (XMLStreamException xse) {
+            logError(xse);
         } catch (ModelException me) {
             logError(me);
         }
@@ -197,23 +195,13 @@ public abstract class AbstractStateMachine {
      */
     public boolean fireEvent(final String event) {
         TriggerEvent[] evts = {new TriggerEvent(event,
-                TriggerEvent.SIGNAL_EVENT, null)};
+                TriggerEvent.SIGNAL_EVENT)};
         try {
             engine.triggerEvents(evts);
         } catch (ModelException me) {
             logError(me);
         }
         return engine.getCurrentStatus().isFinal();
-    }
-
-    /**
-     * Get the SCXML object representing this state machine.
-     *
-     * @return Returns the stateMachine.
-     * @deprecated Returns null, use getEngine().getStateMachine() instead
-     */
-    public static SCXML getStateMachine() {
-        return null;
     }
 
     /**
@@ -251,7 +239,7 @@ public abstract class AbstractStateMachine {
      * @return Whether the invoke was successful.
      */
     public boolean invoke(final String methodName) {
-        Class clas = this.getClass();
+        Class<?> clas = this.getClass();
         try {
             Method method = clas.getDeclaredMethod(methodName, SIGNATURE);
             method.invoke(this, PARAMETERS);

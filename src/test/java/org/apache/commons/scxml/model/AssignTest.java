@@ -20,7 +20,6 @@ import java.net.URL;
 import java.util.Set;
 
 import junit.framework.TestCase;
-
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
 /**
@@ -42,6 +41,7 @@ public class AssignTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
+    @Override
     public void setUp() {
         assign01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/model/assign-test-01.xml");
@@ -52,6 +52,7 @@ public class AssignTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
+    @Override
     public void tearDown() {
         assign01 = assign02 = null;
         exec = null;
@@ -62,19 +63,17 @@ public class AssignTest extends TestCase {
      */
     public void testAssignSrc() throws Exception {
         exec = SCXMLTestHelper.getExecutor(assign01);
-        Set currentStates = exec.getCurrentStatus().getStates();
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
-        assertEquals("assign3", ((State)currentStates.iterator().
-            next()).getId());
+        assertEquals("assign3", currentStates.iterator().next().getId());
         assertTrue(exec.getCurrentStatus().isFinal());
     }
 
     public void testAssignDeep() throws Exception {
         exec = SCXMLTestHelper.getExecutor(assign02);
-        Set currentStates = exec.getCurrentStatus().getStates();
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
-        assertEquals("assign3", ((State)currentStates.iterator().
-            next()).getId());
+        assertEquals("assign3", currentStates.iterator().next().getId());
         assertTrue(exec.getCurrentStatus().isFinal());
     }
 }

@@ -18,7 +18,7 @@
 <!-- Used for SrcTest.java in io package -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
        version="1.0"
-       initialstate="srctest1">
+       initial="srctest1">
 
     <state id="srctest1" src="src-test-2.xml">
         <transition event="src.test" target="srctest3end"/>

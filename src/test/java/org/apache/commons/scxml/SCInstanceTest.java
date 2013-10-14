@@ -19,14 +19,14 @@ package org.apache.commons.scxml;
 import java.util.HashSet;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
-import org.apache.commons.jexl2.JexlContext;
+import org.apache.commons.jexl.JexlContext;
 import org.apache.commons.scxml.env.SimpleContext;
 import org.apache.commons.scxml.env.jexl.JexlEvaluator;
 import org.apache.commons.scxml.model.History;
 import org.apache.commons.scxml.model.State;
 import org.apache.commons.scxml.model.TransitionTarget;
+
+import junit.framework.TestCase;
 
 public class SCInstanceTest extends TestCase {
 
@@ -36,6 +36,7 @@ public class SCInstanceTest extends TestCase {
 
     private SCInstance instance;
     
+    @Override
     public void setUp() {
         instance = new SCInstance(null);
     }
@@ -110,7 +111,7 @@ public class SCInstanceTest extends TestCase {
     public void testGetLastConfigurationNull() {
         History history = new History();
         
-        Set returnConfiguration = instance.getLastConfiguration(history);
+        Set<TransitionTarget> returnConfiguration = instance.getLastConfiguration(history);
         
         assertEquals(0, returnConfiguration.size());
     }
@@ -120,17 +121,19 @@ public class SCInstanceTest extends TestCase {
         History history = new History();
         history.setId("1");
         
-        Set configuration = new HashSet();
-        configuration.add("value1");
-        configuration.add("value2");
+        Set<TransitionTarget> configuration = new HashSet<TransitionTarget>();
+        TransitionTarget tt1 = new State();
+        TransitionTarget tt2 = new State();
+        configuration.add(tt1);
+        configuration.add(tt2);
         
         instance.setLastConfiguration(history, configuration);  
         
-        Set returnConfiguration = instance.getLastConfiguration(history);
+        Set<TransitionTarget> returnConfiguration = instance.getLastConfiguration(history);
         
         assertEquals(2, returnConfiguration.size());
-        assertTrue(returnConfiguration.contains("value1"));
-        assertTrue(returnConfiguration.contains("value2"));
+        assertTrue(returnConfiguration.contains(tt1));
+        assertTrue(returnConfiguration.contains(tt2));
     }
     
     public void testIsEmpty() {
@@ -141,9 +144,9 @@ public class SCInstanceTest extends TestCase {
         History history = new History();
         history.setId("1");
         
-        Set configuration = new HashSet();
-        configuration.add("value1");
-        configuration.add("value2");
+        Set<TransitionTarget> configuration = new HashSet<TransitionTarget>();
+        TransitionTarget tt1 = new State();
+        configuration.add(tt1);
         
         instance.setLastConfiguration(history, configuration);  
 
@@ -154,9 +157,9 @@ public class SCInstanceTest extends TestCase {
         History history = new History();
         history.setId("1");
         
-        Set configuration = new HashSet();
-        configuration.add("value1");
-        configuration.add("value2");
+        Set<TransitionTarget> configuration = new HashSet<TransitionTarget>();
+        TransitionTarget tt1 = new State();
+        configuration.add(tt1);
         
         instance.setLastConfiguration(history, configuration);  
 

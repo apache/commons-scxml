@@ -23,7 +23,7 @@ import junit.framework.TestCase;
 
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
-import org.apache.commons.scxml.model.State;
+import org.apache.commons.scxml.model.TransitionTarget;
 
 /**
  * Test cases for issue 62.
@@ -41,6 +41,7 @@ public class Issue62Test extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
+    @Override
     public void setUp() {
         test01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/issues/issue62-01.xml");
@@ -53,6 +54,7 @@ public class Issue62Test extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
+    @Override
     public void tearDown() {
         test01 = test02 = null;
         exec = null;
@@ -60,10 +62,9 @@ public class Issue62Test extends TestCase {
 
     public void test01issue62() throws Exception {
         exec = SCXMLTestHelper.getExecutor(test01);
-        Set currentStates = exec.getCurrentStatus().getStates();
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
-        assertEquals("s1.1", ((State)currentStates.iterator().
-            next()).getId());
+        assertEquals("s1.1", currentStates.iterator().next().getId());
         SCXMLTestHelper.assertPostTriggerState(exec, "foo", "s1.1");
     }
 
@@ -78,10 +79,9 @@ public class Issue62Test extends TestCase {
     }
 
     private void fragmenttest() throws Exception {
-        Set currentStates = exec.getCurrentStatus().getStates();
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
-        assertEquals("s1", ((State)currentStates.iterator().
-            next()).getId());
+        assertEquals("s1", currentStates.iterator().next().getId());
         SCXMLTestHelper.assertPostTriggerState(exec, "foo", "e1.1.1");
         SCXMLTestHelper.assertPostTriggerState(exec, "bar", "e1.1.2");
         SCXMLTestHelper.assertPostTriggerState(exec, "baz", "s3");

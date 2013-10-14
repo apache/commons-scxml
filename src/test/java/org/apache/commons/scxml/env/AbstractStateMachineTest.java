@@ -76,5 +76,4 @@ public class AbstractStateMachineTest extends TestCase {
             return barCalled;
         }
     }
-
 }

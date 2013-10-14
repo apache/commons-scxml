@@ -24,7 +24,7 @@ import junit.framework.TestCase;
 import org.apache.commons.scxml.Context;
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
-import org.apache.commons.scxml.model.State;
+import org.apache.commons.scxml.model.TransitionTarget;
 
 public class StaticMethodTest extends TestCase {
 
@@ -37,6 +37,7 @@ public class StaticMethodTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
+    @Override
     public void setUp() {
         staticmethod = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/env/jexl/static-method.xml");
@@ -45,6 +46,7 @@ public class StaticMethodTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
+    @Override
     public void tearDown() {
         staticmethod = null;
     }
@@ -54,10 +56,9 @@ public class StaticMethodTest extends TestCase {
         jc.set("System", System.class);
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor(staticmethod,
                 jc, new JexlEvaluator());
-        Set currentStates = exec.getCurrentStatus().getStates();
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
-        assertEquals("static", ((State)currentStates.iterator().
-            next()).getId());
+        assertEquals("static", currentStates.iterator().next().getId());
     }
 
 }

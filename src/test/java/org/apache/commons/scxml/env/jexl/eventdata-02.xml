@@ -17,7 +17,7 @@
 -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
       version="1.0"
-      initialstate="state0">
+      initial="state0">
      <state id="state0">
            <!-- Payload can be any object, such as a String ... -->
            <transition event="connection.alerting"

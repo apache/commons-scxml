@@ -19,28 +19,30 @@ package org.apache.commons.scxml;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.StringReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import junit.framework.Assert;
 
 import org.apache.commons.scxml.env.SimpleDispatcher;
 import org.apache.commons.scxml.env.Tracer;
 import org.apache.commons.scxml.env.jexl.JexlEvaluator;
-import org.apache.commons.scxml.io.SCXMLDigester;
-import org.apache.commons.scxml.io.SCXMLParser;
+import org.apache.commons.scxml.io.SCXMLReader;
+import org.apache.commons.scxml.io.SCXMLReader.Configuration;
+import org.apache.commons.scxml.model.CustomAction;
 import org.apache.commons.scxml.model.ModelException;
 import org.apache.commons.scxml.model.SCXML;
-import org.apache.commons.scxml.model.State;
 import org.apache.commons.scxml.model.TransitionTarget;
-import org.xml.sax.ErrorHandler;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 /**
  * Helper methods for running SCXML unit tests.
  */
@@ -63,48 +65,17 @@ public class SCXMLTestHelper {
         return Integer.toString(++sequence);
     }
 
-    public static SCXML digest(final URL url) throws Exception {
-        return digest(url, null, null);
-    }
-
-    public static SCXML digest(final URL url, final List customActions) throws Exception {
-        return digest(url, null, customActions);
-    }
-
-    public static SCXML digest(final URL url, final ErrorHandler errHandler) throws Exception {
-        return digest(url, errHandler, null);
-    }
-
-    public static SCXML digest(final URL url, final ErrorHandler errHandler,
-            final List customActions) throws Exception {
-        Assert.assertNotNull(url);
-        // SAX ErrorHandler may be null
-        SCXML scxml = null;
-        scxml = SCXMLDigester.digest(url, errHandler, customActions);
-        Assert.assertNotNull(scxml);
-        SCXML roundtrip = testModelSerializability(scxml);
-        Assert.assertNotNull(roundtrip);
-        return roundtrip;
-    }
-
     public static SCXML parse(final URL url) throws Exception {
-        return parse(url, null, null);
+        return parse(url, null);
     }
 
-    public static SCXML parse(final URL url, final List customActions) throws Exception {
-        return parse(url, null, customActions);
-    }
-
-    public static SCXML parse(final URL url, final ErrorHandler errHandler) throws Exception {
-        return parse(url, errHandler, null);
-    }
-
-    public static SCXML parse(final URL url, final ErrorHandler errHandler,
-            final List customActions) throws Exception {
+    public static SCXML parse(final URL url, final List<CustomAction> customActions) throws Exception {
         Assert.assertNotNull(url);
-        // SAX ErrorHandler may be null
         SCXML scxml = null;
-        scxml = SCXMLParser.parse(url, errHandler, customActions);
+        Configuration configuration = new Configuration(null, null, customActions);
+        scxml = SCXMLReader.read(url, configuration);
+        //Uncomment line below to test the (now deprecated) SCXMLParser
+        //scxml = SCXMLParser.parse(url, new SimpleErrorHandler(), customActions);
         Assert.assertNotNull(scxml);
         SCXML roundtrip = testModelSerializability(scxml);
         return roundtrip;
@@ -119,13 +90,6 @@ public class SCXMLTestHelper {
     public static SCXMLExecutor getExecutor(final URL url,
             final Evaluator evaluator) throws Exception {
         SCXML scxml = parse(url);
-        return getExecutor(evaluator, scxml);
-    }
-
-    public static SCXMLExecutor getExecutor(final URL url,
-            final ErrorHandler errHandler) throws Exception {
-        SCXML scxml = parse(url, errHandler);
-        Evaluator evaluator = new JexlEvaluator();
         return getExecutor(evaluator, scxml);
     }
 
@@ -184,18 +148,18 @@ public class SCXMLTestHelper {
         } else {
             exec = new SCXMLExecutor(evaluator, ed, trc, semantics);
         }
-        Assert.assertNotNull(exec);
         exec.addListener(scxml, trc);
         exec.setRootContext(context);
         exec.setSuperStep(true);
         exec.setStateMachine(scxml);
         exec.go();
+        Assert.assertNotNull(exec);
         return exec;
     }
 
     public static TransitionTarget lookupTransitionTarget(SCXMLExecutor exec,
             String id) {
-        return (TransitionTarget) exec.getStateMachine().getTargets().get(id);
+        return exec.getStateMachine().getTargets().get(id);
     }
 
     public static Context lookupContext(SCXMLExecutor exec,
@@ -212,19 +176,29 @@ public class SCXMLTestHelper {
         return exec.getSCInstance().lookupContext(tt);
     }
 
-    public static Set fireEvent(SCXMLExecutor exec, String name) throws Exception {
+    public static void assertState(SCXMLExecutor exec,
+            String expectedStateId) throws Exception {
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        Assert.assertEquals("Expected 1 simple (leaf) state with id '"
+            + expectedStateId + "' but found " + currentStates.size() + " states instead.",
+            1, currentStates.size());
+        Assert.assertEquals(expectedStateId, currentStates.iterator().
+            next().getId());
+    }
+
+    public static Set<TransitionTarget> fireEvent(SCXMLExecutor exec, String name) throws Exception {
         TriggerEvent[] evts = {new TriggerEvent(name,
                 TriggerEvent.SIGNAL_EVENT, null)};
         exec.triggerEvents(evts);
         return exec.getCurrentStatus().getStates();
     }
 
-    public static Set fireEvent(SCXMLExecutor exec, TriggerEvent te) throws Exception {
+    public static Set<TransitionTarget> fireEvent(SCXMLExecutor exec, TriggerEvent te) throws Exception {
         exec.triggerEvent(te);
         return exec.getCurrentStatus().getStates();
     }
 
-    public static Set fireEvents(SCXMLExecutor exec, TriggerEvent[] evts) throws Exception {
+    public static Set<TransitionTarget> fireEvents(SCXMLExecutor exec, TriggerEvent[] evts) throws Exception {
         exec.triggerEvents(evts);
         return exec.getCurrentStatus().getStates();
     }
@@ -243,13 +217,13 @@ public class SCXMLTestHelper {
 
     public static void assertPostTriggerState(SCXMLExecutor exec,
             TriggerEvent triggerEvent, String expectedStateId) throws Exception {
-        Set currentStates = fireEvent(exec, triggerEvent);
+        Set<TransitionTarget> currentStates = fireEvent(exec, triggerEvent);
         Assert.assertEquals("Expected 1 simple (leaf) state with id '"
             + expectedStateId + "' on firing event " + triggerEvent
             + " but found " + currentStates.size() + " states instead.",
             1, currentStates.size());
-        Assert.assertEquals(expectedStateId, ((State)currentStates.iterator().
-            next()).getId());
+        Assert.assertEquals(expectedStateId, currentStates.iterator().
+            next().getId());
     }
 
     public static void assertPostTriggerStates(SCXMLExecutor exec,
@@ -258,16 +232,15 @@ public class SCXMLTestHelper {
             Assert.fail("Must specify an array of one or more "
                 + "expected state IDs");
         }
-        Set currentStates = fireEvent(exec, triggerEvent);
+        Set<TransitionTarget> currentStates = fireEvent(exec, triggerEvent);
         int n = expectedStateIds.length;
         Assert.assertEquals("Expected " + n + " simple (leaf) state(s) "
             + " on firing event " + triggerEvent + " but found "
             + currentStates.size() + " states instead.",
             n, currentStates.size());
-        List expectedStateIdList = new ArrayList(Arrays.asList(expectedStateIds));
-        Iterator iter = currentStates.iterator();
-        while (iter.hasNext()) {
-            String stateId = ((State) iter.next()).getId();
+        List<String> expectedStateIdList = new ArrayList<String>(Arrays.asList(expectedStateIds));
+        for (TransitionTarget tt : currentStates) {
+            String stateId = tt.getId();
             if(!expectedStateIdList.remove(stateId)) {
                 Assert.fail("Expected state with id '" + stateId
                     + "' in current states on firing event "
@@ -287,29 +260,14 @@ public class SCXMLTestHelper {
         String filename = SERIALIZATION_FILE_PREFIX
             + getSequenceNumber() + SERIALIZATION_FILE_SUFFIX;
         SCXML roundtrip = null;
-        try {
-            ObjectOutputStream out =
-                new ObjectOutputStream(new FileOutputStream(filename));
-            out.writeObject(scxml);
-            out.close();
-            ObjectInputStream in =
-                new ObjectInputStream(new FileInputStream(filename));
-            roundtrip = (SCXML) in.readObject();
-            in.close();
-        } catch (NotSerializableException nse) {
-            // <data> nodes failed serialization
-            String msg = nse.getMessage();
-            // Check that it is the DOM that caused the problem
-            if (msg.startsWith("org.apache.crimson.tree.")){
-                // <data> nodes failed serialization, test cases do not add
-                // other non-serializable context data
-                System.err.println("SERIALIZATION ERROR: The DOM implementation"
-                    + " in use is not serializable: " + msg);
-                return scxml;                
-            } else {
-                throw nse;
-            }
-        }
+        ObjectOutputStream out =
+            new ObjectOutputStream(new FileOutputStream(filename));
+        out.writeObject(scxml);
+        out.close();
+        ObjectInputStream in =
+            new ObjectInputStream(new FileInputStream(filename));
+        roundtrip = (SCXML) in.readObject();
+        in.close();
         return roundtrip;
     }
 
@@ -321,29 +279,31 @@ public class SCXMLTestHelper {
         String filename = SERIALIZATION_FILE_PREFIX
             + getSequenceNumber() + SERIALIZATION_FILE_SUFFIX;
         SCXMLExecutor roundtrip = null;
-        try {
-            ObjectOutputStream out =
-                new ObjectOutputStream(new FileOutputStream(filename));
-            out.writeObject(exec);
-            out.close();
-            ObjectInputStream in =
-                new ObjectInputStream(new FileInputStream(filename));
-            roundtrip = (SCXMLExecutor) in.readObject();
-            in.close();
-        } catch (NotSerializableException nse) {
-            String msg = nse.getMessage();
-            // Check that it is the DOM that caused the problem
-            if (msg.startsWith("org.apache.crimson.tree.")){
-                // <data> nodes failed serialization, test cases do not add
-                // other non-serializable context data
-                System.err.println("SERIALIZATION ERROR: The DOM implementation"
-                    + " in use is not serializable: " + msg);
-                return exec;                
-            } else {
-                throw nse;
-            }
-        }
+        ObjectOutputStream out =
+            new ObjectOutputStream(new FileOutputStream(filename));
+        out.writeObject(exec);
+        out.close();
+        ObjectInputStream in =
+            new ObjectInputStream(new FileInputStream(filename));
+        roundtrip = (SCXMLExecutor) in.readObject();
+        in.close();
         return roundtrip;
+    }
+
+    /**
+     * Parses a String containing XML source into a {@link Document}.
+     *
+     * @param xml The XML source as a String.
+     * @return The parsed {@link Document}.
+     */
+    public static Document stringToXMLDocument(final String xml) {
+        try {
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            dbf.setNamespaceAware(true);
+            return dbf.newDocumentBuilder().parse(new InputSource(new StringReader(xml)));
+        } catch (Exception e) {
+            throw new RuntimeException("Exception parsing String to Node:\n" + xml);
+        }
     }
 
     /**
@@ -355,8 +315,8 @@ public class SCXMLTestHelper {
      * @return The <code>id</code> of the active state.
      */
     public static String getCurrentState(SCXMLExecutor exec) {
-        Set current = exec.getCurrentStatus().getStates();
-        TransitionTarget active = (TransitionTarget) current.iterator().next();
+        Set<TransitionTarget> current = exec.getCurrentStatus().getStates();
+        TransitionTarget active = current.iterator().next();
         return active.getId();
     }
 
@@ -375,15 +335,25 @@ public class SCXMLTestHelper {
             throw new IllegalArgumentException("Provided SCXMLExecutor "
                 + "instance cannot be reset.");
         }
-        TransitionTarget active = (TransitionTarget) exec.getStateMachine().
-            getTargets().get(id);
+        TransitionTarget active = exec.getStateMachine().getTargets().get(id);
         if (active == null) {
             throw new IllegalArgumentException("No target with id '" + id
                 + "' present in state machine.");
         }
-        Set current = exec.getCurrentStatus().getStates();
+        Set<TransitionTarget> current = exec.getCurrentStatus().getStates();
         current.clear();
         current.add(active);
+    }
+
+    public static String removeCarriageReturns(final String original) {
+        StringBuffer buf = new StringBuffer();
+        for (int i = 0; i < original.length(); i++) {
+            char c = original.charAt(i);
+            if (c != '\r') {
+                buf.append(c);
+            }
+        }
+        return buf.toString();
     }
 
     /**
@@ -394,4 +364,3 @@ public class SCXMLTestHelper {
     }
 
 }
-

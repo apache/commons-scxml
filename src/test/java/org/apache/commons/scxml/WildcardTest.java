@@ -20,8 +20,7 @@ import java.net.URL;
 import java.util.Set;
 
 import junit.framework.TestCase;
-
-import org.apache.commons.scxml.model.State;
+import org.apache.commons.scxml.model.TransitionTarget;
 /**
  * Unit tests {@link org.apache.commons.scxml.SCXMLExecutor}.
  * Testing wildcard event matching (*)
@@ -42,6 +41,7 @@ public class WildcardTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
+    @Override
     public void setUp() {
         wildcard01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/env/jexl/wildcard-01.xml");
@@ -52,6 +52,7 @@ public class WildcardTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
+    @Override
     public void tearDown() {
         wildcard01 = wildcard02 = null;
     }
@@ -62,23 +63,20 @@ public class WildcardTest extends TestCase {
     public void testWildcard01Sample() throws Exception {
     	exec = SCXMLTestHelper.getExecutor(wildcard01);
         assertNotNull(exec);
-        Set currentStates = exec.getCurrentStatus().getStates();
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
-        assertEquals("state1", ((State)currentStates.iterator().
-            next()).getId());
+        assertEquals("state1", currentStates.iterator().next().getId());
         exec = SCXMLTestHelper.testExecutorSerializability(exec);
         currentStates = SCXMLTestHelper.fireEvent(exec, "foo.bar.baz");
         assertEquals(1, currentStates.size());
-        assertEquals("state4", ((State)currentStates.iterator().
-            next()).getId());
+        assertEquals("state4", currentStates.iterator().next().getId());
     }
 
     public void testWildcard02Sample() throws Exception {
         exec = SCXMLTestHelper.getExecutor(SCXMLTestHelper.parse(wildcard02));
         assertNotNull(exec);
-        Set currentStates = exec.getCurrentStatus().getStates();
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
-        assertEquals("state2", ((State)currentStates.iterator().
-            next()).getId());
+        assertEquals("state2", currentStates.iterator().next().getId());
     }
 }

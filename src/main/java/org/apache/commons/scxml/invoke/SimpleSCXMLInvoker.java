@@ -19,8 +19,9 @@ package org.apache.commons.scxml.invoke;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.Map;
+
+import javax.xml.stream.XMLStreamException;
 
 import org.apache.commons.scxml.Context;
 import org.apache.commons.scxml.Evaluator;
@@ -28,13 +29,11 @@ import org.apache.commons.scxml.SCInstance;
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.TriggerEvent;
 import org.apache.commons.scxml.env.SimpleDispatcher;
-import org.apache.commons.scxml.env.SimpleErrorHandler;
 import org.apache.commons.scxml.env.SimpleErrorReporter;
 import org.apache.commons.scxml.env.SimpleSCXMLListener;
-import org.apache.commons.scxml.io.SCXMLParser;
+import org.apache.commons.scxml.io.SCXMLReader;
 import org.apache.commons.scxml.model.ModelException;
 import org.apache.commons.scxml.model.SCXML;
-import org.xml.sax.SAXException;
 
 /**
  * A simple {@link Invoker} for SCXML documents. Invoked SCXML document
@@ -83,26 +82,24 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
     /**
      * {@inheritDoc}.
      */
-    public void invoke(final String source, final Map params)
+    public void invoke(final String source, final Map<String, Object> params)
     throws InvokerException {
         SCXML scxml = null;
         try {
-            scxml = SCXMLParser.parse(new URL(source),
-                new SimpleErrorHandler());
+            scxml = SCXMLReader.read(new URL(source));
         } catch (ModelException me) {
             throw new InvokerException(me.getMessage(), me.getCause());
         } catch (IOException ioe) {
             throw new InvokerException(ioe.getMessage(), ioe.getCause());
-        } catch (SAXException se) {
-            throw new InvokerException(se.getMessage(), se.getCause());
+        } catch (XMLStreamException xse) {
+            throw new InvokerException(xse.getMessage(), xse.getCause());
         }
         Evaluator eval = parentSCInstance.getEvaluator();
         executor = new SCXMLExecutor(eval,
             new SimpleDispatcher(), new SimpleErrorReporter());
         Context rootCtx = eval.newContext(null);
-        for (Iterator iter = params.entrySet().iterator(); iter.hasNext();) {
-            Map.Entry entry = (Map.Entry) iter.next();
-            rootCtx.setLocal((String) entry.getKey(), entry.getValue());
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+            rootCtx.setLocal(entry.getKey(), entry.getValue());
         }
         executor.setRootContext(rootCtx);
         executor.setStateMachine(scxml);

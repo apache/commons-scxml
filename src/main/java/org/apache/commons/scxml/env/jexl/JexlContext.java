@@ -27,7 +27,7 @@ import org.apache.commons.scxml.env.SimpleContext;
  *
  */
 public class JexlContext extends SimpleContext
-    implements org.apache.commons.jexl2.JexlContext {
+    implements org.apache.commons.jexl.JexlContext {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
@@ -45,7 +45,7 @@ public class JexlContext extends SimpleContext
      *
      * @param initialVars The initial set of variables.
      */
-    public JexlContext(final Map initialVars) {
+    public JexlContext(final Map<String, Object> initialVars) {
         super(initialVars);
         getVars().put("_builtin", new Builtin());
     }
@@ -68,21 +68,12 @@ public class JexlContext extends SimpleContext
      * @see org.apache.commons.jexl.JexlContext#setVars(Map)
      * @see org.apache.commons.scxml.env.SimpleContext#setVars(Map)
      */
+    @Override
+    @SuppressWarnings("unchecked")
+    // Accomodate legacy signature org.apache.commons.jexl.JexlContext#setVars(Map)
     public void setVars(final Map vars) {
         super.setVars(vars);
         getVars().put("_builtin", new Builtin());
-    }
-
-    /**
-     * Get the variables map.
-     *
-     * @return Map The variables map.
-     *
-     * @see org.apache.commons.jexl.JexlContext#getVars()
-     * @see org.apache.commons.scxml.env.SimpleContext#getVars()
-     */
-    public Map getVars() {
-        return super.getVars();
     }
 
     /**
@@ -90,6 +81,7 @@ public class JexlContext extends SimpleContext
      *
      * @see org.apache.commons.scxml.Context#reset()
      */
+    @Override
     public void reset() {
         super.reset();
         getVars().put("_builtin", new Builtin());

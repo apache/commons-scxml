@@ -18,7 +18,6 @@ package org.apache.commons.scxml.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -44,12 +43,12 @@ public class Path implements Serializable {
     /**
      * The list of TransitionTargets in the &quot;up segment&quot;.
      */
-    private List upSeg = new ArrayList();
+    private List<TransitionTarget> upSeg = new ArrayList<TransitionTarget>();
 
     /**
      * The list of TransitionTargets in the &quot;down segment&quot;.
      */
-    private List downSeg = new ArrayList();
+    private List<TransitionTarget> downSeg = new ArrayList<TransitionTarget>();
 
     /**
      * &quot;Lowest&quot; transition target which is not being exited nor
@@ -123,12 +122,11 @@ public class Path implements Serializable {
      *         no order defined for siblings
      * @see State#isRegion()
      */
-    public final List getRegionsExited() {
-        List ll = new LinkedList();
-        for (Iterator i = upSeg.iterator(); i.hasNext();) {
-            Object o = i.next();
-            if (o instanceof State) {
-                State st = (State) o;
+    public final List<State> getRegionsExited() {
+        List<State> ll = new LinkedList<State>();
+        for (TransitionTarget tt : upSeg) {
+            if (tt instanceof State) {
+                State st = (State) tt;
                 if (st.isRegion()) {
                     ll.add(st);
                 }
@@ -144,12 +142,11 @@ public class Path implements Serializable {
      *         defined for siblings
      * @see State#isRegion()
      */
-    public final List getRegionsEntered() {
-        List ll = new LinkedList();
-        for (Iterator i = downSeg.iterator(); i.hasNext();) {
-            Object o = i.next();
-            if (o instanceof State) {
-                State st = (State) o;
+    public final List<State> getRegionsEntered() {
+        List<State> ll = new LinkedList<State>();
+        for (TransitionTarget tt : downSeg) {
+            if (tt instanceof State) {
+                State st = (State) tt;
                 if (st.isRegion()) {
                     ll.add(st);
                 }
@@ -159,31 +156,12 @@ public class Path implements Serializable {
     }
 
     /**
-     * Get the farthest state from root which is not being exited
-     * nor entered by the transition (null if scope is document root).
-     *
-     * @return State scope of the transition path, null means global transition
-     *         (SCXML document level) or parent parallel. Scope is the least
-     *         state which is not being exited nor entered by the transition.
-     *
-     * @deprecated Use {@link #getPathScope()} instead.
-     */
-    public final State getScope() {
-        if (scope instanceof State) {
-            return (State) scope;
-        }
-        return null;
-    }
-
-    /**
      * Get the farthest transition target from root which is not being exited
      * nor entered by the transition (null if scope is document root).
      *
      * @return Scope of the transition path, null means global transition
      *         (SCXML document level). Scope is the least transition target
      *         which is not being exited nor entered by the transition.
-     *
-     * @since 0.9
      */
     public final TransitionTarget getPathScope() {
         return scope;
@@ -194,7 +172,7 @@ public class Path implements Serializable {
      *
      * @return List upward segment of the path up to the scope
      */
-    public final List getUpwardSegment() {
+    public final List<TransitionTarget> getUpwardSegment() {
         return upSeg;
     }
 
@@ -203,7 +181,7 @@ public class Path implements Serializable {
      *
      * @return List downward segment from the scope to the target
      */
-    public final List getDownwardSegment() {
+    public final List<TransitionTarget> getDownwardSegment() {
         return downSeg;
     }
 }

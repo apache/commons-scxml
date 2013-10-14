@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import junit.framework.TestCase;
-
 import org.apache.commons.scxml.Builtin;
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
@@ -37,6 +36,7 @@ public class ParallelTest extends TestCase {
     private URL parallel01, parallel02, parallel03;
     private SCXMLExecutor exec;
     
+    @Override
     public void setUp() {
         parallel01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/model/parallel-01.xml");
@@ -46,36 +46,31 @@ public class ParallelTest extends TestCase {
             getResource("org/apache/commons/scxml/model/parallel-03.xml");
     }
 
+    @Override
     public void tearDown() {
         parallel01 = parallel02 = parallel03 = null;
         exec = null;
     }
 
     public void testParallel01() throws Exception {
-        SCXML scxml = SCXMLTestHelper.parse(parallel01);
-        assertNotNull(scxml);
-        exec = SCXMLTestHelper.getExecutor(scxml);
+        exec = SCXMLTestHelper.getExecutor(parallel01);
         assertNotNull(exec);
         SCXMLTestHelper.assertPostTriggerState(exec, "foo", "end");
     }
 
     public void testParallel02() throws Exception {
-        SCXML scxml = SCXMLTestHelper.parse(parallel02);
-        assertNotNull(scxml);
-        exec = SCXMLTestHelper.getExecutor(scxml);
+        exec = SCXMLTestHelper.getExecutor(parallel02);
         assertNotNull(exec);
         SCXMLTestHelper.assertPostTriggerStates(exec, "dummy.event", new String[] { "state01", "state02" });
         SCXMLTestHelper.assertPostTriggerState(exec, "event1", "state1");
     }
 
     public void testParallel03() throws Exception {
-        SCXML scxml = SCXMLTestHelper.parse(parallel03);
-        assertNotNull(scxml);
-        exec = SCXMLTestHelper.getExecutor(scxml);
+        exec = SCXMLTestHelper.getExecutor(parallel03);
         assertNotNull(exec);
         SCXMLTestHelper.assertPostTriggerStates(exec, "dummy.event", new String[] { "para11", "para21" });
         Node data = (Node) exec.getRootContext().get("root");
-        Map namespaces = new HashMap();
+        Map<String, String> namespaces = new HashMap<String, String>();
         namespaces.put("", "http://www.w3.org/2005/07/scxml");
         Object count = Builtin.data(namespaces, data, "root/count");
         assertEquals("5.0", count.toString());

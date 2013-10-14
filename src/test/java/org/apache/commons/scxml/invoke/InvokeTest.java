@@ -24,13 +24,12 @@ import junit.framework.TestCase;
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
 import org.apache.commons.scxml.env.SimpleDispatcher;
-import org.apache.commons.scxml.env.SimpleErrorHandler;
 import org.apache.commons.scxml.env.SimpleErrorReporter;
 import org.apache.commons.scxml.env.jexl.JexlContext;
 import org.apache.commons.scxml.env.jexl.JexlEvaluator;
-import org.apache.commons.scxml.io.SCXMLParser;
+import org.apache.commons.scxml.io.SCXMLReader;
 import org.apache.commons.scxml.model.SCXML;
-import org.apache.commons.scxml.model.State;
+import org.apache.commons.scxml.model.TransitionTarget;
 
 /**
  * Unit tests {@link org.apache.commons.scxml.SCXMLExecutor}.
@@ -52,6 +51,7 @@ public class InvokeTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
+    @Override
     public void setUp() {
         invoke01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/invoke/invoker-01.xml");
@@ -64,6 +64,7 @@ public class InvokeTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
+    @Override
     public void tearDown() {
         invoke01 = invoke02 = invoke03 = null;
     }
@@ -72,8 +73,7 @@ public class InvokeTest extends TestCase {
      * Test the SCXML documents, usage of &lt;invoke&gt;
      */
     public void testInvoke01Sample() throws Exception {
-        SCXML scxml = SCXMLParser.parse(invoke01,
-            new SimpleErrorHandler());
+        SCXML scxml = SCXMLReader.read(invoke01);
         exec = new SCXMLExecutor(new JexlEvaluator(), new SimpleDispatcher(),
             new SimpleErrorReporter());
         assertNotNull(exec);
@@ -81,14 +81,13 @@ public class InvokeTest extends TestCase {
         exec.setStateMachine(scxml);
         exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
         exec.go();
-        Set currentStates = exec.getCurrentStatus().getStates();
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
-        assertEquals("invoker", ((State)currentStates.iterator().next()).getId());
+        assertEquals("invoker", currentStates.iterator().next().getId());
     }
 
     public void testInvoke02Sample() throws Exception {
-        SCXML scxml = SCXMLParser.parse(invoke02,
-            new SimpleErrorHandler());
+        SCXML scxml = SCXMLReader.read(invoke02);
         exec = new SCXMLExecutor(new JexlEvaluator(), new SimpleDispatcher(),
             new SimpleErrorReporter());
         assertNotNull(exec);
@@ -96,13 +95,12 @@ public class InvokeTest extends TestCase {
         exec.setStateMachine(scxml);
         exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
         exec.go();
-        Set currentStates = exec.getCurrentStatus().getStates();
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
     }
 
     public void testInvoke03Sample() throws Exception {
-        SCXML scxml = SCXMLParser.parse(invoke03,
-            new SimpleErrorHandler());
+        SCXML scxml = SCXMLReader.read(invoke03);
         exec = new SCXMLExecutor(new JexlEvaluator(), new SimpleDispatcher(),
             new SimpleErrorReporter());
         assertNotNull(exec);
@@ -110,11 +108,10 @@ public class InvokeTest extends TestCase {
         exec.setStateMachine(scxml);
         exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
         exec.go();
-        Set currentStates = exec.getCurrentStatus().getStates();
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
         SCXMLTestHelper.fireEvent(exec, "s1.next");
         SCXMLTestHelper.fireEvent(exec, "state1.next");
     }
-
 }
 

@@ -50,10 +50,10 @@
     <pre>
      &lt;scxml xmlns="http://www.w3.org/2005/07/scxml"
                version="1.0"
-               initialstate="init-travel-plan"&gt;
+               initial="init-travel-plan"&gt;
 
       &lt;datamodel&gt;
-        &lt;data name="airlineticket"&gt;
+        &lt;data id="airlineticket"&gt;
           &lt;!-- Note namespace declaration in line below --&gt;
           &lt;flight xmlns=""&gt;
             &lt;origin/&gt;
@@ -64,7 +64,7 @@
             &lt;meal/&gt;
           &lt;/flight&gt;
         &lt;/data&gt;
-        &lt;data name="hotelbooking"&gt;
+        &lt;data id="hotelbooking"&gt;
           &lt;hotel xmlns=""&gt;
             &lt;stay&gt;
               &lt;startdate/&gt;
@@ -92,7 +92,7 @@
     leaf node:</p>
 
     <pre>
-     &lt;data name="foo" expr='bar'" /&gt;
+     &lt;data id="foo" expr='bar'" /&gt;
     </pre>
 
    </subsection>
@@ -136,11 +136,11 @@
     <pre>
      &lt;scxml xmlns="http://www.w3.org/2005/07/scxml"
                version="1.0"
-               initialstate="airline-ticket"&gt;
+               initial="airline-ticket"&gt;
 
       &lt;state id="airline-ticket"&gt;
         &lt;datamodel&gt;
-          &lt;data name="airlineticket"&gt;
+          &lt;data id="airlineticket"&gt;
             &lt;flight xmlns=""&gt;
               &lt;origin/&gt;
               &lt;destination/&gt;
@@ -162,7 +162,7 @@
 
       &lt;state id="hotel-booking"&gt;
         &lt;datamodel&gt;
-          &lt;data name="hotelbooking"&gt;
+          &lt;data id="hotelbooking"&gt;
             &lt;hotel xmlns=""&gt;
               &lt;stay&gt;
                 &lt;startdate/&gt;

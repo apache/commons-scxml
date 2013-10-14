@@ -30,6 +30,7 @@ import javax.servlet.jsp.el.VariableResolver;
  * Must treat variables in the host JSP environments as read-only.
  *
  */
+@SuppressWarnings("serial")
 public final class RootContext extends ELContext {
 
     /** Host JSP's VariableResolver. */
@@ -61,6 +62,7 @@ public final class RootContext extends ELContext {
      * @return The value (or null)
      * @see org.apache.commons.scxml.Context#get(java.lang.String)
      */
+    @Override
     public Object get(final String name) {
         Object value = super.get(name);
         if (value == null) {
@@ -80,6 +82,7 @@ public final class RootContext extends ELContext {
      * @return boolean true if the variable exists
      * @see org.apache.commons.scxml.Context#has(java.lang.String)
      */
+    @Override
     public boolean has(final String name) {
         boolean exists = super.has(name);
         Object value = null;

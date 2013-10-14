@@ -17,8 +17,8 @@
 package org.apache.commons.scxml.io;
 
 import java.text.MessageFormat;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -60,19 +60,16 @@ final class ModelUpdater {
        String initial = scxml.getInitial();
        //we have to use getTargets() here since the initialTarget can be
        //an indirect descendant
-       TransitionTarget initialTarget = (TransitionTarget) scxml.getTargets().
-           get(initial);
+       TransitionTarget initialTarget = scxml.getTargets().get(initial);
        if (initialTarget == null) {
            // Where do we, where do we go?
            logAndThrowModelError(ERR_SCXML_NO_INIT, new Object[] {
                initial });
        }
        scxml.setInitialTarget(initialTarget);
-       Map targets = scxml.getTargets();
-       Map children = scxml.getChildren();
-       Iterator i = children.keySet().iterator();
-       while (i.hasNext()) {
-           TransitionTarget tt = (TransitionTarget) children.get(i.next());
+       Map<String, TransitionTarget> targets = scxml.getTargets();
+       Map<String, TransitionTarget> children = scxml.getChildren();
+       for (TransitionTarget tt : children.values()) {
            if (tt instanceof State) {
                updateState((State) tt, targets);
            } else {
@@ -89,16 +86,16 @@ final class ModelUpdater {
       * @param targets The global Map of all transition targets
       * @throws ModelException If the object model is flawed
       */
-    private static void updateState(final State s, final Map targets)
+    private static void updateState(final State s, final Map<String, TransitionTarget> targets)
     throws ModelException {
         //initialize next / inital
         Initial ini = s.getInitial();
-        Map c = s.getChildren();
-        List initialStates = null;
+        Map<String, TransitionTarget> c = s.getChildren();
+        List<TransitionTarget> initialStates = null;
         if (!c.isEmpty()) {
             if (ini == null) {
                 logAndThrowModelError(ERR_STATE_NO_INIT,
-                    new Object[] {getStateName(s)});
+                    new Object[] {getName(s)});
             }
             Transition initialTransition = ini.getTransition();
             updateTransition(initialTransition, targets);
@@ -107,86 +104,36 @@ final class ModelUpdater {
             //check that initialState is a descendant of s
             if (initialStates.size() == 0) {
                 logAndThrowModelError(ERR_STATE_BAD_INIT,
-                    new Object[] {getStateName(s)});
+                    new Object[] {getName(s)});
             } else {
-                for (int i = 0; i < initialStates.size(); i++) {
-                    TransitionTarget initialState = (TransitionTarget)
-                        initialStates.get(i);
+                for (TransitionTarget initialState : initialStates) {
                     if (!SCXMLHelper.isDescendant(initialState, s)) {
                         logAndThrowModelError(ERR_STATE_BAD_INIT,
-                            new Object[] {getStateName(s)});
+                            new Object[] {getName(s)});
                     }
                 }
             }
         }
-        List histories = s.getHistory();
-        Iterator histIter = histories.iterator();
-        while (histIter.hasNext()) {
-            if (s.isSimple()) {
-                logAndThrowModelError(ERR_HISTORY_SIMPLE_STATE,
-                    new Object[] {getStateName(s)});
-            }
-            History h = (History) histIter.next();
-            Transition historyTransition = h.getTransition();
-            if (historyTransition == null) {
-                // try to assign initial as default
-                if (initialStates != null && initialStates.size() > 0) {
-                    for (int i = 0; i < initialStates.size(); i++) {
-                        if (initialStates.get(i) instanceof History) {
-                            logAndThrowModelError(ERR_HISTORY_BAD_DEFAULT,
-                                new Object[] {h.getId(), getStateName(s)});
-                        }
-                    }
-                    historyTransition = new Transition();
-                    historyTransition.getTargets().addAll(initialStates);
-                    h.setTransition(historyTransition);
-                } else {
-                    logAndThrowModelError(ERR_HISTORY_NO_DEFAULT,
-                        new Object[] {h.getId(), getStateName(s)});
-                }
-            }
-            updateTransition(historyTransition, targets);
-            List historyStates = historyTransition.getTargets();
-            if (historyStates.size() == 0) {
-                logAndThrowModelError(ERR_STATE_NO_HIST,
-                    new Object[] {getStateName(s)});
-            }
-            for (int i = 0; i < historyStates.size(); i++) {
-                TransitionTarget historyState = (TransitionTarget)
-                    historyStates.get(i);
-                if (!h.isDeep()) {
-                    if (!c.containsValue(historyState)) {
-                        logAndThrowModelError(ERR_STATE_BAD_SHALLOW_HIST,
-                            new Object[] {getStateName(s)});
-                    }
-                } else {
-                    if (!SCXMLHelper.isDescendant(historyState, s)) {
-                        logAndThrowModelError(ERR_STATE_BAD_DEEP_HIST,
-                            new Object[] {getStateName(s)});
-                    }
-                }
-            }
+        List<History> histories = s.getHistory();
+        if (histories.size() > 0 && s.isSimple()) {
+            logAndThrowModelError(ERR_HISTORY_SIMPLE_STATE,
+                new Object[] {getName(s)});
         }
-        List t = s.getTransitionsList();
-        for (int i = 0; i < t.size(); i++) {
-            Transition trn = (Transition) t.get(i);
+        for (History h : histories) {
+            updateHistory(h, s.getChildren().values(), targets, s);
+        }
+        for (Transition trn : s.getTransitionsList()) {
             updateTransition(trn, targets);
         }
-        Parallel p = s.getParallel(); //TODO: Remove in v1.0
         Invoke inv = s.getInvoke();
-        if ((inv != null && p != null)
-                || (inv != null && !c.isEmpty())
-                || (p != null && !c.isEmpty())) {
-            logAndThrowModelError(ERR_STATE_BAD_CONTENTS,
-                new Object[] {getStateName(s)});
+        if (inv != null && !c.isEmpty()) {
+            logAndThrowModelError(ERR_STATE_BAD_CONTENTS, new Object[] {getName(s)});
         }
-        if (p != null) {
-            updateParallel(p, targets);
-        } else if (inv != null) {
+        if (inv != null) {
             String type = inv.getType();
             if (type == null || type.trim().length() == 0) {
                 logAndThrowModelError(ERR_INVOKE_NO_TYPE,
-                    new Object[] {getStateName(s)});
+                    new Object[] {getName(s)});
             }
             String src = inv.getSrc();
             boolean noSrc = (src == null || src.trim().length() == 0);
@@ -195,16 +142,14 @@ final class ModelUpdater {
                                  || srcexpr.trim().length() == 0);
             if (noSrc && noSrcexpr) {
                 logAndThrowModelError(ERR_INVOKE_NO_SRC,
-                    new Object[] {getStateName(s)});
+                    new Object[] {getName(s)});
             }
             if (!noSrc && !noSrcexpr) {
                 logAndThrowModelError(ERR_INVOKE_AMBIGUOUS_SRC,
-                    new Object[] {getStateName(s)});
+                    new Object[] {getName(s)});
             }
         } else {
-            Iterator j = c.keySet().iterator();
-            while (j.hasNext()) {
-                TransitionTarget tt = (TransitionTarget) c.get(j.next());
+            for (TransitionTarget tt : c.values()) {
                 if (tt instanceof State) {
                     updateState((State) tt, targets);
                 } else if (tt instanceof Parallel) {
@@ -221,15 +166,80 @@ final class ModelUpdater {
       * @param targets The global Map of all transition targets
       * @throws ModelException If the object model is flawed
       */
-    private static void updateParallel(final Parallel p, final Map targets)
+    private static void updateParallel(final Parallel p, final Map<String, TransitionTarget> targets)
     throws ModelException {
-        Iterator i = p.getChildren().iterator();
-        while (i.hasNext()) {
-            updateState((State) i.next(), targets);
+        for (TransitionTarget tt : p.getChildren()) {
+            updateState((State) tt, targets);
         }
-        Iterator j = p.getTransitionsList().iterator();
-        while (j.hasNext()) {
-            updateTransition((Transition) j.next(), targets);
+        for (Transition trn : p.getTransitionsList()) {
+            updateTransition(trn, targets);
+        }
+        List<History> histories = p.getHistory();
+        for (History h : histories) {
+            updateHistory(h, p.getChildren(), targets, p);
+        }
+    }
+
+    /**
+      * Update this History object (part of post-digestion processing).
+      *
+      * @param h The History object
+      * @param defaults The default history targets
+      * @param targets The global Map of all transition targets
+      * @param parent The parent TransitionTarget for this History
+      * @throws ModelException If the object model is flawed
+      */
+    private static void updateHistory(final History h,
+            final Collection<TransitionTarget> defaults,
+            final Map<String, TransitionTarget> targets,
+            final TransitionTarget parent)
+    throws ModelException {
+        Transition historyTransition = h.getTransition();
+        if (historyTransition == null) {
+            // try to assign defaults
+            if (defaults != null && defaults.size() > 0) {
+                for (TransitionTarget tt : defaults) {
+                    if (tt instanceof History) {
+                        logAndThrowModelError(ERR_HISTORY_BAD_DEFAULT,
+                            new Object[] {h.getId(), getName(parent)});
+                    }
+                }
+                historyTransition = new Transition();
+                historyTransition.getTargets().addAll(defaults);
+                h.setTransition(historyTransition);
+            } else {
+                logAndThrowModelError(ERR_HISTORY_NO_DEFAULT,
+                    new Object[] {h.getId(), getName(parent)});
+            }
+        }
+        updateTransition(historyTransition, targets);
+        List<TransitionTarget> historyStates = historyTransition.getTargets();
+        if (historyStates.size() == 0) {
+            logAndThrowModelError(ERR_STATE_NO_HIST,
+                new Object[] {getName(parent)});
+        }
+        for (TransitionTarget historyState : historyStates) {
+            if (!h.isDeep()) {
+                // Shallow history
+                boolean shallow = false;
+                if (parent instanceof State) {
+                    shallow = ((State) parent).getChildren().
+                        containsValue(historyState);
+                } else if (parent instanceof Parallel) {
+                    shallow = ((Parallel) parent).getChildren().
+                        contains(historyState);
+                }
+                if (!shallow) {
+                    logAndThrowModelError(ERR_STATE_BAD_SHALLOW_HIST,
+                        new Object[] {getName(parent)});
+                }
+            } else {
+                // Deep history
+                if (!SCXMLHelper.isDescendant(historyState, parent)) {
+                    logAndThrowModelError(ERR_STATE_BAD_DEEP_HIST,
+                        new Object[] {getName(parent)});
+                }
+            }
         }
     }
 
@@ -241,18 +251,18 @@ final class ModelUpdater {
       * @throws ModelException If the object model is flawed
       */
     private static void updateTransition(final Transition t,
-            final Map targets) throws ModelException {
+            final Map<String, TransitionTarget> targets) throws ModelException {
         String next = t.getNext();
         if (next == null) { // stay transition
             return;
         }
-        List tts = t.getTargets();
+        List<TransitionTarget> tts = t.getTargets();
         if (tts.size() == 0) {
             // 'next' is a space separated list of transition target IDs
             StringTokenizer ids = new StringTokenizer(next);
             while (ids.hasMoreTokens()) {
                 String id = ids.nextToken();
-                TransitionTarget tt = (TransitionTarget) targets.get(id);
+                TransitionTarget tt = targets.get(id);
                 if (tt == null) {
                     logAndThrowModelError(ERR_TARGET_NOT_FOUND, new Object[] {
                         id });
@@ -288,19 +298,31 @@ final class ModelUpdater {
     }
 
     /**
-     * Get state identifier for error message. This method is only
-     * called to produce an appropriate log message in some error
+     * Get a transition target identifier for error messages. This method is
+     * only called to produce an appropriate log message in some error
      * conditions.
      *
-     * @param state The <code>State</code> object
-     * @return The state identifier for the error message
+     * @param tt The <code>TransitionTarget</code> object
+     * @return The transition target identifier for the error message
      */
-    private static String getStateName(final State state) {
-        String badState = "anonymous state";
-        if (!SCXMLHelper.isStringEmpty(state.getId())) {
-            badState = "state with ID \"" + state.getId() + "\"";
+    private static String getName(final TransitionTarget tt) {
+        String name = "anonymous transition target";
+        if (tt instanceof State) {
+            name = "anonymous state";
+            if (!SCXMLHelper.isStringEmpty(tt.getId())) {
+                name = "state with ID \"" + tt.getId() + "\"";
+            }
+        } else if (tt instanceof Parallel) {
+            name = "anonymous parallel";
+            if (!SCXMLHelper.isStringEmpty(tt.getId())) {
+                name = "parallel with ID \"" + tt.getId() + "\"";
+            }
+        } else {
+            if (!SCXMLHelper.isStringEmpty(tt.getId())) {
+                name = "transition target with ID \"" + tt.getId() + "\"";
+            }
         }
-        return badState;
+        return name;
     }
 
     /**
@@ -314,19 +336,17 @@ final class ModelUpdater {
      * @param tts The transition targets
      * @return Whether this is a legal configuration
      */
-    private static boolean verifyTransitionTargets(final List tts) {
+    private static boolean verifyTransitionTargets(final List<TransitionTarget> tts) {
         if (tts.size() <= 1) { // No contention
             return true;
         }
-        TransitionTarget lca = SCXMLHelper.getLCA((TransitionTarget)
-            tts.get(0), (TransitionTarget) tts.get(1));
+        TransitionTarget lca = SCXMLHelper.getLCA(tts.get(0), tts.get(1));
         if (lca == null || !(lca instanceof Parallel)) {
             return false; // Must have a Parallel LCA
         }
         Parallel p = (Parallel) lca;
-        Set regions = new HashSet();
-        for (int i = 0; i < tts.size(); i++) {
-            TransitionTarget tt = (TransitionTarget) tts.get(i);
+        Set<TransitionTarget> regions = new HashSet<TransitionTarget>();
+        for (TransitionTarget tt : tts) {
             while (tt.getParent() != p) {
                 tt = tt.getParent();
             }
@@ -370,12 +390,10 @@ final class ModelUpdater {
 
     /**
      * Error message when a state element contains anything other than
-     * one &lt;parallel&gt;, one &lt;invoke&gt; or any number of
-     * &lt;state&gt; children.
+     * an &lt;invoke&gt; or any number of &lt;state&gt; children.
      */
     private static final String ERR_STATE_BAD_CONTENTS = "{0} should "
-        + "contain either one <parallel>, one <invoke> or any number of "
-        + "<state> children.";
+        + "contain either one <invoke> or any number of <state> children.";
 
     /**
      * Error message when a referenced history state cannot be found.
@@ -451,3 +469,4 @@ final class ModelUpdater {
         + " must specify either one, but not both.";
 
 }
+

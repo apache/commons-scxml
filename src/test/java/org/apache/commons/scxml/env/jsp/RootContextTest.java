@@ -47,6 +47,7 @@ public class RootContextTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
+    @Override
     public void setUp() {
         rootCtxSample = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/env/jsp/jsp-rootctx-test.xml");
@@ -59,6 +60,7 @@ public class RootContextTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
+    @Override
     public void tearDown() {
         rootCtxSample = null;
         evaluator = null;
@@ -85,6 +87,5 @@ public class RootContextTest extends TestCase {
         assertEquals(ctx.resolveVariable("bar"), "a brand new value");
         assertNotNull(ctx.getVars());
     }
-
 }
 

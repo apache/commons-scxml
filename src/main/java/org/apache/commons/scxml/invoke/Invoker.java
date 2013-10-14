@@ -27,7 +27,7 @@ import org.apache.commons.scxml.TriggerEvent;
  * activities.</p>
  *
  * <p>Invocable activities must first register an Invoker implementation class
- * for the appropriate "type" (attribute of &lt;invoke&gt;) with the
+ * for the appropriate "target" (attribute of &lt;invoke&gt;) with the
  * parent <code>SCXMLExecutor</code>.</p>
  *
  * <p>The communication link between the parent state machine executor and
@@ -35,13 +35,13 @@ import org.apache.commons.scxml.TriggerEvent;
  *
  * <p>All events triggered on the parent state machine get forwarded to the
  * invoked activity. The processing semantics for these events depend
- * upon the "type", and thereby vary per concrete implementation of
+ * upon the "target", and thereby vary per concrete implementation of
  * this interface.</p>
  *
  * <p>The invoked activity in turn must fire a special "done" event
  * when it concludes. It may fire additional events before the "done"
  * event. The semantics of any additional events depend upon the
- * "type". The invoked activity must not fire any events after the "done"
+ * "target". The invoked activity must not fire any events after the "done"
  * event. The name of the special "done" event must be the ID of the parent
  * state wherein the corresponding &lt;invoke&gt; resides, with the String
  * ".invoke.done" appended.</p>
@@ -93,7 +93,7 @@ public interface Invoker {
      * @throws InvokerException In case there is a fatal problem with
      *                          invoking the source.
      */
-    void invoke(String source, Map params)
+    void invoke(String source, Map<String, Object> params)
     throws InvokerException;
 
     /**
@@ -121,3 +121,4 @@ public interface Invoker {
     throws InvokerException;
 
 }
+

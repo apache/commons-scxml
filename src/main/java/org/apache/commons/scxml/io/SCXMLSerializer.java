@@ -17,7 +17,6 @@
 package org.apache.commons.scxml.io;
 
 import java.io.StringWriter;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -122,10 +121,8 @@ public class SCXMLSerializer {
         if (dm != null) {
             serializeDatamodel(b, dm, INDENT);
         }
-        Map c = scxml.getChildren();
-        Iterator i = c.keySet().iterator();
-        while (i.hasNext()) {
-            TransitionTarget tt = (TransitionTarget) c.get(i.next());
+        Map<String, TransitionTarget> c = scxml.getChildren();
+        for (TransitionTarget tt : c.values()) {
             if (tt instanceof State) {
                 serializeState(b, (State) tt, INDENT);
             } else {
@@ -156,7 +153,7 @@ public class SCXMLSerializer {
         if (ini != null) {
             serializeInitial(b, ini, indent + INDENT);
         }
-        List h = s.getHistory();
+        List<History> h = s.getHistory();
         if (h != null) {
             serializeHistory(b, h, indent + INDENT);
         }
@@ -165,21 +162,15 @@ public class SCXMLSerializer {
             serializeDatamodel(b, dm, indent + INDENT);
         }
         serializeOnEntry(b, s, indent + INDENT);
-        List t = s.getTransitionsList();
-        for (int i = 0; i < t.size(); i++) {
-            serializeTransition(b, (Transition) t.get(i), indent + INDENT);
+        for (Transition t : s.getTransitionsList()) {
+            serializeTransition(b, t, indent + INDENT);
         }
-        Parallel p = s.getParallel(); //TODO: Remove in v1.0
         Invoke inv = s.getInvoke();
-        if (p != null) {
-            serializeParallel(b, p, indent + INDENT);
-        } else if (inv != null) {
+        if (inv != null) {
             serializeInvoke(b , inv, indent + INDENT);
         } else {
-            Map c = s.getChildren();
-            Iterator j = c.keySet().iterator();
-            while (j.hasNext()) {
-                TransitionTarget tt = (TransitionTarget) c.get(j.next());
+            Map<String, TransitionTarget> c = s.getChildren();
+            for (TransitionTarget tt : c.values()) {
                 if (tt instanceof State) {
                     serializeState(b, (State) tt, indent + INDENT);
                 } else if (tt instanceof Parallel) {
@@ -204,10 +195,9 @@ public class SCXMLSerializer {
         serializeTransitionTargetAttributes(b, p);
         b.append(">\n");
         serializeOnEntry(b, p, indent + INDENT);
-        Set s = p.getChildren();
-        Iterator i = s.iterator();
-        while (i.hasNext()) {
-            serializeState(b, (State) i.next(), indent + INDENT);
+        Set<TransitionTarget> s = p.getChildren();
+        for (TransitionTarget tt : s) {
+            serializeState(b, (State) tt, indent + INDENT);
         }
         serializeOnExit(b, p, indent + INDENT);
         b.append(indent).append("</parallel>\n");
@@ -236,9 +226,8 @@ public class SCXMLSerializer {
             b.append(" srcexpr=\"").append(srcexpr).append("\"");
         }
         b.append(">\n");
-        List params = i.params();
-        for (Iterator iter = params.iterator(); iter.hasNext();) {
-            Param p = (Param) iter.next();
+        List<Param> params = i.params();
+        for (Param p : params) {
             b.append(indent).append(INDENT).append("<param name=\"").
                 append(p.getName()).append("\" expr=\"").
                 append(SCXMLHelper.escapeXML(p.getExpr())).append("\"/>\n");
@@ -275,11 +264,10 @@ public class SCXMLSerializer {
      * @param l The List of History objects to serialize
      * @param indent The indent for this XML element
      */
-    public static void serializeHistory(final StringBuffer b, final List l,
+    public static void serializeHistory(final StringBuffer b, final List<History> l,
             final String indent) {
         if (l.size() > 0) {
-            for (int i = 0; i < l.size(); i++) {
-                History h = (History) l.get(i);
+            for (History h : l) {
                 b.append(indent).append("<history");
                 serializeTransitionTargetAttributes(b, h);
                  if (h.isDeep()) {
@@ -311,37 +299,13 @@ public class SCXMLSerializer {
             b.append(" cond=\"").append(SCXMLHelper.escapeXML(t.getCond())).
                 append("\"");
         }
-        boolean next = !SCXMLHelper.isStringEmpty(t.getNext());
-        if (next) {
-            b.append(" target=\"").append(t.getNext()).append("\"");
+        if (!SCXMLHelper.isStringEmpty(t.getNext())) {
+            b.append(" target=\"").append(SCXMLHelper.escapeXML(t.getNext())).
+                append("\"");
         }
         b.append(">\n");
-        boolean exit = serializeActions(b, t.getActions(), indent + INDENT);
-        if (!next && !exit) {
-            serializeTarget(b, t, indent + INDENT);
-        }
+        serializeActions(b, t.getActions(), indent + INDENT);
         b.append(indent).append("</transition>\n");
-    }
-
-    /**
-     * Serialize this Transition's Target.
-     *
-     *
-     * @param b The buffer to append the serialization to
-     * @param t The Transition whose Target needs to be serialized
-     * @param indent The indent for this XML element
-     *
-     * @deprecated Inline &lt;target&gt; element has been deprecated
-     *             in the SCXML WD
-     */
-    public static void serializeTarget(final StringBuffer b,
-            final Transition t, final String indent) {
-        if (t.getTarget() != null) {
-            b.append(indent).append("<target>");
-            // The inline transition target can only be a state
-            serializeState(b, (State) t.getTarget(), indent + INDENT);
-            b.append(indent).append("</target>");
-        }
     }
 
     /**
@@ -353,7 +317,7 @@ public class SCXMLSerializer {
      */
     public static void serializeDatamodel(final StringBuffer b,
             final Datamodel dm, final String indent) {
-        List data = dm.getData();
+        List<Data> data = dm.getData();
         if (data != null && data.size() > 0) {
             b.append(indent).append("<datamodel>\n");
             if (XFORMER == null) {
@@ -362,8 +326,7 @@ public class SCXMLSerializer {
                 b.append(indent).append("</datamodel>\n");
                 return;
             }
-            for (Iterator iter = data.iterator(); iter.hasNext();) {
-                Data datum = (Data) iter.next();
+            for (Data datum : data) {
                 Node dataNode = datum.getNode();
                 if (dataNode != null) {
                     StringWriter out = new StringWriter();
@@ -432,15 +395,13 @@ public class SCXMLSerializer {
      * @param indent The indent for this XML element
      * @return boolean true if the list of actions contains an &lt;exit/&gt;
      */
-    public static boolean serializeActions(final StringBuffer b, final List l,
+    public static boolean serializeActions(final StringBuffer b, final List<Action> l,
             final String indent) {
         if (l == null) {
             return false;
         }
         boolean exit = false;
-        Iterator i = l.iterator();
-        while (i.hasNext()) {
-            Action a = (Action) i.next();
+        for (Action a : l) {
             if (a instanceof Var) {
                 Var v = (Var) a;
                 b.append(indent).append("<cs:var name=\"").append(v.getName())
@@ -481,10 +442,10 @@ public class SCXMLSerializer {
                 String expr = SCXMLHelper.escapeXML(e.getExpr());
                 String nl = e.getNamelist();
                 if (expr != null) {
-                    b.append(" expr=\"").append(expr).append("\"");
+                    b.append(" expr=\"" + expr + "\"");
                 }
                 if (nl != null) {
-                    b.append(" namelist=\"").append(nl).append("\"");
+                    b.append(" namelist=\"" + nl + "\"");
                 }
                 b.append("/>\n");
                 exit = true;
@@ -520,7 +481,7 @@ public class SCXMLSerializer {
             b.append(" target=\"").append(send.getTarget()).append("\"");
         }
         if (send.getType() != null) {
-            b.append(" type=\"").append(send.getType()).append("\"");
+            b.append(" targetType=\"").append(send.getType()).append("\"");
         }
         if (send.getNamelist() != null) {
             b.append(" namelist=\"").append(send.getNamelist()).append("\"");
@@ -548,13 +509,13 @@ public class SCXMLSerializer {
     public static final String getBodyContent(
             final ExternalContent externalContent) {
         StringBuffer buf = new StringBuffer();
-        List externalNodes = externalContent.getExternalNodes();
+        List<Node> externalNodes = externalContent.getExternalNodes();
         if (externalNodes.size() > 0 && XFORMER == null) {
             buf.append("<!-- Body content was not serialized -->\n");
             return buf.toString();
         }
-        for (int i = 0; i < externalNodes.size(); i++) {
-            Source input = new DOMSource((Node) externalNodes.get(i));
+        for (Node n : externalNodes) {
+            Source input = new DOMSource(n);
             StringWriter out = new StringWriter();
             Result output = new StreamResult(out);
             try {
@@ -607,30 +568,32 @@ public class SCXMLSerializer {
      */
     private static String serializeNamespaceDeclarations(
             final NamespacePrefixesHolder holder) {
-        Map ns = holder.getNamespaces();
+        Map<String, String> namespaces = holder.getNamespaces();
         StringBuffer b = new StringBuffer();
-        if (ns != null) {
-            Iterator iter = ns.entrySet().iterator();
-            while (iter.hasNext()) {
-                Map.Entry entry = (Map.Entry) iter.next();
-                String prefix = (String) entry.getKey();
-                String nsURI = (String) entry.getValue();
-                if (prefix.length() == 0 && !nsURI.equals(NAMESPACE_SCXML)) {
-                    org.apache.commons.logging.Log log = LogFactory.
-                        getLog(SCXMLSerializer.class);
-                    log.warn("When using the SCXMLSerializer, the default "
-                        + "namespace must be the SCXML namespace:"
-                        + NAMESPACE_SCXML);
-                } if (prefix.equals("cs")
-                        && !nsURI.equals(NAMESPACE_COMMONS_SCXML)) {
-                    org.apache.commons.logging.Log log = LogFactory.
-                        getLog(SCXMLSerializer.class);
-                    log.warn("When using the SCXMLSerializer, the namespace"
-                        + "prefix \"cs\" must bind to the Commons SCXML "
-                        + "namespace:" + NAMESPACE_COMMONS_SCXML);
-                } else if (prefix.length() > 0) {
-                    b.append(" xmlns:").append(prefix).append("=\"").
-                        append(nsURI).append("\"");
+        if (namespaces != null) {
+            for (Map.Entry<String, String> entry : namespaces.entrySet()) {
+                String prefix = entry.getKey();
+                String nsURI = entry.getValue();
+                if (prefix == null || prefix.length() == 0) {
+                    if (!nsURI.equals(NAMESPACE_SCXML)) {
+                        org.apache.commons.logging.Log log = LogFactory.
+                            getLog(SCXMLSerializer.class);
+                        log.warn("When using the SCXMLSerializer, the default "
+                            + "namespace must be the SCXML namespace:"
+                            + NAMESPACE_SCXML);
+                    }
+                } else {
+                    if (prefix.equals("cs") &&
+                            !nsURI.equals(NAMESPACE_COMMONS_SCXML)) {
+                        org.apache.commons.logging.Log log = LogFactory.
+                            getLog(SCXMLSerializer.class);
+                        log.warn("When using the SCXMLSerializer, the namespace"
+                            + "prefix \"cs\" must bind to the Commons SCXML "
+                            + "namespace:" + NAMESPACE_COMMONS_SCXML);
+                    } else if (prefix.length() > 0) {
+                        b.append(" xmlns:").append(prefix).append("=\"").
+                            append(nsURI).append("\"");
+                    }
                 }
             }
         }
@@ -671,3 +634,4 @@ public class SCXMLSerializer {
     }
 
 }
+

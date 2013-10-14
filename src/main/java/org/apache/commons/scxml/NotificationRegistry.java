@@ -17,13 +17,13 @@
 package org.apache.commons.scxml;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.scxml.model.SCXML;
+import org.apache.commons.scxml.model.Observable;
 import org.apache.commons.scxml.model.Transition;
 import org.apache.commons.scxml.model.TransitionTarget;
 
@@ -46,13 +46,13 @@ public final class NotificationRegistry implements Serializable {
     /**
      * The Map of all listeners keyed by Observable.
      */
-    private Map regs = new HashMap();
+    private final Map<Observable, Set<SCXMLListener>> regs;
 
     /**
      * Constructor.
      */
     public NotificationRegistry() {
-        super();
+        this.regs = Collections.synchronizedMap(new HashMap<Observable, Set<SCXMLListener>>());
     }
 
     /**
@@ -61,11 +61,10 @@ public final class NotificationRegistry implements Serializable {
      * @param source The observable this listener wants to listen to
      * @param lst The listener
      */
-    synchronized void addListener(final Object source,
-            final SCXMLListener lst) {
-        Set entries = (Set) regs.get(source);
+    synchronized void addListener(final Observable source, final SCXMLListener lst) {
+        Set<SCXMLListener> entries = regs.get(source);
         if (entries == null) {
-            entries = new LinkedHashSet();
+            entries = new LinkedHashSet<SCXMLListener>();
             regs.put(source, entries);
         }
         entries.add(lst);
@@ -77,9 +76,8 @@ public final class NotificationRegistry implements Serializable {
      * @param source The observable this listener wants to stop listening to
      * @param lst The listener
      */
-    synchronized void removeListener(final Object source,
-            final SCXMLListener lst) {
-        Set entries = (Set) regs.get(source);
+    synchronized void removeListener(final Observable source, final SCXMLListener lst) {
+        Set<SCXMLListener> entries = regs.get(source);
         if (entries != null) {
             entries.remove(lst);
             if (entries.size() == 0) {
@@ -92,41 +90,14 @@ public final class NotificationRegistry implements Serializable {
      * Inform all relevant listeners that a TransitionTarget has been
      * entered.
      *
-     * @param observable The Observable
-     * @param state The TransitionTarget that was entered
-     */
-    public void fireOnEntry(final TransitionTarget observable,
-            final TransitionTarget state) {
-        Object source = observable;
-        fireOnEntry(source, state);
-    }
-
-    /**
-     * Inform all relevant listeners that a TransitionTarget has been
-     * entered.
-     *
-     * @param observable The Observable
-     * @param state The TransitionTarget that was entered
-     */
-    public void fireOnEntry(final SCXML observable,
-            final TransitionTarget state) {
-        Object source = observable;
-        fireOnEntry(source, state);
-    }
-
-    /**
-     * Inform all relevant listeners that a TransitionTarget has been
-     * entered.
-     *
      * @param source The Observable
      * @param state The TransitionTarget that was entered
      */
-    private synchronized void fireOnEntry(final Object source,
+    public synchronized void fireOnEntry(final Observable source,
             final TransitionTarget state) {
-        Set entries = (Set) regs.get(source);
+        Set<SCXMLListener> entries = regs.get(source);
         if (entries != null) {
-            for (Iterator iter = entries.iterator(); iter.hasNext();) {
-                SCXMLListener lst = (SCXMLListener) iter.next();
+            for (SCXMLListener lst : entries) {
                 lst.onEntry(state);
             }
         }
@@ -136,41 +107,14 @@ public final class NotificationRegistry implements Serializable {
      * Inform all relevant listeners that a TransitionTarget has been
      * exited.
      *
-     * @param observable The Observable
-     * @param state The TransitionTarget that was exited
-     */
-    public void fireOnExit(final TransitionTarget observable,
-            final TransitionTarget state) {
-        Object source = observable;
-        fireOnExit(source, state);
-    }
-
-    /**
-     * Inform all relevant listeners that a TransitionTarget has been
-     * exited.
-     *
-     * @param observable The Observable
-     * @param state The TransitionTarget that was exited
-     */
-    public void fireOnExit(final SCXML observable,
-            final TransitionTarget state) {
-        Object source = observable;
-        fireOnExit(source, state);
-    }
-
-    /**
-     * Inform all relevant listeners that a TransitionTarget has been
-     * exited.
-     *
      * @param source The Observable
      * @param state The TransitionTarget that was exited
      */
-    private synchronized void fireOnExit(final Object source,
+    public synchronized void fireOnExit(final Observable source,
             final TransitionTarget state) {
-        Set entries = (Set) regs.get(source);
+        Set<SCXMLListener> entries = regs.get(source);
         if (entries != null) {
-            for (Iterator iter = entries.iterator(); iter.hasNext();) {
-                SCXMLListener lst = (SCXMLListener) iter.next();
+            for (SCXMLListener lst : entries) {
                 lst.onExit(state);
             }
         }
@@ -179,48 +123,17 @@ public final class NotificationRegistry implements Serializable {
     /**
      * Inform all relevant listeners of a transition that has occured.
      *
-     * @param observable The Observable
-     * @param from The source TransitionTarget
-     * @param to The destination TransitionTarget
-     * @param transition The Transition that was taken
-     */
-    public void fireOnTransition(final Transition observable,
-            final TransitionTarget from, final TransitionTarget to,
-            final Transition transition) {
-        Object source = observable;
-        fireOnTransition(source, from, to, transition);
-    }
-
-    /**
-     * Inform all relevant listeners of a transition that has occured.
-     *
-     * @param observable The Observable
-     * @param from The source TransitionTarget
-     * @param to The destination TransitionTarget
-     * @param transition The Transition that was taken
-     */
-    public void fireOnTransition(final SCXML observable,
-            final TransitionTarget from, final TransitionTarget to,
-            final Transition transition) {
-        Object source = observable;
-        fireOnTransition(source, from, to, transition);
-    }
-
-    /**
-     * Inform all relevant listeners of a transition that has occured.
-     *
      * @param source The Observable
      * @param from The source TransitionTarget
      * @param to The destination TransitionTarget
      * @param transition The Transition that was taken
      */
-    private synchronized void fireOnTransition(final Object source,
+    public synchronized void fireOnTransition(final Observable source,
             final TransitionTarget from, final TransitionTarget to,
             final Transition transition) {
-        Set entries = (Set) regs.get(source);
+        Set<SCXMLListener> entries = regs.get(source);
         if (entries != null) {
-            for (Iterator iter = entries.iterator(); iter.hasNext();) {
-                SCXMLListener lst = (SCXMLListener) iter.next();
+            for (SCXMLListener lst : entries) {
                 lst.onTransition(from, to, transition);
             }
         }

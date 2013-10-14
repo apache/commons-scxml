@@ -36,13 +36,13 @@ public class Datamodel implements Serializable {
     * The set of &lt;data&gt; elements, parsed as Elements, that are
     * children of this &lt;datamodel&gt; element.
     */
-   private List data;
+   private List<Data> data;
 
    /**
     * Constructor.
     */
    public Datamodel() {
-       this.data = new ArrayList();
+       this.data = new ArrayList<Data>();
    }
 
    /**
@@ -50,7 +50,7 @@ public class Datamodel implements Serializable {
     *
     * @return Returns the data.
     */
-   public final List getData() {
+   public final List<Data> getData() {
        return data;
    }
 

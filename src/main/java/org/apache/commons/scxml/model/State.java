@@ -35,7 +35,7 @@ public class State extends TransitionTarget {
      * The Map containing immediate children of this State, keyed by
      * their IDs. Incompatible with the parallel or invoke property.
      */
-    private Map children;
+    private Map<String, TransitionTarget> children;
 
     /**
      * The Parallel child, which defines a set of parallel substates.
@@ -67,40 +67,10 @@ public class State extends TransitionTarget {
     private Initial initial;
 
     /**
-     * Applies to composite states only. If one of its final children is
-     * active, its parent is marked done. This property is reset upon
-     * re-entry.
-     *
-     * @deprecated Will be removed in v1.0
-     */
-    private boolean done = false;
-
-    /**
      * Constructor.
      */
     public State() {
-        this.children = new LinkedHashMap();
-    }
-
-    /**
-     * Is this state a &quot;final&quot; state.
-     *
-     * @return boolean Returns the isFinal.
-     * @deprecated Use {@link #isFinal()} instead
-     */
-    public final boolean getIsFinal() {
-        return isFinal;
-    }
-
-    /**
-     * Set whether this is a &quot;final&quot; state.
-     *
-     * @param isFinal
-     *            The isFinal to set.
-     * @deprecated Use {@link #setFinal(boolean)} instead
-     */
-    public final void setIsFinal(final boolean isFinal) {
-        this.isFinal = isFinal;
+        this.children = new LinkedHashMap<String, TransitionTarget>();
     }
 
     /**
@@ -124,31 +94,6 @@ public class State extends TransitionTarget {
      */
     public final void setFinal(final boolean isFinal) {
         this.isFinal = isFinal;
-    }
-
-    /**
-     * Get the Parallel child (may be null).
-     *
-     * @return Parallel Returns the parallel.
-     *
-     * @deprecated &lt;parallel&gt; no longer needs an enclosing
-     *             &lt;state&gt; element.
-     */
-    public final Parallel getParallel() {
-        return parallel;
-    }
-
-    /**
-     * Set the Parallel child.
-     *
-     * @param parallel
-     *            The parallel to set.
-     *
-     * @deprecated &lt;parallel&gt; no longer needs an enclosing
-     *             &lt;state&gt; element.
-     */
-    public final void setParallel(final Parallel parallel) {
-        this.parallel = parallel;
     }
 
     /**
@@ -222,21 +167,8 @@ public class State extends TransitionTarget {
      *
      * @return Map Returns the children.
      */
-    public final Map getChildren() {
+    public final Map<String, TransitionTarget> getChildren() {
         return children;
-    }
-
-    /**
-     * Add a child state.
-     *
-     * @param state
-     *            a child state
-     *
-     * @deprecated Use {@link #addChild(TransitionTarget)} instead.
-     */
-    public final void addChild(final State state) {
-        this.children.put(state.getId(), state);
-        state.setParent(this);
     }
 
     /**
@@ -290,44 +222,5 @@ public class State extends TransitionTarget {
         return false;
     }
 
-    /**
-     * Checks whether it is a orthogonal state, that is, it owns a parallel
-     * (UML terminology).
-     *
-     * @return true if this is a orthogonal state, otherwise false
-     * @deprecated &lt;parallel&gt; now represents an orthogonal state, rather
-     *             than denoting that the enclosing state is orthogonal, as
-     *             it did in previous SCXML WDs.
-     */
-    public final boolean isOrthogonal() {
-        if (parallel != null) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * In case this is a parallel state, check if one its final states
-     * is active.
-     *
-     * @return Returns the done.
-     * @deprecated Will be removed in v1.0, in favor of
-     *             <code>SCInstance#isDone(TransitionTarget)</code>
-     */
-    public final boolean isDone() {
-        return done;
-    }
-
-    /**
-     * Update the done property, which is set if this is a parallel state,
-     * and one its final states is active.
-     *
-     * @param done The done to set.
-     * @deprecated Will be removed in v1.0, in favor of
-     *             <code>SCInstance#setDone(TransitionTarget)</code>
-     */
-    public final void setDone(final boolean done) {
-        this.done = done;
-    }
 }
 

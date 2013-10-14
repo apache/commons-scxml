@@ -18,6 +18,8 @@ package org.apache.commons.scxml.model;
 
 import java.util.List;
 
+import org.w3c.dom.Node;
+
 /**
  * An <code>ExternalContent</code> implementation represents an
  * element in the SCXML document that may contain &quot;body
@@ -33,7 +35,7 @@ public interface ExternalContent {
      *
      * @return The list of (external namespaced) child nodes.
      */
-    List getExternalNodes();
+    List<Node> getExternalNodes();
 
 }
 

@@ -178,9 +178,10 @@ public class Assign extends Action implements PathResolverHolder {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void execute(final EventDispatcher evtDispatcher,
             final ErrorReporter errRep, final SCInstance scInstance,
-            final Log appLog, final Collection derivedEvents)
+            final Log appLog, final Collection<TriggerEvent> derivedEvents)
     throws ModelException, SCXMLExpressionException {
         TransitionTarget parentTarget = getParentTransitionTarget();
         Context ctx = scInstance.getContext(parentTarget);
@@ -273,12 +274,12 @@ public class Assign extends Action implements PathResolverHolder {
                 parse(resolvedSrc);
         } catch (FactoryConfigurationError t) {
             logError(t);
-        } catch (SAXException t) {
-            logError(t);
-        } catch (IOException t) {
-            logError(t);
-        } catch (ParserConfigurationException t) {
-            logError(t);
+        } catch (SAXException e) {
+            logError(e);
+        } catch (IOException e) {
+            logError(e);
+        } catch (ParserConfigurationException e) {
+            logError(e);
         }
         if (doc == null) {
             return null;
@@ -290,7 +291,8 @@ public class Assign extends Action implements PathResolverHolder {
      * @param throwable
      */
     private void logError(Throwable throwable) {
-        org.apache.commons.logging.Log log = LogFactory.getLog(Assign.class);
+        org.apache.commons.logging.Log log = LogFactory.
+            getLog(Assign.class);
         log.error(throwable.getMessage(), throwable);
     }
 

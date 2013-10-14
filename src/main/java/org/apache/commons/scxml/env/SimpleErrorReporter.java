@@ -49,6 +49,7 @@ public class SimpleErrorReporter implements ErrorReporter, Serializable {
     /**
      * @see ErrorReporter#onError(String, String, Object)
      */
+    @SuppressWarnings("unchecked")
     public void onError(final String errorCode, final String errDetail,
             final Object errCtx) {
         //Note: the if-then-else below is based on the actual usage
@@ -64,31 +65,33 @@ public class SimpleErrorReporter implements ErrorReporter, Serializable {
             } else if (errCtx instanceof State) {
                 //determineInitialStates
                 //determineTargetStates
-                msg.append("State ").append(LogUtils.getTTPath((State) errCtx));
+                msg.append("State " + LogUtils.getTTPath((State) errCtx));
             }
         } else if (errCode == ErrorConstants.UNKNOWN_ACTION) {
             //executeActionList
-            msg.append("Action: ").append(errCtx.getClass().getName());
+            msg.append("Action: " + errCtx.getClass().getName());
         } else if (errCode == ErrorConstants.ILLEGAL_CONFIG) {
             //isLegalConfig
-            if (errCtx instanceof Map.Entry) {
-                TransitionTarget tt = (TransitionTarget)
-                    (((Map.Entry) errCtx).getKey());
-                Set vals = (Set) (((Map.Entry) errCtx).getValue());
-                msg.append(LogUtils.getTTPath(tt)).append(" : [");
-                for (Iterator i = vals.iterator(); i.hasNext();) {
-                    TransitionTarget tx = (TransitionTarget) i.next();
+            if (errCtx instanceof Map.Entry) { //unchecked cast below
+                Map.Entry<TransitionTarget, Set<TransitionTarget>> badConfigMap =
+                    (Map.Entry<TransitionTarget, Set<TransitionTarget>>) errCtx;
+                TransitionTarget tt = badConfigMap.getKey();
+                Set<TransitionTarget> vals = badConfigMap.getValue();
+                msg.append(LogUtils.getTTPath(tt) + " : [");
+                for (Iterator<TransitionTarget> i = vals.iterator();
+                        i.hasNext();) {
+                    TransitionTarget tx = i.next();
                     msg.append(LogUtils.getTTPath(tx));
-                    if (i.hasNext()) {
+                    if (i.hasNext()) { // reason for iterator usage
                         msg.append(", ");
                     }
                 }
                 msg.append(']');
-            } else if (errCtx instanceof Set) {
-                Set vals = (Set) errCtx;
+            } else if (errCtx instanceof Set) { //unchecked cast below
+                Set<TransitionTarget> vals = (Set<TransitionTarget>) errCtx;
                 msg.append("<SCXML> : [");
-                for (Iterator i = vals.iterator(); i.hasNext();) {
-                    TransitionTarget tx = (TransitionTarget) i.next();
+                for (Iterator<TransitionTarget> i = vals.iterator(); i.hasNext();) {
+                    TransitionTarget tx = i.next();
                     msg.append(LogUtils.getTTPath(tx));
                     if (i.hasNext()) {
                         msg.append(", ");

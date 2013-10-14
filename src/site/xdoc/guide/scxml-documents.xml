@@ -60,7 +60,7 @@
    <pre>
     &lt;scxml xmlns="http://www.w3.org/2005/07/scxml"
               version="1.0"
-              initialstate="hello"&gt;
+              initial="hello"&gt;
 
      &lt;state id="hello" final="true"&gt;
       &lt;onentry&gt;
@@ -288,7 +288,7 @@
     &lt;scxml xmlns="http://www.w3.org/2005/07/scxml"
               xmlns:my="http://my.custom-actions.domain/CUSTOM"
               version="1.0"
-              initialstate="custom"&gt;
+              initial="custom"&gt;
 
      &lt;state id="custom" final="true"&gt;
       &lt;onentry&gt;

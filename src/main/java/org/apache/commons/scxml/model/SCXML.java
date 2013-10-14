@@ -29,7 +29,8 @@ import org.apache.commons.scxml.SCXMLHelper;
  * root&quot;.
  *
  */
-public class SCXML implements Serializable, NamespacePrefixesHolder {
+public class SCXML implements Serializable, Observable,
+                              NamespacePrefixesHolder {
 
     /**
      * Serial version UID.
@@ -63,6 +64,21 @@ public class SCXML implements Serializable, NamespacePrefixesHolder {
     private String initial;
 
     /**
+     * The name for this state machine.
+     */
+    private String name;
+
+    /**
+     * The profile in use.
+     */
+    private String profile;
+
+    /**
+     * The exmode for this document.
+     */
+    private String exmode;
+
+    /**
      * Optional property holding the data model for this SCXML document.
      * This gets merged with the root context and potentially hides any
      * (namesake) variables in the root context.
@@ -72,58 +88,26 @@ public class SCXML implements Serializable, NamespacePrefixesHolder {
     /**
      * The immediate child targets of this SCXML document root.
      */
-    private Map children;
+    private Map<String, TransitionTarget> children;
 
     /**
      * A global map of all States and Parallels associated with this
      * state machine, keyed by their id.
      */
-    private Map targets;
+    private Map<String, TransitionTarget> targets;
 
     /**
      * The XML namespaces defined on the SCXML document root node,
      * preserved primarily for serialization.
      */
-    private Map namespaces;
-
-    /**
-     * Indicates whether the legacy parser
-     * ({@link org.apache.commons.scxml.io.SCXMLDigester}) was used.
-     */
-    private boolean legacy = false;
+    private Map<String, String> namespaces;
 
     /**
      * Constructor.
      */
     public SCXML() {
-        this.children = new LinkedHashMap();
-        this.targets = new HashMap();
-    }
-
-    /**
-     * Get the initial State.
-     *
-     * @return State Returns the initialstate.
-     *
-     * @deprecated Use getInitialTarget() instead. Returns <code>null</code>
-     *             if the initial target is a Parallel.
-     */
-    public final State getInitialState() {
-        if (initialTarget != null && initialTarget instanceof State) {
-            return (State) initialTarget;
-        }
-        return null;
-    }
-
-    /**
-     * Set the initial State.
-     *
-     * @param initialState The initialstate to set.
-     *
-     * @deprecated Use setInitialTarget(TransitionTarget) instead.
-     */
-    public final void setInitialState(final State initialState) {
-        this.initialTarget = initialState;
+        this.children = new LinkedHashMap<String, TransitionTarget>();
+        this.targets = new HashMap<String, TransitionTarget>();
     }
 
     /**
@@ -167,35 +151,13 @@ public class SCXML implements Serializable, NamespacePrefixesHolder {
     }
 
     /**
-     * Get the children states.
-     *
-     * @return Map Returns map of the child states.
-     *
-     * @deprecated Use getChildren() instead.
-     */
-    public final Map getStates() {
-        return children;
-    }
-
-    /**
-     * Add a child state.
-     *
-     * @param state The state to be added to the states Map.
-     *
-     * @deprecated Use addChild(TransitionTarget) instead.
-     */
-    public final void addState(final State state) {
-        children.put(state.getId(), state);
-    }
-
-    /**
      * Get the immediate child targets of the SCXML root.
      *
      * @return Map Returns map of the child targets.
      *
      * @since 0.7
      */
-    public final Map getChildren() {
+    public final Map<String, TransitionTarget> getChildren() {
         return children;
     }
 
@@ -216,7 +178,7 @@ public class SCXML implements Serializable, NamespacePrefixesHolder {
      *
      * @return Map Returns the targets.
      */
-    public final Map getTargets() {
+    public final Map<String, TransitionTarget> getTargets() {
         return targets;
     }
 
@@ -276,7 +238,7 @@ public class SCXML implements Serializable, NamespacePrefixesHolder {
      * @return The namespace definitions specified on the SCXML element,
      *         may be <code>null</code>.
      */
-    public final Map getNamespaces() {
+    public final Map<String, String> getNamespaces() {
         return namespaces;
     }
 
@@ -286,30 +248,8 @@ public class SCXML implements Serializable, NamespacePrefixesHolder {
      * @param namespaces The namespace definitions specified on the
      *                   SCXML element.
      */
-    public final void setNamespaces(final Map namespaces) {
+    public final void setNamespaces(final Map<String, String> namespaces) {
         this.namespaces = namespaces;
-    }
-
-    /**
-     * Get the ID of the initial state.
-     *
-     * @return String Returns the initial state ID (used by XML Digester only).
-     * @see #getInitialTarget()
-     * @deprecated Use {@link #getInitial()} instead.
-     */
-    public final String getInitialstate() {
-        return initial;
-    }
-
-    /**
-     * Set the ID of the initial state.
-     *
-     * @param initialstate The initial state ID (used by XML Digester only).
-     * @see #setInitialTarget(TransitionTarget)
-     * @deprecated Use {@link #setInitial(String)} instead.
-     */
-    public final void setInitialstate(final String initialstate) {
-        this.initial = initialstate;
     }
 
     /**
@@ -335,28 +275,58 @@ public class SCXML implements Serializable, NamespacePrefixesHolder {
     }
 
     /**
-     * Whether the legacy parser was used.
+     * Get the name for this state machine.
      *
-     * @return True, if legacy parser was used.
-     *
-     * @since 0.9
-     * @deprecated Will be removed in v1.0
+     * @return The name for this state machine.
      */
-    public final boolean isLegacy() {
-        return legacy;
-    }
+	public String getName() {
+		return name;
+	}
 
-    /**
-     * Set whether the legacy parser was used.
-     *
-     * @param legacy True, if legacy parser was used.
-     *
-     * @since 0.9
-     * @deprecated Will be removed in v1.0
-     */
-    public final void setLegacy(final boolean legacy) {
-        this.legacy = legacy;
-    }
+	/**
+	 * Set the name for this state machine.
+	 *
+	 * @param name The name for this state machine.
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * Get the profile in use for this state machine.
+	 *
+	 * @return The profile in use.
+	 */
+	public String getProfile() {
+		return profile;
+	}
+
+	/**
+	 * Set the profile in use for this state machine.
+	 *
+	 * @param profile The profile to be used.
+	 */
+	public void setProfile(String profile) {
+		this.profile = profile;
+	}
+
+	/**
+	 * Get the exmode in use for this state machine.
+	 *
+	 * @return The exmode in use.
+	 */
+	public String getExmode() {
+		return exmode;
+	}
+
+	/**
+	 * Set the exmode to be used for this state machine.
+	 *
+	 * @param exmode The exmode to be used.
+	 */
+	public void setExmode(String exmode) {
+		this.exmode = exmode;
+	}
 
 }
 

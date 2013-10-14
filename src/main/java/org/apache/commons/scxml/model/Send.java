@@ -33,6 +33,7 @@ import org.apache.commons.scxml.SCXMLExpressionException;
 import org.apache.commons.scxml.SCXMLHelper;
 import org.apache.commons.scxml.TriggerEvent;
 import org.apache.commons.scxml.semantics.ErrorConstants;
+import org.w3c.dom.Node;
 
 /**
  * The class in this SCXML object model that corresponds to the
@@ -93,7 +94,7 @@ public class Send extends Action implements ExternalContent {
     /**
      * The list of external nodes associated with this &lt;send&gt; element.
      */
-    private List externalNodes;
+    private List<Node> externalNodes;
 
     /**
      * The type of event being generated.
@@ -115,7 +116,7 @@ public class Send extends Action implements ExternalContent {
      */
     public Send() {
         super();
-        this.externalNodes = new ArrayList();
+        this.externalNodes = new ArrayList<Node>();
     }
 
     /**
@@ -141,7 +142,7 @@ public class Send extends Action implements ExternalContent {
      *
      * @return List Returns the list of externalnodes.
      */
-    public final List getExternalNodes() {
+    public final List<Node> getExternalNodes() {
         return externalNodes;
     }
 
@@ -150,7 +151,7 @@ public class Send extends Action implements ExternalContent {
      *
      * @param externalNodes The externalnode to set.
      */
-    public final void setExternalNodes(final List externalNodes) {
+    public final void setExternalNodes(final List<Node> externalNodes) {
         this.externalNodes = externalNodes;
     }
 
@@ -229,9 +230,10 @@ public class Send extends Action implements ExternalContent {
     /**
      * Get the target type for this &lt;send&gt; element.
      *
-     * @return String Returns the targettype.
+     * @return String Returns the type.
      * @deprecated Use {@link #getType()} instead.
      */
+    @Deprecated
     public final String getTargettype() {
         return type;
     }
@@ -239,9 +241,10 @@ public class Send extends Action implements ExternalContent {
     /**
      * Set the target type for this &lt;send&gt; element.
      *
-     * @param targettype The targettype to set.
+     * @param targettype The type to set.
      * @deprecated Use {@link #setType(String)} instead.
      */
+    @Deprecated
     public final void setTargettype(final String targettype) {
         this.type = targettype;
     }
@@ -285,9 +288,10 @@ public class Send extends Action implements ExternalContent {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void execute(final EventDispatcher evtDispatcher,
             final ErrorReporter errRep, final SCInstance scInstance,
-            final Log appLog, final Collection derivedEvents)
+            final Log appLog, final Collection<TriggerEvent> derivedEvents)
     throws ModelException, SCXMLExpressionException {
         // Send attributes evaluation
         TransitionTarget parentTarget = getParentTransitionTarget();
@@ -321,10 +325,10 @@ public class Send extends Action implements ExternalContent {
             // must default to 'scxml' when unspecified
             typeValue = TYPE_SCXML;
         }
-        Map params = null;
+        Map<String, Object> params = null;
         if (!SCXMLHelper.isStringEmpty(namelist)) {
             StringTokenizer tkn = new StringTokenizer(namelist);
-            params = new HashMap(tkn.countTokens());
+            params = new HashMap<String, Object>(tkn.countTokens());
             while (tkn.hasMoreTokens()) {
                 String varName = tkn.nextToken();
                 Object varObj = ctx.get(varName);
@@ -450,3 +454,4 @@ public class Send extends Action implements ExternalContent {
     private static final long MILLIS_IN_A_MINUTE = 60000L;
 
 }
+

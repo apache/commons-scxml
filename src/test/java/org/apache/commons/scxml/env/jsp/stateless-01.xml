@@ -16,8 +16,9 @@
  * limitations under the License.
 -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
+       xmlns:cs="http://commons.apache.org/scxml"
        version="1.0"
-       initialstate="main">
+       initial="main">
 
     <state id="main">
 
@@ -26,7 +27,7 @@
         </initial>
 
         <onentry>
-            <var name="instancevar" expr="${20}" />
+            <cs:var name="instancevar" expr="${20}" />
         </onentry>
 
         <state id="ten">

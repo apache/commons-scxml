@@ -18,7 +18,7 @@
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
        xmlns:cs="http://commons.apache.org/scxml"
        version="1.0"
-       initialstate="actionsTest">
+       initial="actionsTest">
   
   <state id="actionsTest" final="true">
     <onentry>

@@ -37,7 +37,7 @@ public class JexlContextTest extends TestCase {
     }
 
     public void testPrepopulated() {
-        Map m = new HashMap();
+        Map<String, Object> m = new HashMap<String, Object>();
         m.put("foo", "bar");
         JexlContext ctx = new JexlContext(m);
         assertNotNull(ctx);
@@ -52,7 +52,7 @@ public class JexlContextTest extends TestCase {
         assertNotNull(ctx);
         assertEquals(1, ctx.getVars().size());
         assertTrue(ctx.get("_builtin") instanceof Builtin);
-        Map m = new HashMap();
+        Map<String, Object> m = new HashMap<String, Object>();
         m.put("foo", "bar");
         ctx.setVars(m);
         assertEquals(2, ctx.getVars().size());

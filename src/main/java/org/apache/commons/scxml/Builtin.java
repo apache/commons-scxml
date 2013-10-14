@@ -18,18 +18,20 @@ package org.apache.commons.scxml;
 
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.transform.TransformerException;
+import javax.xml.namespace.NamespaceContext;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml.model.TransitionTarget;
-import org.apache.xml.utils.PrefixResolver;
-import org.apache.xpath.XPath;
-import org.apache.xpath.XPathAPI;
-import org.apache.xpath.XPathContext;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -59,10 +61,9 @@ public class Builtin implements Serializable {
      * @param state The State ID to compare with
      * @return Whether this State belongs to this Set
      */
-    public static boolean isMember(final Set allStates,
+    public static boolean isMember(final Set<TransitionTarget> allStates,
             final String state) {
-        for (Iterator i = allStates.iterator(); i.hasNext();) {
-            TransitionTarget tt = (TransitionTarget) i.next();
+        for (TransitionTarget tt : allStates) {
             if (state.equals(tt.getId())) {
                 return true;
             }
@@ -83,7 +84,7 @@ public class Builtin implements Serializable {
      * @param path The XPath expression.
      * @return The first node matching the path, or null if no nodes match.
      */
-    public static Node dataNode(final Map namespaces, final Object data,
+    public static Node dataNode(final Map<String, String> namespaces, final Object data,
             final String path) {
         if (data == null || !(data instanceof Node)) {
             Log log = LogFactory.getLog(Builtin.class);
@@ -94,6 +95,7 @@ public class Builtin implements Serializable {
         Node dataNode = (Node) data;
         NodeList result = null;
         try {
+            XPath xpath = XPathFactory.newInstance().newXPath();
             if (namespaces == null || namespaces.size() == 0) {
                 Log log = LogFactory.getLog(Builtin.class);
                 if (log.isDebugEnabled()) {
@@ -101,20 +103,14 @@ public class Builtin implements Serializable {
                         + "no namespace information is available for path: "
                         + path);
                 }
-                result = XPathAPI.selectNodeList(dataNode, path);
             } else {
-                XPathContext xpathSupport = new XPathContext();
-                PrefixResolver prefixResolver =
-                    new DataPrefixResolver(namespaces);
-                XPath xpath = new XPath(path, null, prefixResolver,
-                    XPath.SELECT);
-                int ctxtNode = xpathSupport.getDTMHandleFromNode(dataNode);
-                result = xpath.execute(xpathSupport, ctxtNode,
-                    prefixResolver).nodelist();
+                xpath.setNamespaceContext(new ExpressionNSContext(namespaces));
             }
-        } catch (TransformerException te) {
+            result = (NodeList) xpath.evaluate(path, dataNode,
+                XPathConstants.NODESET);
+        } catch (XPathExpressionException xee) {
             Log log = LogFactory.getLog(Builtin.class);
-            log.error(te.getMessage(), te);
+            log.error(xee.getMessage(), xee);
             return null;
         }
         int length = result.getLength();
@@ -126,7 +122,7 @@ public class Builtin implements Serializable {
         } else {
             if (length > 1) {
                 Log log = LogFactory.getLog(Builtin.class);
-                log.warn("Data(): Multiple nodes matching XPath expression \""
+                log.warn("Data(): Multiple (" + length + ") nodes matching XPath expression \""
                     + path + "\", returning first");
             }
             return result.item(0);
@@ -148,7 +144,7 @@ public class Builtin implements Serializable {
      * @return The first node matching the path, coerced to a String, or null
      *         if no nodes match.
      */
-    public static Object data(final Map namespaces, final Object data,
+    public static Object data(final Map<String, String> namespaces, final Object data,
             final String path) {
         Object retVal = null;
         String strVal = SCXMLHelper.getNodeValue(dataNode(namespaces,
@@ -171,122 +167,90 @@ public class Builtin implements Serializable {
     }
 
     /**
-     * Implements the Data() function for Commons SCXML documents, that
-     * can be used to obtain a node from one of the XML data trees.
-     * Manifests within "location" attribute of &lt;assign&gt; element,
-     * for Commons JEXL and Commons EL based documents.
+     * XPath {@link NamespaceContext} for Commons SCXML expressions.
      *
-     * @param data The context Node, though the method accepts an Object
-     *             so error is reported by Commons SCXML, rather
-     *             than the underlying expression language.
-     * @param path The XPath expression.
-     * @return The first node matching the path, or null if no nodes match.
-     *
-     * @deprecated Use {@link #dataNode(Map,Object,String)} instead
+     * <b>Code duplication:</b> Also in XPathEvaluator.java. Class is not
+     * meant to be part of any public API and will be removed when parser
+     * is no longer using Commons Digester.
      */
-    public static Node dataNode(final Object data, final String path) {
-        if (data == null || !(data instanceof Node)) {
-            Log log = LogFactory.getLog(Builtin.class);
-            log.error("Data(): Cannot evaluate an XPath expression"
-                + " in the absence of a context Node, null returned");
-            return null;
-        }
-        Node dataNode = (Node) data;
-        NodeList result = null;
-        try {
-            result = XPathAPI.selectNodeList(dataNode, path);
-        } catch (TransformerException te) {
-            Log log = LogFactory.getLog(Builtin.class);
-            log.error(te.getMessage(), te);
-            return null;
-        }
-        int length = result.getLength();
-        if (length == 0) {
-            Log log = LogFactory.getLog(Builtin.class);
-            log.warn("Data(): No nodes matching the XPath expression \""
-                + path + "\", returning null");
-            return null;
-        } else {
-            if (length > 1) {
-                Log log = LogFactory.getLog(Builtin.class);
-                log.warn("Data(): Multiple nodes matching XPath expression \""
-                    + path + "\", returning first");
-            }
-            return result.item(0);
-        }
-    }
+    private static final class ExpressionNSContext
+    implements Serializable, NamespaceContext {
 
-    /**
-     * A variant of the Data() function for Commons SCXML documents,
-     * coerced to a Double, a Long or a String, whichever succeeds,
-     * in that order.
-     * Manifests within rvalue expressions in the document,
-     * for Commons JEXL and Commons EL based documents..
-     *
-     * @param data The context Node, though the method accepts an Object
-     *             so error is reported by Commons SCXML, rather
-     *             than the underlying expression language.
-     * @param path The XPath expression.
-     * @return The first node matching the path, coerced to a String, or null
-     *         if no nodes match.
-     *
-     * @deprecated Use {@link #data(Map,Object,String)} instead
-     */
-    public static Object data(final Object data, final String path) {
-        Object retVal = null;
-        String strVal = SCXMLHelper.getNodeValue(dataNode(data, path));
-        // try as a double
-        try {
-            double d = Double.parseDouble(strVal);
-            retVal = new Double(d);
-        } catch (NumberFormatException notADouble) {
-            // else as a long
-            try {
-                long l = Long.parseLong(strVal);
-                retVal = new Long(l);
-            } catch (NumberFormatException notALong) {
-                // fallback to string
-                retVal = strVal;
-            }
-        }
-        return retVal;
-    }
-
-    /**
-     * Prefix resolver for XPaths pointing to &lt;data&gt; nodes.
-     */
-    private static class DataPrefixResolver implements PrefixResolver {
-
-        /** Cached namespaces. */
-        private Map namespaces;
+        /** Serial version UID. */
+        private static final long serialVersionUID = 8620558582288851315L;
+        /** Map supplied by digester. */
+        private final Map<String, String> namespaces;
 
         /**
          * Constructor.
-         * @param namespaces The prefix to namespace URI map.
+         *
+         * @param namespaces The current namespace map.
          */
-        private DataPrefixResolver(final Map namespaces) {
+        ExpressionNSContext(final Map<String, String> namespaces) {
             this.namespaces = namespaces;
         }
 
-        /** {@inheritDoc} */
-        public String getNamespaceForPrefix(final String prefix) {
-            return (String) namespaces.get(prefix);
+        /**
+         * @see NamespaceContext#getNamespaceURI(String)
+         */
+        @Override
+        public String getNamespaceURI(final String prefix) {
+            return namespaces.get(prefix);
         }
 
-        /** {@inheritDoc} */
-        public String getNamespaceForPrefix(final String prefix,
-                final Node nsContext) {
-            return (String) namespaces.get(prefix);
+        /**
+         * @see NamespaceContext#getPrefix(String)
+         *
+         * First matching key in iteration order is returned, and the
+         * iteration order depends on the underlying <code>namespaces</code>
+         * {@link Map} implementation.
+         */
+        @Override
+        public String getPrefix(final String namespaceURI) {
+            return (String) getKeys(namespaceURI, true);
         }
 
-        /** {@inheritDoc} */
-        public String getBaseIdentifier() {
-            return null;
+        /**
+         * @see NamespaceContext#getPrefixes(String)
+         *
+         * The iteration order depends on the underlying <code>namespaces</code>
+         * {@link Map} implementation.
+         */
+        @Override
+        @SuppressWarnings("unchecked")
+        public Iterator<String> getPrefixes(final String namespaceURI) {
+            return (Iterator<String>) getKeys(namespaceURI, false);
         }
 
-        /** {@inheritDoc} */
-        public boolean handlesNullPrefixes() {
-            return false;
+        /**
+         * Get prefix key(s) for given namespaceURI value.
+         *
+         * If <code>one</code>, first matching key in iteration order is
+         * returned, and the iteration order depends on the underlying
+         * <code>namespaces</code> {@link Map} implementation.
+         * Otherwise, an iterator to all matching keys is returned.
+         *
+         * @param value The value whose key is required
+         * @param one At most one matching key is returned
+         * @return The required prefix key(s)
+         */
+        private Object getKeys(final String value, final boolean one) {
+            List<String> prefixes = new LinkedList<String>();
+            if (namespaces.containsValue(value)) {
+                for (Map.Entry<String, String> entry : namespaces.entrySet()) {
+                    String v = entry.getValue();
+                    if ((value == null && v == null) ||
+                            (value != null && value.equals(v))) {
+                        String prefix = entry.getKey();
+                        if (one) {
+                            return prefix;
+                        } else {
+                            prefixes.add(prefix);
+                        }
+                    }
+                }
+            }
+            return one ? null : prefixes.iterator();
         }
 
     }

@@ -31,6 +31,7 @@ import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLHelper;
 import org.apache.commons.scxml.TriggerEvent;
 import org.apache.commons.scxml.model.ModelException;
+import org.w3c.dom.Node;
 
 /**
  * <p>EventDispatcher implementation that can schedule <code>delay</code>ed
@@ -57,7 +58,7 @@ public class SimpleScheduler implements EventDispatcher, Serializable {
      * The <code>Map</code> of active <code>Timer</code>s, keyed by
      * &lt;send&gt; element <code>id</code>s.
      */
-    private Map timers;
+    private Map<String, Timer> timers;
 
     /**
      * The state chart execution instance we schedule events for.
@@ -72,7 +73,7 @@ public class SimpleScheduler implements EventDispatcher, Serializable {
     public SimpleScheduler(final SCXMLExecutor executor) {
         super();
         this.executor = executor;
-        this.timers = Collections.synchronizedMap(new HashMap());
+        this.timers = Collections.synchronizedMap(new HashMap<String, Timer>());
     }
 
     /**
@@ -86,7 +87,7 @@ public class SimpleScheduler implements EventDispatcher, Serializable {
         if (!timers.containsKey(sendId)) {
             return; // done, we don't track this one or its already expired
         }
-        Timer timer = (Timer) timers.get(sendId);
+        Timer timer = timers.get(sendId);
         if (timer != null) {
             timer.cancel();
             if (log.isDebugEnabled()) {
@@ -101,8 +102,9 @@ public class SimpleScheduler implements EventDispatcher, Serializable {
     @see EventDispatcher#send(String,String,String,String,Map,Object,long,List)
      */
     public void send(final String sendId, final String target,
-            final String type, final String event, final Map params,
-            final Object hints, final long delay, final List externalNodes) {
+            final String type, final String event,
+            final Map<String, Object> params, final Object hints, final long delay,
+            final List<Node> externalNodes) {
         // Log callback
         if (log.isInfoEnabled()) {
             StringBuffer buf = new StringBuffer();
@@ -168,7 +170,7 @@ public class SimpleScheduler implements EventDispatcher, Serializable {
      *
      * @return The currently scheduled timers
      */
-    protected Map getTimers() {
+    protected Map<String, Timer> getTimers() {
         return timers;
     }
 
@@ -199,7 +201,7 @@ public class SimpleScheduler implements EventDispatcher, Serializable {
         /**
          * The event payload, if any.
          */
-        private Map payload;
+        private Map<String, Object> payload;
 
         /**
          * Constructor.
@@ -219,7 +221,7 @@ public class SimpleScheduler implements EventDispatcher, Serializable {
          * @param payload The event payload, if any.
          */
         DelayedEventTask(final String sendId, final String event,
-                final Map payload) {
+                final Map<String, Object> payload) {
             super();
             this.sendId = sendId;
             this.event = event;
@@ -229,6 +231,7 @@ public class SimpleScheduler implements EventDispatcher, Serializable {
         /**
          * What to do when timer expires.
          */
+        @Override
         public void run() {
             try {
                 executor.triggerEvent(new TriggerEvent(event,
@@ -257,3 +260,4 @@ public class SimpleScheduler implements EventDispatcher, Serializable {
         "error.send.targetunavailable";
 
 }
+

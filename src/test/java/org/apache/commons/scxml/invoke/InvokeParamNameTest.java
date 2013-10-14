@@ -42,8 +42,9 @@ public class InvokeParamNameTest extends TestCase {
     private SCXMLExecutor exec;
 
     static String lastSource;
-    static Map lastParams;
+    static Map<String, Object> lastParams;
     
+    @Override
     public void setUp() throws Exception {
         invoker04 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/invoke/invoker-04.xml");
@@ -52,6 +53,7 @@ public class InvokeParamNameTest extends TestCase {
         exec.registerInvokerClass("x-test", DummyInvoker.class);
     }
     
+    @Override
     public void tearDown() {
         exec.unregisterInvokerClass("x-test");    
         invoker04 = null;
@@ -68,7 +70,8 @@ public class InvokeParamNameTest extends TestCase {
     public void testNameAndExpr() throws Exception {
         trigger();
         assertTrue(lastSource.endsWith("TestSrc"));
-        final Map.Entry e = (Map.Entry)lastParams.entrySet().iterator().next();
+        final Map.Entry<String, Object> e =
+            lastParams.entrySet().iterator().next();
         assertEquals("ding", e.getKey());
         assertEquals("foo", e.getValue());
     }
@@ -87,14 +90,14 @@ public class InvokeParamNameTest extends TestCase {
     public void testWrongNameLocation() throws Exception {
         trigger(); trigger(); trigger();
         assertEquals(1, exec.getCurrentStatus().getEvents().size());
-        final TriggerEvent evt = (TriggerEvent) 
-            exec.getCurrentStatus().getEvents().iterator().next(); 
+        final TriggerEvent evt = exec.getCurrentStatus().getEvents().iterator().next(); 
         assertTrue(evt.getName().endsWith("error.illegalalloc"));
     }
 
     public static class DummyInvoker implements Invoker {
 
-        public void invoke(String source, Map params) throws InvokerException {
+        public void invoke(String source, Map<String, Object> params)
+        throws InvokerException {
             lastSource = source;
             lastParams = params;
         }
@@ -103,7 +106,7 @@ public class InvokeParamNameTest extends TestCase {
             return lastSource;
         }
 
-        public Map lastParams() {
+        public Map<String, Object> lastParams() {
             return lastParams;
         }
 

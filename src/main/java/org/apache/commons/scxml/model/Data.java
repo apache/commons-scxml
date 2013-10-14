@@ -60,7 +60,7 @@ public class Data implements NamespacePrefixesHolder, Serializable {
      * preserved for deferred XPath evaluation. Easier than to scrape node
      * above, given the Builtin API.
      */
-    private Map namespaces;
+    private Map<String, String> namespaces;
 
     /**
      * Constructor.
@@ -70,26 +70,6 @@ public class Data implements NamespacePrefixesHolder, Serializable {
         this.src = null;
         this.expr = null;
         this.node = null;
-    }
-
-    /**
-     * Get the name.
-     *
-     * @return String The name.
-     * @deprecated Use {@link #getId()} instead.
-     */
-    public final String getName() {
-        return id;
-    }
-
-    /**
-     * Set the name.
-     *
-     * @param name The name.
-     * @deprecated Use {@link #setId(String)} instead.
-     */
-    public final void setName(final String name) {
-        this.id = name;
     }
 
     /**
@@ -169,7 +149,7 @@ public class Data implements NamespacePrefixesHolder, Serializable {
      *
      * @return Returns the map of namespaces.
      */
-    public final Map getNamespaces() {
+    public final Map<String, String> getNamespaces() {
         return namespaces;
     }
 
@@ -178,7 +158,7 @@ public class Data implements NamespacePrefixesHolder, Serializable {
      *
      * @param namespaces The document namespaces.
      */
-    public final void setNamespaces(final Map namespaces) {
+    public final void setNamespaces(final Map<String, String> namespaces) {
         this.namespaces = namespaces;
     }
 

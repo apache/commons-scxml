@@ -23,12 +23,12 @@ import java.util.Map;
 import java.util.Set;
 
 import junit.framework.TestCase;
-
 import org.apache.commons.scxml.env.Tracer;
 import org.apache.commons.scxml.env.jexl.JexlContext;
 import org.apache.commons.scxml.env.jexl.JexlEvaluator;
 import org.apache.commons.scxml.model.SCXML;
-import org.apache.commons.scxml.model.State;
+import org.apache.commons.scxml.model.TransitionTarget;
+import org.w3c.dom.Node;
 /**
  * Unit tests {@link org.apache.commons.scxml.SCXMLExecutor}.
  */
@@ -48,6 +48,7 @@ public class WizardsTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
+    @Override
     public void setUp() {
         wizard01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/env/jexl/wizard-01.xml");
@@ -58,6 +59,7 @@ public class WizardsTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
+    @Override
     public void tearDown() {
         wizard01 = wizard02 = null;
     }
@@ -68,47 +70,40 @@ public class WizardsTest extends TestCase {
     public void testWizard01Sample() throws Exception {
     	exec = SCXMLTestHelper.getExecutor(wizard01);
         assertNotNull(exec);
-        Set currentStates = exec.getCurrentStatus().getStates();
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
-        assertEquals("state1", ((State)currentStates.iterator().
-            next()).getId());
+        assertEquals("state1", currentStates.iterator().next().getId());
         exec = SCXMLTestHelper.testExecutorSerializability(exec);
         currentStates = SCXMLTestHelper.fireEvent(exec, "event2");
         assertEquals(1, currentStates.size());
-        assertEquals("state2", ((State)currentStates.iterator().
-            next()).getId());
+        assertEquals("state2", currentStates.iterator().next().getId());
         currentStates = SCXMLTestHelper.fireEvent(exec, "event4");
         assertEquals(1, currentStates.size());
-        assertEquals("state4", ((State)currentStates.iterator().
-            next()).getId());
+        assertEquals("state4", currentStates.iterator().next().getId());
         currentStates = SCXMLTestHelper.fireEvent(exec, "event3");
         assertEquals(1, currentStates.size());
-        assertEquals("state3", ((State)currentStates.iterator().
-            next()).getId());
+        assertEquals("state3", currentStates.iterator().next().getId());
         exec = SCXMLTestHelper.testExecutorSerializability(exec);
         currentStates = SCXMLTestHelper.fireEvent(exec, "event3"); // ensure we stay put
         assertEquals(1, currentStates.size());
-        assertEquals("state3", ((State)currentStates.iterator().
-            next()).getId());
+        assertEquals("state3", currentStates.iterator().next().getId());
     }
 
     public void testWizard02Sample() throws Exception {
-        SCXML scxml = SCXMLTestHelper.digest(wizard02);
+        SCXML scxml = SCXMLTestHelper.parse(wizard02);
         exec = SCXMLTestHelper.getExecutor(new JexlContext(),
             new JexlEvaluator(), scxml, new TestEventDispatcher(),
             new Tracer());
         assertNotNull(exec);
         // If you change this, you must also change
         // the TestEventDispatcher
-        Set currentStates = exec.getCurrentStatus().getStates();
+        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
         assertEquals(1, currentStates.size());
-        assertEquals("state2", ((State)currentStates.iterator().
-            next()).getId());
+        assertEquals("state2", currentStates.iterator().next().getId());
         exec = SCXMLTestHelper.testExecutorSerializability(exec);
         currentStates = SCXMLTestHelper.fireEvent(exec, "event4");
         assertEquals(1, currentStates.size());
-        assertEquals("state4", ((State)currentStates.iterator().
-            next()).getId());
+        assertEquals("state4", currentStates.iterator().next().getId());
     }
 
     static class TestEventDispatcher implements EventDispatcher, Serializable {
@@ -116,8 +111,8 @@ public class WizardsTest extends TestCase {
         // If you change this, you must also change testWizard02Sample()
         int callback = 0;
         public void send(String sendId, String target, String type,
-                String event, Map params, Object hints, long delay,
-                List externalNodes) {
+                String event, Map<String, Object> params, Object hints, long delay,
+                List<Node> externalNodes) {
             int i = ((Integer) params.get("aValue")).intValue();
             switch (callback) {
                 case 0:

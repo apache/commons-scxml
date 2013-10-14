@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.TestCase;
-
 import org.apache.commons.scxml.SCXMLExecutor;
 import org.apache.commons.scxml.SCXMLTestHelper;
 import org.apache.commons.scxml.env.jsp.ELEvaluator;
@@ -38,6 +37,7 @@ public class CustomActionTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
+    @Override
     public void setUp() {
         hello01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml/hello-world.xml");
@@ -56,6 +56,7 @@ public class CustomActionTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
+    @Override
     public void tearDown() {
         hello01 = custom01 = external01 = payload01 = payload02 = null;
         exec = null;
@@ -63,7 +64,7 @@ public class CustomActionTest extends TestCase {
 
     public void testAddGoodCustomAction01() throws Exception {
         new CustomAction("http://my.actions.domain/CUSTOM", "hello",
-                Hello.class);
+            Hello.class);
     }
 
     public void testAddBadCustomAction01() {
@@ -105,19 +106,9 @@ public class CustomActionTest extends TestCase {
     }
 
     public void testAddBadCustomAction05() {
-        try {
-            new CustomAction("http://my.actions.domain/CUSTOM", "foo",
-                this.getClass());
-            fail("Added custom action which is not an Action class subtype");
-        } catch (IllegalArgumentException iae) {
-            // Expected
-        }
-    }
-
-    public void testAddBadCustomAction06() {
-        try {
+        try {            
             new CustomAction("http://www.w3.org/2005/07/scxml", "foo",
-                this.getClass());
+                Hello.class);
             fail("Added custom action in the SCXML namespace");
         } catch (IllegalArgumentException iae) {
             // Expected
@@ -146,11 +137,11 @@ public class CustomActionTest extends TestCase {
         CustomAction ca2 =
             new CustomAction("http://my.custom-actions.domain/CUSTOM2",
                              "bar", Hello.class);
-        List customActions = new ArrayList();
+        List<CustomAction> customActions = new ArrayList<CustomAction>();
         customActions.add(ca1);
         customActions.add(ca2);
         // (2) Parse the document with a custom digester.
-        SCXML scxml = SCXMLTestHelper.digest(custom01, customActions);
+        SCXML scxml = SCXMLTestHelper.parse(custom01, customActions);
         // (3) Get a SCXMLExecutor
         exec = SCXMLTestHelper.getExecutor(scxml);
         // (4) Single, final state
@@ -167,10 +158,10 @@ public class CustomActionTest extends TestCase {
         CustomAction ca =
             new CustomAction("http://my.custom-actions.domain/CUSTOM",
                              "hello", Hello.class);
-        List customActions = new ArrayList();
+        List<CustomAction> customActions = new ArrayList<CustomAction>();
         customActions.add(ca);
         // (2) Parse the document with a custom digester.
-        SCXML scxml = SCXMLTestHelper.digest(external01, customActions);
+        SCXML scxml = SCXMLTestHelper.parse(external01, customActions);
         // (3) Get a SCXMLExecutor
         exec = SCXMLTestHelper.getExecutor(scxml);
         // (4) Single, final state
@@ -185,10 +176,10 @@ public class CustomActionTest extends TestCase {
         CustomAction ca =
             new CustomAction("http://my.custom-actions.domain/CUSTOM",
                              "send", Hello.class);
-        List customActions = new ArrayList();
+        List<CustomAction> customActions = new ArrayList<CustomAction>();
         customActions.add(ca);
         // (2) Parse the document with a custom digester.
-        SCXML scxml = SCXMLTestHelper.digest(override01, customActions);
+        SCXML scxml = SCXMLTestHelper.parse(override01, customActions);
         // (3) Get a SCXMLExecutor
         exec = SCXMLTestHelper.getExecutor(scxml);
         // (4) Single, final state
@@ -210,10 +201,10 @@ public class CustomActionTest extends TestCase {
         CustomAction ca =
             new CustomAction("http://my.custom-actions.domain/CUSTOM",
                              "hello", Hello.class);
-        List customActions = new ArrayList();
+        List<CustomAction> customActions = new ArrayList<CustomAction>();
         customActions.add(ca);
         // (2) Parse the document with a custom digester.
-        SCXML scxml = SCXMLTestHelper.digest(payload01, customActions);
+        SCXML scxml = SCXMLTestHelper.parse(payload01, customActions);
         // (3) Get a SCXMLExecutor
         exec = SCXMLTestHelper.getExecutor(scxml);
         // (4) Single, final state
@@ -242,10 +233,10 @@ public class CustomActionTest extends TestCase {
         CustomAction ca =
             new CustomAction("http://my.custom-actions.domain/CUSTOM",
                              "hello", Hello.class);
-        List customActions = new ArrayList();
+        List<CustomAction> customActions = new ArrayList<CustomAction>();
         customActions.add(ca);
         // (2) Parse the document with a custom digester.
-        SCXML scxml = SCXMLTestHelper.digest(payload02, customActions);
+        SCXML scxml = SCXMLTestHelper.parse(payload02, customActions);
         // (3) Get a SCXMLExecutor
         exec = SCXMLTestHelper.getExecutor(new ELEvaluator(), scxml);
         // (4) Single, final state

@@ -19,10 +19,10 @@ package org.apache.commons.scxml;
 import java.util.HashSet;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.scxml.model.State;
 import org.apache.commons.scxml.model.TransitionTarget;
+
+import junit.framework.TestCase;
 
 public class BuiltinTest extends TestCase {
 
@@ -31,7 +31,7 @@ public class BuiltinTest extends TestCase {
     }
 
     public void testIsMemberEmptySet() {
-        Set set = new HashSet();
+        Set<TransitionTarget> set = new HashSet<TransitionTarget>();
         
         assertFalse(Builtin.isMember(set, "on"));
     }
@@ -40,7 +40,7 @@ public class BuiltinTest extends TestCase {
         TransitionTarget state = new State();
         state.setId("off");
         
-        Set set = new HashSet();
+        Set<TransitionTarget> set = new HashSet<TransitionTarget>();
         set.add(state);
         
         assertFalse(Builtin.isMember(set, "on"));
@@ -50,7 +50,7 @@ public class BuiltinTest extends TestCase {
         TransitionTarget state = new State();
         state.setId("on");
         
-        Set set = new HashSet();
+        Set<TransitionTarget> set = new HashSet<TransitionTarget>();
         set.add(state);
         
         assertTrue(Builtin.isMember(set, "on"));
