@@ -32,7 +32,7 @@
   <inceptionYear>2005</inceptionYear>
   <description>A Java Implementation of a State Chart XML Engine</description>
 
-  <url>http://commons.apache.org/scxml/</url>
+  <url>http://commons.apache.org/proper/commons-scxml/</url>
 
   <issueManagement>
     <system>jira</system>
@@ -50,12 +50,18 @@
       <name>Rahul Akolkar</name>
       <id>rahul</id>
       <email>rahul AT apache.org</email>
-      <organization>Apache Software Foundation</organization>
+      <organization>The Apache Software Foundation</organization>
     </developer>
     <developer>
       <name>Martin Cooper</name>
       <id>martinc</id>
-      <organization>Apache Software Foundation</organization>
+      <organization>The Apache Software Foundation</organization>
+    </developer>
+    <developer>
+      <name>Ate Douma</name>
+      <id>ate</id>
+      <email>ate AT douma.nu</email>
+      <organization>Hippo B.V.</organization>
     </developer>
   </developers>
 
@@ -258,7 +264,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-changes-plugin</artifactId>
-        <version>2.0</version>
+        <version>2.6</version>
         <configuration>
           <xmlPath>${basedir}/src/changes/changes.xml</xmlPath>
           <issueLinkTemplate>%URL%/%ISSUE%</issueLinkTemplate>
