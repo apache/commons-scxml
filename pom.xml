@@ -62,6 +62,12 @@
       <email>ate AT douma.nu</email>
       <organization>Hippo B.V.</organization>
     </developer>
+    <developer>
+      <name>Woonsan Ko</name>
+      <id>woonsan</id>
+      <email>woonsan AT apache.org</email>
+      <organization>The Apache Software Foundation</organization>
+    </developer>
   </developers>
 
   <contributors>
