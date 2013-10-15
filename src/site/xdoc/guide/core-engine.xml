@@ -32,14 +32,14 @@
    <subsection name="Usage">
      <p>The <code>SCXMLExecutor</code> is usually initialized as follows:</p>
      <pre>
-        //import org.apache.commons.scxml.Context;
-        //import org.apache.commons.scxml.ErrorReporter;
-        //import org.apache.commons.scxml.Evaluator;
-        //import org.apache.commons.scxml.EventDispatcher;
-        //import org.apache.commons.scxml.SCXMLExecutor;
-        //import org.apache.commons.scxml.SCXMLListener;
-        //import org.apache.commons.scxml.model.SCXML;
-        //import org.apache.commons.scxml.model.ModelException;
+        //import org.apache.commons.scxml2.Context;
+        //import org.apache.commons.scxml2.ErrorReporter;
+        //import org.apache.commons.scxml2.Evaluator;
+        //import org.apache.commons.scxml2.EventDispatcher;
+        //import org.apache.commons.scxml2.SCXMLExecutor;
+        //import org.apache.commons.scxml2.SCXMLListener;
+        //import org.apache.commons.scxml2.model.SCXML;
+        //import org.apache.commons.scxml2.model.ModelException;
 
         SCXMLExecutor exec = null;
         try {
@@ -67,7 +67,7 @@
      for further details about contexts, evaluators and root contexts.</p>
 
      <p>Commons SCXML provides an
-     <a href="../apidocs/org/apache/commons/scxml/EventDispatcher.html">EventDispatcher</a>
+     <a href="../apidocs/org/apache/commons/scxml2/EventDispatcher.html">EventDispatcher</a>
      interface for wiring the behavior of SCXML &lt;send&gt; and
      &lt;cancel&gt; actions. This allows users to define custom target "types"
      as long as they handle the callbacks on the <code>EventDispatcher</code>
@@ -77,14 +77,14 @@
      &lt;send&gt; usage.</p>
 
      <p>The
-     <a href="../apidocs/org/apache/commons/scxml/ErrorReporter.html">ErrorReporter</a>
+     <a href="../apidocs/org/apache/commons/scxml2/ErrorReporter.html">ErrorReporter</a>
      interface is used by Commons SCXML for reporting SCXML errors to the host
      environment, and contains the definition of commonly occuring errors
      while executing SCXML documents. It is primarily used for passive usages
      such as logging.</p>
 
      <p>Commons SCXML also allows listeners
-     (<a href="../apidocs/org/apache/commons/scxml/SCXMLListener.html">SCXMLListener</a>)
+     (<a href="../apidocs/org/apache/commons/scxml2/SCXMLListener.html">SCXMLListener</a>)
      to be registered with the <code>SCXMLExecutor</code>, which are informed
      about the progress of the state machine via <code>onEntry</code> and
      <code>onExit</code> notifications for <code>State</code>s, as
@@ -94,7 +94,7 @@
      <p>Commons SCXML provides basic implementations of the
      <code>EventDispatcher</code>, <code>ErrorReporter</code>, and
      <code>SCXMLListener</code> interfaces in the
-     <a href="../apidocs/org/apache/commons/scxml/env/package-summary.html">env package</a>,
+     <a href="../apidocs/org/apache/commons/scxml2/env/package-summary.html">env package</a>,
      which simply log all the events received. Commons SCXML uses
      Commons Logging.</p>
 
@@ -104,7 +104,7 @@
      usecase demands.</p>
 
      <p>The <code>SCXMLExecutor</code> Javadoc is available
-     <a href="../apidocs/org/apache/commons/scxml/SCXMLExecutor.html">
+     <a href="../apidocs/org/apache/commons/scxml2/SCXMLExecutor.html">
      here</a>.
      </p>
    </subsection>

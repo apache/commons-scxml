@@ -17,14 +17,14 @@
 $Id$
 
                          Commons SCXML Package
-                          Version 1.0-SNAPSHOT
+                          Version 2.0-SNAPSHOT
                             Release Notes
 
 INTRODUCTION:
 
-Commons SCXML 1.0 is a major release. It contains non backwards compatible
-changes from the 0.x releases. See about section at the end for general
-information on Commons SCXML.
+Commons SCXML 2.0 is a major release. It contains non backwards compatible
+changes from the 0.x releases. Note: version 1.0 never came to be and was skipped.
+See about section at the end for general information on Commons SCXML.
 
 IMPORTANT NOTES:
 

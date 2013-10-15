@@ -56,9 +56,9 @@
     commons-logging-1.1.1.jar;commons-scxml-0.9.jar;
     commons-jexl-1.1.jar
 
-    <a href="../xref/org/apache/commons/scxml/test/StandaloneJexlExpressions.html">org.apache.commons.scxml.test.StandaloneJexlExpressions</a>
+    <a href="../xref/org/apache/commons/scxml2/test/StandaloneJexlExpressions.html">org.apache.commons.scxml2.test.StandaloneJexlExpressions</a>
 
-    <a href="http://svn.apache.org/repos/asf/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml/env/jexl/microwave-01.xml">microwave01.xml</a>
+    <a href="http://svn.apache.org/repos/asf/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml2/env/jexl/microwave-01.xml">microwave01.xml</a>
     </pre>
 
    </subsection>
@@ -78,9 +78,9 @@
     commons-logging-1.0.4.jar;commons-scxml-1.0-SNAPSHOT.jar;
     commons-el-1.0.jar;jsp-api-2.0.jar
 
-    <a href="../xref/org/apache/commons/scxml/test/StandaloneElExpressions.html">org.apache.commons.scxml.test.StandaloneElExpressions</a>
+    <a href="../xref/org/apache/commons/scxml2/test/StandaloneElExpressions.html">org.apache.commons.scxml2.test.StandaloneElExpressions</a>
 
-    <a href="http://svn.apache.org/repos/asf/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml/env/jsp/microwave-01.xml">microwave01.xml</a>
+    <a href="http://svn.apache.org/repos/asf/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml2/env/jsp/microwave-01.xml">microwave01.xml</a>
     </pre>
 
    </subsection>
@@ -93,7 +93,7 @@
    </p>
 
    <p>A few examples are available as part of the 
-   <a href="http://svn.apache.org/repos/asf/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml/">
+   <a href="http://svn.apache.org/repos/asf/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml2/">
    Commons SCXML test suite</a> (look in env.jexl and env.jsp child packages as well).</p>
 
   </section> 

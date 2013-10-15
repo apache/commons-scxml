@@ -33,10 +33,10 @@
    <subsection name="Pluggable semantics">
 
     <p>The Commons SCXML state machine engine is really a tuple, the
-    <a href="../apidocs/org/apache/commons/scxml/SCXMLExecutor.html">SCXMLExecutor</a>
+    <a href="../apidocs/org/apache/commons/scxml2/SCXMLExecutor.html">SCXMLExecutor</a>
     (an API that new users can code to, and is almost always sufficient)
     accompanied by a
-    <a href="../apidocs/org/apache/commons/scxml/SCXMLSemantics.html">SCXMLSemantics</a>
+    <a href="../apidocs/org/apache/commons/scxml2/SCXMLSemantics.html">SCXMLSemantics</a>
     implementation (an API that advanced users can code to, to change the
     engine behavior to suit their needs).</p>
     

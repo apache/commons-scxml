@@ -100,7 +100,7 @@
     <p>Commons SCXML allows processes to register listeners for
     notifications for state machine execution events (entry, exit,
     transition). Listeners implement the
-    <a href="../apidocs/org/apache/commons/scxml/SCXMLListener.html">SCXMLListener</a>
+    <a href="../apidocs/org/apache/commons/scxml2/SCXMLListener.html">SCXMLListener</a>
     interface. This approach is useful for:</p>
 
     <ul>
@@ -120,7 +120,7 @@
     considered as params for the event target.</p>
 
     <p>The callbacks are received on the
-    <a href="../apidocs/org/apache/commons/scxml/EventDispatcher.html">EventDispatcher</a>
+    <a href="../apidocs/org/apache/commons/scxml2/EventDispatcher.html">EventDispatcher</a>
     associated with the SCXMLExecutor. The EventDispatcher implementation
     activates the necessary target, which then performs the activity needed to
     make progress.</p>

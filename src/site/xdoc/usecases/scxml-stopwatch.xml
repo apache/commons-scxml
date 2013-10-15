@@ -73,15 +73,15 @@
    <subsection name="The SCXML document">
     <p>The SCXML document is then, a simple serialization of
        the "model" above:
-       <a href="http://svn.apache.org/repos/asf/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml/env/stopwatch.xml">stopwatch.xml</a>.
+       <a href="http://svn.apache.org/repos/asf/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml2/env/stopwatch.xml">stopwatch.xml</a>.
     </p>
    </subsection>
 
    <subsection name="The Stopwatch class">
     <p>Here is the class that implements the stopwatch behavior,
-       <a href="../xref-test/org/apache/commons/scxml/env/StopWatch.html">StopWatch.java</a>.
+       <a href="../xref-test/org/apache/commons/scxml2/env/StopWatch.html">StopWatch.java</a>.
        The class extends
-       <a href="../xref/org/apache/commons/scxml/env/AbstractStateMachine.html">AbstractStateMachine.java</a>,
+       <a href="../xref/org/apache/commons/scxml2/env/AbstractStateMachine.html">AbstractStateMachine.java</a>,
        which provides one approach for providing the base functionality
        needed by classes representing stateful entities. Points to note
        in the StopWatch class are:
@@ -96,7 +96,7 @@
 
    <subsection name="The Stopwatch UI">
     <p>Here is the UI for our demonstration,
-       <a href="../xref-test/org/apache/commons/scxml/env/StopWatchDisplay.html">StopWatchDisplay.java</a>.
+       <a href="../xref-test/org/apache/commons/scxml2/env/StopWatchDisplay.html">StopWatchDisplay.java</a>.
        Points to note here are:
        <ul>
         <li>The UI is "backed" by a StopWatch instance.</li>

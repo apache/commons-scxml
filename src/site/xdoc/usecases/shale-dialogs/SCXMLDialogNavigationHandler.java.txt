@@ -23,7 +23,7 @@
  * Apache Shale dependencies -
  * http://shale.apache.org/dependencies.html
  */
-package org.apache.commons.scxml.usecases;
+package org.apache.commons.scxml2.usecases;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -43,18 +43,18 @@ import org.apache.commons.digester.Rule;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.apache.commons.scxml.SCXMLDigester;
-import org.apache.commons.scxml.SCXMLExecutor;
-import org.apache.commons.scxml.TriggerEvent;
-import org.apache.commons.scxml.env.SimpleDispatcher;
-import org.apache.commons.scxml.env.SimpleErrorHandler;
-import org.apache.commons.scxml.env.SimpleErrorReporter;
-import org.apache.commons.scxml.env.SimpleSCXMLListener;
-import org.apache.commons.scxml.env.faces.SessionContext;
-import org.apache.commons.scxml.env.faces.ShaleDialogELEvaluator;
-import org.apache.commons.scxml.model.ModelException;
-import org.apache.commons.scxml.model.SCXML;
-import org.apache.commons.scxml.model.TransitionTarget;
+import org.apache.commons.scxml2.SCXMLDigester;
+import org.apache.commons.scxml2.SCXMLExecutor;
+import org.apache.commons.scxml2.TriggerEvent;
+import org.apache.commons.scxml2.env.SimpleDispatcher;
+import org.apache.commons.scxml2.env.SimpleErrorHandler;
+import org.apache.commons.scxml2.env.SimpleErrorReporter;
+import org.apache.commons.scxml2.env.SimpleSCXMLListener;
+import org.apache.commons.scxml2.env.faces.SessionContext;
+import org.apache.commons.scxml2.env.faces.ShaleDialogELEvaluator;
+import org.apache.commons.scxml2.model.ModelException;
+import org.apache.commons.scxml2.model.SCXML;
+import org.apache.commons.scxml2.model.TransitionTarget;
 
 import org.apache.shale.dialog.Globals;
 import org.apache.shale.dialog.Status;
@@ -75,7 +75,7 @@ import org.xml.sax.InputSource;
  *     for your web application such that the
  *     &quot;<code>faces-config/application/navigation-handler</code>&quot;
  *     entry points to
- *     &quot;<code>org.apache.commons.scxml.usecases.SCXMLDialogNavigationHandler</code>&quot;
+ *     &quot;<code>org.apache.commons.scxml2.usecases.SCXMLDialogNavigationHandler</code>&quot;
  *     (with the appropriate package name, if you changed it).
  *    </li>
  *    <li>As an alternative to (1) and (2), you can place a <i>jar</i> in the

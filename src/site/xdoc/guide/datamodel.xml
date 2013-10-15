@@ -187,7 +187,7 @@
     </pre>
 
     <p>Commons SCXML creates a new
-    <a href="../apidocs/org/apache/commons/scxml/Context.html">Context</a>
+    <a href="../apidocs/org/apache/commons/scxml2/Context.html">Context</a>
     for each state that needs one, and each data element may be thought of
     as a <code>org.w3c.dom.Node</code> object placed in the corresponding
     Context. The datamodel element at the document root populates the

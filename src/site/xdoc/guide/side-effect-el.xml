@@ -41,26 +41,26 @@
    context of evaluation and an evaluator, which gives us the following
    usage:</p>
    <pre>
-   //import org.apache.commons.scxml.Context;
-   //import org.apache.commons.scxml.Evaluator;
-   //import org.apache.commons.scxml.SCXMLExpressionException;
-   //import org.apache.commons.scxml.env.jsp.ELContext;
-   //import org.apache.commons.scxml.env.jsp.ELEvaluator;
+     //import org.apache.commons.scxml2.Context;
+     //import org.apache.commons.scxml2.Evaluator;
+     //import org.apache.commons.scxml2.SCXMLExpressionException;
+     //import org.apache.commons.scxml2.env.jsp.ELContext;
+     //import org.apache.commons.scxml2.env.jsp.ELEvaluator;
 
-   Context context = new ELContext();
-   // Say we have an instance 'foo' of type Foo which
-   // has a property 'bar' of type String
-   context.set("foo", foo);
+     Context context = new ELContext();
+     // Say we have an instance 'foo' of type Foo which
+     // has a property 'bar' of type String
+     context.set("foo", foo);
 
-   Evaluator evaluator = new ELEvaluator();
+     Evaluator evaluator = new ELEvaluator();
 
-   String bar = null;
-   try {
+     String bar = null;
+     try {
      bar = (String) evaluator.eval(context, "${foo.bar}");
-   } catch (SCXMLExpressionException see) {
+     } catch (SCXMLExpressionException see) {
      // Commons SCXML wraps the underlying exception,
      // in this case, a javax.servlet.jsp.el.ELException
-   }
+     }
    </pre>
   </section> 
 

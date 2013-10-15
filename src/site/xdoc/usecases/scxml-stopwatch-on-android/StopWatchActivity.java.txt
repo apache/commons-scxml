@@ -15,13 +15,13 @@
  * limitations under the License.
  */
 
-package org.apache.commons.scxml.samples.android;
+package org.apache.commons.scxml2.samples.android;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.apache.commons.scxml.env.StopWatch;
-import org.apache.commons.scxml.samples.android.R;
+import org.apache.commons.scxml2.env.StopWatch;
+import org.apache.commons.scxml2.samples.android.R;
 
 import android.app.Activity;
 import android.os.Bundle;

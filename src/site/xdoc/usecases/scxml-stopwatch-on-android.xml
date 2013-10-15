@@ -72,8 +72,8 @@
   <section name="Building the Android Application">
    <subsection name="The Stopwatch Logic">
     <p>As already mentioned this usecase is based on the stopwatch example. It uses 
-    both the <a href="http://svn.apache.org/repos/asf/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml/env/stopwatch.xml">stopwatch.xml</a> 
-    and the <a href="../xref-test/org/apache/commons/scxml/env/StopWatch.html">StopWatch.java</a>.</p>
+    both the <a href="http://svn.apache.org/repos/asf/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml2/env/stopwatch.xml">stopwatch.xml</a>
+    and the <a href="../xref-test/org/apache/commons/scxml2/env/StopWatch.html">StopWatch.java</a>.</p>
    </subsection>
    <subsection name="The Stopwatch UI">
     <p>Here is the UI definition for the stopwatch: <a href="scxml-stopwatch-on-android/stopwatch_display.xml">stopwatch_display.xml</a>.

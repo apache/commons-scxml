@@ -27,7 +27,7 @@
 
   <section name="Commons SCXML - Parsing SCXML documents for Commons SCXML">
     <p>Commons SCXML provides its own implementation of the
-    <a href="http://commons.apache.org/scxml/apidocs/org/apache/commons/scxml/model/package-summary.html">
+    <a href="http://commons.apache.org/scxml/apidocs/org/apache/commons/scxml2/model/package-summary.html">
     Java object model for SCXML</a>
     and a configured <a href="http://commons.apache.org/digester">
     Digester</a> that can parse SCXML documents into that object model.</p>
@@ -38,9 +38,9 @@
      <pre>
         //import java.io.IOException;
         //import java.net.URL;
-        //import org.apache.commons.scxml.io.SCXMLParser;
-        //import org.apache.commons.scxml.model.ModelException;
-        //import org.apache.commons.scxml.model.SCXML;
+        //import org.apache.commons.scxml2.io.SCXMLParser;
+        //import org.apache.commons.scxml2.model.ModelException;
+        //import org.apache.commons.scxml2.model.SCXML;
         //import org.xml.sax.ErrorHandler;
         //import org.xml.sax.SAXException;
 
@@ -74,13 +74,13 @@
      <p>The SCXMLParser exposes other convenience methods which can handle
      a SCXML document specified using its &quot;real path&quot; on the local
      system, in which case an additional 
-     <code>org.apache.commons.SCXML.PathResolver</code>parameter needs to be
+     <code>org.apache.commons.scxml2.PathResolver</code>parameter needs to be
      supplied for resolving relative document references or as an
      <code>InputSource</code>, in which case there is no path resolution,
      so the document must be a standalone document.</p>
 
      <p>The <code>SCXMLParser</code> Javadoc is available
-     <a href="../apidocs/org/apache/commons/scxml/io/SCXMLParser.html">
+     <a href="../apidocs/org/apache/commons/scxml2/io/SCXMLParser.html">
      here</a>.
      </p>
     </subsection>

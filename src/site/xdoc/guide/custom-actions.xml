@@ -54,31 +54,31 @@
     <p>A custom action in the Commons SCXML implementation has access to:
      <ul>
       <li>The current
-          <a href="../apidocs/org/apache/commons/scxml/Context.html">Context</a>
+          <a href="../apidocs/org/apache/commons/scxml2/Context.html">Context</a>
           (and hence, the values of variables in the current Context).
       </li>
       <li>Any other Context within the document, provided the id of the
           parent &lt;state&gt; is known.
       </li>
       <li>The expression
-          <a href="../apidocs/org/apache/commons/scxml/Evaluator.html">Evaluator</a>
+          <a href="../apidocs/org/apache/commons/scxml2/Evaluator.html">Evaluator</a>
           for this document, and hence the ability to evaluate a given
           expression against the current or a identifiable Context.
       </li>
       <li>The list of other actions in this
-          <a href="../apidocs/org/apache/commons/scxml/model/Executable.html">Executable</a>
+          <a href="../apidocs/org/apache/commons/scxml2/model/Executable.html">Executable</a>
           .</li>
       <li>The "root" Context, to examine any variable values in the
           "document environment".</li>
       <li>The
-          <a href="../apidocs/org/apache/commons/scxml/EventDispatcher.html">EventDispatcher</a>,
+          <a href="../apidocs/org/apache/commons/scxml2/EventDispatcher.html">EventDispatcher</a>,
           to send or cancel events.</li>
       <li>The
-          <a href="../apidocs/org/apache/commons/scxml/ErrorReporter.html">ErrorReporter</a>,
+          <a href="../apidocs/org/apache/commons/scxml2/ErrorReporter.html">ErrorReporter</a>,
           to report any errors (that the ErrorReporter knows how to handle).</li>
       <li>The histories, for any identifiable &lt;history&gt;.</li>
       <li>The
-          <a href="../apidocs/org/apache/commons/scxml/NotificationRegistry.html">NotificationRegistry</a>,
+          <a href="../apidocs/org/apache/commons/scxml2/NotificationRegistry.html">NotificationRegistry</a>,
           to obtain the list of listeners attached to identifiable
           "observers".</li>
       <li>The engine log, to log any information it needs to.</li>
@@ -102,7 +102,7 @@
       value of the name attribute when it executes.</p>
 
     <p>A simple example is
-      <a href="http://svn.apache.org/repos/asf/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml/custom-hello-world-01.xml">here</a>
+      <a href="http://svn.apache.org/repos/asf/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml2/custom-hello-world-01.xml">here</a>
       .</p>
 
    </subsection>
@@ -110,11 +110,11 @@
    <subsection name="Custom action implementation">
 
     <p>A custom action must extend the Commons SCXML
-       <a href="../apidocs/org/apache/commons/scxml/model/Action.html">Action</a>
+       <a href="../apidocs/org/apache/commons/scxml2/model/Action.html">Action</a>
        abstract base class.</p>
 
     <p>Here is the Java source for our custom
-       <a href="../xref-test/org/apache/commons/scxml/model/Hello.html">Hello</a>
+       <a href="../xref-test/org/apache/commons/scxml2/model/Hello.html">Hello</a>
        action. The execute() method contains the logging statement.</p>
 
    </subsection>
@@ -148,7 +148,7 @@
     <p>This approach can only be used if the custom
        rule has no body content (child "tags") or if the custom action
        implements the
-       <a href="../apidocs/org/apache/commons/scxml/model/ExternalContent.html">ExternalContent</a>
+       <a href="../apidocs/org/apache/commons/scxml2/model/ExternalContent.html">ExternalContent</a>
        interface, in which case, any body content gets read into a list
        of DOM nodes. For any other requirements, the digester rules
        can be added by directly by obtaining a Digester instance with the
@@ -162,7 +162,7 @@
    <subsection name="Read in the 'custom' SCXML document">
 
     <p>For documents without custom actions, the utility methods of the
-       <a href="../apidocs/org/apache/commons/scxml/io/SCXMLParser.html">SCXMLParser</a>
+       <a href="../apidocs/org/apache/commons/scxml2/io/SCXMLParser.html">SCXMLParser</a>
        should be used. That section is
        <a href="core-parser.html">here</a>.</p>
 

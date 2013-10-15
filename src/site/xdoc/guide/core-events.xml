@@ -41,9 +41,9 @@
      <p>An event &quot;foo.bar&quot; may be fired on the engine as
      follows:</p>
      <pre>
-        //import org.apache.commons.scxml.SCXMLExecutor;
-        //import org.apache.commons.scxml.TriggerEvent;
-        //import org.apache.commons.scxml.model.ModelException;
+        //import org.apache.commons.scxml2.SCXMLExecutor;
+        //import org.apache.commons.scxml2.TriggerEvent;
+        //import org.apache.commons.scxml2.model.ModelException;
 
         // where &quot;exec&quot; is the SCXMLExecutor instance
         TriggerEvent te = new TriggerEvent("foo.bar",
@@ -68,19 +68,19 @@
      conditions or executable content while the engine is processing the
      event. The payload can be any user-defined type.</p>
      <pre>
-        //import org.apache.commons.scxml.SCXMLExecutor;
-        //import org.apache.commons.scxml.TriggerEvent;
-        //import org.apache.commons.scxml.model.ModelException;
+       //import org.apache.commons.scxml2.SCXMLExecutor;
+       //import org.apache.commons.scxml2.TriggerEvent;
+       //import org.apache.commons.scxml2.model.ModelException;
 
-        // where "exec" is the SCXMLExecutor instance
-        // and "foo" is an object (payload) with an accessible property "bar"
-        TriggerEvent te = new TriggerEvent("event.with.payload",
-                              TriggerEvent.SIGNAL_EVENT, foo);
-        try {
-            exec.triggerEvent(te);
-        } catch (ModelException me) {
-            // The events left the engine in inconsistent state
-        }
+       // where "exec" is the SCXMLExecutor instance
+       // and "foo" is an object (payload) with an accessible property "bar"
+       TriggerEvent te = new TriggerEvent("event.with.payload",
+       TriggerEvent.SIGNAL_EVENT, foo);
+       try {
+       exec.triggerEvent(te);
+       } catch (ModelException me) {
+       // The events left the engine in inconsistent state
+       }
      </pre>
 
      <p>The payload in the above example can now be used in expressions,
@@ -114,10 +114,10 @@
      <code>Status</code> is queried for state machine run to completion.</p>
 
      <pre>
-        //import org.apache.commons.scxml.SCXMLExecutor;
-        //import org.apache.commons.scxml.Status;
+        //import org.apache.commons.scxml2.SCXMLExecutor;
+        //import org.apache.commons.scxml2.Status;
 
-        // where &quot;exec&quot; is the SCXMLExecutor instance    
+        // where &quot;exec&quot; is the SCXMLExecutor instance
         Status status = exec.getCurrentStatus();
         if (status.isFinal()) {
             // run to completion, release cached objects
@@ -125,10 +125,10 @@
      </pre>
 
      <p>The <code>TriggerEvent</code> Javadoc is available
-     <a href="../apidocs/org/apache/commons/scxml/TriggerEvent.html">
+     <a href="../apidocs/org/apache/commons/scxml2/TriggerEvent.html">
      here</a>.<br/>
      The <code>Status</code> Javadoc is available
-     <a href="../apidocs/org/apache/commons/scxml/Status.html">
+     <a href="../apidocs/org/apache/commons/scxml2/Status.html">
      here</a><br/>
      </p>
    </subsection>
