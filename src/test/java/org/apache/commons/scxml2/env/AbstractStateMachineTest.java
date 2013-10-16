@@ -18,20 +18,15 @@ package org.apache.commons.scxml2.env;
 
 import java.net.URL;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Unit tests {@link org.apache.commons.scxml2.env.AbstractStateMachine}.
  */
-public class AbstractStateMachineTest extends TestCase {
+public class AbstractStateMachineTest {
 
-    /**
-     * Construct a new instance of AbstractStateMachineTest with the specified name
-     */
-    public AbstractStateMachineTest(String name) {
-        super(name);
-    }
-
+    @Test
     public void testMoreThanOneScxmlDocument() throws Exception {
         URL fooScxmlDocument = getClass().getResource("foo.xml");
         URL barScxmlDocument = getClass().getResource("bar.xml");
@@ -39,8 +34,8 @@ public class AbstractStateMachineTest extends TestCase {
         Foo f = new Foo(fooScxmlDocument);
         Bar b = new Bar(barScxmlDocument);
 
-        assertTrue(f.fooCalled());
-        assertTrue(b.barCalled());
+        Assert.assertTrue(f.fooCalled());
+        Assert.assertTrue(b.barCalled());
     }
 
     private class Foo extends AbstractStateMachine {

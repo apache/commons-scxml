@@ -19,8 +19,6 @@ package org.apache.commons.scxml2.invoke;
 import java.net.URL;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.scxml2.SCInstance;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
@@ -28,15 +26,15 @@ import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.env.jexl.JexlContext;
 import org.apache.commons.scxml2.env.jexl.JexlEvaluator;
 import org.apache.commons.scxml2.model.ModelException;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 // Tests for 4.3.1 in WD-scxml-20080516
-public class InvokeParamNameTest extends TestCase {
-    
-    public InvokeParamNameTest(String testName) {
-        super(testName);
-    }
+public class InvokeParamNameTest {
 
     private URL invoker04;
     private SCXMLExecutor exec;
@@ -44,7 +42,7 @@ public class InvokeParamNameTest extends TestCase {
     static String lastSource;
     static Map<String, Object> lastParams;
     
-    @Override
+    @Before
     public void setUp() throws Exception {
         invoker04 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml2/invoke/invoker-04.xml");
@@ -53,7 +51,7 @@ public class InvokeParamNameTest extends TestCase {
         exec.registerInvokerClass("x-test", DummyInvoker.class);
     }
     
-    @Override
+    @After
     public void tearDown() {
         exec.unregisterInvokerClass("x-test");    
         invoker04 = null;
@@ -66,32 +64,35 @@ public class InvokeParamNameTest extends TestCase {
             TriggerEvent.SIGNAL_EVENT)); 
     }
     
-    // Tests "param" element with "name" and "expr" attribute
+    // Tests "param" element with "name" and "expr" attribute    
+    @Test
     public void testNameAndExpr() throws Exception {
         trigger();
-        assertTrue(lastSource.endsWith("TestSrc"));
+        Assert.assertTrue(lastSource.endsWith("TestSrc"));
         final Map.Entry<String, Object> e =
             lastParams.entrySet().iterator().next();
-        assertEquals("ding", e.getKey());
-        assertEquals("foo", e.getValue());
+        Assert.assertEquals("ding", e.getKey());
+        Assert.assertEquals("foo", e.getValue());
     }
 
-    // Tests "param" element with only a "name" attribute 
+    // Tests "param" element with only a "name" attribute     
+    @Test
     public void testSoleNameLocation() throws Exception {
         trigger(); trigger();
         final Element e = (Element)lastParams.values().iterator().next();
-        assertNotNull(e);
-        assertEquals("bar", e.getNodeName());
-        assertEquals(Node.TEXT_NODE, e.getFirstChild().getNodeType());
-        assertEquals("foo", e.getFirstChild().getNodeValue());
+        Assert.assertNotNull(e);
+        Assert.assertEquals("bar", e.getNodeName());
+        Assert.assertEquals(Node.TEXT_NODE, e.getFirstChild().getNodeType());
+        Assert.assertEquals("foo", e.getFirstChild().getNodeValue());
     }
 
-    // Tests "param" element with a single, wrong "name" attribute
+    // Tests "param" element with a single, wrong "name" attribute    
+    @Test
     public void testWrongNameLocation() throws Exception {
         trigger(); trigger(); trigger();
-        assertEquals(1, exec.getCurrentStatus().getEvents().size());
+        Assert.assertEquals(1, exec.getCurrentStatus().getEvents().size());
         final TriggerEvent evt = exec.getCurrentStatus().getEvents().iterator().next(); 
-        assertTrue(evt.getName().endsWith("error.illegalalloc"));
+        Assert.assertTrue(evt.getName().endsWith("error.illegalalloc"));
     }
 
     public static class DummyInvoker implements Invoker {

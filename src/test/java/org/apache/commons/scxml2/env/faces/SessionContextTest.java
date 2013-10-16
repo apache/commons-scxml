@@ -16,18 +16,16 @@
  */
 package org.apache.commons.scxml2.env.faces;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class SessionContextTest extends TestCase {
+public class SessionContextTest {
 
-    public SessionContextTest(String testName) {
-        super(testName);
-    }
-
+    @Test
     public void testIllegalInstance() {
     	try {
             new SessionContext(null);
-            fail("SessionContext successfully instantiated with"
+            Assert.fail("SessionContext successfully instantiated with"
                 + " null FacesContext");
     	} catch (IllegalArgumentException iae) {
     		// expected, ignore

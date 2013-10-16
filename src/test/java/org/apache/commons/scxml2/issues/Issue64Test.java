@@ -18,20 +18,17 @@ package org.apache.commons.scxml2.issues;
 
 import java.net.URL;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test cases for issue 64.
  * WONTFIX
  */
-public class Issue64Test extends TestCase {
-
-    public Issue64Test(String name) {
-        super(name);
-    }
+public class Issue64Test {
 
     private URL works, fails;
     private SCXMLExecutor exec;
@@ -39,7 +36,7 @@ public class Issue64Test extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
-    @Override
+    @Before
     public void setUp() {
         works = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml2/issues/issue64-01.xml");
@@ -50,17 +47,19 @@ public class Issue64Test extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
-    @Override
+    @After
     public void tearDown() {
         works = fails = null;
         exec = null;
     }
-
+    
+    @Test
     public void test01issue64() throws Exception {
         exec = SCXMLTestHelper.getExecutor(SCXMLTestHelper.parse(works));
         SCXMLTestHelper.assertPostTriggerState(exec, "show.bug", "end");
     }
-
+    
+    @Test
     public void test02issue64() throws Exception {
         exec = SCXMLTestHelper.getExecutor(SCXMLTestHelper.parse(fails));
         SCXMLTestHelper.assertPostTriggerState(exec, "show.bug", "end");

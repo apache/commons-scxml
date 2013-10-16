@@ -18,24 +18,19 @@ package org.apache.commons.scxml2.env.jsp;
 
 import java.net.URL;
 
-import javax.servlet.jsp.JspContext;
-
-import junit.framework.TestCase;
-
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import javax.servlet.jsp.JspContext;
 
 /**
  * Unit tests {@link org.apache.commons.scxml2.env.jsp.RootContext}.
  */
-public class RootContextTest extends TestCase {
-    /**
-     * Construct a new instance of ActionsTest with
-     * the specified name
-     */
-    public RootContextTest(String name) {
-        super(name);
-    }
+public class RootContextTest {
 
     // Test data
     private URL rootCtxSample;
@@ -47,7 +42,7 @@ public class RootContextTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
-    @Override
+    @Before
     public void setUp() {
         rootCtxSample = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml2/env/jsp/jsp-rootctx-test.xml");
@@ -60,7 +55,7 @@ public class RootContextTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
-    @Override
+    @After
     public void tearDown() {
         rootCtxSample = null;
         evaluator = null;
@@ -71,21 +66,22 @@ public class RootContextTest extends TestCase {
 
     /**
      * Test the implementation
-     */
+     */    
+    @Test
     public void testRootContext() throws Exception {
-        assertEquals("1", String.valueOf(rootCtx.get("foo")));
+        Assert.assertEquals("1", String.valueOf(rootCtx.get("foo")));
         exec = SCXMLTestHelper.getExecutor(rootCtxSample, rootCtx, evaluator);
-        assertEquals("1", String.valueOf(jspCtx.getAttribute("foo")));
-        assertEquals("2", String.valueOf(rootCtx.get("foo")));
-        assertNull(jspCtx.getAttribute("bar"));
+        Assert.assertEquals("1", String.valueOf(jspCtx.getAttribute("foo")));
+        Assert.assertEquals("2", String.valueOf(rootCtx.get("foo")));
+        Assert.assertNull(jspCtx.getAttribute("bar"));
         ELContext ctx = (ELContext) SCXMLTestHelper.lookupContext(exec,
             "rootCtxTest");
-        assertNotNull(ctx);
-        assertNotNull(ctx.get("bar"));
-        assertNull(jspCtx.getVariableResolver().resolveVariable("bar"));
-        assertNotNull(ctx.resolveVariable("bar"));
-        assertEquals(ctx.resolveVariable("bar"), "a brand new value");
-        assertNotNull(ctx.getVars());
+        Assert.assertNotNull(ctx);
+        Assert.assertNotNull(ctx.get("bar"));
+        Assert.assertNull(jspCtx.getVariableResolver().resolveVariable("bar"));
+        Assert.assertNotNull(ctx.resolveVariable("bar"));
+        Assert.assertEquals(ctx.resolveVariable("bar"), "a brand new value");
+        Assert.assertNotNull(ctx.getVars());
     }
 }
 

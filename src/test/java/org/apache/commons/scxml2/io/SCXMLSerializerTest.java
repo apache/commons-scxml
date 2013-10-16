@@ -21,8 +21,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.scxml2.model.Action;
 import org.apache.commons.scxml2.model.Assign;
 import org.apache.commons.scxml2.model.Cancel;
@@ -40,13 +38,12 @@ import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.Transition;
 import org.apache.commons.scxml2.model.TransitionTarget;
 import org.apache.commons.scxml2.model.Var;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class SCXMLSerializerTest extends TestCase {
+public class SCXMLSerializerTest {
 
-    public SCXMLSerializerTest(String testName) {
-        super(testName);
-    }
-
+    @Test
     public void testSerializeSCXMLNoStates() {
         SCXML scxml = new SCXML();
         Map<String, String> namespaces = new LinkedHashMap<String, String>();
@@ -65,9 +62,10 @@ public class SCXMLSerializerTest extends TestCase {
             + "version=\"version1\" initial=\"off\">\n <!-- http://commons.apache.org/scxml -->\n <state>\n "
             + "</state>\n</scxml>\n";
         
-        assertEquals(assertValue, SCXMLSerializer.serialize(scxml));
+        Assert.assertEquals(assertValue, SCXMLSerializer.serialize(scxml));
     }
     
+    @Test
     public void testSerializeSend() {
         Send send = new Send();
         send.setSendid("1");
@@ -89,9 +87,10 @@ public class SCXMLSerializerTest extends TestCase {
         StringBuffer returnValue = new StringBuffer(); 
         SCXMLSerializer.serializeSend(returnValue, send, " "); 
         
-        assertEquals(assertValue, returnValue.toString());
+        Assert.assertEquals(assertValue, returnValue.toString());
     }
-
+    
+    @Test
     public void testSerializeSendEmptyAttributes() {
         // test a <send event="foo"/>, i.e.most attributes are empty
         Send send = new Send();
@@ -102,9 +101,10 @@ public class SCXMLSerializerTest extends TestCase {
         StringBuffer returnValue = new StringBuffer();
         SCXMLSerializer.serializeSend(returnValue, send, " ");
 
-        assertEquals(assertValue, returnValue.toString());
+        Assert.assertEquals(assertValue, returnValue.toString());
     }
-
+    
+    @Test
     public void testSerializeActionsListNull() {
         TransitionTarget target = new State();
         target.setId("1");
@@ -112,10 +112,11 @@ public class SCXMLSerializerTest extends TestCase {
         StringBuffer returnValue = new StringBuffer();
         boolean returnBoolean = SCXMLSerializer.serializeActions(returnValue, null, " ");
         
-        assertFalse(returnBoolean);
-        assertEquals(0, returnValue.length());
+        Assert.assertFalse(returnBoolean);
+        Assert.assertEquals(0, returnValue.length());
     }
     
+    @Test
     public void testSerializeActionsVar() {
         Var var = new Var();
         var.setName("newName");
@@ -129,10 +130,11 @@ public class SCXMLSerializerTest extends TestCase {
         StringBuffer returnValue = new StringBuffer();
         boolean returnBoolean = SCXMLSerializer.serializeActions(returnValue, values, " ");
         
-        assertFalse(returnBoolean);
-        assertEquals(actualValue, returnValue.toString());
+        Assert.assertFalse(returnBoolean);
+        Assert.assertEquals(actualValue, returnValue.toString());
     }
     
+    @Test
     public void testSerializeActionsAssign() {
         Assign assign = new Assign();
         assign.setName("newName");
@@ -146,10 +148,11 @@ public class SCXMLSerializerTest extends TestCase {
         StringBuffer returnValue = new StringBuffer();
         boolean returnBoolean = SCXMLSerializer.serializeActions(returnValue, values, " ");
         
-        assertFalse(returnBoolean);
-        assertEquals(actualValue, returnValue.toString());
+        Assert.assertFalse(returnBoolean);
+        Assert.assertEquals(actualValue, returnValue.toString());
     }
     
+    @Test
     public void testSerializeActionsCancel() {
         Cancel cancel = new Cancel();
         cancel.setSendid("1");
@@ -162,10 +165,11 @@ public class SCXMLSerializerTest extends TestCase {
         StringBuffer returnValue = new StringBuffer();
         boolean returnBoolean = SCXMLSerializer.serializeActions(returnValue, values, " ");
         
-        assertFalse(returnBoolean);
-        assertEquals(actualValue, returnValue.toString());
+        Assert.assertFalse(returnBoolean);
+        Assert.assertEquals(actualValue, returnValue.toString());
     }
     
+    @Test
     public void testSerializeActionsLog() {
         Log log = new Log();
         log.setExpr("newExpression");
@@ -178,10 +182,11 @@ public class SCXMLSerializerTest extends TestCase {
         StringBuffer returnValue = new StringBuffer();
         boolean returnBoolean = SCXMLSerializer.serializeActions(returnValue, values, " ");
         
-        assertFalse(returnBoolean);
-        assertEquals(actualValue, returnValue.toString());
+        Assert.assertFalse(returnBoolean);
+        Assert.assertEquals(actualValue, returnValue.toString());
     }
     
+    @Test
     public void testSerializeActionsExit() {
         Exit exit = new Exit();
         exit.setExpr("newExpression");
@@ -195,10 +200,11 @@ public class SCXMLSerializerTest extends TestCase {
         StringBuffer returnValue = new StringBuffer();
         boolean returnBoolean = SCXMLSerializer.serializeActions(returnValue, values, " ");
         
-        assertTrue(returnBoolean);
-        assertEquals(actualValue, returnValue.toString());
+        Assert.assertTrue(returnBoolean);
+        Assert.assertEquals(actualValue, returnValue.toString());
     }
     
+    @Test
     public void testSerializeActionsElse() {
         Else elseValue = new Else();
         
@@ -210,10 +216,11 @@ public class SCXMLSerializerTest extends TestCase {
         StringBuffer returnValue = new StringBuffer();
         boolean returnBoolean = SCXMLSerializer.serializeActions(returnValue, values, " ");
         
-        assertFalse(returnBoolean);
-        assertEquals(actualValue, returnValue.toString());
+        Assert.assertFalse(returnBoolean);
+        Assert.assertEquals(actualValue, returnValue.toString());
     }
     
+    @Test
     public void testSerializeActionsElseIf() {
         ElseIf elseIf = new ElseIf();
         elseIf.setCond("newCondition");
@@ -226,10 +233,11 @@ public class SCXMLSerializerTest extends TestCase {
         StringBuffer returnValue = new StringBuffer();
         boolean returnBoolean = SCXMLSerializer.serializeActions(returnValue, values, " ");
         
-        assertFalse(returnBoolean);
-        assertEquals(actualValue, returnValue.toString());
+        Assert.assertFalse(returnBoolean);
+        Assert.assertEquals(actualValue, returnValue.toString());
     }
     
+    @Test
     public void testSerializeIf() {
         If ifValue = new If();
         ifValue.setCond("newCondition");
@@ -242,10 +250,11 @@ public class SCXMLSerializerTest extends TestCase {
         StringBuffer returnValue = new StringBuffer();
         boolean returnBoolean = SCXMLSerializer.serializeActions(returnValue, values, " ");
         
-        assertFalse(returnBoolean);
-        assertEquals(actualValue, returnValue.toString());
+        Assert.assertFalse(returnBoolean);
+        Assert.assertEquals(actualValue, returnValue.toString());
     }
     
+    @Test
     public void testSerializeOnEntrySizeZero() {
         TransitionTarget target = new State();
         target.setOnEntry(new OnEntry());
@@ -255,9 +264,10 @@ public class SCXMLSerializerTest extends TestCase {
         StringBuffer returnValue = new StringBuffer();
         SCXMLSerializer.serializeOnEntry(returnValue, target, " ");
         
-        assertEquals(actualValue, returnValue.toString());
+        Assert.assertEquals(actualValue, returnValue.toString());
     }
-
+    
+    @Test
     public void testSerializeOnEntry() {
         TransitionTarget target = new State();
         
@@ -271,9 +281,10 @@ public class SCXMLSerializerTest extends TestCase {
         StringBuffer returnValue = new StringBuffer();
         SCXMLSerializer.serializeOnEntry(returnValue, target, " ");
         
-        assertEquals(actualValue, returnValue.toString());
+        Assert.assertEquals(actualValue, returnValue.toString());
     }
     
+    @Test
     public void testSerializeOnExitSizeZero() {
         TransitionTarget target = new State();
         target.setOnExit(new OnExit());
@@ -283,9 +294,10 @@ public class SCXMLSerializerTest extends TestCase {
         StringBuffer returnValue = new StringBuffer();
         SCXMLSerializer.serializeOnExit(returnValue, target, " ");
         
-        assertEquals(actualValue, returnValue.toString());
+        Assert.assertEquals(actualValue, returnValue.toString());
     }
-
+    
+    @Test
     public void testSerializeOnExit() {
         TransitionTarget target = new State();
         
@@ -299,9 +311,10 @@ public class SCXMLSerializerTest extends TestCase {
         StringBuffer returnValue = new StringBuffer();
         SCXMLSerializer.serializeOnExit(returnValue, target, " ");
         
-        assertEquals(actualValue, returnValue.toString());
+        Assert.assertEquals(actualValue, returnValue.toString());
     }
-
+    
+    @Test
     public void testSerializeTransition() {
         Transition t = new Transition();
 
@@ -314,9 +327,10 @@ public class SCXMLSerializerTest extends TestCase {
         StringBuffer returnValue = new StringBuffer();
         SCXMLSerializer.serializeTransition(returnValue, t, "");
 
-        assertEquals(actualValue, returnValue.toString());
+        Assert.assertEquals(actualValue, returnValue.toString());
     }
-
+    
+    @Test
     public void testSerializeTransitionEscapeXML() {
         Transition t = new Transition();
 
@@ -328,9 +342,10 @@ public class SCXMLSerializerTest extends TestCase {
         StringBuffer returnValue = new StringBuffer();
         SCXMLSerializer.serializeTransition(returnValue, t, "");
 
-        assertEquals(actualValue, returnValue.toString());
+        Assert.assertEquals(actualValue, returnValue.toString());
     }
-
+    
+    @Test
     public void testSerializeSCXMLState() {
         SCXML scxml = new SCXML();
         scxml.setVersion("1.0");
@@ -346,9 +361,10 @@ public class SCXMLSerializerTest extends TestCase {
             + "version=\"1.0\" initial=\"S1\">\n <!-- http://commons.apache.org/scxml -->\n"
             + " <state id=\"S1\">\n </state>\n</scxml>\n";
 
-        assertEquals(assertValue, SCXMLSerializer.serialize(scxml));
+        Assert.assertEquals(assertValue, SCXMLSerializer.serialize(scxml));
     }
-
+    
+    @Test
     public void testSerializeParallel() {
 
         SCXML scxml = new SCXML();
@@ -397,7 +413,7 @@ public class SCXMLSerializerTest extends TestCase {
 
         String s = SCXMLSerializer.serialize(scxml);
 
-        assertEquals(assertValue, s);
+        Assert.assertEquals(assertValue, s);
      }
 
 }

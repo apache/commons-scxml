@@ -19,39 +19,40 @@ package org.apache.commons.scxml2.env;
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-public class SimpleContextTest extends TestCase {
-
-    public SimpleContextTest(String testName) {
-        super(testName);
-    }
+public class SimpleContextTest {
 
     private SimpleContext context;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         context = new SimpleContext();
     }
     
+    @Test
     public void testHasTrue() {
         Map<String, Object> vars = new HashMap<String, Object>();
         vars.put("key", "value");
         
         context.setVars(vars);
         
-        assertTrue(context.has("key"));
+        Assert.assertTrue(context.has("key"));
     }
 
+    @Test
     public void testHasNullParent() {
         Map<String, Object> vars = new HashMap<String, Object>();
         vars.put("key", "value");
         
         context.setVars(vars);
         
-        assertFalse(context.has("differentKey"));
+        Assert.assertFalse(context.has("differentKey"));
     }
     
+    @Test
     public void testHasParentWrongKey() {
         Map<String, Object> parentVars = new HashMap<String, Object>();
         parentVars.put("key", "value");
@@ -64,9 +65,10 @@ public class SimpleContextTest extends TestCase {
         context.setVars(vars);
         context = new SimpleContext(parentContext, parentVars);
         
-        assertFalse(context.has("differentKey"));
+        Assert.assertFalse(context.has("differentKey"));
     }
 
+    @Test
     public void testHasParentCorrectKey() {
         Map<String, Object> parentVars = new HashMap<String, Object>();
         parentVars.put("differentKey", "value");
@@ -79,24 +81,27 @@ public class SimpleContextTest extends TestCase {
         context.setVars(vars);
         context = new SimpleContext(parentContext, parentVars);
         
-        assertTrue(context.has("differentKey"));
+        Assert.assertTrue(context.has("differentKey"));
     }
     
+    @Test
     public void testGetNull() {
         Object value = context.get("key");
         
-        assertNull(value);
+        Assert.assertNull(value);
     }
     
+    @Test
     public void testGetValue() {
         Map<String, Object> vars = new HashMap<String, Object>();
         vars.put("key", "value");
         
         context.setVars(vars);
         
-        assertEquals("value", context.get("key"));
+        Assert.assertEquals("value", context.get("key"));
     }
     
+    @Test
     public void testGetParentValue() {
         Map<String, Object> parentVars = new HashMap<String, Object>();
         parentVars.put("differentKey", "differentValue");
@@ -109,18 +114,20 @@ public class SimpleContextTest extends TestCase {
         context.setVars(vars);
         context = new SimpleContext(parentContext, parentVars);
         
-        assertEquals("differentValue", context.get("differentKey"));
+        Assert.assertEquals("differentValue", context.get("differentKey"));
     }
     
+    @Test
     public void testGetParentNull() {
         Map<String, Object> vars = new HashMap<String, Object>();
         vars.put("key", "value");
         
         context.setVars(vars);
         
-        assertNull(context.get("differentKey"));
+        Assert.assertNull(context.get("differentKey"));
     }
     
+    @Test
     public void testGetParentWrongValue() {
         Map<String, Object> parentVars = new HashMap<String, Object>();
         parentVars.put("differentKey", "differentValue");
@@ -133,9 +140,10 @@ public class SimpleContextTest extends TestCase {
         context.setVars(vars);
         context = new SimpleContext(parentContext, parentVars);
         
-        assertNull(context.get("reallyDifferentKey"));
+        Assert.assertNull(context.get("reallyDifferentKey"));
     }
 
+    @Test
     public void testSetVarsChangeValue() {
         Map<String, Object> vars = new HashMap<String, Object>();
         vars.put("key", "value");
@@ -144,18 +152,20 @@ public class SimpleContextTest extends TestCase {
         
         context.set("key", "newValue");
         
-        assertEquals("newValue", context.get("key"));
+        Assert.assertEquals("newValue", context.get("key"));
     }
 
+    @Test
     public void testSetVarsEmpty() {
         Map<String, Object> vars = new HashMap<String, Object>();
         context.setVars(vars);
         
         context.set("key", "newValue");
         
-        assertEquals("newValue", context.get("key"));
+        Assert.assertEquals("newValue", context.get("key"));
     }
     
+    @Test
     public void testSetVarsParent() {
         Map<String, Object> parentVars = new HashMap<String, Object>();
         parentVars.put("differentKey", "differentValue");
@@ -170,6 +180,6 @@ public class SimpleContextTest extends TestCase {
         
         context.set("differentKey", "newValue");
         
-        assertEquals("newValue", context.get("differentKey"));
+        Assert.assertEquals("newValue", context.get("differentKey"));
     }
 }

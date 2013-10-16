@@ -21,21 +21,19 @@ import java.util.Set;
 
 import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.TransitionTarget;
+import org.junit.Assert;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+public class BuiltinTest {
 
-public class BuiltinTest extends TestCase {
-
-    public BuiltinTest(String testName) {
-        super(testName);
-    }
-
+    @Test
     public void testIsMemberEmptySet() {
         Set<TransitionTarget> set = new HashSet<TransitionTarget>();
         
-        assertFalse(Builtin.isMember(set, "on"));
+        Assert.assertFalse(Builtin.isMember(set, "on"));
     }
     
+    @Test
     public void testIsMemberFalse() {
         TransitionTarget state = new State();
         state.setId("off");
@@ -43,9 +41,10 @@ public class BuiltinTest extends TestCase {
         Set<TransitionTarget> set = new HashSet<TransitionTarget>();
         set.add(state);
         
-        assertFalse(Builtin.isMember(set, "on"));
+        Assert.assertFalse(Builtin.isMember(set, "on"));
     }
     
+    @Test
     public void testIsMemberTrue() {
         TransitionTarget state = new State();
         state.setId("on");
@@ -53,7 +52,7 @@ public class BuiltinTest extends TestCase {
         Set<TransitionTarget> set = new HashSet<TransitionTarget>();
         set.add(state);
         
-        assertTrue(Builtin.isMember(set, "on"));
+        Assert.assertTrue(Builtin.isMember(set, "on"));
     }
 
 }

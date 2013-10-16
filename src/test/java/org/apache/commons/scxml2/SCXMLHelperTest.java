@@ -19,55 +19,59 @@ package org.apache.commons.scxml2;
 import java.util.HashSet;
 import java.util.Set;
 
-import junit.framework.TestCase;
 import org.apache.commons.scxml2.env.MockErrorReporter;
 import org.apache.commons.scxml2.env.SimpleErrorReporter;
 import org.apache.commons.scxml2.model.Parallel;
 import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.TransitionTarget;
 import org.apache.commons.scxml2.semantics.ErrorConstants;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class SCXMLHelperTest extends TestCase {
+public class SCXMLHelperTest {
 
-    public SCXMLHelperTest(String testName) {
-        super(testName);
-    }
-
+    @Test
     public void testIsStringEmptyNull() {
-        assertTrue(SCXMLHelper.isStringEmpty(null));
+        Assert.assertTrue(SCXMLHelper.isStringEmpty(null));
     }
     
+    @Test
     public void testIsStringEmptyZeroLength() {
-        assertTrue(SCXMLHelper.isStringEmpty(""));
+        Assert.assertTrue(SCXMLHelper.isStringEmpty(""));
     }
 
+    @Test
     public void testIsStringEmpty() {
-        assertFalse(SCXMLHelper.isStringEmpty("value"));
+        Assert.assertFalse(SCXMLHelper.isStringEmpty("value"));
     }
 
+    @Test
     public void testIsDescendantNullParent() {
         TransitionTarget state = new State();
         TransitionTarget context = new State();
         
-        assertFalse(SCXMLHelper.isDescendant(state, context));
+        Assert.assertFalse(SCXMLHelper.isDescendant(state, context));
     }
     
+    @Test
     public void testIsDescendantNotEqual() {
         TransitionTarget state = new State();
         state.setParent(new State());
         TransitionTarget context = new State();
         
-        assertFalse(SCXMLHelper.isDescendant(state, context));
+        Assert.assertFalse(SCXMLHelper.isDescendant(state, context));
     }
     
+    @Test
     public void testIsDescendantEqual() {
         TransitionTarget state = new State();
         TransitionTarget context = new State();
         state.setParent(context);
         
-        assertTrue(SCXMLHelper.isDescendant(state, context));
+        Assert.assertTrue(SCXMLHelper.isDescendant(state, context));
     }
     
+    @Test
     public void testIsDescendantParentEqual() {
         TransitionTarget state = new State();
         TransitionTarget context = new State();
@@ -76,17 +80,19 @@ public class SCXMLHelperTest extends TestCase {
         parent.setParent(context);
         state.setParent(parent);
         
-        assertTrue(SCXMLHelper.isDescendant(state, context));
+        Assert.assertTrue(SCXMLHelper.isDescendant(state, context));
     }
     
+    @Test
     public void testGetAncestorClosureEmptySet() {
         Set<TransitionTarget> states = new HashSet<TransitionTarget>();
         
         Set<TransitionTarget> returnValue = SCXMLHelper.getAncestorClosure(states, new HashSet<TransitionTarget>());
         
-        assertEquals(0, returnValue.size());
+        Assert.assertEquals(0, returnValue.size());
     }
     
+    @Test
     public void testGetAncestorClosureUpperBoundNotNullAndContains() {
         Set<TransitionTarget> states = new HashSet<TransitionTarget>();
         TransitionTarget state = new State();
@@ -98,10 +104,11 @@ public class SCXMLHelperTest extends TestCase {
         
         Set<TransitionTarget> returnValue = SCXMLHelper.getAncestorClosure(states, upperBounds);
         
-        assertEquals(1, returnValue.size());
-        assertEquals("1", ((TransitionTarget)returnValue.toArray()[0]).getId());
+        Assert.assertEquals(1, returnValue.size());
+        Assert.assertEquals("1", ((TransitionTarget)returnValue.toArray()[0]).getId());
     }
     
+    @Test
     public void testGetAncestorClosureContainsParent() {
         Set<TransitionTarget> states = new HashSet<TransitionTarget>();
         TransitionTarget state = new State();
@@ -113,16 +120,18 @@ public class SCXMLHelperTest extends TestCase {
         
         Set<TransitionTarget> returnValue = SCXMLHelper.getAncestorClosure(states, upperBounds);
         
-        assertEquals(1, returnValue.size());
-        assertEquals("1", ((TransitionTarget)returnValue.toArray()[0]).getId());
+        Assert.assertEquals(1, returnValue.size());
+        Assert.assertEquals("1", ((TransitionTarget)returnValue.toArray()[0]).getId());
     }
     
+    @Test
     public void testIsLegalConfigNoStates() {
         Set<TransitionTarget> states = new HashSet<TransitionTarget>();
         
-        assertTrue(SCXMLHelper.isLegalConfig(states, new SimpleErrorReporter()));
+        Assert.assertTrue(SCXMLHelper.isLegalConfig(states, new SimpleErrorReporter()));
     }
     
+    @Test
     public void testIsLegalConfigInvalidParallel() {
         Set<TransitionTarget> states = new HashSet<TransitionTarget>();
         Parallel parallel = new Parallel();
@@ -144,11 +153,12 @@ public class SCXMLHelperTest extends TestCase {
         
         MockErrorReporter errorReporter = new MockErrorReporter();
         
-        assertFalse(SCXMLHelper.isLegalConfig(states, errorReporter));
-        assertEquals(ErrorConstants.ILLEGAL_CONFIG, errorReporter.getErrCode());
-        assertEquals("Not all AND states active for parallel 4", errorReporter.getErrDetail());
+        Assert.assertFalse(SCXMLHelper.isLegalConfig(states, errorReporter));
+        Assert.assertEquals(ErrorConstants.ILLEGAL_CONFIG, errorReporter.getErrCode());
+        Assert.assertEquals("Not all AND states active for parallel 4", errorReporter.getErrDetail());
     }
     
+    @Test
     public void testIsLegalConfigMultipleTopLevel() {
         Set<TransitionTarget> states = new HashSet<TransitionTarget>();
 
@@ -162,11 +172,12 @@ public class SCXMLHelperTest extends TestCase {
         
         MockErrorReporter errorReporter = new MockErrorReporter();
         
-        assertTrue(SCXMLHelper.isLegalConfig(states, errorReporter));
-        assertEquals(ErrorConstants.ILLEGAL_CONFIG, errorReporter.getErrCode());
-        assertEquals("Multiple top-level OR states active!", errorReporter.getErrDetail());
+        Assert.assertTrue(SCXMLHelper.isLegalConfig(states, errorReporter));
+        Assert.assertEquals(ErrorConstants.ILLEGAL_CONFIG, errorReporter.getErrCode());
+        Assert.assertEquals("Multiple top-level OR states active!", errorReporter.getErrDetail());
     }
     
+    @Test
     public void testIsLegalConfigMultipleStatesActive() {
         Set<TransitionTarget> states = new HashSet<TransitionTarget>();
 
@@ -187,20 +198,22 @@ public class SCXMLHelperTest extends TestCase {
         
         MockErrorReporter errorReporter = new MockErrorReporter();
         
-        assertFalse(SCXMLHelper.isLegalConfig(states, errorReporter));
-        assertEquals(ErrorConstants.ILLEGAL_CONFIG, errorReporter.getErrCode());
-        assertEquals("Multiple OR states active for state parentid", errorReporter.getErrDetail());
+        Assert.assertFalse(SCXMLHelper.isLegalConfig(states, errorReporter));
+        Assert.assertEquals(ErrorConstants.ILLEGAL_CONFIG, errorReporter.getErrCode());
+        Assert.assertEquals("Multiple OR states active for state parentid", errorReporter.getErrDetail());
     }
     
+    @Test
     public void testGetLCASameTarget() {
         TransitionTarget target = new State();
         target.setId("1");
         
         TransitionTarget returnValue = SCXMLHelper.getLCA(target, target);
         
-        assertEquals("1", returnValue.getId());
+        Assert.assertEquals("1", returnValue.getId());
     }
 
+    @Test
     public void testGetLCAIsDescendant() {
         TransitionTarget target = new State();
         target.setId("1");
@@ -212,9 +225,10 @@ public class SCXMLHelperTest extends TestCase {
         
         TransitionTarget returnValue = SCXMLHelper.getLCA(target, parent);
         
-        assertEquals("2", returnValue.getId());
+        Assert.assertEquals("2", returnValue.getId());
     }
     
+    @Test
     public void testGetLCAIsDescendantReverse() {
         TransitionTarget target = new State();
         target.setId("1");
@@ -226,9 +240,10 @@ public class SCXMLHelperTest extends TestCase {
         
         TransitionTarget returnValue = SCXMLHelper.getLCA(target, parent);
         
-        assertEquals("1", returnValue.getId());
+        Assert.assertEquals("1", returnValue.getId());
     }
 
+    @Test
     public void testGetLCANull() {
         TransitionTarget target = new State();
         target.setId("1");
@@ -238,9 +253,10 @@ public class SCXMLHelperTest extends TestCase {
 
         TransitionTarget returnValue = SCXMLHelper.getLCA(target, notParent);
         
-        assertNull(returnValue);
+        Assert.assertNull(returnValue);
     }
 
+    @Test
     public void testGetLCADistantAncestor() {
         TransitionTarget target1 = new State();
         target1.setId("1");
@@ -256,6 +272,6 @@ public class SCXMLHelperTest extends TestCase {
         
         TransitionTarget returnValue = SCXMLHelper.getLCA(target1, target2);
         
-        assertEquals("3", returnValue.getId());
+        Assert.assertEquals("3", returnValue.getId());
     }
 }

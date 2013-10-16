@@ -16,31 +16,31 @@
  */
 package org.apache.commons.scxml2;
 
-import junit.framework.TestCase;
 import org.apache.commons.scxml2.model.State;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-public class StatusTest extends TestCase {
-
-    public StatusTest(String name) {
-        super(name);
-    }
+public class StatusTest {
 
     private Status status;
     
-    @Override
+    @Before
     public void setUp() {
         status = new Status();
     }
     
+    @Test
     public void testIsFinalStateFalse() {
         State state = new State();
         state.setFinal(false);
         
         status.getStates().add(state);
         
-        assertFalse(status.isFinal());
+        Assert.assertFalse(status.isFinal());
     }
     
+    @Test
     public void testIsFinalStateHasParent() {
         State state = new State();
         state.setFinal(true);
@@ -48,9 +48,10 @@ public class StatusTest extends TestCase {
         
         status.getStates().add(state);
 
-        assertFalse(status.isFinal());
+        Assert.assertFalse(status.isFinal());
     }
     
+    @Test
     public void testIsFinalStateHasEvent() {
         State state = new State();
         state.setFinal(true);
@@ -58,16 +59,17 @@ public class StatusTest extends TestCase {
         status.getStates().add(state);
         status.getEvents().add(new TriggerEvent("name", TriggerEvent.CALL_EVENT));
         
-        assertFalse(status.isFinal());
+        Assert.assertFalse(status.isFinal());
     }
     
+    @Test
     public void testIsFinalState() {
         State state = new State();
         state.setFinal(true);
         
         status.getStates().add(state);
         
-        assertTrue(status.isFinal());
+        Assert.assertTrue(status.isFinal());
     }
     
 }

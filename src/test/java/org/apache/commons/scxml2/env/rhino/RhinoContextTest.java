@@ -19,47 +19,29 @@ package org.apache.commons.scxml2.env.rhino;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import junit.framework.Assert;
-import junit.framework.TestCase;
-
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.mozilla.javascript.Script;
 import org.mozilla.javascript.Scriptable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
 /**
  * Tests for class {@link RhinoContext}.
  */
-public class RhinoContextTest extends TestCase {
-
-    /**
-     * Constructs a test case with the given name.
-     *
-     * @param name
-     *            The name of the test case.
-     */
-    public RhinoContextTest(String name) {
-        super(name);
-    }
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
+public class RhinoContextTest {
 
     /**
      * @throws Exception
-     */
+     */    
+    @Test
     public void testSetStringValue() throws Exception {
         Context context = new RhinoContext();
         context.set("myVar", "stringValue");
@@ -70,7 +52,8 @@ public class RhinoContextTest extends TestCase {
 
     /**
      * @throws Exception
-     */
+     */    
+    @Test
     public void testSetIntValue() throws Exception {
         Context context = new RhinoContext();
         context.set("myVar", new Integer(27));
@@ -81,7 +64,8 @@ public class RhinoContextTest extends TestCase {
 
     /**
      * @throws Exception
-     */
+     */    
+    @Test
     public void testSetXMLValue() throws Exception {
         Context context = new RhinoContext();
         String xmlString = "<foo><bar>bar</bar></foo>";
@@ -92,7 +76,8 @@ public class RhinoContextTest extends TestCase {
 
     /**
      * @throws Exception
-     */
+     */    
+    @Test
     public void testSetMapValueWithStringEntry() throws Exception {
         Context context = new RhinoContext();
         Map<String, String> map = new HashMap<String, String>();
@@ -105,7 +90,8 @@ public class RhinoContextTest extends TestCase {
 
     /**
      * @throws Exception
-     */
+     */    
+    @Test
     public void testSetMapValueWithMapEntry() throws Exception {
         Context context = new RhinoContext();
         Map<String, Map<String, String>> map1 = new HashMap<String, Map<String, String>>();
@@ -122,7 +108,8 @@ public class RhinoContextTest extends TestCase {
 
     /**
      * @throws Exception
-     */
+     */    
+    @Test
     public void testSetMapValueWithXMLStringEntry() throws Exception {
         RhinoContext context = new RhinoContext();
         Map<String, String> map = new HashMap<String, String>();
@@ -141,7 +128,8 @@ public class RhinoContextTest extends TestCase {
 
     /**
      * @throws Exception
-     */
+     */    
+    @Test
     public void testCompileStringWithNodeValue() throws Exception {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -164,7 +152,8 @@ public class RhinoContextTest extends TestCase {
         Assert.assertTrue( returnValue instanceof String);
         Assert.assertEquals("blub", returnValue);
     }
-
+    
+    @Test
     public void testSetLocalWithMap() throws Exception {
         Evaluator evaluator = new RhinoEvaluator();
         Context ctx = evaluator.newContext(null);
@@ -173,13 +162,14 @@ public class RhinoContextTest extends TestCase {
         m.put("data", new Integer(4711));
         ctx.setLocal("_event", m);
         Object eventname = evaluator.eval(ctx, "_event.name");
-        assertTrue(eventname instanceof String);
-        assertEquals("theEventName", eventname);
+        Assert.assertTrue(eventname instanceof String);
+        Assert.assertEquals("theEventName", eventname);
         Object evateData = evaluator.eval(ctx, "_event.data");
-        assertTrue(evateData instanceof Integer);
-        assertEquals(new Integer(4711), evateData);
+        Assert.assertTrue(evateData instanceof Integer);
+        Assert.assertEquals(new Integer(4711), evateData);
     }
-
+    
+    @Test
     public void testSetLocalWithMapInMap() throws Exception {
         Evaluator evaluator = new RhinoEvaluator();
         Context ctx = evaluator.newContext(null);
@@ -190,12 +180,13 @@ public class RhinoContextTest extends TestCase {
         m1.put("data", m2);
         ctx.setLocal("_event", m1);
         Object eventname = evaluator.eval(ctx, "_event.name");
-        assertTrue(eventname instanceof String);
-        assertEquals("theEventName", eventname);
+        Assert.assertTrue(eventname instanceof String);
+        Assert.assertEquals("theEventName", eventname);
         Object foo = evaluator.eval(ctx, "_event.data.foo");
-        assertEquals("bar", foo);
+        Assert.assertEquals("bar", foo);
     }
-
+    
+    @Test
     public void testSetLocalWithNullValue() throws Exception {
         Context context = new RhinoContext();
         context.set("myVar", "stringValue");

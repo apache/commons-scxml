@@ -16,35 +16,33 @@
  */
 package org.apache.commons.scxml2.env.rhino;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.SCXMLExpressionException;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class RhinoEvaluatorTest extends TestCase {
+public class RhinoEvaluatorTest {
 
     private String BAD_EXPRESSION = ">";
     private Context ctx = new RhinoContext();
 
-    public RhinoEvaluatorTest(String testName) {
-        super(testName);
-    }
-
+    @Test
     public void testPristine() throws SCXMLExpressionException {
         Evaluator eval = new RhinoEvaluator();
-        assertNotNull(eval);
-        assertTrue(eval.evalCond(ctx, "1+1 == 2").booleanValue());
+        Assert.assertNotNull(eval);
+        Assert.assertTrue(eval.evalCond(ctx, "1+1 == 2").booleanValue());
     }
-
+    
+    @Test
     public void testErrorMessage() {
         Evaluator eval = new RhinoEvaluator();
-        assertNotNull(eval);
+        Assert.assertNotNull(eval);
         try {
             eval.eval(ctx, BAD_EXPRESSION);
-            fail("RhinoEvaluator should throw SCXMLExpressionException");
+            Assert.fail("RhinoEvaluator should throw SCXMLExpressionException");
         } catch (SCXMLExpressionException e) {
-            assertTrue("RhinoEvaluator: Incorrect error message",
+            Assert.assertTrue("RhinoEvaluator: Incorrect error message",
                 e.getMessage().startsWith("eval('" + BAD_EXPRESSION + "'):"));
         }
     }

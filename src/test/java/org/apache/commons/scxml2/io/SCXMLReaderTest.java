@@ -22,9 +22,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.xml.stream.XMLStreamException;
-
-import junit.framework.TestCase;
 import org.apache.commons.logging.Log;
 import org.apache.commons.scxml2.ErrorReporter;
 import org.apache.commons.scxml2.EventDispatcher;
@@ -41,18 +38,17 @@ import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.Send;
 import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.Transition;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.w3c.dom.Node;
+
+import javax.xml.stream.XMLStreamException;
 /**
  * Unit tests {@link org.apache.commons.scxml2.io.SCXMLReader}.
  */
-public class SCXMLReaderTest extends TestCase {
-    /**
-     * Construct a new instance of SCXMLDigesterTest with
-     * the specified name
-     */
-    public SCXMLReaderTest(String name) {
-        super(name);
-    }
+public class SCXMLReaderTest {
 
     // Test data
     private URL microwave01, microwave02, transitions01, prefix01, send01,
@@ -63,7 +59,7 @@ public class SCXMLReaderTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
-    @Override
+    @Before
     public void setUp() {
         microwave01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml2/env/jsp/microwave-01.xml");
@@ -88,7 +84,7 @@ public class SCXMLReaderTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
-    @Override
+    @After
     public void tearDown() {
         microwave01 = microwave02 = microwave03 = microwave04 = transitions01 = prefix01 = send01 = action01 = null;
         scxml = null;
@@ -97,81 +93,90 @@ public class SCXMLReaderTest extends TestCase {
 
     /**
      * Test the implementation
-     */
+     */    
+    @Test
     public void testSCXMLReaderMicrowave01Sample() throws Exception {
         scxml = SCXMLTestHelper.parse(microwave01);
-        assertNotNull(scxml);
+        Assert.assertNotNull(scxml);
         scxmlAsString = serialize(scxml);
-        assertNotNull(scxmlAsString);
+        Assert.assertNotNull(scxmlAsString);
     }
-
+    
+    @Test
     public void testSCXMLReaderMicrowave02Sample() throws Exception {
         scxml = SCXMLTestHelper.parse(microwave02);
-        assertNotNull(scxml);
+        Assert.assertNotNull(scxml);
         scxmlAsString = serialize(scxml);
-        assertNotNull(scxmlAsString);
+        Assert.assertNotNull(scxmlAsString);
     }
-
+    
+    @Test
     public void testSCXMLReaderMicrowave03Sample() throws Exception {
         scxml = SCXMLTestHelper.parse(microwave03);
-        assertNotNull(scxml);
+        Assert.assertNotNull(scxml);
         scxmlAsString = serialize(scxml);
-        assertNotNull(scxmlAsString);
+        Assert.assertNotNull(scxmlAsString);
     }
-
+    
+    @Test
     public void testSCXMLReaderMicrowave04Sample() throws Exception {
         scxml = SCXMLTestHelper.parse(microwave04);
-        assertNotNull(scxml);
+        Assert.assertNotNull(scxml);
         scxmlAsString = serialize(scxml);
-        assertNotNull(scxmlAsString);
+        Assert.assertNotNull(scxmlAsString);
     }
-
+    
+    @Test
     public void testSCXMLReaderTransitions01Sample() throws Exception {
         scxml = SCXMLTestHelper.parse(transitions01);
-        assertNotNull(scxml);
+        Assert.assertNotNull(scxml);
         scxmlAsString = serialize(scxml);
-        assertNotNull(scxmlAsString);
+        Assert.assertNotNull(scxmlAsString);
     }
-
+    
+    @Test
     public void testSCXMLReaderPrefix01Sample() throws Exception {
         scxml = SCXMLTestHelper.parse(prefix01);
-        assertNotNull(scxml);
+        Assert.assertNotNull(scxml);
         scxmlAsString = serialize(scxml);
-        assertNotNull(scxmlAsString);
+        Assert.assertNotNull(scxmlAsString);
     }
-
+    
+    @Test
     public void testSCXMLReaderSend01Sample() throws Exception {
         // Digest
         scxml = SCXMLTestHelper.parse(send01);
         State ten = (State) scxml.getInitialTarget();
-        assertEquals("ten", ten.getId());
+        Assert.assertEquals("ten", ten.getId());
         List<Transition> ten_done = ten.getTransitionsList("ten.done");
-        assertEquals(1, ten_done.size());
+        Assert.assertEquals(1, ten_done.size());
         Transition ten2twenty = ten_done.get(0);
         List<Action> actions = ten2twenty.getActions();
-        assertEquals(1, actions.size());
+        Assert.assertEquals(1, actions.size());
         Send send = (Send) actions.get(0);
-        assertEquals("send1", send.getSendid());
+        Assert.assertEquals("send1", send.getSendid());
         /* Serialize
         scxmlAsString = serialize(scxml);
-        assertNotNull(scxmlAsString);
+        Assert.assertNotNull(scxmlAsString);
         String expectedFoo2Serialization =
             "<foo xmlns=\"http://my.test.namespace\" id=\"foo2\">"
             + "<prompt xmlns=\"http://foo.bar.com/vxml3\">This is just"
             + " an example.</prompt></foo>";
-        assertFalse(scxmlAsString.indexOf(expectedFoo2Serialization) == -1);
+        Assert.assertFalse(scxmlAsString.indexOf(expectedFoo2Serialization) == -1);
         */
     }
-
+    
+    @Test
     public void testSCXMLReaderInitialAttr() throws Exception {
         scxml = SCXMLTestHelper.parse(scxmlinitialattr);
-        assertNotNull(scxml);
+        Assert.assertNotNull(scxml);
         scxmlAsString = serialize(scxml);
-        assertNotNull(scxmlAsString);
+        Assert.assertNotNull(scxmlAsString);
         Final foo = (Final) scxml.getInitialTarget();
-        assertEquals("foo", foo.getId());
+        Assert.assertEquals("foo", foo.getId());
     }
-
+    
+    @Test
     public void testSCXMLReaderCustomActionWithBodyTextSample() throws Exception {
         List<CustomAction> cas = new ArrayList<CustomAction>();
         CustomAction ca = new CustomAction("http://my.custom-actions.domain",
@@ -179,17 +184,17 @@ public class SCXMLReaderTest extends TestCase {
         cas.add(ca);
         scxml = SCXMLTestHelper.parse(action01, cas);
         State state = (State) scxml.getInitialTarget();
-        assertEquals("actions", state.getId());
+        Assert.assertEquals("actions", state.getId());
         List<Action> actions = state.getOnEntry().getActions();
-        assertEquals(1, actions.size());
+        Assert.assertEquals(1, actions.size());
         MyAction my = (MyAction) actions.get(0);
-        assertNotNull(my);
-        assertTrue(my.getExternalNodes().size() > 0);
+        Assert.assertNotNull(my);
+        Assert.assertTrue(my.getExternalNodes().size() > 0);
     }
 
     private String serialize(final SCXML scxml) throws IOException, XMLStreamException {
         scxmlAsString = SCXMLWriter.write(scxml);
-        assertNotNull(scxmlAsString);
+        Assert.assertNotNull(scxmlAsString);
         return scxmlAsString;
     }
 

@@ -16,21 +16,18 @@
  */
 package org.apache.commons.scxml2;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Unit tests {@link org.apache.commons.scxml2.TriggerEvent}.
  */
-public class TriggerEventTest extends TestCase {
-    /**
-     * Construct a new instance of TriggerEventTest with the specified name
-     */
-    public TriggerEventTest(String name) {
-        super(name);
-    }
+public class TriggerEventTest {
 
     // Test data
     private Map<String, String> payloadData;
@@ -40,7 +37,7 @@ public class TriggerEventTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
-    @Override
+    @Before
     public void setUp() {
         payloadData = new HashMap<String, String>();
         payloadData.put("property1", "value1");
@@ -58,7 +55,7 @@ public class TriggerEventTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
-    @Override
+    @After
     public void tearDown() {
         payloadData.clear();
         payloadData = null;
@@ -69,30 +66,34 @@ public class TriggerEventTest extends TestCase {
     /**
      * Test the implementation
      */
+    @Test
     public void testTriggerEventGetters() {
-        assertEquals(te1.getName(), "name1");
-        assertEquals(te2.getType(), 2);
-        assertNull(te7.getPayload());
+        Assert.assertEquals(te1.getName(), "name1");
+        Assert.assertEquals(te2.getType(), 2);
+        Assert.assertNull(te7.getPayload());
     }
 
+    @Test
     public void testTriggerEventEquals() {
-        assertTrue(te1.equals(te2));
-        assertTrue(te3.equals(te4));
-        assertTrue(te5.equals(te6));
-        assertFalse(te1.equals(te4));
-        assertFalse(te7.equals(null));
+        Assert.assertTrue(te1.equals(te2));
+        Assert.assertTrue(te3.equals(te4));
+        Assert.assertTrue(te5.equals(te6));
+        Assert.assertFalse(te1.equals(te4));
+        Assert.assertFalse(te7.equals(null));
     }
 
+    @Test
     public void testTriggerEventToString() {
-        assertEquals("TriggerEvent{name=name3,type=4}", te7.toString());
-        assertEquals("TriggerEvent{name=name1,type=2,payload="
+        Assert.assertEquals("TriggerEvent{name=name3,type=4}", te7.toString());
+        Assert.assertEquals("TriggerEvent{name=name1,type=2,payload="
             + "{property1=value1}}", te2.toString());
     }
 
+    @Test
     public void testTriggerEventHashCode() {
-        assertEquals("TriggerEvent{name=name3,type=4}".hashCode(),
+        Assert.assertEquals("TriggerEvent{name=name3,type=4}".hashCode(),
             te7.hashCode());
-        assertEquals("TriggerEvent{name=name3,type=3}".hashCode(),
+        Assert.assertEquals("TriggerEvent{name=name3,type=3}".hashCode(),
             te5.hashCode());
     }
 }

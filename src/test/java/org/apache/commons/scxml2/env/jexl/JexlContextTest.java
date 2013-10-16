@@ -19,46 +19,45 @@ package org.apache.commons.scxml2.env.jexl;
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.scxml2.Builtin;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class JexlContextTest extends TestCase {
+public class JexlContextTest {
 
-    public JexlContextTest(String testName) {
-        super(testName);
-    }
-
+    @Test
     public void testNew() {
         JexlContext ctx = new JexlContext();
-        assertNotNull(ctx);
-        assertEquals(1, ctx.getVars().size());
-        assertTrue(ctx.get("_builtin") instanceof Builtin);
+        Assert.assertNotNull(ctx);
+        Assert.assertEquals(1, ctx.getVars().size());
+        Assert.assertTrue(ctx.get("_builtin") instanceof Builtin);
     }
-
+    
+    @Test
     public void testPrepopulated() {
         Map<String, Object> m = new HashMap<String, Object>();
         m.put("foo", "bar");
         JexlContext ctx = new JexlContext(m);
-        assertNotNull(ctx);
-        assertEquals(2, ctx.getVars().size());
-        assertTrue(ctx.get("_builtin") instanceof Builtin);
+        Assert.assertNotNull(ctx);
+        Assert.assertEquals(2, ctx.getVars().size());
+        Assert.assertTrue(ctx.get("_builtin") instanceof Builtin);
         String fooValue = (String) ctx.get("foo");
-        assertEquals("bar", fooValue);
+        Assert.assertEquals("bar", fooValue);
     }
-
+    
+    @Test
     public void testSetVars() {
         JexlContext ctx = new JexlContext();
-        assertNotNull(ctx);
-        assertEquals(1, ctx.getVars().size());
-        assertTrue(ctx.get("_builtin") instanceof Builtin);
+        Assert.assertNotNull(ctx);
+        Assert.assertEquals(1, ctx.getVars().size());
+        Assert.assertTrue(ctx.get("_builtin") instanceof Builtin);
         Map<String, Object> m = new HashMap<String, Object>();
         m.put("foo", "bar");
         ctx.setVars(m);
-        assertEquals(2, ctx.getVars().size());
+        Assert.assertEquals(2, ctx.getVars().size());
         String fooValue = (String) ctx.get("foo");
-        assertTrue(ctx.get("_builtin") instanceof Builtin);
-        assertEquals("bar", fooValue);
+        Assert.assertTrue(ctx.get("_builtin") instanceof Builtin);
+        Assert.assertEquals("bar", fooValue);
     }
 
 }

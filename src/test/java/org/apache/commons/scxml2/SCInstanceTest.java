@@ -25,42 +25,43 @@ import org.apache.commons.scxml2.env.jexl.JexlEvaluator;
 import org.apache.commons.scxml2.model.History;
 import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.TransitionTarget;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-import junit.framework.TestCase;
-
-public class SCInstanceTest extends TestCase {
-
-    public SCInstanceTest(String testName) {
-        super(testName);
-    }
+public class SCInstanceTest {
 
     private SCInstance instance;
     
-    @Override
+    @Before
     public void setUp() {
         instance = new SCInstance(null);
     }
     
+    @Test
     public void testGetRootContextNull() {
-        assertNull(instance.getRootContext());
+        Assert.assertNull(instance.getRootContext());
     }
     
+    @Test
     public void testGetRootContext() {
         Context context = new SimpleContext();
         context.set("name", "value");
         
         instance.setRootContext(context);
-        assertEquals("value", instance.getRootContext().get("name"));
+        Assert.assertEquals("value", instance.getRootContext().get("name"));
     }
     
+    @Test
     public void testGetRootContextEvaluator() {
         Evaluator evaluator = new JexlEvaluator();
         
         instance.setEvaluator(evaluator);
         
-        assertTrue(instance.getRootContext() instanceof JexlContext);
+        Assert.assertTrue(instance.getRootContext() instanceof JexlContext);
     }
     
+    @Test
     public void testGetContext() {
         TransitionTarget target = new State();
         target.setId("1");
@@ -70,9 +71,10 @@ public class SCInstanceTest extends TestCase {
         
         instance.setContext(target, context);
         
-        assertEquals("value", instance.getContext(target).get("name"));
+        Assert.assertEquals("value", instance.getContext(target).get("name"));
     }
     
+    @Test
     public void testGetContextNullParent() {
         TransitionTarget target = new State();
         target.setId("1");
@@ -84,10 +86,11 @@ public class SCInstanceTest extends TestCase {
         Evaluator evaluator = new JexlEvaluator();
         instance.setEvaluator(evaluator);
 
-        assertEquals("value", instance.getContext(target).get("name"));
-        assertEquals("value", instance.lookupContext(target).get("name"));
+        Assert.assertEquals("value", instance.getContext(target).get("name"));
+        Assert.assertEquals("value", instance.lookupContext(target).get("name"));
     }
 
+    @Test
     public void testGetContextParent() {
         TransitionTarget target = new State();
         target.setId("1");
@@ -104,19 +107,20 @@ public class SCInstanceTest extends TestCase {
         Evaluator evaluator = new JexlEvaluator();
         instance.setEvaluator(evaluator);
 
-        assertEquals("value", instance.getContext(target).get("name"));
-        assertEquals("value", instance.lookupContext(target).get("name"));
+        Assert.assertEquals("value", instance.getContext(target).get("name"));
+        Assert.assertEquals("value", instance.lookupContext(target).get("name"));
     }
 
+    @Test
     public void testGetLastConfigurationNull() {
         History history = new History();
         
         Set<TransitionTarget> returnConfiguration = instance.getLastConfiguration(history);
         
-        assertEquals(0, returnConfiguration.size());
+        Assert.assertEquals(0, returnConfiguration.size());
     }
 
-
+    @Test
     public void testGetLastConfiguration() {
         History history = new History();
         history.setId("1");
@@ -131,15 +135,17 @@ public class SCInstanceTest extends TestCase {
         
         Set<TransitionTarget> returnConfiguration = instance.getLastConfiguration(history);
         
-        assertEquals(2, returnConfiguration.size());
-        assertTrue(returnConfiguration.contains(tt1));
-        assertTrue(returnConfiguration.contains(tt2));
+        Assert.assertEquals(2, returnConfiguration.size());
+        Assert.assertTrue(returnConfiguration.contains(tt1));
+        Assert.assertTrue(returnConfiguration.contains(tt2));
     }
     
+    @Test
     public void testIsEmpty() {
-        assertTrue(instance.isEmpty(new History()));
+        Assert.assertTrue(instance.isEmpty(new History()));
     }
     
+    @Test
     public void testIsEmptyFalse() {
         History history = new History();
         history.setId("1");
@@ -150,9 +156,10 @@ public class SCInstanceTest extends TestCase {
         
         instance.setLastConfiguration(history, configuration);  
 
-        assertFalse(instance.isEmpty(history));
+        Assert.assertFalse(instance.isEmpty(history));
     }
     
+    @Test
     public void testReset() {
         History history = new History();
         history.setId("1");
@@ -165,7 +172,7 @@ public class SCInstanceTest extends TestCase {
 
         instance.reset(history);
         
-        assertTrue(instance.isEmpty(history));
+        Assert.assertTrue(instance.isEmpty(history));
     }
     
 }

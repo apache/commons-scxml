@@ -23,8 +23,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.scxml2.ErrorReporter;
 import org.apache.commons.scxml2.EventDispatcher;
@@ -38,16 +36,16 @@ import org.apache.commons.scxml2.model.CustomAction;
 import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.State;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test cases for issue 112.
  * OPEN
  */
-public class Issue112Test extends TestCase {
-
-    public Issue112Test(String testName) {
-        super(testName);
-    }
+public class Issue112Test {
 
     private URL queue01;
     private SCXMLExecutor exec;
@@ -55,7 +53,7 @@ public class Issue112Test extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
-    @Override
+    @Before
     public void setUp() {
         queue01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml2/issues/queue-01.xml");
@@ -64,7 +62,7 @@ public class Issue112Test extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
-    @Override
+    @After
     public void tearDown() {
         queue01 = null;
         exec = null;
@@ -72,7 +70,8 @@ public class Issue112Test extends TestCase {
     }
 
     // Example using a custom <my:enqueue> action that generates more events during event processing.
-    // An external event queue is used by <my:enqueue> instead of SCXMLExecutor#triggerEvent(TriggerEvent)
+    // An external event queue is used by <my:enqueue> instead of SCXMLExecutor#triggerEvent(TriggerEvent)    
+    @Test
     public void test01issue112() throws Exception {
 
         CustomAction ca1 =
@@ -84,7 +83,7 @@ public class Issue112Test extends TestCase {
         SCXML scxml = SCXMLTestHelper.parse(queue01, customActions);
 
         exec = SCXMLTestHelper.getExecutor(scxml);
-        assertEquals("init", ((State) exec.getCurrentStatus().getStates().
+        Assert.assertEquals("init", ((State) exec.getCurrentStatus().getStates().
                 iterator().next()).getId());
 
         // Add an event, other external events could be added to the queue at any time (this test only adds one).
@@ -100,8 +99,8 @@ public class Issue112Test extends TestCase {
             }
         }
 
-        assertTrue(exec.getCurrentStatus().isFinal());
-        assertEquals("end", ((State) exec.getCurrentStatus().getStates().
+        Assert.assertTrue(exec.getCurrentStatus().isFinal());
+        Assert.assertEquals("end", ((State) exec.getCurrentStatus().getStates().
                 iterator().next()).getId());
 
     }

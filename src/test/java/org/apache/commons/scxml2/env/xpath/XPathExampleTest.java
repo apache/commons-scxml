@@ -20,8 +20,6 @@ package org.apache.commons.scxml2.env.xpath;
 import java.net.URL;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.SCXMLExecutor;
@@ -30,16 +28,16 @@ import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.TransitionTarget;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * SCXML application for the XPath example.
  *
  */
-public class XPathExampleTest extends TestCase {
-
-    public XPathExampleTest(String name) {
-        super(name);
-    }
+public class XPathExampleTest {
 
     // Test data
     private URL example01, example02;
@@ -48,7 +46,7 @@ public class XPathExampleTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
-    @Override
+    @Before
     public void setUp() {
         example01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml2/env/xpath/example-01.xml");
@@ -59,13 +57,13 @@ public class XPathExampleTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
-    @Override
+    @After
     public void tearDown() {
         example01 = example02 = null;
     }
 
     // TEST METHODS
-
+    @Test
     public void testExample01Sample() throws Exception {
 
         SCXML scxml = SCXMLTestHelper.parse(example01);
@@ -74,10 +72,10 @@ public class XPathExampleTest extends TestCase {
         Context context = new XPathContext(null);
         exec = SCXMLTestHelper.getExecutor(scxml, context, evaluator);
 
-        assertNotNull(exec);
+        Assert.assertNotNull(exec);
         Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
-        assertEquals(1, currentStates.size());
-        assertEquals("mid", ((State)currentStates.iterator().
+        Assert.assertEquals(1, currentStates.size());
+        Assert.assertEquals("mid", ((State)currentStates.iterator().
             next()).getId());
 
         String payload = "<test xmlns=''><status>complete</status></test>";
@@ -87,7 +85,8 @@ public class XPathExampleTest extends TestCase {
             "end");
 
     }
-
+    
+    @Test
     public void testExample02Sample() throws Exception {
 
         SCXML scxml = SCXMLTestHelper.parse(example02);
@@ -96,10 +95,10 @@ public class XPathExampleTest extends TestCase {
         Context context = new XPathContext(null);
         exec = SCXMLTestHelper.getExecutor(scxml, context, evaluator);
 
-        assertNotNull(exec);
+        Assert.assertNotNull(exec);
         Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
-        assertEquals(1, currentStates.size());
-        assertEquals("end", ((State)currentStates.iterator().
+        Assert.assertEquals(1, currentStates.size());
+        Assert.assertEquals("end", ((State)currentStates.iterator().
             next()).getId());
 
     }

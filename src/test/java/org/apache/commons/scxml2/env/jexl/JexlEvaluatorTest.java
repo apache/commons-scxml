@@ -16,35 +16,33 @@
  */
 package org.apache.commons.scxml2.env.jexl;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.SCXMLExpressionException;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class JexlEvaluatorTest extends TestCase {
+public class JexlEvaluatorTest {
 
     private String BAD_EXPRESSION = ">";
     private Context ctx = new JexlContext();
 
-    public JexlEvaluatorTest(String testName) {
-        super(testName);
-    }
-
+    @Test
     public void testPristine() throws SCXMLExpressionException {
         Evaluator eval = new JexlEvaluator();
-        assertNotNull(eval);
-        assertTrue(((Boolean) eval.eval(ctx, "1+1 eq 2")).booleanValue());
+        Assert.assertNotNull(eval);
+        Assert.assertTrue(((Boolean) eval.eval(ctx, "1+1 eq 2")).booleanValue());
     }
-
+    
+    @Test
     public void testErrorMessage() {
         Evaluator eval = new JexlEvaluator();
-        assertNotNull(eval);
+        Assert.assertNotNull(eval);
         try {
             eval.eval(ctx, BAD_EXPRESSION);
-            fail("JexlEvaluator should throw SCXMLExpressionException");
+            Assert.fail("JexlEvaluator should throw SCXMLExpressionException");
         } catch (SCXMLExpressionException e) {
-            assertTrue("JexlEvaluator: Incorrect error message",
+            Assert.assertTrue("JexlEvaluator: Incorrect error message",
                 e.getMessage().startsWith("eval('" + BAD_EXPRESSION + "'):"));
         }
     }

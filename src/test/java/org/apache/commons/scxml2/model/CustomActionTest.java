@@ -20,16 +20,18 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.TestCase;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.env.jsp.ELEvaluator;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
-public class CustomActionTest extends TestCase {
-
-    public CustomActionTest(String testName) {
-        super(testName);
-    }
+@FixMethodOrder(MethodSorters.JVM)
+public class CustomActionTest {
 
     private URL hello01, custom01, external01, override01, payload01, payload02;
     private SCXMLExecutor exec;
@@ -37,7 +39,7 @@ public class CustomActionTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
-    @Override
+    @Before
     public void setUp() {
         hello01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml2/hello-world.xml");
@@ -56,76 +58,84 @@ public class CustomActionTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
-    @Override
+    @After
     public void tearDown() {
         hello01 = custom01 = external01 = payload01 = payload02 = null;
         exec = null;
     }
 
+    @Test
     public void testAddGoodCustomAction01() throws Exception {
         new CustomAction("http://my.actions.domain/CUSTOM", "hello",
             Hello.class);
     }
 
+    @Test
     public void testAddBadCustomAction01() {
         try {
             new CustomAction(null, "hello", Hello.class);
-            fail("Added custom action with illegal namespace");
+            Assert.fail("Added custom action with illegal namespace");
         } catch (IllegalArgumentException iae) {
             // Expected
         }
     }
 
+    @Test
     public void testAddBadCustomAction02() {
         try {
             new CustomAction("  ", "hello", Hello.class);
-            fail("Added custom action with illegal namespace");
+            Assert.fail("Added custom action with illegal namespace");
         } catch (IllegalArgumentException iae) {
             // Expected
         }
     }
 
+    @Test
     public void testAddBadCustomAction03() {
         try {
             new CustomAction("http://my.actions.domain/CUSTOM", "",
                 Hello.class);
-            fail("Added custom action with illegal local name");
+            Assert.fail("Added custom action with illegal local name");
         } catch (IllegalArgumentException iae) {
             // Expected
         }
     }
 
+    @Test
     public void testAddBadCustomAction04() {
         try {
             new CustomAction("http://my.actions.domain/CUSTOM", "  ",
                 Hello.class);
-            fail("Added custom action with illegal local name");
+            Assert.fail("Added custom action with illegal local name");
         } catch (IllegalArgumentException iae) {
             // Expected
         }
     }
 
+    @Test
     public void testAddBadCustomAction05() {
         try {            
             new CustomAction("http://www.w3.org/2005/07/scxml", "foo",
                 Hello.class);
-            fail("Added custom action in the SCXML namespace");
+            Assert.fail("Added custom action in the SCXML namespace");
         } catch (IllegalArgumentException iae) {
             // Expected
         }
     }
 
     // Hello World example using the SCXML <log> action
+    @Test
     public void testHelloWorld() throws Exception {
         // (1) Get a SCXMLExecutor
         exec = SCXMLTestHelper.getExecutor(hello01);
         // (2) Single, final state
-        assertEquals("hello", ((State) exec.getCurrentStatus().getStates().
+        Assert.assertEquals("hello", ((State) exec.getCurrentStatus().getStates().
                 iterator().next()).getId());
-        assertTrue(exec.getCurrentStatus().isFinal());
+        Assert.assertTrue(exec.getCurrentStatus().isFinal());
     }
 
     // Hello World example using a custom <hello> action
+    @Test
     public void testCustomActionHelloWorld() throws Exception {
         // (1) Form a list of custom actions defined in the SCXML
         //     document (and any included documents via "src" attributes)
@@ -145,13 +155,14 @@ public class CustomActionTest extends TestCase {
         // (3) Get a SCXMLExecutor
         exec = SCXMLTestHelper.getExecutor(scxml);
         // (4) Single, final state
-        assertEquals("custom", ((State) exec.getCurrentStatus().getStates().
+        Assert.assertEquals("custom", ((State) exec.getCurrentStatus().getStates().
                 iterator().next()).getId());
-        assertTrue(exec.getCurrentStatus().isFinal());
+        Assert.assertTrue(exec.getCurrentStatus().isFinal());
     }
 
     // Hello World example using custom <my:hello> action
     // as part of an external state source (src attribute)
+    @Test
     public void testCustomActionExternalSrcHelloWorld() throws Exception {
         // (1) Form a list of custom actions defined in the SCXML
         //     document (and any included documents via "src" attributes)
@@ -165,12 +176,13 @@ public class CustomActionTest extends TestCase {
         // (3) Get a SCXMLExecutor
         exec = SCXMLTestHelper.getExecutor(scxml);
         // (4) Single, final state
-        assertEquals("custom", ((State) exec.getCurrentStatus().getStates().
+        Assert.assertEquals("custom", ((State) exec.getCurrentStatus().getStates().
             iterator().next()).getId());
     }
 
     // Hello World example using custom <my:send> action
     // (overriding SCXML local name "send")
+    @Test
     public void testCustomActionOverrideLocalName() throws Exception {
         // (1) List of custom actions, use same local name as SCXML action
         CustomAction ca =
@@ -183,18 +195,20 @@ public class CustomActionTest extends TestCase {
         // (3) Get a SCXMLExecutor
         exec = SCXMLTestHelper.getExecutor(scxml);
         // (4) Single, final state
-        assertEquals("custom", ((State) exec.getCurrentStatus().getStates().
+        Assert.assertEquals("custom", ((State) exec.getCurrentStatus().getStates().
             iterator().next()).getId());
     }
 
     // The custom action defined by Hello.class should be called
     // to execute() exactly 5 times upto this point
+    @Test
     public void testCustomActionCallbacks() {
-        assertEquals(5, Hello.callbacks);
+        Assert.assertEquals(5, Hello.callbacks);
     }
 
     // Hello World example using custom <my:hello> action that generates an
     // event which has the payload examined with JEXL expressions
+    @Test
     public void testCustomActionEventPayloadHelloWorldJexl() throws Exception {
         // (1) Form a list of custom actions defined in the SCXML
         //     document (and any included documents via "src" attributes)
@@ -208,25 +222,26 @@ public class CustomActionTest extends TestCase {
         // (3) Get a SCXMLExecutor
         exec = SCXMLTestHelper.getExecutor(scxml);
         // (4) Single, final state
-        assertEquals("Invalid intermediate state",
+        Assert.assertEquals("Invalid intermediate state",
                      "custom1", ((State) exec.getCurrentStatus().getStates().
                                 iterator().next()).getId());
         // (5) Verify datamodel variable is correct
-        assertEquals("Missing helloName1 in root context", "custom04a",
+        Assert.assertEquals("Missing helloName1 in root context", "custom04a",
                      (String) exec.getRootContext().get("helloName1"));
         // (6) Check use of payload in non-initial state
         SCXMLTestHelper.fireEvent(exec, "custom.next");
         // (7) Verify correct end state
-        assertEquals("Missing helloName1 in root context", "custom04b",
+        Assert.assertEquals("Missing helloName1 in root context", "custom04b",
                 (String) exec.getRootContext().get("helloName1"));
-        assertEquals("Invalid final state",
+        Assert.assertEquals("Invalid final state",
                 "end", ((State) exec.getCurrentStatus().getStates().
                 iterator().next()).getId());
-        assertTrue(exec.getCurrentStatus().isFinal());
+        Assert.assertTrue(exec.getCurrentStatus().isFinal());
     }
 
     // Hello World example using custom <my:hello> action that generates an
     // event which has the payload examined with EL expressions
+    @Test
     public void testCustomActionEventPayloadHelloWorldEL() throws Exception {
         // (1) Form a list of custom actions defined in the SCXML
         //     document (and any included documents via "src" attributes)
@@ -240,13 +255,12 @@ public class CustomActionTest extends TestCase {
         // (3) Get a SCXMLExecutor
         exec = SCXMLTestHelper.getExecutor(new ELEvaluator(), scxml);
         // (4) Single, final state
-        assertEquals("Invalid final state",
+        Assert.assertEquals("Invalid final state",
                      "custom", ((State) exec.getCurrentStatus().getStates().
                                 iterator().next()).getId());
         // (5) Verify datamodel variable is correct
-        assertEquals("Missing helloName1 in root context", "custom04",
+        Assert.assertEquals("Missing helloName1 in root context", "custom04",
                      (String) exec.getRootContext().get("helloName1"));
     }
-
 }
 

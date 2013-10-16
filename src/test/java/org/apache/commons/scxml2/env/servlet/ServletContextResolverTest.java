@@ -16,18 +16,16 @@
  */
 package org.apache.commons.scxml2.env.servlet;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class ServletContextResolverTest extends TestCase {
+public class ServletContextResolverTest {
 
-    public ServletContextResolverTest(String testName) {
-        super(testName);
-    }
-
+    @Test
     public void testIllegalInstance() {
     	try {
             new ServletContextResolver(null);
-            fail("ServletContextResolver successfully instantiated with"
+            Assert.fail("ServletContextResolver successfully instantiated with"
                 + " null ServletContext");
     	} catch (IllegalArgumentException iae) {
     		// expected, ignore

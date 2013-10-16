@@ -20,20 +20,17 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javax.xml.stream.XMLStreamException;
-
-import junit.framework.TestCase;
-
 import org.apache.commons.scxml2.model.Parallel;
 import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.State;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class SCXMLWriterTest extends TestCase {
+import javax.xml.stream.XMLStreamException;
 
-    public SCXMLWriterTest(String testName) {
-        super(testName);
-    }
+public class SCXMLWriterTest {
 
+    @Test
     public void testSerializeSCXMLNoStates() throws IOException, XMLStreamException {
         SCXML scxml = new SCXML();
         Map<String, String> namespaces = new LinkedHashMap<String, String>();
@@ -52,9 +49,10 @@ public class SCXMLWriterTest extends TestCase {
             + "version=\"version1\" initial=\"off\"><!--http://commons.apache.org/scxml--><state></state>"
             + "</scxml>";
 
-        assertEquals(assertValue, SCXMLWriter.write(scxml, new SCXMLWriter.Configuration(true, false)));
+        Assert.assertEquals(assertValue, SCXMLWriter.write(scxml, new SCXMLWriter.Configuration(true, false)));
     }
-
+    
+    @Test
     public void testSerializeSCXMLState() throws IOException, XMLStreamException {
         SCXML scxml = new SCXML();
         Map<String, String> namespaces = new LinkedHashMap<String, String>();
@@ -72,9 +70,10 @@ public class SCXMLWriterTest extends TestCase {
             + "xmlns:cs=\"http://commons.apache.org/scxml\" version=\"1.0\" initial=\"S1\">"
             + "<!--http://commons.apache.org/scxml--><state id=\"S1\"></state></scxml>";
 
-        assertEquals(assertValue, SCXMLWriter.write(scxml, new SCXMLWriter.Configuration(true, false)));
+        Assert.assertEquals(assertValue, SCXMLWriter.write(scxml, new SCXMLWriter.Configuration(true, false)));
     }
-
+    
+    @Test
     public void testSerializeParallel() throws IOException, XMLStreamException {
 
         SCXML scxml = new SCXML();
@@ -121,7 +120,7 @@ public class SCXMLWriterTest extends TestCase {
             + "</parallel>"
             + "</scxml>";
 
-        assertEquals(assertValue, SCXMLWriter.write(scxml, new SCXMLWriter.Configuration(true, false)));
+        Assert.assertEquals(assertValue, SCXMLWriter.write(scxml, new SCXMLWriter.Configuration(true, false)));
      }
 
 }

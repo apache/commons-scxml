@@ -23,8 +23,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.ErrorReporter;
@@ -41,16 +39,16 @@ import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.TransitionTarget;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * SCXML application for the example JavaScript scripts.
  *
  */
-public class JSExampleTest extends TestCase {
-
-    public JSExampleTest(String name) {
-        super(name);
-    }
+public class JSExampleTest {
 
     // Test data
     private URL example01;
@@ -59,7 +57,7 @@ public class JSExampleTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
-    @Override
+    @Before
     public void setUp() {
         example01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml2/env/javascript/example-01.xml");
@@ -68,13 +66,13 @@ public class JSExampleTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
-    @Override
+    @After
     public void tearDown() {
         example01 = null;
     }
 
     // TEST METHODS
-
+    @Test
     public void testExample01Sample() throws Exception {
 
         List<CustomAction> actions  = new ArrayList<CustomAction>();        
@@ -86,10 +84,10 @@ public class JSExampleTest extends TestCase {
         Context context = new JSContext();
         exec = SCXMLTestHelper.getExecutor(scxml, context, evaluator);
 
-        assertNotNull(exec);
+        Assert.assertNotNull(exec);
         Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
-        assertEquals(1, currentStates.size());
-        assertEquals("end", ((State)currentStates.iterator().
+        Assert.assertEquals(1, currentStates.size());
+        Assert.assertEquals("end", ((State)currentStates.iterator().
             next()).getId());
     }
 

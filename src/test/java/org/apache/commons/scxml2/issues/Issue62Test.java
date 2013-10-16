@@ -19,21 +19,19 @@ package org.apache.commons.scxml2.issues;
 import java.net.URL;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.model.TransitionTarget;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test cases for issue 62.
  * FIXED
  */
-public class Issue62Test extends TestCase {
-
-    public Issue62Test(String name) {
-        super(name);
-    }
+public class Issue62Test {
 
     private URL test01, test02, test03;
     private SCXMLExecutor exec;
@@ -41,7 +39,7 @@ public class Issue62Test extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
-    @Override
+    @Before
     public void setUp() {
         test01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml2/issues/issue62-01.xml");
@@ -54,25 +52,28 @@ public class Issue62Test extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
-    @Override
+    @After
     public void tearDown() {
         test01 = test02 = null;
         exec = null;
     }
-
+    
+    @Test
     public void test01issue62() throws Exception {
         exec = SCXMLTestHelper.getExecutor(test01);
         Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
-        assertEquals(1, currentStates.size());
-        assertEquals("s1.1", currentStates.iterator().next().getId());
+        Assert.assertEquals(1, currentStates.size());
+        Assert.assertEquals("s1.1", currentStates.iterator().next().getId());
         SCXMLTestHelper.assertPostTriggerState(exec, "foo", "s1.1");
     }
-
+    
+    @Test
     public void test02issue62() throws Exception {
         exec = SCXMLTestHelper.getExecutor(test02);
         fragmenttest();
     }
-
+    
+    @Test
     public void test03issue62() throws Exception {
         exec = SCXMLTestHelper.getExecutor(SCXMLTestHelper.parse(test03));
         fragmenttest();
@@ -80,12 +81,12 @@ public class Issue62Test extends TestCase {
 
     private void fragmenttest() throws Exception {
         Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
-        assertEquals(1, currentStates.size());
-        assertEquals("s1", currentStates.iterator().next().getId());
+        Assert.assertEquals(1, currentStates.size());
+        Assert.assertEquals("s1", currentStates.iterator().next().getId());
         SCXMLTestHelper.assertPostTriggerState(exec, "foo", "e1.1.1");
         SCXMLTestHelper.assertPostTriggerState(exec, "bar", "e1.1.2");
         SCXMLTestHelper.assertPostTriggerState(exec, "baz", "s3");
-        assertTrue(exec.getCurrentStatus().isFinal());
+        Assert.assertTrue(exec.getCurrentStatus().isFinal());
     }
 }
 

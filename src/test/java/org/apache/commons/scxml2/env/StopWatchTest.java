@@ -16,21 +16,19 @@
  */
 package org.apache.commons.scxml2.env;
 
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-import junit.framework.TestCase;
-
-public class StopWatchTest extends TestCase {
-
-    public StopWatchTest(String testName) {
-        super(testName);
-    }
+public class StopWatchTest {
 
     private StopWatch stopWatch;
 
     /**
      * Set up instance variables required by this test case.
      */
-    @Override
+    @Before
     public void setUp() {
         stopWatch = new StopWatch();
     }
@@ -38,23 +36,24 @@ public class StopWatchTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
-    @Override
+    @After
     public void tearDown() {
         stopWatch = null;
     }
 
+    @Test
     public void testStopWatch() {
-        assertEquals("reset", stopWatch.getCurrentState());
+        Assert.assertEquals("reset", stopWatch.getCurrentState());
         stopWatch.fireEvent(StopWatch.EVENT_START);
-        assertEquals("running", stopWatch.getCurrentState());
+        Assert.assertEquals("running", stopWatch.getCurrentState());
         stopWatch.fireEvent(StopWatch.EVENT_SPLIT);
-        assertEquals("paused", stopWatch.getCurrentState());
+        Assert.assertEquals("paused", stopWatch.getCurrentState());
         stopWatch.fireEvent(StopWatch.EVENT_UNSPLIT);
-        assertEquals("running", stopWatch.getCurrentState());
+        Assert.assertEquals("running", stopWatch.getCurrentState());
         stopWatch.fireEvent(StopWatch.EVENT_STOP);
-        assertEquals("stopped", stopWatch.getCurrentState());
+        Assert.assertEquals("stopped", stopWatch.getCurrentState());
         stopWatch.fireEvent(StopWatch.EVENT_RESET);
-        assertEquals("reset", stopWatch.getCurrentState());
+        Assert.assertEquals("reset", stopWatch.getCurrentState());
     }
 
 }

@@ -19,25 +19,23 @@ package org.apache.commons.scxml2.env.jexl;
 import java.net.URL;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.model.TransitionTarget;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-public class StaticMethodTest extends TestCase {
+public class StaticMethodTest {
 
     private URL staticmethod;
-    
-    public StaticMethodTest(String testName) {
-        super(testName);
-    }
 
     /**
      * Set up instance variables required by this test case.
      */
-    @Override
+    @Before
     public void setUp() {
         staticmethod = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml2/env/jexl/static-method.xml");
@@ -46,19 +44,20 @@ public class StaticMethodTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
-    @Override
+    @After
     public void tearDown() {
         staticmethod = null;
     }
-
+    
+    @Test
     public void testJexlStaticMethodInvocation() throws Exception {
         Context jc = new JexlContext();
         jc.set("System", System.class);
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor(staticmethod,
                 jc, new JexlEvaluator());
         Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
-        assertEquals(1, currentStates.size());
-        assertEquals("static", currentStates.iterator().next().getId());
+        Assert.assertEquals(1, currentStates.size());
+        Assert.assertEquals("static", currentStates.iterator().next().getId());
     }
 
 }

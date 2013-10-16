@@ -16,35 +16,33 @@
  */
 package org.apache.commons.scxml2.env.jsp;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.SCXMLExpressionException;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class ELEvaluatorTest extends TestCase {
+public class ELEvaluatorTest {
 
     private String BAD_EXPRESSION = "${${}";
     private Context ctx = new ELContext();
 
-    public ELEvaluatorTest(String testName) {
-        super(testName);
-    }
-
+    @Test
     public void testPristine() throws SCXMLExpressionException {
         Evaluator eval = new ELEvaluator();
-        assertNotNull(eval);
-        assertTrue(((Boolean) eval.eval(ctx, "${1+1 eq 2}")).booleanValue());
+        Assert.assertNotNull(eval);
+        Assert.assertTrue(((Boolean) eval.eval(ctx, "${1+1 eq 2}")).booleanValue());
     }
-
+    
+    @Test
     public void testErrorMessage() {
         Evaluator eval = new ELEvaluator();
-        assertNotNull(eval);
+        Assert.assertNotNull(eval);
         try {
             eval.eval(ctx, BAD_EXPRESSION);
-            fail("ELEvaluator should throw SCXMLExpressionException");
+            Assert.fail("ELEvaluator should throw SCXMLExpressionException");
         } catch (SCXMLExpressionException e) {
-            assertTrue("ELEvaluator: Incorrect error message",
+            Assert.assertTrue("ELEvaluator: Incorrect error message",
                 e.getMessage().startsWith("eval('" + BAD_EXPRESSION + "'):"));
         }
     }

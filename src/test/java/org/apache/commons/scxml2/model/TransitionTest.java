@@ -16,44 +16,46 @@
  */
 package org.apache.commons.scxml2.model;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-public class TransitionTest extends TestCase {
-
-    public TransitionTest(String testName) {
-        super(testName);
-    }
+public class TransitionTest {
 
     private Transition transition;
     
-    @Override
+    @Before
     public void setUp() {
         transition = new Transition();
     }
-    
+        
+    @Test
     public void testGetRuntimeTargetNullNoParent() {
-        assertTrue(transition.getRuntimeTargets().size() > 0);
+        Assert.assertTrue(transition.getRuntimeTargets().size() > 0);
     }
-    
+        
+    @Test
     public void testGetRuntimeTargetNullWithParent() {
         State state = new State();
         state.setId("1");
         
         transition.setParent(state);
         
-        assertEquals("1", (transition.getRuntimeTargets().get(0)).getId());
+        Assert.assertEquals("1", (transition.getRuntimeTargets().get(0)).getId());
     }
-    
+        
+    @Test
     public void testGetRuntimeTarget() {
         State state = new State();
         state.setId("2");
         
         transition.getTargets().add(state);
         
-        assertEquals("2", (transition.getRuntimeTargets().get(0)).getId());
+        Assert.assertEquals("2", (transition.getRuntimeTargets().get(0)).getId());
     }
-    
+        
+    @Test
     public void testGetPath() {
-        assertTrue(transition.getPaths().size() > 0);
+        Assert.assertTrue(transition.getPaths().size() > 0);
     }
 }

@@ -16,26 +16,26 @@
  */
 package org.apache.commons.scxml2.model;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class PathTest extends TestCase {
+public class PathTest {
 
-    public PathTest(String testName) {
-        super(testName);
-    }
-
+    @Test
     public void testConstructorNull() {
         Path path = new Path(null, null);
         
-        assertNull(path.getPathScope());
+        Assert.assertNull(path.getPathScope());
     }
-
+    
+    @Test
     public void testConstructorNullState() {
         Path path = new Path(new State(), null);
         
-        assertTrue(path.getPathScope() instanceof State);
+        Assert.assertTrue(path.getPathScope() instanceof State);
     }
-
+    
+    @Test
     public void testConstructorStates() {
         TransitionTarget source = new State();
         source.setId("1");
@@ -45,16 +45,17 @@ public class PathTest extends TestCase {
         
         Path path = new Path(source, target);
         
-        assertNull(path.getPathScope());
-        assertEquals(1, path.getUpwardSegment().size());
-        assertEquals("1", ((State)path.getUpwardSegment().get(0)).getId());
+        Assert.assertNull(path.getPathScope());
+        Assert.assertEquals(1, path.getUpwardSegment().size());
+        Assert.assertEquals("1", ((State)path.getUpwardSegment().get(0)).getId());
 
-        assertEquals(1, path.getDownwardSegment().size());
-        assertEquals("2", ((State)path.getDownwardSegment().get(0)).getId());
+        Assert.assertEquals(1, path.getDownwardSegment().size());
+        Assert.assertEquals("2", ((State)path.getDownwardSegment().get(0)).getId());
         
-        assertFalse(path.isCrossRegion());
+        Assert.assertFalse(path.isCrossRegion());
     }
     
+    @Test
     public void testConstructorSourceCrossRegion() {
         Parallel region = new Parallel();
         
@@ -67,9 +68,10 @@ public class PathTest extends TestCase {
         
         Path path = new Path(source, target);
         
-        assertTrue(path.isCrossRegion());
+        Assert.assertTrue(path.isCrossRegion());
     }
-
+    
+    @Test
     public void testConstructorTargetCrossRegion() {
         Parallel region = new Parallel();
         
@@ -82,9 +84,10 @@ public class PathTest extends TestCase {
         
         Path path = new Path(source, target);
         
-        assertTrue(path.isCrossRegion());
+        Assert.assertTrue(path.isCrossRegion());
     }
-
+    
+    @Test
     public void testConstructorParentTarget() {
         TransitionTarget source = new State();
         source.setId("1");
@@ -96,9 +99,10 @@ public class PathTest extends TestCase {
 
         Path path = new Path(source, target);
 
-        assertNull(path.getPathScope());
+        Assert.assertNull(path.getPathScope());
     }
-
+    
+    @Test
     public void testConstructorParentSource() {
         TransitionTarget source = new State();
         source.setId("1");
@@ -110,9 +114,10 @@ public class PathTest extends TestCase {
 
         Path path = new Path(source, target);
 
-        assertNull(path.getPathScope());
+        Assert.assertNull(path.getPathScope());
     }
     
+    @Test
     public void testConstructorParent() {
         TransitionTarget source = new State();
         source.setId("1");
@@ -128,9 +133,10 @@ public class PathTest extends TestCase {
 
         Path path = new Path(source, target);
 
-        assertEquals("parentid", path.getPathScope().getId());
+        Assert.assertEquals("parentid", path.getPathScope().getId());
     }
     
+    @Test
     public void testConstructorParentParallel() {
         TransitionTarget source = new State();
         source.setId("1");
@@ -146,9 +152,10 @@ public class PathTest extends TestCase {
 
         Path path = new Path(source, target);
 
-        assertEquals("parentid", path.getPathScope().getId());
+        Assert.assertEquals("parentid", path.getPathScope().getId());
     }
     
+    @Test
     public void testConstructorParentParallelParent() {
         TransitionTarget source = new State();
         source.setId("1");
@@ -169,15 +176,17 @@ public class PathTest extends TestCase {
 
         Path path = new Path(source, target);
 
-        assertEquals("parentid", path.getPathScope().getId());
+        Assert.assertEquals("parentid", path.getPathScope().getId());
     }
     
+    @Test
     public void testGetRegionsExitedNull() {
         Path path = new Path(new State(), null);
 
-        assertEquals(0, path.getRegionsExited().size());
+        Assert.assertEquals(0, path.getRegionsExited().size());
     }
     
+    @Test
     public void testGetRegionsExitedNotRegion() {
         TransitionTarget source = new State();
         source.setId("1");
@@ -187,9 +196,10 @@ public class PathTest extends TestCase {
         
         Path path = new Path(source, target);
 
-        assertEquals(0, path.getRegionsExited().size());
+        Assert.assertEquals(0, path.getRegionsExited().size());
     }
     
+    @Test
     public void testGetRegionsExitedParallel() {
         TransitionTarget source = new Parallel();
         source.setId("1");
@@ -199,9 +209,10 @@ public class PathTest extends TestCase {
         
         Path path = new Path(source, target);
 
-        assertEquals(0, path.getRegionsExited().size());
+        Assert.assertEquals(0, path.getRegionsExited().size());
     }
     
+    @Test
     public void testGetRegionsExited() {
         Parallel region = new Parallel();
         
@@ -214,16 +225,18 @@ public class PathTest extends TestCase {
         
         Path path = new Path(source, target);
         
-        assertEquals(1, path.getRegionsExited().size());
-        assertEquals("1", (path.getRegionsExited().get(0)).getId());
+        Assert.assertEquals(1, path.getRegionsExited().size());
+        Assert.assertEquals("1", (path.getRegionsExited().get(0)).getId());
     }
-
+    
+    @Test
     public void testGetRegionsEnteredNull() {
         Path path = new Path(new State(), null);
 
-        assertEquals(0, path.getRegionsEntered().size());
+        Assert.assertEquals(0, path.getRegionsEntered().size());
     }
     
+    @Test
     public void testGetRegionsEnteredNotRegion() {
         TransitionTarget source = new State();
         source.setId("1");
@@ -233,9 +246,10 @@ public class PathTest extends TestCase {
         
         Path path = new Path(source, target);
 
-        assertEquals(0, path.getRegionsEntered().size());
+        Assert.assertEquals(0, path.getRegionsEntered().size());
     }
     
+    @Test
     public void testGetRegionsEnteredParallel() {
         TransitionTarget source = new Parallel();
         source.setId("1");
@@ -245,9 +259,10 @@ public class PathTest extends TestCase {
         
         Path path = new Path(source, target);
 
-        assertEquals(0, path.getRegionsEntered().size());
+        Assert.assertEquals(0, path.getRegionsEntered().size());
     }
     
+    @Test
     public void testGetRegionsEntered() {
         Parallel region = new Parallel();
         
@@ -260,8 +275,8 @@ public class PathTest extends TestCase {
         
         Path path = new Path(source, target);
         
-        assertEquals(1, path.getRegionsEntered().size());
-        assertEquals("2", (path.getRegionsEntered().get(0)).getId());
+        Assert.assertEquals(1, path.getRegionsEntered().size());
+        Assert.assertEquals("2", (path.getRegionsEntered().get(0)).getId());
     }
 
 }

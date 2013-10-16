@@ -18,48 +18,50 @@ package org.apache.commons.scxml2.semantics;
 
 import java.util.Comparator;
 
-import junit.framework.TestCase;
 import org.apache.commons.scxml2.model.Parallel;
 import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.TransitionTarget;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-public class TransitionTargetComparatorTest extends TestCase {
-
-    public TransitionTargetComparatorTest(String testName) {
-        super(testName);
-    }
+public class TransitionTargetComparatorTest {
 
     private Comparator<TransitionTarget> comparator;
     
-    @Override
+    @Before
     public void setUp() {
         comparator = new TransitionTargetComparator<TransitionTarget>();
     }
-    
+        
+    @Test
     public void testComparatorEquals() {
         TransitionTarget target = new State();
         
-        assertEquals(0, comparator.compare(target, target));
+        Assert.assertEquals(0, comparator.compare(target, target));
     }
-    
+        
+    @Test
     public void testComparatorNegative() {
         TransitionTarget target1 = new State();
         TransitionTarget target2 = new State();
         
         target1.setParent(target2);
         
-        assertEquals(-1, comparator.compare(target1, target2));
+        Assert.assertEquals(-1, comparator.compare(target1, target2));
     }
-    
+        
+    @Test
     public void testComparatorPositive() {
         TransitionTarget target1 = new State();
         TransitionTarget target2 = new State();
         
         target2.setParent(target1);
         
-        assertEquals(1, comparator.compare(target1, target2));
+        Assert.assertEquals(1, comparator.compare(target1, target2));
     }
-    
+        
+    @Test
     public void testComparatorFirstMoreParents() {
         TransitionTarget target1 = new State();
         TransitionTarget parent1 = new State();
@@ -73,9 +75,10 @@ public class TransitionTargetComparatorTest extends TestCase {
         
         target2.setParent(parent3);
         
-        assertEquals(-1, comparator.compare(target1, target2));
+        Assert.assertEquals(-1, comparator.compare(target1, target2));
     }
-    
+        
+    @Test
     public void testComparatorSecondMoreParents() {
         TransitionTarget target1 = new State();
         TransitionTarget parent1 = new State();
@@ -89,9 +92,10 @@ public class TransitionTargetComparatorTest extends TestCase {
         
         target2.setParent(parent3);
         
-        assertEquals(1, comparator.compare(target2, target1)); // reversed
+        Assert.assertEquals(1, comparator.compare(target2, target1)); // reversed
     }
-    
+        
+    @Test
     public void testComparatorSameParent() {
         State target1 = new State();
         Parallel parent = new Parallel();
@@ -102,6 +106,6 @@ public class TransitionTargetComparatorTest extends TestCase {
         target2.setParent(parent);
         parent.addChild(target2);
         
-        assertEquals(1, comparator.compare(target1, target2));
+        Assert.assertEquals(1, comparator.compare(target1, target2));
     }
 }

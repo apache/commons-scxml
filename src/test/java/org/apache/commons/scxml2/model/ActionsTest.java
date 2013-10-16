@@ -18,12 +18,14 @@ package org.apache.commons.scxml2.model;
 
 import java.net.URL;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.env.jsp.ELContext;
 import org.apache.commons.scxml2.env.jsp.ELEvaluator;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 /**
  * Unit tests {@link org.apache.commons.scxml2.model.Assign}.
  * Unit tests {@link org.apache.commons.scxml2.model.Cancel}.
@@ -35,14 +37,7 @@ import org.apache.commons.scxml2.env.jsp.ELEvaluator;
  * Unit tests {@link org.apache.commons.scxml2.model.Send}.
  * Unit tests {@link org.apache.commons.scxml2.model.Var}.
  */
-public class ActionsTest extends TestCase {
-    /**
-     * Construct a new instance of ActionsTest with
-     * the specified name
-     */
-    public ActionsTest(String name) {
-        super(name);
-    }
+public class ActionsTest {
 
     // Test data
     private URL actionsSample01, actionsSample02, actionsSample03;
@@ -53,7 +48,7 @@ public class ActionsTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
-    @Override
+    @Before
     public void setUp() {
         actionsSample01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml2/model/actions-state-test.xml");
@@ -68,7 +63,7 @@ public class ActionsTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
-    @Override
+    @After
     public void tearDown() {
         actionsSample01 = actionsSample02 = actionsSample03 = null;
         evaluator = null;
@@ -78,17 +73,20 @@ public class ActionsTest extends TestCase {
 
     /**
      * Test the implementation
-     */
+     */    
+    @Test
     public void testStateActions() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse(actionsSample01);
         runTest(scxml);
     }
-
+    
+    @Test
     public void testParallelActions() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse(actionsSample02);
         runTest(scxml);
     }
-
+    
+    @Test
     public void testInitialActions() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse(actionsSample03);
         runTest(scxml);
@@ -98,8 +96,8 @@ public class ActionsTest extends TestCase {
         exec = SCXMLTestHelper.getExecutor(scxml, ctx, evaluator);
         ELContext ctx = (ELContext) SCXMLTestHelper.lookupContext(exec,
             "actionsTest");
-        assertEquals((String) ctx.get("foo"), "foobar");
-        assertEquals("Missed event transition",
+        Assert.assertEquals((String) ctx.get("foo"), "foobar");
+        Assert.assertEquals("Missed event transition",
             "true", (String) ctx.get("eventsent"));
     }
 }

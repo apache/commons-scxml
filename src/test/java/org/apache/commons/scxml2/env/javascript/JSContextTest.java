@@ -17,16 +17,16 @@
 
 package org.apache.commons.scxml2.env.javascript;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.scxml2.env.SimpleContext;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * JUnit 3 test case for the JSContext SCXML Context implementation for
  * the Javascript expression evaluator.
  *
  */
-public class JSContextTest extends TestCase {
+public class JSContextTest {
         // TEST CONSTANTS
 
         // TEST VARIABLES
@@ -45,32 +45,24 @@ public class JSContextTest extends TestCase {
             junit.textui.TestRunner.main(testCaseName);
         }
 
-        // CONSTRUCTORS
-
-        /**
-         * Initialises the test case with the supplied name.
-         *
-         */
-        public JSContextTest(String testName) {
-                super(testName);
-        }
-
         // INSTANCE METHOD TESTS
 
         /**
          * Tests implementation of JSContext default constructor.
          *
          */
+        @Test
         public void testDefaultConstructor() {
-            assertNotNull("Error in JSContext default constructor",new JSContext());
+            Assert.assertNotNull("Error in JSContext default constructor",new JSContext());
         }
 
         /**
          * Tests implementation of JSContext 'child' constructor.
          *
          */
+        @Test
         public void testChildConstructor() {
-                assertNotNull("Error in JSContext child constructor",new JSContext(new SimpleContext()));
+                Assert.assertNotNull("Error in JSContext child constructor",new JSContext(new SimpleContext()));
         }
 
 }

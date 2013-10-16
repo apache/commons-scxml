@@ -30,7 +30,7 @@ import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.apache.commons.scxml2.env.SimpleDispatcher;
 import org.apache.commons.scxml2.env.Tracer;

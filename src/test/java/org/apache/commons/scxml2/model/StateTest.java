@@ -21,44 +21,45 @@ import java.util.List;
 
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-import junit.framework.TestCase;
-
-public class StateTest extends TestCase {
-
-    public StateTest(String testName) {
-        super(testName);
-    }
+public class StateTest {
 
     // Test data
     private State state;
     private URL state01;
     private SCXMLExecutor exec;
 
-    @Override
+    @Before
     public void setUp() {
         state = new State();
         state01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml2/model/state-01.xml");
     }
 
-    @Override
+    @After
     public void tearDown() {
         state01 = null;
         exec = null;
     }
-
-    public void testGetTransitionsListNull() {
-        assertNull(state.getTransitionsList("event"));
-    }
     
+    @Test
+    public void testGetTransitionsListNull() {
+        Assert.assertNull(state.getTransitionsList("event"));
+    }
+        
+    @Test
     public void testGetTransitionsList() {
         
         state.getTransitionsList().add(new Transition());
         
-        assertNotNull(state.getTransitionsList(null));
+        Assert.assertNotNull(state.getTransitionsList(null));
     }
-    
+        
+    @Test
     public void testAddTransitionDoesNotContainKey() {
         Transition transition = new Transition();
         transition.setEvent("event");
@@ -67,10 +68,11 @@ public class StateTest extends TestCase {
         
         List<Transition> events = state.getTransitionsList("event");
         
-        assertEquals(1, events.size());
-        assertEquals("event", events.get(0).getEvent());
+        Assert.assertEquals(1, events.size());
+        Assert.assertEquals("event", events.get(0).getEvent());
     }
-    
+        
+    @Test
     public void testAddTransitionContainKey() {
         Transition transition1 = new Transition();
         transition1.setEvent("event");
@@ -83,9 +85,10 @@ public class StateTest extends TestCase {
         
         List<Transition> events = state.getTransitionsList("event");
         
-        assertEquals(2, events.size());
+        Assert.assertEquals(2, events.size());
     }
-    
+        
+    @Test
     public void testGetTransitionList() {
         Transition transition1 = new Transition();
         transition1.setEvent("event");
@@ -98,25 +101,29 @@ public class StateTest extends TestCase {
         
         List<Transition> events = state.getTransitionsList();
         
-        assertEquals(2, events.size());
+        Assert.assertEquals(2, events.size());
+    }
+        
+    @Test
+    public void testHasHistoryEmpty() {
+        Assert.assertFalse(state.hasHistory());
     }
     
-    public void testHasHistoryEmpty() {
-        assertFalse(state.hasHistory());
-    }
-
+    @Test
     public void testHasHistory() {
         History history = new History();
         
         state.addHistory(history);
         
-        assertTrue(state.hasHistory());
+        Assert.assertTrue(state.hasHistory());
     }
-    
+        
+    @Test
     public void testIsSimple() {
-        assertTrue(state.isSimple());
+        Assert.assertTrue(state.isSimple());
     }
-    
+        
+    @Test
     public void testIsSimpleHasChildren() {
         State state1 = new State();
         
@@ -124,21 +131,24 @@ public class StateTest extends TestCase {
         // could be removed in v1.0
         state.addChild(state1);
         
-        assertFalse(state.isSimple());
+        Assert.assertFalse(state.isSimple());
     }
-    
+        
+    @Test
     public void testIsCompositeFalse() {
-        assertFalse(state.isComposite());
+        Assert.assertFalse(state.isComposite());
     }
-    
+        
+    @Test
     public void testIsCompositeParallel() {
         State child = new State();
         
         state.addChild(child);
         
-        assertTrue(state.isComposite());
+        Assert.assertTrue(state.isComposite());
     }
-    
+        
+    @Test
     public void testIsCompositeHasChildren() {
         State state1 = new State();
         
@@ -146,27 +156,30 @@ public class StateTest extends TestCase {
         // could be removed in v1.0
         state.addChild(state1);
         
-        assertTrue(state.isComposite());
+        Assert.assertTrue(state.isComposite());
     }
-    
+        
+    @Test
     public void testIsRegion() {
         state.setParent(new Parallel());
         
-        assertTrue(state.isRegion());
+        Assert.assertTrue(state.isRegion());
     }
-    
+        
+    @Test
     public void testIsRegionNotParallel() {
         state.setParent(new State());
         
-        assertFalse(state.isRegion());
+        Assert.assertFalse(state.isRegion());
     }
-
+    
+    @Test
     public void testInitialAttribute() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse(state01);
-        assertNotNull(scxml);
+        Assert.assertNotNull(scxml);
         exec = SCXMLTestHelper.getExecutor(scxml);
-        assertNotNull(exec);
-        assertEquals("s11", exec.getCurrentStatus().getStates().iterator().next().getId());
+        Assert.assertNotNull(exec);
+        Assert.assertEquals("s11", exec.getCurrentStatus().getStates().iterator().next().getId());
     }
 
 }

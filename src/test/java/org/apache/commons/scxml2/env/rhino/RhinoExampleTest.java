@@ -19,42 +19,40 @@ package org.apache.commons.scxml2.env.rhino;
 import java.net.URL;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.TransitionTarget;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-public class RhinoExampleTest extends TestCase {
-
-    public RhinoExampleTest(String name) {
-        super(name);
-    }
+public class RhinoExampleTest {
 
     // Test data
     private URL example01;
     private SCXMLExecutor exec;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         example01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml2/env/rhino/example-01.xml");
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         example01 = null;
     }
 
     // TEST METHODS
-
+    @Test
     public void testExample01Sample() throws Exception {
         exec = SCXMLTestHelper.getExecutor(example01, new RhinoEvaluator());
-        assertNotNull(exec);
+        Assert.assertNotNull(exec);
         Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
-        assertEquals(1, currentStates.size());
-        assertEquals("ten", ((State)currentStates.iterator().next()).getId());
+        Assert.assertEquals(1, currentStates.size());
+        Assert.assertEquals("ten", ((State)currentStates.iterator().next()).getId());
         SCXMLTestHelper.assertPostTriggerState(exec, "ten.done", "twenty");
         SCXMLTestHelper.assertPostTriggerState(exec, "twenty.done", "thirty");
         SCXMLTestHelper.assertPostTriggerState(exec, "thirty.done", "forty");

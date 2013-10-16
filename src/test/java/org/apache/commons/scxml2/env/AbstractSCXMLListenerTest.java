@@ -16,23 +16,19 @@
  */
 package org.apache.commons.scxml2.env;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.scxml2.SCXMLListener;
 import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.Transition;
 import org.apache.commons.scxml2.model.TransitionTarget;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Unit tests {@link org.apache.commons.scxml2.env.AbstractSCXMLListener}.
  */
-public class AbstractSCXMLListenerTest extends TestCase {
-    /**
-     * Construct a new instance of AbstractSCXMLListenerTest with the specified name
-     */
-    public AbstractSCXMLListenerTest(String name) {
-        super(name);
-    }
+public class AbstractSCXMLListenerTest {
 
     // Test data
     private TransitionTarget to;
@@ -45,7 +41,7 @@ public class AbstractSCXMLListenerTest extends TestCase {
     /**
      * Set up instance variables required by this test case.
      */
-    @Override
+    @Before
     public void setUp() {
         to = new State();
         from = new State();
@@ -58,13 +54,14 @@ public class AbstractSCXMLListenerTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
-    @Override
+    @After
     public void tearDown() {
         to = null;
         from = null;
         transition = null;
     }
 
+    @Test
     public void testAbstractSCXMLListener0() {
         SCXMLListener listener0 = new AbstractSCXMLListener() {
                 /**
@@ -93,17 +90,18 @@ public class AbstractSCXMLListenerTest extends TestCase {
                 }
             };
 
-        assertFalse("heardOnEntry == false", heardOnEntry);
-        assertFalse("heardOnExit == false", heardOnExit);
-        assertFalse("heardOnTransition == false", heardOnTransition);
+        Assert.assertFalse("heardOnEntry == false", heardOnEntry);
+        Assert.assertFalse("heardOnExit == false", heardOnExit);
+        Assert.assertFalse("heardOnTransition == false", heardOnTransition);
         listener0.onEntry(to);
         listener0.onExit(to);
         listener0.onTransition(from, to, transition);
-        assertTrue("heardOnEntry", heardOnEntry);
-        assertTrue("heardOnExit", heardOnExit);
-        assertTrue("heardOnExit", heardOnTransition);
+        Assert.assertTrue("heardOnEntry", heardOnEntry);
+        Assert.assertTrue("heardOnExit", heardOnExit);
+        Assert.assertTrue("heardOnExit", heardOnTransition);
     }
 
+    @Test
     public void testAbstractSCXMLListener1() {
         SCXMLListener listener1 = new AbstractSCXMLListener() {
                 /**
@@ -123,17 +121,18 @@ public class AbstractSCXMLListenerTest extends TestCase {
                 }
             };
 
-        assertFalse("heardOnEntry == false", heardOnEntry);
-        assertFalse("heardOnExit == false", heardOnExit);
-        assertFalse("heardOnTransition == false", heardOnTransition);
+        Assert.assertFalse("heardOnEntry == false", heardOnEntry);
+        Assert.assertFalse("heardOnExit == false", heardOnExit);
+        Assert.assertFalse("heardOnTransition == false", heardOnTransition);
         listener1.onEntry(to);
         listener1.onExit(to);
         listener1.onTransition(from, to, transition);
-        assertTrue("heardOnEntry", heardOnEntry);
-        assertTrue("heardOnExit", heardOnExit);
-        assertFalse("heardOnTransition == false", heardOnTransition);
+        Assert.assertTrue("heardOnEntry", heardOnEntry);
+        Assert.assertTrue("heardOnExit", heardOnExit);
+        Assert.assertFalse("heardOnTransition == false", heardOnTransition);
     }
 
+    @Test
     public void testAbstractSCXMLListener2() {
         SCXMLListener listener2 = new AbstractSCXMLListener() {
                 /**
@@ -145,30 +144,31 @@ public class AbstractSCXMLListenerTest extends TestCase {
                 }
             };
 
-        assertFalse("heardOnEntry == false", heardOnEntry);
-        assertFalse("heardOnExit == false", heardOnExit);
-        assertFalse("heardOnTransition == false", heardOnTransition);
+            Assert.assertFalse("heardOnEntry == false", heardOnEntry);
+            Assert.assertFalse("heardOnExit == false", heardOnExit);
+            Assert.assertFalse("heardOnTransition == false", heardOnTransition);
         listener2.onEntry(to);
         listener2.onExit(to);
         listener2.onTransition(from, to, transition);
-        assertTrue("heardOnEntry", heardOnEntry);
-        assertFalse("heardOnExit == false", heardOnExit);
-        assertFalse("heardOnTransition == false", heardOnTransition);
+        Assert.assertTrue("heardOnEntry", heardOnEntry);
+        Assert.assertFalse("heardOnExit == false", heardOnExit);
+        Assert.assertFalse("heardOnTransition == false", heardOnTransition);
     }
 
+    @Test
     public void testAbstractSCXMLListener3() {
         SCXMLListener listener3 = new AbstractSCXMLListener() {
                 // empty
             };
 
-        assertFalse("heardOnEntry == false", heardOnEntry);
-        assertFalse("heardOnExit == false", heardOnExit);
-        assertFalse("heardOnTransition == false", heardOnTransition);
+            Assert.assertFalse("heardOnEntry == false", heardOnEntry);
+            Assert.assertFalse("heardOnExit == false", heardOnExit);
+            Assert.assertFalse("heardOnTransition == false", heardOnTransition);
         listener3.onEntry(to);
         listener3.onExit(to);
         listener3.onTransition(from, to, transition);
-        assertFalse("heardOnEntry == false", heardOnEntry);
-        assertFalse("heardOnExit == false", heardOnExit);
-        assertFalse("heardOnTransition == false", heardOnTransition);
+        Assert.assertFalse("heardOnEntry == false", heardOnEntry);
+        Assert.assertFalse("heardOnExit == false", heardOnExit);
+        Assert.assertFalse("heardOnTransition == false", heardOnTransition);
     }
 }

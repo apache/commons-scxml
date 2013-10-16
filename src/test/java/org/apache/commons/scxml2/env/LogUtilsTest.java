@@ -16,25 +16,23 @@
  */
 package org.apache.commons.scxml2.env;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.Transition;
 import org.apache.commons.scxml2.model.TransitionTarget;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class LogUtilsTest extends TestCase {
+public class LogUtilsTest {
 
-    public LogUtilsTest(String testName) {
-        super(testName);
-    }
-
+    @Test
     public void testGetTTPathParentNull() {
         TransitionTarget target = new State();
         target.setId("ID");
         
-        assertEquals("/ID", LogUtils.getTTPath(target));
+        Assert.assertEquals("/ID", LogUtils.getTTPath(target));
     }
     
+    @Test
     public void testGetTTPathParent() {
         TransitionTarget target = new State();
         target.setId("ID");
@@ -48,9 +46,10 @@ public class LogUtilsTest extends TestCase {
         parent1.setParent(parent2);
         target.setParent(parent1);
         
-        assertEquals("/parent2/parent1/ID", LogUtils.getTTPath(target));
+        Assert.assertEquals("/parent2/parent1/ID", LogUtils.getTTPath(target));
     }
     
+    @Test
     public void testTransToString() {
         TransitionTarget targetTo = new State();
         targetTo.setId("TO");
@@ -62,7 +61,7 @@ public class LogUtilsTest extends TestCase {
         transition.setCond("condition");
         transition.setEvent("event happened");
         
-        assertEquals( "transition (event = event happened, cond = condition, from = /FROM, to = /TO)", 
+        Assert.assertEquals( "transition (event = event happened, cond = condition, from = /FROM, to = /TO)", 
                                         LogUtils.transToString(targetFrom, targetTo, transition));
     }
 

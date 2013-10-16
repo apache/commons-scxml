@@ -19,23 +19,22 @@ package org.apache.commons.scxml2.model;
 import java.net.URL;
 import java.util.Set;
 
-import junit.framework.TestCase;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.env.javascript.JSEvaluator;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-public class ScriptTest extends TestCase {
+public class ScriptTest {
 
     private URL script01jexl, script01js;
-    
-    public ScriptTest(String testName) {
-        super(testName);
-    }
 
     /**
      * Set up instance variables required by this test case.
      */
-    @Override
+    @Before
     public void setUp() {
         script01jexl = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml2/env/jexl/script-01.xml");
@@ -46,26 +45,28 @@ public class ScriptTest extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
-    @Override
+    @After
     public void tearDown() {
         script01jexl = script01js = null;
     }
 
     /**
      * Test JEXL script execution.
-     */
+     */    
+    @Test
     public void testJexlScriptExecution() throws Exception {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor(script01jexl);
         Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
-        assertEquals(1, currentStates.size());
-        assertEquals("end", currentStates.iterator().next().getId());
+        Assert.assertEquals(1, currentStates.size());
+        Assert.assertEquals("end", currentStates.iterator().next().getId());
     }
-
+    
+    @Test
     public void testJavaScriptExecution() throws Exception {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor(script01js, new JSEvaluator());
         Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
-        assertEquals(1, currentStates.size());
-        assertEquals("end", currentStates.iterator().next().getId());
+        Assert.assertEquals(1, currentStates.size());
+        Assert.assertEquals("end", currentStates.iterator().next().getId());
     }
 
 }

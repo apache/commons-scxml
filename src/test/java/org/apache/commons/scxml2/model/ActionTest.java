@@ -16,21 +16,19 @@
  */
 package org.apache.commons.scxml2.model;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-public class ActionTest extends TestCase {
-
-    public ActionTest(String testName) {
-        super(testName);
-    }
+public class ActionTest {
 
     private Action action;
     
-    @Override
+    @Before
     public void setUp() {
         action = new Assign();
     }
-    
+    @Test
     public void testGetParentStateIsState() throws Exception {
         Transition transition = new Transition();
         
@@ -42,9 +40,10 @@ public class ActionTest extends TestCase {
 
         TransitionTarget returnValue = action.getParentTransitionTarget();
         
-        assertEquals("on", returnValue.getId());
+        Assert.assertEquals("on", returnValue.getId());
     }
-
+    
+    @Test
     public void testGetParentStateIsParallel() throws Exception {
         Transition transition = new Transition();
         
@@ -61,9 +60,10 @@ public class ActionTest extends TestCase {
 
         TransitionTarget returnValue = action.getParentTransitionTarget();
         
-        assertEquals("on", returnValue.getId());
+        Assert.assertEquals("on", returnValue.getId());
     }
     
+    @Test
     public void testGetParentStateIsHistory() throws Exception {
         Transition transition = new Transition();
         
@@ -80,9 +80,10 @@ public class ActionTest extends TestCase {
 
         TransitionTarget returnValue = action.getParentTransitionTarget();
         
-        assertEquals("off", returnValue.getId());
+        Assert.assertEquals("off", returnValue.getId());
     }
-
+    
+    @Test
     public void testGetParentStateIsInitial() throws Exception {
         Transition transition = new Transition();
         
@@ -99,6 +100,6 @@ public class ActionTest extends TestCase {
 
         TransitionTarget returnValue = action.getParentTransitionTarget();
 
-        assertEquals("off", returnValue.getId());
+        Assert.assertEquals("off", returnValue.getId());
     }
 }
