@@ -26,11 +26,8 @@ import org.apache.commons.scxml2.env.jsp.ELEvaluator;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 
-@FixMethodOrder(MethodSorters.JVM)
 public class CustomActionTest {
 
     private URL hello01, custom01, external01, override01, payload01, payload02;
@@ -53,6 +50,8 @@ public class CustomActionTest {
             getResource("org/apache/commons/scxml2/custom-hello-world-04-jexl.xml");
         payload02 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml2/custom-hello-world-04-el.xml");
+
+        Hello.callbacks = 0;
     }
 
     /**
@@ -158,6 +157,10 @@ public class CustomActionTest {
         Assert.assertEquals("custom", ((State) exec.getCurrentStatus().getStates().
                 iterator().next()).getId());
         Assert.assertTrue(exec.getCurrentStatus().isFinal());
+
+        // The custom action defined by Hello.class should be called
+        // to execute() exactly twice at this point (one by <my:hello/> and the other by <foo:bar/>).
+        Assert.assertEquals(2, Hello.callbacks);
     }
 
     // Hello World example using custom <my:hello> action
@@ -178,6 +181,10 @@ public class CustomActionTest {
         // (4) Single, final state
         Assert.assertEquals("custom", ((State) exec.getCurrentStatus().getStates().
             iterator().next()).getId());
+
+        // The custom action defined by Hello.class should be called
+        // to execute() exactly twice at this point (one by <my:hello/> and the other by <my:hello/> in external).
+        Assert.assertEquals(2, Hello.callbacks);
     }
 
     // Hello World example using custom <my:send> action
@@ -197,13 +204,10 @@ public class CustomActionTest {
         // (4) Single, final state
         Assert.assertEquals("custom", ((State) exec.getCurrentStatus().getStates().
             iterator().next()).getId());
-    }
 
-    // The custom action defined by Hello.class should be called
-    // to execute() exactly 5 times upto this point
-    @Test
-    public void testCustomActionCallbacks() {
-        Assert.assertEquals(5, Hello.callbacks);
+        // The custom action defined by Hello.class should be called
+        // to execute() exactly once at this point (by <my:send/>).
+        Assert.assertEquals(1, Hello.callbacks);
     }
 
     // Hello World example using custom <my:hello> action that generates an
@@ -228,6 +232,11 @@ public class CustomActionTest {
         // (5) Verify datamodel variable is correct
         Assert.assertEquals("Missing helloName1 in root context", "custom04a",
                      (String) exec.getRootContext().get("helloName1"));
+
+        // The custom action defined by Hello.class should be called
+        // to execute() exactly once at this point (by onentry in init state).
+        Assert.assertEquals(1, Hello.callbacks);
+
         // (6) Check use of payload in non-initial state
         SCXMLTestHelper.fireEvent(exec, "custom.next");
         // (7) Verify correct end state
@@ -237,6 +246,10 @@ public class CustomActionTest {
                 "end", ((State) exec.getCurrentStatus().getStates().
                 iterator().next()).getId());
         Assert.assertTrue(exec.getCurrentStatus().isFinal());
+
+        // The custom action defined by Hello.class should be called
+        // to execute() exactly two times at this point (by onentry in custom2 state).
+        Assert.assertEquals(2, Hello.callbacks);
     }
 
     // Hello World example using custom <my:hello> action that generates an
@@ -261,6 +274,10 @@ public class CustomActionTest {
         // (5) Verify datamodel variable is correct
         Assert.assertEquals("Missing helloName1 in root context", "custom04",
                      (String) exec.getRootContext().get("helloName1"));
+
+        // The custom action defined by Hello.class should be called
+        // to execute() exactly once at this point (by onentry in init state).
+        Assert.assertEquals(1, Hello.callbacks);
     }
 }
 
