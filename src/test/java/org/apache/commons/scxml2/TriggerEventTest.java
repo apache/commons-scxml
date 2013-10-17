@@ -68,18 +68,18 @@ public class TriggerEventTest {
      */
     @Test
     public void testTriggerEventGetters() {
-        Assert.assertEquals(te1.getName(), "name1");
-        Assert.assertEquals(te2.getType(), 2);
+        Assert.assertEquals("name1", te1.getName());
+        Assert.assertEquals(2, te2.getType());
         Assert.assertNull(te7.getPayload());
     }
 
     @Test
     public void testTriggerEventEquals() {
-        Assert.assertTrue(te1.equals(te2));
-        Assert.assertTrue(te3.equals(te4));
-        Assert.assertTrue(te5.equals(te6));
-        Assert.assertFalse(te1.equals(te4));
-        Assert.assertFalse(te7.equals(null));
+        Assert.assertEquals(te1, te2);
+        Assert.assertEquals(te3, te4);
+        Assert.assertEquals(te5, te6);
+        Assert.assertNotEquals(te1, te4);
+        Assert.assertNotNull(te7);
     }
 
     @Test
