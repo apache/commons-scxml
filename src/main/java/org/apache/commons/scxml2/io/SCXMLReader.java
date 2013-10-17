@@ -2148,7 +2148,7 @@ public final class SCXMLReader {
         // Instantiate the XMLInputFactory
         XMLInputFactory factory = XMLInputFactory.newInstance();
         if (configuration.factoryId != null && configuration.factoryClassLoader != null) {
-            factory = XMLInputFactory.newInstance(configuration.factoryId, configuration.factoryClassLoader);
+            factory = XMLInputFactory.newFactory(configuration.factoryId, configuration.factoryClassLoader);
         }
         factory.setEventAllocator(configuration.allocator);
         for (Map.Entry<String, Object> property : configuration.properties.entrySet()) {
