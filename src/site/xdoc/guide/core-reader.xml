@@ -19,46 +19,63 @@
 <document>
 
  <properties>
-  <title>Commons SCXML Usage - API notes - Parser</title>
+  <title>Commons SCXML Usage - API notes - Reader</title>
   <author email="dev@commons.apache.org">Commons Documentation Team</author>
  </properties>
 
  <body>
 
-  <section name="Commons SCXML - Parsing SCXML documents for Commons SCXML">
+  <section name="Commons SCXML - Reading SCXML documents for Commons SCXML">
     <p>Commons SCXML provides its own implementation of the
     <a href="http://commons.apache.org/scxml/apidocs/org/apache/commons/scxml2/model/package-summary.html">
     Java object model for SCXML</a>
-    and a configured <a href="http://commons.apache.org/digester">
-    Digester</a> that can parse SCXML documents into that object model.</p>
+    and a dedicated <a href="http://commons.apache.org/scxml/apidocs/org/apache/commons/scxml2/io/SCXMLReader">
+    SCXMLReader</a> that can read SCXML documents into that object model.</p>
 
     <subsection name="Usage">
-     <p>The primary convenience method exposed by the <code>SCXMLParser</code>
+     <p>The primary convenience method exposed by the <code>SCXMLReader</code>
      is:</p>
      <pre>
         //import java.io.IOException;
         //import java.net.URL;
-        //import org.apache.commons.scxml2.io.SCXMLParser;
+        //import org.apache.commons.scxml2.io.SCXMLReader;
         //import org.apache.commons.scxml2.model.ModelException;
         //import org.apache.commons.scxml2.model.SCXML;
         //import org.xml.sax.ErrorHandler;
         //import org.xml.sax.SAXException;
 
+        //import java.io.IOException;
+        //import java.net.URL;
+        //import java.util.List;
+
+        //import javax.xml.stream.XMLReporter;
+        //import javax.xml.stream.XMLStreamException;
+
+        //import org.apache.commons.scxml2.PathResolver;
+        //import org.apache.commons.scxml2.io.SCXMLReader;
+        //import org.apache.commons.scxml2.io.SCXMLReader.Configuration;
+        //import org.apache.commons.scxml2.model.CustomAction;
+        //import org.apache.commons.scxml2.model.ModelException;
+        //import org.apache.commons.scxml2.model.SCXML;
+
         SCXML scxml = null;
 
         try {
-          scxml = SCXMLParser.parse(&lt;URL&gt;, &lt;ErrorHandler&gt;);
-        } catch (IOException ioe) {
-          // IOException while parsing
-        } catch (SAXException se) {
-          // SAXException while parsing
-        } catch (ModelException me) {
-          // ModelException while parsing
+          // Through a Configuration object the reading of a SCXML document can be configured and customized.
+          Configuration configuration = new Configuration(&lt;XMLReporter&gt;, &lt;PATHResolver&gt;, &lt;List&lt;CustomAction&gt;&gt;);
+          // scxml = SCXMLReader.read(&lt;URL&gt;);
+          // scxml = SCXMLReader.read(&lt;URL&gt; new Configuration());
+          scxml = SCXMLReader.read(&lt;URL&gt;, configuration);
+        } catch (IOException e) {
+          // IOException while reading
+        } catch (ModelException e) {
+          // ModelException while reading
+        } catch (XMLStreamException e) {
+          // XMLStreamException while reading
         }
-          
 
         if (scxml == null) {
-          // Parsing failed
+          // Reading failed
         }
      </pre>
 
@@ -69,18 +86,19 @@
      attributes of <code>State</code> SCXML elements.</p>
 
      <p>Commons SCXML provides convenience implementations of most of the
-     interfaces such as <code>ErrorHandler</code>.</p>
+     interfaces such as <code>XMLReporter</code>.</p>
 
-     <p>The SCXMLParser exposes other convenience methods which can handle
+     <p>The SCXMLReader exposes other convenience methods which can handle
      a SCXML document specified using its &quot;real path&quot; on the local
      system, in which case an additional 
      <code>org.apache.commons.scxml2.PathResolver</code>parameter needs to be
-     supplied for resolving relative document references or as an
+     supplied through an SCXMLReader.Configuration instance for resolving relative
+     document references or as an
      <code>InputSource</code>, in which case there is no path resolution,
      so the document must be a standalone document.</p>
 
-     <p>The <code>SCXMLParser</code> Javadoc is available
-     <a href="../apidocs/org/apache/commons/scxml2/io/SCXMLParser.html">
+     <p>The <code>SCXMLReader</code> Javadoc is available
+     <a href="../apidocs/org/apache/commons/scxml2/io/SCXMLReader.html">
      here</a>.
      </p>
     </subsection>

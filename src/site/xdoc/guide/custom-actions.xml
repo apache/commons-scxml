@@ -119,27 +119,25 @@
 
    </subsection>
 
-   <subsection name="Using a custom SCXML digester">
+   <subsection name="Using a custom SCXML reader">
 
     <p>With the custom action(s) implemented, the document may be
-    parsed using a custom SCXML digester that is aware of these actions
+    parsed using a SCXMLReader that is made aware of these actions through a custom Configuration
     like so:</p>
 
     <pre>
       // (1) Create a list of custom actions, add as many as are needed
-      List customActions = new ArrayList();
+      List&lt;CustomAction&gt; customActions = new ArrayList&lt;CustomAction&gt;();
       CustomAction ca =
             new CustomAction("http://my.custom-actions.domain/CUSTOM",
                              "hello", Hello.class);
       customActions.add(ca);
 
-      // (2) Parse the SCXML document containing the custom action(s)
+      // (2) Read the SCXML document containing the custom action(s)
       SCXML scxml = null;
       try {
-          scxml = SCXMLParser.parse(url, errorHandler, customActions);
-          // Also see other methods in SCXMLParser API
-          // "url" points to SCXML document
-          // "errorHandler" is SAX ErrorHandler
+          scxml = SCXMLReader.read(url, new SCXMLReader.Configuration(null, null, customActions));
+          // Also see other methods in SCXMLReader API
       } catch (Exception e) {
           // bad document, take necessary action
       }
@@ -150,21 +148,16 @@
        implements the
        <a href="../apidocs/org/apache/commons/scxml2/model/ExternalContent.html">ExternalContent</a>
        interface, in which case, any body content gets read into a list
-       of DOM nodes. For any other requirements, the digester rules
-       can be added by directly by obtaining a Digester instance with the
-       "default" SCXML rules using the <code>newInstance()</code> methods
-       and further directly adding the necessary rules using the
-       <a href="http://commons.apache.org/digester/commons-digester-1.8/docs/api/">digester API</a>
+       of DOM nodes.
        .</p>
 
    </subsection>
 
    <subsection name="Read in the 'custom' SCXML document">
 
-    <p>For documents without custom actions, the utility methods of the
-       <a href="../apidocs/org/apache/commons/scxml2/io/SCXMLParser.html">SCXMLParser</a>
-       should be used. That section is
-       <a href="core-parser.html">here</a>.</p>
+    <p>For documents with or without custom actions, several utility methods of the
+       <a href="../apidocs/org/apache/commons/scxml2/io/SCXMLReader.html">SCXMLReader</a>
+       can be used. More information is <a href="core-reader.html">here</a>.</p>
 
    </subsection>
 

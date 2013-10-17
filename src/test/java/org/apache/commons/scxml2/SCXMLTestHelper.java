@@ -74,8 +74,6 @@ public class SCXMLTestHelper {
         SCXML scxml = null;
         Configuration configuration = new Configuration(null, null, customActions);
         scxml = SCXMLReader.read(url, configuration);
-        //Uncomment line below to test the (now deprecated) SCXMLParser
-        //scxml = SCXMLParser.parse(url, new SimpleErrorHandler(), customActions);
         Assert.assertNotNull(scxml);
         SCXML roundtrip = testModelSerializability(scxml);
         return roundtrip;

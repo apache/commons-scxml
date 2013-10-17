@@ -20,30 +20,11 @@
 <body>
 
   <p>A collection of classes for reading in and writing out SCXML
-     documents, to and from the Commons SCXML Java object model.</p>
-
-  <p>Two variants of the SCXML parser are present in this package:
+     documents, to and from the Commons SCXML Java object model.
     <ul>
-      <li><code>SCXMLParser</code> represents the SAX-based parser that
-          uses Commons Digester, and will be removed in v1.0.
-          It will be present all v0.x releases for backwards compatibility
-          reasons.</li>
-      <li><code>SCXMLReader</code> represents the newer version, based on
-          StAX based pull parsing and has no external dependencies.
-          This will be updated to keep up with the more recent
-          Working Drafts.</li>
-    </ul>
-  </p>
-
-  <p>Two variants of the SCXML serializer are present in this package:
-    <ul>
-      <li><code>SCXMLSerializer</code> represents the legacy serializer that
-          will be removed in v1.0.
-          It will be present all v0.x releases for backwards compatibility
-          reasons.</li>
-      <li><code>SCXMLWriter</code> represents the newer version, based on
-          StAX XML stream writer.
-          This will be updated to keep up with the more recent changes.</li>
+      <li><code>SCXMLReader</code> is based on
+          StAX based pull parsing and has no external dependencies.</li>
+      <li><code>SCXMLWriter</code> is based on StAX XML stream writer.</li>
     </ul>
   </p>
 

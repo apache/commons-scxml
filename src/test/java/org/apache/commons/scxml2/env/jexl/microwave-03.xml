@@ -17,7 +17,6 @@
 -->
 <!--
    This document uses Commons JEXL as the expressions language.
-   Needs SCXMLParser.
 -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
        xmlns:cs="http://commons.apache.org/scxml"

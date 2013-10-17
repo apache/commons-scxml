@@ -122,7 +122,6 @@ public class SCXMLExecutorTest {
         checkMicrowave02Sample();
     }
 
-    // Uses SCXMLParser (latest WD)
     @Test
     public void testSCXMLExecutorMicrowave03JexlSample() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse(microwave03jexl);
@@ -132,7 +131,6 @@ public class SCXMLExecutorTest {
         checkMicrowave01Sample();
     }
 
-    // Uses SCXMLParser (latest WD)
     @Test
     public void testSCXMLExecutorMicrowave04JexlSample() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse(microwave04jexl);
@@ -142,7 +140,6 @@ public class SCXMLExecutorTest {
         checkMicrowave02Sample();
     }
 
-    // Uses SCXMLParser (latest WD)
     @Test
     public void testSCXMLExecutorMicrowave05JexlSample() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse(microwave05jexl);
@@ -212,7 +209,6 @@ public class SCXMLExecutorTest {
         }
     }
 
-    // Uses SCXMLParser (latest WD)
     @Test
     public void testSCXMLExecutorTransitions04Sample() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse(transitions04);
