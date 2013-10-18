@@ -18,15 +18,14 @@ package org.apache.commons.scxml2.env.jexl;
 
 import java.io.Serializable;
 import java.util.AbstractMap;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
 
-import org.apache.commons.jexl.Expression;
-import org.apache.commons.jexl.ExpressionFactory;
-import org.apache.commons.jexl.Script;
-import org.apache.commons.jexl.ScriptFactory;
+import org.apache.commons.jexl2.Expression;
+import org.apache.commons.jexl2.JexlEngine;
+import org.apache.commons.jexl2.Script;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.SCXMLExpressionException;
@@ -44,12 +43,19 @@ public class JexlEvaluator implements Evaluator, Serializable {
 
     /** Error message if evaluation context is not a JexlContext. */
     private static final String ERR_CTX_TYPE = "Error evaluating JEXL "
-        + "expression, Context must be a org.apache.commons.jexl.JexlContext";
+        + "expression, Context must be a org.apache.commons.jexl2.JexlContext";
 
-    /** Pattern for recognizing the SCXML In() special predicate. */
-    private static Pattern inFct = Pattern.compile("In\\(");
-    /** Pattern for recognizing the Commons SCXML Data() builtin function. */
-    private static Pattern dataFct = Pattern.compile("Data\\(");
+    /** The JexlEngine instance to use. */
+    private static final transient JexlEngine jexlEngine;
+    static {
+        jexlEngine = new JexlEngine();
+        Map<String, Object> top = new HashMap<String, Object>();
+        // With null prefix, define top-level user defined functions.
+        // See javadoc of org.apache.commons.jexl2.JexlEngine#setFunctions(Map<String,Object> funcs) for detail.
+        top.put(null, JexlBuiltin.class);
+        jexlEngine.setFunctions(top);
+        jexlEngine.setCache(256);
+    }
 
     /** Constructor. */
     public JexlEvaluator() {
@@ -78,12 +84,9 @@ public class JexlEvaluator implements Evaluator, Serializable {
         }
         Expression exp = null;
         try {
-            String evalExpr = inFct.matcher(expr).
-                replaceAll("_builtin.isMember(_ALL_STATES, ");
-            evalExpr = dataFct.matcher(evalExpr).
-                replaceAll("_builtin.data(_ALL_NAMESPACES, ");
-            exp = ExpressionFactory.createExpression(evalExpr);
-            return exp.evaluate(getEffectiveContext(jexlCtx));
+            final JexlContext effective = getEffectiveContext(jexlCtx);
+            exp = jexlEngine.createExpression(expr);
+            return exp.evaluate(effective);
         } catch (Exception e) {
             throw new SCXMLExpressionException("eval('" + expr + "'):"
                 + e.getMessage(), e);
@@ -106,13 +109,10 @@ public class JexlEvaluator implements Evaluator, Serializable {
         }
         Expression exp = null;
         try {
-            String evalExpr = inFct.matcher(expr).
-                replaceAll("_builtin.isMember(_ALL_STATES, ");
-            evalExpr = dataFct.matcher(evalExpr).
-                replaceAll("_builtin.data(_ALL_NAMESPACES, ");
-            exp = ExpressionFactory.createExpression(evalExpr);
-            return (Boolean) exp.evaluate(getEffectiveContext(jexlCtx));
-        } catch (Exception e) {e.printStackTrace();
+            final JexlContext effective = getEffectiveContext(jexlCtx);
+            exp = jexlEngine.createExpression(expr);
+            return (Boolean) exp.evaluate(effective);
+        } catch (Exception e) {
             throw new SCXMLExpressionException("evalCond('" + expr + "'):"
                 + e.getMessage(), e);
         }
@@ -134,14 +134,10 @@ public class JexlEvaluator implements Evaluator, Serializable {
         }
         Expression exp = null;
         try {
-            String evalExpr = inFct.matcher(expr).
-                replaceAll("_builtin.isMember(_ALL_STATES, ");
-            evalExpr = dataFct.matcher(evalExpr).
-                replaceFirst("_builtin.dataNode(_ALL_NAMESPACES, ");
-            evalExpr = dataFct.matcher(evalExpr).
-                replaceAll("_builtin.data(_ALL_NAMESPACES, ");
-            exp = ExpressionFactory.createExpression(evalExpr);
-            return (Node) exp.evaluate(getEffectiveContext(jexlCtx));
+            final JexlContext effective = getEffectiveContext(jexlCtx);
+            effective.setEvaluatingLocation(true);
+            exp = jexlEngine.createExpression(expr);
+            return (Node) exp.evaluate(effective);
         } catch (Exception e) {
             throw new SCXMLExpressionException("evalLocation('" + expr + "'):"
                 + e.getMessage(), e);
@@ -151,7 +147,7 @@ public class JexlEvaluator implements Evaluator, Serializable {
     /**
      * @see Evaluator#evalScript(Context, String)
      */
-    public Object evalScript(Context ctx, String script)
+    public Object evalScript(final Context ctx, final String script)
     throws SCXMLExpressionException {
         if (script == null) {
             return null;
@@ -164,12 +160,10 @@ public class JexlEvaluator implements Evaluator, Serializable {
         }
         Script jexlScript = null;
         try {
-            String scriptStr = inFct.matcher(script).
-                replaceAll("_builtin.isMember(_ALL_STATES, ");
-            scriptStr = dataFct.matcher(scriptStr).
-                replaceAll("_builtin.data(_ALL_NAMESPACES, ");
-            jexlScript = ScriptFactory.createScript(scriptStr);
-            return jexlScript.execute(getEffectiveContext(jexlCtx));
+            final JexlContext effective = getEffectiveContext(jexlCtx);
+            effective.setEvaluatingLocation(true);
+            jexlScript = jexlEngine.createScript(script);
+            return jexlScript.execute(effective);
         } catch (Exception e) {
             throw new SCXMLExpressionException("evalScript('" + script + "'):"
                 + e.getMessage(), e);
@@ -209,10 +203,10 @@ public class JexlEvaluator implements Evaluator, Serializable {
     private static final class EffectiveContextMap extends AbstractMap<String, Object> {
 
         /** The {@link Context} for the current state. */
-        final Context leaf;
+        private final Context leaf;
 
         /** Constructor. */
-        public EffectiveContextMap(JexlContext ctx) {
+        public EffectiveContextMap(final JexlContext ctx) {
             super();
             this.leaf = ctx;
         }
@@ -235,7 +229,7 @@ public class JexlEvaluator implements Evaluator, Serializable {
          * {@inheritDoc}
          */
         @Override
-        public Object put(String key, Object value) {
+        public Object put(final String key, final Object value) {
             Object old = leaf.get(key);
             if (leaf.has(key)) {
                 leaf.set(key, value);
@@ -249,7 +243,7 @@ public class JexlEvaluator implements Evaluator, Serializable {
          * {@inheritDoc}
          */
         @Override
-        public Object get(Object key) {
+        public Object get(final Object key) {
             Context current = leaf;
             while (current != null) {
                 if (current.getVars().containsKey(key)) {

@@ -18,7 +18,6 @@ package org.apache.commons.scxml2.env.jexl;
 
 import java.util.Map;
 
-import org.apache.commons.scxml2.Builtin;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.env.SimpleContext;
 
@@ -27,17 +26,22 @@ import org.apache.commons.scxml2.env.SimpleContext;
  *
  */
 public class JexlContext extends SimpleContext
-    implements org.apache.commons.jexl.JexlContext {
+    implements org.apache.commons.jexl2.JexlContext {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
+
+    /**
+     * Internal flag to indicate whether it is to evaluate a location
+     * that returns a Node within an XML data tree.
+     */
+    private boolean evaluatingLocation = false;
 
     /**
      * Constructor.
      */
     public JexlContext() {
         super();
-        getVars().put("_builtin", new Builtin());
     }
 
     /**
@@ -47,7 +51,6 @@ public class JexlContext extends SimpleContext
      */
     public JexlContext(final Map<String, Object> initialVars) {
         super(initialVars);
-        getVars().put("_builtin", new Builtin());
     }
 
     /**
@@ -57,34 +60,22 @@ public class JexlContext extends SimpleContext
      */
     public JexlContext(final Context parent) {
         super(parent);
-        getVars().put("_builtin", new Builtin());
     }
 
     /**
-     * Set the variables map.
-     *
-     * @param vars The new variables map.
-     *
-     * @see org.apache.commons.jexl.JexlContext#setVars(Map)
-     * @see org.apache.commons.scxml2.env.SimpleContext#setVars(Map)
+     * Returns the internal flag to indicate whether it is to evaluate a location
+     * that returns a Node within an XML data tree.
      */
-    @Override
-    @SuppressWarnings("unchecked")
-    // Accomodate legacy signature org.apache.commons.jexl.JexlContext#setVars(Map)
-    public void setVars(final Map vars) {
-        super.setVars(vars);
-        getVars().put("_builtin", new Builtin());
+    public boolean isEvaluatingLocation() {
+        return evaluatingLocation;
     }
 
     /**
-     * Clear this Context.
-     *
-     * @see org.apache.commons.scxml2.Context#reset()
+     * Sets the internal flag to indicate whether it is to evaluate a location
+     * that returns a Node within an XML data tree.
      */
-    @Override
-    public void reset() {
-        super.reset();
-        getVars().put("_builtin", new Builtin());
+    public void setEvaluatingLocation(boolean evaluatingLocation) {
+        this.evaluatingLocation = evaluatingLocation;
     }
 
 }

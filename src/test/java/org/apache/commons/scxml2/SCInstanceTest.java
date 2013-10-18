@@ -19,7 +19,7 @@ package org.apache.commons.scxml2;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.jexl.JexlContext;
+import org.apache.commons.jexl2.JexlContext;
 import org.apache.commons.scxml2.env.SimpleContext;
 import org.apache.commons.scxml2.env.jexl.JexlEvaluator;
 import org.apache.commons.scxml2.model.History;
