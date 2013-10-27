@@ -24,8 +24,8 @@
 <!-- ================================================== -->
 <section name="Overview">
 <p>
-  Commons SCXML uses <a href="http://maven.apache.org">Maven</a> or
-  <a href="http://ant.apache.org">Ant</a> as a build system. The source is
+  Commons SCXML uses <a href="http://maven.apache.org">Maven 2 or higher</a> as
+  a build system. The source is
   <a href="http://svn.apache.org/repos/asf/commons/proper/scxml/trunk/">here</a>.
 </p>
 </section>
@@ -44,17 +44,6 @@
   </p>
   <p>
     Maven 2.0.8 and above is recommended.
-  </p>
-</section>
-<!-- ================================================== -->
-<section name="Ant Goals">
-  <p>
-    To build a jar file, change into SCXML's root directory and run "ant jar".
-    The result will be in the "target" subdirectory.
-  </p>
-  <p>
-    To build the Javadocs, run "ant javadoc".
-    The result will be in "dist/docs".
   </p>
 </section>
 <!-- ================================================== -->

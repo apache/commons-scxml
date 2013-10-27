@@ -24,8 +24,6 @@
     <fileSets>
         <fileSet>
             <includes>
-                <include>build.properties.sample</include>
-                <include>build.xml</include>
                 <include>LICENSE.txt</include>
                 <include>NOTICE.txt</include>
                 <include>pom.xml</include>
