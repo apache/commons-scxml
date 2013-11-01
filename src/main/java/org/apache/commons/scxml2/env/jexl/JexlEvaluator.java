@@ -36,8 +36,7 @@ import org.w3c.dom.Node;
  * SCXML documents.
  * <P>
  * This implementation itself is thread-safe, so you can keep singleton
- * instance of this class for efficiency of the internal <code>JexlEngine</code>
- * instance.
+ * for efficiency of the internal <code>JexlEngine</code> member.
  * </P>
  */
 public class JexlEvaluator implements Evaluator, Serializable {
@@ -196,7 +195,7 @@ public class JexlEvaluator implements Evaluator, Serializable {
     }
 
     /**
-     * Returns the existing internal JexlEngine if existing.
+     * Returns the internal JexlEngine if existing.
      * Otherwise, it creates a new engine by invoking {@link #createJexlEngine()}.
      * <P>
      * <EM>NOTE: The internal JexlEngine instance can be null when this is deserialized.</EM>
