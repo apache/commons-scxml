@@ -34,7 +34,11 @@ import org.w3c.dom.Node;
 /**
  * Evaluator implementation enabling use of JEXL expressions in
  * SCXML documents.
- *
+ * <P>
+ * This implementation itself is thread-safe, so you can keep singleton
+ * instance of this class for efficiency of the internal <code>JexlEngine</code>
+ * instance.
+ * </P>
  */
 public class JexlEvaluator implements Evaluator, Serializable {
 
@@ -45,21 +49,14 @@ public class JexlEvaluator implements Evaluator, Serializable {
     private static final String ERR_CTX_TYPE = "Error evaluating JEXL "
         + "expression, Context must be a org.apache.commons.jexl2.JexlContext";
 
-    /** The JexlEngine instance to use. */
-    private static final transient JexlEngine jexlEngine;
-    static {
-        jexlEngine = new JexlEngine();
-        Map<String, Object> top = new HashMap<String, Object>();
-        // With null prefix, define top-level user defined functions.
-        // See javadoc of org.apache.commons.jexl2.JexlEngine#setFunctions(Map<String,Object> funcs) for detail.
-        top.put(null, JexlBuiltin.class);
-        jexlEngine.setFunctions(top);
-        jexlEngine.setCache(256);
-    }
+    /** The internal JexlEngine instance to use. */
+    private transient volatile JexlEngine jexlEngine;
 
     /** Constructor. */
     public JexlEvaluator() {
         super();
+        // create the internal JexlEngine initially
+        jexlEngine = createJexlEngine();
     }
 
     /**
@@ -85,7 +82,7 @@ public class JexlEvaluator implements Evaluator, Serializable {
         Expression exp = null;
         try {
             final JexlContext effective = getEffectiveContext(jexlCtx);
-            exp = jexlEngine.createExpression(expr);
+            exp = getJexlEngine().createExpression(expr);
             return exp.evaluate(effective);
         } catch (Exception e) {
             throw new SCXMLExpressionException("eval('" + expr + "'):"
@@ -110,7 +107,7 @@ public class JexlEvaluator implements Evaluator, Serializable {
         Expression exp = null;
         try {
             final JexlContext effective = getEffectiveContext(jexlCtx);
-            exp = jexlEngine.createExpression(expr);
+            exp = getJexlEngine().createExpression(expr);
             return (Boolean) exp.evaluate(effective);
         } catch (Exception e) {
             throw new SCXMLExpressionException("evalCond('" + expr + "'):"
@@ -136,7 +133,7 @@ public class JexlEvaluator implements Evaluator, Serializable {
         try {
             final JexlContext effective = getEffectiveContext(jexlCtx);
             effective.setEvaluatingLocation(true);
-            exp = jexlEngine.createExpression(expr);
+            exp = getJexlEngine().createExpression(expr);
             return (Node) exp.evaluate(effective);
         } catch (Exception e) {
             throw new SCXMLExpressionException("evalLocation('" + expr + "'):"
@@ -162,7 +159,7 @@ public class JexlEvaluator implements Evaluator, Serializable {
         try {
             final JexlContext effective = getEffectiveContext(jexlCtx);
             effective.setEvaluatingLocation(true);
-            jexlScript = jexlEngine.createScript(script);
+            jexlScript = getJexlEngine().createScript(script);
             return jexlScript.execute(effective);
         } catch (Exception e) {
             throw new SCXMLExpressionException("evalScript('" + script + "'):"
@@ -179,6 +176,44 @@ public class JexlEvaluator implements Evaluator, Serializable {
      */
     public Context newContext(final Context parent) {
         return new JexlContext(parent);
+    }
+
+    /**
+     * Create the internal JexlEngine member during the initialization.
+     * This method can be overriden to specify more detailed options
+     * into the JexlEngine.
+     * @return
+     */
+    protected JexlEngine createJexlEngine() {
+        JexlEngine engine = new JexlEngine();
+        // With null prefix, define top-level user defined functions.
+        // See javadoc of org.apache.commons.jexl2.JexlEngine#setFunctions(Map<String,Object> funcs) for detail.
+        Map<String, Object> funcs = new HashMap<String, Object>();
+        funcs.put(null, JexlBuiltin.class);
+        engine.setFunctions(funcs);
+        engine.setCache(256);
+        return engine;
+    }
+
+    /**
+     * Returns the existing internal JexlEngine if existing.
+     * Otherwise, it creates a new engine by invoking {@link #createJexlEngine()}.
+     * <P>
+     * <EM>NOTE: The internal JexlEngine instance can be null when this is deserialized.</EM>
+     * </P>
+     * @return
+     */
+    private JexlEngine getJexlEngine() {
+        JexlEngine engine = jexlEngine;
+        if (engine == null) {
+            synchronized (this) {
+                engine = jexlEngine;
+                if (engine == null) {
+                    jexlEngine = engine = createJexlEngine();
+                }
+            }
+        }
+        return engine;
     }
 
     /**
