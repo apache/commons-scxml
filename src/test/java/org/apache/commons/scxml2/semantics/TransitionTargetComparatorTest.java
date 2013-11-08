@@ -108,4 +108,28 @@ public class TransitionTargetComparatorTest {
         
         Assert.assertEquals(1, comparator.compare(target1, target2));
     }
+
+    @Test
+    public void testComparatorSiblingParallels() {
+        Parallel ancestor = new Parallel();
+
+        State target1 = new State();
+        Parallel parent1 = new Parallel();
+        target1.setParent(parent1);
+        parent1.addChild(target1);
+
+        State target2 = new State();
+        Parallel parent2 = new Parallel();
+        target1.setParent(parent2);
+        parent1.addChild(target2);
+
+        parent1.setParent(ancestor);
+        ancestor.addChild(parent1);
+        parent2.setParent(ancestor);
+        ancestor.addChild(parent2);
+
+        Assert.assertEquals(1, comparator.compare(parent1, parent2));
+        Assert.assertEquals(-1, comparator.compare(parent2, parent1));
+    }
+
 }
