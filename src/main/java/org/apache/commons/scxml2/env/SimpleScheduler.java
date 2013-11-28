@@ -233,13 +233,13 @@ public class SimpleScheduler implements EventDispatcher, Serializable {
          */
         @Override
         public void run() {
+            timers.remove(sendId);
             try {
                 executor.triggerEvent(new TriggerEvent(event,
                     TriggerEvent.SIGNAL_EVENT, payload));
             } catch (ModelException me) {
                 log.error(me.getMessage(), me);
             }
-            timers.remove(sendId);
             if (log.isDebugEnabled()) {
                 log.debug("Fired event '" + event + "' as scheduled by "
                     + "<send> with id '" + sendId + "'");
