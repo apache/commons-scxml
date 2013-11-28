@@ -21,6 +21,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Reader;
 import java.io.StringReader;
 import java.net.URL;
 import java.util.ArrayList;
@@ -29,8 +30,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.junit.Assert;
 
 import org.apache.commons.scxml2.env.SimpleDispatcher;
 import org.apache.commons.scxml2.env.Tracer;
@@ -41,6 +40,7 @@ import org.apache.commons.scxml2.model.CustomAction;
 import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.TransitionTarget;
+import org.junit.Assert;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 /**
@@ -74,6 +74,16 @@ public class SCXMLTestHelper {
         SCXML scxml = null;
         Configuration configuration = new Configuration(null, null, customActions);
         scxml = SCXMLReader.read(url, configuration);
+        Assert.assertNotNull(scxml);
+        SCXML roundtrip = testModelSerializability(scxml);
+        return roundtrip;
+    }
+
+    public static SCXML parse(final Reader scxmlReader, final List<CustomAction> customActions) throws Exception {
+        Assert.assertNotNull(scxmlReader);
+        SCXML scxml = null;
+        Configuration configuration = new Configuration(null, null, customActions);
+        scxml = SCXMLReader.read(scxmlReader, configuration);
         Assert.assertNotNull(scxml);
         SCXML roundtrip = testModelSerializability(scxml);
         return roundtrip;

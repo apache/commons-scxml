@@ -58,14 +58,23 @@ final class ModelUpdater {
      */
    static void updateSCXML(final SCXML scxml) throws ModelException {
        String initial = scxml.getInitial();
-       //we have to use getTargets() here since the initialTarget can be
-       //an indirect descendant
-       TransitionTarget initialTarget = scxml.getTargets().get(initial);
-       if (initialTarget == null) {
-           // Where do we, where do we go?
-           logAndThrowModelError(ERR_SCXML_NO_INIT, new Object[] {
-               initial });
+       TransitionTarget initialTarget = null;
+
+       if (initial != null) {
+           //we have to use getTargets() here since the initialTarget can be
+           //an indirect descendant
+           initialTarget = scxml.getTargets().get(initial);
+           if (initialTarget == null) {
+               // Where do we, where do we go?
+               logAndThrowModelError(ERR_SCXML_NO_INIT, new Object[] {
+                   initial });
+           }
+       } else {
+           // If 'initial' is not specified, the default initial state is
+           // the first child state in document order.
+           initialTarget = scxml.getFirstChild();
        }
+
        scxml.setInitialTarget(initialTarget);
        Map<String, TransitionTarget> targets = scxml.getTargets();
        Map<String, TransitionTarget> children = scxml.getChildren();

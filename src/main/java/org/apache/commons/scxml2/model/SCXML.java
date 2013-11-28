@@ -162,6 +162,17 @@ public class SCXML implements Serializable, Observable,
     }
 
     /**
+     * Get the first immediate child target of the SCXML root.
+     *
+     * @return TransitionTarget Returns the first immediate child target of the SCXML root.
+     *
+     * @since 2.0
+     */
+    public final TransitionTarget getFirstChild() {
+        return children.values().iterator().next();
+    }
+
+    /**
      * Add an immediate child target of the SCXML root.
      *
      * @param tt The transition target to be added to the states Map.
