@@ -372,7 +372,7 @@ final class ModelUpdater {
      * Error message when SCXML document specifies an illegal initial state.
      */
     private static final String ERR_SCXML_NO_INIT = "No SCXML child state "
-        + "with ID \"{0}\" found; illegal initialstate for SCXML document";
+        + "with ID \"{0}\" found; illegal initial state for SCXML document";
 
     /**
      * Error message when a state element specifies an initial state which
