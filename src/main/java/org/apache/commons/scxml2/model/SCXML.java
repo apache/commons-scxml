@@ -162,14 +162,17 @@ public class SCXML implements Serializable, Observable,
     }
 
     /**
-     * Get the first immediate child target of the SCXML root.
+     * Get the first immediate child target of the SCXML root. Return null if there's no child.
      *
-     * @return TransitionTarget Returns the first immediate child target of the SCXML root.
+     * @return TransitionTarget Returns the first immediate child target of the SCXML root. Return null if there's no child.
      *
      * @since 2.0
      */
     public final TransitionTarget getFirstChild() {
-        return children.values().iterator().next();
+        if (!children.isEmpty()) {
+            return children.values().iterator().next();
+        }
+        return null;
     }
 
     /**

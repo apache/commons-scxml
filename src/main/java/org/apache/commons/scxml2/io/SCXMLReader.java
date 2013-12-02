@@ -1425,14 +1425,20 @@ public final class SCXMLReader {
                         } else {
                             reportIgnoredElement(reader, configuration, end, nsURI, name);
                         }
-                    } else if (configuration.customActions.size() > 0) {
-                        for (CustomAction ca : configuration.customActions) {
-                            if (ca.getNamespaceURI().equals(nsURI) && ca.getLocalName().equals(name)) {
-                                readCustomAction(reader, configuration, ca, tt, executable, iff);
+                    } else { // custom action
+                        CustomAction customAction = null;
+                        if (!configuration.customActions.isEmpty()) {
+                            for (CustomAction ca : configuration.customActions) {
+                                if (ca.getNamespaceURI().equals(nsURI) && ca.getLocalName().equals(name)) {
+                                    customAction = ca;
+                                }
                             }
                         }
-                    } else {
-                        reportIgnoredElement(reader, configuration, end, nsURI, name);
+                        if (customAction != null) {
+                            readCustomAction(reader, configuration, customAction, tt, executable, iff);
+                        } else {
+                            reportIgnoredElement(reader, configuration, end, nsURI, name);
+                        }
                     }
                     break;
                 case XMLStreamConstants.END_ELEMENT:
@@ -2067,7 +2073,7 @@ public final class SCXMLReader {
 
         org.apache.commons.logging.Log log = LogFactory.getLog(SCXMLReader.class);
         StringBuffer sb = new StringBuffer();
-        sb.append("Ignoring element <").append(name).append("> in namespace \"").append(nsURI).append("\" as child ").
+        sb.append("Ignoring unknown or invalid element <").append(name).append("> in namespace \"").append(nsURI).append("\" as child ").
             append(" of <").append(parent).append("> at ").append(reader.getLocation());
         log.warn(sb.toString());
         XMLReporter reporter = configuration.reporter;
