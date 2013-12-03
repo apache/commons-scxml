@@ -24,6 +24,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml2.ErrorReporter;
+import org.apache.commons.scxml2.model.Executable;
 import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.TransitionTarget;
@@ -98,6 +99,11 @@ public class SimpleErrorReporter implements ErrorReporter, Serializable {
                     }
                 }
                 msg.append(']');
+            }
+        } else if (errCode == ErrorConstants.EXPRESSION_ERROR) {
+            if (errCtx instanceof Executable) {
+                TransitionTarget parent = ((Executable) errCtx).getParent();
+                msg.append("Expression error inside " + LogUtils.getTTPath(parent));
             }
         }
         if (log.isWarnEnabled()) {
