@@ -195,8 +195,12 @@ public class SCXMLTestHelper {
     }
 
     public static Set<TransitionTarget> fireEvent(SCXMLExecutor exec, String name) throws Exception {
+        return fireEvent(exec, name, null);
+    }
+
+    public static Set<TransitionTarget> fireEvent(SCXMLExecutor exec, String name, Object payload) throws Exception {
         TriggerEvent[] evts = {new TriggerEvent(name,
-                TriggerEvent.SIGNAL_EVENT, null)};
+                TriggerEvent.SIGNAL_EVENT, payload)};
         exec.triggerEvents(evts);
         return exec.getCurrentStatus().getStates();
     }
@@ -213,14 +217,24 @@ public class SCXMLTestHelper {
 
     public static void assertPostTriggerState(SCXMLExecutor exec,
             String triggerEventName, String expectedStateId) throws Exception {
+        assertPostTriggerState(exec, triggerEventName, null, expectedStateId);
+    }
+
+    public static void assertPostTriggerState(SCXMLExecutor exec,
+            String triggerEventName, Object payload, String expectedStateId) throws Exception {
         assertPostTriggerState(exec, new TriggerEvent(triggerEventName,
-                TriggerEvent.SIGNAL_EVENT), expectedStateId);
+                TriggerEvent.SIGNAL_EVENT, payload), expectedStateId);
     }
 
     public static void assertPostTriggerStates(SCXMLExecutor exec,
             String triggerEventName, String[] expectedStateIds) throws Exception {
+        assertPostTriggerStates(exec, triggerEventName, null, expectedStateIds);
+    }
+
+    public static void assertPostTriggerStates(SCXMLExecutor exec,
+            String triggerEventName, Object payload, String[] expectedStateIds) throws Exception {
         assertPostTriggerStates(exec, new TriggerEvent(triggerEventName,
-                TriggerEvent.SIGNAL_EVENT), expectedStateIds);
+                TriggerEvent.SIGNAL_EVENT, payload), expectedStateIds);
     }
 
     public static void assertPostTriggerState(SCXMLExecutor exec,

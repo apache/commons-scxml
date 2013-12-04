@@ -395,7 +395,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                 continue; //makes no sense to eval guard cond.
             }
             // guard condition check
-            Boolean rslt;
+            Boolean rslt = Boolean.FALSE;
             String expr = t.getCond();
             if (SCXMLHelper.isStringEmpty(expr)) {
                 rslt = Boolean.TRUE;
@@ -405,11 +405,17 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                     ctx.setLocal(NAMESPACES_KEY, t.getNamespaces());
                     rslt = scInstance.getEvaluator().evalCond(ctx,
                         t.getCond());
+                    if (rslt == null) {
+                        if (appLog.isDebugEnabled()) {
+                            appLog.debug("Treating as false because the cond expression was evaluated as null: '" + t.getCond() + "'");
+                        }
+                        rslt = Boolean.FALSE;
+                    }
                     ctx.setLocal(NAMESPACES_KEY, null);
                 } catch (SCXMLExpressionException e) {
                     rslt = Boolean.FALSE;
-                    errRep.onError(ErrorConstants.EXPRESSION_ERROR, e
-                            .getMessage(), t);
+                    errRep.onError(ErrorConstants.EXPRESSION_ERROR, "Treating as false due to error: " + e.getMessage(), t);
+                    // TODO: place the error 'error.execution' in the internal event queue. (section "3.12.2 Errors")
                 }
             }
             if (!rslt.booleanValue()) {

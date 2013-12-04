@@ -28,6 +28,7 @@ import org.apache.commons.scxml2.EventDispatcher;
 import org.apache.commons.scxml2.SCInstance;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.TriggerEvent;
+import org.apache.commons.scxml2.semantics.ErrorConstants;
 
 /**
  * The class in this SCXML object model that corresponds to the
@@ -121,7 +122,21 @@ public class If extends Action {
         Context ctx = scInstance.getContext(parentTarget);
         Evaluator eval = scInstance.getEvaluator();
         ctx.setLocal(getNamespacesKey(), getNamespaces());
-        execute = eval.evalCond(ctx, cond).booleanValue();
+        Boolean rslt = Boolean.FALSE;
+        try {
+            rslt = eval.evalCond(ctx, cond);
+            if (rslt == null) {
+                if (appLog.isDebugEnabled()) {
+                    appLog.debug("Treating as false because the cond expression was evaluated as null: '" + cond + "'");
+                }
+                rslt = Boolean.FALSE;
+            }
+        } catch (SCXMLExpressionException e) {
+            rslt = Boolean.FALSE;
+            errRep.onError(ErrorConstants.EXPRESSION_ERROR, "Treating as false due to error: " + e.getMessage(), this);
+            // TODO: place the error 'error.execution' in the internal event queue. (section "3.12.2 Errors")
+        }
+        execute = rslt.booleanValue();
         ctx.setLocal(getNamespacesKey(), null);
         // The "if" statement is a "container"
         for (Action aa : actions) {

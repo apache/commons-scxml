@@ -17,7 +17,9 @@
 package org.apache.commons.scxml2;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.scxml2.env.SimpleContext;
@@ -37,7 +39,8 @@ public class SCXMLExecutorTest {
     // Test data
     private URL microwave01jsp, microwave02jsp, microwave01jexl,
         microwave02jexl, microwave03jexl, microwave04jexl, microwave05jexl, transitions01,
-        transitions02, transitions03, transitions04, transitions05, transitions06, prefix01, send01, send02;
+        transitions02, transitions03, transitions04, transitions05, transitions06, prefix01, send01, send02,
+        transitionsWithCond01;
     private SCXMLExecutor exec;
 
     /**
@@ -77,6 +80,8 @@ public class SCXMLExecutorTest {
             getResource("org/apache/commons/scxml2/send-01.xml");
         send02 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml2/send-02.xml");
+        transitionsWithCond01 = this.getClass().getClassLoader().
+                getResource("org/apache/commons/scxml2/transitions-with-cond-01.xml");
     }
 
     /**
@@ -86,7 +91,8 @@ public class SCXMLExecutorTest {
     public void tearDown() {
         microwave01jsp = microwave02jsp = microwave01jexl = microwave02jexl =
             microwave04jexl = microwave05jexl = transitions01 = transitions02 = transitions03 =
-            transitions04 = transitions05 = transitions06 = prefix01 = send01 = send02 = null;
+            transitions04 = transitions05 = transitions06 = prefix01 = send01 = send02 = 
+            transitionsWithCond01 = null;
     }
 
     /**
@@ -276,6 +282,38 @@ public class SCXMLExecutorTest {
         Assert.assertTrue(exec.getCurrentStatus().isFinal());
     }
 
+    @Test
+    public void testSCXMLExecutorTransitionsWithCond01Sample() throws Exception {
+        SCXML scxml = SCXMLTestHelper.parse(transitionsWithCond01);
+        Assert.assertNotNull(scxml);
+        exec = SCXMLTestHelper.getExecutor(scxml);
+        Assert.assertNotNull(exec);
+
+        Map<String, Object> payload = new HashMap<String, Object>();
+
+        // with _eventdata['keyed'] set to true, transition should happen as expected.
+        payload.put("keyed", Boolean.TRUE);
+        SCXMLTestHelper.assertPostTriggerState(exec, "open", payload, "opened");
+        // turn back to closed
+        SCXMLTestHelper.assertPostTriggerState(exec, "close", payload, "closed");
+
+        // with _eventdata['keyed'] set to false, transition shouldn't happen as expected.
+        payload.put("keyed", Boolean.FALSE);
+        SCXMLTestHelper.assertPostTriggerState(exec, "open", payload, "closed");
+
+        // with _eventdata['keyed'] set to null, transition shouldn't happen as expected.
+        payload.clear();
+        SCXMLTestHelper.assertPostTriggerState(exec, "open", payload, "closed");
+
+        // with _eventdata set to null, transition shouldn't happen as expected.
+        SCXMLTestHelper.assertPostTriggerState(exec, "open", null, "closed");
+
+        // transition to locked for testing
+        SCXMLTestHelper.assertPostTriggerState(exec, "lock", null, "locked");
+        // due to intentional expression syntax error, it catches an exception and so treat the cond as false
+        SCXMLTestHelper.assertPostTriggerState(exec, "unlock", null, "locked");
+    }
+
     private void checkMicrowave01Sample() throws Exception {
         Set<TransitionTarget> currentStates = SCXMLTestHelper.fireEvent(exec, "turn_on");
         Assert.assertEquals(1, currentStates.size());
@@ -288,5 +326,6 @@ public class SCXMLExecutorTest {
         String id = ((State)currentStates.iterator().next()).getId();
         Assert.assertTrue(id.equals("closed") || id.equals("cooking"));
     }
+
 }
 
