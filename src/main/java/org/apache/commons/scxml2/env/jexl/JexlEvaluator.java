@@ -51,11 +51,63 @@ public class JexlEvaluator implements Evaluator, Serializable {
     /** The internal JexlEngine instance to use. */
     private transient volatile JexlEngine jexlEngine;
 
+    /** The current JexlEngine silent mode, stored locally to be reapplied after deserialization of the engine */
+    private boolean jexlEngineSilent;
+    /** The current JexlEngine strict mode, stored locally to be reapplied after deserialization of the engine */
+    private boolean jexlEngineStrict;
+
     /** Constructor. */
     public JexlEvaluator() {
         super();
         // create the internal JexlEngine initially
         jexlEngine = createJexlEngine();
+        jexlEngineSilent = jexlEngine.isSilent();
+        jexlEngineStrict = jexlEngine.isStrict();
+    }
+
+    /**
+     * Checks whether the internal Jexl engine throws JexlException during evaluation.
+     * @return true if silent, false (default) otherwise
+     */
+    public boolean isJexlEngineSilent() {
+        return jexlEngineSilent;
+    }
+
+    /**
+     * Delegate method for {@link JexlEngine#setSilent(boolean)} to set whether the engine throws JexlException during
+     * evaluation when an error is triggered.
+     * <p>This method should be called as an optional step of the JexlEngine
+     * initialization code before expression creation &amp; evaluation.</p>
+     * @param silent true means no JexlException will occur, false allows them
+     */
+    public void setJexlEngineSilent(boolean silent) {
+        synchronized (this) {
+            JexlEngine engine = getJexlEngine();
+            engine.setSilent(silent);
+            this.jexlEngineSilent = silent;
+        }
+    }
+
+    /**
+     * Checks whether the internal Jexl engine behaves in strict or lenient mode.
+     * @return true for strict, false for lenient
+     */
+    public boolean isJexlEngineStrict() {
+        return jexlEngineStrict;
+    }
+
+    /**
+     * Delegate method for {@link JexlEngine#setStrict(boolean)} to set whether it behaves in strict or lenient mode.
+     * <p>This method is should be called as an optional step of the JexlEngine
+     * initialization code before expression creation &amp; evaluation.</p>
+     * @param strict true for strict, false for lenient
+     */
+    public void setJexlEngineStrict(boolean strict) {
+        synchronized (this) {
+            JexlEngine engine = getJexlEngine();
+            engine.setStrict(strict);
+            this.jexlEngineStrict = strict;
+        }
     }
 
     /**
