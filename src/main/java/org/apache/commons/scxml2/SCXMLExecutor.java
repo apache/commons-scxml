@@ -34,6 +34,7 @@ import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.TransitionTarget;
 import org.apache.commons.scxml2.semantics.SCXMLSemanticsImpl;
+import org.apache.commons.scxml2.system.EventVariable;
 
 /**
  * <p>The SCXML &quot;engine&quot; that executes SCXML documents. The
@@ -496,11 +497,11 @@ public class SCXMLExecutor implements Serializable {
      */
     private Object[] setEventData(final TriggerEvent[] evts) {
         Context rootCtx = scInstance.getRootContext();
-        Object[] oldData = {rootCtx.get(EVENT_DATA),
-            rootCtx.get(EVENT_DATA_MAP)};
+        Object[] oldData = { rootCtx.get(EVENT_DATA), rootCtx.get(EVENT_DATA_MAP), rootCtx.get(EVENT_VARIABLE) };
         int len = evts.length;
         if (len > 0) { // 0 has retry semantics (eg: see usage in reset())
             Object eventData = null;
+            EventVariable eventVar = null;
             Map<String, Object> payloadMap = new HashMap<String, Object>();
             for (TriggerEvent te : evts) {
                 payloadMap.put(te.getName(), te.getPayload());
@@ -508,9 +509,12 @@ public class SCXMLExecutor implements Serializable {
             if (len == 1) {
                 // we have only one event
                 eventData = evts[0].getPayload();
+                // TODO: determine type, sendid, origin, originType and invokeid based on context.
+                eventVar = new EventVariable(evts[0].getName(), EventVariable.TYPE_INTERNAL, null, null, null, null, eventData);
             }
             rootCtx.setLocal(EVENT_DATA, eventData);
             rootCtx.setLocal(EVENT_DATA_MAP, payloadMap);
+            rootCtx.setLocal(EVENT_VARIABLE, eventVar);
         }
         return oldData;
     }
@@ -521,10 +525,12 @@ public class SCXMLExecutor implements Serializable {
     private void restoreEventData(final Object[] oldData) {
         scInstance.getRootContext().setLocal(EVENT_DATA, oldData[0]);
         scInstance.getRootContext().setLocal(EVENT_DATA_MAP, oldData[1]);
+        scInstance.getRootContext().setLocal(EVENT_VARIABLE, oldData[2]);
     }
 
     /**
      * The special variable for storing single event data / payload.
+     * @deprecated
      */
     private static final String EVENT_DATA = "_eventdata";
 
@@ -532,7 +538,13 @@ public class SCXMLExecutor implements Serializable {
      * The special variable for storing event data / payload,
      * when multiple events are triggered, keyed by event name.
      */
+    // TODO: is _eventdatamap really being used somewhere?
     private static final String EVENT_DATA_MAP = "_eventdatamap";
+
+    /**
+     * The special variable for storing single event data / payload.
+     */
+    private static final String EVENT_VARIABLE = "_event";
 
     /**
      * SCXMLExecutor put into motion without setting a model (state machine).

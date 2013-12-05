@@ -40,7 +40,7 @@ public class SCXMLExecutorTest {
     private URL microwave01jsp, microwave02jsp, microwave01jexl,
         microwave02jexl, microwave03jexl, microwave04jexl, microwave05jexl, transitions01,
         transitions02, transitions03, transitions04, transitions05, transitions06, prefix01, send01, send02,
-        transitionsWithCond01;
+        transitionsWithCond01, transitionsEventVar;
     private SCXMLExecutor exec;
 
     /**
@@ -82,6 +82,8 @@ public class SCXMLExecutorTest {
             getResource("org/apache/commons/scxml2/send-02.xml");
         transitionsWithCond01 = this.getClass().getClassLoader().
                 getResource("org/apache/commons/scxml2/transitions-with-cond-01.xml");
+        transitionsEventVar = this.getClass().getClassLoader().
+                getResource("org/apache/commons/scxml2/transitions-event-variable.xml");
     }
 
     /**
@@ -92,7 +94,7 @@ public class SCXMLExecutorTest {
         microwave01jsp = microwave02jsp = microwave01jexl = microwave02jexl =
             microwave04jexl = microwave05jexl = transitions01 = transitions02 = transitions03 =
             transitions04 = transitions05 = transitions06 = prefix01 = send01 = send02 = 
-            transitionsWithCond01 = null;
+            transitionsWithCond01 = transitionsEventVar = null;
     }
 
     /**
@@ -312,6 +314,18 @@ public class SCXMLExecutorTest {
         SCXMLTestHelper.assertPostTriggerState(exec, "lock", null, "locked");
         // due to intentional expression syntax error, it catches an exception and so treat the cond as false
         SCXMLTestHelper.assertPostTriggerState(exec, "unlock", null, "locked");
+    }
+
+    @Test
+    public void testSCXMLExecutorSystemEventVariable() throws Exception {
+        SCXML scxml = SCXMLTestHelper.parse(transitionsEventVar);
+        Assert.assertNotNull(scxml);
+        exec = SCXMLTestHelper.getExecutor(scxml);
+        Assert.assertNotNull(exec);
+
+        Map<String, Object> payload = new HashMap<String, Object>();
+        payload.put("keyed", Boolean.TRUE);
+        SCXMLTestHelper.assertPostTriggerState(exec, "open", payload, "opened");
     }
 
     private void checkMicrowave01Sample() throws Exception {
