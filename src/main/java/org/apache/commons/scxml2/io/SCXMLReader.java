@@ -818,10 +818,12 @@ public final class SCXMLReader {
      * @param parent The parent {@link TransitionTarget} for this final (null for top level state).
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
+     * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
+     *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readFinal(final XMLStreamReader reader, final Configuration configuration, final SCXML scxml,
             final TransitionTarget parent)
-    throws XMLStreamException {
+    throws XMLStreamException, ModelException {
 
         Final end = new Final();
         end.setId(readAV(reader, ATTR_ID));
@@ -1002,10 +1004,12 @@ public final class SCXMLReader {
      * @param parent The parent {@link TransitionTarget} for this datamodel (null for top level).
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
+     * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
+     *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readDatamodel(final XMLStreamReader reader, final Configuration configuration, final SCXML scxml,
             final TransitionTarget parent)
-    throws XMLStreamException {
+    throws XMLStreamException, ModelException {
 
         Datamodel dm = new Datamodel();
 
@@ -1075,10 +1079,12 @@ public final class SCXMLReader {
      * @param parent The parent {@link State} for this invoke.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
+     * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
+     *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readInvoke(final XMLStreamReader reader, final Configuration configuration,
             final State parent)
-    throws XMLStreamException {
+    throws XMLStreamException, ModelException {
 
         Invoke invoke = new Invoke();
         invoke.setSrc(readAV(reader, ATTR_SRC));
@@ -1153,10 +1159,12 @@ public final class SCXMLReader {
      * @param invoke The parent {@link Invoke} for this finalize.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
+     * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
+     *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readFinalize(final XMLStreamReader reader, final Configuration configuration,
             final State state, final Invoke invoke)
-    throws XMLStreamException {
+    throws XMLStreamException, ModelException {
 
         Finalize finalize = new Finalize();
         readExecutableContext(reader, configuration, state, finalize, null);
@@ -1191,10 +1199,12 @@ public final class SCXMLReader {
      * @param state The parent composite {@link State} for this initial.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
+     * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
+     *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readInitial(final XMLStreamReader reader, final Configuration configuration,
             final State state)
-    throws XMLStreamException {
+    throws XMLStreamException, ModelException {
 
         Initial initial = new Initial();
 
@@ -1241,10 +1251,12 @@ public final class SCXMLReader {
      * @param tt The parent {@link TransitionTarget} for this history.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
+     * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
+     *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readHistory(final XMLStreamReader reader, final Configuration configuration,
             final SCXML scxml, final TransitionTarget tt)
-    throws XMLStreamException {
+    throws XMLStreamException, ModelException {
 
         History history = new History();
         history.setId(readAV(reader, ATTR_ID));
@@ -1294,10 +1306,12 @@ public final class SCXMLReader {
      * @param tt The parent {@link TransitionTarget} for this onentry.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
+     * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
+     *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readOnEntry(final XMLStreamReader reader, final Configuration configuration, final SCXML scxml,
             final TransitionTarget tt)
-    throws XMLStreamException {
+    throws XMLStreamException, ModelException {
 
         OnEntry onentry = new OnEntry();
         readExecutableContext(reader, configuration, tt, onentry, null);
@@ -1314,10 +1328,12 @@ public final class SCXMLReader {
      * @param tt The parent {@link TransitionTarget} for this onexit.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
+     * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
+     *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readOnExit(final XMLStreamReader reader, final Configuration configuration, final SCXML scxml,
             final TransitionTarget tt)
-    throws XMLStreamException {
+    throws XMLStreamException, ModelException {
 
         OnExit onexit = new OnExit();
         readExecutableContext(reader, configuration, tt, onexit, null);
@@ -1333,10 +1349,12 @@ public final class SCXMLReader {
      * @param tt The parent {@link TransitionTarget} for this transition.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
+     * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
+     *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readTransition(final XMLStreamReader reader, final Configuration configuration,
             final TransitionTarget tt)
-    throws XMLStreamException {
+    throws XMLStreamException, ModelException {
 
         Transition t = new Transition();
         t.setCond(readAV(reader, ATTR_COND));
@@ -1368,10 +1386,12 @@ public final class SCXMLReader {
      * @param iff The optional parent {@link If} if this is child content of an if action.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
+     * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
+     *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readExecutableContext(final XMLStreamReader reader, final Configuration configuration,
             final TransitionTarget tt, final Executable executable, final If iff)
-    throws XMLStreamException {
+    throws XMLStreamException, ModelException {
 
         String end = "";
         if (iff != null) {
@@ -1492,10 +1512,12 @@ public final class SCXMLReader {
      * @param parent The optional parent {@link If} if this &lt;if&gt; is a child of another.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
+     * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
+     *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readIf(final XMLStreamReader reader, final Configuration configuration,
             final TransitionTarget tt, final Executable executable, final If parent)
-    throws XMLStreamException {
+    throws XMLStreamException, ModelException {
 
         If iff = new If();
         iff.setCond(readAV(reader, ATTR_COND));
@@ -2066,16 +2088,23 @@ public final class SCXMLReader {
      * @param name The local name of the ignored element.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
+     * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
+     *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void reportIgnoredElement(final XMLStreamReader reader, final Configuration configuration,
             final String parent, final String nsURI, final String name)
-    throws XMLStreamException {
+    throws XMLStreamException, ModelException {
 
         org.apache.commons.logging.Log log = LogFactory.getLog(SCXMLReader.class);
         StringBuffer sb = new StringBuffer();
         sb.append("Ignoring unknown or invalid element <").append(name).append("> in namespace \"").append(nsURI).append("\" as child ").
             append(" of <").append(parent).append("> at ").append(reader.getLocation());
-        log.warn(sb.toString());
+        if (!configuration.isSilent() && log.isWarnEnabled()) {
+            log.warn(sb.toString());
+        }
+        if (configuration.isStrict()) {
+            throw new ModelException(sb.toString());
+        }
         XMLReporter reporter = configuration.reporter;
         if (reporter != null) {
             reporter.report(sb.toString(), "COMMONS_SCXML", null, reader.getLocation());
@@ -2354,6 +2383,18 @@ public final class SCXMLReader {
          */
         PathResolver pathResolver;
 
+        /**
+         * Whether to silently ignore any unknown or invalid elements
+         * or to leave warning logs for those.
+         */
+        boolean silent;
+
+        /**
+         * Whether to strictly throw a model exception when there are any unknown or invalid elements
+         * or to leniently allow to read the model even with those.
+         */
+        boolean strict;
+
         /*
          * Public constructors
          */
@@ -2473,6 +2514,42 @@ public final class SCXMLReader {
                 final String encoding, final String systemId, final boolean validate, final PathResolver pathResolver,
                 final SCXML parent, final List<CustomAction> customActions, final ClassLoader customActionClassLoader,
                 final boolean useContextClassLoaderForCustomActions) {
+            this(factoryId, factoryClassLoader, allocator, properties, resolver, reporter, encoding, systemId,
+                    validate, pathResolver, parent, customActions, customActionClassLoader,
+                    useContextClassLoaderForCustomActions, false, false);
+        }
+
+        /**
+         * All-purpose package access constructor.
+         *
+         * @param factoryId The <code>factoryId</code> to use.
+         * @param factoryClassLoader The {@link ClassLoader} to use for the {@link XMLInputFactory} instance to
+         *                           create.
+         * @param allocator The {@link XMLEventAllocator} for the {@link XMLInputFactory}.
+         * @param properties The map of properties (keys are property name strings, values are object property values)
+         *                   for the {@link XMLInputFactory}.
+         * @param resolver The {@link XMLResolver} for the {@link XMLInputFactory}.
+         * @param reporter The {@link XMLReporter} for the {@link XMLInputFactory}.
+         * @param encoding The <code>encoding</code> to use for the {@link XMLStreamReader}
+         * @param systemId The <code>systemId</code> to use for the {@link XMLStreamReader}
+         * @param validate Whether to validate the input with the XML Schema for SCXML.
+         * @param pathResolver The Commons SCXML {@link PathResolver} to use for this document.
+         * @param parent The parent SCXML document if this document is src'ed in via the &lt;state&gt; or
+         *               &lt;parallel&gt; element's "src" attribute.
+         * @param customActions The list of Commons SCXML custom actions that will be available for this document.
+         * @param customActionClassLoader The {@link ClassLoader} to use for the {@link CustomAction} instances to
+         *                                create.
+         * @param useContextClassLoaderForCustomActions Whether to use the thread context {@link ClassLoader} for the
+         *                                             {@link CustomAction} instances to create.
+         * @param silent Whether to silently ignore any unknown or invalid elements or to leave warning logs for those.
+         * @param strict Whether to strictly throw a model exception when there are any unknown or invalid elements
+         *               or to leniently allow to read the model even with those.
+         */
+        Configuration(final String factoryId, final ClassLoader factoryClassLoader, final XMLEventAllocator allocator,
+                final Map<String, Object> properties, final XMLResolver resolver, final XMLReporter reporter,
+                final String encoding, final String systemId, final boolean validate, final PathResolver pathResolver,
+                final SCXML parent, final List<CustomAction> customActions, final ClassLoader customActionClassLoader,
+                final boolean useContextClassLoaderForCustomActions, final boolean silent, final boolean strict) {
             this.factoryId = factoryId;
             this.factoryClassLoader = factoryClassLoader;
             this.allocator = allocator;
@@ -2488,6 +2565,8 @@ public final class SCXMLReader {
             this.customActionClassLoader = customActionClassLoader;
             this.useContextClassLoaderForCustomActions = useContextClassLoaderForCustomActions;
             this.namespaces = new HashMap<String, Stack<String>>();
+            this.silent = silent;
+            this.strict = strict;
         }
 
         /*
@@ -2505,6 +2584,42 @@ public final class SCXMLReader {
                 currentNamespaces.put(nsEntry.getKey(), nsEntry.getValue().peek());
             }
             return currentNamespaces;
+        }
+
+        /**
+         * Returns true if it is set to read models silently without any model error warning logs.
+         * @return
+         * @see {@link #silent}
+         */
+        public boolean isSilent() {
+            return silent;
+        }
+
+        /**
+         * Turn on/off silent mode (whether to read models silently without any model error warning logs)
+         * @param silent
+         * @see {@link #silent}
+         */
+        public void setSilent(boolean silent) {
+            this.silent = silent;
+        }
+
+        /**
+         * Returns true if it is set to check model strictly with throwing exceptions on any model error.
+         * @return
+         * @see {@link #strict}
+         */
+        public boolean isStrict() {
+            return strict;
+        }
+
+        /**
+         * Turn on/off strict model (whether to check model strictly with throwing exception on any model error)
+         * @param strict
+         * @see {@link #strict}
+         */
+        public void setStrict(boolean strict) {
+            this.strict = strict;
         }
 
     }
