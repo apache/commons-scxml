@@ -261,6 +261,8 @@ public class JexlEvaluator implements Evaluator, Serializable {
                 engine = jexlEngine;
                 if (engine == null) {
                     jexlEngine = engine = createJexlEngine();
+                    jexlEngine.setSilent(jexlEngineSilent);
+                    jexlEngine.setStrict(jexlEngineStrict);
                 }
             }
         }
