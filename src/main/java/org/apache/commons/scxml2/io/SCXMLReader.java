@@ -2483,7 +2483,7 @@ public final class SCXMLReader {
             this(source.factoryId, source.factoryClassLoader, source.allocator, source.properties, source.resolver,
                     source.reporter, source.encoding, source.systemId, source.validate, source.pathResolver,
                     source.parent, source.customActions, source.customActionClassLoader,
-                    source.useContextClassLoaderForCustomActions);
+                    source.useContextClassLoaderForCustomActions, source.silent, source.strict);
         }
 
         /**
