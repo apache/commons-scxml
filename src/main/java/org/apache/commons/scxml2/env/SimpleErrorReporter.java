@@ -106,10 +106,19 @@ public class SimpleErrorReporter implements ErrorReporter, Serializable {
                 msg.append("Expression error inside " + LogUtils.getTTPath(parent));
             }
         }
-        if (log.isWarnEnabled()) {
-            log.warn(msg.toString());
-        }
+        handleErrorMessage(errorCode, errDetail, errCtx, msg);
     }
 
+    /**
+     * Final handling of the resulting errorMessage build by {@link #onError(String, String, Object)} onError}.
+     * <p>The default implementation write the errorMessage as a warning to the log.</p>
+     */
+    protected void handleErrorMessage(final String errorCode, final String errDetail,
+                               final Object errCtx, final CharSequence errorMessage) {
+
+        if (log.isWarnEnabled()) {
+            log.warn(errorMessage.toString());
+        }
+    }
 }
 
