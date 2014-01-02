@@ -55,25 +55,25 @@ public class EventVariable implements Serializable {
     /**
      * The type in an external event.
      */
-    private final String originType;
+    private final String origintype;
 
     /**
      * The invoke id of the invocation that triggered the child process.
      */
-    private final String invokeId;
+    private final String invokeid;
 
     /**
      * Whatever data the sending entity chose to include in the event
      */
     private final Object data;
 
-    public EventVariable(final String name, final String type, final String sendid, final String origin, final String originType, final String invokeId, final Object data) {
+    public EventVariable(final String name, final String type, final String sendid, final String origin, final String origintype, final String invokeid, final Object data) {
         this.name = name;
         this.type = type;
         this.sendid = sendid;
         this.origin = origin;
-        this.originType = originType;
-        this.invokeId = invokeId;
+        this.origintype = origintype;
+        this.invokeid = invokeid;
         this.data = data;
     }
 
@@ -93,12 +93,12 @@ public class EventVariable implements Serializable {
         return origin;
     }
 
-    public String getOriginType() {
-        return originType;
+    public String getOrigintype() {
+        return origintype;
     }
 
-    public String getInvokeId() {
-        return invokeId;
+    public String getInvokeid() {
+        return invokeid;
     }
 
     public Object getData() {

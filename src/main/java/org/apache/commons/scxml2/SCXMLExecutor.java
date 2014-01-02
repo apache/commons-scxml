@@ -509,8 +509,22 @@ public class SCXMLExecutor implements Serializable {
             if (len == 1) {
                 // we have only one event
                 eventData = evts[0].getPayload();
-                // TODO: determine type, sendid, origin, originType and invokeid based on context.
-                eventVar = new EventVariable(evts[0].getName(), EventVariable.TYPE_INTERNAL, null, null, null, null, eventData);
+
+                // NOTE: According to spec 5.10.1, _event.type must be 'platform', 'internal' or 'external'.
+                //       So, error or variable change trigger events can be translated into 'platform' type event variables.
+                //       However, the Send model for <send> element doesn't support any target yet, and so
+                //       'internal' type can't supported either.
+                //       All the others must be 'external'.
+
+                String eventType = EventVariable.TYPE_EXTERNAL;
+                final int triggerEventType = evts[0].getType();
+
+                if (triggerEventType == TriggerEvent.ERROR_EVENT || triggerEventType == TriggerEvent.CHANGE_EVENT) {
+                    eventType = EventVariable.TYPE_PLATFORM;
+                }
+
+                // TODO: determine sendid, origin, originType and invokeid based on context later.
+                eventVar = new EventVariable(evts[0].getName(), eventType, null, null, null, null, eventData);
             }
             rootCtx.setLocal(EVENT_DATA, eventData);
             rootCtx.setLocal(EVENT_DATA_MAP, payloadMap);

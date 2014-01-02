@@ -23,7 +23,7 @@
        initial="closed">
 
   <state id="closed">
-    <transition event="open" cond="_event.name == 'open' and _event.type == 'internal' and _event.data['keyed']" target="opened" />
+    <transition event="open" cond="_event.name == 'open' and _event.data['keyed']" target="opened" />
   </state>
 
   <state id="opened">
