@@ -23,6 +23,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.scxml2.env.SimpleContext;
+import org.apache.commons.scxml2.env.groovy.GroovyContext;
+import org.apache.commons.scxml2.env.groovy.GroovyEvaluator;
 import org.apache.commons.scxml2.env.jsp.ELEvaluator;
 import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.State;
@@ -38,7 +40,8 @@ public class SCXMLExecutorTest {
 
     // Test data
     private URL microwave01jsp, microwave02jsp, microwave01jexl,
-        microwave02jexl, microwave03jexl, microwave04jexl, microwave05jexl, transitions01,
+        microwave02jexl, microwave03jexl, microwave04jexl, microwave05jexl,
+            microwave01grv, microwave02grv, microwave03grv, microwave04grv, microwave05grv, transitions01,
         transitions02, transitions03, transitions04, transitions05, transitions06, prefix01, send01, send02,
         transitionsWithCond01, transitionsEventVar;
     private SCXMLExecutor exec;
@@ -62,6 +65,16 @@ public class SCXMLExecutorTest {
             getResource("org/apache/commons/scxml2/env/jexl/microwave-04.xml");
         microwave05jexl = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml2/env/jexl/microwave-05.xml");
+        microwave01grv = this.getClass().getClassLoader().
+                getResource("org/apache/commons/scxml2/env/groovy/microwave-01.xml");
+        microwave02grv = this.getClass().getClassLoader().
+                getResource("org/apache/commons/scxml2/env/groovy/microwave-02.xml");
+        microwave03grv = this.getClass().getClassLoader().
+                getResource("org/apache/commons/scxml2/env/groovy/microwave-03.xml");
+        microwave04grv = this.getClass().getClassLoader().
+                getResource("org/apache/commons/scxml2/env/groovy/microwave-04.xml");
+        microwave05grv = this.getClass().getClassLoader().
+                getResource("org/apache/commons/scxml2/env/groovy/microwave-05.xml");
         transitions01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml2/transitions-01.xml");
         transitions02 = this.getClass().getClassLoader().
@@ -153,6 +166,47 @@ public class SCXMLExecutorTest {
         SCXML scxml = SCXMLTestHelper.parse(microwave05jexl);
         Assert.assertNotNull(scxml);
         exec = SCXMLTestHelper.getExecutor(scxml);
+        Assert.assertNotNull(exec);
+        checkMicrowave02Sample();
+    }
+
+    @Test
+    public void testSCXMLExecutorMicrowave01grvSample() throws Exception {
+        exec = SCXMLTestHelper.getExecutor(microwave01grv, new GroovyContext(), new GroovyEvaluator());
+        Assert.assertNotNull(exec);
+        checkMicrowave01Sample();
+    }
+
+    @Test
+    public void testSCXMLExecutorMicrowave02grvSample() throws Exception {
+        exec = SCXMLTestHelper.getExecutor(microwave02grv, new GroovyContext(), new GroovyEvaluator());
+        Assert.assertNotNull(exec);
+        checkMicrowave02Sample();
+    }
+
+    @Test
+    public void testSCXMLExecutorMicrowave03grvSample() throws Exception {
+        SCXML scxml = SCXMLTestHelper.parse(microwave03grv);
+        Assert.assertNotNull(scxml);
+        exec = SCXMLTestHelper.getExecutor(scxml, new GroovyContext(), new GroovyEvaluator());
+        Assert.assertNotNull(exec);
+        checkMicrowave01Sample();
+    }
+
+    @Test
+    public void testSCXMLExecutorMicrowave04grvSample() throws Exception {
+        SCXML scxml = SCXMLTestHelper.parse(microwave04grv);
+        Assert.assertNotNull(scxml);
+        exec = SCXMLTestHelper.getExecutor(scxml, new GroovyContext(), new GroovyEvaluator());
+        Assert.assertNotNull(exec);
+        checkMicrowave02Sample();
+    }
+
+    @Test
+    public void testSCXMLExecutorMicrowave05grvSample() throws Exception {
+        SCXML scxml = SCXMLTestHelper.parse(microwave05grv);
+        Assert.assertNotNull(scxml);
+        exec = SCXMLTestHelper.getExecutor(scxml, new GroovyContext(), new GroovyEvaluator());
         Assert.assertNotNull(exec);
         checkMicrowave02Sample();
     }
