@@ -242,6 +242,8 @@ public final class SCXMLReader {
     private static final String ATTR_TYPE = "type";
     private static final String ATTR_VERSION = "version";
 
+    private static final String ID_INITIAL_SCRIPT = "_initialScript";
+
     //------------------------- PUBLIC API METHODS -------------------------//
     /*
      * Public methods
@@ -585,6 +587,8 @@ public final class SCXMLReader {
         scxml.setVersion(readAV(reader, ATTR_VERSION));
         readNamespaces(configuration, scxml);
 
+        boolean hasInitialScript = false;
+
         loop : while (reader.hasNext()) {
             String name, nsURI;
             switch (reader.next()) {
@@ -601,6 +605,9 @@ public final class SCXMLReader {
                             readFinal(reader, configuration, scxml, null);
                         } else if (ELEM_DATAMODEL.equals(name)) {
                             readDatamodel(reader, configuration, scxml, null);
+                        } else if (ELEM_SCRIPT.equals(name) && !hasInitialScript) {
+                            readInitialScript(reader, configuration, scxml);
+                            hasInitialScript = true;
                         } else {
                             reportIgnoredElement(reader, configuration, ELEM_SCXML, nsURI, name);
                         }
@@ -1747,6 +1754,33 @@ public final class SCXMLReader {
             executable.addAction(script);
         }
 
+    }
+
+    /**
+     * Read the contents of the initial &lt;script&gt; element.
+     * @see <a href="http://www.w3.org/TR/2013/WD-scxml-20130801/#scxml">http://www.w3.org/TR/2013/WD-scxml-20130801/#scxml<a> section 3.2.2
+     *
+     * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
+     * @param configuration The {@link Configuration} to use while parsing.
+     * @param scxml The root of the object model being parsed.
+     *
+     * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
+     */
+    private static void readInitialScript(final XMLStreamReader reader, final Configuration configuration,
+                                   final SCXML scxml)
+            throws XMLStreamException {
+
+        Script initialScript = new Script();
+        State initialScriptState = new State();
+        initialScriptState.setId(ID_INITIAL_SCRIPT);
+        Transition initialScriptTransition = new Transition();
+        initialScript.setParent(initialScriptTransition);
+        initialScriptTransition.getActions().add(initialScript);
+        initialScriptState.addTransition(initialScriptTransition);
+
+        readNamespaces(configuration, initialScript);
+        initialScript.setBody(readBody(reader, configuration, XMLNS_SCXML, ELEM_SCRIPT));
+        scxml.setInitialScript(initialScript);
     }
 
     /**

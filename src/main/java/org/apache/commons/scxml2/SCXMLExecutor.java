@@ -32,6 +32,7 @@ import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.Observable;
 import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.State;
+import org.apache.commons.scxml2.model.Transition;
 import org.apache.commons.scxml2.model.TransitionTarget;
 import org.apache.commons.scxml2.semantics.SCXMLSemanticsImpl;
 import org.apache.commons.scxml2.system.EventVariable;
@@ -224,6 +225,12 @@ public class SCXMLExecutor implements Serializable {
             SCXMLHelper.cloneDatamodel(rootdm, rootCtx,
                 scInstance.getEvaluator(), log);
         }
+        if (stateMachine.getInitialScript() != null) {
+            Context initialScriptCtx = scInstance.getContext(stateMachine.getInitialScript().getParentTransitionTarget());
+            if (initialScriptCtx != null) {
+                initialScriptCtx.reset();
+            }
+        }
         // all states and parallels, only states have variable contexts
         for (TransitionTarget tt : stateMachine.getTargets().values()) {
             if (tt instanceof State) {
@@ -247,6 +254,10 @@ public class SCXMLExecutor implements Serializable {
         semantics.determineInitialStates(stateMachine,
                 step.getAfterStatus().getStates(),
                 step.getEntryList(), errorReporter, scInstance);
+        // execute initial script if defined configured as transition so as to not trigger events
+        if (stateMachine.getInitialScript() != null) {
+            step.getTransitList().add((Transition)stateMachine.getInitialScript().getParent());
+        }
         // ExecuteActions
         semantics.executeActions(step, stateMachine, eventdispatcher,
                 errorReporter, scInstance);

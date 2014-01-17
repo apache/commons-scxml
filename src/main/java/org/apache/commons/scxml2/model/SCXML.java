@@ -86,6 +86,11 @@ public class SCXML implements Serializable, Observable,
     private Datamodel datamodel;
 
     /**
+     * Optional property holding the initial script for this SCXML document.
+     */
+    private Script initialScript;
+
+    /**
      * The immediate child targets of this SCXML document root.
      */
     private Map<String, TransitionTarget> children;
@@ -108,6 +113,14 @@ public class SCXML implements Serializable, Observable,
     public SCXML() {
         this.children = new LinkedHashMap<String, TransitionTarget>();
         this.targets = new HashMap<String, TransitionTarget>();
+    }
+
+    public Script getInitialScript() {
+        return initialScript;
+    }
+
+    public void setInitialScript(Script script) {
+        this.initialScript = script;
     }
 
     /**

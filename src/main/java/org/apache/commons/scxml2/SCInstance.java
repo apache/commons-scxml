@@ -87,6 +87,11 @@ public class SCInstance implements Serializable {
     private Context rootContext;
 
     /**
+     * The initial script context
+     */
+    private Context initialScriptContext;
+
+    /**
      * The owning state machine executor.
      */
     private SCXMLExecutor executor;
@@ -147,6 +152,16 @@ public class SCInstance implements Serializable {
         this.rootContext = context;
     }
 
+    Context getInitialScriptContext() {
+        if (initialScriptContext == null) {
+            Context rootContext = getRootContext();
+            if (rootContext != null) {
+                initialScriptContext = evaluator.newContext(getRootContext());
+            }
+        }
+        return initialScriptContext;
+    }
+
     /**
      * Get the notification registry.
      *
@@ -177,8 +192,15 @@ public class SCInstance implements Serializable {
         if (context == null) {
             TransitionTarget parent = transitionTarget.getParent();
             if (parent == null) {
-                // docroot
-                context = evaluator.newContext(getRootContext());
+                if (executor != null && executor.getStateMachine().getInitialScript() != null &&
+                        transitionTarget == executor.getStateMachine().getInitialScript().getParent().getParent()) {
+                    // initialScript
+                    return getInitialScriptContext();
+                }
+                else {
+                    // docroot
+                    context = evaluator.newContext(getInitialScriptContext());
+                }
             } else {
                 context = evaluator.newContext(getContext(parent));
             }
