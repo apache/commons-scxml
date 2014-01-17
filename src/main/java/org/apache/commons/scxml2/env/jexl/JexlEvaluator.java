@@ -17,11 +17,8 @@
 package org.apache.commons.scxml2.env.jexl;
 
 import java.io.Serializable;
-import java.util.AbstractMap;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.jexl2.Expression;
 import org.apache.commons.jexl2.JexlEngine;
@@ -29,6 +26,7 @@ import org.apache.commons.jexl2.Script;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.SCXMLExpressionException;
+import org.apache.commons.scxml2.env.EffectiveContextMap;
 import org.w3c.dom.Node;
 
 /**
@@ -281,67 +279,5 @@ public class JexlEvaluator implements Evaluator, Serializable {
     private JexlContext getEffectiveContext(final JexlContext nodeCtx) {
         return new JexlContext(new EffectiveContextMap(nodeCtx));
     }
-
-    /**
-     * The map that will back the effective context for the
-     * {@link JexlEvaluator}. The effective context enables the chaining of
-     * {@link Context}s all the way from the current state node to the root.
-     *
-     */
-    private static final class EffectiveContextMap extends AbstractMap<String, Object> {
-
-        /** The {@link Context} for the current state. */
-        private final Context leaf;
-
-        /** Constructor. */
-        public EffectiveContextMap(final JexlContext ctx) {
-            super();
-            this.leaf = ctx;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Set<Map.Entry<String, Object>> entrySet() {
-            Set<Map.Entry<String, Object>> entrySet = new HashSet<Map.Entry<String, Object>>();
-            Context current = leaf;
-            while (current != null) {
-                entrySet.addAll(current.getVars().entrySet());
-                current = current.getParent();
-            }
-            return entrySet;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Object put(final String key, final Object value) {
-            Object old = leaf.get(key);
-            if (leaf.has(key)) {
-                leaf.set(key, value);
-            } else {
-                leaf.setLocal(key, value);
-            }
-            return old;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Object get(final Object key) {
-            Context current = leaf;
-            while (current != null) {
-                if (current.getVars().containsKey(key)) {
-                    return current.getVars().get(key);
-                }
-                current = current.getParent();
-            }
-            return null;
-        }
-    }
-
 }
 
