@@ -92,4 +92,12 @@ public class GroovyEvaluatorTest {
         }
     }
 
+    @Test
+    public void testPreprocessScript() {
+        GroovyEvaluator evaluator = new GroovyEvaluator();
+        Assert.assertEquals("x &&  x || x  !  x == x <  x <= x != x >  x >= x", evaluator.getScriptPreProcessor().
+                preProcess("x and x or x not x eq x lt x le x ne x gt x ge x"));
+        Assert.assertEquals("and x OR x\n ! \nx\n== x < \nx(le)x ne. xgt x ge", evaluator.getScriptPreProcessor().
+                 preProcess("and x OR x\nnot\nx\neq x lt\nx(le)x ne. xgt x ge"));
+    }
 }
