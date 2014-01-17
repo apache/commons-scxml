@@ -73,9 +73,9 @@ public class SimpleContext implements Context, Serializable {
     public SimpleContext(final Context parent, final Map<String, Object> initialVars) {
         this.parent = parent;
         if (initialVars == null) {
-            this.vars = new HashMap<String, Object>();
+            setVars(new HashMap<String, Object>());
         } else {
-            this.vars = initialVars;
+            setVars(this.vars = initialVars);
         }
     }
 
@@ -89,7 +89,7 @@ public class SimpleContext implements Context, Serializable {
      * @see org.apache.commons.scxml2.Context#set(String, Object)
      */
     public void set(final String name, final Object value) {
-        if (vars.containsKey(name)) { //first try to override local
+        if (getVars().containsKey(name)) { //first try to override local
             setLocal(name, value);
         } else if (parent != null && parent.has(name)) { //then check for global
             parent.set(name, value);
@@ -106,8 +106,8 @@ public class SimpleContext implements Context, Serializable {
      * @see org.apache.commons.scxml2.Context#get(java.lang.String)
      */
     public Object get(final String name) {
-        if (vars.containsKey(name)) {
-            return vars.get(name);
+        if (getVars().containsKey(name)) {
+            return getVars().get(name);
         } else if (parent != null) {
             return parent.get(name);
         } else {
@@ -123,7 +123,7 @@ public class SimpleContext implements Context, Serializable {
      * @see org.apache.commons.scxml2.Context#has(java.lang.String)
      */
     public boolean has(final String name) {
-        if (vars.containsKey(name)) {
+        if (getVars().containsKey(name)) {
             return true;
         } else if (parent != null && parent.has(name)) {
             return true;
@@ -137,7 +137,7 @@ public class SimpleContext implements Context, Serializable {
      * @see org.apache.commons.scxml2.Context#reset()
      */
     public void reset() {
-        vars.clear();
+        getVars().clear();
     }
 
     /**
@@ -160,7 +160,7 @@ public class SimpleContext implements Context, Serializable {
      * @see org.apache.commons.scxml2.Context#setLocal(String, Object)
      */
     public void setLocal(final String name, final Object value) {
-        vars.put(name, value);
+        getVars().put(name, value);
         if (log.isDebugEnabled() && !name.equals("_ALL_STATES")) {
             log.debug(name + " = " + String.valueOf(value));
         }
