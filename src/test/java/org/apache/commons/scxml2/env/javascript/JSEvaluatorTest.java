@@ -180,9 +180,11 @@ public class JSEvaluatorTest {
     @Test
     public void testStandardExpressions() throws Exception {
         for (TestItem item: SIMPLE_EXPRESSIONS) {
+            Object eval = evaluator.eval(context,item.expression);
+            System.out.println("testStandardExpressions:"+eval.getClass().getCanonicalName()+"="+eval.toString());
             Assert.assertEquals("Invalid result: " + item.expression,
                          item.result,
-                         evaluator.eval(context,item.expression));
+                         eval);
         }
     }
 
