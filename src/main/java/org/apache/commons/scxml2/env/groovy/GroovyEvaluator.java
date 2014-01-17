@@ -16,24 +16,23 @@
  */
 package org.apache.commons.scxml2.env.groovy;
 
-import groovy.lang.Binding;
-import groovy.lang.GroovyShell;
+import groovy.lang.Script;
 
 import java.io.Serializable;
-import java.util.AbstractMap;
-import java.util.HashSet;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.SCXMLExpressionException;
-import org.codehaus.groovy.runtime.MethodClosure;
+import org.apache.commons.scxml2.env.EffectiveContextMap;
 import org.w3c.dom.Node;
 
 /**
- * Evaluator implementation enabling use of Groovy expressions in
- * SCXML documents.
+ * Evaluator implementation enabling use of Groovy expressions in SCXML documents.
  * <P>
  * This implementation itself is thread-safe, so you can keep singleton for efficiency.
  * </P>
@@ -47,10 +46,74 @@ public class GroovyEvaluator implements Evaluator, Serializable {
     private static final String ERR_CTX_TYPE = "Error evaluating Groovy "
             + "expression, Context must be a org.apache.commons.scxml2.env.groovy.GroovyContext";
 
-    /** Constructor. */
+    private static final GroovyExtendableScriptCache.ScriptPreProcessor scriptPreProcessor = new GroovyExtendableScriptCache.ScriptPreProcessor () {
+
+        /**
+         * Pattern for case-sensitive matching of the Groovy operator aliases, delimited by whitespace
+         */
+        private final Pattern GROOVY_OPERATOR_ALIASES_PATTERN = Pattern.compile("(?<=\\s)(and|or|not|eq|lt|le|ne|gt|ge)(?=\\s)");
+
+        /**
+         * Groovy operator aliases mapped to their underlying Groovy operator
+         */
+        private final Map<String, String> GROOVY_OPERATOR_ALIASES = Collections.unmodifiableMap(new HashMap<String, String>() {{
+            put("and", "&& "); put("or",  "||"); put("not", " ! ");
+            put("eq",  "==");  put("lt",  "< "); put("le",  "<=");
+            put("ne",  "!=");  put("gt",  "> "); put("ge",  ">=");
+        }});
+
+        @Override
+        public String preProcess(final String script) {
+            if (script == null || script.length() == 0) {
+                return script;
+            }
+            StringBuffer sb = null;
+            Matcher m = GROOVY_OPERATOR_ALIASES_PATTERN.matcher(script);
+            while (m.find()) {
+                if (sb == null) {
+                    sb = new StringBuffer();
+                }
+                m.appendReplacement(sb, GROOVY_OPERATOR_ALIASES.get(m.group()));
+            }
+            if (sb != null) {
+                m.appendTail(sb);
+                return sb.toString();
+            }
+            return script;
+        }
+    };
+
+    private final boolean useInitialScriptAsBaseScript;
+    private final GroovyExtendableScriptCache scriptCache;
+
     public GroovyEvaluator() {
-        super();
+        this(false);
     }
+
+    public GroovyEvaluator(boolean useInitialScriptAsBaseScript) {
+        this.useInitialScriptAsBaseScript = useInitialScriptAsBaseScript;
+        this.scriptCache = new GroovyExtendableScriptCache();
+        scriptCache.setScriptPreProcessor(scriptPreProcessor);
+        scriptCache.setScriptBaseClass(GroovySCXMLScript.class.getName());
+    }
+
+    @SuppressWarnings("unchecked")
+    protected Script getScript(GroovyContext groovyContext, String scriptBaseClassName, String scriptSource) {
+        Script script = scriptCache.getScript(scriptBaseClassName, scriptSource);
+        script.setBinding(groovyContext.getBinding());
+        return script;
+    }
+
+    @SuppressWarnings("unused")
+    public void clearCache() {
+        scriptCache.clearCache();
+    }
+
+    public GroovyExtendableScriptCache.ScriptPreProcessor getScriptPreProcessor() {
+        return scriptPreProcessor;
+    }
+
+    /* SCXMLEvaluator implementation methods */
 
     /**
      * Evaluate an expression.
@@ -61,23 +124,22 @@ public class GroovyEvaluator implements Evaluator, Serializable {
      * @throws SCXMLExpressionException For a malformed expression
      * @see Evaluator#eval(Context, String)
      */
+    @Override
     public Object eval(final Context ctx, final String expr) throws SCXMLExpressionException {
         if (expr == null) {
             return null;
         }
 
-        GroovyContext groovyCtx = null;
-
-        if (ctx instanceof GroovyContext) {
-            groovyCtx = (GroovyContext) ctx;
-        } else {
+        if (!(ctx instanceof GroovyContext)) {
             throw new SCXMLExpressionException(ERR_CTX_TYPE);
         }
 
+        GroovyContext groovyCtx = (GroovyContext) ctx;
+        if (groovyCtx.getGroovyEvaluator() == null) {
+            groovyCtx.setGroovyEvaluator(this);
+        }
         try {
-            final GroovyContext effective = getEffectiveContext(groovyCtx);
-            GroovyShell shell = createGroovyShell(effective);
-            return shell.evaluate(expr);
+            return getScript(getEffectiveContext(groovyCtx), groovyCtx.getScriptBaseClass(), expr).run();
         } catch (Exception e) {
             throw new SCXMLExpressionException("eval('" + expr + "'):" + e.getMessage(), e);
         }
@@ -86,23 +148,22 @@ public class GroovyEvaluator implements Evaluator, Serializable {
     /**
      * @see Evaluator#evalCond(Context, String)
      */
+    @Override
     public Boolean evalCond(final Context ctx, final String expr) throws SCXMLExpressionException {
         if (expr == null) {
             return null;
         }
 
-        GroovyContext groovyCtx = null;
-
-        if (ctx instanceof GroovyContext) {
-            groovyCtx = (GroovyContext) ctx;
-        } else {
+        if (!(ctx instanceof GroovyContext)) {
             throw new SCXMLExpressionException(ERR_CTX_TYPE);
         }
 
+        GroovyContext groovyCtx = (GroovyContext) ctx;
+        if (groovyCtx.getGroovyEvaluator() == null) {
+            groovyCtx.setGroovyEvaluator(this);
+        }
         try {
-            final GroovyContext effective = getEffectiveContext(groovyCtx);
-            GroovyShell shell = createGroovyShell(effective);
-            return (Boolean) shell.evaluate(expr);
+            return (Boolean)getScript(getEffectiveContext(groovyCtx), groovyCtx.getScriptBaseClass(), expr).run();
         } catch (Exception e) {
             throw new SCXMLExpressionException("evalCond('" + expr + "'):" + e.getMessage(), e);
         }
@@ -111,24 +172,24 @@ public class GroovyEvaluator implements Evaluator, Serializable {
     /**
      * @see Evaluator#evalLocation(Context, String)
      */
+    @Override
     public Node evalLocation(final Context ctx, final String expr) throws SCXMLExpressionException {
         if (expr == null) {
             return null;
         }
 
-        GroovyContext groovyCtx = null;
-
-        if (ctx instanceof GroovyContext) {
-            groovyCtx = (GroovyContext) ctx;
-        } else {
+        if (!(ctx instanceof GroovyContext)) {
             throw new SCXMLExpressionException(ERR_CTX_TYPE);
         }
 
+        GroovyContext groovyCtx = (GroovyContext) ctx;
+        if (groovyCtx.getGroovyEvaluator() == null) {
+            groovyCtx.setGroovyEvaluator(this);
+        }
         try {
             final GroovyContext effective = getEffectiveContext(groovyCtx);
             effective.setEvaluatingLocation(true);
-            GroovyShell shell = createGroovyShell(effective);
-            return (Node) shell.evaluate(expr);
+            return (Node)getScript(effective, groovyCtx.getScriptBaseClass(), expr).run();
         } catch (Exception e) {
             throw new SCXMLExpressionException("evalLocation('" + expr + "'):" + e.getMessage(), e);
         }
@@ -137,27 +198,39 @@ public class GroovyEvaluator implements Evaluator, Serializable {
     /**
      * @see Evaluator#evalScript(Context, String)
      */
-    public Object evalScript(final Context ctx, final String script) throws SCXMLExpressionException {
-        if (script == null) {
+    @Override
+    public Object evalScript(final Context ctx, final String scriptSource) throws SCXMLExpressionException {
+        if (scriptSource == null) {
             return null;
         }
 
-        GroovyContext groovyCtx = null;
-
-        if (ctx instanceof GroovyContext) {
-            groovyCtx = (GroovyContext) ctx;
-        } else {
+        if (!(ctx instanceof GroovyContext)) {
             throw new SCXMLExpressionException(ERR_CTX_TYPE);
         }
 
+        GroovyContext groovyCtx = (GroovyContext) ctx;
+        if (groovyCtx.getGroovyEvaluator() == null) {
+            groovyCtx.setGroovyEvaluator(this);
+        }
         try {
             final GroovyContext effective = getEffectiveContext(groovyCtx);
             effective.setEvaluatingLocation(true);
-            GroovyShell shell = createGroovyShell(effective);
-            return shell.evaluate(script);
+            boolean isInitialScript =  groovyCtx.getParent() != null &&
+                    groovyCtx.getParent().getParent() == null &&
+                    scriptCache.isEmpty();
+            Script script = getScript(effective, groovyCtx.getScriptBaseClass(), scriptSource);
+            Object result = script.run();
+            if (isInitialScript && useInitialScriptAsBaseScript) {
+                groovyCtx.setScriptBaseClass(script.getClass().getName());
+            }
+            return result;
         } catch (Exception e) {
-            throw new SCXMLExpressionException("evalScript('" + script + "'):" + e.getMessage(), e);
+            throw new SCXMLExpressionException("evalScript('" + scriptSource + "'):" + e.getMessage(), e);
         }
+    }
+
+    protected ClassLoader getGroovyClassLoader() {
+        return scriptCache.getGroovyClassLoader();
     }
 
     /**
@@ -167,25 +240,9 @@ public class GroovyEvaluator implements Evaluator, Serializable {
      * @return new child context
      * @see Evaluator#newContext(Context)
      */
+    @Override
     public Context newContext(final Context parent) {
-        return new GroovyContext(parent);
-    }
-
-    /**
-     * Create a GroovyShell instance.
-     * @param context
-     * @return
-     */
-    protected GroovyShell createGroovyShell(GroovyContext groovyContext) {
-        Binding binding = new Binding();
-        GroovyBuiltin builtin = new GroovyBuiltin(groovyContext);
-        MethodClosure dataClosure = new MethodClosure(builtin, "Data");
-        MethodClosure inClosure = new MethodClosure(builtin, "In");
-        binding.setProperty("Data", dataClosure);
-        binding.setProperty("In", inClosure);
-        GroovyBinding groovyBinding = new GroovyBinding(groovyContext, binding);
-        GroovyShell shell = new GroovyShell(groovyBinding);
-        return shell;
+        return new GroovyContext(parent, this);
     }
 
     /**
@@ -198,68 +255,6 @@ public class GroovyEvaluator implements Evaluator, Serializable {
      *         document root.
      */
     private GroovyContext getEffectiveContext(final GroovyContext nodeCtx) {
-        return new GroovyContext(new EffectiveContextMap(nodeCtx));
+        return new GroovyContext(new EffectiveContextMap(nodeCtx), this);
     }
-
-    /**
-     * The map that will back the effective context for the
-     * {@link GroovyEvaluator}. The effective context enables the chaining of
-     * {@link Context}s all the way from the current state node to the root.
-     *
-     */
-    private static final class EffectiveContextMap extends AbstractMap<String, Object> {
-
-        /** The {@link Context} for the current state. */
-        private final Context leaf;
-
-        /** Constructor. */
-        public EffectiveContextMap(final GroovyContext ctx) {
-            super();
-            this.leaf = ctx;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Set<Map.Entry<String, Object>> entrySet() {
-            Set<Map.Entry<String, Object>> entrySet = new HashSet<Map.Entry<String, Object>>();
-            Context current = leaf;
-            while (current != null) {
-                entrySet.addAll(current.getVars().entrySet());
-                current = current.getParent();
-            }
-            return entrySet;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Object put(final String key, final Object value) {
-            Object old = leaf.get(key);
-            if (leaf.has(key)) {
-                leaf.set(key, value);
-            } else {
-                leaf.setLocal(key, value);
-            }
-            return old;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Object get(final Object key) {
-            Context current = leaf;
-            while (current != null) {
-                if (current.getVars().containsKey(key)) {
-                    return current.getVars().get(key);
-                }
-                current = current.getParent();
-            }
-            return null;
-        }
-    }
-
 }
