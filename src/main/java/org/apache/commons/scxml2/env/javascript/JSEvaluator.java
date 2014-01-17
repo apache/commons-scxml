@@ -196,6 +196,7 @@ public class JSEvaluator implements Evaluator {
      *
      * @throws SCXMLExpressionException Thrown if the script was invalid.
      */
+    @Override
     public Object evalScript(Context ctx, String script)
     throws SCXMLExpressionException {
         return eval(ctx, script);
