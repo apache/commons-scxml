@@ -76,6 +76,7 @@ public class JSEvaluatorTest {
             new TestItem("1 + 1 + 2 + 3 + 5",            new Double(12)),
             new TestItem("(1 + 1 + 2 + 3 + 5) == 12",    new Boolean(true)),
             new TestItem("(1 + 1 + 2 + 3 + 5) == 13",    new Boolean(false)),
+            new TestItem("1.0 + 1.0 + 2.0 + 3.0 + 5.0",  new Double(12.0)),
     };
 
     private static final TestItem[] VAR_EXPRESSIONS = {
@@ -181,9 +182,19 @@ public class JSEvaluatorTest {
     public void testStandardExpressions() throws Exception {
         for (TestItem item: SIMPLE_EXPRESSIONS) {
             Object eval = evaluator.eval(context,item.expression);
-            Assert.assertEquals("Invalid result: " + item.expression,
-                    item.result,
-                    eval);
+            // Allow for OpenJDK 1.6 which returns Integer instead of Double
+            if (eval instanceof Integer && item.result instanceof Number) {
+                Assert.assertEquals("Invalid result: " + item.expression,
+                        ((Number) item.result).intValue(),
+                        ((Number) eval).intValue());
+                if (!(item.result instanceof Integer)) {
+                    System.err.println("Expected: " + item.result.getClass().getCanonicalName() + ", actual: Integer");
+                }
+            } else {
+                Assert.assertEquals("Invalid result: " + item.expression,
+                        item.result,
+                        eval);
+            }
         }
     }
 
