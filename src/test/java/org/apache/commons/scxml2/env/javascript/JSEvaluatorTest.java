@@ -73,7 +73,7 @@ public class JSEvaluatorTest {
 
     private static final TestItem[] SIMPLE_EXPRESSIONS = {
             new TestItem("'FIB: ' + (1 + 1 + 2 + 3 + 5)",new String("FIB: 12")),
-            new TestItem("1 + 1 + 2 + 3 + 5",            new Integer(12)),
+            new TestItem("1 + 1 + 2 + 3 + 5",            new Integer(12)), // Force comparison using intValue
             new TestItem("1.1 + 1.1 + 2.1 + 3.1 + 5.1",  new Double(12.5)),
             new TestItem("(1 + 1 + 2 + 3 + 5) == 12",    new Boolean(true)),
             new TestItem("(1 + 1 + 2 + 3 + 5) == 13",    new Boolean(false)),
