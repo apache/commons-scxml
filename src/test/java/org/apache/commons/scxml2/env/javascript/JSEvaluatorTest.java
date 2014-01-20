@@ -188,7 +188,9 @@ public class JSEvaluatorTest {
                         ((Number) item.result).intValue(),
                         ((Number) eval).intValue());
                 if (!(item.result instanceof Integer)) {
-                    System.err.println("Expected: " + item.result.getClass().getCanonicalName() + ", actual: Integer");
+                    System.err.println("Evaluated: " + item.expression +
+                            ". Expected: " + item.result.getClass().getCanonicalName() 
+                            + ", actual: Integer");
                 }
             } else {
                 Assert.assertEquals("Invalid result: " + item.expression,
