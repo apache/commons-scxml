@@ -186,7 +186,7 @@ public class JSEvaluatorTest {
                          item.result,
                          eval);
             }
-            catch (Exception e) {
+            catch (Error e) {
                 System.out.println("testStandardExpressions:"+eval.getClass().getCanonicalName()+"="+eval.toString());
                 javax.script.ScriptEngineFactory factory = new javax.script.ScriptEngineManager().getEngineByName("JavaScript").getFactory();
                 System.out.println(factory.getEngineName()+" version: "+factory.getEngineVersion()+", languageVersion: "+factory.getLanguageVersion()+ " on " +
