@@ -181,18 +181,9 @@ public class JSEvaluatorTest {
     public void testStandardExpressions() throws Exception {
         for (TestItem item: SIMPLE_EXPRESSIONS) {
             Object eval = evaluator.eval(context,item.expression);
-            try {
-                Assert.assertEquals("Invalid result: " + item.expression,
-                         item.result,
-                         eval);
-            }
-            catch (Error e) {
-                System.out.println("testStandardExpressions:"+eval.getClass().getCanonicalName()+"="+eval.toString());
-                javax.script.ScriptEngineFactory factory = new javax.script.ScriptEngineManager().getEngineByName("JavaScript").getFactory();
-                System.out.println(factory.getEngineName()+" version: "+factory.getEngineVersion()+", languageVersion: "+factory.getLanguageVersion()+ " on " +
-                                   System.getProperty("java.vendor")+" "+System.getProperty("java.version")+": "+System.getProperty("java.vendor.url"));
-                throw e;
-            }
+            Assert.assertEquals("Invalid result: " + item.expression,
+                    item.result,
+                    eval);
         }
     }
 
