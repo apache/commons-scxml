@@ -46,17 +46,17 @@ public class GroovyEvaluator implements Evaluator, Serializable {
     private static final String ERR_CTX_TYPE = "Error evaluating Groovy "
             + "expression, Context must be a org.apache.commons.scxml2.env.groovy.GroovyContext";
 
-    private static final GroovyExtendableScriptCache.ScriptPreProcessor scriptPreProcessor = new GroovyExtendableScriptCache.ScriptPreProcessor () {
+    protected static final GroovyExtendableScriptCache.ScriptPreProcessor scriptPreProcessor = new GroovyExtendableScriptCache.ScriptPreProcessor () {
 
         /**
          * Pattern for case-sensitive matching of the Groovy operator aliases, delimited by whitespace
          */
-        private final Pattern GROOVY_OPERATOR_ALIASES_PATTERN = Pattern.compile("(?<=\\s)(and|or|not|eq|lt|le|ne|gt|ge)(?=\\s)");
+        public final Pattern GROOVY_OPERATOR_ALIASES_PATTERN = Pattern.compile("(?<=\\s)(and|or|not|eq|lt|le|ne|gt|ge)(?=\\s)");
 
         /**
          * Groovy operator aliases mapped to their underlying Groovy operator
          */
-        private final Map<String, String> GROOVY_OPERATOR_ALIASES = Collections.unmodifiableMap(new HashMap<String, String>() {{
+        public final Map<String, String> GROOVY_OPERATOR_ALIASES = Collections.unmodifiableMap(new HashMap<String, String>() {{
             put("and", "&& "); put("or",  "||"); put("not", " ! ");
             put("eq",  "==");  put("lt",  "< "); put("le",  "<=");
             put("ne",  "!=");  put("gt",  "> "); put("ge",  ">=");
@@ -92,9 +92,21 @@ public class GroovyEvaluator implements Evaluator, Serializable {
 
     public GroovyEvaluator(boolean useInitialScriptAsBaseScript) {
         this.useInitialScriptAsBaseScript = useInitialScriptAsBaseScript;
-        this.scriptCache = new GroovyExtendableScriptCache();
+        this.scriptCache = newScriptCache();
+    }
+
+    /**
+     * Overridable factory method to create the GroovyExtendableScriptCache for this GroovyEvaluator.
+     * <p>
+     * The default implementation configures the scriptCache to use the {@link #scriptPreProcessor GroovyEvaluator scriptPreProcessor}
+     * and the {@link GroovySCXMLScript} as script base class.
+     * </p>
+     */
+    protected GroovyExtendableScriptCache newScriptCache() {
+        GroovyExtendableScriptCache scriptCache = new GroovyExtendableScriptCache();
         scriptCache.setScriptPreProcessor(scriptPreProcessor);
         scriptCache.setScriptBaseClass(GroovySCXMLScript.class.getName());
+        return scriptCache;
     }
 
     @SuppressWarnings("unchecked")
