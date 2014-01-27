@@ -445,6 +445,11 @@ public class SCXMLWriter {
         // Marker to indicate generated document
         writer.writeComment(XMLNS_COMMONS_SCXML);
 
+        // Write initial script if defined
+        if (scxml.getInitialScript() != null) {
+            writeExecutableContent(writer, scxml.getInitialScript().getParent().getActions());
+        }
+
         // Children
         writeDatamodel(writer, scxml.getDatamodel());
         for (TransitionTarget tt : scxml.getChildren().values()) {

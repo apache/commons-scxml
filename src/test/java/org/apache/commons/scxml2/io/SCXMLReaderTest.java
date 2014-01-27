@@ -17,6 +17,7 @@
 package org.apache.commons.scxml2.io;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -66,7 +67,7 @@ public class SCXMLReaderTest {
     // Test data
     private URL microwave01, microwave02, transitions01, prefix01, send01,
         microwave03, microwave04, scxmlinitialattr, action01,
-        scxmlWithInvalidElems;
+        scxmlWithInvalidElems, groovyClosure;
     private SCXML scxml;
     private String scxmlAsString;
 
@@ -112,6 +113,8 @@ public class SCXMLReaderTest {
             getResource("org/apache/commons/scxml2/io/custom-action-body-test-1.xml");
         scxmlWithInvalidElems = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml2/io/scxml-with-invalid-elems.xml");
+        groovyClosure = this.getClass().getClassLoader().
+                getResource("org/apache/commons/scxml2/env/groovy/groovy-closure.xml");
 
         scxmlReaderLog = LogFactory.getLog(SCXMLReader.class);
         clearRecordedLogMessages();
@@ -123,7 +126,7 @@ public class SCXMLReaderTest {
     @After
     public void after() {
         microwave01 = microwave02 = microwave03 = microwave04 = transitions01 = prefix01 = send01 = action01 = 
-                scxmlinitialattr = scxmlWithInvalidElems = null;
+                scxmlinitialattr = scxmlWithInvalidElems = groovyClosure = null;
         scxml = null;
         scxmlAsString = null;
     }
@@ -308,6 +311,18 @@ public class SCXMLReaderTest {
         assertNotContainsRecordedLogMessage("Ignoring unknown or invalid element <baddata> in namespace \"http://www.example.com/scxml\" as child  of <datamodel>");
         assertNotContainsRecordedLogMessage("Ignoring unknown or invalid element <trace> in namespace \"http://www.w3.org/2005/07/scxml\" as child  of <onentry>");
         assertNotContainsRecordedLogMessage("Ignoring unknown or invalid element <onbeforeexit> in namespace \"http://www.w3.org/2005/07/scxml\" as child  of <final>");
+    }
+
+    @Test
+    public void testSCXMLReaderGroovyClosure() throws Exception {
+        scxml = SCXMLTestHelper.parse(groovyClosure);
+        Assert.assertNotNull(scxml);
+        Assert.assertNotNull(scxml.getInitialScript());
+        scxmlAsString = serialize(scxml);
+        Assert.assertNotNull(scxmlAsString);
+        scxml = SCXMLTestHelper.parse(new StringReader(scxmlAsString), null);
+        Assert.assertNotNull(scxml);
+        Assert.assertNotNull(scxml.getInitialScript());
     }
 
     private String serialize(final SCXML scxml) throws IOException, XMLStreamException {
