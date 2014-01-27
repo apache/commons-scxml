@@ -32,7 +32,7 @@ import org.junit.Test;
 public class ScxmlInitialAttributeTest {
 
     private static final String SCXML_WITH_LEGAL_INITIAL =
-            "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" initial=\"s1\">\n" +
+            "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" version=\"1.0\" initial=\"s1\">\n" +
             "  <state id=\"s1\">\n" +
             "    <transition event=\"end\" target=\"fine\" />\n" +
             "  </state>\n" +
@@ -40,7 +40,7 @@ public class ScxmlInitialAttributeTest {
             "</scxml>";
 
     private static final String SCXML_WITH_NO_INITIAL =
-            "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\">\n" +
+            "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" version=\"1.0\">\n" +
             "  <state id=\"s1\">\n" +
             "    <transition event=\"end\" target=\"fine\" />\n" +
             "  </state>\n" +
@@ -48,7 +48,7 @@ public class ScxmlInitialAttributeTest {
             "</scxml>";
 
     private static final String SCXML_WITH_ILLEGAL_INITIAL =
-            "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" initial=\"nonexisting\">\n" +
+            "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" version=\"1.0\" initial=\"nonexisting\">\n" +
             "  <state id=\"s1\">\n" +
             "    <transition event=\"end\" target=\"fine\" />\n" +
             "  </state>\n" +

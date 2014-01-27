@@ -49,6 +49,7 @@ import javax.xml.validation.Validator;
 
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml2.PathResolver;
+import org.apache.commons.scxml2.SCXMLHelper;
 import org.apache.commons.scxml2.env.SimpleErrorHandler;
 import org.apache.commons.scxml2.env.URLResolver;
 import org.apache.commons.scxml2.model.Action;
@@ -125,6 +126,10 @@ public final class SCXMLReader {
         "http://commons.apache.org/scxml";
 
     /**
+     * The version attribute value the SCXML element <em>must</em> have as stated by the spec: 3.2.1
+     */
+    private static final String SCXML_REQUIRED_VERSION = "1.0";
+    /**
      * The default namespace for attributes.
      */
     private static final String XMLNS_DEFAULT = null;
@@ -190,6 +195,22 @@ public final class SCXMLReader {
      */
     private static final String ERR_STATE_SRC_FRAGMENT_TARGET = "URI Fragment"
         + " in <state src=\"{0}\"> does not point to a <state> or <final>";
+
+    /**
+     * Error message when the target of the URI fragment in a &lt;state&gt;'s
+     * &quot;src&quot; attribute is not a &lt;state&gt; or &lt;final&gt; in
+     * the referenced document.
+     */
+    private static final String ERR_REQUIRED_ATTRIBUTE_MISSING = "<{0}> is missing"
+            +" required attribute \"{1}\" value at {2}";
+
+    /**
+     * Error message when the target of the URI fragment in a &lt;state&gt;'s
+     * &quot;src&quot; attribute is not a &lt;state&gt; or &lt;final&gt; in
+     * the referenced document.
+     */
+    private static final String ERR_INVALID_VERSION = "The <scxml> element defines"
+            +" an unsupported version \"{0}\", only version \"1.0\" is supported.";
 
     //--------------------------- XML VOCABULARY ---------------------------//
     //---- ELEMENT NAMES ----//
@@ -584,7 +605,10 @@ public final class SCXMLReader {
         scxml.setInitial(readAV(reader, ATTR_INITIAL));
         scxml.setName(readAV(reader, ATTR_NAME));
         scxml.setProfile(readAV(reader, ATTR_PROFILE));
-        scxml.setVersion(readAV(reader, ATTR_VERSION));
+        scxml.setVersion(readRequiredAV(reader, ELEM_SCXML, ATTR_VERSION));
+        if (!SCXML_REQUIRED_VERSION.equals(scxml.getVersion())) {
+            throw new ModelException(new MessageFormat(ERR_INVALID_VERSION).format(new Object[] {scxml.getVersion()}));
+        }
         readNamespaces(configuration, scxml);
 
         boolean hasInitialScript = false;
@@ -1067,10 +1091,10 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readData(final XMLStreamReader reader, final Configuration configuration, final Datamodel dm)
-    throws XMLStreamException {
+    throws XMLStreamException, ModelException {
 
         Data datum = new Data();
-        datum.setId(readAV(reader, ATTR_ID));
+        datum.setId(readRequiredAV(reader, ELEM_DATA, ATTR_ID));
         datum.setExpr(readAV(reader, ATTR_EXPR));
         readNamespaces(configuration, datum);
         datum.setNode(readNode(reader, configuration, XMLNS_SCXML, ELEM_DATA, new String[] {"id"}));
@@ -1147,10 +1171,10 @@ public final class SCXMLReader {
      */
     private static void readParam(final XMLStreamReader reader, final Configuration configuration,
             final Invoke parent)
-    throws XMLStreamException {
+    throws XMLStreamException, ModelException {
 
         Param param = new Param();
-        param.setName(readAV(reader, ATTR_NAME));
+        param.setName(readRequiredAV(reader, ELEM_PARAM, ATTR_NAME));
         param.setExpr(readAV(reader, ATTR_EXPR));
         readNamespaces(configuration, param);
         parent.addParam(param);
@@ -1527,7 +1551,7 @@ public final class SCXMLReader {
     throws XMLStreamException, ModelException {
 
         If iff = new If();
-        iff.setCond(readAV(reader, ATTR_COND));
+        iff.setCond(readRequiredAV(reader, ELEM_IF, ATTR_COND));
         readNamespaces(configuration, iff);
         iff.setParent(executable);
         if (parent != null) {
@@ -1552,10 +1576,10 @@ public final class SCXMLReader {
      */
     private static void readElseIf(final XMLStreamReader reader, final Configuration configuration,
             final TransitionTarget tt, final Executable executable, final If iff)
-    throws XMLStreamException {
+    throws XMLStreamException, ModelException {
 
         ElseIf elseif = new ElseIf();
-        elseif.setCond(readAV(reader, ATTR_COND));
+        elseif.setCond(readRequiredAV(reader, ELEM_ELSEIF, ATTR_COND));
         readNamespaces(configuration, elseif);
         elseif.setParent(executable);
         iff.addAction(elseif);
@@ -1625,12 +1649,19 @@ public final class SCXMLReader {
      */
     private static void readAssign(final XMLStreamReader reader, final Configuration configuration,
             final TransitionTarget tt, final Executable executable, final If iff)
-    throws XMLStreamException {
+    throws XMLStreamException, ModelException {
 
         Assign assign = new Assign();
         assign.setExpr(readAV(reader, ATTR_EXPR));
-        assign.setLocation(readAV(reader, ATTR_LOCATION));
         assign.setName(readAV(reader, ATTR_NAME));
+        if (SCXMLHelper.isStringEmpty(assign.getName())) {
+            // if custom attribute name not specified or empty, enforce location attribute to be specified
+            assign.setLocation(readRequiredAV(reader, ELEM_ASSIGN, ATTR_LOCATION));
+        }
+        else {
+            assign.setLocation(readAV(reader, ATTR_LOCATION));
+        }
+        assign.setLocation(readAV(reader, ATTR_LOCATION));
         assign.setSrc(readAV(reader, ATTR_SRC));
         assign.setPathResolver(configuration.pathResolver);
         readNamespaces(configuration, assign);
@@ -2097,6 +2128,27 @@ public final class SCXMLReader {
      */
     private static String readAV(final XMLStreamReader reader, final String attrLocalName) {
         return reader.getAttributeValue(XMLNS_DEFAULT, attrLocalName);
+    }
+
+    /**
+     * Get a required attribute value at the current reader location,
+     *
+     * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
+     * @param elementName The name of the element for which the attribute value is needed.
+     * @param attrLocalName The attribute name whose value is needed.
+     *
+     * @return The value of the attribute.
+     * @throws ModelException When the required attribute is missing or empty.
+     */
+    private static String readRequiredAV(final XMLStreamReader reader, final String elementName, final String attrLocalName)
+            throws ModelException {
+        String value = reader.getAttributeValue(XMLNS_DEFAULT, attrLocalName);
+        if (SCXMLHelper.isStringEmpty(value)) {
+            MessageFormat msgFormat = new MessageFormat(ERR_REQUIRED_ATTRIBUTE_MISSING);
+            String errMsg = msgFormat.format(new Object[] {elementName, attrLocalName, reader.getLocation()});
+            throw new ModelException(errMsg);
+        }
+        return value;
     }
 
     /**
