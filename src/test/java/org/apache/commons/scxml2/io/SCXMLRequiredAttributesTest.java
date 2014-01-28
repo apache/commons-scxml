@@ -37,7 +37,6 @@ import static org.junit.Assert.fail;
  * TODO required attributes for elements:
  * <ul>
  *   <li>&lt;raise&gt; required attribute: 'id'</li>
- *   <li>&lt;foreach&gt; required attributes: 'array' and 'item'</li>
  * </ul>
  * </p>
  */
