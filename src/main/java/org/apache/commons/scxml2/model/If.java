@@ -38,7 +38,7 @@ import org.apache.commons.scxml2.semantics.ErrorConstants;
  * the elements within an &lt;if&gt;.
  *
  */
-public class If extends Action {
+public class If extends Action implements ActionsContainer {
 
     /**
      * Serial version UID.
@@ -69,6 +69,11 @@ public class If extends Action {
         super();
         this.actions = new ArrayList<Action>();
         this.execute = false;
+    }
+
+    @Override
+    public final String getContainerElementName() {
+        return ELEM_IF;
     }
 
     /**

@@ -55,6 +55,7 @@ import org.apache.commons.scxml2.model.Exit;
 import org.apache.commons.scxml2.model.ExternalContent;
 import org.apache.commons.scxml2.model.Final;
 import org.apache.commons.scxml2.model.Finalize;
+import org.apache.commons.scxml2.model.Foreach;
 import org.apache.commons.scxml2.model.History;
 import org.apache.commons.scxml2.model.If;
 import org.apache.commons.scxml2.model.Initial;
@@ -141,6 +142,7 @@ public class SCXMLWriter {
     private static final String ELEM_IF = "if";
     private static final String ELEM_INITIAL = "initial";
     private static final String ELEM_INVOKE = "invoke";
+    private static final String ELEM_FOREACH = "foreach";
     private static final String ELEM_LOG = "log";
     private static final String ELEM_ONENTRY = "onentry";
     private static final String ELEM_ONEXIT = "onexit";
@@ -155,6 +157,7 @@ public class SCXMLWriter {
     private static final String ELEM_VAR = "var";
 
     //---- ATTRIBUTE NAMES ----//
+    private static final String ATTR_ARRAY = "array";
     private static final String ATTR_COND = "cond";
     private static final String ATTR_DELAY = "delay";
     private static final String ATTR_EVENT = "event";
@@ -163,7 +166,9 @@ public class SCXMLWriter {
     private static final String ATTR_FINAL = "final";
     private static final String ATTR_HINTS = "hints";
     private static final String ATTR_ID = "id";
+    private static final String ATTR_INDEX = "index";
     private static final String ATTR_INITIAL = "initial";
+    private static final String ATTR_ITEM = "item";
     private static final String ATTR_LABEL = "label";
     private static final String ATTR_LOCATION = "location";
     private static final String ATTR_NAME = "name";
@@ -792,6 +797,8 @@ public class SCXMLWriter {
                 writer.writeStartElement(XMLNS_SCXML, ELEM_CANCEL);
                 writeAV(writer, ATTR_SENDID, c.getSendid());
                 writer.writeEndElement();
+            } else if (a instanceof Foreach) {
+                writeForeach(writer, (Foreach) a);
             } else if (a instanceof Log) {
                 Log lg = (Log) a;
                 writer.writeStartElement(XMLNS_SCXML, ELEM_LOG);
@@ -874,8 +881,27 @@ public class SCXMLWriter {
     throws XMLStreamException {
 
         writer.writeStartElement(ELEM_IF);
-        writeAV(writer, ATTR_COND, iff.getCond());
+        writeAV(writer, ATTR_COND, SCXMLHelper.escapeXML(iff.getCond()));
         writeExecutableContent(writer, iff.getActions());
+        writer.writeEndElement();
+    }
+
+    /**
+     * Write out this {@link Foreach} object into its serialization as the corresponding &lt;foreach&gt; element.
+     *
+     * @param writer The {@link XMLStreamWriter} in use for the serialization.
+     * @param foreach The {@link If} to serialize.
+     *
+     * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
+     */
+    private static void writeForeach(final XMLStreamWriter writer, final Foreach foreach)
+            throws XMLStreamException {
+
+        writer.writeStartElement(ELEM_FOREACH);
+        writeAV(writer, ATTR_ITEM, foreach.getItem());
+        writeAV(writer, ATTR_INDEX, foreach.getIndex());
+        writeAV(writer, ATTR_ARRAY, SCXMLHelper.escapeXML(foreach.getArray()));
+        writeExecutableContent(writer, foreach.getActions());
         writer.writeEndElement();
     }
 

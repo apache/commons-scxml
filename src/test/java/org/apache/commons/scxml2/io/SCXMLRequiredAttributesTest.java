@@ -130,6 +130,36 @@ public class SCXMLRequiredAttributesTest {
                     "  <final id=\"fine\"/>\n" +
                     "</scxml>";
 
+    private static final String SCXML_WITH_MISSING_FOREACH_ARRAY =
+            "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" version=\"1.0\">\n" +
+                    "  <state id=\"s1\">\n" +
+                    "    <transition target=\"fine\">\n" +
+                    "      <foreach item=\"y\"></foreach>\n" +
+                    "    </transition>\n" +
+                    "  </state>\n" +
+                    "  <final id=\"fine\"/>\n" +
+                    "</scxml>";
+
+    private static final String SCXML_WITH_MISSING_FOREACH_ITEM =
+            "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" version=\"1.0\">\n" +
+                    "  <state id=\"s1\">\n" +
+                    "    <transition target=\"fine\">\n" +
+                    "      <foreach array=\"[1,2]\"></foreach>\n" +
+                    "    </transition>\n" +
+                    "  </state>\n" +
+                    "  <final id=\"fine\"/>\n" +
+                    "</scxml>";
+
+    private static final String SCXML_WITH_FOREACH =
+            "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" version=\"1.0\">\n" +
+                    "  <state id=\"s1\">\n" +
+                    "    <transition target=\"fine\">\n" +
+                    "      <foreach array=\"[1,2]\" item=\"x\"></foreach>\n" +
+                    "    </transition>\n" +
+                    "  </state>\n" +
+                    "  <final id=\"fine\"/>\n" +
+                    "</scxml>";
+
     @Test
     public void testValidSCXML() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse(new StringReader(VALID_SCXML), null);
@@ -228,6 +258,36 @@ public class SCXMLRequiredAttributesTest {
         SCXML scxml = SCXMLTestHelper.parse(new StringReader(SCXML_WITH_PARAM_AND_NAME), null);
         assertNotNull(scxml);
         // Note: cannot execute this instance without providing proper <invoke> src attribute
+    }
+
+    @Test
+    public void testSCXMLMissingForeachArray() throws Exception {
+        try {
+            SCXMLTestHelper.parse(new StringReader(SCXML_WITH_MISSING_FOREACH_ARRAY), null);
+            fail("SCXML reading should have failed due to missing foreach array in SCXML");
+        }
+        catch (ModelException e) {
+            assertTrue(e.getMessage().startsWith("<foreach> is missing required attribute \"array\" value"));
+        }
+    }
+
+    @Test
+    public void testSCXMLMissingForeachItem() throws Exception {
+        try {
+            SCXMLTestHelper.parse(new StringReader(SCXML_WITH_MISSING_FOREACH_ITEM), null);
+            fail("SCXML reading should have failed due to missing foreach item in SCXML");
+        }
+        catch (ModelException e) {
+            assertTrue(e.getMessage().startsWith("<foreach> is missing required attribute \"item\" value"));
+        }
+    }
+
+    @Test
+    public void testSCXMLWithForEach() throws Exception {
+        SCXML scxml = SCXMLTestHelper.parse(new StringReader(SCXML_WITH_FOREACH), null);
+        assertNotNull(scxml);
+        SCXMLExecutor exec = executeSCXML(scxml);
+        assertTrue(exec.getCurrentStatus().isFinal());
     }
 
     private SCXMLExecutor executeSCXML(SCXML scxml) throws Exception {

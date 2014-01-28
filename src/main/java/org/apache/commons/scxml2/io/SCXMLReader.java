@@ -53,6 +53,7 @@ import org.apache.commons.scxml2.SCXMLHelper;
 import org.apache.commons.scxml2.env.SimpleErrorHandler;
 import org.apache.commons.scxml2.env.URLResolver;
 import org.apache.commons.scxml2.model.Action;
+import org.apache.commons.scxml2.model.ActionsContainer;
 import org.apache.commons.scxml2.model.Assign;
 import org.apache.commons.scxml2.model.Cancel;
 import org.apache.commons.scxml2.model.CustomAction;
@@ -66,6 +67,7 @@ import org.apache.commons.scxml2.model.Exit;
 import org.apache.commons.scxml2.model.ExternalContent;
 import org.apache.commons.scxml2.model.Final;
 import org.apache.commons.scxml2.model.Finalize;
+import org.apache.commons.scxml2.model.Foreach;
 import org.apache.commons.scxml2.model.History;
 import org.apache.commons.scxml2.model.If;
 import org.apache.commons.scxml2.model.Initial;
@@ -229,6 +231,7 @@ public final class SCXMLReader {
     private static final String ELEM_IF = "if";
     private static final String ELEM_INITIAL = "initial";
     private static final String ELEM_INVOKE = "invoke";
+    private static final String ELEM_FOREACH = "foreach";
     private static final String ELEM_LOG = "log";
     private static final String ELEM_ONENTRY = "onentry";
     private static final String ELEM_ONEXIT = "onexit";
@@ -243,6 +246,7 @@ public final class SCXMLReader {
     private static final String ELEM_VAR = "var";
 
     //---- ATTRIBUTE NAMES ----//
+    private static final String ATTR_ARRAY = "array";
     private static final String ATTR_COND = "cond";
     private static final String ATTR_DELAY = "delay";
     private static final String ATTR_EVENT = "event";
@@ -251,7 +255,9 @@ public final class SCXMLReader {
     private static final String ATTR_FINAL = "final";
     private static final String ATTR_HINTS = "hints";
     private static final String ATTR_ID = "id";
+    private static final String ATTR_INDEX = "index";
     private static final String ATTR_INITIAL = "initial";
+    private static final String ATTR_ITEM = "item";
     private static final String ATTR_LABEL = "label";
     private static final String ATTR_LOCATION = "location";
     private static final String ATTR_NAME = "name";
@@ -1414,19 +1420,19 @@ public final class SCXMLReader {
      * @param configuration The {@link Configuration} to use while parsing.
      * @param tt The parent {@link TransitionTarget} for this executable content.
      * @param executable The parent {@link Executable} to which this content belongs.
-     * @param iff The optional parent {@link If} if this is child content of an if action.
+     * @param parent The optional parent {@link ActionsContainer} if this is child content of an ActionsContainer action.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
      *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readExecutableContext(final XMLStreamReader reader, final Configuration configuration,
-            final TransitionTarget tt, final Executable executable, final If iff)
+            final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
     throws XMLStreamException, ModelException {
 
         String end = "";
-        if (iff != null) {
-            end = ELEM_IF;
+        if (parent != null) {
+            end = parent.getContainerElementName();
         } else if (executable instanceof Transition) {
             end = ELEM_TRANSITION;
         } else if (executable instanceof OnEntry) {
@@ -1446,33 +1452,35 @@ public final class SCXMLReader {
                     name = reader.getLocalName();
                     if (XMLNS_SCXML.equals(nsURI)) {
                         if (ELEM_EVENT.equals(name)) {
-                            readEvent(reader, configuration, tt, executable, iff);
+                            readEvent(reader, configuration, tt, executable, parent);
+                        } else if (ELEM_FOREACH.equals(name)) {
+                            readForeach(reader, configuration, tt, executable, parent);
                         } else if (ELEM_IF.equals(name)) {
-                            readIf(reader, configuration, tt, executable, iff);
+                            readIf(reader, configuration, tt, executable, parent);
                         } else if (ELEM_LOG.equals(name)) {
-                            readLog(reader, configuration, tt, executable, iff);
+                            readLog(reader, configuration, tt, executable, parent);
                         } else if (ELEM_ASSIGN.equals(name)) {
-                            readAssign(reader, configuration, tt, executable, iff);
+                            readAssign(reader, configuration, tt, executable, parent);
                         } else if (ELEM_VALIDATE.equals(name)) {
-                            readValidate(reader, configuration, tt, executable, iff);
+                            readValidate(reader, configuration, tt, executable, parent);
                         } else if (ELEM_SEND.equals(name)) {
-                            readSend(reader, configuration, tt, executable, iff);
+                            readSend(reader, configuration, tt, executable, parent);
                         } else if (ELEM_CANCEL.equals(name)) {
-                            readCancel(reader, configuration, tt, executable, iff);
+                            readCancel(reader, configuration, tt, executable, parent);
                         } else if (ELEM_SCRIPT.equals(name)) {
-                            readScript(reader, configuration, tt, executable, iff);
+                            readScript(reader, configuration, tt, executable, parent);
                         } else if (ELEM_IF.equals(end) && ELEM_ELSEIF.equals(name)) {
-                            readElseIf(reader, configuration, tt, executable, iff);
+                            readElseIf(reader, configuration, tt, executable, (If) parent);
                         } else if (ELEM_IF.equals(end) && ELEM_ELSE.equals(name)) {
-                            readElse(reader, configuration, tt, executable, iff);
+                            readElse(reader, configuration, tt, executable, (If)parent);
                         } else {
                             reportIgnoredElement(reader, configuration, end, nsURI, name);
                         }
                     } else if (XMLNS_COMMONS_SCXML.equals(nsURI)) {
                         if (ELEM_VAR.equals(name)) {
-                            readVar(reader, configuration, tt, executable, iff);
+                            readVar(reader, configuration, tt, executable, parent);
                         } else if (ELEM_EXIT.equals(name)) {
-                            readExit(reader, configuration, tt, executable, iff);
+                            readExit(reader, configuration, tt, executable, parent);
                         } else {
                             reportIgnoredElement(reader, configuration, end, nsURI, name);
                         }
@@ -1486,7 +1494,7 @@ public final class SCXMLReader {
                             }
                         }
                         if (customAction != null) {
-                            readCustomAction(reader, configuration, customAction, tt, executable, iff);
+                            readCustomAction(reader, configuration, customAction, tt, executable, parent);
                         } else {
                             reportIgnoredElement(reader, configuration, end, nsURI, name);
                         }
@@ -1513,20 +1521,20 @@ public final class SCXMLReader {
      * @param configuration The {@link Configuration} to use while parsing.
      * @param tt The parent {@link TransitionTarget} for this action.
      * @param executable The parent {@link Executable} for this action.
-     * @param iff The optional parent {@link If} if this action is a child of one.
+     * @param parent The optional parent {@link ActionsContainer} if this action is a child of one.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readEvent(final XMLStreamReader reader, final Configuration configuration,
-            final TransitionTarget tt, final Executable executable, final If iff)
+            final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
     throws XMLStreamException {
 
         Event event = new Event();
         event.setName(readAV(reader, ATTR_NAME));
         readNamespaces(configuration, event);
         event.setParent(executable);
-        if (iff != null) {
-            iff.addAction(event);
+        if (parent != null) {
+            parent.addAction(event);
         } else {
             executable.addAction(event);
         }
@@ -1540,14 +1548,14 @@ public final class SCXMLReader {
      * @param configuration The {@link Configuration} to use while parsing.
      * @param tt The parent {@link TransitionTarget} for this action.
      * @param executable The parent {@link Executable} for this action.
-     * @param parent The optional parent {@link If} if this &lt;if&gt; is a child of another.
+     * @param parent The optional parent {@link ActionsContainer} if this &lt;if&gt; is a child of one.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
      *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readIf(final XMLStreamReader reader, final Configuration configuration,
-            final TransitionTarget tt, final Executable executable, final If parent)
+            final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
     throws XMLStreamException, ModelException {
 
         If iff = new If();
@@ -1609,18 +1617,50 @@ public final class SCXMLReader {
     }
 
     /**
+     * Read the contents of this &lt;foreach&gt; element.
+     *
+     * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
+     * @param configuration The {@link Configuration} to use while parsing.
+     * @param tt The parent {@link TransitionTarget} for this action.
+     * @param executable The parent {@link Executable} for this action.
+     * @param parent The optional parent {@link ActionsContainer} if this &lt;foreach&gt; is a child of one.
+     *
+     * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
+     * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
+     *                        errors in the SCXML document that may not be identified by the schema).
+     */
+    private static void readForeach(final XMLStreamReader reader, final Configuration configuration,
+                                    final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
+            throws XMLStreamException, ModelException {
+
+        Foreach fe = new Foreach();
+        fe.setArray(readRequiredAV(reader, ELEM_FOREACH, ATTR_ARRAY));
+        fe.setItem(readRequiredAV(reader, ELEM_FOREACH, ATTR_ITEM));
+        fe.setIndex(readAV(reader, ATTR_INDEX));
+        readNamespaces(configuration, fe);
+        fe.setParent(executable);
+        if (parent != null) {
+            parent.addAction(fe);
+        } else {
+            executable.addAction(fe);
+        }
+        readExecutableContext(reader, configuration, tt, executable, fe);
+
+    }
+
+    /**
      * Read the contents of this &lt;log&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
      * @param tt The parent {@link TransitionTarget} for this action.
      * @param executable The parent {@link Executable} for this action.
-     * @param iff The optional parent {@link If} if this action is a child of one.
+     * @param parent The optional parent {@link ActionsContainer} if this action is a child of one.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readLog(final XMLStreamReader reader, final Configuration configuration,
-            final TransitionTarget tt, final Executable executable, final If iff)
+            final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
     throws XMLStreamException {
 
         Log log = new Log();
@@ -1628,8 +1668,8 @@ public final class SCXMLReader {
         log.setLabel(readAV(reader, ATTR_LABEL));
         readNamespaces(configuration, log);
         log.setParent(executable);
-        if (iff != null) {
-            iff.addAction(log);
+        if (parent != null) {
+            parent.addAction(log);
         } else {
             executable.addAction(log);
         }
@@ -1643,31 +1683,30 @@ public final class SCXMLReader {
      * @param configuration The {@link Configuration} to use while parsing.
      * @param tt The parent {@link TransitionTarget} for this action.
      * @param executable The parent {@link Executable} for this action.
-     * @param iff The optional parent {@link If} if this action is a child of one.
+     * @param parent The optional parent {@link ActionsContainer} if this action is a child of one.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readAssign(final XMLStreamReader reader, final Configuration configuration,
-            final TransitionTarget tt, final Executable executable, final If iff)
+            final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
     throws XMLStreamException, ModelException {
 
         Assign assign = new Assign();
         assign.setExpr(readAV(reader, ATTR_EXPR));
         assign.setName(readAV(reader, ATTR_NAME));
-        if (SCXMLHelper.isStringEmpty(assign.getName())) {
-            // if custom attribute name not specified or empty, enforce location attribute to be specified
-            assign.setLocation(readRequiredAV(reader, ELEM_ASSIGN, ATTR_LOCATION));
-        }
-        else {
+        if (assign.getName() != null && assign.getName().trim().length() > 0) {
+            // if 'non-standard' name attribute is defined, don't require location (as per the spec. 20130831)
             assign.setLocation(readAV(reader, ATTR_LOCATION));
         }
-        assign.setLocation(readAV(reader, ATTR_LOCATION));
+        else {
+            assign.setLocation(readRequiredAV(reader, ELEM_ASSIGN, ATTR_LOCATION));
+        }
         assign.setSrc(readAV(reader, ATTR_SRC));
         assign.setPathResolver(configuration.pathResolver);
         readNamespaces(configuration, assign);
         assign.setParent(executable);
-        if (iff != null) {
-            iff.addAction(assign);
+        if (parent != null) {
+            parent.addAction(assign);
         } else {
             executable.addAction(assign);
         }
@@ -1681,12 +1720,12 @@ public final class SCXMLReader {
      * @param configuration The {@link Configuration} to use while parsing.
      * @param tt The parent {@link TransitionTarget} for this action.
      * @param executable The parent {@link Executable} for this action.
-     * @param iff The optional parent {@link If} if this action is a child of one.
+     * @param parent The optional parent {@link ActionsContainer} if this action is a child of one.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readValidate(final XMLStreamReader reader, final Configuration configuration,
-            final TransitionTarget tt, final Executable executable, final If iff)
+            final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
     throws XMLStreamException {
 
         // TODO validate support
@@ -1700,12 +1739,12 @@ public final class SCXMLReader {
      * @param configuration The {@link Configuration} to use while parsing.
      * @param tt The parent {@link TransitionTarget} for this action.
      * @param executable The parent {@link Executable} for this action.
-     * @param iff The optional parent {@link If} if this action is a child of one.
+     * @param parent The optional parent {@link ActionsContainer} if this action is a child of one.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readSend(final XMLStreamReader reader, final Configuration configuration,
-            final TransitionTarget tt, final Executable executable, final If iff)
+            final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
     throws XMLStreamException {
 
         Send send = new Send();
@@ -1726,8 +1765,8 @@ public final class SCXMLReader {
         }
 
         send.setParent(executable);
-        if (iff != null) {
-            iff.addAction(send);
+        if (parent != null) {
+            parent.addAction(send);
         } else {
             executable.addAction(send);
         }
@@ -1741,19 +1780,19 @@ public final class SCXMLReader {
      * @param configuration The {@link Configuration} to use while parsing.
      * @param tt The parent {@link TransitionTarget} for this action.
      * @param executable The parent {@link Executable} for this action.
-     * @param iff The optional parent {@link If} if this action is a child of one.
+     * @param parent The optional parent {@link ActionsContainer} if this action is a child of one.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readCancel(final XMLStreamReader reader, final Configuration configuration,
-            final TransitionTarget tt, final Executable executable, final If iff)
+            final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
     throws XMLStreamException {
 
         Cancel cancel = new Cancel();
         readNamespaces(configuration, cancel);
         cancel.setParent(executable);
-        if (iff != null) {
-            iff.addAction(cancel);
+        if (parent != null) {
+            parent.addAction(cancel);
         } else {
             executable.addAction(cancel);
         }
@@ -1767,20 +1806,20 @@ public final class SCXMLReader {
      * @param configuration The {@link Configuration} to use while parsing.
      * @param tt The parent {@link TransitionTarget} for this action.
      * @param executable The parent {@link Executable} for this action.
-     * @param iff The optional parent {@link If} if this action is a child of one.
+     * @param parent The optional parent {@link ActionsContainer} if this action is a child of one.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readScript(final XMLStreamReader reader, final Configuration configuration,
-            final TransitionTarget tt, final Executable executable, final If iff)
+            final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
     throws XMLStreamException {
 
         Script script = new Script();
         readNamespaces(configuration, script);
         script.setBody(readBody(reader, configuration, XMLNS_SCXML, ELEM_SCRIPT));
         script.setParent(executable);
-        if (iff != null) {
-            iff.addAction(script);
+        if (parent != null) {
+            parent.addAction(script);
         } else {
             executable.addAction(script);
         }
@@ -1821,12 +1860,12 @@ public final class SCXMLReader {
      * @param configuration The {@link Configuration} to use while parsing.
      * @param tt The parent {@link TransitionTarget} for this action.
      * @param executable The parent {@link Executable} for this action.
-     * @param iff The optional parent {@link If} if this action is a child of one.
+     * @param parent The optional parent {@link ActionsContainer} if this action is a child of one.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readVar(final XMLStreamReader reader, final Configuration configuration,
-            final TransitionTarget tt, final Executable executable, final If iff)
+            final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
     throws XMLStreamException {
 
         Var var = new Var();
@@ -1834,8 +1873,8 @@ public final class SCXMLReader {
         var.setExpr(readAV(reader, ATTR_EXPR));
         readNamespaces(configuration, var);
         var.setParent(executable);
-        if (iff != null) {
-            iff.addAction(var);
+        if (parent != null) {
+            parent.addAction(var);
         } else {
             executable.addAction(var);
         }
@@ -1850,19 +1889,19 @@ public final class SCXMLReader {
      * @param configuration The {@link Configuration} to use while parsing.
      * @param tt The parent {@link TransitionTarget} for this action.
      * @param executable The parent {@link Executable} for this action.
-     * @param iff The optional parent {@link If} if this action is a child of one.
+     * @param parent The optional parent {@link ActionsContainer} if this action is a child of one.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readExit(final XMLStreamReader reader, final Configuration configuration,
-            final TransitionTarget tt, final Executable executable, final If iff)
+            final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
     throws XMLStreamException {
 
         Exit exit = new Exit();
         readNamespaces(configuration, exit);
         exit.setParent(executable);
-        if (iff != null) {
-            iff.addAction(exit);
+        if (parent != null) {
+            parent.addAction(exit);
         } else {
             executable.addAction(exit);
         }
@@ -1877,13 +1916,13 @@ public final class SCXMLReader {
      * @param customAction The {@link CustomAction} to read.
      * @param tt The parent {@link TransitionTarget} for this custom action.
      * @param executable The parent {@link Executable} for this custom action.
-     * @param iff The optional parent {@link If} if this custom action is a child of one.
+     * @param parent The optional parent {@link ActionsContainer} if this custom action is a child of one.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readCustomAction(final XMLStreamReader reader, final Configuration configuration,
             final CustomAction customAction, final TransitionTarget tt, final Executable executable,
-            final If iff)
+            final ActionsContainer parent)
     throws XMLStreamException {
 
         // Instantiate custom action
@@ -1947,8 +1986,8 @@ public final class SCXMLReader {
         // Wire in the action and add to parent
         readNamespaces(configuration, action);
         action.setParent(executable);
-        if (iff != null) {
-            iff.addAction(action);
+        if (parent != null) {
+            parent.addAction(action);
         } else {
             executable.addAction(action);
         }
@@ -2707,8 +2746,6 @@ public final class SCXMLReader {
         public void setStrict(boolean strict) {
             this.strict = strict;
         }
-
     }
-
 }
 
