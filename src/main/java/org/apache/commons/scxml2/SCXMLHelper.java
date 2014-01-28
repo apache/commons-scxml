@@ -485,9 +485,6 @@ public final class SCXMLHelper {
                 case '&':
                     entityName = "amp";
                     break;
-                case '\'':
-                    entityName = "apos";
-                    break;
                 case '<':
                     entityName = "lt";
                     break;
