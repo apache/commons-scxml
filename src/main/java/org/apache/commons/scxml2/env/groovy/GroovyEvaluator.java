@@ -104,7 +104,7 @@ public class GroovyEvaluator implements Evaluator, Serializable {
      */
     protected GroovyExtendableScriptCache newScriptCache() {
         GroovyExtendableScriptCache scriptCache = new GroovyExtendableScriptCache();
-        scriptCache.setScriptPreProcessor(scriptPreProcessor);
+        scriptCache.setScriptPreProcessor(getScriptPreProcessor());
         scriptCache.setScriptBaseClass(GroovySCXMLScript.class.getName());
         return scriptCache;
     }
