@@ -43,10 +43,9 @@ public class GroovyContextTest {
     
     @Test
     public void testSetVars() {
-        Map<String, Object> m = new HashMap<String, Object>();
-        m.put("foo", "bar");
-        GroovyContext ctx = new GroovyContext(m, null);
+        GroovyContext ctx = new GroovyContext();
         Assert.assertNotNull(ctx);
+        ctx.set("foo", "bar");
         Assert.assertEquals(1, ctx.getVars().size());
         String fooValue = (String) ctx.get("foo");
         Assert.assertEquals("bar", fooValue);
