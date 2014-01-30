@@ -229,7 +229,7 @@ public class GroovyEvaluator implements Evaluator, Serializable {
             effective.setEvaluatingLocation(true);
             boolean isInitialScript =  groovyCtx.getParent() != null &&
                     groovyCtx.getParent().getParent() == null &&
-                    scriptCache.isEmpty();
+                    groovyCtx.getScriptBaseClass() == null;
             Script script = getScript(effective, groovyCtx.getScriptBaseClass(), scriptSource);
             Object result = script.run();
             if (isInitialScript && useInitialScriptAsBaseScript) {
