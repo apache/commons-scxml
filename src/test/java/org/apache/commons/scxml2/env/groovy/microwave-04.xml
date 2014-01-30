@@ -63,7 +63,7 @@
         </state>
 
         <state id="cooking">
-          <transition cond="not In('closed')" target="idle"/>
+          <transition cond="!In('closed')" target="idle"/>
 
           <transition event="time" target="cooking">
             <assign name="timer" expr="timer + 1"/>
