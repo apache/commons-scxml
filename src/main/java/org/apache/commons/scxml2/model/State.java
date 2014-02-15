@@ -38,12 +38,6 @@ public class State extends TransitionTarget {
     private Map<String, TransitionTarget> children;
 
     /**
-     * The Parallel child, which defines a set of parallel substates.
-     * May occur 0 or 1 times. Incompatible with the state or invoke property.
-     */
-    private Parallel parallel;
-
-    /**
      * The Invoke child, which defines an external process that should
      * be invoked, immediately after the onentry executable content,
      * and the transitions become candidates after the invoked
@@ -190,10 +184,7 @@ public class State extends TransitionTarget {
      * @return true if this is a simple state, otherwise false
      */
     public final boolean isSimple() {
-        if (parallel == null && children.isEmpty()) {
-            return true;
-        }
-        return false;
+        return children.isEmpty();
     }
 
     /**
@@ -202,10 +193,7 @@ public class State extends TransitionTarget {
      * @return true if this is a composite state, otherwise false
      */
     public final boolean isComposite() {
-        if (parallel == null && children.isEmpty()) {
-            return false;
-        }
-        return true;
+        return !children.isEmpty();
     }
 
     /**
@@ -216,10 +204,7 @@ public class State extends TransitionTarget {
      * @see Parallel
      */
     public final boolean isRegion() {
-        if (getParent() instanceof Parallel) {
-            return true;
-        }
-        return false;
+        return getParent() instanceof  Parallel;
     }
 
 }
