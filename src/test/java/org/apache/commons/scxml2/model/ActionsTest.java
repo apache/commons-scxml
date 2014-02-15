@@ -31,7 +31,6 @@ import org.junit.Test;
  * Unit tests {@link org.apache.commons.scxml2.model.Cancel}.
  * Unit tests {@link org.apache.commons.scxml2.model.Else}.
  * Unit tests {@link org.apache.commons.scxml2.model.ElseIf}.
- * Unit tests {@link org.apache.commons.scxml2.model.Exit}.
  * Unit tests {@link org.apache.commons.scxml2.model.If}.
  * Unit tests {@link org.apache.commons.scxml2.model.Log}.
  * Unit tests {@link org.apache.commons.scxml2.model.Send}.

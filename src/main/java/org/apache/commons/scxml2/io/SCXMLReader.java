@@ -63,7 +63,6 @@ import org.apache.commons.scxml2.model.Else;
 import org.apache.commons.scxml2.model.ElseIf;
 import org.apache.commons.scxml2.model.Raise;
 import org.apache.commons.scxml2.model.Executable;
-import org.apache.commons.scxml2.model.Exit;
 import org.apache.commons.scxml2.model.ExternalContent;
 import org.apache.commons.scxml2.model.Final;
 import org.apache.commons.scxml2.model.Finalize;
@@ -224,7 +223,6 @@ public final class SCXMLReader {
     private static final String ELEM_ELSE = "else";
     private static final String ELEM_ELSEIF = "elseif";
     private static final String ELEM_RAISE = "raise";
-    private static final String ELEM_EXIT = "exit";
     private static final String ELEM_FINAL = "final";
     private static final String ELEM_FINALIZE = "finalize";
     private static final String ELEM_HISTORY = "history";
@@ -1479,8 +1477,6 @@ public final class SCXMLReader {
                     } else if (XMLNS_COMMONS_SCXML.equals(nsURI)) {
                         if (ELEM_VAR.equals(name)) {
                             readVar(reader, configuration, tt, executable, parent);
-                        } else if (ELEM_EXIT.equals(name)) {
-                            readExit(reader, configuration, tt, executable, parent);
                         } else {
                             reportIgnoredElement(reader, configuration, end, nsURI, name);
                         }
@@ -1893,33 +1889,6 @@ public final class SCXMLReader {
             parent.addAction(var);
         } else {
             executable.addAction(var);
-        }
-
-    }
-
-    // TODO Remove <exit> support
-    /**
-     * Read the contents of this &lt;exit&gt; element.
-     *
-     * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
-     * @param configuration The {@link Configuration} to use while parsing.
-     * @param tt The parent {@link TransitionTarget} for this action.
-     * @param executable The parent {@link Executable} for this action.
-     * @param parent The optional parent {@link ActionsContainer} if this action is a child of one.
-     *
-     * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
-     */
-    private static void readExit(final XMLStreamReader reader, final Configuration configuration,
-            final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
-    throws XMLStreamException {
-
-        Exit exit = new Exit();
-        readNamespaces(configuration, exit);
-        exit.setParent(executable);
-        if (parent != null) {
-            parent.addAction(exit);
-        } else {
-            executable.addAction(exit);
         }
 
     }

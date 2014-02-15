@@ -41,8 +41,6 @@
         <cancel sendId="send12345"/>
         <log expr="leaving" label="entry001" />
         <raise event="event.test"/>
-        <!-- exit will be ignored, makes little sense in initial -->
-        <cs:exit expr="later" namelist="freddy" />
       </transition>
     </initial>
 

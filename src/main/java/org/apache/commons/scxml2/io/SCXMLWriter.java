@@ -51,7 +51,6 @@ import org.apache.commons.scxml2.model.Datamodel;
 import org.apache.commons.scxml2.model.Else;
 import org.apache.commons.scxml2.model.ElseIf;
 import org.apache.commons.scxml2.model.Raise;
-import org.apache.commons.scxml2.model.Exit;
 import org.apache.commons.scxml2.model.ExternalContent;
 import org.apache.commons.scxml2.model.Final;
 import org.apache.commons.scxml2.model.Finalize;
@@ -135,7 +134,6 @@ public class SCXMLWriter {
     private static final String ELEM_ELSE = "else";
     private static final String ELEM_ELSEIF = "elseif";
     private static final String ELEM_RAISE = "raise";
-    private static final String ELEM_EXIT = "exit";
     private static final String ELEM_FINAL = "final";
     private static final String ELEM_FINALIZE = "finalize";
     private static final String ELEM_HISTORY = "history";
@@ -829,12 +827,6 @@ public class SCXMLWriter {
                 writer.writeStartElement(XMLNS_COMMONS_SCXML, ELEM_VAR);
                 writeAV(writer, ATTR_NAME, v.getName());
                 writeAV(writer, ATTR_EXPR, SCXMLHelper.escapeXML(v.getExpr()));
-                writer.writeEndElement();
-            } else if (a instanceof Exit) {
-                Exit e = (Exit) a;
-                writer.writeStartElement(XMLNS_COMMONS_SCXML, ELEM_EXIT);
-                writeAV(writer, ATTR_EXPR, SCXMLHelper.escapeXML(e.getExpr()));
-                writeAV(writer, ATTR_NAMELIST, e.getNamelist());
                 writer.writeEndElement();
             } else {
                 writer.writeComment("Custom action with class name '" + a.getClass().getName() + "' not serialized");

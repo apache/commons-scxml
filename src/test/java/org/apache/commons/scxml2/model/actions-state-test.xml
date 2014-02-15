@@ -40,7 +40,6 @@
       <cancel sendId="send12345"/>
       <log expr="leaving" label="entry001" />
       <raise event="event.test"/>
-      <cs:exit expr="later" namelist="freddy" />
     </onentry>
 
     <transition event="event.test">
