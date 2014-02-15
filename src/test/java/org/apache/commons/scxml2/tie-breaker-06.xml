@@ -22,8 +22,8 @@
   <state id="main">
 
     <onentry>
-      <event name="internal_event1"/>
-      <event name="internal_event2"/>
+      <raise event="internal_event1"/>
+      <raise event="internal_event2"/>
     </onentry>
 
     <transition event="internal_event1">

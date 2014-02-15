@@ -50,7 +50,7 @@ import org.apache.commons.scxml2.model.Data;
 import org.apache.commons.scxml2.model.Datamodel;
 import org.apache.commons.scxml2.model.Else;
 import org.apache.commons.scxml2.model.ElseIf;
-import org.apache.commons.scxml2.model.Event;
+import org.apache.commons.scxml2.model.Raise;
 import org.apache.commons.scxml2.model.Exit;
 import org.apache.commons.scxml2.model.ExternalContent;
 import org.apache.commons.scxml2.model.Final;
@@ -134,7 +134,7 @@ public class SCXMLWriter {
     private static final String ELEM_DATAMODEL = "datamodel";
     private static final String ELEM_ELSE = "else";
     private static final String ELEM_ELSEIF = "elseif";
-    private static final String ELEM_EVENT = "event";
+    private static final String ELEM_RAISE = "raise";
     private static final String ELEM_EXIT = "exit";
     private static final String ELEM_FINAL = "final";
     private static final String ELEM_FINALIZE = "finalize";
@@ -805,10 +805,10 @@ public class SCXMLWriter {
                 writeAV(writer, ATTR_LABEL, lg.getLabel());
                 writeAV(writer, ATTR_EXPR, SCXMLHelper.escapeXML(lg.getExpr()));
                 writer.writeEndElement();
-            } else if (a instanceof Event) {
-                Event e = (Event) a;
-                writer.writeStartElement(XMLNS_SCXML, ELEM_EVENT);
-                writeAV(writer, ATTR_NAME, e.getName());
+            } else if (a instanceof Raise) {
+                Raise e = (Raise) a;
+                writer.writeStartElement(XMLNS_SCXML, ELEM_RAISE);
+                writeAV(writer, ATTR_EVENT, e.getEvent());
                 writer.writeEndElement();
             } else if (a instanceof Script) {
                 Script s = (Script) a;

@@ -27,11 +27,11 @@ import org.apache.commons.scxml2.TriggerEvent;
 
 /**
  * The class in this SCXML object model that corresponds to the
- * &lt;event&gt; SCXML element.
+ * &lt;raise&gt; SCXML element.
  *
- * @since 0.7
+ * @since 2.0
  */
-public class Event extends Action {
+public class Raise extends Action {
 
     /**
      * Serial version UID.
@@ -39,33 +39,33 @@ public class Event extends Action {
     private static final long serialVersionUID = 1L;
 
     /**
-     * The name of the derived event to be generated.
+     * The event to be generated.
      */
-    private String name;
+    private String event;
 
     /**
      * Constructor.
      */
-    public Event() {
+    public Raise() {
         super();
     }
 
     /**
-     * Get the event name.
+     * Get the event.
      *
-     * @return Returns the name.
+     * @return Returns the event.
      */
-    public final String getName() {
-        return name;
+    public final String getEvent() {
+        return event;
     }
 
     /**
-     * Set the event name.
+     * Set the event.
      *
-     * @param name The event name to set.
+     * @param event The event to set.
      */
-    public final void setName(final String name) {
-        this.name = name;
+    public final void setEvent(final String event) {
+        this.event = event;
     }
 
     /**
@@ -78,13 +78,11 @@ public class Event extends Action {
     throws ModelException, SCXMLExpressionException {
 
         if (appLog.isDebugEnabled()) {
-            appLog.debug("<event>: Adding event named '" + name
+            appLog.debug("<raise>: Adding event '" + event
                 + "' to list of derived events.");
         }
-        TriggerEvent ev = new TriggerEvent(name, TriggerEvent.SIGNAL_EVENT);
+        TriggerEvent ev = new TriggerEvent(event, TriggerEvent.SIGNAL_EVENT);
         derivedEvents.add(ev);
 
     }
-
 }
-

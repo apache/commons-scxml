@@ -61,7 +61,7 @@ import org.apache.commons.scxml2.model.Data;
 import org.apache.commons.scxml2.model.Datamodel;
 import org.apache.commons.scxml2.model.Else;
 import org.apache.commons.scxml2.model.ElseIf;
-import org.apache.commons.scxml2.model.Event;
+import org.apache.commons.scxml2.model.Raise;
 import org.apache.commons.scxml2.model.Executable;
 import org.apache.commons.scxml2.model.Exit;
 import org.apache.commons.scxml2.model.ExternalContent;
@@ -223,7 +223,7 @@ public final class SCXMLReader {
     private static final String ELEM_DATAMODEL = "datamodel";
     private static final String ELEM_ELSE = "else";
     private static final String ELEM_ELSEIF = "elseif";
-    private static final String ELEM_EVENT = "event";
+    private static final String ELEM_RAISE = "raise";
     private static final String ELEM_EXIT = "exit";
     private static final String ELEM_FINAL = "final";
     private static final String ELEM_FINALIZE = "finalize";
@@ -1451,8 +1451,8 @@ public final class SCXMLReader {
                     nsURI = reader.getNamespaceURI();
                     name = reader.getLocalName();
                     if (XMLNS_SCXML.equals(nsURI)) {
-                        if (ELEM_EVENT.equals(name)) {
-                            readEvent(reader, configuration, tt, executable, parent);
+                        if (ELEM_RAISE.equals(name)) {
+                            readRaise(reader, configuration, tt, executable, parent);
                         } else if (ELEM_FOREACH.equals(name)) {
                             readForeach(reader, configuration, tt, executable, parent);
                         } else if (ELEM_IF.equals(name)) {
@@ -1515,7 +1515,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the contents of this &lt;event&gt; element.
+     * Read the contents of this &lt;raise&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
@@ -1524,21 +1524,29 @@ public final class SCXMLReader {
      * @param parent The optional parent {@link ActionsContainer} if this action is a child of one.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
+     * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
+     *                        errors in the SCXML document that may not be identified by the schema).
      */
-    private static void readEvent(final XMLStreamReader reader, final Configuration configuration,
-            final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
-    throws XMLStreamException {
+    private static void readRaise(final XMLStreamReader reader, final Configuration configuration,
+                                  final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
+    throws XMLStreamException, ModelException {
 
-        Event event = new Event();
-        event.setName(readAV(reader, ATTR_NAME));
-        readNamespaces(configuration, event);
-        event.setParent(executable);
-        if (parent != null) {
-            parent.addAction(event);
-        } else {
-            executable.addAction(event);
+        if (executable instanceof Finalize) {
+            // http://www.w3.org/TR/2013/WD-scxml-20130801/#finalize
+            // [...] the executable content inside <finalize> MUST NOT raise events or invoke external actions.
+            // In particular, the <send> and <raise> elements MUST NOT occur.
+            reportIgnoredElement(reader, configuration, ELEM_FINALIZE, XMLNS_SCXML, ELEM_RAISE);
         }
 
+        Raise raise = new Raise();
+        raise.setEvent(readAV(reader, ATTR_EVENT));
+        readNamespaces(configuration, raise);
+        raise.setParent(executable);
+        if (parent != null) {
+            parent.addAction(raise);
+        } else {
+            executable.addAction(raise);
+        }
     }
 
     /**
@@ -1742,10 +1750,19 @@ public final class SCXMLReader {
      * @param parent The optional parent {@link ActionsContainer} if this action is a child of one.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
+     * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
+     *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readSend(final XMLStreamReader reader, final Configuration configuration,
             final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
-    throws XMLStreamException {
+    throws XMLStreamException, ModelException {
+
+        if (executable instanceof Finalize) {
+            // http://www.w3.org/TR/2013/WD-scxml-20130801/#finalize
+            // [...] the executable content inside <finalize> MUST NOT raise events or invoke external actions.
+            // In particular, the <send> and <raise> elements MUST NOT occur.
+            reportIgnoredElement(reader, configuration, ELEM_FINALIZE, XMLNS_SCXML, ELEM_SEND);
+        }
 
         Send send = new Send();
         send.setDelay(readAV(reader, ATTR_DELAY));
@@ -1770,7 +1787,6 @@ public final class SCXMLReader {
         } else {
             executable.addAction(send);
         }
-
     }
 
     /**

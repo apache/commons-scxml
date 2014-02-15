@@ -21,7 +21,7 @@
 
     <state id="state1">
       <onentry>
-        <event name="success.start"/>
+        <raise event="success.start"/>
       </onentry>
       <transition event="success.*" target="state2"/>
     </state>

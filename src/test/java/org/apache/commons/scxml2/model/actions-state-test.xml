@@ -39,7 +39,7 @@
        delay="${1000+500}" />
       <cancel sendId="send12345"/>
       <log expr="leaving" label="entry001" />
-      <event name="event.test"/>
+      <raise event="event.test"/>
       <cs:exit expr="later" namelist="freddy" />
     </onentry>
 
