@@ -174,6 +174,7 @@ public class SCXMLWriter {
     private static final String ATTR_PROFILE = "profile";
     private static final String ATTR_SENDID = "sendid";
     private static final String ATTR_SRC = "src";
+    private static final String ATTR_SRCEXPR = "srcexpr";
     private static final String ATTR_TARGET = "target";
     private static final String ATTR_TYPE = "type";
     private static final String ATTR_VERSION = "version";
@@ -731,6 +732,7 @@ public class SCXMLWriter {
 
         writer.writeStartElement(ELEM_INVOKE);
         writeAV(writer, ATTR_SRC, invoke.getSrc());
+        writeAV(writer, ATTR_SRCEXPR, invoke.getSrcexpr());
         writeAV(writer, ATTR_TYPE, invoke.getType());
 
         for (Param p : invoke.params()) {

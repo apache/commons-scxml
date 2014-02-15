@@ -31,6 +31,7 @@ import org.apache.commons.scxml2.TriggerEvent;
  * The class in this SCXML object model that corresponds to the
  * &lt;script&gt; SCXML element.
  *
+ * TODO src attribute support
  */
 public class Script extends Action implements BodyContainer {
 
@@ -62,8 +63,6 @@ public class Script extends Action implements BodyContainer {
      * Get the script to execute.
      *
      * @return The script to execute.
-     *
-     * @TODO src attribute support
      */
     public String getScript() {
         return body;

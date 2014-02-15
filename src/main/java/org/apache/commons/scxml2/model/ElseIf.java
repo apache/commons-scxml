@@ -76,7 +76,6 @@ public class ElseIf extends Action {
             final Log appLog, final Collection<TriggerEvent> derivedEvents)
     throws ModelException, SCXMLExpressionException {
         // nothing to do, the <if> container will take care of this
-        return;
     }
 
 }

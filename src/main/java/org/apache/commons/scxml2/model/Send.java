@@ -102,16 +102,6 @@ public class Send extends Action implements ExternalContent {
     private String event;
 
     /**
-     * OutputFormat used to serialize external nodes.
-     *
-    private static final OutputFormat format;
-    static {
-        format = new OutputFormat();
-        format.setOmitXMLDeclaration(true);
-    }
-    */
-
-    /**
      * Constructor.
      */
     public Send() {
@@ -144,15 +134,6 @@ public class Send extends Action implements ExternalContent {
      */
     public final List<Node> getExternalNodes() {
         return externalNodes;
-    }
-
-    /**
-     * Set the list of external namespaced child nodes.
-     *
-     * @param externalNodes The externalnode to set.
-     */
-    public final void setExternalNodes(final List<Node> externalNodes) {
-        this.externalNodes = externalNodes;
     }
 
     /**
@@ -291,7 +272,7 @@ public class Send extends Action implements ExternalContent {
                     + "\" evaluated to null or empty String");
             }
         }
-        String typeValue = type;
+        String typeValue;
         if (!SCXMLHelper.isStringEmpty(type)) {
             typeValue = (String) eval.eval(ctx, type);
             if (SCXMLHelper.isStringEmpty(typeValue)
@@ -413,7 +394,6 @@ public class Send extends Action implements ExternalContent {
         }
 
         return wait;
-
     }
 
     /** The suffix in the delay string for milliseconds. */

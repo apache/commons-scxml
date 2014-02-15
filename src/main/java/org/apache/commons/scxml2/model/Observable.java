@@ -24,6 +24,5 @@ package org.apache.commons.scxml2.model;
  *
  */
 public interface Observable {
-
 }
 

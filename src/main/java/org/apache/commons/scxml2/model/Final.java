@@ -30,7 +30,7 @@ public class Final extends State {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Default no-args constructor for Digester. Sets
+     * Default no-args constructor. Sets
      * <code>isFinal</code> property of this <code>State</code>
      * to be <code>true</code>.
      */

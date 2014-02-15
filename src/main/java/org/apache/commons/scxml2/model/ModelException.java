@@ -38,7 +38,7 @@ public class ModelException extends Exception {
 
     /**
      * @see java.lang.Exception#Exception(java.lang.String)
-     * @param message
+     * @param message the detail message
      */
     public ModelException(final String message) {
         super(message);
@@ -46,7 +46,7 @@ public class ModelException extends Exception {
 
     /**
      * @see java.lang.Exception#Exception(java.lang.Throwable)
-     * @param cause
+     * @param cause the cause
      */
     public ModelException(final Throwable cause) {
         super(cause);
@@ -54,8 +54,8 @@ public class ModelException extends Exception {
 
     /**
      * @see java.lang.Exception#Exception(String, java.lang.Throwable)
-     * @param message
-     * @param cause
+     * @param message the detail message
+     * @param cause the cause
      */
     public ModelException(final String message, final Throwable cause) {
         super(message, cause);

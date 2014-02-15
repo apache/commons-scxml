@@ -36,6 +36,5 @@ public class OnEntry extends Executable {
     public OnEntry() {
         super();
     }
-
 }
 

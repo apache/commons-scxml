@@ -127,7 +127,7 @@ public class If extends Action implements ActionsContainer {
         Context ctx = scInstance.getContext(parentTarget);
         Evaluator eval = scInstance.getEvaluator();
         ctx.setLocal(getNamespacesKey(), getNamespaces());
-        Boolean rslt = Boolean.FALSE;
+        Boolean rslt;
         try {
             rslt = eval.evalCond(ctx, cond);
             if (rslt == null) {
@@ -141,23 +141,19 @@ public class If extends Action implements ActionsContainer {
             errRep.onError(ErrorConstants.EXPRESSION_ERROR, "Treating as false due to error: " + e.getMessage(), this);
             // TODO: place the error 'error.execution' in the internal event queue. (section "3.12.2 Errors")
         }
-        execute = rslt.booleanValue();
+        execute = rslt;
         ctx.setLocal(getNamespacesKey(), null);
         // The "if" statement is a "container"
         for (Action aa : actions) {
-            if (execute && !(aa instanceof ElseIf)
-                    && !(aa instanceof Else)) {
-                aa.execute(evtDispatcher, errRep, scInstance, appLog,
-                    derivedEvents);
-            } else if (execute
-                    && (aa instanceof ElseIf || aa instanceof Else)) {
+            if (execute && !(aa instanceof ElseIf)) {
+                aa.execute(evtDispatcher, errRep, scInstance, appLog, derivedEvents);
+            } else if (execute && aa instanceof ElseIf) {
                 break;
             } else if (aa instanceof Else) {
                 execute = true;
             } else if (aa instanceof ElseIf) {
                 ctx.setLocal(getNamespacesKey(), getNamespaces());
-                execute = eval.evalCond(ctx, ((ElseIf) aa).getCond())
-                        .booleanValue();
+                execute = eval.evalCond(ctx, ((ElseIf) aa).getCond());
                 ctx.setLocal(getNamespacesKey(), null);
             }
         }

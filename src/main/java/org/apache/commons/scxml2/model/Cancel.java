@@ -77,6 +77,5 @@ public class Cancel extends Action {
     throws ModelException, SCXMLExpressionException {
         evtDispatcher.cancel(sendid);
     }
-
 }
 

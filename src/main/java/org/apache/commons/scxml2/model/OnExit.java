@@ -36,6 +36,5 @@ public class OnExit extends Executable {
     public OnExit() {
         super();
     }
-
 }
 

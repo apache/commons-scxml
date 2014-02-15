@@ -84,6 +84,5 @@ public abstract class Executable implements Serializable {
     public final void setParent(final TransitionTarget parent) {
         this.parent = parent;
     }
-
 }
 

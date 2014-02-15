@@ -75,7 +75,7 @@ public class Invoke implements NamespacePrefixesHolder, PathResolverHolder,
     private Map<String, String> namespaces;
 
     /**
-     * Default no-args constructor for Digester.
+     * Default no-args constructor.
      */
     public Invoke() {
         paramsList = Collections.synchronizedList(new ArrayList<Param>());

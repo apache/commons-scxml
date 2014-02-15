@@ -263,6 +263,7 @@ public final class SCXMLReader {
     private static final String ATTR_PROFILE = "profile";
     private static final String ATTR_SENDID = "sendid";
     private static final String ATTR_SRC = "src";
+    private static final String ATTR_SRCEXPR = "srcexpr";
     private static final String ATTR_TARGET = "target";
     private static final String ATTR_TYPE = "type";
     private static final String ATTR_VERSION = "version";
@@ -1123,6 +1124,7 @@ public final class SCXMLReader {
 
         Invoke invoke = new Invoke();
         invoke.setSrc(readAV(reader, ATTR_SRC));
+        invoke.setSrcexpr(readAV(reader, ATTR_SRCEXPR));
         invoke.setType(readAV(reader, ATTR_TYPE));
         invoke.setPathResolver(configuration.pathResolver);
         readNamespaces(configuration, invoke);

@@ -19,6 +19,8 @@ package org.apache.commons.scxml2.model;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml2.SCXMLHelper;
 
+import org.apache.commons.logging.Log;
+
 /**
  * A custom action is simply a tuple consisting of a namespace URI,
  * the local name for the custom action and the corresponding
@@ -78,11 +80,6 @@ public class CustomAction {
     private Class<? extends Action> actionClass;
 
     /**
-     * The log for this custom action.
-     */
-    private org.apache.commons.logging.Log log;
-
-    /**
      * Constructor, if the namespace or local name is null or empty,
      * or if the implementation is not an {@link Action}, an
      * {@link IllegalArgumentException} is thrown.
@@ -94,7 +91,7 @@ public class CustomAction {
      */
     public CustomAction(final String namespaceURI, final String localName,
             final Class<? extends Action> actionClass) {
-        this.log = LogFactory.getLog(CustomAction.class);
+        Log log = LogFactory.getLog(CustomAction.class);
         if (SCXMLHelper.isStringEmpty(namespaceURI)) {
             log.error(ERR_NO_NAMESPACE);
             throw new IllegalArgumentException(ERR_NO_NAMESPACE);
@@ -143,6 +140,5 @@ public class CustomAction {
     public String getNamespaceURI() {
         return namespaceURI;
     }
-
 }
 

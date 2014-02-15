@@ -111,7 +111,7 @@ public class Foreach extends Action implements ActionsContainer {
         ctx.setLocal(getNamespacesKey(), getNamespaces());
         try {
             Object arrayObject = eval.eval(ctx,array);
-            if (arrayObject != null && arrayObject instanceof Iterable || arrayObject.getClass().isArray()) {
+            if (arrayObject != null && (arrayObject instanceof Iterable || arrayObject.getClass().isArray())) {
                 if (arrayObject.getClass().isArray()) {
                     for (int currentIndex = 0, size = Array.getLength(arrayObject); currentIndex < size; currentIndex++) {
                         ctx.setLocal(item, Array.get(arrayObject, currentIndex));
@@ -145,9 +145,7 @@ public class Foreach extends Action implements ActionsContainer {
                     }
                 }
             }
-            else {
-                // TODO: place the error 'error.execution' in the internal event queue. (section "3.12.2 Errors")
-            }
+            // else {} TODO: place the error 'error.execution' in the internal event queue. (section "3.12.2 Errors")
         }
         finally {
             ctx.setLocal(getNamespacesKey(), null);

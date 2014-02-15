@@ -116,6 +116,5 @@ public class Var extends Action {
                 TriggerEvent.CHANGE_EVENT);
         derivedEvents.add(ev);
     }
-
 }
 

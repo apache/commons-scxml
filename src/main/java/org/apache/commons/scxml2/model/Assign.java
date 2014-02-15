@@ -193,7 +193,7 @@ public class Assign extends Action implements PathResolverHolder {
             if (oldNode != null) {
                 //// rvalue may be ...
                 // a Node, if so, import it at location
-                Node newNode = null;
+                Node newNode;
                 try {
                     if (src != null && src.trim().length() > 0) {
                         newNode = getSrcNode();
@@ -239,7 +239,7 @@ public class Assign extends Action implements PathResolverHolder {
                 errRep.onError(ErrorConstants.UNDEFINED_VARIABLE, name
                     + " = null", parentTarget);
             } else {
-                Object varObj = null;
+                Object varObj;
                 if (src != null && src.trim().length() > 0) {
                     varObj = getSrcNode();
                 } else {
@@ -288,7 +288,7 @@ public class Assign extends Action implements PathResolverHolder {
     }
 
     /**
-     * @param throwable
+     * @param throwable The throwable to log about
      */
     private void logError(Throwable throwable) {
         org.apache.commons.logging.Log log = LogFactory.

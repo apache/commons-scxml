@@ -44,7 +44,7 @@ public class Parallel extends TransitionTarget {
      * Constructor.
      */
     public Parallel() {
-        this.children = new LinkedHashSet<TransitionTarget>();
+        children = new LinkedHashSet<TransitionTarget>();
     }
 
     /**
@@ -66,8 +66,7 @@ public class Parallel extends TransitionTarget {
      * @since 0.7
      */
     public final void addChild(final TransitionTarget tt) {
-        // TODO: State is a sufficient enough type for the parameter
-        this.children.add(tt);
+        children.add(tt);
         tt.setParent(this);
     }
 

@@ -29,7 +29,7 @@ public class Finalize extends Executable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Default no-args constructor for Digester.
+     * Default no-args constructor.
      */
     public Finalize() {
         super();
