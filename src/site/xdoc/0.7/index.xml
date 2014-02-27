@@ -33,7 +33,7 @@
 
   <p>
     <ul>
-      <li>The v0.7 <a href="javadocs/0.7/">Javadoc</a>.</li>
+      <li>The v0.7 <a href="../javadocs/0.7/">Javadoc</a>.</li>
       <li>The v0.7 <a href="http://svn.apache.org/viewvc/commons/proper/scxml/tags/SCXML_0_7/RELEASE-NOTES.txt?view=markup">release notes</a>.</li>
       <li>The v0.7 <a href="http://svn.apache.org/viewvc/commons/proper/scxml/tags/SCXML_0_7/">source tree</a>.</li>
     </ul>
