@@ -203,11 +203,10 @@
   </dependencies>
 
   <distributionManagement>
-    <!-- Cannot define in parent ATM, see COMMONSSITE-26 -->
     <site>
       <id>apache.website</id>
       <name>Apache Commons Site</name>
-      <url>${commons.deployment.protocol}://people.apache.org/www/commons.apache.org/scxml</url>
+      <url>scm:svn:https://svn.apache.org/repos/infra/websites/production/commons/content/proper/commons-scxml/</url>
     </site>
   </distributionManagement>
 
