@@ -67,7 +67,7 @@
       </item>
 
       <item       name="Javadoc"
-                  href="/0.9/apidocs/index.html"/>
+                  href="/javadocs/0.9/"/>
 
       <item       name="FAQ"
                   href="faq.html"/>
@@ -120,7 +120,7 @@
                   collapse="true">
 
         <item     name="Javadoc"
-                  href="/0.9/apidocs/index.html" />
+                  href="/javadocs/0.9/" />
 
         <item     name="Release notes"
                   href="http://svn.apache.org/viewvc/commons/proper/scxml/tags/SCXML_0_9/RELEASE-NOTES.txt?view=markup" />
@@ -135,7 +135,7 @@
                   collapse="true">
 
         <item     name="Javadoc"
-                  href="/0.8/apidocs/index.html" />
+                  href="/javadocs/0.8/" />
 
         <item     name="Release notes"
                   href="http://svn.apache.org/viewvc/commons/proper/scxml/tags/SCXML_0_8/RELEASE-NOTES.txt?view=markup" />
@@ -150,7 +150,7 @@
                   collapse="true">
 
         <item     name="Javadoc"
-                  href="/0.7/apidocs/index.html" />
+                  href="/javadocs/0.7/" />
 
         <item     name="Release notes"
                   href="http://svn.apache.org/viewvc/commons/proper/scxml/tags/SCXML_0_7/RELEASE-NOTES.txt?view=markup" />
@@ -165,7 +165,7 @@
                   collapse="true">
 
         <item     name="Javadoc"
-                  href="/0.6/apidocs/index.html" />
+                  href="/javadocs/0.6/" />
 
         <item     name="Release notes"
                   href="http://svn.apache.org/viewvc/commons/proper/scxml/tags/SCXML_0_6/RELEASE-NOTES.txt?view=markup" />
@@ -180,7 +180,7 @@
                   collapse="true">
 
         <item     name="Javadoc"
-                  href="/0.5/apidocs/index.html" />
+                  href="/javadocs/0.5/" />
 
         <item     name="Release notes"
                   href="http://svn.apache.org/viewvc/commons/proper/scxml/tags/SCXML_0_5/RELEASE-NOTES.txt?view=markup" />
