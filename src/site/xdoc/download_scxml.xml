@@ -95,7 +95,7 @@ limitations under the License.
       </p>
     </subsection>
     </section>
-    <section name="Apache Commons SCXML 0.9 (Java 6.0+)">
+    <section name="Apache Commons SCXML 0.9 (Java 1.4+)">
       <subsection name="Binaries">
         <table>
           <tr>
