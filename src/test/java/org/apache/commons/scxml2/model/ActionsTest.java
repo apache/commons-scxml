@@ -20,8 +20,8 @@ import java.net.URL;
 
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
-import org.apache.commons.scxml2.env.jsp.ELContext;
-import org.apache.commons.scxml2.env.jsp.ELEvaluator;
+import org.apache.commons.scxml2.env.jexl.JexlContext;
+import org.apache.commons.scxml2.env.jexl.JexlEvaluator;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -40,8 +40,8 @@ public class ActionsTest {
 
     // Test data
     private URL actionsSample01, actionsSample02, actionsSample03;
-    private ELEvaluator evaluator;
-    private ELContext ctx;
+    private JexlEvaluator evaluator;
+    private JexlContext ctx;
     private SCXMLExecutor exec;
 
     /**
@@ -55,8 +55,8 @@ public class ActionsTest {
             getResource("org/apache/commons/scxml2/model/actions-parallel-test.xml");
         actionsSample03 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml2/model/actions-initial-test.xml");
-        evaluator = new ELEvaluator();
-        ctx = new ELContext();
+        evaluator = new JexlEvaluator();
+        ctx = new JexlContext();
     }
 
     /**
@@ -93,11 +93,11 @@ public class ActionsTest {
 
     private void runTest(SCXML scxml) throws Exception {
         exec = SCXMLTestHelper.getExecutor(scxml, ctx, evaluator);
-        ELContext ctx = (ELContext) SCXMLTestHelper.lookupContext(exec,
+        JexlContext ctx = (JexlContext) SCXMLTestHelper.lookupContext(exec,
             "actionsTest");
-        Assert.assertEquals((String) ctx.get("foo"), "foobar");
+        Assert.assertEquals(ctx.get("foo"), "foobar");
         Assert.assertEquals("Missed event transition",
-            "true", (String) ctx.get("eventsent"));
+            true, ctx.get("eventsent"));
     }
 }
 

@@ -151,7 +151,7 @@
     children). The process may return a payload with the "done" event,
     that becomes available for decision making in the state machine
     context. Some related details are currently <b>TBD</b> in the Working
-    Draft and thefore, susceptible to change.</p>
+    Draft and therefore, susceptible to change.</p>
 
    </subsection>
 
@@ -166,10 +166,6 @@
    <ul>
     <li>The StopWatch usecases registers a SCXMLListener at the
     document root to manage the UI updates.</li>
-    <li>The RDC usecase (dialog management in speech apps) implicitly
-    maps state IDs to IDs of speech components that get activated.</li>
-    <li>The Shale usecase (cross-page navigation for JSF apps) has an
-    explicit lookup table mapping state IDs to JSF view IDs.</li>
    </ul>
 
   </section>

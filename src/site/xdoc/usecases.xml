@@ -54,23 +54,6 @@
        </ul>
     </p>
    </subsection>
-   <subsection name="Advanced">
-    <p>These are usecases within frameworks available in the open source
-       community, and are labeled advanced since they require some additional
-       knowledge about the framework relevant to the particular usecase.
-       <ul>
-        <li><a href="usecases/scxml-in-rdc-group.html">Usecase 2</a> - Use in
-        <a href="http://jakarta.apache.org/taglibs/doc/rdc-doc/intro.html">
-        Reusable Dialog Components (RDC) Framework</a> &lt;group&gt;
-        container.</li>
-        <li><a href="usecases/scxml-in-shale-dialogs.html">Usecase 3</a> -
-        Use in <a href="http://shale.apache.org/">Shale</a> dialogs</li>
-        <li><a href="usecases/scxml-stopwatch-on-android.html">Usecase 4</a> -
-        SCXML stopwatch example in <a href="http://code.google.com/android/">Google Android</a>
-        </li>
-       </ul>
-    </p>
-   </subsection>
    <p>If you know of another usecase we should list or if you are interesting
    in seeing if SCXML fits a usecase you have in mind, contact us via the
    <a href="mail-lists.html">mailing lists</a>.

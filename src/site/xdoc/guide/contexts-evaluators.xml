@@ -77,10 +77,10 @@
 
   <section name="Available expression languages">
 
-   <p>Commons SCXML currently supports using Commons JEXL and
-      Commons EL (JSP 2.0 EL) as the expression language.
+   <p>Commons SCXML currently supports using Commons JEXL, Javascript, XPath and
+      Groovy as the expression language.
       The expressions throughout the document must be homogeneous.
-      This also applies to any external documents that may be refered
+      This also applies to any external documents that may be referred
       by this document, for example via "src" attributes, like so: 
 
     <pre>
@@ -103,10 +103,24 @@
     relevant root context and evaluator tuple to use.</p>
    </subsection>
 
-   <subsection name="Commons EL (JSP 2.0 EL)">
+    <subsection name="Javascript">
+      <p>See
+        <a href="../apidocs/org/apache/commons/scxml2/env/javascript/package-summary.html">
+          org.apache.commons.scxml2.env.javascript package summary</a> for the
+        relevant root context and evaluator tuple to use.</p>
+    </subsection>
+
+    <subsection name="XPath">
+      <p>See
+        <a href="../apidocs/org/apache/commons/scxml2/env/xpath/package-summary.html">
+          org.apache.commons.scxml2.env.xpath package summary</a> for the
+        relevant root context and evaluator tuple to use.</p>
+    </subsection>
+
+    <subsection name="Groovy">
     <p>See
-    <a href="../apidocs/org/apache/commons/scxml2/env/jsp/package-summary.html">
-    org.apache.commons.scxml2.env.jsp package summary</a> for the
+    <a href="../apidocs/org/apache/commons/scxml2/env/groovy/package-summary.html">
+    org.apache.commons.scxml2.env.groovy package summary</a> for the
     relevant root context and evaluator tuple to use.</p>
    </subsection>
 
@@ -115,8 +129,8 @@
   <section name="Method invocation in expressions">
 
    <p>Commons SCXML uses the mechanisms provided by the expression language
-   chosen for the document to support method invocation. Commons JEXL and
-   Commons EL allow for method invocations as follows:</p>
+   chosen for the document to support method invocation. Commons JEXL
+   allow for method invocations as follows:</p>
 
    <subsection name="Commons JEXL">
     <p>See Commons JEXL reference for 
@@ -127,15 +141,6 @@
     under name <code>foo</code> which has an accessible method
     <code>bar()</code>, then the JEXL expression for calling the method is
     <code>foo.bar()</code></p>
-   </subsection>
-
-   <subsection name="Commons EL (JSP 2.0 EL)">
-    <p>It is possible to register "namespaced" functions with the
-    <a href="../apidocs/org/apache/commons/scxml2/env/jsp/ELEvaluator.html">
-    ELEvaluator</a> to enable method invocation. The methods need to be
-    static accessible methods in the class(es) that implement(s) them,
-    and a suitable <code>FunctionMapper</code> is passed in via the
-    ELEvaluator constructor. For further details, see the JSP 2.0 EL API.</p>
    </subsection>
 
   </section>

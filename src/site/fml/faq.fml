@@ -57,17 +57,12 @@
 
   <faq id="dependencies">
    <question>
-    What are the core requirements of SCXML? Do I need to include
-    the JSP and Servlet API or the Faces libraries?
+    What are the core requirements of SCXML?
    </question>
    <answer>
-    The "core" requirements for Commons SCXML are Commons Digester and
-    Commons Logging. Commons Digester, at the minimum (if you use Commons
-    Digester 1.7+), has a runtime dependency on Commons BeanUtils. 
-    You do not need to include JSP or Servlet or Faces libraries. These
-    are meant to come in via the servlet container (if at
-    all you need them). You will need to choose an expression
-    language for your SCXML documents (details in next section of this
+    The "core" requirements for Commons SCXML are Commons Logging.
+    You will need to choose an expression language for your SCXML documents
+    (details in next section of this
     FAQ). See the <a href="dependencies.html">dependencies page</a>
     for details about the dependency versions.
    </answer>
@@ -85,8 +80,8 @@
    </question>
    <answer>
     Commons SCXML currently supports
-    <a href="http://commons.apache.org/jexl/">Commons JEXL</a> and
-    <a href="http://commons.apache.org/el/">Commons EL</a>. For details,
+    <a href="http://commons.apache.org/jexl/">Commons JEXL</a>, Javascript, XPath and
+    <a href="http://groovy.codehaus.org/">Groovy</a>. For details,
     see the <a href="guide/testing-standalone.html">trying out</a> and
     <a href="guide/contexts-evaluators.html">contexts and evaluators</a>
     pages of the user guide.
@@ -99,7 +94,7 @@
    </question>
    <answer>
     No, the expressions throughout the document must be homogeneous. This
-    also applies to any external documents that may be refered by this
+    also applies to any external documents that may be referred by this
     document, for example via "src" attributes.
    </answer>
   </faq>

@@ -84,8 +84,6 @@
   <subsection name="Side-effects">
    <p>Contains notes about non-primary uses for Commons SCXML.</p>
    <ul>
-    <li><a href="guide/side-effect-el.html">EL</a> - Trying Commons EL outside
-    a servlet container.</li>
    </ul>
   </subsection>
 

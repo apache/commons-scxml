@@ -61,7 +61,7 @@
      expression languages so SCXML documents can be used in varying
      environments. The <code>Context</code> and <code>Evaluator</code>
      interfaces serve as adapters to the particular expression language
-     APIs. Commons SCXML currently supports JEXL and JSP 2.0 EL
+     APIs. Commons SCXML currently supports JEXL, Javascript, Groovy and XPath
      expressions. See the section on
      <a href="contexts-evaluators.html">contexts and evaluators</a>
      for further details about contexts, evaluators and root contexts.</p>

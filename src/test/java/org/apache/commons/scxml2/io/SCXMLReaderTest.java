@@ -65,7 +65,7 @@ public class SCXMLReaderTest {
     private static String oldLogFactoryProperty;
 
     // Test data
-    private URL microwave01, microwave02, transitions01, prefix01, send01,
+    private URL transitions01, prefix01, send01,
         microwave03, microwave04, scxmlinitialattr, action01,
         scxmlWithInvalidElems, groovyClosure;
     private SCXML scxml;
@@ -93,10 +93,6 @@ public class SCXMLReaderTest {
      */
     @Before
     public void before() {
-        microwave01 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/env/jsp/microwave-01.xml");
-        microwave02 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/env/jsp/microwave-02.xml");
         microwave03 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml2/env/jexl/microwave-03.xml");
         microwave04 = this.getClass().getClassLoader().
@@ -125,7 +121,7 @@ public class SCXMLReaderTest {
      */
     @After
     public void after() {
-        microwave01 = microwave02 = microwave03 = microwave04 = transitions01 = prefix01 = send01 = action01 = 
+        microwave03 = microwave04 = transitions01 = prefix01 = send01 = action01 =
                 scxmlinitialattr = scxmlWithInvalidElems = groovyClosure = null;
         scxml = null;
         scxmlAsString = null;
@@ -134,22 +130,6 @@ public class SCXMLReaderTest {
     /**
      * Test the implementation
      */    
-    @Test
-    public void testSCXMLReaderMicrowave01Sample() throws Exception {
-        scxml = SCXMLTestHelper.parse(microwave01);
-        Assert.assertNotNull(scxml);
-        scxmlAsString = serialize(scxml);
-        Assert.assertNotNull(scxmlAsString);
-    }
-    
-    @Test
-    public void testSCXMLReaderMicrowave02Sample() throws Exception {
-        scxml = SCXMLTestHelper.parse(microwave02);
-        Assert.assertNotNull(scxml);
-        scxmlAsString = serialize(scxml);
-        Assert.assertNotNull(scxmlAsString);
-    }
-    
     @Test
     public void testSCXMLReaderMicrowave03Sample() throws Exception {
         scxml = SCXMLTestHelper.parse(microwave03);

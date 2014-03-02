@@ -22,7 +22,6 @@ import java.util.List;
 
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
-import org.apache.commons.scxml2.env.jsp.ELEvaluator;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -30,7 +29,7 @@ import org.junit.Test;
 
 public class CustomActionTest {
 
-    private URL hello01, custom01, external01, override01, payload01, payload02;
+    private URL hello01, custom01, external01, override01, payload01;
     private SCXMLExecutor exec;
 
     /**
@@ -48,8 +47,6 @@ public class CustomActionTest {
             getResource("org/apache/commons/scxml2/custom-hello-world-03.xml");
         payload01 = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml2/custom-hello-world-04-jexl.xml");
-        payload02 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/custom-hello-world-04-el.xml");
 
         Hello.callbacks = 0;
     }
@@ -59,7 +56,7 @@ public class CustomActionTest {
      */
     @After
     public void tearDown() {
-        hello01 = custom01 = external01 = payload01 = payload02 = null;
+        hello01 = custom01 = external01 = payload01 = null;
         exec = null;
     }
 
@@ -128,7 +125,7 @@ public class CustomActionTest {
         // (1) Get a SCXMLExecutor
         exec = SCXMLTestHelper.getExecutor(hello01);
         // (2) Single, final state
-        Assert.assertEquals("hello", ((State) exec.getCurrentStatus().getStates().
+        Assert.assertEquals("hello", (exec.getCurrentStatus().getStates().
                 iterator().next()).getId());
         Assert.assertTrue(exec.getCurrentStatus().isFinal());
     }
@@ -154,7 +151,7 @@ public class CustomActionTest {
         // (3) Get a SCXMLExecutor
         exec = SCXMLTestHelper.getExecutor(scxml);
         // (4) Single, final state
-        Assert.assertEquals("custom", ((State) exec.getCurrentStatus().getStates().
+        Assert.assertEquals("custom", (exec.getCurrentStatus().getStates().
                 iterator().next()).getId());
         Assert.assertTrue(exec.getCurrentStatus().isFinal());
 
@@ -179,7 +176,7 @@ public class CustomActionTest {
         // (3) Get a SCXMLExecutor
         exec = SCXMLTestHelper.getExecutor(scxml);
         // (4) Single, final state
-        Assert.assertEquals("custom", ((State) exec.getCurrentStatus().getStates().
+        Assert.assertEquals("custom", (exec.getCurrentStatus().getStates().
             iterator().next()).getId());
 
         // The custom action defined by Hello.class should be called
@@ -202,7 +199,7 @@ public class CustomActionTest {
         // (3) Get a SCXMLExecutor
         exec = SCXMLTestHelper.getExecutor(scxml);
         // (4) Single, final state
-        Assert.assertEquals("custom", ((State) exec.getCurrentStatus().getStates().
+        Assert.assertEquals("custom", (exec.getCurrentStatus().getStates().
             iterator().next()).getId());
 
         // The custom action defined by Hello.class should be called
@@ -227,11 +224,11 @@ public class CustomActionTest {
         exec = SCXMLTestHelper.getExecutor(scxml);
         // (4) Single, final state
         Assert.assertEquals("Invalid intermediate state",
-                     "custom1", ((State) exec.getCurrentStatus().getStates().
+                     "custom1", (exec.getCurrentStatus().getStates().
                                 iterator().next()).getId());
         // (5) Verify datamodel variable is correct
         Assert.assertEquals("Missing helloName1 in root context", "custom04a",
-                     (String) exec.getRootContext().get("helloName1"));
+                     exec.getRootContext().get("helloName1"));
 
         // The custom action defined by Hello.class should be called
         // to execute() exactly once at this point (by onentry in init state).
@@ -241,43 +238,15 @@ public class CustomActionTest {
         SCXMLTestHelper.fireEvent(exec, "custom.next");
         // (7) Verify correct end state
         Assert.assertEquals("Missing helloName1 in root context", "custom04b",
-                (String) exec.getRootContext().get("helloName1"));
+                exec.getRootContext().get("helloName1"));
         Assert.assertEquals("Invalid final state",
-                "end", ((State) exec.getCurrentStatus().getStates().
+                "end", (exec.getCurrentStatus().getStates().
                 iterator().next()).getId());
         Assert.assertTrue(exec.getCurrentStatus().isFinal());
 
         // The custom action defined by Hello.class should be called
         // to execute() exactly two times at this point (by onentry in custom2 state).
         Assert.assertEquals(2, Hello.callbacks);
-    }
-
-    // Hello World example using custom <my:hello> action that generates an
-    // event which has the payload examined with EL expressions
-    @Test
-    public void testCustomActionEventPayloadHelloWorldEL() throws Exception {
-        // (1) Form a list of custom actions defined in the SCXML
-        //     document (and any included documents via "src" attributes)
-        CustomAction ca =
-            new CustomAction("http://my.custom-actions.domain/CUSTOM",
-                             "hello", Hello.class);
-        List<CustomAction> customActions = new ArrayList<CustomAction>();
-        customActions.add(ca);
-        // (2) Parse the document with a custom digester.
-        SCXML scxml = SCXMLTestHelper.parse(payload02, customActions);
-        // (3) Get a SCXMLExecutor
-        exec = SCXMLTestHelper.getExecutor(new ELEvaluator(), scxml);
-        // (4) Single, final state
-        Assert.assertEquals("Invalid final state",
-                     "custom", ((State) exec.getCurrentStatus().getStates().
-                                iterator().next()).getId());
-        // (5) Verify datamodel variable is correct
-        Assert.assertEquals("Missing helloName1 in root context", "custom04",
-                     (String) exec.getRootContext().get("helloName1"));
-
-        // The custom action defined by Hello.class should be called
-        // to execute() exactly once at this point (by onentry in init state).
-        Assert.assertEquals(1, Hello.callbacks);
     }
 }
 

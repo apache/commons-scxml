@@ -23,20 +23,20 @@
   <state id="actionsTest" final="true">
     <onentry>
       <cs:var name="foo"/>
-      <cs:var name="delta" expr="${1+2+3}" />
+      <cs:var name="delta" expr="1+2+3" />
       <cs:var name="eventsent"/>
-      <if cond="${delta le 3}">
-        <assign name="foo" expr="bar" />
-      <elseif cond="${delta eq 3}"/>
-        <assign name="foo" expr="fubar" />
+      <if cond="delta le 3">
+        <assign name="foo" expr="'bar'" />
+      <elseif cond="delta eq 3"/>
+        <assign name="foo" expr="'fubar'" />
       <else/>
-        <assign name="foo" expr="foobar" />
+        <assign name="foo" expr="'foobar'" />
       </if>
-      <cs:var name="drink" expr="water" />
-      <cs:var name="eat" expr="flies" />
+      <cs:var name="drink" expr="'water'" />
+      <cs:var name="eat" expr="'flies'" />
       <send sendid="send12345" target="freddy" type="frog"
-       event="croak" namelist="drink eat" hints="h2o bzz"
-       delay="${1000+500}" />
+       event="croak" namelist="drink eat" hints="'h2o bzz'"
+       delay="1000+500" />
       <cancel sendId="send12345"/>
       <log expr="leaving" label="entry001" />
       <raise event="event.test"/>

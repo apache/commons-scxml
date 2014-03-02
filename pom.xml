@@ -149,22 +149,9 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>commons-el</groupId>
-      <artifactId>commons-el</artifactId>
-      <version>1.0</version>
-      <scope>provided</scope>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-jexl</artifactId>
       <version>2.1.1</version>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>rhino</groupId>
-      <artifactId>js</artifactId>
-      <version>1.6R7</version>
       <optional>true</optional>
     </dependency>
     <dependency>
@@ -173,33 +160,14 @@
       <version>2.2.1</version>
       <optional>true</optional>
     </dependency>
+    <!--
     <dependency>
       <groupId>org.apache.xmlbeans</groupId>
       <artifactId>xmlbeans</artifactId>
       <version>2.3.0</version>
       <optional>true</optional>
     </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <version>2.4</version>
-      <scope>provided</scope>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>jsp-api</artifactId>
-      <version>2.0</version>
-      <scope>provided</scope>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.myfaces.core</groupId>
-      <artifactId>myfaces-api</artifactId>
-      <version>1.1.8</version>
-      <scope>provided</scope>
-      <optional>true</optional>
-    </dependency>
+    -->
   </dependencies>
 
   <distributionManagement>

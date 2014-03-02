@@ -46,11 +46,9 @@ import org.apache.commons.scxml2.model.SCXML;
  * The following expression languages are supported in SCXML documents:
  * <ol>
  *  <li>JEXL - Using Commons JEXL</li>
- *  <li>EL - Using Commons EL</li>
  * </ol>
  *
  * @see org.apache.commons.scxml2.env.jexl
- * @see org.apache.commons.scxml2.env.jsp
  */
 public final class StandaloneUtils {
 
@@ -94,7 +92,7 @@ public final class StandaloneUtils {
             exec.go();
             BufferedReader br = new BufferedReader(new
                 InputStreamReader(System.in));
-            String event = null;
+            String event;
             while ((event = br.readLine()) != null) {
                 event = event.trim();
                 if (event.equalsIgnoreCase("help") || event.equals("?")) {

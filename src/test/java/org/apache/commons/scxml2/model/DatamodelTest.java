@@ -26,8 +26,6 @@ import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.env.jexl.JexlContext;
 import org.apache.commons.scxml2.env.jexl.JexlEvaluator;
-import org.apache.commons.scxml2.env.jsp.ELContext;
-import org.apache.commons.scxml2.env.jsp.ELEvaluator;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -38,7 +36,7 @@ import org.junit.Test;
 public class DatamodelTest {
 
     // Test data
-    private URL datamodel01jexl, datamodel02jexl, datamodel04jexl, datamodel05jexl, datamodel01jsp, datamodel02jsp;
+    private URL datamodel01jexl, datamodel02jexl, datamodel04jexl, datamodel05jexl;
     private SCXMLExecutor exec01, exec02;
 
     /**
@@ -54,10 +52,6 @@ public class DatamodelTest {
             getResource("org/apache/commons/scxml2/env/jexl/datamodel-04.xml");
         datamodel05jexl = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml2/env/jexl/datamodel-05.xml");
-        datamodel01jsp = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/env/jsp/datamodel-01.xml");
-        datamodel02jsp = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/env/jsp/datamodel-02.xml");
     }
 
     /**
@@ -65,7 +59,7 @@ public class DatamodelTest {
      */
     @After
     public void tearDown() {
-        datamodel01jexl = datamodel02jexl = datamodel04jexl = datamodel05jexl = datamodel01jsp = datamodel02jsp = null;
+        datamodel01jexl = datamodel02jexl = datamodel04jexl = datamodel05jexl = null;
     }
 
     /**
@@ -84,24 +78,12 @@ public class DatamodelTest {
     }
     
     @Test
-    public void testDatamodelSimultaneousJsp() throws Exception {
-        exec01 = SCXMLTestHelper.getExecutor(datamodel01jsp,
-            new ELContext(), new ELEvaluator());
-        Assert.assertNotNull(exec01);
-        exec02 = SCXMLTestHelper.getExecutor(datamodel01jsp,
-            new ELContext(), new ELEvaluator());
-        Assert.assertNotNull(exec02);
-        Assert.assertFalse(exec01 == exec02);
-        runtest();
-    }
-    
-    @Test
     public void testDatamodelNamespacePrefixedXPaths() throws Exception {
         exec01 = SCXMLTestHelper.getExecutor(datamodel02jexl,
             new JexlContext(), new JexlEvaluator());
         Assert.assertNotNull(exec01);
-        exec02 = SCXMLTestHelper.getExecutor(datamodel02jsp,
-            new ELContext(), new ELEvaluator());
+        exec02 = SCXMLTestHelper.getExecutor(datamodel02jexl,
+                new JexlContext(), new JexlEvaluator());
         Assert.assertNotNull(exec02);
         Assert.assertFalse(exec01 == exec02);
         runtest();

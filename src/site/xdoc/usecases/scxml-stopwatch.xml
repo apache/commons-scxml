@@ -36,10 +36,7 @@
 
    <subsection name="Motivation">
     <ul>
-     <li>Demonstrate a "standalone" usecase of Commons SCXML
-         (some of the other usecases are "frameworky" in nature and require
-         additional knowledge of the framework the particular usecase
-         refers to).</li>
+     <li>Demonstrate a "standalone" usecase of Commons SCXML</li>
      <li>Demonstrate the useful separation of concerns, the
          simplicity of the resulting artifacts, and the direct association
          between the model and the code when using Commons SCXML to

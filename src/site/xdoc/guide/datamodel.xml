@@ -205,9 +205,9 @@
    <p>Since the data elements contain XML data trees, the straightforward
    way to refer to bits inside these in expressions is to use XPath or an
    equivalent language. Commons SCXML currently supports expression languages
-   such as Commons JEXL and Commons EL, which do not have any inherent
+   such as Commons JEXL which do not have any inherent
    understanding of XPath. Therefore, Commons SCXML defines a <b>Data()</b>
-   function for use in JEXL or EL expressions, for example:</p>
+   function for use in JEXL or other expression languages, for example:</p>
 
    <pre>
     &lt;var name="arrival" expr="Data(hotelbooking, 'hotel/stay/arrival')" /&gt;

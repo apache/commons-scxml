@@ -24,8 +24,6 @@ import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.env.SimpleSCXMLListener;
-import org.apache.commons.scxml2.env.jsp.ELContext;
-import org.apache.commons.scxml2.env.jsp.ELEvaluator;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -36,8 +34,8 @@ import org.junit.Test;
 public class StatelessModelTest {
 
     // Test data
-    private URL stateless01jexl, stateless01jsp, stateless01par;
-    private SCXML scxml01jexl, scxml01jsp, scxml01par, scxml02par;
+    private URL stateless01jexl, stateless01par;
+    private SCXML scxml01jexl, scxml01par, scxml02par;
     private SCXMLExecutor exec01, exec02;
 
     /**
@@ -47,12 +45,9 @@ public class StatelessModelTest {
     public void setUp() throws Exception {
         stateless01jexl = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml2/env/jexl/stateless-01.xml");
-        stateless01jsp = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/env/jsp/stateless-01.xml");
         stateless01par = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml2/model/stateless-parallel-01.xml");
         scxml01jexl = SCXMLTestHelper.parse(stateless01jexl);
-        scxml01jsp = SCXMLTestHelper.parse(stateless01jsp);
         scxml01par = SCXMLTestHelper.parse(stateless01par);
         scxml02par = SCXMLTestHelper.parse(stateless01par);
     }
@@ -87,36 +82,6 @@ public class StatelessModelTest {
         // rinse and repeat
         for (int i = 0; i < 3; i++) {
             exec01 = SCXMLTestHelper.getExecutor(scxml01jexl);
-            Assert.assertNotNull(exec01);
-            runSequentialTest();
-        }
-    }
-
-    /**
-     * Test the stateless model, simultaneous executions, EL expressions
-     */    
-    @Test
-    public void testStatelessModelSimultaneousEl() throws Exception {
-    	// parse once, use many times
-        exec01 = SCXMLTestHelper.getExecutor(scxml01jsp,
-            new ELContext(), new ELEvaluator());
-        Assert.assertNotNull(exec01);
-        exec02 = SCXMLTestHelper.getExecutor(scxml01jsp,
-            new ELContext(), new ELEvaluator());
-        Assert.assertNotNull(exec02);
-        Assert.assertFalse(exec01 == exec02);
-        runSimultaneousTest();
-    }
-
-    /**
-     * Test the stateless model, sequential executions, EL expressions
-     */    
-    @Test
-    public void testStatelessModelSequentialEl() throws Exception {
-        // rinse and repeat
-        for (int i = 0; i < 3; i++) {
-            exec01 = SCXMLTestHelper.getExecutor(scxml01jsp,
-                new ELContext(), new ELEvaluator());
             Assert.assertNotNull(exec01);
             runSequentialTest();
         }
@@ -178,7 +143,7 @@ public class StatelessModelTest {
         Iterator<TransitionTarget> i = currentStates.iterator();
         Assert.assertTrue("Not enough states", i.hasNext());
         String cs1 = i.next().getId();
-        String cs2 = null;
+        String cs2;
         if (s2 != null) {
             Assert.assertTrue("Not enough states, found one state: " + cs1, i.hasNext());
             cs2 = i.next().getId();
@@ -231,15 +196,15 @@ public class StatelessModelTest {
     private void runSequentialTest() throws Exception {
         Set<TransitionTarget> currentStates = exec01.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
-        Assert.assertEquals("ten", ((State)currentStates.iterator().
+        Assert.assertEquals("ten", (currentStates.iterator().
             next()).getId());
         currentStates = fireEvent("ten.done", exec01);
         Assert.assertEquals(1, currentStates.size());
-        Assert.assertEquals("twenty", ((State)currentStates.iterator().
+        Assert.assertEquals("twenty", (currentStates.iterator().
             next()).getId());
         currentStates = fireEvent("twenty.done", exec01);
         Assert.assertEquals(1, currentStates.size());
-        Assert.assertEquals("thirty", ((State)currentStates.iterator().
+        Assert.assertEquals("thirty", (currentStates.iterator().
             next()).getId());
     }
 

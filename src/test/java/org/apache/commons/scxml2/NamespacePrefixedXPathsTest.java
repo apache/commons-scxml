@@ -19,8 +19,6 @@ package org.apache.commons.scxml2;
 import java.net.URL;
 import java.util.Set;
 
-import org.apache.commons.scxml2.env.jsp.ELContext;
-import org.apache.commons.scxml2.env.jsp.ELEvaluator;
 import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.TransitionTarget;
 import org.junit.After;
@@ -34,8 +32,8 @@ import org.junit.Test;
 public class NamespacePrefixedXPathsTest {
 
     // Test data
-    private URL datamodel03jexl, datamodel03jsp;
-    private SCXMLExecutor exec01, exec02;
+    private URL datamodel03jexl;
+    private SCXMLExecutor exec01;
 
     /**
      * Set up instance variables required by this test case.
@@ -44,10 +42,7 @@ public class NamespacePrefixedXPathsTest {
     public void setUp() throws Exception {
         datamodel03jexl = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml2/env/jexl/datamodel-03.xml");
-        datamodel03jsp = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/env/jsp/datamodel-03.xml");
         exec01 = SCXMLTestHelper.getExecutor(datamodel03jexl);
-        exec02 = SCXMLTestHelper.getExecutor(datamodel03jsp, new ELContext(), new ELEvaluator());
     }
 
     /**
@@ -55,8 +50,8 @@ public class NamespacePrefixedXPathsTest {
      */
     @After
     public void tearDown() {
-        datamodel03jexl = datamodel03jsp = null;
-        exec01 = exec02 = null;
+        datamodel03jexl = null;
+        exec01 = null;
     }
 
     /**
@@ -66,12 +61,6 @@ public class NamespacePrefixedXPathsTest {
     @Test
     public void testNamespacePrefixedXPathsJexl() throws Exception {
         runtest(exec01);
-    }
-
-    // EL
-    @Test
-    public void testNamespacePrefixedXPathsEL() throws Exception {
-        runtest(exec02);
     }
 
     // Same test, since same documents (different expression languages)
@@ -111,7 +100,7 @@ public class NamespacePrefixedXPathsTest {
 
         currentStates = SCXMLTestHelper.fireEvent(exec, "fifty.done");
         Assert.assertEquals(1, currentStates.size());
-        Assert.assertEquals("sixty", ((State)currentStates.iterator().
+        Assert.assertEquals("sixty", (currentStates.iterator().
             next()).getId());
 
         currentStates = SCXMLTestHelper.fireEvent(exec, "sixty.done");

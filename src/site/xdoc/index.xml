@@ -108,23 +108,13 @@
   <p>
    Projects that use Commons SCXML:
    <ul>
-    <li><a href="http://jakarta.apache.org/taglibs/doc/rdc-doc/intro.html">Reusable Dialog Components (RDC)</a>,
-        part of Apache Jakarta Taglibs - For choreographing the execution of speech components
-        taking part in a voice interaction bounded by a RDC group container.</li>
-    <li><a href="http://shale.apache.org/">Apache Shale</a> - For managing the flow of control in
-        web based applications, using <a href="http://shale.apache.org/shale-dialog/">Shale dialogs</a>.</li>
-    <li><a href="http://www.softwaredemo.de/en">Softwaredemo</a> - A platform for online live testing of software.
-        SCXML is responsible for managing all resources like VMs, storage and virtual desktop components.</li>
-    <li><a href="http://mymobileweb.morfeo-project.org/">MyMobileWeb project</a> - Open source software platform
-        for simplifying development of mobile web applications. Flow manager uses SCXML to control mobile
-        application flow.</li>
    </ul>
   </p>
  </section>
 
  <section name="Related Projects">
   <p>
-   Related projects providing some SCXML-related functionality:
+   Related projects providing some SCXML-related functionality (based on Commons SCXML 0.9):
    <ul>
     <li>
      <a href="http://commons.apache.org/sandbox/gsoc/2010/scxml-eclipse/">Commons SCXML - Eclipse</a> -

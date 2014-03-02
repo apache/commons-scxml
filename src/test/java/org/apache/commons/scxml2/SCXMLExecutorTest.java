@@ -22,10 +22,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.scxml2.env.SimpleContext;
 import org.apache.commons.scxml2.env.groovy.GroovyContext;
 import org.apache.commons.scxml2.env.groovy.GroovyEvaluator;
-import org.apache.commons.scxml2.env.jsp.ELEvaluator;
 import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.TransitionTarget;
@@ -39,8 +37,7 @@ import org.junit.Test;
 public class SCXMLExecutorTest {
 
     // Test data
-    private URL microwave01jsp, microwave02jsp, microwave01jexl,
-        microwave02jexl, microwave03jexl, microwave04jexl, microwave05jexl,
+    private URL microwave01jexl, microwave02jexl, microwave03jexl, microwave04jexl, microwave05jexl,
             microwave01grv, microwave02grv, microwave03grv, microwave04grv, microwave05grv, transitions01,
         transitions02, transitions03, transitions04, transitions05, transitions06, prefix01, send01, send02,
         transitionsWithCond01, transitionsEventVar;
@@ -51,10 +48,6 @@ public class SCXMLExecutorTest {
      */
     @Before
     public void setUp() {
-        microwave01jsp = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/env/jsp/microwave-01.xml");
-        microwave02jsp = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/env/jsp/microwave-02.xml");
         microwave01jexl = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml2/env/jexl/microwave-01.xml");
         microwave02jexl = this.getClass().getClassLoader().
@@ -104,7 +97,7 @@ public class SCXMLExecutorTest {
      */
     @After
     public void tearDown() {
-        microwave01jsp = microwave02jsp = microwave01jexl = microwave02jexl =
+        microwave01jexl = microwave02jexl =
             microwave04jexl = microwave05jexl = transitions01 = transitions02 = transitions03 =
             transitions04 = transitions05 = transitions06 = prefix01 = send01 = send02 = 
             transitionsWithCond01 = transitionsEventVar = null;
@@ -113,22 +106,6 @@ public class SCXMLExecutorTest {
     /**
      * Test the implementation
      */
-    @Test
-    public void testSCXMLExecutorMicrowave01JspSample() throws Exception {
-        exec = SCXMLTestHelper.getExecutor(microwave01jsp,
-            new SimpleContext(), new ELEvaluator());
-        Assert.assertNotNull(exec);
-        checkMicrowave01Sample();
-    }
-
-    @Test
-    public void testSCXMLExecutorMicrowave02JspSample() throws Exception {
-        exec = SCXMLTestHelper.getExecutor(microwave02jsp,
-            new SimpleContext(), new ELEvaluator());
-        Assert.assertNotNull(exec);
-        checkMicrowave02Sample();
-    }
-
     @Test
     public void testSCXMLExecutorMicrowave01JexlSample() throws Exception {
         exec = SCXMLTestHelper.getExecutor(microwave01jexl);
@@ -233,7 +210,7 @@ public class SCXMLExecutorTest {
         currentStates = SCXMLTestHelper.fireEvent(exec, "twenty_one.done");
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("twenty_two", currentStates.iterator().next().getId());
-        currentStates = SCXMLTestHelper.fireEvent(exec, "twenty_two.done");
+        SCXMLTestHelper.fireEvent(exec, "twenty_two.done");
         Assert.assertEquals(3, exec.getCurrentStatus().getStates().size());
     }
 
@@ -291,7 +268,7 @@ public class SCXMLExecutorTest {
         }
         currentStates = SCXMLTestHelper.fireEvent(exec, "bar");
         Assert.assertEquals(1, currentStates.size());
-        Assert.assertEquals("thirty", ((State)currentStates.iterator().
+        Assert.assertEquals("thirty", (currentStates.iterator().
             next()).getId());
     }
 
@@ -391,7 +368,7 @@ public class SCXMLExecutorTest {
     private void checkMicrowave02Sample() throws Exception {
         Set<TransitionTarget> currentStates = SCXMLTestHelper.fireEvent(exec, "turn_on");
         Assert.assertEquals(2, currentStates.size());
-        String id = ((State)currentStates.iterator().next()).getId();
+        String id = (currentStates.iterator().next()).getId();
         Assert.assertTrue(id.equals("closed") || id.equals("cooking"));
     }
 

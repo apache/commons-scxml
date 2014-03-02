@@ -61,9 +61,6 @@
         <item     name="Custom Semantics"
                   href="/guide/custom-semantics.html" />
 
-        <item     name="Side Effect - EL"  
-                  href="/guide/side-effect-el.html" />
-
       </item>
 
       <item       name="Javadoc"
@@ -78,15 +75,6 @@
 
         <item     name="SCXML Stopwatch"
                   href="/usecases/scxml-stopwatch.html" />
-
-        <item     name="SCXML in RDC group container"  
-                  href="/usecases/scxml-in-rdc-group.html" />
-
-        <item     name="SCXML in Shale dialogs"        
-                  href="/usecases/scxml-in-shale-dialogs.html" />
-
-        <item     name="SCXML in Google Android"
-                  href="/usecases/scxml-stopwatch-on-android.html" />
 
       </item>
 
