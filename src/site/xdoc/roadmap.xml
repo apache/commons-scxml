@@ -29,12 +29,12 @@
       </p>
       <p>
         The goal for Commons SCXML 2.0 is to get alignment (back) and be compliant with the W3C SCXML specification,
-        but for this a lot of major changes are needed, both to the 'public' API and, even more so, to the internal
+        but for this a lot of major changes are needed, both to the public API and, even more so, to the internal
         model and processing logic.
       </p>
       <p>
         To be able to make such major changes in an effective way, we already cleaned out a lot of the old but no
-        longer relevant, working or otherwise compatible features from the previous SCXML (0.9) version, see
+        longer relevant, working or otherwise incompatible features from the previous SCXML (0.9) version, see
         <a href="#Milestone_0:_Cleanup_(done)">Milestone 0</a> below.
       </p>
       <p>
@@ -175,8 +175,8 @@
           will be used to test against.
         </p>
         <p>
-          Even if the IRP is not intended to be used for conformance testing of implementations, it is very much used as
-          a functional benchmark, also by other SCXML implementations.
+          Even though the IRP is not intended to be used for conformance testing of implementations, it is very much
+          used as a functional benchmark, also by other SCXML implementations.
         </p>
       </subsection>
       <subsection name="Commons SCXML 2.0+: Optional SCXML features">
@@ -186,7 +186,7 @@
         </p>
         <p>
           Also, adding extensions outside the specification, or bringing back some of the features dropped for
-          milestone 0, like integration with other frameworks or expression languages (Servlet, EL, etc.) will be
+          milestone 0, like integration with other frameworks or expression languages (Servlet, EL, etc.), will be
           considered again.
         </p>
       </subsection>
@@ -196,7 +196,7 @@
           For the above milestones specific VCS milestone tags will be set, like <b>commons-scxml-2.0-M0</b>.
         </p>
         <p>
-          These milestones tag however do <b><em>not</em></b> represent a formal release and they are
+          These milestones tags however do <b><em>not</em></b> represent a formal release and they are
           <b><em>only</em></b> intended and targeted to be used by the Commons SCXML developers, not end users.
         </p>
         <p>
