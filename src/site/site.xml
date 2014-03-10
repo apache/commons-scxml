@@ -27,6 +27,9 @@
       <item       name="Overview"
                   href="/index.html"/>
 
+      <item       name="Roadmap"
+                  href="/roadmap.html"/>
+
       <item       name="User Guide"
                   href="/guide.html"
                   collapse="true">

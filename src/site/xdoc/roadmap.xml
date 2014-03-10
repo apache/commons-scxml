@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+<document>
+  <properties>
+    <title>Commons SCXML Roadmap</title>
+    <author email="dev@commons.apache.org">Commons Documentation Team</author>
+  </properties>
+  <body>
+    <section name="Commons SCXML 2.0 Roadmap">
+      <p>
+        The last SCXML release 0.9 has been quite some time ago (2008) and since then the
+        <a href="http://www.w3.org/TR/scxml/" target="_blank">W3C SCXML specification</a>, as of 11 March 2014 a
+        <em>"Candidate Recommendation"</em>, has progressed and changed quite a lot.
+      </p>
+      <p>
+        The goal for Commons SCXML 2.0 is to get alignment (back) and be compliant with the W3C SCXML specification,
+        but for this a lot of major changes are needed, both to the 'public' API and, even more so, to the internal
+        model and processing logic.
+      </p>
+      <p>
+        To be able to make such major changes in an effective way, we already cleaned out a lot of the old but no
+        longer relevant, working or otherwise compatible features from the previous SCXML (0.9) version, see
+        <a href="#Milestone_0:_Cleanup_(done)">Milestone 0</a> below.
+      </p>
+      <p>
+        The work needed towards Commons SCXML 2.0 has been divided in a set of high-level targets and corresponding
+        milestones:
+      </p>
+      <subsection name="Milestone 0: Cleanup (done)">
+        <p>
+          The first and already completed target was to cleanup and clean out no longer relevant or even no longer
+          working features, or features which would make it very hard or complicated to keep working and supported
+          for the major changes ahead.
+        </p>
+        <p>
+          The support for the following features and integrations has been dropped: Shale/JSF, Rhino/E4X, Servlet/JSP.
+        </p>
+        <p>
+          Note: some of the dropped features <em>might</em> be restored or re-implemented again once we reached a
+          reasonable level of stability for the new APIs and internal logic, but that also will depend on the level of
+          interest and support from the community.
+        </p>
+        <p>
+          Technically, this milestone 0 still is largely compatible with the 0.9 release,
+          just without those above mentioned features, and also now requires Java 6+. In addition this milestone also
+          contains several fixes and enhancements (like Groovy language support).
+        </p>
+      </subsection>
+      <subsection name="Milestone 1: Redesign semantics and processing components">
+        <p>
+          The target for milestone 1 is a redesign and better separation of concerns of the main SCXML processing
+          components: SCXMLSemantics, SCXMLExecutor and SCInstance.
+        </p>
+        <p>
+          The high-level plan is to:
+          <ul>
+            <li>Redefine SCXMLSemantics to align with the
+              <a href="http://www.w3.org/TR/scxml/#AlgorithmforSCXMLInterpretation" target="_blank">
+                SCXML Algorithm for SCXML Interpretation</a>
+              <p>
+                The current SCXMLSemantics interface and its implementation is so much different from
+                the algorithm in the specification that 'molding' it into what the algorithm now expects is too
+                cumbersome.
+              </p>
+              <p>
+                Also, developers wishing to extend or customize the SCXMLSemantics will have a hard time to match that
+                against the algorithm as well.
+              </p>
+              <p>
+                The intend therefore is to start with a new SCXMLSemantics interface from scratch which (largely)
+                follows the algorithm in the specification.
+              </p>
+            </li>
+            <li>
+              Better separation of concern between SCXMLExecutor and SCInstance.
+              <p>
+                The purpose of SCInstance is to be used as backing store for internal SCXML state. However
+                over time some processing and transient state based features have ended up in SCInstance which are more
+                appropriated to be managed by the SCXMLExecutor instead.
+              </p>
+              <p>
+                Conversely, SCXMLExecutor maintains the current Status for the SCXML state as well as the internal
+                events list going with it. Having the Status, without the processing related events list, to be
+                managed by SCInstance instead would be better fitting.
+              </p>
+              <p>
+                And finally, SCXMLExecutor currently doesn't yet provide a good abstraction or implementation of the
+                <a href="http://www.w3.org/TR/scxml/#SCXMLEventProcessor" target="_blank">
+                  SCXML Event I/O Processor</a> functionally.
+                The internal and external event I/O management is a critical requirement and many features of the
+                specification rely on it fulfilling this contract.<br/>
+                The goal for this milestone is to provide a least a basic level of support for the SCXML Event I/O
+                Processor and Event queue handling features.<br/>
+              </p>
+              <p>
+                Overall, the intend is to let SCXMLExecutor be responsible as SCXML Processor and SCXML I/O Processor
+                and to maintain all transient processing state including the system variables, while delegating to
+                SCXMLSemantics for dealing with the processing algorithm.
+              </p>
+            </li>
+          </ul>
+        </p>
+      </subsection>
+      <subsection name="Milestone 2: Datamodel and data manipulation alignment">
+        <p>The target for milestone 2 is to get better alignment with the SCXML datamodel specification.</p>
+        <p>
+          The Commons SCXML datamodel and context features are very flexible and can be defined and redefined in a
+          hierarchical way (per state element). However this also makes it much more complex to manage, especially for
+          XPath (XML) datamodel definitions.
+        </p>
+        <p>
+          The SCXML specification however is very explicit in its requirements that, while datamodel elements may be
+          defined in multiple locations within an SCXML document, together they must be accessible (and thus managed) as
+          a single datamodel definition.
+        </p>
+        <p>
+          The current Commons SCXML datamodel (and the backing Context handling) is to some extend actually more
+          flexible and generic than what is possible <em>AND</em> allowed by the specification.
+        </p>
+        <p>
+          To be able to be compliant with the specification, the <em>default</em> datamodel management in
+          Commons SCXML will have to be more restricted and simplified.<br/>
+          That will actually make things much easier to implement. For an XPath (XML) datamodel then only a single
+          (aggregated) XML datamodel document can be used and the custom Commons SCXML Data() function no longer will be
+          needed to access the data elements.
+        </p>
+        <p>
+          It is the intend to also retain the current flexible Commons SCXML datamodel and context features, but
+          provide this as custom extension, no longer as default.
+        </p>
+      </subsection>
+      <subsection name="Milestone 3: SCXML model alignment">
+        <p>
+          The target for milestone 3 is to complete the support for the remaining SCXML model elements.
+        </p>
+        <p>
+          The current Commons SCXML is still missing implementation of some SCXML element features, or is providing
+          functionality or behavior not compliant with the specification.
+        </p>
+      </subsection>
+      <subsection name="Milestone 4: Session management, external communications and environment variables">
+        <p>
+          The target for milestone 4 is to complete the remaining SCXML Processor and SCXML I/O Processor required
+          features for session management and external communications (send and invoke elements).
+        </p>
+        <p>
+          There are several requirements and restrictions with respect to environment variables which also needs to be
+          supported.
+        </p>
+      </subsection>
+      <subsection name="Commons SCXML 2.0 release">
+        <p>
+          If and when all of the above milestone targets are met Commons SCXML should be very close to being in
+          compliance with the SCXML specification, and/or in any case at a good enough level for all practical purposes,
+          to be released as Commons SCXML 2.0.
+        </p>
+        <p>
+          As part of validation the implementation, the
+          <a href="http://www.w3.org/Voice/2013/scxml-irp/" target="_blank">SCXML 1.0 Implementation Report Plan</a>
+          will be used to test against.
+        </p>
+        <p>
+          Even if the IRP is not intended to be used for conformance testing of implementations, it is very much used as
+          a functional benchmark, also by other SCXML implementations.
+        </p>
+      </subsection>
+      <subsection name="Commons SCXML 2.0+: Optional SCXML features">
+        <p>
+          There are still plenty of optional features in the SCXML specification which might be very useful to support,
+          like ECMAScript+JSON datamodel or HTTP Event I/O Processor support.
+        </p>
+        <p>
+          Also, adding extensions outside the specification, or bringing back some of the features dropped for
+          milestone 0, like integration with other frameworks or expression languages (Servlet, EL, etc.) will be
+          considered again.
+        </p>
+      </subsection>
+
+      <subsection name="Milestone tags">
+        <p>
+          For the above milestones specific VCS milestone tags will be set, like <b>commons-scxml-2.0-M0</b>.
+        </p>
+        <p>
+          These milestones tag however do <b><em>not</em></b> represent a formal release and they are
+          <b><em>only</em></b> intended and targeted to be used by the Commons SCXML developers, not end users.
+        </p>
+        <p>
+          Developers willing to test and validate these milestones can do so by using the following Maven dependency
+          configuration (using milestone 0 as example):
+          <pre><![CDATA[
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-scxml2</artifactId>
+          <version>2.0-M0</version>
+        </dependency>]]>
+          </pre>
+        </p>
+      </subsection>
+    </section>
+  </body>
+</document>
