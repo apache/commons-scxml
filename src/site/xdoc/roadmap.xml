@@ -196,12 +196,16 @@
           For the above milestones specific VCS milestone tags will be set, like <b>commons-scxml-2.0-M0</b>.
         </p>
         <p>
-          These milestones tags however do <b><em>not</em></b> represent a formal release and they are
-          <b><em>only</em></b> intended and targeted to be used by the Commons SCXML developers, not end users.
+          These milestones tags however do <b><em>not</em></b> represent a formal release and are
+          only intended to be used for testing purposes by Commons SCXML developers.
         </p>
         <p>
-          Developers willing to test and validate these milestones can do so by using the following Maven dependency
-          configuration (using milestone 0 as example):
+          Developers willing to test and validate these milestones can do so by checking out these tags
+          and building and deploying a milestone version into their local Maven repository.
+        </p>
+        <p>
+          Such locally installed milestone builds then can be used in your Maven project using a dependency
+          configuration like below (using milestone 0 as example):
           <pre><![CDATA[
         <dependency>
           <groupId>org.apache.commons</groupId>
