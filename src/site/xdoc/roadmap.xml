@@ -193,7 +193,7 @@
 
       <subsection name="Milestone tags">
         <p>
-          For the above milestones specific VCS milestone tags will be set, like <b>commons-scxml-2.0-M0</b>.
+          For the above milestones specific VCS milestone tags will be set, like <b>commons-scxml2-2.0-M0</b>.
         </p>
         <p>
           These milestones tags however do <b><em>not</em></b> represent a formal release and are
