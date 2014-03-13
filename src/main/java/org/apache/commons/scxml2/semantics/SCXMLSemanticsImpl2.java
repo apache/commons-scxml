@@ -1,11 +1,12 @@
 /*
- * Copyright 2014 Hippo B.V. (http://www.onehippo.com)
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -61,7 +62,7 @@ import org.apache.commons.scxml2.model.Transition;
 import org.apache.commons.scxml2.model.TransitionTarget;
 
 /**
- * <p>This class will encapsulates and implement the
+ * This class will encapsulate and implement the
  * <a href="http://www.w3.org/TR/2014/CR-scxml-20140313/#AlgorithmforSCXMLInterpretation">W3C SCXML Algorithm for SCXML Interpretation</a>
  */
 public class SCXMLSemanticsImpl2 implements SCXMLSemantics, Serializable {
