@@ -29,10 +29,10 @@
 
   <p>
   <a href="http://www.w3.org/TR/scxml/" target="_blank">State Chart XML (SCXML)</a> is currently a
-  Candidate Recommendation published by the World Wide Web Consortium (W3C).
+  Working Draft specification published by the World Wide Web Consortium (W3C).
   SCXML provides a generic state-machine based execution environment based on Harel
   State Tables. SCXML is a candidate for the control language within 
-  multiple markup languages coming out of the W3C (see Candidate Recommendation for details).
+  multiple markup languages coming out of the W3C (see the latest Working Draft for details).
   <em>Commons SCXML</em> is an implementation aimed at creating
   and maintaining a Java SCXML engine capable of executing a state machine defined 
   using a SCXML document, while abstracting out the environment interfaces.

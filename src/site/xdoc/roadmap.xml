@@ -24,8 +24,8 @@
     <section name="Commons SCXML 2.0 Roadmap">
       <p>
         The last SCXML release 0.9 has been quite some time ago (2008) and since then the
-        <a href="http://www.w3.org/TR/scxml/" target="_blank">W3C SCXML specification</a>, as of 11 March 2014 a
-        <em>"Candidate Recommendation"</em>, has progressed and changed quite a lot.
+        <a href="http://www.w3.org/TR/scxml/" target="_blank">W3C SCXML specification</a> has progressed and changed
+        quite a lot, and almost ready to move to Candidate Recommendation status.
       </p>
       <p>
         The goal for Commons SCXML 2.0 is to get alignment (back) and be compliant with the W3C SCXML specification,
