@@ -110,6 +110,94 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
     private static final Transition[] TR_ARR0 = new Transition[0];
 
     /**
+     * TransitionTargetComparator factory method.
+     * @return Comparator The TransitionTarget comparator
+     */
+    protected Comparator<TransitionTarget> getTTComparator() {
+        return targetComparator;
+    }
+
+    /**
+     * Set the log used by this <code>SCXMLSemantics</code> instance.
+     *
+     * @param log The new log.
+     */
+    protected void setLog(final Log log) {
+        this.appLog = log;
+    }
+
+    /**
+     * Get the log used by this <code>SCXMLSemantics</code> instance.
+     *
+     * @return Log The log being used.
+     */
+    protected Log getLog() {
+        return appLog;
+    }
+
+    /**
+     * Implements prefix match, that is, if, for example,
+     * &quot;mouse.click&quot; is a member of eventOccurrences and a
+     * transition is triggered by &quot;mouse&quot;, the method returns true.
+     *
+     * @param transEvent
+     *            a trigger event of a transition
+     * @param eventOccurrences
+     *            current events
+     * @return true/false
+     */
+    protected boolean eventMatch(final String transEvent,
+                                 final Set<TriggerEvent> eventOccurrences) {
+        if (SCXMLHelper.isStringEmpty(transEvent)) { // Eventless transition
+            return true;
+        } else {
+            String trimTransEvent = transEvent.trim();
+            for (TriggerEvent te : eventOccurrences) {
+                String event = te.getName();
+                if (event == null) {
+                    continue; // Unnamed events
+                }
+                String trimEvent = event.trim();
+                if (trimEvent.equals(trimTransEvent)) {
+                    return true; // Match
+                } else if (te.getType() != TriggerEvent.CHANGE_EVENT
+                        && trimTransEvent.equals("*")) {
+                    return true; // Wildcard, skip gen'ed ones like .done etc.
+                } else if (trimTransEvent.endsWith(".*")
+                        && trimEvent.startsWith(trimTransEvent.substring(0,
+                        trimTransEvent.length() - 1))) {
+                    return true; // Prefixed wildcard
+                }
+            }
+            return false;
+        }
+    }
+
+    /**
+     * Implements event prefix match to ascertain &lt;finalize&gt; execution.
+     *
+     * @param parentStateId
+     *            the ID of the parent state of the &lt;invoke&gt; holding
+     *            the &lt;finalize&gt;
+     * @param eventOccurrences
+     *            current events
+     * @return true/false
+     */
+    protected boolean finalizeMatch(final String parentStateId,
+                                    final Set<TriggerEvent> eventOccurrences) {
+        String prefix = parentStateId + ".invoke."; // invoke prefix
+        for (TriggerEvent te : eventOccurrences) {
+            String evt = te.getName();
+            if (evt == null) {
+                continue; // Unnamed events
+            } else if (evt.trim().startsWith(prefix)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * @param input
      *            SCXML state machine
      * @return normalized SCXML state machine, pseudo states are removed, etc.
@@ -834,94 +922,5 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
             }
         }
     }
-
-    /**
-     * Implements prefix match, that is, if, for example,
-     * &quot;mouse.click&quot; is a member of eventOccurrences and a
-     * transition is triggered by &quot;mouse&quot;, the method returns true.
-     *
-     * @param transEvent
-     *            a trigger event of a transition
-     * @param eventOccurrences
-     *            current events
-     * @return true/false
-     */
-    protected boolean eventMatch(final String transEvent,
-            final Set<TriggerEvent> eventOccurrences) {
-        if (SCXMLHelper.isStringEmpty(transEvent)) { // Eventless transition
-            return true;
-        } else {
-            String trimTransEvent = transEvent.trim();
-            for (TriggerEvent te : eventOccurrences) {
-                String event = te.getName();
-                if (event == null) {
-                    continue; // Unnamed events
-                }
-                String trimEvent = event.trim();
-                if (trimEvent.equals(trimTransEvent)) {
-                    return true; // Match
-                } else if (te.getType() != TriggerEvent.CHANGE_EVENT
-                        && trimTransEvent.equals("*")) {
-                    return true; // Wildcard, skip gen'ed ones like .done etc.
-                } else if (trimTransEvent.endsWith(".*")
-                        && trimEvent.startsWith(trimTransEvent.substring(0,
-                                trimTransEvent.length() - 1))) {
-                    return true; // Prefixed wildcard
-                }
-            }
-            return false;
-        }
-    }
-
-    /**
-     * Implements event prefix match to ascertain &lt;finalize&gt; execution.
-     *
-     * @param parentStateId
-     *            the ID of the parent state of the &lt;invoke&gt; holding
-     *            the &lt;finalize&gt;
-     * @param eventOccurrences
-     *            current events
-     * @return true/false
-     */
-    protected boolean finalizeMatch(final String parentStateId,
-            final Set<TriggerEvent> eventOccurrences) {
-        String prefix = parentStateId + ".invoke."; // invoke prefix
-        for (TriggerEvent te : eventOccurrences) {
-            String evt = te.getName();
-            if (evt == null) {
-                continue; // Unnamed events
-            } else if (evt.trim().startsWith(prefix)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * TransitionTargetComparator factory method.
-     * @return Comparator The TransitionTarget comparator
-     */
-    protected Comparator<TransitionTarget> getTTComparator() {
-        return targetComparator;
-    }
-
-    /**
-     * Set the log used by this <code>SCXMLSemantics</code> instance.
-     *
-     * @param log The new log.
-     */
-    protected void setLog(final Log log) {
-        this.appLog = log;
-    }
-
-    /**
-     * Get the log used by this <code>SCXMLSemantics</code> instance.
-     *
-     * @return Log The log being used.
-     */
-    protected Log getLog() {
-        return appLog;
-    }
-
 }
 

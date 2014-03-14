@@ -54,6 +54,29 @@ public class SCXMLExecutor implements Serializable {
      */
     private static final long serialVersionUID = 1L;
 
+
+    /**
+     * The special variable for storing single event data / payload.
+     * @deprecated
+     */
+    private static final String EVENT_DATA = "_eventdata";
+
+    /**
+     * The special variable for storing event data / payload,
+     * when multiple events are triggered, keyed by event name.
+     */
+    private static final String EVENT_DATA_MAP = "_eventdatamap";
+
+    /**
+     * The special variable for storing single event data / payload.
+     */
+    private static final String EVENT_VARIABLE = "_event";
+
+    /**
+     * SCXMLExecutor put into motion without setting a model (state machine).
+     */
+    private static final String ERR_NO_STATE_MACHINE = "SCXMLExecutor: State machine not set";
+
     /**
      * The Logger for the SCXMLExecutor.
      */
@@ -95,83 +118,88 @@ public class SCXMLExecutor implements Serializable {
     private SCInstance scInstance;
 
     /**
-     * The worker method.
-     * Re-evaluates current status whenever any events are triggered.
+     * Get the state chart instance for this executor.
      *
-     * @param evts
-     *            an array of external events which triggered during the last
-     *            time quantum
-     * @throws ModelException in case there is a fatal SCXML object
-     *            model problem.
+     * @return The SCInstance for this executor.
      */
-    public synchronized void triggerEvents(final TriggerEvent[] evts)
-            throws ModelException {
-        // Set event data, saving old values
-        Object[] oldData = setEventData(evts);
+    SCInstance getSCInstance() {
+        return scInstance;
+    }
 
-        // Forward events (external only) to any existing invokes,
-        // and finalize processing
-        semantics.processInvokes(evts, errorReporter, scInstance);
-
-        List<TriggerEvent> evs = new ArrayList<TriggerEvent>(Arrays.asList(evts));
-        Step step = null;
-
-        do {
-            // CreateStep
-            step = new Step(evs, currentStatus);
-            // EnumerateReachableTransitions
-            semantics.enumerateReachableTransitions(stateMachine, step,
-                errorReporter);
-            // FilterTransitionSet
-            semantics.filterTransitionsSet(step, eventdispatcher,
-                errorReporter, scInstance);
-            // FollowTransitions
-            semantics.followTransitions(step, errorReporter, scInstance);
-            // UpdateHistoryStates
-            semantics.updateHistoryStates(step, errorReporter, scInstance);
-            // ExecuteActions
-            semantics.executeActions(step, stateMachine, eventdispatcher,
-                errorReporter, scInstance);
-            // AssignCurrentStatus
-            updateStatus(step);
-            // ***Cleanup external events if superStep
-            if (superStep) {
-                evs.clear();
+    /**
+     * Log the current set of active states.
+     */
+    private void logState() {
+        if (log.isDebugEnabled()) {
+            StringBuffer sb = new StringBuffer("Current States: [ ");
+            for (TransitionTarget tt : currentStatus.getStates()) {
+                sb.append(tt.getId()).append(", ");
             }
-        } while (superStep && currentStatus.getEvents().size() > 0);
-
-        // InitiateInvokes only after state machine has stabilized
-        semantics.initiateInvokes(step, errorReporter, scInstance);
-
-        // Restore event data
-        restoreEventData(oldData);
-        logState();
+            int length = sb.length();
+            sb.delete(length - 2, length).append(" ]");
+            log.debug(sb.toString());
+        }
     }
 
     /**
-     * Convenience method when only one event needs to be triggered.
-     *
-     * @param evt
-     *            the external events which triggered during the last
-     *            time quantum
-     * @throws ModelException in case there is a fatal SCXML object
-     *            model problem.
+     * @param step The most recent Step
      */
-    public void triggerEvent(final TriggerEvent evt)
-            throws ModelException {
-        triggerEvents(new TriggerEvent[] {evt});
+    private void updateStatus(final Step step) {
+        currentStatus = step.getAfterStatus();
+        scInstance.getRootContext().setLocal("_ALL_STATES",
+                SCXMLHelper.getAncestorClosure(currentStatus.getStates(), null));
+        setEventData(currentStatus.getEvents().toArray(new TriggerEvent[0]));
     }
 
     /**
-     * Constructor.
-     *
-     * @param expEvaluator The expression evaluator
-     * @param evtDisp The event dispatcher
-     * @param errRep The error reporter
+     * @param evts The events being triggered.
+     * @return Object[] Previous values.
      */
-    public SCXMLExecutor(final Evaluator expEvaluator,
-            final EventDispatcher evtDisp, final ErrorReporter errRep) {
-        this(expEvaluator, evtDisp, errRep, null);
+    private Object[] setEventData(final TriggerEvent[] evts) {
+        Context rootCtx = scInstance.getRootContext();
+        Object[] oldData = { rootCtx.get(EVENT_DATA), rootCtx.get(EVENT_DATA_MAP), rootCtx.get(EVENT_VARIABLE) };
+        int len = evts.length;
+        if (len > 0) { // 0 has retry semantics (eg: see usage in reset())
+            Object eventData = null;
+            EventVariable eventVar = null;
+            Map<String, Object> payloadMap = new HashMap<String, Object>();
+            for (TriggerEvent te : evts) {
+                payloadMap.put(te.getName(), te.getPayload());
+            }
+            if (len == 1) {
+                // we have only one event
+                eventData = evts[0].getPayload();
+
+                // NOTE: According to spec 5.10.1, _event.type must be 'platform', 'internal' or 'external'.
+                //       So, error or variable change trigger events can be translated into 'platform' type event variables.
+                //       However, the Send model for <send> element doesn't support any target yet, and so
+                //       'internal' type can't supported either.
+                //       All the others must be 'external'.
+
+                String eventType = EventVariable.TYPE_EXTERNAL;
+                final int triggerEventType = evts[0].getType();
+
+                if (triggerEventType == TriggerEvent.ERROR_EVENT || triggerEventType == TriggerEvent.CHANGE_EVENT) {
+                    eventType = EventVariable.TYPE_PLATFORM;
+                }
+
+                // TODO: determine sendid, origin, originType and invokeid based on context later.
+                eventVar = new EventVariable(evts[0].getName(), eventType, null, null, null, null, eventData);
+            }
+            rootCtx.setLocal(EVENT_DATA, eventData);
+            rootCtx.setLocal(EVENT_DATA_MAP, payloadMap);
+            rootCtx.setLocal(EVENT_VARIABLE, eventVar);
+        }
+        return oldData;
+    }
+
+    /**
+     * @param oldData The old values to restore to.
+     */
+    private void restoreEventData(final Object[] oldData) {
+        scInstance.getRootContext().setLocal(EVENT_DATA, oldData[0]);
+        scInstance.getRootContext().setLocal(EVENT_DATA_MAP, oldData[1]);
+        scInstance.getRootContext().setLocal(EVENT_VARIABLE, oldData[2]);
     }
 
     /**
@@ -187,11 +215,23 @@ public class SCXMLExecutor implements Serializable {
      * @param expEvaluator The expression evaluator
      * @param evtDisp The event dispatcher
      * @param errRep The error reporter
+     */
+    public SCXMLExecutor(final Evaluator expEvaluator,
+                         final EventDispatcher evtDisp, final ErrorReporter errRep) {
+        this(expEvaluator, evtDisp, errRep, null);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param expEvaluator The expression evaluator
+     * @param evtDisp The event dispatcher
+     * @param errRep The error reporter
      * @param semantics The SCXML semantics
      */
     public SCXMLExecutor(final Evaluator expEvaluator,
-            final EventDispatcher evtDisp, final ErrorReporter errRep,
-            final SCXMLSemantics semantics) {
+                         final EventDispatcher evtDisp, final ErrorReporter errRep,
+                         final SCXMLSemantics semantics) {
         this.eventdispatcher = evtDisp;
         this.errorReporter = errRep;
         this.currentStatus = new Status();
@@ -204,73 +244,6 @@ public class SCXMLExecutor implements Serializable {
         }
         this.scInstance = new SCInstance(this);
         this.scInstance.setEvaluator(expEvaluator);
-    }
-
-    /**
-     * Clear all state and begin from &quot;initialstate&quot; indicated
-     * on root SCXML element.
-     *
-     * @throws ModelException in case there is a fatal SCXML object
-     *         model problem.
-     */
-    public synchronized void reset() throws ModelException {
-        // Reset all variable contexts
-        Context rootCtx = scInstance.getRootContext();
-        // Clone root datamodel
-        if (stateMachine == null) {
-            log.error(ERR_NO_STATE_MACHINE);
-            throw new ModelException(ERR_NO_STATE_MACHINE);
-        } else {
-            Datamodel rootdm = stateMachine.getDatamodel();
-            SCXMLHelper.cloneDatamodel(rootdm, rootCtx,
-                scInstance.getEvaluator(), log);
-        }
-        if (stateMachine.getInitialScript() != null) {
-            Context initialScriptCtx = scInstance.getContext(stateMachine.getInitialScript().getParentTransitionTarget());
-            if (initialScriptCtx != null) {
-                initialScriptCtx.reset();
-            }
-        }
-        // all states and parallels, only states have variable contexts
-        for (TransitionTarget tt : stateMachine.getTargets().values()) {
-            if (tt instanceof State) {
-                Context context = scInstance.lookupContext(tt);
-                if (context != null) {
-                    context.reset();
-                    Datamodel dm = tt.getDatamodel();
-                    if (dm != null) {
-                        SCXMLHelper.cloneDatamodel(dm, context,
-                            scInstance.getEvaluator(), log);
-                    }
-                }
-            } else if (tt instanceof History) {
-                scInstance.reset((History) tt);
-            }
-        }
-        // CreateEmptyStatus
-        currentStatus = new Status();
-        Step step = new Step(null, currentStatus);
-        // DetermineInitialStates
-        semantics.determineInitialStates(stateMachine,
-                step.getAfterStatus().getStates(),
-                step.getEntryList(), errorReporter, scInstance);
-        // execute initial script if defined configured as transition so as to not trigger events
-        if (stateMachine.getInitialScript() != null) {
-            step.getTransitList().add((Transition)stateMachine.getInitialScript().getParent());
-        }
-        // ExecuteActions
-        semantics.executeActions(step, stateMachine, eventdispatcher,
-                errorReporter, scInstance);
-        // AssignCurrentStatus
-        updateStatus(step);
-        // Execute Immediate Transitions
-        if (superStep && currentStatus.getEvents().size() > 0) {
-            this.triggerEvents(new TriggerEvent[0]);
-        } else {
-            // InitiateInvokes only after state machine has stabilized
-            semantics.initiateInvokes(step, errorReporter, scInstance);
-            logState();
-        }
     }
 
     /**
@@ -351,17 +324,6 @@ public class SCXMLExecutor implements Serializable {
     }
 
     /**
-     * Initiate state machine execution.
-     *
-     * @throws ModelException in case there is a fatal SCXML object
-     *  model problem.
-     */
-    public void go() throws ModelException {
-        // same as reset
-        this.reset();
-    }
-
-    /**
      * Get the environment specific error reporter.
      *
      * @return Returns the errorReporter.
@@ -418,9 +380,155 @@ public class SCXMLExecutor implements Serializable {
      * CurrentStatus property and processed within the next
      * triggerEvents() invocation, also the immediate (empty event) transitions
      * are deferred until the next step
-      */
+     */
     public void setSuperStep(final boolean superStep) {
         this.superStep = superStep;
+    }
+
+    /**
+     * Initiate state machine execution.
+     *
+     * @throws ModelException in case there is a fatal SCXML object
+     *  model problem.
+     */
+    public void go() throws ModelException {
+        // same as reset
+        this.reset();
+    }
+
+    /**
+     * Clear all state and begin from &quot;initialstate&quot; indicated
+     * on root SCXML element.
+     *
+     * @throws ModelException in case there is a fatal SCXML object
+     *         model problem.
+     */
+    public synchronized void reset() throws ModelException {
+        // Reset all variable contexts
+        Context rootCtx = scInstance.getRootContext();
+        // Clone root datamodel
+        if (stateMachine == null) {
+            log.error(ERR_NO_STATE_MACHINE);
+            throw new ModelException(ERR_NO_STATE_MACHINE);
+        } else {
+            Datamodel rootdm = stateMachine.getDatamodel();
+            SCXMLHelper.cloneDatamodel(rootdm, rootCtx,
+                    scInstance.getEvaluator(), log);
+        }
+        if (stateMachine.getInitialScript() != null) {
+            Context initialScriptCtx = scInstance.getContext(stateMachine.getInitialScript().getParentTransitionTarget());
+            if (initialScriptCtx != null) {
+                initialScriptCtx.reset();
+            }
+        }
+        // all states and parallels, only states have variable contexts
+        for (TransitionTarget tt : stateMachine.getTargets().values()) {
+            if (tt instanceof State) {
+                Context context = scInstance.lookupContext(tt);
+                if (context != null) {
+                    context.reset();
+                    Datamodel dm = tt.getDatamodel();
+                    if (dm != null) {
+                        SCXMLHelper.cloneDatamodel(dm, context,
+                                scInstance.getEvaluator(), log);
+                    }
+                }
+            } else if (tt instanceof History) {
+                scInstance.reset((History) tt);
+            }
+        }
+        // CreateEmptyStatus
+        currentStatus = new Status();
+        Step step = new Step(null, currentStatus);
+        // DetermineInitialStates
+        semantics.determineInitialStates(stateMachine,
+                step.getAfterStatus().getStates(),
+                step.getEntryList(), errorReporter, scInstance);
+        // execute initial script if defined configured as transition so as to not trigger events
+        if (stateMachine.getInitialScript() != null) {
+            step.getTransitList().add((Transition)stateMachine.getInitialScript().getParent());
+        }
+        // ExecuteActions
+        semantics.executeActions(step, stateMachine, eventdispatcher,
+                errorReporter, scInstance);
+        // AssignCurrentStatus
+        updateStatus(step);
+        // Execute Immediate Transitions
+        if (superStep && currentStatus.getEvents().size() > 0) {
+            this.triggerEvents(new TriggerEvent[0]);
+        } else {
+            // InitiateInvokes only after state machine has stabilized
+            semantics.initiateInvokes(step, errorReporter, scInstance);
+            logState();
+        }
+    }
+
+    /**
+     * Convenience method when only one event needs to be triggered.
+     *
+     * @param evt
+     *            the external events which triggered during the last
+     *            time quantum
+     * @throws ModelException in case there is a fatal SCXML object
+     *            model problem.
+     */
+    public void triggerEvent(final TriggerEvent evt)
+            throws ModelException {
+        triggerEvents(new TriggerEvent[] {evt});
+    }
+
+    /**
+     * The worker method.
+     * Re-evaluates current status whenever any events are triggered.
+     *
+     * @param evts
+     *            an array of external events which triggered during the last
+     *            time quantum
+     * @throws ModelException in case there is a fatal SCXML object
+     *            model problem.
+     */
+    public synchronized void triggerEvents(final TriggerEvent[] evts)
+            throws ModelException {
+        // Set event data, saving old values
+        Object[] oldData = setEventData(evts);
+
+        // Forward events (external only) to any existing invokes,
+        // and finalize processing
+        semantics.processInvokes(evts, errorReporter, scInstance);
+
+        List<TriggerEvent> evs = new ArrayList<TriggerEvent>(Arrays.asList(evts));
+        Step step = null;
+
+        do {
+            // CreateStep
+            step = new Step(evs, currentStatus);
+            // EnumerateReachableTransitions
+            semantics.enumerateReachableTransitions(stateMachine, step,
+                errorReporter);
+            // FilterTransitionSet
+            semantics.filterTransitionsSet(step, eventdispatcher,
+                errorReporter, scInstance);
+            // FollowTransitions
+            semantics.followTransitions(step, errorReporter, scInstance);
+            // UpdateHistoryStates
+            semantics.updateHistoryStates(step, errorReporter, scInstance);
+            // ExecuteActions
+            semantics.executeActions(step, stateMachine, eventdispatcher,
+                errorReporter, scInstance);
+            // AssignCurrentStatus
+            updateStatus(step);
+            // ***Cleanup external events if superStep
+            if (superStep) {
+                evs.clear();
+            }
+        } while (superStep && currentStatus.getEvents().size() > 0);
+
+        // InitiateInvokes only after state machine has stabilized
+        semantics.initiateInvokes(step, errorReporter, scInstance);
+
+        // Restore event data
+        restoreEventData(oldData);
+        logState();
     }
 
     /**
@@ -467,115 +575,5 @@ public class SCXMLExecutor implements Serializable {
     public void unregisterInvokerClass(final String type) {
         scInstance.unregisterInvokerClass(type);
     }
-
-    /**
-     * Get the state chart instance for this executor.
-     *
-     * @return The SCInstance for this executor.
-     */
-    SCInstance getSCInstance() {
-        return scInstance;
-    }
-
-    /**
-     * Log the current set of active states.
-     */
-    private void logState() {
-        if (log.isDebugEnabled()) {
-            StringBuffer sb = new StringBuffer("Current States: [ ");
-            for (TransitionTarget tt : currentStatus.getStates()) {
-                sb.append(tt.getId()).append(", ");
-            }
-            int length = sb.length();
-            sb.delete(length - 2, length).append(" ]");
-            log.debug(sb.toString());
-        }
-    }
-
-    /**
-     * @param step The most recent Step
-     */
-    private void updateStatus(final Step step) {
-        currentStatus = step.getAfterStatus();
-        scInstance.getRootContext().setLocal("_ALL_STATES",
-            SCXMLHelper.getAncestorClosure(currentStatus.getStates(), null));
-        setEventData(currentStatus.getEvents().toArray(new TriggerEvent[0]));
-    }
-
-    /**
-     * @param evts The events being triggered.
-     * @return Object[] Previous values.
-     */
-    private Object[] setEventData(final TriggerEvent[] evts) {
-        Context rootCtx = scInstance.getRootContext();
-        Object[] oldData = { rootCtx.get(EVENT_DATA), rootCtx.get(EVENT_DATA_MAP), rootCtx.get(EVENT_VARIABLE) };
-        int len = evts.length;
-        if (len > 0) { // 0 has retry semantics (eg: see usage in reset())
-            Object eventData = null;
-            EventVariable eventVar = null;
-            Map<String, Object> payloadMap = new HashMap<String, Object>();
-            for (TriggerEvent te : evts) {
-                payloadMap.put(te.getName(), te.getPayload());
-            }
-            if (len == 1) {
-                // we have only one event
-                eventData = evts[0].getPayload();
-
-                // NOTE: According to spec 5.10.1, _event.type must be 'platform', 'internal' or 'external'.
-                //       So, error or variable change trigger events can be translated into 'platform' type event variables.
-                //       However, the Send model for <send> element doesn't support any target yet, and so
-                //       'internal' type can't supported either.
-                //       All the others must be 'external'.
-
-                String eventType = EventVariable.TYPE_EXTERNAL;
-                final int triggerEventType = evts[0].getType();
-
-                if (triggerEventType == TriggerEvent.ERROR_EVENT || triggerEventType == TriggerEvent.CHANGE_EVENT) {
-                    eventType = EventVariable.TYPE_PLATFORM;
-                }
-
-                // TODO: determine sendid, origin, originType and invokeid based on context later.
-                eventVar = new EventVariable(evts[0].getName(), eventType, null, null, null, null, eventData);
-            }
-            rootCtx.setLocal(EVENT_DATA, eventData);
-            rootCtx.setLocal(EVENT_DATA_MAP, payloadMap);
-            rootCtx.setLocal(EVENT_VARIABLE, eventVar);
-        }
-        return oldData;
-    }
-
-    /**
-     * @param oldData The old values to restore to.
-     */
-    private void restoreEventData(final Object[] oldData) {
-        scInstance.getRootContext().setLocal(EVENT_DATA, oldData[0]);
-        scInstance.getRootContext().setLocal(EVENT_DATA_MAP, oldData[1]);
-        scInstance.getRootContext().setLocal(EVENT_VARIABLE, oldData[2]);
-    }
-
-    /**
-     * The special variable for storing single event data / payload.
-     * @deprecated
-     */
-    private static final String EVENT_DATA = "_eventdata";
-
-    /**
-     * The special variable for storing event data / payload,
-     * when multiple events are triggered, keyed by event name.
-     */
-    // TODO: is _eventdatamap really being used somewhere?
-    private static final String EVENT_DATA_MAP = "_eventdatamap";
-
-    /**
-     * The special variable for storing single event data / payload.
-     */
-    private static final String EVENT_VARIABLE = "_event";
-
-    /**
-     * SCXMLExecutor put into motion without setting a model (state machine).
-     */
-    private static final String ERR_NO_STATE_MACHINE =
-        "SCXMLExecutor: State machine not set";
-
 }
 
