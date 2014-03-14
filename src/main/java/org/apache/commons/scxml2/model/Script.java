@@ -39,7 +39,8 @@ public class Script extends Action implements BodyContainer {
      * Serial version UID.
      */
     private static final long serialVersionUID = 1L;
-    
+
+    private boolean globalScript;
     private String body;
 
     /**
@@ -47,6 +48,14 @@ public class Script extends Action implements BodyContainer {
      */
     public Script() {
         super();
+    }
+
+    public boolean isGlobalScript() {
+        return globalScript;
+    }
+
+    public void setGlobalScript(final boolean globalScript) {
+        this.globalScript = globalScript;
     }
 
     @Override
@@ -76,7 +85,8 @@ public class Script extends Action implements BodyContainer {
             final ErrorReporter errRep, final SCInstance scInstance,
             final Log appLog, final Collection<TriggerEvent> derivedEvents)
     throws ModelException, SCXMLExpressionException {
-        Context ctx = scInstance.getContext(getParentTransitionTarget());
+        Context ctx = isGlobalScript() ? scInstance.getGlobalScriptContext() :
+                scInstance.getContext(getParentTransitionTarget());
         ctx.setLocal(getNamespacesKey(), getNamespaces());
         Evaluator eval = scInstance.getEvaluator();
         eval.evalScript(ctx, getScript());

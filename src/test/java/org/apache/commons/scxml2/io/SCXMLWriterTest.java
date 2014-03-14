@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.apache.commons.scxml2.model.Parallel;
 import org.apache.commons.scxml2.model.SCXML;
+import org.apache.commons.scxml2.model.Script;
 import org.apache.commons.scxml2.model.State;
 import org.junit.Assert;
 import org.junit.Test;
@@ -123,4 +124,29 @@ public class SCXMLWriterTest {
         Assert.assertEquals(assertValue, SCXMLWriter.write(scxml, new SCXMLWriter.Configuration(true, false)));
      }
 
+    @Test
+    public void testSerializeGlobalScript() throws IOException, XMLStreamException {
+        SCXML scxml = new SCXML();
+        Map<String, String> namespaces = new LinkedHashMap<String, String>();
+        scxml.setNamespaces(namespaces);
+        scxml.setVersion("1.0");
+        scxml.setInitial("S1");
+
+        Script script = new Script();
+        script.setGlobalScript(true);
+        script.setBody("foo=\"abc\"");
+        scxml.setGlobalScript(script);
+
+        State s1 = new State();
+        s1.setId("S1");
+
+        scxml.addChild(s1);
+
+        String assertValue = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                + "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" "
+                + "xmlns:cs=\"http://commons.apache.org/scxml\" version=\"1.0\" initial=\"S1\">"
+                + "<!--http://commons.apache.org/scxml--><script><![CDATA[foo=\"abc\"]]></script><state id=\"S1\"></state></scxml>";
+
+        Assert.assertEquals(assertValue, SCXMLWriter.write(scxml, new SCXMLWriter.Configuration(true, false)));
+    }
 }

@@ -108,6 +108,10 @@ public abstract class Action implements NamespacePrefixesHolder,
      */
     public final TransitionTarget getParentTransitionTarget()
     throws ModelException {
+        if (parent == null && this instanceof Script && ((Script)this).isGlobalScript()) {
+            // global script doesn't have a TransitionTarget
+            return null;
+        }
         TransitionTarget tt = parent.getParent();
         if (tt instanceof State || tt instanceof Parallel) {
             return tt;

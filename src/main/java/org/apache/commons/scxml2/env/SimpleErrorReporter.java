@@ -105,6 +105,10 @@ public class SimpleErrorReporter implements ErrorReporter, Serializable {
                 TransitionTarget parent = ((Executable) errCtx).getParent();
                 msg.append("Expression error inside " + LogUtils.getTTPath(parent));
             }
+            else if (errCtx instanceof SCXML) {
+                // Global Script
+                msg.append("Expression error inside the global script");
+            }
         }
         handleErrorMessage(errorCode, errDetail, errCtx, msg);
     }

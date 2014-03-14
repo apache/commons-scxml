@@ -214,9 +214,9 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
 
     public void executeGlobalScript(final Step step, final SCXML stateMachine, final EventDispatcher evtDispatcher,
                                     final ErrorReporter errRep, final SCInstance scInstance) throws ModelException {
-        if (stateMachine.getInitialScript() != null) {
+        if (stateMachine.getGlobalScript() != null) {
             try {
-                stateMachine.getInitialScript().execute(evtDispatcher, errRep, scInstance, appLog,
+                stateMachine.getGlobalScript().execute(evtDispatcher, errRep, scInstance, appLog,
                         step.getAfterStatus().getEvents());
             } catch (SCXMLExpressionException e) {
                 errRep.onError(ErrorConstants.EXPRESSION_ERROR, e.getMessage(), stateMachine);

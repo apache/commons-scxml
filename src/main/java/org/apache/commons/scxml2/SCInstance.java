@@ -89,7 +89,7 @@ public class SCInstance implements Serializable {
     /**
      * The initial script context
      */
-    private Context initialScriptContext;
+    private Context globalScriptContext;
 
     /**
      * The owning state machine executor.
@@ -152,14 +152,14 @@ public class SCInstance implements Serializable {
         this.rootContext = context;
     }
 
-    Context getInitialScriptContext() {
-        if (initialScriptContext == null) {
+    public Context getGlobalScriptContext() {
+        if (globalScriptContext == null) {
             Context rootContext = getRootContext();
             if (rootContext != null) {
-                initialScriptContext = evaluator.newContext(getRootContext());
+                globalScriptContext = evaluator.newContext(getRootContext());
             }
         }
-        return initialScriptContext;
+        return globalScriptContext;
     }
 
     /**
@@ -192,15 +192,8 @@ public class SCInstance implements Serializable {
         if (context == null) {
             TransitionTarget parent = transitionTarget.getParent();
             if (parent == null) {
-                if (executor != null && executor.getStateMachine().getInitialScript() != null &&
-                        transitionTarget == executor.getStateMachine().getInitialScript().getParent().getParent()) {
-                    // initialScript
-                    return getInitialScriptContext();
-                }
-                else {
-                    // docroot
-                    context = evaluator.newContext(getInitialScriptContext());
-                }
+                // docroot
+                context = evaluator.newContext(getGlobalScriptContext());
             } else {
                 context = evaluator.newContext(getContext(parent));
             }

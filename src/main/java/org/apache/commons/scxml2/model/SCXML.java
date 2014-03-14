@@ -88,7 +88,7 @@ public class SCXML implements Serializable, Observable,
     /**
      * Optional property holding the initial script for this SCXML document.
      */
-    private Script initialScript;
+    private Script globalScript;
 
     /**
      * The immediate child targets of this SCXML document root.
@@ -115,12 +115,12 @@ public class SCXML implements Serializable, Observable,
         this.targets = new HashMap<String, TransitionTarget>();
     }
 
-    public Script getInitialScript() {
-        return initialScript;
+    public Script getGlobalScript() {
+        return globalScript;
     }
 
-    public void setInitialScript(Script script) {
-        this.initialScript = script;
+    public void setGlobalScript(Script script) {
+        this.globalScript = script;
     }
 
     /**

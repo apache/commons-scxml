@@ -297,12 +297,12 @@ public class SCXMLReaderTest {
     public void testSCXMLReaderGroovyClosure() throws Exception {
         scxml = SCXMLTestHelper.parse(groovyClosure);
         Assert.assertNotNull(scxml);
-        Assert.assertNotNull(scxml.getInitialScript());
+        Assert.assertNotNull(scxml.getGlobalScript());
         scxmlAsString = serialize(scxml);
         Assert.assertNotNull(scxmlAsString);
         scxml = SCXMLTestHelper.parse(new StringReader(scxmlAsString), null);
         Assert.assertNotNull(scxml);
-        Assert.assertNotNull(scxml.getInitialScript());
+        Assert.assertNotNull(scxml.getGlobalScript());
     }
 
     private String serialize(final SCXML scxml) throws IOException, XMLStreamException {
