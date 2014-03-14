@@ -62,13 +62,13 @@ import org.apache.commons.scxml2.model.Transition;
 import org.apache.commons.scxml2.model.TransitionTarget;
 
 /**
- * <p>This class encapsulates a particular SCXML semantics, that is, a
- * particular semantic interpretation of Harel Statecharts, which aligns
- * mostly with W3C SCXML July 5 public draft (that is, UML 1.5). However,
- * certain aspects are taken from STATEMATE.</p>
+ * This class will encapsulate and implement the
+ * <a href="http://www.w3.org/TR/2014/CR-scxml-20140313/#AlgorithmforSCXMLInterpretation">
+ *     W3C SCXML Algorithm for SCXML Interpretation</a>
  *
- * <p>Specific semantics can be created by subclassing this class.</p>
+ * <p>Custom semantics can be created by subclassing this class.</p>
  */
+@SuppressWarnings("unused") // TODO: remove when done refactoring
 public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
 
     /**
@@ -98,16 +98,6 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
      * model locations.
      */
     private static final String ERR_ILLEGAL_ALLOC = ".error.illegalalloc";
-
-    /**
-     * Zero-length array of {@link TransitionTarget}s.
-     */
-    private static final TransitionTarget[] TT_ARR0 = new TransitionTarget[0];
-
-    /**
-     * Zero-length array of {@link Transition}s.
-     */
-    private static final Transition[] TR_ARR0 = new Transition[0];
 
     /**
      * TransitionTargetComparator factory method.
@@ -188,9 +178,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
         String prefix = parentStateId + ".invoke."; // invoke prefix
         for (TriggerEvent te : eventOccurrences) {
             String evt = te.getName();
-            if (evt == null) {
-                continue; // Unnamed events
-            } else if (evt.trim().startsWith(prefix)) {
+            if (evt != null && evt.trim().startsWith(prefix)) {
                 return true;
             }
         }
@@ -238,7 +226,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
             //set of ALL entered states (even if initialState is a jump-over)
             Set<TransitionTarget> onEntry = SCXMLHelper.getAncestorClosure(targets, null);
             // sort onEntry according state hierarchy
-            TransitionTarget[] oen = onEntry.toArray(TT_ARR0);
+            TransitionTarget[] oen = onEntry.toArray(new TransitionTarget[onEntry.size()]);
             onEntry.clear();
             Arrays.sort(oen, getTTComparator());
             // we need to impose reverse order for the onEntry list
@@ -483,7 +471,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                 continue; //makes no sense to eval guard cond.
             }
             // guard condition check
-            Boolean rslt = Boolean.FALSE;
+            Boolean rslt;
             String expr = t.getCond();
             if (SCXMLHelper.isStringEmpty(expr)) {
                 rslt = Boolean.TRUE;
@@ -506,7 +494,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                     // TODO: place the error 'error.execution' in the internal event queue. (section "3.12.2 Errors")
                 }
             }
-            if (!rslt.booleanValue()) {
+            if (!rslt) {
                 // guard condition has not passed
                 removeList.add(t);
             }
@@ -520,7 +508,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
         // only if there are multiple enabled transitions
         if (step.getTransitList().size() > 1) {
             // global transition precedence check
-            Transition[] trans = step.getTransitList().toArray(TR_ARR0);
+            Transition[] trans = step.getTransitList().toArray(new Transition[step.getTransitList().size()]);
             // non-determinism candidates
             Set<Transition> nonDeterm = new LinkedHashSet<Transition>();
             for (int i = 0; i < trans.length; i++) {
@@ -700,12 +688,11 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                                 //calculate shallow history for a given state
                                 // once
                                 shallow = new HashSet<TransitionTarget>();
-                                Collection<TransitionTarget> children =
-                                    new HashSet<TransitionTarget>();
+                                Collection<TransitionTarget> children;
                                 if (tt instanceof State) {
                                     children = ((State) tt).getChildren().
                                         values();
-                                } else if (tt instanceof Parallel) {
+                                } else { // (tt instanceof Parallel) {
                                     children = ((Parallel) tt).getChildren();
                                 }
                                 shallow.addAll(children);
@@ -715,8 +702,6 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                             scInstance.setLastConfiguration(h, shallow);
                         }
                     }
-                    shallow = null;
-                    deep = null;
                 }
             }
         }
@@ -776,9 +761,9 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
             throw new ModelException("Illegal state machine configuration!");
         }
         // sort onEntry and onExit according state hierarchy
-        TransitionTarget[] oex = exitedStates.toArray(TT_ARR0);
+        TransitionTarget[] oex = exitedStates.toArray(new TransitionTarget[exitedStates.size()]);
         exitedStates.clear();
-        TransitionTarget[] oen = entered.toArray(TT_ARR0);
+        TransitionTarget[] oen = entered.toArray(new TransitionTarget[entered.size()]);
         entered.clear();
         Arrays.sort(oex, getTTComparator());
         Arrays.sort(oen, getTTComparator());
@@ -848,7 +833,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                 String src = i.getSrc();
                 if (src == null) {
                     String srcexpr = i.getSrcexpr();
-                    Object srcObj = null;
+                    Object srcObj;
                     try {
                         ctx.setLocal(NAMESPACES_KEY, i.getNamespaces());
                         srcObj = eval.eval(ctx, srcexpr);
@@ -865,7 +850,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                     source = i.getPathResolver().resolvePath(src);
                 }
                 String type = i.getType();
-                Invoker inv = null;
+                Invoker inv;
                 try {
                     inv = scInstance.newInvoker(type);
                 } catch (InvokerException ie) {

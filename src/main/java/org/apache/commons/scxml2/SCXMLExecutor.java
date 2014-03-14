@@ -47,6 +47,7 @@ import org.apache.commons.scxml2.system.EventVariable;
  *
  * @see SCXMLSemantics
  */
+@SuppressWarnings("deprecation") // TODO: remove again after refactoring is done
 public class SCXMLExecutor implements Serializable {
 
     /**
@@ -131,7 +132,7 @@ public class SCXMLExecutor implements Serializable {
      */
     private void logState() {
         if (log.isDebugEnabled()) {
-            StringBuffer sb = new StringBuffer("Current States: [ ");
+            StringBuilder sb = new StringBuilder("Current States: [ ");
             for (TransitionTarget tt : currentStatus.getStates()) {
                 sb.append(tt.getId()).append(", ");
             }
@@ -148,7 +149,7 @@ public class SCXMLExecutor implements Serializable {
         currentStatus = step.getAfterStatus();
         scInstance.getRootContext().setLocal("_ALL_STATES",
                 SCXMLHelper.getAncestorClosure(currentStatus.getStates(), null));
-        setEventData(currentStatus.getEvents().toArray(new TriggerEvent[0]));
+        setEventData(currentStatus.getEvents().toArray(new TriggerEvent[currentStatus.getEvents().size()]));
     }
 
     /**
@@ -316,11 +317,7 @@ public class SCXMLExecutor implements Serializable {
      * @param stateMachine The stateMachine to set.
      */
     public void setStateMachine(final SCXML stateMachine) {
-        // NormalizeStateMachine
-        SCXML sm = semantics.normalizeStateMachine(stateMachine,
-                errorReporter);
-        // StoreStateMachine
-        this.stateMachine = sm;
+        this.stateMachine = semantics.normalizeStateMachine(stateMachine, errorReporter);
     }
 
     /**
@@ -474,7 +471,7 @@ public class SCXMLExecutor implements Serializable {
      */
     public void triggerEvent(final TriggerEvent evt)
             throws ModelException {
-        triggerEvents(new TriggerEvent[] {evt});
+        triggerEvents(new TriggerEvent[]{evt});
     }
 
     /**
@@ -497,7 +494,7 @@ public class SCXMLExecutor implements Serializable {
         semantics.processInvokes(evts, errorReporter, scInstance);
 
         List<TriggerEvent> evs = new ArrayList<TriggerEvent>(Arrays.asList(evts));
-        Step step = null;
+        Step step;
 
         do {
             // CreateStep
@@ -550,7 +547,7 @@ public class SCXMLExecutor implements Serializable {
     public void removeListener(final Observable observable,
             final SCXMLListener listener) {
         scInstance.getNotificationRegistry().removeListener(observable,
-            listener);
+                listener);
     }
 
     /**
