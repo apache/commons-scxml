@@ -437,17 +437,12 @@ public class SCXMLExecutor implements Serializable {
         // CreateEmptyStatus
         currentStatus = new Status();
         Step step = new Step(null, currentStatus);
+        // execute initial script if defined
+        semantics.executeGlobalScript(step, stateMachine, eventdispatcher, errorReporter, scInstance);
         // DetermineInitialStates
-        semantics.determineInitialStates(stateMachine,
-                step.getAfterStatus().getStates(),
-                step.getEntryList(), errorReporter, scInstance);
-        // execute initial script if defined configured as transition so as to not trigger events
-        if (stateMachine.getInitialScript() != null) {
-            step.getTransitList().add((Transition)stateMachine.getInitialScript().getParent());
-        }
-        // ExecuteActions
-        semantics.executeActions(step, stateMachine, eventdispatcher,
-                errorReporter, scInstance);
+        semantics.determineInitialStates(step, stateMachine, errorReporter, scInstance);
+        // enter initial states
+        semantics.enterStates(step, stateMachine, eventdispatcher, errorReporter, scInstance);
         // AssignCurrentStatus
         updateStatus(step);
         // Execute Immediate Transitions

@@ -16,29 +16,18 @@
  */
 package org.apache.commons.scxml2;
 
-import java.util.List;
-import java.util.Set;
-
 import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.SCXML;
-import org.apache.commons.scxml2.model.TransitionTarget;
 
 /**
- * <p>The purpose of this interface is to separate the interpretation algorithm
+ * <p>The purpose of this interface is to separate the the
+ * <a href="http://www.w3.org/TR/2014/CR-scxml-20140313/#AlgorithmforSCXMLInterpretation">
+ *     W3C SCXML Algorithm for SCXML Interpretation</a>
  * from the <code>SCXMLExecutor</code> and therefore make it pluggable.</p>
  *
  * <p>Semantics agnostic utility functions and common operators as defined in
  * UML can be found in the <code>SCXMLHelper</code> or attached directly to
- * the SCXML model elements. Some of the possible semantic interpretations
- * are, for example:</p>
- *
- * <ul>
- * <li>STATEMATE
- * <li>RHAPSODY
- * <li>ROOMCharts
- * <li>UML 1.5
- * <li>UML 2.0
- * </ul>
+ * the SCXML model elements.</p>
  *
  * <p>Specific semantics can be created by subclassing
  * <code>org.apache.commons.scxml2.semantics.SCXMLSemanticsImpl</code>.</p>
@@ -57,15 +46,25 @@ public interface SCXMLSemantics {
      */
     SCXML normalizeStateMachine(final SCXML input, final ErrorReporter errRep);
 
+    public void executeGlobalScript(final Step step, final SCXML stateMachine, final EventDispatcher evtDispatcher,
+                                    final ErrorReporter errRep, final SCInstance scInstance) throws ModelException;
+
+    public void exitStates(final Step step, final SCXML stateMachine, final EventDispatcher evtDispatcher,
+                           final ErrorReporter errRep, final SCInstance scInstance) throws ModelException;
+
+    public void executeTransitionContent(final Step step, final SCXML stateMachine, final EventDispatcher evtDispatcher,
+                                         final ErrorReporter errRep, final SCInstance scInstance) throws ModelException;
+
+    public void enterStates(final Step step, final SCXML stateMachine, final EventDispatcher evtDispatcher,
+                            final ErrorReporter errRep, final SCInstance scInstance) throws ModelException;
+
     /**
      * Determining the initial state(s) for this state machine.
      *
-     * @param input
+     * @param step
+     *            provides target states and entry list to fill in [out]
+     * @param stateMachine
      *            SCXML state machine
-     * @param states
-     *            a set of States to populate
-     * @param entryList
-     *            a list of States and Parallels to enter
      * @param errRep
      *            ErrorReporter callback
      * @param scInstance
@@ -74,8 +73,7 @@ public interface SCXMLSemantics {
      * @throws ModelException
      *             in case there is a fatal SCXML object model problem.
      */
-    void determineInitialStates(final SCXML input, final Set<TransitionTarget> states,
-            final List<TransitionTarget> entryList, final ErrorReporter errRep,
+    void determineInitialStates(final Step step, final SCXML stateMachine, final ErrorReporter errRep,
             final SCInstance scInstance)
     throws ModelException;
 
@@ -195,6 +193,5 @@ public interface SCXMLSemantics {
      */
     void initiateInvokes(final Step step, final ErrorReporter errRep,
             final SCInstance scInstance);
-
 }
 

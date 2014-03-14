@@ -46,6 +46,7 @@ import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.invoke.Invoker;
 import org.apache.commons.scxml2.invoke.InvokerException;
 import org.apache.commons.scxml2.model.Action;
+import org.apache.commons.scxml2.model.Executable;
 import org.apache.commons.scxml2.model.Finalize;
 import org.apache.commons.scxml2.model.History;
 import org.apache.commons.scxml2.model.Initial;
@@ -185,6 +186,19 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
         return false;
     }
 
+    protected void executeContent(Executable exec, final EventDispatcher evtDispatcher, final ErrorReporter errRep,
+                                  final SCInstance scInstance, final Collection<TriggerEvent> internalEvents)
+            throws ModelException {
+
+        try {
+            for (Action action : exec.getActions()) {
+                action.execute(evtDispatcher, errRep, scInstance, appLog, internalEvents);
+            }
+        } catch (SCXMLExpressionException e) {
+            errRep.onError(ErrorConstants.EXPRESSION_ERROR, e.getMessage(), exec);
+        }
+    }
+
     /**
      * @param input
      *            SCXML state machine
@@ -193,86 +207,32 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
      *            ErrorReporter callback
      */
     public SCXML normalizeStateMachine(final SCXML input,
-            final ErrorReporter errRep) {
+                                       final ErrorReporter errRep) {
         //it is a no-op for now
         return input;
     }
 
-    /**
-     * @param input
-     *            SCXML state machine [in]
-     * @param targets
-     *            a set of initial targets to populate [out]
-     * @param entryList
-     *            a list of States and Parallels to enter [out]
-     * @param errRep
-     *            ErrorReporter callback [inout]
-     * @param scInstance
-     *            The state chart instance [in]
-     * @throws ModelException
-     *             in case there is a fatal SCXML object model problem.
-     */
-    public void determineInitialStates(final SCXML input, final Set<TransitionTarget> targets,
-            final List<TransitionTarget> entryList, final ErrorReporter errRep,
-            final SCInstance scInstance)
-            throws ModelException {
-        TransitionTarget tmp = input.getInitialTarget();
-        if (tmp == null) {
-            errRep.onError(ErrorConstants.NO_INITIAL,
-                    "SCXML initialstate is missing!", input);
-        } else {
-            targets.add(tmp);
-            determineTargetStates(targets, errRep, scInstance);
-            //set of ALL entered states (even if initialState is a jump-over)
-            Set<TransitionTarget> onEntry = SCXMLHelper.getAncestorClosure(targets, null);
-            // sort onEntry according state hierarchy
-            TransitionTarget[] oen = onEntry.toArray(new TransitionTarget[onEntry.size()]);
-            onEntry.clear();
-            Arrays.sort(oen, getTTComparator());
-            // we need to impose reverse order for the onEntry list
-            List<TransitionTarget> entering = Arrays.asList(oen);
-            Collections.reverse(entering);
-            entryList.addAll(entering);
-
+    public void executeGlobalScript(final Step step, final SCXML stateMachine, final EventDispatcher evtDispatcher,
+                                    final ErrorReporter errRep, final SCInstance scInstance) throws ModelException {
+        if (stateMachine.getInitialScript() != null) {
+            try {
+                stateMachine.getInitialScript().execute(evtDispatcher, errRep, scInstance, appLog,
+                        step.getAfterStatus().getEvents());
+            } catch (SCXMLExpressionException e) {
+                errRep.onError(ErrorConstants.EXPRESSION_ERROR, e.getMessage(), stateMachine);
+            }
         }
     }
 
-    /**
-     * Executes all OnExit/Transition/OnEntry transitional actions.
-     *
-     * @param step
-     *            provides EntryList, TransitList, ExitList gets
-     *            updated its AfterStatus/Events
-     * @param stateMachine
-     *            state machine - SCXML instance
-     * @param evtDispatcher
-     *            the event dispatcher - EventDispatcher instance
-     * @param errRep
-     *            error reporter
-     * @param scInstance
-     *            The state chart instance
-     * @throws ModelException
-     *             in case there is a fatal SCXML object model problem.
-     */
-    public void executeActions(final Step step, final SCXML stateMachine,
-            final EventDispatcher evtDispatcher,
-            final ErrorReporter errRep, final SCInstance scInstance)
-    throws ModelException {
+    public void exitStates(final Step step, final SCXML stateMachine, final EventDispatcher evtDispatcher,
+                           final ErrorReporter errRep, final SCInstance scInstance) throws ModelException {
         NotificationRegistry nr = scInstance.getNotificationRegistry();
         Collection<TriggerEvent> internalEvents = step.getAfterStatus().getEvents();
         Map<TransitionTarget, Invoker> invokers = scInstance.getInvokers();
         // ExecutePhaseActions / OnExit
         for (TransitionTarget tt : step.getExitList()) {
             OnExit oe = tt.getOnExit();
-            try {
-                for (Action onExitAct : oe.getActions()) {
-                    onExitAct.execute(evtDispatcher,
-                        errRep, scInstance, appLog, internalEvents);
-                }
-            } catch (SCXMLExpressionException e) {
-                errRep.onError(ErrorConstants.EXPRESSION_ERROR, e.getMessage(),
-                        oe);
-            }
+            executeContent(oe, evtDispatcher, errRep, scInstance, internalEvents);
             // check if invoke is active in this state
             if (invokers.containsKey(tt)) {
                 Invoker toCancel = invokers.get(tt);
@@ -280,7 +240,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                     toCancel.cancel();
                 } catch (InvokerException ie) {
                     TriggerEvent te = new TriggerEvent(tt.getId()
-                        + ".invoke.cancel.failed", TriggerEvent.ERROR_EVENT);
+                            + ".invoke.cancel.failed", TriggerEvent.ERROR_EVENT);
                     internalEvents.add(te);
                 }
                 // done here, don't wait for cancel response
@@ -292,35 +252,29 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                     TriggerEvent.CHANGE_EVENT);
             internalEvents.add(te);
         }
-        // ExecutePhaseActions / Transitions
+    }
+
+    public void executeTransitionContent(final Step step, final SCXML stateMachine, final EventDispatcher evtDispatcher,
+                                         final ErrorReporter errRep, final SCInstance scInstance) throws ModelException {
+        NotificationRegistry nr = scInstance.getNotificationRegistry();
+        Collection<TriggerEvent> internalEvents = step.getAfterStatus().getEvents();
         for (Transition t : step.getTransitList()) {
-            try {
-                for (Action transitAct : t.getActions()) {
-                    transitAct.execute(evtDispatcher,
-                        errRep, scInstance, appLog, internalEvents);
-                }
-            } catch (SCXMLExpressionException e) {
-                errRep.onError(ErrorConstants.EXPRESSION_ERROR,
-                    e.getMessage(), t);
-            }
+            executeContent(t, evtDispatcher, errRep, scInstance, internalEvents);
             List<TransitionTarget> rtargets = t.getRuntimeTargets();
             for (TransitionTarget tt : rtargets) {
                 nr.fireOnTransition(t, t.getParent(), tt, t);
                 nr.fireOnTransition(stateMachine, t.getParent(), tt, t);
             }
         }
-        // ExecutePhaseActions / OnEntry
+    }
+
+    public void enterStates(final Step step, final SCXML stateMachine, final EventDispatcher evtDispatcher,
+                            final ErrorReporter errRep, final SCInstance scInstance) throws ModelException {
+        NotificationRegistry nr = scInstance.getNotificationRegistry();
+        Collection<TriggerEvent> internalEvents = step.getAfterStatus().getEvents();
         for (TransitionTarget tt : step.getEntryList()) {
             OnEntry oe = tt.getOnEntry();
-            try {
-                for (Action onEntryAct : oe.getActions()) {
-                    onEntryAct.execute(evtDispatcher,
-                        errRep, scInstance, appLog, internalEvents);
-                }
-            } catch (SCXMLExpressionException e) {
-                errRep.onError(ErrorConstants.EXPRESSION_ERROR, e.getMessage(),
-                        oe);
-            }
+            executeContent(oe, evtDispatcher, errRep, scInstance, internalEvents);
             nr.fireOnEntry(tt, tt);
             nr.fireOnEntry(stateMachine, tt);
             TriggerEvent te = new TriggerEvent(tt.getId() + ".entry",
@@ -330,17 +284,8 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
             if (tt instanceof State) {
                 State ts = (State) tt;
                 Initial ini = ts.getInitial();
-                if (ts.isComposite() && ini != null) {
-                    try {
-                        for (Action initialAct : ini.getTransition().
-                                getActions()) {
-                            initialAct.execute(evtDispatcher,
-                                errRep, scInstance, appLog, internalEvents);
-                        }
-                    } catch (SCXMLExpressionException e) {
-                        errRep.onError(ErrorConstants.EXPRESSION_ERROR,
-                            e.getMessage(), ini);
-                    }
+                if (ts.isComposite() && ini != null) { // TODO: use step.getDefaultEntrySet().contains(tt) instead
+                    executeContent(ini.getTransition(), evtDispatcher, errRep, scInstance, internalEvents);
                 }
                 if (ts.isFinal()) {
                     State parent = (State) ts.getParent();
@@ -368,7 +313,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                         }
                         if (finCount == pCount) {
                             te = new TriggerEvent(p.getId() + ".done",
-                                        TriggerEvent.CHANGE_EVENT);
+                                    TriggerEvent.CHANGE_EVENT);
                             internalEvents.add(te);
                             scInstance.setDone(p, true);
                         }
@@ -376,6 +321,69 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                 }
             }
         }
+    }
+
+    /**
+     * @param step
+     *            provides target states and entry list to fill in [out]
+     * @param stateMachine
+     *            SCXML state machine [in]
+     * @param errRep
+     *            ErrorReporter callback [inout]
+     * @param scInstance
+     *            The state chart instance [in]
+     * @throws org.apache.commons.scxml2.model.ModelException
+     *             in case there is a fatal SCXML object model problem.
+     */
+    public void determineInitialStates(final Step step, final SCXML stateMachine, final ErrorReporter errRep,
+                                       final SCInstance scInstance)
+            throws ModelException {
+        TransitionTarget tmp = stateMachine.getInitialTarget();
+        if (tmp == null) {
+            errRep.onError(ErrorConstants.NO_INITIAL,
+                    "SCXML initialstate is missing!", stateMachine);
+        } else {
+            Set<TransitionTarget> targets = step.getAfterStatus().getStates();
+            targets.add(tmp);
+            determineTargetStates(targets, errRep, scInstance);
+            //set of ALL entered states (even if initialState is a jump-over)
+            Set<TransitionTarget> onEntry = SCXMLHelper.getAncestorClosure(targets, null);
+            // sort onEntry according state hierarchy
+            TransitionTarget[] oen = onEntry.toArray(new TransitionTarget[onEntry.size()]);
+            onEntry.clear();
+            Arrays.sort(oen, getTTComparator());
+            // we need to impose reverse order for the onEntry list
+            List<TransitionTarget> entering = Arrays.asList(oen);
+            Collections.reverse(entering);
+            step.getEntryList().addAll(entering);
+
+        }
+    }
+
+    /**
+     * Executes all OnExit/Transition/OnEntry transitional actions.
+     *
+     * @param step
+     *            provides EntryList, TransitList, ExitList gets
+     *            updated its AfterStatus/Events
+     * @param stateMachine
+     *            state machine - SCXML instance
+     * @param evtDispatcher
+     *            the event dispatcher - EventDispatcher instance
+     * @param errRep
+     *            error reporter
+     * @param scInstance
+     *            The state chart instance
+     * @throws ModelException
+     *             in case there is a fatal SCXML object model problem.
+     */
+    public void executeActions(final Step step, final SCXML stateMachine,
+                               final EventDispatcher evtDispatcher,
+                               final ErrorReporter errRep, final SCInstance scInstance)
+            throws ModelException {
+        exitStates(step, stateMachine, evtDispatcher, errRep, scInstance);
+        executeTransitionContent(step, stateMachine, evtDispatcher, errRep, scInstance);
+        enterStates(step, stateMachine, evtDispatcher, errRep, scInstance);
     }
 
     /**
@@ -447,15 +455,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
             if (finalizeMatch(s.getId(), allEvents)) {
                 Finalize fn = s.getInvoke().getFinalize();
                 if (fn != null) {
-                    try {
-                        for (Action fnAct : fn.getActions()) {
-                            fnAct.execute(evtDispatcher, errRep, scInstance, appLog,
-                                step.getAfterStatus().getEvents());
-                        }
-                    } catch (SCXMLExpressionException e) {
-                        errRep.onError(ErrorConstants.EXPRESSION_ERROR,
-                            e.getMessage(), fn);
-                    }
+                    executeContent(fn, evtDispatcher, errRep, scInstance, step.getAfterStatus().getEvents());
                 }
             }
         }
