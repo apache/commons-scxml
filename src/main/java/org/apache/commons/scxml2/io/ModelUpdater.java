@@ -39,21 +39,122 @@ import org.apache.commons.scxml2.model.TransitionTarget;
 /**
  * The ModelUpdater provides the utility methods to check the Commons
  * SCXML model for inconsistencies, detect errors, and wire the Commons
- * SCXML model appropriately post document parsing by the digester to make
+ * SCXML model appropriately post document parsing by the SCXMLReader to make
  * it executor ready.
  */
 final class ModelUpdater {
+
+    //// Error messages
+    /**
+     * Error message when SCXML document specifies an illegal initial state.
+     */
+    private static final String ERR_SCXML_NO_INIT = "No SCXML child state "
+            + "with ID \"{0}\" found; illegal initial state for SCXML document";
+
+    /**
+     * Error message when a state element specifies an initial state which
+     * cannot be found.
+     */
+    private static final String ERR_STATE_NO_INIT = "No initial element "
+            + "available for {0}";
+
+    /**
+     * Error message when a state element specifies an initial state which
+     * is not a direct descendent.
+     */
+    private static final String ERR_STATE_BAD_INIT = "Initial state "
+            + "null or not a descendant of {0}";
+
+    /**
+     * Error message when a state element contains anything other than
+     * an &lt;invoke&gt; or any number of &lt;state&gt; children.
+     */
+    private static final String ERR_STATE_BAD_CONTENTS = "{0} should "
+            + "contain either one <invoke> or any number of <state> children.";
+
+    /**
+     * Error message when a referenced history state cannot be found.
+     */
+    private static final String ERR_STATE_NO_HIST = "Referenced history state"
+            + " null for {0}";
+
+    /**
+     * Error message when a shallow history state is not a child state.
+     */
+    private static final String ERR_STATE_BAD_SHALLOW_HIST = "History state"
+            + " for shallow history is not child for {0}";
+
+    /**
+     * Error message when a deep history state is not a descendent state.
+     */
+    private static final String ERR_STATE_BAD_DEEP_HIST = "History state"
+            + " for deep history is not descendant for {0}";
+
+    /**
+     * Transition target is not a legal IDREF (not found).
+     */
+    private static final String ERR_TARGET_NOT_FOUND =
+            "Transition target with ID \"{0}\" not found";
+
+    /**
+     * Transition targets do not form a legal configuration.
+     */
+    private static final String ERR_ILLEGAL_TARGETS =
+            "Transition targets \"{0}\" do not satisfy the requirements for"
+                    + " target regions belonging to a <parallel>";
+
+    /**
+     * Simple states should not contain a history.
+     */
+    private static final String ERR_HISTORY_SIMPLE_STATE =
+            "Simple {0} contains history elements";
+
+    /**
+     * History does not specify a default transition target.
+     */
+    private static final String ERR_HISTORY_NO_DEFAULT =
+            "No default target specified for history with ID \"{0}\""
+                    + " belonging to {1}";
+
+    /**
+     * Error message when an &lt;invoke&gt; does not specify a "type"
+     * attribute.
+     */
+    private static final String ERR_INVOKE_NO_TYPE = "{0} contains "
+            + "<invoke> with no \"type\" attribute specified.";
+
+    /**
+     * Error message when an &lt;invoke&gt; does not specify a "src"
+     * or a "srcexpr" attribute.
+     */
+    private static final String ERR_INVOKE_NO_SRC = "{0} contains "
+            + "<invoke> without a \"src\" or \"srcexpr\" attribute specified.";
+
+    /**
+     * Error message when an &lt;invoke&gt; specifies both "src" and "srcexpr"
+     * attributes.
+     */
+    private static final String ERR_INVOKE_AMBIGUOUS_SRC = "{0} contains "
+            + "<invoke> with both \"src\" and \"srcexpr\" attributes specified,"
+            + " must specify either one, but not both.";
+
+    /**
+     * Discourage instantiation since this is a utility class.
+     */
+    private ModelUpdater() {
+        super();
+    }
 
     /*
      * Post-processing methods to make the SCXML object SCXMLExecutor ready.
      */
     /**
      * <p>Update the SCXML object model and make it SCXMLExecutor ready.
-     * This is part of post-digester processing, and sets up the necessary
+     * This is part of post-read processing, and sets up the necessary
      * object references throughtout the SCXML object model for the parsed
      * document.</p>
      *
-     * @param scxml The SCXML object (output from Digester)
+     * @param scxml The SCXML object (output from SCXMLReader)
      * @throws ModelException If the object model is flawed
      */
    static void updateSCXML(final SCXML scxml) throws ModelException {
@@ -63,6 +164,7 @@ final class ModelUpdater {
        if (initial != null) {
            //we have to use getTargets() here since the initialTarget can be
            //an indirect descendant
+           // TODO: initial may specify multiple targets (like it may for any state, see also State#first)
            initialTarget = scxml.getTargets().get(initial);
            if (initialTarget == null) {
                // Where do we, where do we go?
@@ -88,7 +190,7 @@ final class ModelUpdater {
    }
 
     /**
-      * Update this State object (part of post-digestion processing).
+      * Update this State object (part of post-read processing).
       * Also checks for any errors in the document.
       *
       * @param s The State object
@@ -129,7 +231,7 @@ final class ModelUpdater {
                 new Object[] {getName(s)});
         }
         for (History h : histories) {
-            updateHistory(h, s.getChildren().values(), targets, s);
+            updateHistory(h, targets, s);
         }
         for (Transition trn : s.getTransitionsList()) {
             updateTransition(trn, targets);
@@ -169,7 +271,7 @@ final class ModelUpdater {
     }
 
     /**
-      * Update this Parallel object (part of post-digestion processing).
+      * Update this Parallel object (part of post-read processing).
       *
       * @param p The Parallel object
       * @param targets The global Map of all transition targets
@@ -185,41 +287,26 @@ final class ModelUpdater {
         }
         List<History> histories = p.getHistory();
         for (History h : histories) {
-            updateHistory(h, p.getChildren(), targets, p);
+            updateHistory(h, targets, p);
         }
     }
 
     /**
-      * Update this History object (part of post-digestion processing).
+      * Update this History object (part of post-read processing).
       *
       * @param h The History object
-      * @param defaults The default history targets
       * @param targets The global Map of all transition targets
       * @param parent The parent TransitionTarget for this History
       * @throws ModelException If the object model is flawed
       */
     private static void updateHistory(final History h,
-            final Collection<TransitionTarget> defaults,
             final Map<String, TransitionTarget> targets,
             final TransitionTarget parent)
     throws ModelException {
         Transition historyTransition = h.getTransition();
-        if (historyTransition == null) {
-            // try to assign defaults
-            if (defaults != null && defaults.size() > 0) {
-                for (TransitionTarget tt : defaults) {
-                    if (tt instanceof History) {
-                        logAndThrowModelError(ERR_HISTORY_BAD_DEFAULT,
-                            new Object[] {h.getId(), getName(parent)});
-                    }
-                }
-                historyTransition = new Transition();
-                historyTransition.getTargets().addAll(defaults);
-                h.setTransition(historyTransition);
-            } else {
-                logAndThrowModelError(ERR_HISTORY_NO_DEFAULT,
+        if (historyTransition == null || historyTransition.getNext() == null) {
+            logAndThrowModelError(ERR_HISTORY_NO_DEFAULT,
                     new Object[] {h.getId(), getName(parent)});
-            }
         }
         updateTransition(historyTransition, targets);
         List<TransitionTarget> historyStates = historyTransition.getTargets();
@@ -253,7 +340,7 @@ final class ModelUpdater {
     }
 
     /**
-      * Update this Transition object (part of post-digestion processing).
+      * Update this Transition object (part of post-read processing).
       *
       * @param t The Transition object
       * @param targets The global Map of all transition targets
@@ -290,7 +377,7 @@ final class ModelUpdater {
     }
 
     /**
-      * Log an error discovered in post-digestion processing.
+      * Log an error discovered in post-read processing.
       *
       * @param errType The type of error
       * @param msgArgs The arguments for formatting the error message
@@ -368,114 +455,5 @@ final class ModelUpdater {
         }
         return true;
     }
-
-    /**
-     * Discourage instantiation since this is a utility class.
-     */
-    private ModelUpdater() {
-        super();
-    }
-
-    //// Error messages
-    /**
-     * Error message when SCXML document specifies an illegal initial state.
-     */
-    private static final String ERR_SCXML_NO_INIT = "No SCXML child state "
-        + "with ID \"{0}\" found; illegal initial state for SCXML document";
-
-    /**
-     * Error message when a state element specifies an initial state which
-     * cannot be found.
-     */
-    private static final String ERR_STATE_NO_INIT = "No initial element "
-        + "available for {0}";
-
-    /**
-     * Error message when a state element specifies an initial state which
-     * is not a direct descendent.
-     */
-    private static final String ERR_STATE_BAD_INIT = "Initial state "
-        + "null or not a descendant of {0}";
-
-    /**
-     * Error message when a state element contains anything other than
-     * an &lt;invoke&gt; or any number of &lt;state&gt; children.
-     */
-    private static final String ERR_STATE_BAD_CONTENTS = "{0} should "
-        + "contain either one <invoke> or any number of <state> children.";
-
-    /**
-     * Error message when a referenced history state cannot be found.
-     */
-    private static final String ERR_STATE_NO_HIST = "Referenced history state"
-        + " null for {0}";
-
-    /**
-     * Error message when a shallow history state is not a child state.
-     */
-    private static final String ERR_STATE_BAD_SHALLOW_HIST = "History state"
-        + " for shallow history is not child for {0}";
-
-    /**
-     * Error message when a deep history state is not a descendent state.
-     */
-    private static final String ERR_STATE_BAD_DEEP_HIST = "History state"
-        + " for deep history is not descendant for {0}";
-
-    /**
-     * Transition target is not a legal IDREF (not found).
-     */
-    private static final String ERR_TARGET_NOT_FOUND =
-        "Transition target with ID \"{0}\" not found";
-
-    /**
-     * Transition targets do not form a legal configuration.
-     */
-    private static final String ERR_ILLEGAL_TARGETS =
-        "Transition targets \"{0}\" do not satisfy the requirements for"
-        + " target regions belonging to a <parallel>";
-
-    /**
-     * Simple states should not contain a history.
-     */
-    private static final String ERR_HISTORY_SIMPLE_STATE =
-        "Simple {0} contains history elements";
-
-    /**
-     * History does not specify a default transition target.
-     */
-    private static final String ERR_HISTORY_NO_DEFAULT =
-        "No default target specified for history with ID \"{0}\""
-        + " belonging to {1}";
-
-    /**
-     * History specifies a bad default transition target.
-     */
-    private static final String ERR_HISTORY_BAD_DEFAULT =
-        "Default target specified for history with ID \"{0}\""
-        + " belonging to \"{1}\" is also a history";
-
-    /**
-     * Error message when an &lt;invoke&gt; does not specify a "type"
-     * attribute.
-     */
-    private static final String ERR_INVOKE_NO_TYPE = "{0} contains "
-        + "<invoke> with no \"type\" attribute specified.";
-
-    /**
-     * Error message when an &lt;invoke&gt; does not specify a "src"
-     * or a "srcexpr" attribute.
-     */
-    private static final String ERR_INVOKE_NO_SRC = "{0} contains "
-        + "<invoke> without a \"src\" or \"srcexpr\" attribute specified.";
-
-    /**
-     * Error message when an &lt;invoke&gt; specifies both "src" and "srcexpr"
-     * attributes.
-     */
-    private static final String ERR_INVOKE_AMBIGUOUS_SRC = "{0} contains "
-        + "<invoke> with both \"src\" and \"srcexpr\" attributes specified,"
-        + " must specify either one, but not both.";
-
 }
 

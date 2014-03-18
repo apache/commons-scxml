@@ -77,12 +77,14 @@
         <!-- shallow history, no default transition specified,
              reuse initial as default transition -->
 
-        <history id="history3"/>
+      <history id="history3">
+        <transition target="state31"/>
+      </history>
 
         <state id="state31">
                 <transition event="state.next" target="state4"/>
         </state>
-        
+
     </state>
 
     <state id="state4" final="true"/>

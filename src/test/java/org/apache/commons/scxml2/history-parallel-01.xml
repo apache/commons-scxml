@@ -47,7 +47,9 @@
             </state>
         </state>
 
-        <history id="resume_call" type="deep"/>
+        <history id="resume_call" type="deep">
+          <transition target="talk_status call_status"/>
+        </history>
 
     </parallel>
 
@@ -69,7 +71,9 @@
             </state>
         </state>
 
-        <history id="resume_consult" type="deep"/>
+        <history id="resume_consult" type="deep">
+          <transition target="consult_talk_status consult_status"/>
+        </history>
 
     </parallel>
 
