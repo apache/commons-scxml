@@ -166,7 +166,7 @@ public class SCXMLReaderTest {
     public void testSCXMLReaderSend01Sample() throws Exception {
         // Digest
         scxml = SCXMLTestHelper.parse(send01);
-        State ten = (State) scxml.getInitialTarget();
+        State ten = (State) scxml.getInitialTransition().getTargets().get(0);
         Assert.assertEquals("ten", ten.getId());
         List<Transition> ten_done = ten.getTransitionsList("ten.done");
         Assert.assertEquals(1, ten_done.size());
@@ -192,7 +192,7 @@ public class SCXMLReaderTest {
         Assert.assertNotNull(scxml);
         scxmlAsString = serialize(scxml);
         Assert.assertNotNull(scxmlAsString);
-        Final foo = (Final) scxml.getInitialTarget();
+        Final foo = (Final) scxml.getInitialTransition().getTargets().get(0);
         Assert.assertEquals("foo", foo.getId());
     }
     
@@ -203,7 +203,7 @@ public class SCXMLReaderTest {
             "action", MyAction.class);
         cas.add(ca);
         scxml = SCXMLTestHelper.parse(action01, cas);
-        State state = (State) scxml.getInitialTarget();
+        State state = (State) scxml.getInitialTransition().getTargets().get(0);
         Assert.assertEquals("actions", state.getId());
         List<Action> actions = state.getOnEntry().getActions();
         Assert.assertEquals(1, actions.size());
@@ -221,7 +221,7 @@ public class SCXMLReaderTest {
         Assert.assertNotNull(scxml);
         scxmlAsString = serialize(scxml);
         Assert.assertNotNull(scxmlAsString);
-        Final foo = (Final) scxml.getInitialTarget();
+        Final foo = (Final) scxml.getInitialTransition().getTargets().get(0);
         Assert.assertEquals("foo", foo.getId());
         Datamodel dataModel = scxml.getDatamodel();
         Assert.assertNotNull(dataModel);
@@ -244,7 +244,7 @@ public class SCXMLReaderTest {
         Assert.assertNotNull(scxml);
         scxmlAsString = serialize(scxml);
         Assert.assertNotNull(scxmlAsString);
-        foo = (Final) scxml.getInitialTarget();
+        foo = (Final) scxml.getInitialTransition().getTargets().get(0);
         Assert.assertEquals("foo", foo.getId());
         dataModel = scxml.getDatamodel();
         Assert.assertNotNull(dataModel);

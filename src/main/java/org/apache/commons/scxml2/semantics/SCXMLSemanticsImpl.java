@@ -338,13 +338,13 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
     public void determineInitialStates(final Step step, final SCXML stateMachine, final ErrorReporter errRep,
                                        final SCInstance scInstance)
             throws ModelException {
-        TransitionTarget tmp = stateMachine.getInitialTarget();
-        if (tmp == null) {
+        Transition t = stateMachine.getInitialTransition();
+        if (t == null) {
             errRep.onError(ErrorConstants.NO_INITIAL,
                     "SCXML initialstate is missing!", stateMachine);
         } else {
             Set<TransitionTarget> targets = step.getAfterStatus().getStates();
-            targets.add(tmp);
+            targets.addAll(t.getTargets());
             determineTargetStates(targets, errRep, scInstance);
             //set of ALL entered states (even if initialState is a jump-over)
             Set<TransitionTarget> onEntry = SCXMLHelper.getAncestorClosure(targets, null);
@@ -356,7 +356,6 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
             List<TransitionTarget> entering = Arrays.asList(oen);
             Collections.reverse(entering);
             step.getEntryList().addAll(entering);
-
         }
     }
 

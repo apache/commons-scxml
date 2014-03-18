@@ -59,8 +59,8 @@ public class ScxmlInitialAttributeTest {
     public void testInitial() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse(new StringReader(SCXML_WITH_LEGAL_INITIAL), null);
         assertEquals("The initial state ID reading was wrong.", "s1", scxml.getInitial());
-        assertNotNull(scxml.getInitialTarget());
-        assertEquals("The initial state resolution was wrong.", "s1", scxml.getInitialTarget().getId());
+        assertNotNull(scxml.getInitialTransition().getTargets().get(0));
+        assertEquals("The initial state resolution was wrong.", "s1", scxml.getInitialTransition().getTargets().get(0).getId());
         SCXMLExecutor exec = executeSCXML(scxml);
         assertEquals(scxml.getTargets().get("s1"), exec.getCurrentStatus().getStates().iterator().next());
     }
@@ -69,8 +69,8 @@ public class ScxmlInitialAttributeTest {
     public void testNoInitial() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse(new StringReader(SCXML_WITH_NO_INITIAL), null);
         assertNull(scxml.getInitial());
-        assertNotNull("The initial state ID reading was wrong.", scxml.getInitialTarget());
-        assertEquals("The initial state resolution was wrong.", "s1", scxml.getInitialTarget().getId());
+        assertNotNull("The initial state ID reading was wrong.", scxml.getInitialTransition().getTargets().get(0));
+        assertEquals("The initial state resolution was wrong.", "s1", scxml.getInitialTransition().getTargets().get(0).getId());
         SCXMLExecutor exec = executeSCXML(scxml);
         assertEquals(scxml.getTargets().get("s1"), exec.getCurrentStatus().getStates().iterator().next());
     }

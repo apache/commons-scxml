@@ -25,7 +25,7 @@ public class ErrorConstants {
     /**
      * Missing initial state for a composite state or for the scxml root.
      *
-     * @see org.apache.commons.scxml2.model.SCXML#getInitialTarget()
+     * @see org.apache.commons.scxml2.model.SCXML#getInitialTransition()
      * @see org.apache.commons.scxml2.model.State#getInitial()
      */
     public static final String NO_INITIAL = "NO_INITIAL";

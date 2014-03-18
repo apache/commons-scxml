@@ -32,6 +32,8 @@ import org.apache.commons.scxml2.SCXMLHelper;
  * the least common ancestor and a &quot;down segment&quot; that traces
  * down to the target of the Transition.
  *
+ * For an initial transition, the TransitionTarget source is null and
+ * the &quot;up segment&quot; will be empty and the scope null.
  */
 public class Path implements Serializable {
 
@@ -73,7 +75,7 @@ public class Path implements Serializable {
             scope = source;
             //all segments remain empty
         } else {
-            TransitionTarget tt = SCXMLHelper.getLCA(source, target);
+            TransitionTarget tt = source != null ? SCXMLHelper.getLCA(source, target) : null;
             if (tt != null) {
                 scope = tt;
                 if (scope == source || scope == target) {

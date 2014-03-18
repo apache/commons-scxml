@@ -54,9 +54,9 @@ public class SCXML implements Serializable, Observable,
     private String version;
 
     /**
-     * The initial TransitionTarget for the SCXML executor.
+     * The initial Transition for the SCXML executor.
      */
-    private TransitionTarget initialTarget;
+    private Transition initialTransition;
 
     /**
      * The initial transition target ID (used by XML Digester only).
@@ -124,25 +124,26 @@ public class SCXML implements Serializable, Observable,
     }
 
     /**
-     * Get the initial TransitionTarget.
+     * Get the initial Transition.
      *
-     * @return Returns the initial target for this state machine.
+     * @return Returns the initial transition for this state machine.
      *
-     * @since 0.7
+     * @since 2.0
      */
-    public final TransitionTarget getInitialTarget() {
-        return initialTarget;
+    public final Transition getInitialTransition() {
+        return initialTransition;
     }
 
     /**
-     * Set the initial TransitionTarget.
+     * Set the initial Transition.
+     * <p>Note: the initial transition can/may not have executable content!</p>
      *
-     * @param initialTarget The initial target to set.
+     * @param initialTransition The initial transition to set.
      *
-     * @since 0.7
+     * @since 2.0
      */
-    public final void setInitialTarget(final TransitionTarget initialTarget) {
-        this.initialTarget = initialTarget;
+    public final void setInitialTransition(final Transition initialTransition) {
+        this.initialTransition = initialTransition;
     }
 
     /**
@@ -280,22 +281,20 @@ public class SCXML implements Serializable, Observable,
     }
 
     /**
-     * Get the ID of the initial transition target.
+     * Get the the initial transition target.
      *
      * @return String Returns the initial transition target ID
-     *     (used by XML Digester only).
-     * @see #getInitialTarget()
+     * @see #getInitialTransition()
      */
     public final String getInitial() {
         return initial;
     }
 
     /**
-     * Set the ID of the initial transition target.
+     * Set the initial transition target.
      *
-     * @param initial The initial transition target ID
-     *     (used by XML Digester only).
-     * @see #setInitialTarget(TransitionTarget)
+     * @param initial The initial transition target
+     * @see #setInitialTransition(Transition)
      */
     public final void setInitial(final String initial) {
         this.initial = initial;
