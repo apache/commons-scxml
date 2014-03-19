@@ -498,6 +498,19 @@ public class SCXMLWriter {
     }
 
     /**
+     * Write out the TransitionTarget id attribute unless it was auto-generated
+     * @param writer The {@link XMLStreamWriter} in use for the serialization.
+     * @param tt The {@link TransitionTarget} for which to write the id attribute.
+     * @throws XMLStreamException
+     */
+    private static void writeTransitionTargetId(final XMLStreamWriter writer, final TransitionTarget tt)
+            throws XMLStreamException {
+        if (!tt.getId().startsWith(SCXML.GENERATED_TT_ID_PREFIX)) {
+            writeAV(writer, ATTR_ID, tt.getId());
+        }
+    }
+
+    /**
      * Write out this {@link State} object into its serialization as the corresponding &lt;state&gt; element.
      *
      * @param writer The {@link XMLStreamWriter} in use for the serialization.
@@ -509,7 +522,7 @@ public class SCXMLWriter {
             throws XMLStreamException {
 
         writer.writeStartElement(ELEM_STATE);
-        writeAV(writer, ATTR_ID, state.getId());
+        writeTransitionTargetId(writer, state);
         writeAV(writer, ATTR_INITIAL, state.getFirst());
         boolean f = state.isFinal();
         if (f) {
@@ -556,7 +569,7 @@ public class SCXMLWriter {
             throws XMLStreamException {
 
         writer.writeStartElement(ELEM_PARALLEL);
-        writeAV(writer, ATTR_ID, parallel.getId());
+        writeTransitionTargetId(writer, parallel);
 
         writeDatamodel(writer, parallel.getDatamodel());
         writeHistory(writer, parallel.getHistory());
@@ -590,7 +603,7 @@ public class SCXMLWriter {
             throws XMLStreamException {
 
         writer.writeStartElement(ELEM_FINAL);
-        writeAV(writer, ATTR_ID, end.getId());
+        writeTransitionTargetId(writer, end);
         writeOnEntry(writer, end.getOnEntry());
         // params
         writeOnExit(writer, end.getOnExit());
@@ -635,7 +648,7 @@ public class SCXMLWriter {
 
         for (History h : history) {
             writer.writeStartElement(ELEM_HISTORY);
-            writeAV(writer, ATTR_ID, h.getId());
+            writeTransitionTargetId(writer, h);
             if (h.isDeep()) {
                 writeAV(writer, ATTR_TYPE, "deep");
             } else {

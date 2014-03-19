@@ -21,8 +21,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.apache.commons.scxml2.SCXMLHelper;
-
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;scxml&gt; root element, and serves as the &quot;document
@@ -41,6 +39,11 @@ public class SCXML implements Serializable, Observable,
      * The SCXML XMLNS.
      */
     public static final String XMLNS = "http://www.w3.org/2005/07/scxml";
+
+    /**
+     * Reserved prefix for auto generated TransitionTarget id values
+     */
+    public static final String GENERATED_TT_ID_PREFIX = "_generated_tt_id_";
 
     /**
      * The xmlns attribute on the root &lt;smxml&gt; element.
@@ -108,6 +111,13 @@ public class SCXML implements Serializable, Observable,
     private Map<String, String> namespaces;
 
     /**
+     * The next auto-generated transition target unique id value
+     * @see #generateTransitionTargetId()
+     */
+
+    private long ttNextId;
+
+    /**
      * Constructor.
      */
     public SCXML() {
@@ -115,11 +125,19 @@ public class SCXML implements Serializable, Observable,
         this.targets = new HashMap<String, TransitionTarget>();
     }
 
-    public Script getGlobalScript() {
+    /**
+     * Simple unique TransitionTarget id value generation
+     * @return a unique TransitionTarget id for this SCXML instance
+     */
+    public final String generateTransitionTargetId() {
+        return GENERATED_TT_ID_PREFIX +ttNextId++;
+    }
+
+    public final Script getGlobalScript() {
         return globalScript;
     }
 
-    public void setGlobalScript(Script script) {
+    public final void setGlobalScript(Script script) {
         this.globalScript = script;
     }
 
@@ -216,11 +234,7 @@ public class SCXML implements Serializable, Observable,
      * @param target The target to be added to the targets Map.
      */
     public final void addTarget(final TransitionTarget target) {
-        String id = target.getId();
-        if (!SCXMLHelper.isStringEmpty(id)) {
-            // Target is not anonymous, so makes sense to map it
-            targets.put(id, target);
-        }
+        targets.put(target.getId(), target);
     }
 
     /**

@@ -114,7 +114,7 @@ public final class SCXMLReader {
      * bind the SCXML elements to this namespace.
      */
     private static final String XMLNS_SCXML =
-        "http://www.w3.org/2005/07/scxml";
+            "http://www.w3.org/2005/07/scxml";
 
     /**
      * The namespace that defines any custom actions defined by the Commons
@@ -124,7 +124,7 @@ public final class SCXMLReader {
      * implementations.
      */
     private static final String XMLNS_COMMONS_SCXML =
-        "http://commons.apache.org/scxml";
+            "http://commons.apache.org/scxml";
 
     /**
      * The version attribute value the SCXML element <em>must</em> have as stated by the spec: 3.2.1
@@ -166,13 +166,13 @@ public final class SCXMLReader {
      * not extend the Commons SCXML Action base class.
      */
     private static final String ERR_CUSTOM_ACTION_TYPE = "Custom actions list"
-        + " contained unknown object, class not a Commons SCXML Action class subtype: ";
+            + " contained unknown object, class not a Commons SCXML Action class subtype: ";
 
     /**
      * Parser configuration error while trying to parse stream to DOM node(s).
      */
     private static final String ERR_PARSER_CFG = "ParserConfigurationException while trying"
-        + " to parse stream into DOM node(s).";
+            + " to parse stream into DOM node(s).";
 
     /**
      * Error message when the URI in a &lt;state&gt;'s &quot;src&quot;
@@ -180,14 +180,14 @@ public final class SCXMLReader {
      * parsed.
      */
     private static final String ERR_STATE_SRC =
-        "Source attribute in <state src=\"{0}\"> cannot be parsed";
+            "Source attribute in <state src=\"{0}\"> cannot be parsed";
 
     /**
      * Error message when the target of the URI fragment in a &lt;state&gt;'s
      * &quot;src&quot; attribute is not defined in the referenced document.
      */
     private static final String ERR_STATE_SRC_FRAGMENT = "URI Fragment in "
-        + "<state src=\"{0}\"> is an unknown state in referenced document";
+            + "<state src=\"{0}\"> is an unknown state in referenced document";
 
     /**
      * Error message when the target of the URI fragment in a &lt;state&gt;'s
@@ -195,7 +195,7 @@ public final class SCXMLReader {
      * the referenced document.
      */
     private static final String ERR_STATE_SRC_FRAGMENT_TARGET = "URI Fragment"
-        + " in <state src=\"{0}\"> does not point to a <state> or <final>";
+            + " in <state src=\"{0}\"> does not point to a <state> or <final>";
 
     /**
      * Error message when the target of the URI fragment in a &lt;state&gt;'s
@@ -204,6 +204,13 @@ public final class SCXMLReader {
      */
     private static final String ERR_REQUIRED_ATTRIBUTE_MISSING = "<{0}> is missing"
             +" required attribute \"{1}\" value at {2}";
+
+    /**
+     * Error message when the element (state|parallel|final|history) uses an id value
+     * with the reserved prefix {@link SCXML#GENERATED_TT_ID_PREFIX}.
+     */
+    private static final String ERR_RESERVED_ID_PREFIX = "Reserved id prefix \""
+            +SCXML.GENERATED_TT_ID_PREFIX+"\" used for <{0} id=\"{1}\"> at {2}";
 
     /**
      * Error message when the target of the URI fragment in a &lt;state&gt;'s
@@ -285,10 +292,9 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     public static SCXML read(final String scxmlPath)
-    throws IOException, ModelException, XMLStreamException {
+            throws IOException, ModelException, XMLStreamException {
 
         return read(scxmlPath, new Configuration());
-
     }
 
     /**
@@ -305,7 +311,7 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     public static SCXML read(final String scxmlPath, final Configuration configuration)
-    throws IOException, ModelException, XMLStreamException {
+            throws IOException, ModelException, XMLStreamException {
 
         if (scxmlPath == null) {
             throw new IllegalArgumentException(ERR_NULL_PATH);
@@ -315,7 +321,6 @@ public final class SCXMLReader {
             ModelUpdater.updateSCXML(scxml);
         }
         return scxml;
-
     }
 
     /**
@@ -331,10 +336,9 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     public static SCXML read(final URL scxmlURL)
-    throws IOException, ModelException, XMLStreamException {
+            throws IOException, ModelException, XMLStreamException {
 
         return read(scxmlURL, new Configuration());
-
     }
 
     /**
@@ -351,7 +355,7 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     public static SCXML read(final URL scxmlURL, final Configuration configuration)
-    throws IOException, ModelException, XMLStreamException {
+            throws IOException, ModelException, XMLStreamException {
 
         if (scxmlURL == null) {
             throw new IllegalArgumentException(ERR_NULL_URL);
@@ -361,7 +365,6 @@ public final class SCXMLReader {
             ModelUpdater.updateSCXML(scxml);
         }
         return scxml;
-
     }
 
     /**
@@ -377,10 +380,9 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     public static SCXML read(final InputStream scxmlStream)
-    throws IOException, ModelException, XMLStreamException {
+            throws IOException, ModelException, XMLStreamException {
 
         return read(scxmlStream, new Configuration());
-
     }
 
     /**
@@ -397,7 +399,7 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     public static SCXML read(final InputStream scxmlStream, final Configuration configuration)
-    throws IOException, ModelException, XMLStreamException {
+            throws IOException, ModelException, XMLStreamException {
 
         if (scxmlStream == null) {
             throw new IllegalArgumentException(ERR_NULL_ISTR);
@@ -407,7 +409,6 @@ public final class SCXMLReader {
             ModelUpdater.updateSCXML(scxml);
         }
         return scxml;
-
     }
 
     /**
@@ -423,10 +424,9 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     public static SCXML read(final Reader scxmlReader)
-    throws IOException, ModelException, XMLStreamException {
+            throws IOException, ModelException, XMLStreamException {
 
         return read(scxmlReader, new Configuration());
-
     }
 
     /**
@@ -443,7 +443,7 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     public static SCXML read(final Reader scxmlReader, final Configuration configuration)
-    throws IOException, ModelException, XMLStreamException {
+            throws IOException, ModelException, XMLStreamException {
 
         if (scxmlReader == null) {
             throw new IllegalArgumentException(ERR_NULL_READ);
@@ -453,7 +453,6 @@ public final class SCXMLReader {
             ModelUpdater.updateSCXML(scxml);
         }
         return scxml;
-
     }
 
     /**
@@ -469,10 +468,9 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     public static SCXML read(final Source scxmlSource)
-    throws IOException, ModelException, XMLStreamException {
+            throws IOException, ModelException, XMLStreamException {
 
         return read(scxmlSource, new Configuration());
-
     }
 
     /**
@@ -489,7 +487,7 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     public static SCXML read(final Source scxmlSource, final Configuration configuration)
-    throws IOException, ModelException, XMLStreamException {
+            throws IOException, ModelException, XMLStreamException {
 
         if (scxmlSource == null) {
             throw new IllegalArgumentException(ERR_NULL_SRC);
@@ -499,7 +497,6 @@ public final class SCXMLReader {
             ModelUpdater.updateSCXML(scxml);
         }
         return scxml;
-
     }
 
     //---------------------- PRIVATE UTILITY METHODS ----------------------//
@@ -524,8 +521,8 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static SCXML readInternal(final Configuration configuration, final URL scxmlURL, final String scxmlPath,
-            final InputStream scxmlStream, final Reader scxmlReader, final Source scxmlSource)
-    throws IOException, ModelException, XMLStreamException {
+                                      final InputStream scxmlStream, final Reader scxmlReader, final Source scxmlSource)
+            throws IOException, ModelException, XMLStreamException {
 
         if (configuration.pathResolver == null) {
             if (scxmlURL != null) {
@@ -538,7 +535,6 @@ public final class SCXMLReader {
         XMLStreamReader reader = getReader(configuration, scxmlURL, scxmlPath, scxmlStream, scxmlReader, scxmlSource);
 
         return readDocument(reader, configuration);
-
     }
 
     /*
@@ -559,7 +555,7 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static SCXML readDocument(final XMLStreamReader reader, final Configuration configuration)
-    throws IOException, ModelException, XMLStreamException {
+            throws IOException, ModelException, XMLStreamException {
 
         SCXML scxml = new SCXML();
         while (reader.hasNext()) {
@@ -586,7 +582,6 @@ public final class SCXMLReader {
             }
         }
         return scxml;
-
     }
 
     /**
@@ -602,7 +597,7 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readSCXML(final XMLStreamReader reader, final Configuration configuration, final SCXML scxml)
-    throws IOException, ModelException, XMLStreamException {
+            throws IOException, ModelException, XMLStreamException {
 
         scxml.setExmode(readAV(reader, ATTR_EXMODE));
         scxml.setInitial(readAV(reader, ATTR_INITIAL));
@@ -653,7 +648,6 @@ public final class SCXMLReader {
                 default:
             }
         }
-
     }
 
     /**
@@ -670,11 +664,11 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readState(final XMLStreamReader reader, final Configuration configuration, final SCXML scxml,
-            final TransitionTarget parent)
-    throws IOException, ModelException, XMLStreamException {
+                                  final TransitionTarget parent)
+            throws IOException, ModelException, XMLStreamException {
 
         State state = new State();
-        state.setId(readAV(reader, ATTR_ID));
+        state.setId(readOrGeneratedTransitionTargetId(reader, scxml, ELEM_STATE));
         String initial = readAV(reader, ATTR_INITIAL);
         if (initial != null) {
             state.setFirst(initial);
@@ -755,7 +749,6 @@ public final class SCXMLReader {
         if (configuration.parent != null) {
             configuration.parent.addTarget(state);
         }
-
     }
 
     /**
@@ -772,11 +765,11 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readParallel(final XMLStreamReader reader, final Configuration configuration, final SCXML scxml,
-            final TransitionTarget parent)
-    throws IOException, ModelException, XMLStreamException {
+                                     final TransitionTarget parent)
+            throws IOException, ModelException, XMLStreamException {
 
         Parallel parallel = new Parallel();
-        parallel.setId(readAV(reader, ATTR_ID));
+        parallel.setId(readOrGeneratedTransitionTargetId(reader, scxml, ELEM_PARALLEL));
         String src = readAV(reader, ATTR_SRC);
         if (src != null) {
             String source = src;
@@ -840,7 +833,6 @@ public final class SCXMLReader {
         if (configuration.parent != null) {
             configuration.parent.addTarget(parallel);
         }
-
     }
 
     /**
@@ -856,11 +848,11 @@ public final class SCXMLReader {
      *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readFinal(final XMLStreamReader reader, final Configuration configuration, final SCXML scxml,
-            final TransitionTarget parent)
-    throws XMLStreamException, ModelException {
+                                  final TransitionTarget parent)
+            throws XMLStreamException, ModelException {
 
         Final end = new Final();
-        end.setId(readAV(reader, ATTR_ID));
+        end.setId(readOrGeneratedTransitionTargetId(reader, scxml, ELEM_FINAL));
 
         loop : while (reader.hasNext()) {
             String name, nsURI;
@@ -899,7 +891,6 @@ public final class SCXMLReader {
             ((State) parent).addChild(end);
         }
         scxml.addTarget(end);
-
     }
 
     /**
@@ -918,8 +909,8 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readTransitionTargetSrc(final Configuration configuration, final String src,
-            final TransitionTarget tt)
-    throws IOException, ModelException, XMLStreamException {
+                                                final TransitionTarget tt)
+            throws IOException, ModelException, XMLStreamException {
 
         // Check for URI fragment
         String[] fragments = src.split("#", 2);
@@ -976,7 +967,7 @@ public final class SCXMLReader {
                     configuration.parent.addTarget(h);
                 }
                 Collection<TransitionTarget> children = include.getChildren().
-                    values();
+                        values();
                 for (TransitionTarget child : children) {
                     s.addChild(child);
                     configuration.parent.addTarget(child);
@@ -995,7 +986,7 @@ public final class SCXMLReader {
                 // TODO src attribute for <parallel>
             } else {
                 MessageFormat msgFormat =
-                    new MessageFormat(ERR_STATE_SRC_FRAGMENT_TARGET);
+                        new MessageFormat(ERR_STATE_SRC_FRAGMENT_TARGET);
                 String errMsg = msgFormat.format(new Object[] {src});
                 throw new ModelException(errMsg);
             }
@@ -1015,7 +1006,7 @@ public final class SCXMLReader {
         }
         if (tt instanceof State) {
             Collection<TransitionTarget> children = ((State) tt).getChildren().
-                values();
+                    values();
             for (TransitionTarget child : children) {
                 parent.addTarget(child);
                 readInExternalTargets(parent, child);
@@ -1042,8 +1033,8 @@ public final class SCXMLReader {
      *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readDatamodel(final XMLStreamReader reader, final Configuration configuration, final SCXML scxml,
-            final TransitionTarget parent)
-    throws XMLStreamException, ModelException {
+                                      final TransitionTarget parent)
+            throws XMLStreamException, ModelException {
 
         Datamodel dm = new Datamodel();
 
@@ -1081,7 +1072,6 @@ public final class SCXMLReader {
         } else {
             parent.setDatamodel(dm);
         }
-
     }
 
     /**
@@ -1094,7 +1084,7 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readData(final XMLStreamReader reader, final Configuration configuration, final Datamodel dm)
-    throws XMLStreamException, ModelException {
+            throws XMLStreamException, ModelException {
 
         Data datum = new Data();
         datum.setId(readRequiredAV(reader, ELEM_DATA, ATTR_ID));
@@ -1102,7 +1092,6 @@ public final class SCXMLReader {
         readNamespaces(configuration, datum);
         datum.setNode(readNode(reader, configuration, XMLNS_SCXML, ELEM_DATA, new String[] {"id"}));
         dm.addData(datum);
-
     }
 
     /**
@@ -1117,8 +1106,8 @@ public final class SCXMLReader {
      *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readInvoke(final XMLStreamReader reader, final Configuration configuration,
-            final State parent)
-    throws XMLStreamException, ModelException {
+                                   final State parent)
+            throws XMLStreamException, ModelException {
 
         Invoke invoke = new Invoke();
         invoke.setSrc(readAV(reader, ATTR_SRC));
@@ -1161,7 +1150,6 @@ public final class SCXMLReader {
         }
 
         parent.setInvoke(invoke);
-
     }
 
     /**
@@ -1174,15 +1162,14 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readParam(final XMLStreamReader reader, final Configuration configuration,
-            final Invoke parent)
-    throws XMLStreamException, ModelException {
+                                  final Invoke parent)
+            throws XMLStreamException, ModelException {
 
         Param param = new Param();
         param.setName(readRequiredAV(reader, ELEM_PARAM, ATTR_NAME));
         param.setExpr(readAV(reader, ATTR_EXPR));
         readNamespaces(configuration, param);
         parent.addParam(param);
-
     }
 
     /**
@@ -1198,14 +1185,13 @@ public final class SCXMLReader {
      *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readFinalize(final XMLStreamReader reader, final Configuration configuration,
-            final State state, final Invoke invoke)
-    throws XMLStreamException, ModelException {
+                                     final State state, final Invoke invoke)
+            throws XMLStreamException, ModelException {
 
         Finalize finalize = new Finalize();
         readExecutableContext(reader, configuration, state, finalize, null);
         invoke.setFinalize(finalize);
         finalize.setParent(state);
-
     }
 
     /**
@@ -1219,11 +1205,10 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readContent(final XMLStreamReader reader, final Configuration configuration,
-            final State state, final Invoke invoke)
-    throws XMLStreamException {
+                                    final State state, final Invoke invoke)
+            throws XMLStreamException {
 
         // TODO content support
-
     }
 
     /**
@@ -1238,8 +1223,8 @@ public final class SCXMLReader {
      *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readInitial(final XMLStreamReader reader, final Configuration configuration,
-            final State state)
-    throws XMLStreamException, ModelException {
+                                    final State state)
+            throws XMLStreamException, ModelException {
 
         Initial initial = new Initial();
 
@@ -1274,7 +1259,6 @@ public final class SCXMLReader {
 
         initial.setParent(state);
         state.setInitial(initial);
-
     }
 
     /**
@@ -1290,11 +1274,11 @@ public final class SCXMLReader {
      *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readHistory(final XMLStreamReader reader, final Configuration configuration,
-            final SCXML scxml, final TransitionTarget tt)
-    throws XMLStreamException, ModelException {
+                                    final SCXML scxml, final TransitionTarget tt)
+            throws XMLStreamException, ModelException {
 
         History history = new History();
-        history.setId(readAV(reader, ATTR_ID));
+        history.setId(readOrGeneratedTransitionTargetId(reader, scxml, ELEM_HISTORY));
         history.setType(readAV(reader, ATTR_TYPE));
 
         loop : while (reader.hasNext()) {
@@ -1329,7 +1313,6 @@ public final class SCXMLReader {
         history.setParent(tt);
         tt.addHistory(history);
         scxml.addTarget(history);
-
     }
 
     /**
@@ -1345,13 +1328,12 @@ public final class SCXMLReader {
      *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readOnEntry(final XMLStreamReader reader, final Configuration configuration, final SCXML scxml,
-            final TransitionTarget tt)
-    throws XMLStreamException, ModelException {
+                                    final TransitionTarget tt)
+            throws XMLStreamException, ModelException {
 
         OnEntry onentry = new OnEntry();
         readExecutableContext(reader, configuration, tt, onentry, null);
         tt.setOnEntry(onentry);
-
     }
 
     /**
@@ -1367,13 +1349,12 @@ public final class SCXMLReader {
      *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readOnExit(final XMLStreamReader reader, final Configuration configuration, final SCXML scxml,
-            final TransitionTarget tt)
-    throws XMLStreamException, ModelException {
+                                   final TransitionTarget tt)
+            throws XMLStreamException, ModelException {
 
         OnExit onexit = new OnExit();
         readExecutableContext(reader, configuration, tt, onexit, null);
         tt.setOnExit(onexit);
-
     }
 
     /**
@@ -1388,8 +1369,8 @@ public final class SCXMLReader {
      *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readTransition(final XMLStreamReader reader, final Configuration configuration,
-            final TransitionTarget tt)
-    throws XMLStreamException, ModelException {
+                                       final TransitionTarget tt)
+            throws XMLStreamException, ModelException {
 
         Transition t = new Transition();
         t.setCond(readAV(reader, ATTR_COND));
@@ -1408,7 +1389,6 @@ public final class SCXMLReader {
         } else {
             // TODO Error
         }
-
     }
 
     /**
@@ -1425,8 +1405,8 @@ public final class SCXMLReader {
      *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readExecutableContext(final XMLStreamReader reader, final Configuration configuration,
-            final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
-    throws XMLStreamException, ModelException {
+                                              final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
+            throws XMLStreamException, ModelException {
 
         String end = "";
         if (parent != null) {
@@ -1507,7 +1487,6 @@ public final class SCXMLReader {
                 default:
             }
         }
-
     }
 
     /**
@@ -1525,7 +1504,7 @@ public final class SCXMLReader {
      */
     private static void readRaise(final XMLStreamReader reader, final Configuration configuration,
                                   final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
-    throws XMLStreamException, ModelException {
+            throws XMLStreamException, ModelException {
 
         if (executable instanceof Finalize) {
             // http://www.w3.org/TR/2013/WD-scxml-20130801/#finalize
@@ -1559,8 +1538,8 @@ public final class SCXMLReader {
      *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readIf(final XMLStreamReader reader, final Configuration configuration,
-            final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
-    throws XMLStreamException, ModelException {
+                               final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
+            throws XMLStreamException, ModelException {
 
         If iff = new If();
         iff.setCond(readRequiredAV(reader, ELEM_IF, ATTR_COND));
@@ -1572,7 +1551,6 @@ public final class SCXMLReader {
             executable.addAction(iff);
         }
         readExecutableContext(reader, configuration, tt, executable, iff);
-
     }
 
     /**
@@ -1587,15 +1565,14 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readElseIf(final XMLStreamReader reader, final Configuration configuration,
-            final TransitionTarget tt, final Executable executable, final If iff)
-    throws XMLStreamException, ModelException {
+                                   final TransitionTarget tt, final Executable executable, final If iff)
+            throws XMLStreamException, ModelException {
 
         ElseIf elseif = new ElseIf();
         elseif.setCond(readRequiredAV(reader, ELEM_ELSEIF, ATTR_COND));
         readNamespaces(configuration, elseif);
         elseif.setParent(executable);
         iff.addAction(elseif);
-
     }
 
     /**
@@ -1610,14 +1587,13 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readElse(final XMLStreamReader reader, final Configuration configuration,
-            final TransitionTarget tt, final Executable executable, final If iff)
-    throws XMLStreamException {
+                                 final TransitionTarget tt, final Executable executable, final If iff)
+            throws XMLStreamException {
 
         Else els = new Else();
         readNamespaces(configuration, els);
         els.setParent(executable);
         iff.addAction(els);
-
     }
 
     /**
@@ -1649,7 +1625,6 @@ public final class SCXMLReader {
             executable.addAction(fe);
         }
         readExecutableContext(reader, configuration, tt, executable, fe);
-
     }
 
     /**
@@ -1664,8 +1639,8 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readLog(final XMLStreamReader reader, final Configuration configuration,
-            final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
-    throws XMLStreamException {
+                                final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
+            throws XMLStreamException {
 
         Log log = new Log();
         log.setExpr(readAV(reader, ATTR_EXPR));
@@ -1677,7 +1652,6 @@ public final class SCXMLReader {
         } else {
             executable.addAction(log);
         }
-
     }
 
     /**
@@ -1692,8 +1666,8 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readAssign(final XMLStreamReader reader, final Configuration configuration,
-            final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
-    throws XMLStreamException, ModelException {
+                                   final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
+            throws XMLStreamException, ModelException {
 
         Assign assign = new Assign();
         assign.setExpr(readAV(reader, ATTR_EXPR));
@@ -1714,7 +1688,6 @@ public final class SCXMLReader {
         } else {
             executable.addAction(assign);
         }
-
     }
 
     /**
@@ -1729,11 +1702,10 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readValidate(final XMLStreamReader reader, final Configuration configuration,
-            final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
-    throws XMLStreamException {
+                                     final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
+            throws XMLStreamException {
 
         // TODO validate support
-
     }
 
     /**
@@ -1750,8 +1722,8 @@ public final class SCXMLReader {
      *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readSend(final XMLStreamReader reader, final Configuration configuration,
-            final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
-    throws XMLStreamException, ModelException {
+                                 final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
+            throws XMLStreamException, ModelException {
 
         if (executable instanceof Finalize) {
             // http://www.w3.org/TR/2013/WD-scxml-20130801/#finalize
@@ -1797,8 +1769,8 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readCancel(final XMLStreamReader reader, final Configuration configuration,
-            final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
-    throws XMLStreamException {
+                                   final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
+            throws XMLStreamException {
 
         Cancel cancel = new Cancel();
         readNamespaces(configuration, cancel);
@@ -1808,7 +1780,6 @@ public final class SCXMLReader {
         } else {
             executable.addAction(cancel);
         }
-
     }
 
     /**
@@ -1823,8 +1794,8 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readScript(final XMLStreamReader reader, final Configuration configuration,
-            final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
-    throws XMLStreamException {
+                                   final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
+            throws XMLStreamException {
 
         Script script = new Script();
         readNamespaces(configuration, script);
@@ -1835,7 +1806,6 @@ public final class SCXMLReader {
         } else {
             executable.addAction(script);
         }
-
     }
 
     /**
@@ -1871,8 +1841,8 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readVar(final XMLStreamReader reader, final Configuration configuration,
-            final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
-    throws XMLStreamException {
+                                final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
+            throws XMLStreamException {
 
         Var var = new Var();
         var.setName(readAV(reader, ATTR_NAME));
@@ -1884,7 +1854,6 @@ public final class SCXMLReader {
         } else {
             executable.addAction(var);
         }
-
     }
 
     /**
@@ -1900,9 +1869,9 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readCustomAction(final XMLStreamReader reader, final Configuration configuration,
-            final CustomAction customAction, final TransitionTarget tt, final Executable executable,
-            final ActionsContainer parent)
-    throws XMLStreamException {
+                                         final CustomAction customAction, final TransitionTarget tt, final Executable executable,
+                                         final ActionsContainer parent)
+            throws XMLStreamException {
 
         // Instantiate custom action
         Object actionObject = null;
@@ -1970,7 +1939,6 @@ public final class SCXMLReader {
         } else {
             executable.addAction(action);
         }
-
     }
 
     /**
@@ -1989,8 +1957,8 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static Node readNode(final XMLStreamReader reader, final Configuration configuration,
-            final String namespaceURI, final String localName, final String[] attrs)
-    throws XMLStreamException {
+                                 final String namespaceURI, final String localName, final String[] attrs)
+            throws XMLStreamException {
 
         // Create a document in which to build the DOM node
         Document document = null;
@@ -2097,8 +2065,8 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static String readBody(final XMLStreamReader reader, final Configuration configuration,
-            final String namespaceURI, final String localName)
-    throws XMLStreamException {
+                                   final String namespaceURI, final String localName)
+            throws XMLStreamException {
 
         StringBuffer body = new StringBuffer();
         org.apache.commons.logging.Log log;
@@ -2110,7 +2078,7 @@ public final class SCXMLReader {
                 case XMLStreamConstants.START_ELEMENT:
                     log = LogFactory.getLog(SCXMLReader.class);
                     log.warn("Ignoring XML content in <script> element, encountered start tag with local name: "
-                        + reader.getLocalName());
+                            + reader.getLocalName());
                     break;
                 case XMLStreamConstants.SPACE:
                 case XMLStreamConstants.CHARACTERS:
@@ -2128,7 +2096,7 @@ public final class SCXMLReader {
                     }
                     log = LogFactory.getLog(SCXMLReader.class);
                     log.warn("Ignoring XML content in <script> element, encountered end tag with local name: "
-                        + reader.getLocalName());
+                            + reader.getLocalName());
                     break;
                 default: // rest is ignored
             }
@@ -2169,6 +2137,21 @@ public final class SCXMLReader {
         return value;
     }
 
+    private static String readOrGeneratedTransitionTargetId(final XMLStreamReader reader, final SCXML scxml,
+                                                            final String elementName)
+            throws ModelException {
+        String id = readAV(reader, ATTR_ID);
+        if (SCXMLHelper.isStringEmpty(id)) {
+            id = scxml.generateTransitionTargetId();
+        }
+        else if (id.startsWith(SCXML.GENERATED_TT_ID_PREFIX)) {
+            MessageFormat msgFormat = new MessageFormat(ERR_RESERVED_ID_PREFIX);
+            String errMsg = msgFormat.format(new Object[] {elementName, id, reader.getLocation()});
+            throw new ModelException(errMsg);
+        }
+        return id;
+    }
+
     /**
      * Read the current active namespace declarations into the namespace prefixes holder.
      *
@@ -2178,7 +2161,6 @@ public final class SCXMLReader {
     private static void readNamespaces(final Configuration configuration, final NamespacePrefixesHolder holder) {
 
         holder.setNamespaces(configuration.getCurrentNamespaces());
-
     }
 
     /**
@@ -2196,13 +2178,13 @@ public final class SCXMLReader {
      *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void reportIgnoredElement(final XMLStreamReader reader, final Configuration configuration,
-            final String parent, final String nsURI, final String name)
-    throws XMLStreamException, ModelException {
+                                             final String parent, final String nsURI, final String name)
+            throws XMLStreamException, ModelException {
 
         org.apache.commons.logging.Log log = LogFactory.getLog(SCXMLReader.class);
         StringBuffer sb = new StringBuffer();
         sb.append("Ignoring unknown or invalid element <").append(name).append("> in namespace \"").append(nsURI).append("\" as child ").
-            append(" of <").append(parent).append("> at ").append(reader.getLocation());
+                append(" of <").append(parent).append("> at ").append(reader.getLocation());
         if (!configuration.isSilent() && log.isWarnEnabled()) {
             log.warn(sb.toString());
         }
@@ -2213,7 +2195,6 @@ public final class SCXMLReader {
         if (reporter != null) {
             reporter.report(sb.toString(), "COMMONS_SCXML", null, reader.getLocation());
         }
-
     }
 
     /**
@@ -2232,7 +2213,6 @@ public final class SCXMLReader {
             }
             stack.push(reader.getNamespaceURI(i));
         }
-
     }
 
     /**
@@ -2244,7 +2224,7 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void popNamespaces(final XMLStreamReader reader, final Configuration configuration)
-    throws XMLStreamException {
+            throws XMLStreamException {
 
         for (int i = 0; i < reader.getNamespaceCount(); i++) {
             Stack<String> stack = configuration.namespaces.get(reader.getNamespacePrefix(i));
@@ -2260,7 +2240,6 @@ public final class SCXMLReader {
                 throw new XMLStreamException("Configuration namespaces stack popped too many times");
             }
         }
-
     }
 
     /**
@@ -2281,8 +2260,8 @@ public final class SCXMLReader {
      *                            thrown in trying to validate the document against the XML Schema for SCXML.
      */
     private static XMLStreamReader getReader(final Configuration configuration, final URL url, final String path,
-            final InputStream stream, final Reader reader, final Source source)
-    throws IOException, XMLStreamException {
+                                             final InputStream stream, final Reader reader, final Source source)
+            throws IOException, XMLStreamException {
 
         // Instantiate the XMLInputFactory
         XMLInputFactory factory = XMLInputFactory.newInstance();
@@ -2374,7 +2353,6 @@ public final class SCXMLReader {
         }
 
         return xsr;
-
     }
 
     /**
@@ -2527,7 +2505,7 @@ public final class SCXMLReader {
          * @param customActions The list of Commons SCXML custom actions that will be available for this document.
          */
         public Configuration(final XMLReporter reporter, final PathResolver pathResolver,
-                final List<CustomAction> customActions) {
+                             final List<CustomAction> customActions) {
             this(null, null, null, null, null, reporter, null, null, false, pathResolver, null, customActions, null,
                     false);
         }
@@ -2554,10 +2532,10 @@ public final class SCXMLReader {
          *                                             {@link CustomAction} instances to create.
          */
         public Configuration(final String factoryId, final ClassLoader classLoader, final XMLEventAllocator allocator,
-                final Map<String, Object> properties, final XMLResolver resolver, final XMLReporter reporter,
-                final String encoding, final String systemId, final boolean validate, final PathResolver pathResolver,
-                final List<CustomAction> customActions, final ClassLoader customActionClassLoader,
-                final boolean useContextClassLoaderForCustomActions) {
+                             final Map<String, Object> properties, final XMLResolver resolver, final XMLReporter reporter,
+                             final String encoding, final String systemId, final boolean validate, final PathResolver pathResolver,
+                             final List<CustomAction> customActions, final ClassLoader customActionClassLoader,
+                             final boolean useContextClassLoaderForCustomActions) {
             this(factoryId, classLoader, allocator, properties, resolver, reporter, encoding, systemId, validate,
                     pathResolver, null, customActions, customActionClassLoader,
                     useContextClassLoaderForCustomActions);
@@ -2614,10 +2592,10 @@ public final class SCXMLReader {
          *                                             {@link CustomAction} instances to create.
          */
         Configuration(final String factoryId, final ClassLoader factoryClassLoader, final XMLEventAllocator allocator,
-                final Map<String, Object> properties, final XMLResolver resolver, final XMLReporter reporter,
-                final String encoding, final String systemId, final boolean validate, final PathResolver pathResolver,
-                final SCXML parent, final List<CustomAction> customActions, final ClassLoader customActionClassLoader,
-                final boolean useContextClassLoaderForCustomActions) {
+                      final Map<String, Object> properties, final XMLResolver resolver, final XMLReporter reporter,
+                      final String encoding, final String systemId, final boolean validate, final PathResolver pathResolver,
+                      final SCXML parent, final List<CustomAction> customActions, final ClassLoader customActionClassLoader,
+                      final boolean useContextClassLoaderForCustomActions) {
             this(factoryId, factoryClassLoader, allocator, properties, resolver, reporter, encoding, systemId,
                     validate, pathResolver, parent, customActions, customActionClassLoader,
                     useContextClassLoaderForCustomActions, false, false);
@@ -2650,10 +2628,10 @@ public final class SCXMLReader {
          *               or to leniently allow to read the model even with those.
          */
         Configuration(final String factoryId, final ClassLoader factoryClassLoader, final XMLEventAllocator allocator,
-                final Map<String, Object> properties, final XMLResolver resolver, final XMLReporter reporter,
-                final String encoding, final String systemId, final boolean validate, final PathResolver pathResolver,
-                final SCXML parent, final List<CustomAction> customActions, final ClassLoader customActionClassLoader,
-                final boolean useContextClassLoaderForCustomActions, final boolean silent, final boolean strict) {
+                      final Map<String, Object> properties, final XMLResolver resolver, final XMLReporter reporter,
+                      final String encoding, final String systemId, final boolean validate, final PathResolver pathResolver,
+                      final SCXML parent, final List<CustomAction> customActions, final ClassLoader customActionClassLoader,
+                      final boolean useContextClassLoaderForCustomActions, final boolean silent, final boolean strict) {
             this.factoryId = factoryId;
             this.factoryClassLoader = factoryClassLoader;
             this.allocator = allocator;
@@ -2727,4 +2705,3 @@ public final class SCXMLReader {
         }
     }
 }
-
