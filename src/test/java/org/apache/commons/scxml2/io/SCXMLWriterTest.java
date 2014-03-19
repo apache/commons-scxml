@@ -42,7 +42,9 @@ public class SCXMLWriterTest {
         scxml.setNamespaces(namespaces);
         scxml.setVersion("version1");
         scxml.setInitial("off");
-        scxml.addChild(new State());
+        State s = new State();
+        s.setId(scxml.generateTransitionTargetId());
+        scxml.addChild(s);
         
         String assertValue = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
             + "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" xmlns:cs=\"http://commons.apache.org/scxml\" "
