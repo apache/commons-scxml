@@ -84,6 +84,7 @@ import org.apache.commons.scxml2.model.Send;
 import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.Transition;
 import org.apache.commons.scxml2.model.TransitionTarget;
+import org.apache.commons.scxml2.model.TransitionType;
 import org.apache.commons.scxml2.model.Var;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -211,6 +212,13 @@ public final class SCXMLReader {
      */
     private static final String ERR_RESERVED_ID_PREFIX = "Reserved id prefix \""
             +SCXML.GENERATED_TT_ID_PREFIX+"\" used for <{0} id=\"{1}\"> at {2}";
+
+    /**
+     * Error message when the target of the URI fragment in a &lt;state&gt;'s
+     * &quot;src&quot; attribute is not defined in the referenced document.
+     */
+    private static final String ERR_UNSUPPORTED_TRANSITION_TYPE = "Unsupported transition type "
+            + "for <transition type=\"{0}\"> at {1}.";
 
     /**
      * Error message when the target of the URI fragment in a &lt;state&gt;'s
@@ -1376,6 +1384,18 @@ public final class SCXMLReader {
         t.setCond(readAV(reader, ATTR_COND));
         t.setEvent(readAV(reader, ATTR_EVENT));
         t.setNext(readAV(reader, ATTR_TARGET));
+        String type = readAV(reader, ATTR_TYPE);
+        if (type != null) {
+            try {
+                t.setType(TransitionType.valueOf(type));
+            }
+            catch (IllegalArgumentException e) {
+                MessageFormat msgFormat = new MessageFormat(ERR_UNSUPPORTED_TRANSITION_TYPE);
+                String errMsg = msgFormat.format(new Object[] {type, reader.getLocation()});
+                throw new ModelException(errMsg);
+            }
+        }
+
         readNamespaces(configuration, t);
 
         readExecutableContext(reader, configuration, tt, t, null);

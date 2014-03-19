@@ -710,6 +710,9 @@ public class SCXMLWriter {
         writeAV(writer, ATTR_EVENT, transition.getEvent());
         writeAV(writer, ATTR_COND, SCXMLHelper.escapeXML(transition.getCond()));
         writeAV(writer, ATTR_TARGET, transition.getNext());
+        if (transition.getType() != null) {
+            writeAV(writer, ATTR_TYPE, transition.getType().name());
+        }
         writeExecutableContent(writer, transition.getActions());
         writer.writeEndElement();
     }

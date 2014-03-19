@@ -36,6 +36,18 @@ public class Transition extends Executable
     private static final long serialVersionUID = 2L;
 
     /**
+     * The Transition type: internal or external (default)
+     * @see {@link #isTypeInternal()}
+     */
+    private TransitionType type;
+
+    /**
+     * Derived effective Transition type.
+     * @see #isTypeInternal()
+     */
+    private Boolean typeInternal;
+
+    /**
      * Property that specifies the trigger for this transition.
      */
     private String event;
@@ -78,6 +90,64 @@ public class Transition extends Executable
         super();
         this.targets = new ArrayList<TransitionTarget>();
         this.paths = new ArrayList<Path>();
+    }
+
+    /**
+     * @return true if Transition type == internal or false if type == external (default)
+     */
+    public final TransitionType getType() {
+        return type;
+    }
+
+    /**
+     * Sets the Transition type
+     * @param type the Transition type
+     */
+    public final void setType(final TransitionType type) {
+        this.type = type;
+    }
+
+    /**
+     * Returns the effective Transition type.
+     * <p>
+     * A transition type is only effectively internal if:
+     * <ul>
+     *   <li>its {@link #getType()} == {@link TransitionType#internal}</li>
+     *   <li>its source state {@link #getParent()} {@link State#isComposite()}</li>
+     *   <li>all its {@link #getTargets()} are proper descendants of its {@link #getParent()}</li>
+     * </ul>
+     * Otherwise it is treated (for determining its exit states) as if it is of type {@link TransitionType#external}
+     * </p>
+     * @see <a href="http://www.w3.org/TR/2014/CR-scxml-20140313/#SelectingTransitions">
+     *     http://www.w3.org/TR/2014/CR-scxml-20140313/#SelectingTransitions</a>
+     * </p>
+     * @return true if the effective Transition type is {@link TransitionType#internal}
+     */
+    public final boolean isTypeInternal() {
+        if (typeInternal == null) {
+            // derive typeInternal
+
+            boolean internal = TransitionType.internal == type;
+
+            if (internal) {
+                internal = (getParent() != null && getParent() instanceof State && ((State)getParent()).isComposite());
+            }
+
+            if (internal && targets.size() > 0) {
+                for (Path p : getPaths()) {
+                    // TODO: testing the following actual works and always is correct
+                    if (p.getPathScope() == null || p.getPathScope() == getParent()) {
+                        continue;
+                    }
+                    // not a proper descendant
+                    internal = false;
+                    break;
+                }
+            }
+
+            typeInternal = internal;
+        }
+        return typeInternal;
     }
 
     /**
