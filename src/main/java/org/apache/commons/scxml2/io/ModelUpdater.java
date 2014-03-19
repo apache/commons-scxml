@@ -64,13 +64,6 @@ final class ModelUpdater {
             + "null or not a descendant of {0}";
 
     /**
-     * Error message when a state element contains anything other than
-     * an &lt;invoke&gt; or any number of &lt;state&gt; children.
-     */
-    private static final String ERR_STATE_BAD_CONTENTS = "{0} should "
-            + "contain either one <invoke> or any number of <state> children.";
-
-    /**
      * Error message when a referenced history state cannot be found.
      */
     private static final String ERR_STATE_NO_HIST = "Referenced history state"
@@ -225,6 +218,7 @@ final class ModelUpdater {
         else if (s.getInitial() != null) {
             logAndThrowModelError(ERR_UNSUPPORTED_INIT, new Object[] {getName(s)});
         }
+
         List<History> histories = s.getHistory();
         if (histories.size() > 0 && s.isSimple()) {
             logAndThrowModelError(ERR_HISTORY_SIMPLE_STATE,
@@ -236,10 +230,9 @@ final class ModelUpdater {
         for (Transition trn : s.getTransitionsList()) {
             updateTransition(trn, targets);
         }
+
+        // TODO: state must may have multiple invokes
         Invoke inv = s.getInvoke();
-        if (inv != null && !c.isEmpty()) {
-            logAndThrowModelError(ERR_STATE_BAD_CONTENTS, new Object[] {getName(s)});
-        }
         if (inv != null) {
             String type = inv.getType();
             if (type == null || type.trim().length() == 0) {
@@ -259,13 +252,13 @@ final class ModelUpdater {
                 logAndThrowModelError(ERR_INVOKE_AMBIGUOUS_SRC,
                         new Object[] {getName(s)});
             }
-        } else {
-            for (TransitionTarget tt : c.values()) {
-                if (tt instanceof State) {
-                    updateState((State) tt, targets);
-                } else if (tt instanceof Parallel) {
-                    updateParallel((Parallel) tt, targets);
-                }
+        }
+
+        for (TransitionTarget tt : c.values()) {
+            if (tt instanceof State) {
+                updateState((State) tt, targets);
+            } else if (tt instanceof Parallel) {
+                updateParallel((Parallel) tt, targets);
             }
         }
     }
@@ -289,6 +282,7 @@ final class ModelUpdater {
         for (History h : histories) {
             updateHistory(h, targets, p);
         }
+        // TODO: parallel must may have invokes too
     }
 
     /**
