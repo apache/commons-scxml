@@ -30,40 +30,6 @@ import org.apache.commons.scxml2.model.TransitionTarget;
 public class Step {
 
     /**
-     * Constructor.
-      */
-    public Step() {
-        this.externalEvents = new ArrayList<TriggerEvent>();
-        this.beforeStatus = new Status();
-        this.afterStatus = new Status();
-        this.exitList = new ArrayList<TransitionTarget>();
-        this.entryList = new ArrayList<TransitionTarget>();
-        this.transitList = new ArrayList<Transition>();
-    }
-
-    /**
-     * @param externalEvents The external events received in this
-     *     unit of progression
-     * @param beforeStatus The before status
-     */
-    public Step(final Collection<TriggerEvent> externalEvents, final Status beforeStatus) {
-        if (externalEvents != null) {
-            this.externalEvents = externalEvents;
-        } else {
-            this.externalEvents = new ArrayList<TriggerEvent>();
-        }
-        if (beforeStatus != null) {
-            this.beforeStatus = beforeStatus;
-        } else {
-            this.beforeStatus = new Status();
-        }
-        this.afterStatus = new Status();
-        this.exitList = new ArrayList<TransitionTarget>();
-        this.entryList = new ArrayList<TransitionTarget>();
-        this.transitList = new ArrayList<Transition>();
-    }
-
-    /**
      * The external events in this step.
      */
     private Collection<TriggerEvent> externalEvents;
@@ -89,9 +55,43 @@ public class Step {
     private List<TransitionTarget> entryList;
 
     /**
+     * The list of TransitionTargets that were entered during this step by default
+     */
+    private List<TransitionTarget> defaultEntryList;
+    /**
      * The list of Transitions taken during this step.
      */
     private List<Transition> transitList;
+
+    /**
+     * Constructor.
+      */
+    public Step() {
+        this(null, null);
+    }
+
+    /**
+     * @param externalEvents The external events received in this
+     *     unit of progression
+     * @param beforeStatus The before status
+     */
+    public Step(final Collection<TriggerEvent> externalEvents, final Status beforeStatus) {
+        if (externalEvents != null) {
+            this.externalEvents = externalEvents;
+        } else {
+            this.externalEvents = new ArrayList<TriggerEvent>();
+        }
+        if (beforeStatus != null) {
+            this.beforeStatus = beforeStatus;
+        } else {
+            this.beforeStatus = new Status();
+        }
+        this.afterStatus = new Status();
+        this.exitList = new ArrayList<TransitionTarget>();
+        this.entryList = new ArrayList<TransitionTarget>();
+        this.defaultEntryList = new ArrayList<TransitionTarget>();
+        this.transitList = new ArrayList<Transition>();
+    }
 
     /**
      * @return Returns the afterStatus.
@@ -126,6 +126,13 @@ public class Step {
      */
     public List<TransitionTarget> getEntryList() {
         return entryList;
+    }
+
+    /**
+     * @return Returns the defaultEntryList.
+     */
+    public List<TransitionTarget> getDefaultEntryList() {
+        return defaultEntryList;
     }
 
     /**
