@@ -36,6 +36,11 @@ public class Initial extends TransitionTarget {
     private Transition transition;
 
     /**
+     * Indicator if this Initial was automatically generated and not loaded from the SCXML Document itself
+     */
+    private boolean generated;
+
+    /**
      * Constructor.
      */
     public Initial() {
@@ -61,5 +66,18 @@ public class Initial extends TransitionTarget {
         this.transition.setParent(this);
     }
 
+    /**
+     * @return true if this Initial was automatically generated and not loaded from the SCXML Document itself
+     */
+    public final boolean isGenerated() {
+        return generated;
+    }
+
+    /**
+     * Marks this Initial as automatically generated after loading the SCXML Document
+     */
+    public final void setGenerated() {
+        this.generated = true;
+    }
 }
 

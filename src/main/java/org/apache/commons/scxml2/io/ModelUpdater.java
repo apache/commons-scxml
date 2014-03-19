@@ -17,7 +17,6 @@
 package org.apache.commons.scxml2.io;
 
 import java.text.MessageFormat;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -52,11 +51,10 @@ final class ModelUpdater {
             + "with ID \"{0}\" found; illegal initial state for SCXML document";
 
     /**
-     * Error message when a state element specifies an initial state which
-     * cannot be found.
+     * Error message when SCXML document specifies an illegal initial state.
      */
-    private static final String ERR_STATE_NO_INIT = "No initial element "
-            + "available for {0}";
+    private static final String ERR_UNSUPPORTED_INIT = "Initial attribute or element not supported for "
+            + "atomic {0}";
 
     /**
      * Error message when a state element specifies an initial state which
@@ -157,78 +155,80 @@ final class ModelUpdater {
      * @param scxml The SCXML object (output from SCXMLReader)
      * @throws ModelException If the object model is flawed
      */
-   static void updateSCXML(final SCXML scxml) throws ModelException {
-       String initial = scxml.getInitial();
-       Transition initialTransition = new Transition();
+    static void updateSCXML(final SCXML scxml) throws ModelException {
+        String initial = scxml.getInitial();
+        Transition initialTransition = new Transition();
 
-       if (initial != null) {
+        if (initial != null) {
 
-           initialTransition.setNext(scxml.getInitial());
-           updateTransition(initialTransition, scxml.getTargets());
+            initialTransition.setNext(scxml.getInitial());
+            updateTransition(initialTransition, scxml.getTargets());
 
-           if (initialTransition.getTargets().size() == 0) {
-               logAndThrowModelError(ERR_SCXML_NO_INIT, new Object[] {
-                   initial });
-           }
-       } else {
-           // If 'initial' is not specified, the default initial state is
-           // the first child state in document order.
-           initialTransition.getTargets().add(scxml.getFirstChild());
-           initialTransition.getPaths(); // init paths
-       }
+            if (initialTransition.getTargets().size() == 0) {
+                logAndThrowModelError(ERR_SCXML_NO_INIT, new Object[] {
+                        initial });
+            }
+        } else {
+            // If 'initial' is not specified, the default initial state is
+            // the first child state in document order.
+            initialTransition.getTargets().add(scxml.getFirstChild());
+            initialTransition.getPaths(); // init paths
+        }
 
-       scxml.setInitialTransition(initialTransition);
-       Map<String, TransitionTarget> targets = scxml.getTargets();
-       Map<String, TransitionTarget> children = scxml.getChildren();
-       for (TransitionTarget tt : children.values()) {
-           if (tt instanceof State) {
-               updateState((State) tt, targets);
-           } else {
-               updateParallel((Parallel) tt, targets);
-           }
-       }
-   }
+        scxml.setInitialTransition(initialTransition);
+        Map<String, TransitionTarget> targets = scxml.getTargets();
+        Map<String, TransitionTarget> children = scxml.getChildren();
+        for (TransitionTarget tt : children.values()) {
+            if (tt instanceof State) {
+                updateState((State) tt, targets);
+            } else {
+                updateParallel((Parallel) tt, targets);
+            }
+        }
+    }
 
     /**
-      * Update this State object (part of post-read processing).
-      * Also checks for any errors in the document.
-      *
-      * @param s The State object
-      * @param targets The global Map of all transition targets
-      * @throws ModelException If the object model is flawed
-      */
+     * Update this State object (part of post-read processing).
+     * Also checks for any errors in the document.
+     *
+     * @param s The State object
+     * @param targets The global Map of all transition targets
+     * @throws ModelException If the object model is flawed
+     */
     private static void updateState(final State s, final Map<String, TransitionTarget> targets)
-    throws ModelException {
-        //initialize next / inital
-        Initial ini = s.getInitial();
+            throws ModelException {
         Map<String, TransitionTarget> c = s.getChildren();
-        List<TransitionTarget> initialStates = null;
-        if (!c.isEmpty()) {
+        if (s.isComposite()) {
+            //initialize next / initial
+            Initial ini = s.getInitial();
             if (ini == null) {
-                logAndThrowModelError(ERR_STATE_NO_INIT,
-                    new Object[] {getName(s)});
+                s.setFirst(c.keySet().iterator().next());
+                ini = s.getInitial();
             }
             Transition initialTransition = ini.getTransition();
             updateTransition(initialTransition, targets);
-            initialStates = initialTransition.getTargets();
+            List<TransitionTarget> initialStates = initialTransition.getTargets();
             // we have to allow for an indirect descendant initial (targets)
             //check that initialState is a descendant of s
             if (initialStates.size() == 0) {
                 logAndThrowModelError(ERR_STATE_BAD_INIT,
-                    new Object[] {getName(s)});
+                        new Object[] {getName(s)});
             } else {
                 for (TransitionTarget initialState : initialStates) {
                     if (!SCXMLHelper.isDescendant(initialState, s)) {
                         logAndThrowModelError(ERR_STATE_BAD_INIT,
-                            new Object[] {getName(s)});
+                                new Object[] {getName(s)});
                     }
                 }
             }
         }
+        else if (s.getInitial() != null) {
+            logAndThrowModelError(ERR_UNSUPPORTED_INIT, new Object[] {getName(s)});
+        }
         List<History> histories = s.getHistory();
         if (histories.size() > 0 && s.isSimple()) {
             logAndThrowModelError(ERR_HISTORY_SIMPLE_STATE,
-                new Object[] {getName(s)});
+                    new Object[] {getName(s)});
         }
         for (History h : histories) {
             updateHistory(h, targets, s);
@@ -244,20 +244,20 @@ final class ModelUpdater {
             String type = inv.getType();
             if (type == null || type.trim().length() == 0) {
                 logAndThrowModelError(ERR_INVOKE_NO_TYPE,
-                    new Object[] {getName(s)});
+                        new Object[] {getName(s)});
             }
             String src = inv.getSrc();
             boolean noSrc = (src == null || src.trim().length() == 0);
             String srcexpr = inv.getSrcexpr();
             boolean noSrcexpr = (srcexpr == null
-                                 || srcexpr.trim().length() == 0);
+                    || srcexpr.trim().length() == 0);
             if (noSrc && noSrcexpr) {
                 logAndThrowModelError(ERR_INVOKE_NO_SRC,
-                    new Object[] {getName(s)});
+                        new Object[] {getName(s)});
             }
             if (!noSrc && !noSrcexpr) {
                 logAndThrowModelError(ERR_INVOKE_AMBIGUOUS_SRC,
-                    new Object[] {getName(s)});
+                        new Object[] {getName(s)});
             }
         } else {
             for (TransitionTarget tt : c.values()) {
@@ -271,14 +271,14 @@ final class ModelUpdater {
     }
 
     /**
-      * Update this Parallel object (part of post-read processing).
-      *
-      * @param p The Parallel object
-      * @param targets The global Map of all transition targets
-      * @throws ModelException If the object model is flawed
-      */
+     * Update this Parallel object (part of post-read processing).
+     *
+     * @param p The Parallel object
+     * @param targets The global Map of all transition targets
+     * @throws ModelException If the object model is flawed
+     */
     private static void updateParallel(final Parallel p, final Map<String, TransitionTarget> targets)
-    throws ModelException {
+            throws ModelException {
         for (TransitionTarget tt : p.getChildren()) {
             updateState((State) tt, targets);
         }
@@ -292,62 +292,64 @@ final class ModelUpdater {
     }
 
     /**
-      * Update this History object (part of post-read processing).
-      *
-      * @param h The History object
-      * @param targets The global Map of all transition targets
-      * @param parent The parent TransitionTarget for this History
-      * @throws ModelException If the object model is flawed
-      */
+     * Update this History object (part of post-read processing).
+     *
+     * @param h The History object
+     * @param targets The global Map of all transition targets
+     * @param parent The parent TransitionTarget for this History
+     * @throws ModelException If the object model is flawed
+     */
     private static void updateHistory(final History h,
-            final Map<String, TransitionTarget> targets,
-            final TransitionTarget parent)
-    throws ModelException {
+                                      final Map<String, TransitionTarget> targets,
+                                      final TransitionTarget parent)
+            throws ModelException {
         Transition historyTransition = h.getTransition();
         if (historyTransition == null || historyTransition.getNext() == null) {
             logAndThrowModelError(ERR_HISTORY_NO_DEFAULT,
                     new Object[] {h.getId(), getName(parent)});
         }
-        updateTransition(historyTransition, targets);
-        List<TransitionTarget> historyStates = historyTransition.getTargets();
-        if (historyStates.size() == 0) {
-            logAndThrowModelError(ERR_STATE_NO_HIST,
-                new Object[] {getName(parent)});
-        }
-        for (TransitionTarget historyState : historyStates) {
-            if (!h.isDeep()) {
-                // Shallow history
-                boolean shallow = false;
-                if (parent instanceof State) {
-                    shallow = ((State) parent).getChildren().
-                        containsValue(historyState);
-                } else if (parent instanceof Parallel) {
-                    shallow = ((Parallel) parent).getChildren().
-                        contains(historyState);
-                }
-                if (!shallow) {
-                    logAndThrowModelError(ERR_STATE_BAD_SHALLOW_HIST,
+        else {
+            updateTransition(historyTransition, targets);
+            List<TransitionTarget> historyStates = historyTransition.getTargets();
+            if (historyStates.size() == 0) {
+                logAndThrowModelError(ERR_STATE_NO_HIST,
                         new Object[] {getName(parent)});
-                }
-            } else {
-                // Deep history
-                if (!SCXMLHelper.isDescendant(historyState, parent)) {
-                    logAndThrowModelError(ERR_STATE_BAD_DEEP_HIST,
-                        new Object[] {getName(parent)});
+            }
+            for (TransitionTarget historyState : historyStates) {
+                if (!h.isDeep()) {
+                    // Shallow history
+                    boolean shallow = false;
+                    if (parent instanceof State) {
+                        shallow = ((State) parent).getChildren().
+                                containsValue(historyState);
+                    } else if (parent instanceof Parallel) {
+                        shallow = ((Parallel) parent).getChildren().
+                                contains(historyState);
+                    }
+                    if (!shallow) {
+                        logAndThrowModelError(ERR_STATE_BAD_SHALLOW_HIST,
+                                new Object[] {getName(parent)});
+                    }
+                } else {
+                    // Deep history
+                    if (!SCXMLHelper.isDescendant(historyState, parent)) {
+                        logAndThrowModelError(ERR_STATE_BAD_DEEP_HIST,
+                                new Object[] {getName(parent)});
+                    }
                 }
             }
         }
     }
 
     /**
-      * Update this Transition object (part of post-read processing).
-      *
-      * @param t The Transition object
-      * @param targets The global Map of all transition targets
-      * @throws ModelException If the object model is flawed
-      */
+     * Update this Transition object (part of post-read processing).
+     *
+     * @param t The Transition object
+     * @param targets The global Map of all transition targets
+     * @throws ModelException If the object model is flawed
+     */
     private static void updateTransition(final Transition t,
-            final Map<String, TransitionTarget> targets) throws ModelException {
+                                         final Map<String, TransitionTarget> targets) throws ModelException {
         String next = t.getNext();
         if (next == null) { // stay transition
             return;
@@ -361,7 +363,7 @@ final class ModelUpdater {
                 TransitionTarget tt = targets.get(id);
                 if (tt == null) {
                     logAndThrowModelError(ERR_TARGET_NOT_FOUND, new Object[] {
-                        id });
+                            id });
                 }
                 tts.add(tt);
             }
@@ -377,18 +379,18 @@ final class ModelUpdater {
     }
 
     /**
-      * Log an error discovered in post-read processing.
-      *
-      * @param errType The type of error
-      * @param msgArgs The arguments for formatting the error message
-      * @throws ModelException The model error, always thrown.
-      */
+     * Log an error discovered in post-read processing.
+     *
+     * @param errType The type of error
+     * @param msgArgs The arguments for formatting the error message
+     * @throws ModelException The model error, always thrown.
+     */
     private static void logAndThrowModelError(final String errType,
-            final Object[] msgArgs) throws ModelException {
+                                              final Object[] msgArgs) throws ModelException {
         MessageFormat msgFormat = new MessageFormat(errType);
         String errMsg = msgFormat.format(msgArgs);
         org.apache.commons.logging.Log log = LogFactory.
-            getLog(ModelUpdater.class);
+                getLog(ModelUpdater.class);
         log.error(errMsg);
         throw new ModelException(errMsg);
     }
@@ -450,10 +452,6 @@ final class ModelUpdater {
                 return false; // One per region
             }
         }
-        if (regions.size() != p.getChildren().size()) {
-            return false; // Must represent all regions
-        }
-        return true;
+        return regions.size() == p.getChildren().size();
     }
 }
-

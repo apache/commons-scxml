@@ -55,6 +55,11 @@ public class State extends TransitionTarget {
     private boolean isFinal;
 
     /**
+     * The id of the initial child of this composite, corresponding with the state initial attribute
+     */
+    private String first;
+
+    /**
      * A child which identifies initial state for state machines that
      * have substates.
      */
@@ -125,6 +130,7 @@ public class State extends TransitionTarget {
      *            The target to set.
      */
     public final void setInitial(final Initial target) {
+        this.first = null;
         this.initial = target;
         target.setParent(this);
     }
@@ -135,10 +141,7 @@ public class State extends TransitionTarget {
      * @return The initial state's string ID.
      */
     public final String getFirst() {
-        if (initial != null) {
-            return initial.getTransition().getNext();
-        }
-        return null;
+        return first;
     }
 
     /**
@@ -148,9 +151,11 @@ public class State extends TransitionTarget {
      *            The initial target's ID to set.
      */
     public final void setFirst(final String target) {
+        this.first = target;
         Transition t = new Transition();
         t.setNext(target);
         Initial ini = new Initial();
+        ini.setGenerated();
         ini.setTransition(t);
         ini.setParent(this);
         this.initial = ini;

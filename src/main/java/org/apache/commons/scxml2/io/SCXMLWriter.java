@@ -73,7 +73,6 @@ import org.apache.commons.scxml2.model.TransitionTarget;
 import org.apache.commons.scxml2.model.Var;
 import org.w3c.dom.Node;
 
-
 /**
  * <p>Utility class for serializing the Commons SCXML Java object
  * model. Class uses the visitor pattern to trace through the
@@ -199,10 +198,9 @@ public class SCXMLWriter {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
      */
     public static String write(final SCXML scxml)
-    throws IOException, XMLStreamException {
+            throws IOException, XMLStreamException {
 
         return write(scxml, new Configuration(true, true));
-
     }
 
     /**
@@ -219,7 +217,7 @@ public class SCXMLWriter {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
      */
     public static String write(final SCXML scxml, final Configuration configuration)
-    throws IOException, XMLStreamException {
+            throws IOException, XMLStreamException {
 
         // Must be true since we want to return a string
         configuration.writeToString = true;
@@ -230,7 +228,6 @@ public class SCXMLWriter {
             configuration.internalWriter.flush();
             return configuration.internalWriter.toString();
         }
-
     }
 
     /**
@@ -244,10 +241,9 @@ public class SCXMLWriter {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
      */
     public static void write(final SCXML scxml, final OutputStream scxmlStream)
-    throws IOException, XMLStreamException {
+            throws IOException, XMLStreamException {
 
         write(scxml, scxmlStream, new Configuration());
-
     }
 
     /**
@@ -262,7 +258,7 @@ public class SCXMLWriter {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
      */
     public static void write(final SCXML scxml, final OutputStream scxmlStream, final Configuration configuration)
-    throws IOException, XMLStreamException {
+            throws IOException, XMLStreamException {
 
         if (scxmlStream == null) {
             throw new IllegalArgumentException(ERR_NULL_OSTR);
@@ -272,7 +268,6 @@ public class SCXMLWriter {
             scxmlStream.flush();
             scxmlStream.close();
         }
-
     }
 
     /**
@@ -286,10 +281,9 @@ public class SCXMLWriter {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
      */
     public static void write(final SCXML scxml, final Writer scxmlWriter)
-    throws IOException, XMLStreamException {
+            throws IOException, XMLStreamException {
 
         write(scxml, scxmlWriter, new Configuration());
-
     }
 
     /**
@@ -304,7 +298,7 @@ public class SCXMLWriter {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
      */
     public static void write(final SCXML scxml, final Writer scxmlWriter, final Configuration configuration)
-    throws IOException, XMLStreamException {
+            throws IOException, XMLStreamException {
 
         if (scxmlWriter == null) {
             throw new IllegalArgumentException(ERR_NULL_WRIT);
@@ -314,7 +308,6 @@ public class SCXMLWriter {
             scxmlWriter.flush();
             scxmlWriter.close();
         }
-
     }
 
     /**
@@ -328,10 +321,9 @@ public class SCXMLWriter {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
      */
     public static void write(final SCXML scxml, final Result scxmlResult)
-    throws IOException, XMLStreamException {
+            throws IOException, XMLStreamException {
 
         write(scxml, scxmlResult, new Configuration());
-
     }
 
     /**
@@ -346,13 +338,12 @@ public class SCXMLWriter {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
      */
     public static void write(final SCXML scxml, final Result scxmlResult, final Configuration configuration)
-    throws IOException, XMLStreamException {
+            throws IOException, XMLStreamException {
 
         if (scxmlResult == null) {
             throw new IllegalArgumentException(ERR_NULL_RES);
         }
         writeInternal(scxml, configuration, null, null, scxmlResult);
-
     }
 
     //---------------------- PRIVATE UTILITY METHODS ----------------------//
@@ -370,8 +361,8 @@ public class SCXMLWriter {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
      */
     private static void writeInternal(final SCXML scxml, final Configuration configuration,
-            final OutputStream scxmlStream, final Writer scxmlWriter, final Result scxmlResult)
-    throws IOException, XMLStreamException {
+                                      final OutputStream scxmlStream, final Writer scxmlWriter, final Result scxmlResult)
+            throws IOException, XMLStreamException {
 
         XMLStreamWriter writer = getWriter(configuration, scxmlStream, scxmlWriter, scxmlResult);
         writeDocument(writer, configuration, scxml);
@@ -388,7 +379,6 @@ public class SCXMLWriter {
                 configuration.prettyPrintOutput = prettyPrintWriter.toString();
             }
         }
-
     }
 
     /**
@@ -402,8 +392,8 @@ public class SCXMLWriter {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
      */
     private static void writeDocument(final XMLStreamWriter writer, final Configuration configuration,
-            final SCXML scxml)
-    throws XMLStreamException {
+                                      final SCXML scxml)
+            throws XMLStreamException {
 
         String encoding = "UTF-8";
         if (configuration.encoding != null) {
@@ -412,7 +402,6 @@ public class SCXMLWriter {
         writer.writeStartDocument(encoding, "1.0");
         writeSCXML(writer, scxml);
         writer.writeEndDocument();
-
     }
 
     /**
@@ -424,7 +413,7 @@ public class SCXMLWriter {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
      */
     private static void writeSCXML(final XMLStreamWriter writer, final SCXML scxml)
-    throws XMLStreamException {
+            throws XMLStreamException {
 
         // Start
         writer.writeStartElement(ELEM_SCXML);
@@ -471,7 +460,6 @@ public class SCXMLWriter {
 
         // End
         writer.writeEndElement();
-
     }
 
     /**
@@ -483,7 +471,7 @@ public class SCXMLWriter {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
      */
     private static void writeDatamodel(final XMLStreamWriter writer, final Datamodel datamodel)
-    throws XMLStreamException {
+            throws XMLStreamException {
 
         if (datamodel == null) {
             return;
@@ -507,7 +495,6 @@ public class SCXMLWriter {
             }
         }
         writer.writeEndElement();
-
     }
 
     /**
@@ -519,7 +506,7 @@ public class SCXMLWriter {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
      */
     private static void writeState(final XMLStreamWriter writer, final State state)
-    throws XMLStreamException {
+            throws XMLStreamException {
 
         writer.writeStartElement(ELEM_STATE);
         writeAV(writer, ATTR_ID, state.getId());
@@ -555,7 +542,6 @@ public class SCXMLWriter {
 
         writeOnExit(writer, state.getOnExit());
         writer.writeEndElement();
-
     }
 
     /**
@@ -567,7 +553,7 @@ public class SCXMLWriter {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
      */
     private static void writeParallel(final XMLStreamWriter writer, final Parallel parallel)
-    throws XMLStreamException {
+            throws XMLStreamException {
 
         writer.writeStartElement(ELEM_PARALLEL);
         writeAV(writer, ATTR_ID, parallel.getId());
@@ -590,7 +576,6 @@ public class SCXMLWriter {
 
         writeOnExit(writer, parallel.getOnExit());
         writer.writeEndElement();
-
     }
 
     /**
@@ -602,7 +587,7 @@ public class SCXMLWriter {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
      */
     private static void writeFinal(final XMLStreamWriter writer, final Final end)
-    throws XMLStreamException {
+            throws XMLStreamException {
 
         writer.writeStartElement(ELEM_FINAL);
         writeAV(writer, ATTR_ID, end.getId());
@@ -610,7 +595,6 @@ public class SCXMLWriter {
         // params
         writeOnExit(writer, end.getOnExit());
         writer.writeEndElement();
-
     }
 
     /**
@@ -622,16 +606,15 @@ public class SCXMLWriter {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
      */
     private static void writeInitial(final XMLStreamWriter writer, final Initial initial)
-    throws XMLStreamException {
+            throws XMLStreamException {
 
-        if (initial == null) {
+        if (initial == null || initial.isGenerated()) {
             return;
         }
 
         writer.writeStartElement(ELEM_INITIAL);
         writeTransition(writer, initial.getTransition());
         writer.writeEndElement();
-
     }
 
     /**
@@ -644,7 +627,7 @@ public class SCXMLWriter {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
      */
     private static void writeHistory(final XMLStreamWriter writer, final List<History> history)
-    throws XMLStreamException {
+            throws XMLStreamException {
 
         if (history == null) {
             return;
@@ -661,7 +644,6 @@ public class SCXMLWriter {
             writeTransition(writer, h.getTransition());
             writer.writeEndElement();
         }
-
     }
 
     /**
@@ -673,14 +655,13 @@ public class SCXMLWriter {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
      */
     private static void writeOnEntry(final XMLStreamWriter writer, final OnEntry onentry)
-    throws XMLStreamException {
+            throws XMLStreamException {
 
         if (onentry != null && onentry.getActions().size() > 0) {
             writer.writeStartElement(ELEM_ONENTRY);
             writeExecutableContent(writer, onentry.getActions());
             writer.writeEndElement();
         }
-
     }
 
     /**
@@ -692,14 +673,13 @@ public class SCXMLWriter {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
      */
     private static void writeOnExit(final XMLStreamWriter writer, final OnExit onexit)
-    throws XMLStreamException {
+            throws XMLStreamException {
 
         if (onexit != null && onexit.getActions().size() > 0) {
             writer.writeStartElement(ELEM_ONEXIT);
             writeExecutableContent(writer, onexit.getActions());
             writer.writeEndElement();
         }
-
     }
 
     /**
@@ -711,7 +691,7 @@ public class SCXMLWriter {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
      */
     private static void writeTransition(final XMLStreamWriter writer, final Transition transition)
-    throws XMLStreamException {
+            throws XMLStreamException {
 
         writer.writeStartElement(ELEM_TRANSITION);
         writeAV(writer, ATTR_EVENT, transition.getEvent());
@@ -719,7 +699,6 @@ public class SCXMLWriter {
         writeAV(writer, ATTR_TARGET, transition.getNext());
         writeExecutableContent(writer, transition.getActions());
         writer.writeEndElement();
-
     }
 
     /**
@@ -731,7 +710,7 @@ public class SCXMLWriter {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
      */
     private static void writeInvoke(final XMLStreamWriter writer, final Invoke invoke)
-    throws XMLStreamException {
+            throws XMLStreamException {
 
         writer.writeStartElement(ELEM_INVOKE);
         writeAV(writer, ATTR_SRC, invoke.getSrc());
@@ -747,7 +726,6 @@ public class SCXMLWriter {
         writeFinalize(writer, invoke.getFinalize());
 
         writer.writeEndElement();
-
     }
 
     /**
@@ -759,14 +737,13 @@ public class SCXMLWriter {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
      */
     private static void writeFinalize(final XMLStreamWriter writer, final Finalize finalize)
-    throws XMLStreamException {
+            throws XMLStreamException {
 
         if (finalize != null && finalize.getActions().size() > 0) {
             writer.writeStartElement(ELEM_FINALIZE);
             writeExecutableContent(writer, finalize.getActions());
             writer.writeEndElement();
         }
-
     }
 
     /**
@@ -779,7 +756,7 @@ public class SCXMLWriter {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
      */
     private static void writeExecutableContent(final XMLStreamWriter writer, final List<Action> actions)
-    throws XMLStreamException {
+            throws XMLStreamException {
 
         if (actions == null) {
             return;
@@ -837,7 +814,6 @@ public class SCXMLWriter {
                 writer.writeComment("Custom action with class name '" + a.getClass().getName() + "' not serialized");
             }
         }
-
     }
 
     /**
@@ -849,7 +825,7 @@ public class SCXMLWriter {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
      */
     private static void writeSend(final XMLStreamWriter writer, final Send send)
-    throws XMLStreamException {
+            throws XMLStreamException {
 
         writer.writeStartElement(XMLNS_SCXML, ELEM_SEND);
         writeAV(writer, ATTR_SENDID, send.getSendid());
@@ -863,7 +839,6 @@ public class SCXMLWriter {
         writeExternalContent(writer, send);
 
         writer.writeEndElement();
-
     }
 
     /**
@@ -875,7 +850,7 @@ public class SCXMLWriter {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
      */
     private static void writeIf(final XMLStreamWriter writer, final If iff)
-    throws XMLStreamException {
+            throws XMLStreamException {
 
         writer.writeStartElement(ELEM_IF);
         writeAV(writer, ATTR_COND, SCXMLHelper.escapeXML(iff.getCond()));
@@ -911,8 +886,8 @@ public class SCXMLWriter {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
      */
     private static void writeExternalContent(final XMLStreamWriter writer,
-            final ExternalContent externalContent)
-    throws XMLStreamException {
+                                             final ExternalContent externalContent)
+            throws XMLStreamException {
 
         List<Node> externalNodes = externalContent.getExternalNodes();
 
@@ -923,7 +898,6 @@ public class SCXMLWriter {
                 writeNode(writer, n);
             }
         }
-
     }
 
     /**
@@ -935,7 +909,7 @@ public class SCXMLWriter {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
      */
     private static void writeNode(final XMLStreamWriter writer, final Node node)
-    throws XMLStreamException {
+            throws XMLStreamException {
 
         Source input = new DOMSource(node);
         StringWriter out = new StringWriter();
@@ -948,7 +922,6 @@ public class SCXMLWriter {
             writer.writeComment("TransformerException: Node was not serialized");
         }
         writer.writeCharacters(out.toString());
-
     }
 
     /**
@@ -961,7 +934,7 @@ public class SCXMLWriter {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
      */
     private static void writeAV(final XMLStreamWriter writer, final String localName, final String value)
-    throws XMLStreamException {
+            throws XMLStreamException {
         if (value != null) {
             writer.writeAttribute(localName, value);
         }
@@ -981,8 +954,8 @@ public class SCXMLWriter {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
      */
     private static void writePretty(final Configuration configuration, final OutputStream scxmlStream,
-            final Writer scxmlWriter, final Result scxmlResult)
-    throws IOException, XMLStreamException {
+                                    final Writer scxmlWriter, final Result scxmlResult)
+            throws IOException, XMLStreamException {
 
         // There isn't any portable way to write pretty using the JDK 1.6 StAX API
         configuration.internalWriter.flush();
@@ -1007,7 +980,6 @@ public class SCXMLWriter {
         } catch (TransformerException te) {
             throw new XMLStreamException("TransformerException while pretty printing SCXML", te);
         }
-
     }
 
     /**
@@ -1024,15 +996,17 @@ public class SCXMLWriter {
      * @throws XMLStreamException A problem with the XML stream creation.
      */
     private static XMLStreamWriter getWriter(final Configuration configuration, final OutputStream stream,
-            final Writer writer, final Result result)
-    throws XMLStreamException {
+                                             final Writer writer, final Result result)
+            throws XMLStreamException {
 
         // Instantiate the XMLOutputFactory
         XMLOutputFactory factory = XMLOutputFactory.newInstance();
+        /*
         if (configuration.factoryId != null && configuration.factoryClassLoader != null) {
             // TODO StAX API bug means we can't use custom factories yet
             //factory = XMLOutputFactory.newInstance(configuration.factoryId, configuration.factoryClassLoader);
         }
+        */
         for (Map.Entry<String, Object> property : configuration.properties.entrySet()) {
             factory.setProperty(property.getKey(), property.getValue());
         }
@@ -1052,7 +1026,6 @@ public class SCXMLWriter {
             xsw = factory.createXMLStreamWriter(result);
         }
         return xsw;
-
     }
 
     /**
@@ -1061,7 +1034,7 @@ public class SCXMLWriter {
      * @return Transformer The indenting {@link Transformer} instance.
      */
     private static Transformer getTransformer() {
-        Transformer transformer = null;
+        Transformer transformer;
         Properties outputProps = new Properties();
         outputProps.put(OutputKeys.OMIT_XML_DECLARATION, "yes");
         outputProps.put(OutputKeys.STANDALONE, "no");
@@ -1167,7 +1140,6 @@ public class SCXMLWriter {
         public Configuration() {
 
             this(null, null, null, null, false, false, false);
-
         }
 
         /**
@@ -1187,11 +1159,10 @@ public class SCXMLWriter {
          * @param closeUnderlyingWhenDone Whether to close the underlying stream or writer passed by the caller.
          */
         public Configuration(final String factoryId, final ClassLoader factoryClassLoader,
-                final Map<String, Object> properties, final String encoding, final boolean usePrettyPrint,
-                final boolean closeUnderlyingWhenDone) {
+                             final Map<String, Object> properties, final String encoding, final boolean usePrettyPrint,
+                             final boolean closeUnderlyingWhenDone) {
 
             this(factoryId, factoryClassLoader, properties, encoding, usePrettyPrint, closeUnderlyingWhenDone, false);
-
         }
 
         /*
@@ -1206,7 +1177,6 @@ public class SCXMLWriter {
         Configuration(final boolean writeToString, final boolean usePrettyPrint) {
 
             this(null, null, null, null, usePrettyPrint, false, writeToString);
-
         }
 
         /**
@@ -1225,8 +1195,8 @@ public class SCXMLWriter {
          * @param writeToString Whether to maintain an internal writer to return the serialization as a string.
          */
         Configuration(final String factoryId, final ClassLoader factoryClassLoader,
-                final Map<String, Object> properties, final String encoding, final boolean usePrettyPrint,
-                final boolean closeUnderlyingWhenDone, final boolean writeToString) {
+                      final Map<String, Object> properties, final String encoding, final boolean usePrettyPrint,
+                      final boolean closeUnderlyingWhenDone, final boolean writeToString) {
 
             this.factoryId = factoryId;
             this.factoryClassLoader = factoryClassLoader;
@@ -1240,10 +1210,6 @@ public class SCXMLWriter {
             } else {
                 this.internalWriter = null;
             }
-
         }
-
     }
-
 }
-
