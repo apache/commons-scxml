@@ -38,10 +38,10 @@ public class History extends TransitionTarget {
      * and indicates the state to transition to if the parent state has
      * never been entered before.
      */
-    private Transition transition;
+    private SimpleTransition transition;
 
     /**
-     * Default no-args constructor for XML Digester.
+     * Default no-args constructor
      */
     public History() {
         super();
@@ -52,7 +52,7 @@ public class History extends TransitionTarget {
      *
      * @return Returns the transition.
      */
-    public final Transition getTransition() {
+    public final SimpleTransition getTransition() {
         return transition;
     }
 
@@ -61,7 +61,7 @@ public class History extends TransitionTarget {
      *
      * @param transition The transition to set.
      */
-    public final void setTransition(final Transition transition) {
+    public final void setTransition(final SimpleTransition transition) {
         this.transition = transition;
         this.transition.setParent(this);
     }
@@ -76,8 +76,6 @@ public class History extends TransitionTarget {
     }
 
     /**
-     * This method is invoked by XML digester when parsing SCXML markup.
-     *
      * @param type The history type, which can be &quot;shallow&quot; or
      * &quot;deep&quot;
      */
@@ -88,5 +86,16 @@ public class History extends TransitionTarget {
         //shallow is by default
     }
 
+    @Override
+    public TransitionalState getParent() {
+        return (TransitionalState)super.getParent();
+    }
+
+    @Override
+    public void setParent(final TransitionTarget parent) {
+        // enforce / validate only TransitionalState parents are allowed
+        TransitionalState ts = (TransitionalState)parent;
+        super.setParent(ts);
+    }
 }
 

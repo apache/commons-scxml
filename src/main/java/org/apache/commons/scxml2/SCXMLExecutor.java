@@ -27,12 +27,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml2.invoke.Invoker;
 import org.apache.commons.scxml2.model.Datamodel;
+import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.History;
 import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.Observable;
 import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.TransitionTarget;
+import org.apache.commons.scxml2.model.TransitionalState;
 import org.apache.commons.scxml2.semantics.SCXMLSemanticsImpl;
 import org.apache.commons.scxml2.system.EventVariable;
 
@@ -132,8 +134,8 @@ public class SCXMLExecutor implements Serializable {
     private void logState() {
         if (log.isDebugEnabled()) {
             StringBuilder sb = new StringBuilder("Current States: [ ");
-            for (TransitionTarget tt : currentStatus.getStates()) {
-                sb.append(tt.getId()).append(", ");
+            for (EnterableState es : currentStatus.getStates()) {
+                sb.append(es.getId()).append(", ");
             }
             int length = sb.length();
             sb.delete(length - 2, length).append(" ]");
@@ -416,14 +418,13 @@ public class SCXMLExecutor implements Serializable {
         }
         // all states and parallels, only states have variable contexts
         for (TransitionTarget tt : stateMachine.getTargets().values()) {
-            if (tt instanceof State) {
-                Context context = scInstance.lookupContext(tt);
+            if (tt instanceof EnterableState) {
+                Context context = scInstance.lookupContext((EnterableState)tt);
                 if (context != null) {
                     context.reset();
-                    Datamodel dm = tt.getDatamodel();
-                    if (dm != null) {
-                        SCXMLHelper.cloneDatamodel(dm, context,
-                                scInstance.getEvaluator(), log);
+                    if (tt instanceof TransitionalState) {
+                        Datamodel dm = ((TransitionalState)tt).getDatamodel();
+                        SCXMLHelper.cloneDatamodel(dm, context, scInstance.getEvaluator(), log);
                     }
                 }
             } else if (tt instanceof History) {

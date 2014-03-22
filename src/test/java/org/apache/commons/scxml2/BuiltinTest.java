@@ -19,8 +19,8 @@ package org.apache.commons.scxml2;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.State;
-import org.apache.commons.scxml2.model.TransitionTarget;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -28,17 +28,17 @@ public class BuiltinTest {
 
     @Test
     public void testIsMemberEmptySet() {
-        Set<TransitionTarget> set = new HashSet<TransitionTarget>();
+        Set<EnterableState> set = new HashSet<EnterableState>();
         
         Assert.assertFalse(Builtin.isMember(set, "on"));
     }
     
     @Test
     public void testIsMemberFalse() {
-        TransitionTarget state = new State();
+        State state = new State();
         state.setId("off");
-        
-        Set<TransitionTarget> set = new HashSet<TransitionTarget>();
+
+        Set<EnterableState> set = new HashSet<EnterableState>();
         set.add(state);
         
         Assert.assertFalse(Builtin.isMember(set, "on"));
@@ -46,10 +46,10 @@ public class BuiltinTest {
     
     @Test
     public void testIsMemberTrue() {
-        TransitionTarget state = new State();
+        State state = new State();
         state.setId("on");
-        
-        Set<TransitionTarget> set = new HashSet<TransitionTarget>();
+
+        Set<EnterableState> set = new HashSet<EnterableState>();
         set.add(state);
         
         Assert.assertTrue(Builtin.isMember(set, "on"));

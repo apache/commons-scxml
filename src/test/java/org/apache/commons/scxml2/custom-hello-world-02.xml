@@ -21,13 +21,13 @@
        version="1.0"
        initial="custom">
 
-    <state id="custom" final="true">
+    <final id="custom">
         
         <onentry>
             <my:hello name="child (included) document" />
         </onentry>
 
-    </state>
+    </final>
 
 </scxml>
 

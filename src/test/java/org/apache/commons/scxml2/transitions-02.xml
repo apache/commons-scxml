@@ -47,7 +47,7 @@
 
     </state>
 
-    <state id="twenty" final="true" />
+    <final id="twenty"/>
 
 </scxml>
 

@@ -30,11 +30,11 @@
         </transition>
     </state>
 
-    <state id="end" final="true">
+    <final id="end">
         <onentry>
             <log expr="'Invoker completed'"/>
         </onentry>
-    </state>
+    </final>
 
 </scxml>
 

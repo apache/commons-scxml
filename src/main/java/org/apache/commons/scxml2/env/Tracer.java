@@ -24,6 +24,7 @@ import javax.xml.stream.XMLStreamException;
 
 import org.apache.commons.scxml2.ErrorReporter;
 import org.apache.commons.scxml2.SCXMLListener;
+import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.Transition;
 import org.apache.commons.scxml2.model.TransitionTarget;
 import org.xml.sax.ErrorHandler;
@@ -92,17 +93,17 @@ public class Tracer implements ErrorHandler, ErrorReporter,
     }
 
     /**
-     * @see SCXMLListener#onEntry(TransitionTarget)
+     * @see SCXMLListener#onEntry(EnterableState)
      */
-    public void onEntry(final TransitionTarget target) {
-        scxmlListener.onEntry(target);
+    public void onEntry(final EnterableState state) {
+        scxmlListener.onEntry(state);
     }
 
     /**
-     * @see SCXMLListener#onExit(TransitionTarget)
+     * @see SCXMLListener#onExit(EnterableState)
      */
-    public void onExit(final TransitionTarget target) {
-        scxmlListener.onExit(target);
+    public void onExit(final EnterableState state) {
+        scxmlListener.onExit(state);
     }
 
     /**

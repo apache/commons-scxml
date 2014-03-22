@@ -33,7 +33,7 @@
         <transition event="invoker.invoke.done" target="end" />
     </state>
 
-    <state id="end" final="true" />
+    <final id="end"/>
 
 </scxml>
 

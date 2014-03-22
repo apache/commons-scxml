@@ -22,6 +22,7 @@ import java.util.Set;
 import org.apache.commons.jexl2.JexlContext;
 import org.apache.commons.scxml2.env.SimpleContext;
 import org.apache.commons.scxml2.env.jexl.JexlEvaluator;
+import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.History;
 import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.TransitionTarget;
@@ -63,7 +64,7 @@ public class SCInstanceTest {
     
     @Test
     public void testGetContext() {
-        TransitionTarget target = new State();
+        State target = new State();
         target.setId("1");
         
         Context context = new SimpleContext();
@@ -76,7 +77,7 @@ public class SCInstanceTest {
     
     @Test
     public void testGetContextNullParent() {
-        TransitionTarget target = new State();
+        State target = new State();
         target.setId("1");
 
         Context context = new SimpleContext();
@@ -92,7 +93,7 @@ public class SCInstanceTest {
 
     @Test
     public void testGetContextParent() {
-        TransitionTarget target = new State();
+        State target = new State();
         target.setId("1");
         
         State parent = new State();
@@ -115,7 +116,7 @@ public class SCInstanceTest {
     public void testGetLastConfigurationNull() {
         History history = new History();
         
-        Set<TransitionTarget> returnConfiguration = instance.getLastConfiguration(history);
+        Set<EnterableState> returnConfiguration = instance.getLastConfiguration(history);
         
         Assert.assertEquals(0, returnConfiguration.size());
     }
@@ -125,15 +126,15 @@ public class SCInstanceTest {
         History history = new History();
         history.setId("1");
         
-        Set<TransitionTarget> configuration = new HashSet<TransitionTarget>();
-        TransitionTarget tt1 = new State();
-        TransitionTarget tt2 = new State();
+        Set<EnterableState> configuration = new HashSet<EnterableState>();
+        EnterableState tt1 = new State();
+        EnterableState tt2 = new State();
         configuration.add(tt1);
         configuration.add(tt2);
         
         instance.setLastConfiguration(history, configuration);  
         
-        Set<TransitionTarget> returnConfiguration = instance.getLastConfiguration(history);
+        Set<EnterableState> returnConfiguration = instance.getLastConfiguration(history);
         
         Assert.assertEquals(2, returnConfiguration.size());
         Assert.assertTrue(returnConfiguration.contains(tt1));
@@ -150,8 +151,8 @@ public class SCInstanceTest {
         History history = new History();
         history.setId("1");
         
-        Set<TransitionTarget> configuration = new HashSet<TransitionTarget>();
-        TransitionTarget tt1 = new State();
+        Set<EnterableState> configuration = new HashSet<EnterableState>();
+        EnterableState tt1 = new State();
         configuration.add(tt1);
         
         instance.setLastConfiguration(history, configuration);  
@@ -163,9 +164,9 @@ public class SCInstanceTest {
     public void testReset() {
         History history = new History();
         history.setId("1");
-        
-        Set<TransitionTarget> configuration = new HashSet<TransitionTarget>();
-        TransitionTarget tt1 = new State();
+
+        Set<EnterableState> configuration = new HashSet<EnterableState>();
+        EnterableState tt1 = new State();
         configuration.add(tt1);
         
         instance.setLastConfiguration(history, configuration);  

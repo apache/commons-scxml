@@ -21,13 +21,13 @@
        version="1.0"
        initial="custom">
 
-    <state id="custom" final="true">
+    <final id="custom">
         
         <onentry>
             <my:send name="overridden local name" />
         </onentry>
 
-    </state>
+    </final>
 
 </scxml>
 

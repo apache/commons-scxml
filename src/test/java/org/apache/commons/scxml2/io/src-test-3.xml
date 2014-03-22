@@ -22,7 +22,7 @@
 
     <state id="srctest3"/>
 
-    <state id="srctest3end" final="true"/>
+    <final id="srctest3end"/>
 
 </scxml>
 

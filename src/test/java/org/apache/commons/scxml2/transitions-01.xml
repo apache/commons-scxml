@@ -130,7 +130,7 @@
     </parallel>
 
     <!-- Declare victory -->
-    <state id="forty" final="true" />
+    <final id="forty"/>
 
 </scxml>
 

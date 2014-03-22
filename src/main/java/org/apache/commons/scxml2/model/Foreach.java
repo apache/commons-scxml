@@ -106,7 +106,7 @@ public class Foreach extends Action implements ActionsContainer {
                         final ErrorReporter errRep, final SCInstance scInstance,
                         final Log appLog, final Collection<TriggerEvent> derivedEvents)
             throws ModelException, SCXMLExpressionException {
-        Context ctx = scInstance.getContext(getParentTransitionTarget());
+        Context ctx = scInstance.getContext(getParentEnterableState());
         Evaluator eval = scInstance.getEvaluator();
         ctx.setLocal(getNamespacesKey(), getNamespaces());
         try {

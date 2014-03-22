@@ -253,8 +253,8 @@ public class Send extends Action implements ExternalContent {
             final Log appLog, final Collection<TriggerEvent> derivedEvents)
     throws ModelException, SCXMLExpressionException {
         // Send attributes evaluation
-        TransitionTarget parentTarget = getParentTransitionTarget();
-        Context ctx = scInstance.getContext(parentTarget);
+        EnterableState parentState = getParentEnterableState();
+        Context ctx = scInstance.getContext(parentState);
         ctx.setLocal(getNamespacesKey(), getNamespaces());
         Evaluator eval = scInstance.getEvaluator();
         // Most attributes of <send> are expressions so need to be
@@ -294,7 +294,7 @@ public class Send extends Action implements ExternalContent {
                 if (varObj == null) {
                     //considered as a warning here
                     errRep.onError(ErrorConstants.UNDEFINED_VARIABLE,
-                            varName + " = null", parentTarget);
+                            varName + " = null", parentState);
                 }
                 params.put(varName, varObj);
             }

@@ -252,7 +252,7 @@
 
     </state>
 
-    <state id="seventy" final="true" />
+    <final id="seventy"/>
 
 </scxml>
 

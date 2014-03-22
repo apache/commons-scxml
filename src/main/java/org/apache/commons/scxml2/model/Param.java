@@ -48,7 +48,7 @@ public class Param implements NamespacePrefixesHolder, Serializable {
     private Map<String, String> namespaces;
 
     /**
-     * Default no-args constructor for Digester.
+     * Default no-args constructor
      */
     public Param() {
         name = null;

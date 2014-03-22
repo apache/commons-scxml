@@ -49,7 +49,7 @@
                </transition>
            </state>
 
-           <state id="thirty" final="true"/>
+           <final id="thirty"/>
        </state>
 
    </parallel>

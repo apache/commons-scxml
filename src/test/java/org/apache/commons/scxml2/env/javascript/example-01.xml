@@ -160,10 +160,10 @@
 
  <!-- DONE -->
 
- <state id='end' final='true' >
+ <final id='end'>
   <onentry>
    <log expr='"Ending Javascript sample script: " + new Date()' />
   </onentry>
- </state>
+ </final>
 
 </scxml>

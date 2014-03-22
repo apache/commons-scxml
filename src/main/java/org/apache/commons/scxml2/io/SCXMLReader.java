@@ -25,7 +25,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.EmptyStackException;
 import java.util.HashMap;
 import java.util.List;
@@ -61,6 +60,8 @@ import org.apache.commons.scxml2.model.Data;
 import org.apache.commons.scxml2.model.Datamodel;
 import org.apache.commons.scxml2.model.Else;
 import org.apache.commons.scxml2.model.ElseIf;
+import org.apache.commons.scxml2.model.EnterableState;
+import org.apache.commons.scxml2.model.TransitionalState;
 import org.apache.commons.scxml2.model.Raise;
 import org.apache.commons.scxml2.model.Executable;
 import org.apache.commons.scxml2.model.ExternalContent;
@@ -81,9 +82,9 @@ import org.apache.commons.scxml2.model.Param;
 import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.Script;
 import org.apache.commons.scxml2.model.Send;
+import org.apache.commons.scxml2.model.SimpleTransition;
 import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.Transition;
-import org.apache.commons.scxml2.model.TransitionTarget;
 import org.apache.commons.scxml2.model.TransitionType;
 import org.apache.commons.scxml2.model.Var;
 import org.w3c.dom.Attr;
@@ -255,7 +256,6 @@ public final class SCXMLReader {
     private static final String ELEM_SEND = "send";
     private static final String ELEM_STATE = "state";
     private static final String ELEM_TRANSITION = "transition";
-    private static final String ELEM_VALIDATE = "validate";
     private static final String ELEM_VAR = "var";
 
     //---- ATTRIBUTE NAMES ----//
@@ -265,7 +265,6 @@ public final class SCXMLReader {
     private static final String ATTR_EVENT = "event";
     private static final String ATTR_EXMODE = "exmode";
     private static final String ATTR_EXPR = "expr";
-    private static final String ATTR_FINAL = "final";
     private static final String ATTR_HINTS = "hints";
     private static final String ATTR_ID = "id";
     private static final String ATTR_INDEX = "index";
@@ -664,7 +663,7 @@ public final class SCXMLReader {
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
      * @param scxml The root of the object model being parsed.
-     * @param parent The parent {@link TransitionTarget} for this state (null for top level state).
+     * @param parent The parent {@link TransitionalState} for this state (null for top level state).
      *
      * @throws IOException An IO error during parsing.
      * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
@@ -672,7 +671,7 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readState(final XMLStreamReader reader, final Configuration configuration, final SCXML scxml,
-                                  final TransitionTarget parent)
+                                  final TransitionalState parent)
             throws IOException, ModelException, XMLStreamException {
 
         State state = new State();
@@ -680,10 +679,6 @@ public final class SCXMLReader {
         String initial = readAV(reader, ATTR_INITIAL);
         if (initial != null) {
             state.setFirst(initial);
-        }
-        String isFinal = readAV(reader, ATTR_FINAL);
-        if ("true".equals(isFinal)) {
-            state.setFinal(true);
         }
         String src = readAV(reader, ATTR_SRC);
         if (src != null) {
@@ -696,7 +691,17 @@ public final class SCXMLReader {
                 source = configuration.pathResolver.resolvePath(src);
                 copy.pathResolver = configuration.pathResolver.getResolver(src);
             }
-            readTransitionTargetSrc(copy, source, state);
+            readTransitionalStateSrc(copy, source, state);
+        }
+
+        if (parent == null) {
+            scxml.addChild(state);
+        } else {
+            parent.addChild(state);
+        }
+        scxml.addTarget(state);
+        if (configuration.parent != null) {
+            configuration.parent.addTarget(state);
         }
 
         loop : while (reader.hasNext()) {
@@ -708,7 +713,7 @@ public final class SCXMLReader {
                     name = reader.getLocalName();
                     if (XMLNS_SCXML.equals(nsURI)) {
                         if (ELEM_TRANSITION.equals(name)) {
-                            readTransition(reader, configuration, state);
+                            state.addTransition(readTransition(reader, configuration));
                         } else if (ELEM_STATE.equals(name)) {
                             readState(reader, configuration, scxml, state);
                         } else if (ELEM_INITIAL.equals(name)) {
@@ -716,9 +721,9 @@ public final class SCXMLReader {
                         } else if (ELEM_FINAL.equals(name)) {
                             readFinal(reader, configuration, scxml, state);
                         } else if (ELEM_ONENTRY.equals(name)) {
-                            readOnEntry(reader, configuration, scxml, state);
+                            readOnEntry(reader, configuration, state);
                         } else if (ELEM_ONEXIT.equals(name)) {
-                            readOnExit(reader, configuration, scxml, state);
+                            readOnExit(reader, configuration, state);
                         } else if (ELEM_PARALLEL.equals(name)) {
                             readParallel(reader, configuration, scxml, state);
                         } else if (ELEM_DATAMODEL.equals(name)) {
@@ -745,18 +750,6 @@ public final class SCXMLReader {
                 default:
             }
         }
-
-        if (parent == null) {
-            scxml.addChild(state);
-        } else if (parent instanceof State) {
-            ((State) parent).addChild(state);
-        } else if (parent instanceof Parallel) {
-            ((Parallel) parent).addChild(state);
-        }
-        scxml.addTarget(state);
-        if (configuration.parent != null) {
-            configuration.parent.addTarget(state);
-        }
     }
 
     /**
@@ -765,7 +758,7 @@ public final class SCXMLReader {
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
      * @param scxml The root of the object model being parsed.
-     * @param parent The parent {@link TransitionTarget} for this parallel (null for top level state).
+     * @param parent The parent {@link TransitionalState} for this parallel (null for top level state).
      *
      * @throws IOException An IO error during parsing.
      * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
@@ -773,7 +766,7 @@ public final class SCXMLReader {
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readParallel(final XMLStreamReader reader, final Configuration configuration, final SCXML scxml,
-                                     final TransitionTarget parent)
+                                     final TransitionalState parent)
             throws IOException, ModelException, XMLStreamException {
 
         Parallel parallel = new Parallel();
@@ -789,7 +782,17 @@ public final class SCXMLReader {
                 source = configuration.pathResolver.resolvePath(src);
                 copy.pathResolver = configuration.pathResolver.getResolver(src);
             }
-            readTransitionTargetSrc(copy, source, parallel);
+            readTransitionalStateSrc(copy, source, parallel);
+        }
+
+        if (parent == null) {
+            scxml.addChild(parallel);
+        } else {
+            parent.addChild(parallel);
+        }
+        scxml.addTarget(parallel);
+        if (configuration.parent != null) {
+            configuration.parent.addTarget(parallel);
         }
 
         loop : while (reader.hasNext()) {
@@ -801,16 +804,18 @@ public final class SCXMLReader {
                     name = reader.getLocalName();
                     if (XMLNS_SCXML.equals(nsURI)) {
                         if (ELEM_TRANSITION.equals(name)) {
-                            readTransition(reader, configuration, parallel);
+                            parallel.addTransition(readTransition(reader, configuration));
                         } else if (ELEM_STATE.equals(name)) {
                             readState(reader, configuration, scxml, parallel);
                         } else if (ELEM_ONENTRY.equals(name)) {
-                            readOnEntry(reader, configuration, scxml, parallel);
+                            readOnEntry(reader, configuration, parallel);
                         } else if (ELEM_ONEXIT.equals(name)) {
-                            readOnExit(reader, configuration, scxml, parallel);
+                            readOnExit(reader, configuration, parallel);
                         } else if (ELEM_DATAMODEL.equals(name)) {
                             readDatamodel(reader, configuration, null, parallel);
-                        } else if (ELEM_HISTORY.equals(name)) { // TODO Check parallel history
+                        } else if (ELEM_INVOKE.equals(name)) {
+                            readInvoke(reader, configuration, parallel);
+                        } else if (ELEM_HISTORY.equals(name)) {
                             readHistory(reader, configuration, scxml, parallel);
                         } else {
                             reportIgnoredElement(reader, configuration, ELEM_PARALLEL, nsURI, name);
@@ -830,17 +835,6 @@ public final class SCXMLReader {
                 default:
             }
         }
-
-        if (parent == null) {
-            scxml.addChild(parallel);
-        } else if (parent instanceof State) {
-            ((State) parent).addChild(parallel);
-        }
-        // TODO parallel child of parallel?
-        scxml.addTarget(parallel);
-        if (configuration.parent != null) {
-            configuration.parent.addTarget(parallel);
-        }
     }
 
     /**
@@ -849,18 +843,30 @@ public final class SCXMLReader {
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
      * @param scxml The root of the object model being parsed.
-     * @param parent The parent {@link TransitionTarget} for this final (null for top level state).
+     * @param parent The parent {@link State} for this final (null for top level state).
      *
+     * @throws IOException An IO error during parsing.
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
      *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readFinal(final XMLStreamReader reader, final Configuration configuration, final SCXML scxml,
-                                  final TransitionTarget parent)
-            throws XMLStreamException, ModelException {
+                                  final State parent)
+            throws XMLStreamException, ModelException, IOException {
 
         Final end = new Final();
         end.setId(readOrGeneratedTransitionTargetId(reader, scxml, ELEM_FINAL));
+
+        if (parent == null) {
+            scxml.addChild(end);
+        } else {
+            parent.addChild(end);
+        }
+
+        scxml.addTarget(end);
+        if (configuration.parent != null) {
+            configuration.parent.addTarget(end);
+        }
 
         loop : while (reader.hasNext()) {
             String name, nsURI;
@@ -871,9 +877,9 @@ public final class SCXMLReader {
                     name = reader.getLocalName();
                     if (XMLNS_SCXML.equals(nsURI)) {
                         if (ELEM_ONENTRY.equals(name)) {
-                            readOnEntry(reader, configuration, scxml, end);
+                            readOnEntry(reader, configuration, end);
                         } else if (ELEM_ONEXIT.equals(name)) {
-                            readOnExit(reader, configuration, scxml, end);
+                            readOnExit(reader, configuration, end);
                         } else {
                             reportIgnoredElement(reader, configuration, ELEM_FINAL, nsURI, name);
                         }
@@ -892,13 +898,6 @@ public final class SCXMLReader {
                 default:
             }
         }
-
-        if (parent == null) {
-            scxml.addChild(end);
-        } else if (parent instanceof State) {
-            ((State) parent).addChild(end);
-        }
-        scxml.addTarget(end);
     }
 
     /**
@@ -909,15 +908,15 @@ public final class SCXMLReader {
      *
      * @param configuration The {@link Configuration} to use while parsing.
      * @param src The "src" attribute value.
-     * @param tt The parent {@link TransitionTarget} that specifies this "src" attribute.
+     * @param ts The parent {@link TransitionalState} that specifies this "src" attribute.
      *
      * @throws IOException An IO error during parsing.
      * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
      *                        errors in the SCXML document that may not be identified by the schema).
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
-    private static void readTransitionTargetSrc(final Configuration configuration, final String src,
-                                                final TransitionTarget tt)
+    private static void readTransitionalStateSrc(final Configuration configuration, final String src,
+                                                 final TransitionalState ts)
             throws IOException, ModelException, XMLStreamException {
 
         // Check for URI fragment
@@ -939,21 +938,20 @@ public final class SCXMLReader {
         }
 
         // Pull in the parts of the external document as needed
-        State s = (State) tt;
         if (fragment == null) {
             // All targets pulled in since its not a src fragment
-            if (tt instanceof State) {
+            if (ts instanceof State) {
+                State s = (State) ts;
                 Initial ini = new Initial();
-                Transition t = new Transition();
+                SimpleTransition t = new SimpleTransition();
                 t.setNext(externalSCXML.getInitial());
                 ini.setTransition(t);
                 s.setInitial(ini);
-                Collection<TransitionTarget> children = externalSCXML.getChildren().values();
-                for (TransitionTarget child : children) {
+                for (EnterableState child : externalSCXML.getChildren()) {
                     s.addChild(child);
                 }
                 s.setDatamodel(externalSCXML.getDatamodel());
-            } else if (tt instanceof Parallel) {
+            } else if (ts instanceof Parallel) {
                 // TODO src attribute for <parallel>
             }
         } else {
@@ -964,7 +962,8 @@ public final class SCXMLReader {
                 String errMsg = msgFormat.format(new Object[] {src});
                 throw new ModelException(errMsg);
             }
-            if (source instanceof State) {
+            if (source instanceof State && ts instanceof State) {
+                State s = (State) ts;
                 State include = (State) source;
                 s.setOnEntry(include.getOnEntry());
                 s.setOnExit(include.getOnExit());
@@ -974,15 +973,12 @@ public final class SCXMLReader {
                     s.addHistory(h);
                     configuration.parent.addTarget(h);
                 }
-                Collection<TransitionTarget> children = include.getChildren().
-                        values();
-                for (TransitionTarget child : children) {
+                for (EnterableState child : include.getChildren()) {
                     s.addChild(child);
                     configuration.parent.addTarget(child);
                     readInExternalTargets(configuration.parent, child);
                 }
                 s.setInvoke(include.getInvoke());
-                s.setFinal(include.isFinal());
                 if (include.getInitial() != null) {
                     s.setInitial(include.getInitial());
                 }
@@ -990,7 +986,7 @@ public final class SCXMLReader {
                 for (Transition t : transitions) {
                     s.addTransition(t);
                 }
-            } else if (tt instanceof Parallel) {
+            } else if (ts instanceof Parallel && source instanceof Parallel) {
                 // TODO src attribute for <parallel>
             } else {
                 MessageFormat msgFormat =
@@ -1005,23 +1001,14 @@ public final class SCXMLReader {
      * Add all the nested targets from given target to given parent state machine.
      *
      * @param parent The state machine
-     * @param tt The transition target to import
+     * @param es The target to import
      */
-    private static void readInExternalTargets(final SCXML parent, final TransitionTarget tt) {
-        List<History> histories = tt.getHistory();
-        for (History h : histories) {
-            parent.addTarget(h);
-        }
-        if (tt instanceof State) {
-            Collection<TransitionTarget> children = ((State) tt).getChildren().
-                    values();
-            for (TransitionTarget child : children) {
-                parent.addTarget(child);
-                readInExternalTargets(parent, child);
+    private static void readInExternalTargets(final SCXML parent, final EnterableState es) {
+        if (es instanceof TransitionalState) {
+            for (History h : ((TransitionalState)es).getHistory()) {
+                parent.addTarget(h);
             }
-        } else if (tt instanceof Parallel) {
-            Collection<TransitionTarget> children = ((Parallel) tt).getChildren();
-            for (TransitionTarget child : children) {
+            for (EnterableState child : ((TransitionalState) es).getChildren()) {
                 parent.addTarget(child);
                 readInExternalTargets(parent, child);
             }
@@ -1034,14 +1021,14 @@ public final class SCXMLReader {
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
      * @param scxml The root of the object model being parsed.
-     * @param parent The parent {@link TransitionTarget} for this datamodel (null for top level).
+     * @param parent The parent {@link TransitionalState} for this datamodel (null for top level).
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
      *                        errors in the SCXML document that may not be identified by the schema).
      */
-    private static void readDatamodel(final XMLStreamReader reader, final Configuration configuration, final SCXML scxml,
-                                      final TransitionTarget parent)
+    private static void readDatamodel(final XMLStreamReader reader, final Configuration configuration,
+                                      final SCXML scxml, final TransitionalState parent)
             throws XMLStreamException, ModelException {
 
         Datamodel dm = new Datamodel();
@@ -1107,14 +1094,14 @@ public final class SCXMLReader {
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
-     * @param parent The parent {@link State} for this invoke.
+     * @param parent The parent {@link TransitionalState} for this invoke.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
      *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readInvoke(final XMLStreamReader reader, final Configuration configuration,
-                                   final State parent)
+                                   final TransitionalState parent)
             throws XMLStreamException, ModelException {
 
         Invoke invoke = new Invoke();
@@ -1185,7 +1172,7 @@ public final class SCXMLReader {
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
-     * @param state The {@link State} which contains the parent {@link Invoke}.
+     * @param state The {@link TransitionalState} which contains the parent {@link Invoke}.
      * @param invoke The parent {@link Invoke} for this finalize.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
@@ -1193,11 +1180,11 @@ public final class SCXMLReader {
      *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readFinalize(final XMLStreamReader reader, final Configuration configuration,
-                                     final State state, final Invoke invoke)
+                                     final TransitionalState state, final Invoke invoke)
             throws XMLStreamException, ModelException {
 
         Finalize finalize = new Finalize();
-        readExecutableContext(reader, configuration, state, finalize, null);
+        readExecutableContext(reader, configuration, finalize, null);
         invoke.setFinalize(finalize);
         finalize.setParent(state);
     }
@@ -1207,13 +1194,13 @@ public final class SCXMLReader {
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
-     * @param state The {@link State} which contains the parent {@link Invoke}.
+     * @param state The {@link TransitionalState} which contains the parent {@link Invoke}.
      * @param invoke The parent {@link Invoke} for this content.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readContent(final XMLStreamReader reader, final Configuration configuration,
-                                    final State state, final Invoke invoke)
+                                    final TransitionalState state, final Invoke invoke)
             throws XMLStreamException {
 
         // TODO content support
@@ -1245,7 +1232,7 @@ public final class SCXMLReader {
                     name = reader.getLocalName();
                     if (XMLNS_SCXML.equals(nsURI)) {
                         if (ELEM_TRANSITION.equals(name)) {
-                            readTransition(reader, configuration, initial);
+                            initial.setTransition(readSimpleTransition(reader, configuration));
                         } else {
                             reportIgnoredElement(reader, configuration, ELEM_INITIAL, nsURI, name);
                         }
@@ -1265,7 +1252,6 @@ public final class SCXMLReader {
             }
         }
 
-        initial.setParent(state);
         state.setInitial(initial);
     }
 
@@ -1275,19 +1261,22 @@ public final class SCXMLReader {
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
      * @param scxml The root of the object model being parsed.
-     * @param tt The parent {@link TransitionTarget} for this history.
+     * @param ts The parent {@link org.apache.commons.scxml2.model.TransitionalState} for this history.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
      *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readHistory(final XMLStreamReader reader, final Configuration configuration,
-                                    final SCXML scxml, final TransitionTarget tt)
+                                    final SCXML scxml, final TransitionalState ts)
             throws XMLStreamException, ModelException {
 
         History history = new History();
         history.setId(readOrGeneratedTransitionTargetId(reader, scxml, ELEM_HISTORY));
         history.setType(readAV(reader, ATTR_TYPE));
+
+        ts.addHistory(history);
+        scxml.addTarget(history);
 
         loop : while (reader.hasNext()) {
             String name, nsURI;
@@ -1298,7 +1287,7 @@ public final class SCXMLReader {
                     name = reader.getLocalName();
                     if (XMLNS_SCXML.equals(nsURI)) {
                         if (ELEM_TRANSITION.equals(name)) {
-                            readTransition(reader, configuration, history);
+                            history.setTransition(readTransition(reader, configuration));
                         } else {
                             reportIgnoredElement(reader, configuration, ELEM_HISTORY, nsURI, name);
                         }
@@ -1317,10 +1306,6 @@ public final class SCXMLReader {
                 default:
             }
         }
-
-        history.setParent(tt);
-        tt.addHistory(history);
-        scxml.addTarget(history);
     }
 
     /**
@@ -1328,20 +1313,19 @@ public final class SCXMLReader {
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
-     * @param scxml The root of the object model being parsed.
-     * @param tt The parent {@link TransitionTarget} for this onentry.
+     * @param es The parent {@link EnterableState} for this onentry.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
      *                        errors in the SCXML document that may not be identified by the schema).
      */
-    private static void readOnEntry(final XMLStreamReader reader, final Configuration configuration, final SCXML scxml,
-                                    final TransitionTarget tt)
+    private static void readOnEntry(final XMLStreamReader reader, final Configuration configuration,
+                                    final EnterableState es)
             throws XMLStreamException, ModelException {
 
         OnEntry onentry = new OnEntry();
-        readExecutableContext(reader, configuration, tt, onentry, null);
-        tt.setOnEntry(onentry);
+        readExecutableContext(reader, configuration, onentry, null);
+        es.setOnEntry(onentry);
     }
 
     /**
@@ -1349,45 +1333,40 @@ public final class SCXMLReader {
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
-     * @param scxml The root of the object model being parsed.
-     * @param tt The parent {@link TransitionTarget} for this onexit.
+     * @param es The parent {@link EnterableState} for this onexit.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
      *                        errors in the SCXML document that may not be identified by the schema).
      */
-    private static void readOnExit(final XMLStreamReader reader, final Configuration configuration, final SCXML scxml,
-                                   final TransitionTarget tt)
+    private static void readOnExit(final XMLStreamReader reader, final Configuration configuration,
+                                   final EnterableState es)
             throws XMLStreamException, ModelException {
 
         OnExit onexit = new OnExit();
-        readExecutableContext(reader, configuration, tt, onexit, null);
-        tt.setOnExit(onexit);
+        readExecutableContext(reader, configuration, onexit, null);
+        es.setOnExit(onexit);
     }
 
     /**
-     * Read the contents of this &lt;transition&gt; element.
+     * Read the contents of this simple &lt;transition&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
-     * @param tt The parent {@link TransitionTarget} for this transition.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
      *                        errors in the SCXML document that may not be identified by the schema).
      */
-    private static void readTransition(final XMLStreamReader reader, final Configuration configuration,
-                                       final TransitionTarget tt)
+    private static SimpleTransition readSimpleTransition(final XMLStreamReader reader, final Configuration configuration)
             throws XMLStreamException, ModelException {
 
-        Transition t = new Transition();
-        t.setCond(readAV(reader, ATTR_COND));
-        t.setEvent(readAV(reader, ATTR_EVENT));
-        t.setNext(readAV(reader, ATTR_TARGET));
+        SimpleTransition transition = new SimpleTransition();
+        transition.setNext(readAV(reader, ATTR_TARGET));
         String type = readAV(reader, ATTR_TYPE);
         if (type != null) {
             try {
-                t.setType(TransitionType.valueOf(type));
+                transition.setType(TransitionType.valueOf(type));
             }
             catch (IllegalArgumentException e) {
                 MessageFormat msgFormat = new MessageFormat(ERR_UNSUPPORTED_TRANSITION_TYPE);
@@ -1396,19 +1375,45 @@ public final class SCXMLReader {
             }
         }
 
-        readNamespaces(configuration, t);
+        readNamespaces(configuration, transition);
+        readExecutableContext(reader, configuration, transition, null);
 
-        readExecutableContext(reader, configuration, tt, t, null);
+        return transition;
+    }
 
-        if (tt instanceof State || tt instanceof Parallel) {
-            tt.addTransition(t);
-        } else if (tt instanceof Initial) {
-            ((Initial) tt).setTransition(t);
-        } else if (tt instanceof History) {
-            ((History) tt).setTransition(t);
-        } else {
-            // TODO Error
+    /**
+     * Read the contents of this &lt;transition&gt; element.
+     *
+     * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
+     * @param configuration The {@link Configuration} to use while parsing.
+     *
+     * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
+     * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
+     *                        errors in the SCXML document that may not be identified by the schema).
+     */
+    private static Transition readTransition(final XMLStreamReader reader, final Configuration configuration)
+            throws XMLStreamException, ModelException {
+
+        Transition transition = new Transition();
+        transition.setCond(readAV(reader, ATTR_COND));
+        transition.setEvent(readAV(reader, ATTR_EVENT));
+        transition.setNext(readAV(reader, ATTR_TARGET));
+        String type = readAV(reader, ATTR_TYPE);
+        if (type != null) {
+            try {
+                transition.setType(TransitionType.valueOf(type));
+            }
+            catch (IllegalArgumentException e) {
+                MessageFormat msgFormat = new MessageFormat(ERR_UNSUPPORTED_TRANSITION_TYPE);
+                String errMsg = msgFormat.format(new Object[] {type, reader.getLocation()});
+                throw new ModelException(errMsg);
+            }
         }
+
+        readNamespaces(configuration, transition);
+        readExecutableContext(reader, configuration, transition, null);
+
+        return transition;
     }
 
     /**
@@ -1416,7 +1421,6 @@ public final class SCXMLReader {
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
-     * @param tt The parent {@link TransitionTarget} for this executable content.
      * @param executable The parent {@link Executable} to which this content belongs.
      * @param parent The optional parent {@link ActionsContainer} if this is child content of an ActionsContainer action.
      *
@@ -1425,13 +1429,13 @@ public final class SCXMLReader {
      *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readExecutableContext(final XMLStreamReader reader, final Configuration configuration,
-                                              final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
+                                              final Executable executable, final ActionsContainer parent)
             throws XMLStreamException, ModelException {
 
         String end = "";
         if (parent != null) {
             end = parent.getContainerElementName();
-        } else if (executable instanceof Transition) {
+        } else if (executable instanceof SimpleTransition) {
             end = ELEM_TRANSITION;
         } else if (executable instanceof OnEntry) {
             end = ELEM_ONENTRY;
@@ -1450,33 +1454,31 @@ public final class SCXMLReader {
                     name = reader.getLocalName();
                     if (XMLNS_SCXML.equals(nsURI)) {
                         if (ELEM_RAISE.equals(name)) {
-                            readRaise(reader, configuration, tt, executable, parent);
+                            readRaise(reader, configuration, executable, parent);
                         } else if (ELEM_FOREACH.equals(name)) {
-                            readForeach(reader, configuration, tt, executable, parent);
+                            readForeach(reader, configuration, executable, parent);
                         } else if (ELEM_IF.equals(name)) {
-                            readIf(reader, configuration, tt, executable, parent);
+                            readIf(reader, configuration, executable, parent);
                         } else if (ELEM_LOG.equals(name)) {
-                            readLog(reader, configuration, tt, executable, parent);
+                            readLog(reader, configuration, executable, parent);
                         } else if (ELEM_ASSIGN.equals(name)) {
-                            readAssign(reader, configuration, tt, executable, parent);
-                        } else if (ELEM_VALIDATE.equals(name)) {
-                            readValidate(reader, configuration, tt, executable, parent);
+                            readAssign(reader, configuration, executable, parent);
                         } else if (ELEM_SEND.equals(name)) {
-                            readSend(reader, configuration, tt, executable, parent);
+                            readSend(reader, configuration, executable, parent);
                         } else if (ELEM_CANCEL.equals(name)) {
-                            readCancel(reader, configuration, tt, executable, parent);
+                            readCancel(reader, configuration, executable, parent);
                         } else if (ELEM_SCRIPT.equals(name)) {
-                            readScript(reader, configuration, tt, executable, parent);
+                            readScript(reader, configuration, executable, parent);
                         } else if (ELEM_IF.equals(end) && ELEM_ELSEIF.equals(name)) {
-                            readElseIf(reader, configuration, tt, executable, (If) parent);
+                            readElseIf(reader, configuration, executable, (If) parent);
                         } else if (ELEM_IF.equals(end) && ELEM_ELSE.equals(name)) {
-                            readElse(reader, configuration, tt, executable, (If)parent);
+                            readElse(reader, configuration, executable, (If)parent);
                         } else {
                             reportIgnoredElement(reader, configuration, end, nsURI, name);
                         }
                     } else if (XMLNS_COMMONS_SCXML.equals(nsURI)) {
                         if (ELEM_VAR.equals(name)) {
-                            readVar(reader, configuration, tt, executable, parent);
+                            readVar(reader, configuration, executable, parent);
                         } else {
                             reportIgnoredElement(reader, configuration, end, nsURI, name);
                         }
@@ -1490,7 +1492,7 @@ public final class SCXMLReader {
                             }
                         }
                         if (customAction != null) {
-                            readCustomAction(reader, configuration, customAction, tt, executable, parent);
+                            readCustomAction(reader, configuration, customAction, executable, parent);
                         } else {
                             reportIgnoredElement(reader, configuration, end, nsURI, name);
                         }
@@ -1514,7 +1516,6 @@ public final class SCXMLReader {
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
-     * @param tt The parent {@link TransitionTarget} for this action.
      * @param executable The parent {@link Executable} for this action.
      * @param parent The optional parent {@link ActionsContainer} if this action is a child of one.
      *
@@ -1523,7 +1524,7 @@ public final class SCXMLReader {
      *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readRaise(final XMLStreamReader reader, final Configuration configuration,
-                                  final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
+                                  final Executable executable, final ActionsContainer parent)
             throws XMLStreamException, ModelException {
 
         if (executable instanceof Finalize) {
@@ -1549,7 +1550,6 @@ public final class SCXMLReader {
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
-     * @param tt The parent {@link TransitionTarget} for this action.
      * @param executable The parent {@link Executable} for this action.
      * @param parent The optional parent {@link ActionsContainer} if this &lt;if&gt; is a child of one.
      *
@@ -1558,7 +1558,7 @@ public final class SCXMLReader {
      *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readIf(final XMLStreamReader reader, final Configuration configuration,
-                               final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
+                               final Executable executable, final ActionsContainer parent)
             throws XMLStreamException, ModelException {
 
         If iff = new If();
@@ -1570,7 +1570,7 @@ public final class SCXMLReader {
         } else {
             executable.addAction(iff);
         }
-        readExecutableContext(reader, configuration, tt, executable, iff);
+        readExecutableContext(reader, configuration, executable, iff);
     }
 
     /**
@@ -1578,14 +1578,13 @@ public final class SCXMLReader {
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
-     * @param tt The parent {@link TransitionTarget} for this action.
      * @param executable The parent {@link Executable} for this action.
      * @param iff The parent {@link If} for this &lt;elseif&gt;.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readElseIf(final XMLStreamReader reader, final Configuration configuration,
-                                   final TransitionTarget tt, final Executable executable, final If iff)
+                                   final Executable executable, final If iff)
             throws XMLStreamException, ModelException {
 
         ElseIf elseif = new ElseIf();
@@ -1600,14 +1599,13 @@ public final class SCXMLReader {
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
-     * @param tt The parent {@link TransitionTarget} for this action.
      * @param executable The parent {@link Executable} for this action.
      * @param iff The parent {@link If} for this &lt;else&gt;.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readElse(final XMLStreamReader reader, final Configuration configuration,
-                                 final TransitionTarget tt, final Executable executable, final If iff)
+                                 final Executable executable, final If iff)
             throws XMLStreamException {
 
         Else els = new Else();
@@ -1621,7 +1619,6 @@ public final class SCXMLReader {
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
-     * @param tt The parent {@link TransitionTarget} for this action.
      * @param executable The parent {@link Executable} for this action.
      * @param parent The optional parent {@link ActionsContainer} if this &lt;foreach&gt; is a child of one.
      *
@@ -1630,7 +1627,7 @@ public final class SCXMLReader {
      *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readForeach(final XMLStreamReader reader, final Configuration configuration,
-                                    final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
+                                    final Executable executable, final ActionsContainer parent)
             throws XMLStreamException, ModelException {
 
         Foreach fe = new Foreach();
@@ -1644,7 +1641,7 @@ public final class SCXMLReader {
         } else {
             executable.addAction(fe);
         }
-        readExecutableContext(reader, configuration, tt, executable, fe);
+        readExecutableContext(reader, configuration, executable, fe);
     }
 
     /**
@@ -1652,14 +1649,13 @@ public final class SCXMLReader {
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
-     * @param tt The parent {@link TransitionTarget} for this action.
      * @param executable The parent {@link Executable} for this action.
      * @param parent The optional parent {@link ActionsContainer} if this action is a child of one.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readLog(final XMLStreamReader reader, final Configuration configuration,
-                                final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
+                                final Executable executable, final ActionsContainer parent)
             throws XMLStreamException {
 
         Log log = new Log();
@@ -1679,14 +1675,13 @@ public final class SCXMLReader {
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
-     * @param tt The parent {@link TransitionTarget} for this action.
      * @param executable The parent {@link Executable} for this action.
      * @param parent The optional parent {@link ActionsContainer} if this action is a child of one.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readAssign(final XMLStreamReader reader, final Configuration configuration,
-                                   final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
+                                   final Executable executable, final ActionsContainer parent)
             throws XMLStreamException, ModelException {
 
         Assign assign = new Assign();
@@ -1711,29 +1706,10 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the contents of this &lt;validate&gt; element.
-     *
-     * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
-     * @param configuration The {@link Configuration} to use while parsing.
-     * @param tt The parent {@link TransitionTarget} for this action.
-     * @param executable The parent {@link Executable} for this action.
-     * @param parent The optional parent {@link ActionsContainer} if this action is a child of one.
-     *
-     * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
-     */
-    private static void readValidate(final XMLStreamReader reader, final Configuration configuration,
-                                     final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
-            throws XMLStreamException {
-
-        // TODO validate support
-    }
-
-    /**
      * Read the contents of this &lt;send&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
-     * @param tt The parent {@link TransitionTarget} for this action.
      * @param executable The parent {@link Executable} for this action.
      * @param parent The optional parent {@link ActionsContainer} if this action is a child of one.
      *
@@ -1742,7 +1718,7 @@ public final class SCXMLReader {
      *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readSend(final XMLStreamReader reader, final Configuration configuration,
-                                 final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
+                                 final Executable executable, final ActionsContainer parent)
             throws XMLStreamException, ModelException {
 
         if (executable instanceof Finalize) {
@@ -1782,14 +1758,13 @@ public final class SCXMLReader {
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
-     * @param tt The parent {@link TransitionTarget} for this action.
      * @param executable The parent {@link Executable} for this action.
      * @param parent The optional parent {@link ActionsContainer} if this action is a child of one.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readCancel(final XMLStreamReader reader, final Configuration configuration,
-                                   final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
+                                   final Executable executable, final ActionsContainer parent)
             throws XMLStreamException {
 
         Cancel cancel = new Cancel();
@@ -1807,14 +1782,13 @@ public final class SCXMLReader {
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
-     * @param tt The parent {@link TransitionTarget} for this action.
      * @param executable The parent {@link Executable} for this action.
      * @param parent The optional parent {@link ActionsContainer} if this action is a child of one.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readScript(final XMLStreamReader reader, final Configuration configuration,
-                                   final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
+                                   final Executable executable, final ActionsContainer parent)
             throws XMLStreamException {
 
         Script script = new Script();
@@ -1830,7 +1804,8 @@ public final class SCXMLReader {
 
     /**
      * Read the contents of the initial &lt;script&gt; element.
-     * @see <a href="http://www.w3.org/TR/2013/WD-scxml-20130801/#scxml">http://www.w3.org/TR/2013/WD-scxml-20130801/#scxml<a> section 3.2.2
+     * @see <a href="http://www.w3.org/TR/2013/WD-scxml-20130801/#scxml">
+     *     http://www.w3.org/TR/2013/WD-scxml-20130801/#scxml<a> section 3.2.2
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
@@ -1854,14 +1829,13 @@ public final class SCXMLReader {
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
-     * @param tt The parent {@link TransitionTarget} for this action.
      * @param executable The parent {@link Executable} for this action.
      * @param parent The optional parent {@link ActionsContainer} if this action is a child of one.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readVar(final XMLStreamReader reader, final Configuration configuration,
-                                final TransitionTarget tt, final Executable executable, final ActionsContainer parent)
+                                final Executable executable, final ActionsContainer parent)
             throws XMLStreamException {
 
         Var var = new Var();
@@ -1882,14 +1856,13 @@ public final class SCXMLReader {
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
      * @param customAction The {@link CustomAction} to read.
-     * @param tt The parent {@link TransitionTarget} for this custom action.
      * @param executable The parent {@link Executable} for this custom action.
      * @param parent The optional parent {@link ActionsContainer} if this custom action is a child of one.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readCustomAction(final XMLStreamReader reader, final Configuration configuration,
-                                         final CustomAction customAction, final TransitionTarget tt, final Executable executable,
+                                         final CustomAction customAction, final Executable executable,
                                          final ActionsContainer parent)
             throws XMLStreamException {
 
@@ -2202,9 +2175,11 @@ public final class SCXMLReader {
             throws XMLStreamException, ModelException {
 
         org.apache.commons.logging.Log log = LogFactory.getLog(SCXMLReader.class);
-        StringBuffer sb = new StringBuffer();
-        sb.append("Ignoring unknown or invalid element <").append(name).append("> in namespace \"").append(nsURI).append("\" as child ").
-                append(" of <").append(parent).append("> at ").append(reader.getLocation());
+        StringBuilder sb = new StringBuilder();
+        sb.append("Ignoring unknown or invalid element <").append(name)
+                .append("> in namespace \"").append(nsURI)
+                .append("\" as child of <").append(parent)
+                .append("> at ").append(reader.getLocation());
         if (!configuration.isSilent() && log.isWarnEnabled()) {
             log.warn(sb.toString());
         }

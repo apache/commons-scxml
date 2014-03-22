@@ -22,7 +22,7 @@ import java.util.Set;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
-import org.apache.commons.scxml2.model.TransitionTarget;
+import org.apache.commons.scxml2.model.EnterableState;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -55,9 +55,27 @@ public class StaticMethodTest {
         jc.set("System", System.class);
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor(staticmethod,
                 jc, new GroovyEvaluator());
-        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("static", currentStates.iterator().next().getId());
     }
 
+    @Test
+    public void mytest() throws Exception {
+        Object o1, o2 = new Object();
+        o1 = new Object();
+
+        o2 = null;
+        o1 = null;
+        if (val(o1,o2)) {
+            System.out.println("hello");
+        }
+        else {
+            System.out.println("boo");
+        }
+    }
+
+    public boolean val(Object o1, Object o2) {
+        return (o1 == o2);
+    }
 }

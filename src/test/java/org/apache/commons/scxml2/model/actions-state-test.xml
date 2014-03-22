@@ -20,7 +20,7 @@
        version="1.0"
        initial="actionsTest">
   
-  <state id="actionsTest" final="true">
+  <state id="actionsTest">
     <onentry>
       <cs:var name="foo"/>
       <cs:var name="delta" expr="1+2+3" />

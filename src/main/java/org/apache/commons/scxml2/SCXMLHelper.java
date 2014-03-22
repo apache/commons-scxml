@@ -27,6 +27,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml2.model.Data;
 import org.apache.commons.scxml2.model.Datamodel;
+import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.Parallel;
 import org.apache.commons.scxml2.model.Path;
 import org.apache.commons.scxml2.model.State;
@@ -66,16 +67,9 @@ public final class SCXMLHelper {
      *            TransitionTarget context - a potential ancestor
      * @return true iff tt is a descendant of ctx, false otherwise
      */
-    public static boolean isDescendant(final TransitionTarget tt,
-            final TransitionTarget ctx) {
-        TransitionTarget parent = tt.getParent();
-        while (parent != null) {
-            if (parent == ctx) {
-                return true;
-            }
-            parent = parent.getParent();
-        }
-        return false;
+    public static boolean isDescendant(final TransitionTarget tt, final TransitionTarget ctx) {
+        return tt.getNumberOfAncestors() > ctx.getNumberOfAncestors()
+            && tt.getAncestor(ctx.getNumberOfAncestors()) == ctx;
     }
 
     /**
@@ -87,12 +81,12 @@ public final class SCXMLHelper {
      * @param upperBounds The Set of upper bound States
      * @return transitive closure of a given state set
      */
-    public static Set<TransitionTarget> getAncestorClosure(final Set<TransitionTarget> states,
-            final Set<TransitionTarget> upperBounds) {
-        Set<TransitionTarget> closure = new HashSet<TransitionTarget>(states.size() * 2);
+    public static Set<EnterableState> getAncestorClosure(final Set<? extends TransitionTarget> states,
+            final Set<? extends TransitionTarget> upperBounds) {
+        Set<EnterableState> closure = new HashSet<EnterableState>(states.size() * 2);
         for (TransitionTarget tt : states) {
             while (tt != null) {
-                if (!closure.add(tt)) {
+                if (tt instanceof EnterableState && !closure.add((EnterableState)tt)) {
                     //tt is already a part of the closure
                     break;
                 }
@@ -116,7 +110,7 @@ public final class SCXMLHelper {
      *            ErrorReporter to report detailed error info if needed
      * @return true if a given state configuration is legal, false otherwise
      */
-    public static boolean isLegalConfig(final Set<TransitionTarget> states,
+    public static boolean isLegalConfig(final Set<EnterableState> states,
             final ErrorReporter errRep) {
         /*
          * For every active state we add 1 to the count of its parent. Each
@@ -127,29 +121,29 @@ public final class SCXMLHelper {
          * states = active configuration.
          */
         boolean legalConfig = true; // let's be optimists
-        Map<TransitionTarget, Set<TransitionTarget>> counts =
-            new IdentityHashMap<TransitionTarget, Set<TransitionTarget>>();
-        Set<TransitionTarget> scxmlCount = new HashSet<TransitionTarget>();
-        for (TransitionTarget tt : states) {
-            TransitionTarget parent = null;
-            while ((parent = tt.getParent()) != null) {
-                Set<TransitionTarget> cnt = counts.get(parent);
+        Map<EnterableState, Set<EnterableState>> counts =
+            new IdentityHashMap<EnterableState, Set<EnterableState>>();
+        Set<EnterableState> scxmlCount = new HashSet<EnterableState>();
+        for (EnterableState es : states) {
+            EnterableState parent = null;
+            while ((parent = es.getParent()) != null) {
+                Set<EnterableState> cnt = counts.get(parent);
                 if (cnt == null) {
-                    cnt = new HashSet<TransitionTarget>();
+                    cnt = new HashSet<EnterableState>();
                     counts.put(parent, cnt);
                 }
-                cnt.add(tt);
-                tt = parent;
+                cnt.add(es);
+                es = parent;
             }
             //top-level contribution
-            scxmlCount.add(tt);
+            scxmlCount.add(es);
         }
         //Validate counts:
-        for (Map.Entry<TransitionTarget, Set<TransitionTarget>> entry : counts.entrySet()) {
-            TransitionTarget tt = entry.getKey();
-            Set<TransitionTarget> count = entry.getValue();
-            if (tt instanceof Parallel) {
-                Parallel p = (Parallel) tt;
+        for (Map.Entry<EnterableState, Set<EnterableState>> entry : counts.entrySet()) {
+            EnterableState es = entry.getKey();
+            Set<EnterableState> count = entry.getValue();
+            if (es instanceof Parallel) {
+                Parallel p = (Parallel) es;
                 if (count.size() < p.getChildren().size()) {
                     errRep.onError(ErrorConstants.ILLEGAL_CONFIG,
                         "Not all AND states active for parallel "
@@ -160,7 +154,7 @@ public final class SCXMLHelper {
                 if (count.size() > 1) {
                     errRep.onError(ErrorConstants.ILLEGAL_CONFIG,
                         "Multiple OR states active for state "
-                        + tt.getId(), entry);
+                        + es.getId(), entry);
                     legalConfig = false;
                 }
             }
@@ -223,17 +217,21 @@ public final class SCXMLHelper {
      * @return a set of all states (including composite) which are exited if a
      *         given transition is taken
      */
-    public static Set<TransitionTarget> getStatesExited(final Transition t,
-            final Set<TransitionTarget> currentStates) {
-        Set<TransitionTarget> allStates = new HashSet<TransitionTarget>();
+    public static Set<EnterableState> getStatesExited(final Transition t,
+            final Set<EnterableState> currentStates) {
+        Set<EnterableState> allStates = new HashSet<EnterableState>();
         if (t.getTargets().size() == 0) {
             return allStates;
         }
         Path p = t.getPaths().get(0); // all paths have same upseg
         //the easy part
-        allStates.addAll(p.getUpwardSegment());
+        for (TransitionTarget tt : p.getUpwardSegment()) {
+            if (tt instanceof EnterableState) {
+                allStates.add((EnterableState)tt);
+            }
+        }
         TransitionTarget source = t.getParent();
-        for (TransitionTarget a : currentStates) {
+        for (EnterableState a : currentStates) {
             if (isDescendant(a, source)) {
                 boolean added = false;
                 added = allStates.add(a);
@@ -247,14 +245,13 @@ public final class SCXMLHelper {
             for (State region : p.getRegionsExited()) {
                 Parallel par = (Parallel) region.getParent();
                 //let's find affected states in sibling regions
-                for (TransitionTarget tt : par.getChildren()) {
-                    State s = (State) tt;
-                    for (TransitionTarget a : currentStates) {
-                        if (isDescendant(a, s) || a == s) {
+                for (EnterableState es : par.getChildren()) {
+                    for (EnterableState a : currentStates) {
+                        if (isDescendant(a, es) || a == es) {
                             //a is affected
                             boolean added = false;
                             added = allStates.add(a);
-                            while (added && a != s) {
+                            while (added && a != es) {
                                 a = a.getParent();
                                 added = allStates.add(a);
                             }
@@ -277,58 +274,14 @@ public final class SCXMLHelper {
      * @see #getStatesExited(Transition, Set)
      */
     public static boolean inConflict(final Transition t1,
-            final Transition t2, final Set<TransitionTarget> currentStates) {
-        Set<TransitionTarget> ts1 = getStatesExited(t1, currentStates);
-        Set<TransitionTarget> ts2 = getStatesExited(t2, currentStates);
+            final Transition t2, final Set<EnterableState> currentStates) {
+        Set<EnterableState> ts1 = getStatesExited(t1, currentStates);
+        Set<EnterableState> ts2 = getStatesExited(t2, currentStates);
         ts1.retainAll(ts2);
         if (ts1.isEmpty()) {
             return false;
         }
         return true;
-    }
-
-    /**
-     * Whether the first argument is a subtype of the second.
-     *
-     * @param child The candidate subtype
-     * @param parent The supertype
-     * @return true if child is subtype of parent, otherwise false
-     */
-    public static boolean subtypeOf(final Class<?> child, final Class<?> parent) {
-        if (child == null || parent == null) {
-            return false;
-        }
-        for (Class<?> current = child; current != Object.class;
-                current = current.getSuperclass()) {
-            if (current == parent) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Whether the class implements the interface.
-     *
-     * @param clas The candidate class
-     * @param interfayce The interface
-     * @return true if clas implements interfayce, otherwise false
-     */
-    public static boolean implementationOf(final Class<?> clas,
-            final Class<?> interfayce) {
-        if (clas == null || interfayce == null || !interfayce.isInterface()) {
-            return false;
-        }
-        for (Class<?> current = clas; current != Object.class;
-                current = current.getSuperclass()) {
-            Class<?>[] implementedInterfaces = current.getInterfaces();
-            for (int i = 0; i < implementedInterfaces.length; i++) {
-                if (implementedInterfaces[i] == interfayce) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     /**

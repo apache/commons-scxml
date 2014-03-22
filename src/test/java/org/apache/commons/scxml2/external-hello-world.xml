@@ -22,7 +22,7 @@
        version="1.0"
        initial="external-hello">
 
-    <state id="external-hello" final="true" src="custom-hello-world-02.xml">
+    <state id="external-hello" src="custom-hello-world-02.xml">
 
         <onentry>
             <my:hello name="parent document" />

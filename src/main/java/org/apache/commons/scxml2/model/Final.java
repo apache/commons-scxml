@@ -22,7 +22,7 @@ package org.apache.commons.scxml2.model;
  *
  * @since 0.7
  */
-public class Final extends State {
+public class Final extends EnterableState {
 
     /**
      * Serial version UID.
@@ -30,13 +30,10 @@ public class Final extends State {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Default no-args constructor. Sets
-     * <code>isFinal</code> property of this <code>State</code>
-     * to be <code>true</code>.
+     * Default no-args constructor.
      */
     public Final() {
         super();
-        this.setFinal(true);
     }
 
 }

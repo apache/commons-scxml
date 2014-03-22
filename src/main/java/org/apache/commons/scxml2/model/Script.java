@@ -86,7 +86,7 @@ public class Script extends Action implements BodyContainer {
             final Log appLog, final Collection<TriggerEvent> derivedEvents)
     throws ModelException, SCXMLExpressionException {
         Context ctx = isGlobalScript() ? scInstance.getGlobalScriptContext() :
-                scInstance.getContext(getParentTransitionTarget());
+                scInstance.getContext(getParentEnterableState());
         ctx.setLocal(getNamespacesKey(), getNamespaces());
         Evaluator eval = scInstance.getEvaluator();
         eval.evalScript(ctx, getScript());

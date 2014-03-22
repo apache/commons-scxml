@@ -17,6 +17,7 @@
 package org.apache.commons.scxml2.env;
 
 import org.apache.commons.scxml2.SCXMLListener;
+import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.Transition;
 import org.apache.commons.scxml2.model.TransitionTarget;
 
@@ -30,16 +31,16 @@ import org.apache.commons.scxml2.model.TransitionTarget;
 public abstract class AbstractSCXMLListener implements SCXMLListener {
 
     /**
-     * @see SCXMLListener#onEntry(TransitionTarget)
+     * @see SCXMLListener#onEntry(EnterableState)
      */
-    public void onEntry(final TransitionTarget state) {
+    public void onEntry(final EnterableState state) {
         // empty
     }
 
     /**
-     * @see SCXMLListener#onExit(TransitionTarget)
+     * @see SCXMLListener#onExit(EnterableState)
      */
-    public void onExit(final TransitionTarget state) {
+    public void onExit(final EnterableState state) {
         // empty
     }
 

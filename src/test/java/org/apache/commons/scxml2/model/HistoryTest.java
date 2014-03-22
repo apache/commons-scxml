@@ -91,7 +91,7 @@ public class HistoryTest {
     @Test
     public void testHistoryDefaults01() throws Exception {
         exec = SCXMLTestHelper.getExecutor(defaults01);
-        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state11", currentStates.iterator().next().getId());
         currentStates = SCXMLTestHelper.fireEvent(exec, "state.next");
@@ -105,7 +105,7 @@ public class HistoryTest {
     @Test
     public void testHistoryParallel01() throws Exception {
         exec = SCXMLTestHelper.getExecutor(parallel01);
-        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         SCXMLTestHelper.assertState(exec, "off_call");
         SCXMLTestHelper.assertPostTriggerStates(exec, "dial", new String[] { "talking", "on_call" });
@@ -120,7 +120,7 @@ public class HistoryTest {
     }
 
     private void runHistoryFlow() throws Exception {
-        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("phase1", currentStates.iterator().next().getId());
         Assert.assertEquals("phase1", pauseAndResume());
@@ -133,25 +133,24 @@ public class HistoryTest {
         exec.reset();
         currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
-        Assert.assertEquals("phase1", ((State)currentStates.iterator().
-            next()).getId());
+        Assert.assertEquals("phase1", currentStates.iterator().next().getId());
     }
 
     private String pauseAndResume() throws Exception {
-        Set<TransitionTarget> currentStates = SCXMLTestHelper.fireEvent(exec, "flow.pause");
+        Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "flow.pause");
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("interrupted", currentStates.iterator().next().getId());
         exec = SCXMLTestHelper.testExecutorSerializability(exec);
         currentStates = SCXMLTestHelper.fireEvent(exec, "flow.resume");
         Assert.assertEquals(1, currentStates.size());
         exec = SCXMLTestHelper.testExecutorSerializability(exec);
-        return ((State)currentStates.iterator().next()).getId();
+        return currentStates.iterator().next().getId();
     }
 
     private String nextPhase() throws Exception {
-        Set<TransitionTarget> currentStates = SCXMLTestHelper.fireEvent(exec, "phase.done");
+        Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "phase.done");
         Assert.assertEquals(1, currentStates.size());
-        return ((State)currentStates.iterator().next()).getId();
+        return currentStates.iterator().next().getId();
     }
 
 }

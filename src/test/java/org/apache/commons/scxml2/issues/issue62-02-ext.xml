@@ -33,7 +33,7 @@
                 <transition event="baz" target="e1.2"/>
             </state>
         </state>
-        <state id="e1.2" final="true"/>
+        <final id="e1.2"/>
     </state>
 
 </scxml>

@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.Transition;
-import org.apache.commons.scxml2.model.TransitionTarget;
 
 /**
  * A logical unit of progression in the execution of a SCXML model.
@@ -47,17 +47,17 @@ public class Step {
     /**
      * The list of TransitionTargets that were exited during this step.
      */
-    private List<TransitionTarget> exitList;
+    private List<EnterableState> exitList;
 
     /**
      * The list of TransitionTargets that were entered during this step.
      */
-    private List<TransitionTarget> entryList;
+    private List<EnterableState> entryList;
 
     /**
      * The list of TransitionTargets that were entered during this step by default
      */
-    private List<TransitionTarget> defaultEntryList;
+    private List<EnterableState> defaultEntryList;
     /**
      * The list of Transitions taken during this step.
      */
@@ -87,9 +87,9 @@ public class Step {
             this.beforeStatus = new Status();
         }
         this.afterStatus = new Status();
-        this.exitList = new ArrayList<TransitionTarget>();
-        this.entryList = new ArrayList<TransitionTarget>();
-        this.defaultEntryList = new ArrayList<TransitionTarget>();
+        this.exitList = new ArrayList<EnterableState>();
+        this.entryList = new ArrayList<EnterableState>();
+        this.defaultEntryList = new ArrayList<EnterableState>();
         this.transitList = new ArrayList<Transition>();
     }
 
@@ -124,21 +124,21 @@ public class Step {
     /**
      * @return Returns the entryList.
      */
-    public List<TransitionTarget> getEntryList() {
+    public List<EnterableState> getEntryList() {
         return entryList;
     }
 
     /**
      * @return Returns the defaultEntryList.
      */
-    public List<TransitionTarget> getDefaultEntryList() {
+    public List<EnterableState> getDefaultEntryList() {
         return defaultEntryList;
     }
 
     /**
      * @return Returns the exitList.
      */
-    public List<TransitionTarget> getExitList() {
+    public List<EnterableState> getExitList() {
         return exitList;
     }
 

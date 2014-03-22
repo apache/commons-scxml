@@ -19,7 +19,7 @@ package org.apache.commons.scxml2;
 import java.net.URL;
 import java.util.Set;
 
-import org.apache.commons.scxml2.model.TransitionTarget;
+import org.apache.commons.scxml2.model.EnterableState;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -60,7 +60,7 @@ public class WildcardTest {
     public void testWildcard01Sample() throws Exception {
     	exec = SCXMLTestHelper.getExecutor(wildcard01);
         Assert.assertNotNull(exec);
-        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state1", currentStates.iterator().next().getId());
         exec = SCXMLTestHelper.testExecutorSerializability(exec);
@@ -73,7 +73,7 @@ public class WildcardTest {
     public void testWildcard02Sample() throws Exception {
         exec = SCXMLTestHelper.getExecutor(SCXMLTestHelper.parse(wildcard02));
         Assert.assertNotNull(exec);
-        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state2", currentStates.iterator().next().getId());
     }

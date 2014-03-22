@@ -61,7 +61,7 @@ public class Builtin implements Serializable {
      * @param state The State ID to compare with
      * @return Whether this State belongs to this Set
      */
-    public static boolean isMember(final Set<TransitionTarget> allStates,
+    public static boolean isMember(final Set<? extends TransitionTarget> allStates,
             final String state) {
         for (TransitionTarget tt : allStates) {
             if (state.equals(tt.getId())) {
@@ -178,7 +178,6 @@ public class Builtin implements Serializable {
 
         /** Serial version UID. */
         private static final long serialVersionUID = 8620558582288851315L;
-        /** Map supplied by digester. */
         private final Map<String, String> namespaces;
 
         /**

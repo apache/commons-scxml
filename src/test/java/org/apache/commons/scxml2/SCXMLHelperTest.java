@@ -21,6 +21,7 @@ import java.util.Set;
 
 import org.apache.commons.scxml2.env.MockErrorReporter;
 import org.apache.commons.scxml2.env.SimpleErrorReporter;
+import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.Parallel;
 import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.TransitionTarget;
@@ -87,22 +88,22 @@ public class SCXMLHelperTest {
     public void testGetAncestorClosureEmptySet() {
         Set<TransitionTarget> states = new HashSet<TransitionTarget>();
         
-        Set<TransitionTarget> returnValue = SCXMLHelper.getAncestorClosure(states, new HashSet<TransitionTarget>());
+        Set<EnterableState> returnValue = SCXMLHelper.getAncestorClosure(states, new HashSet<TransitionTarget>());
         
         Assert.assertEquals(0, returnValue.size());
     }
     
     @Test
     public void testGetAncestorClosureUpperBoundNotNullAndContains() {
-        Set<TransitionTarget> states = new HashSet<TransitionTarget>();
-        TransitionTarget state = new State();
+        Set<EnterableState> states = new HashSet<EnterableState>();
+        EnterableState state = new State();
         state.setId("1");
         states.add(state);
         
-        Set<TransitionTarget> upperBounds = new HashSet<TransitionTarget>();
+        Set<EnterableState> upperBounds = new HashSet<EnterableState>();
         upperBounds.add(state);
         
-        Set<TransitionTarget> returnValue = SCXMLHelper.getAncestorClosure(states, upperBounds);
+        Set<EnterableState> returnValue = SCXMLHelper.getAncestorClosure(states, upperBounds);
         
         Assert.assertEquals(1, returnValue.size());
         Assert.assertEquals("1", ((TransitionTarget)returnValue.toArray()[0]).getId());
@@ -110,30 +111,31 @@ public class SCXMLHelperTest {
     
     @Test
     public void testGetAncestorClosureContainsParent() {
-        Set<TransitionTarget> states = new HashSet<TransitionTarget>();
-        TransitionTarget state = new State();
+        Set<EnterableState> states = new HashSet<EnterableState>();
+        EnterableState parent = new State();
+        parent.setId("0");
+        EnterableState state = new State();
         state.setId("1");
-        state.setParent(state);
+        state.setParent(parent);
         states.add(state);
         
-        Set<TransitionTarget> upperBounds = new HashSet<TransitionTarget>();
+        Set<EnterableState> upperBounds = new HashSet<EnterableState>();
         
-        Set<TransitionTarget> returnValue = SCXMLHelper.getAncestorClosure(states, upperBounds);
+        Set<EnterableState> returnValue = SCXMLHelper.getAncestorClosure(states, upperBounds);
         
-        Assert.assertEquals(1, returnValue.size());
-        Assert.assertEquals("1", ((TransitionTarget)returnValue.toArray()[0]).getId());
+        Assert.assertEquals(2, returnValue.size());
     }
     
     @Test
     public void testIsLegalConfigNoStates() {
-        Set<TransitionTarget> states = new HashSet<TransitionTarget>();
+        Set<EnterableState> states = new HashSet<EnterableState>();
         
         Assert.assertTrue(SCXMLHelper.isLegalConfig(states, new SimpleErrorReporter()));
     }
     
     @Test
     public void testIsLegalConfigInvalidParallel() {
-        Set<TransitionTarget> states = new HashSet<TransitionTarget>();
+        Set<EnterableState> states = new HashSet<EnterableState>();
         Parallel parallel = new Parallel();
 
         Parallel parent = new Parallel();
@@ -160,7 +162,7 @@ public class SCXMLHelperTest {
     
     @Test
     public void testIsLegalConfigMultipleTopLevel() {
-        Set<TransitionTarget> states = new HashSet<TransitionTarget>();
+        Set<EnterableState> states = new HashSet<EnterableState>();
 
         State state1 = new State();
         state1.setId("1");
@@ -179,7 +181,7 @@ public class SCXMLHelperTest {
     
     @Test
     public void testIsLegalConfigMultipleStatesActive() {
-        Set<TransitionTarget> states = new HashSet<TransitionTarget>();
+        Set<EnterableState> states = new HashSet<EnterableState>();
 
         State state1 = new State();
         state1.setId("1");

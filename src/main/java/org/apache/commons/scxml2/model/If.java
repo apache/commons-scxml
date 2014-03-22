@@ -123,8 +123,8 @@ public class If extends Action implements ActionsContainer {
             final ErrorReporter errRep, final SCInstance scInstance,
             final Log appLog, final Collection<TriggerEvent> derivedEvents)
     throws ModelException, SCXMLExpressionException {
-        TransitionTarget parentTarget = getParentTransitionTarget();
-        Context ctx = scInstance.getContext(parentTarget);
+        EnterableState parentState = getParentEnterableState();
+        Context ctx = scInstance.getContext(parentState);
         Evaluator eval = scInstance.getEvaluator();
         ctx.setLocal(getNamespacesKey(), getNamespaces());
         Boolean rslt;

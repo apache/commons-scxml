@@ -23,7 +23,7 @@
        version="1.0"
        initial="custom">
 
-    <state id="custom" final="true">
+    <final id="custom">
 
         <onentry>
             <my:hello name="world" />
@@ -31,7 +31,7 @@
             <foo:bar name="custom action" />
         </onentry>
 
-    </state>
+    </final>
 
 </scxml>
 

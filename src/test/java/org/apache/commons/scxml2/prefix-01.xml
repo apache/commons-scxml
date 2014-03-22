@@ -23,7 +23,7 @@
         <scxml:transition event="ten.done" target="twenty"/>
     </scxml:state>
 
-    <scxml:state id="twenty" final="true" />
+    <scxml:final id="twenty"/>
 
 </scxml:scxml>
 

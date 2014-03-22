@@ -48,7 +48,7 @@
     <transition event="foo.*" cond="targets(3)" target="state3"/>
     <transition event="foo.bar.*" cond="targets(4)" target="state4"/>
   </state>
-  <state id="state2" final="true"/>
-  <state id="state3" final="true"/>
-  <state id="state4" final="true"/>
+  <final id="state2"/>
+  <final id="state3"/>
+  <final id="state4"/>
 </scxml>

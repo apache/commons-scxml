@@ -56,7 +56,7 @@ public class ScriptTest {
     @Test
     public void testJexlScriptExecution() throws Exception {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor(script01jexl);
-        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("end", currentStates.iterator().next().getId());
     }
@@ -64,7 +64,7 @@ public class ScriptTest {
     @Test
     public void testJavaScriptExecution() throws Exception {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor(script01js, new JSEvaluator());
-        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("end", currentStates.iterator().next().getId());
     }

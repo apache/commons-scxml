@@ -24,6 +24,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml2.ErrorReporter;
+import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.Executable;
 import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.State;
@@ -74,26 +75,25 @@ public class SimpleErrorReporter implements ErrorReporter, Serializable {
         } else if (errCode == ErrorConstants.ILLEGAL_CONFIG) {
             //isLegalConfig
             if (errCtx instanceof Map.Entry) { //unchecked cast below
-                Map.Entry<TransitionTarget, Set<TransitionTarget>> badConfigMap =
-                    (Map.Entry<TransitionTarget, Set<TransitionTarget>>) errCtx;
-                TransitionTarget tt = badConfigMap.getKey();
-                Set<TransitionTarget> vals = badConfigMap.getValue();
-                msg.append(LogUtils.getTTPath(tt) + " : [");
-                for (Iterator<TransitionTarget> i = vals.iterator();
-                        i.hasNext();) {
-                    TransitionTarget tx = i.next();
-                    msg.append(LogUtils.getTTPath(tx));
+                Map.Entry<EnterableState, Set<EnterableState>> badConfigMap =
+                    (Map.Entry<EnterableState, Set<EnterableState>>) errCtx;
+                EnterableState es = badConfigMap.getKey();
+                Set<EnterableState> vals = badConfigMap.getValue();
+                msg.append(LogUtils.getTTPath(es) + " : [");
+                for (Iterator<EnterableState> i = vals.iterator(); i.hasNext();) {
+                    EnterableState ex = i.next();
+                    msg.append(LogUtils.getTTPath(ex));
                     if (i.hasNext()) { // reason for iterator usage
                         msg.append(", ");
                     }
                 }
                 msg.append(']');
             } else if (errCtx instanceof Set) { //unchecked cast below
-                Set<TransitionTarget> vals = (Set<TransitionTarget>) errCtx;
+                Set<EnterableState> vals = (Set<EnterableState>) errCtx;
                 msg.append("<SCXML> : [");
-                for (Iterator<TransitionTarget> i = vals.iterator(); i.hasNext();) {
-                    TransitionTarget tx = i.next();
-                    msg.append(LogUtils.getTTPath(tx));
+                for (Iterator<EnterableState> i = vals.iterator(); i.hasNext();) {
+                    EnterableState ex = i.next();
+                    msg.append(LogUtils.getTTPath(ex));
                     if (i.hasNext()) {
                         msg.append(", ");
                     }

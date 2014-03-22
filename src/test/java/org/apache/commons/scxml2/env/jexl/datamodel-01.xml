@@ -104,7 +104,7 @@
              target="forty" />
         </state>
 
-        <state id="forty" final="true" />
+        <final id="forty"/>
 
     </state>
 

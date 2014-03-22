@@ -25,7 +25,7 @@
            <transition event="connection.alerting"
                        cond="_eventdata eq 'line2'" target="state2"/>
      </state>
-     <state id="state1" final="true"/>
+     <final id="state1"/>
      <state id="state2">
            <!-- ... or an arbitrary, user defined object. -->
            <transition event="connection.alerting"
@@ -33,6 +33,6 @@
            <transition event="connection.alerting"
                        cond="_eventdata.line eq 4" target="state4"/>
      </state>
-     <state id="state3" final="true"/>
-     <state id="state4" final="true"/>
+     <final id="state3"/>
+     <final id="state4"/>
 </scxml>

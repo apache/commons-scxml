@@ -16,6 +16,7 @@
  */
 package org.apache.commons.scxml2;
 
+import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.Transition;
 import org.apache.commons.scxml2.model.TransitionTarget;
 
@@ -32,18 +33,18 @@ import org.apache.commons.scxml2.model.TransitionTarget;
 public interface SCXMLListener {
 
     /**
-     * Handle the entry into a TransitionTarget.
+     * Handle the entry into a EnterableState.
      *
-     * @param state The TransitionTarget entered
+     * @param state The EnterableState entered
      */
-    void onEntry(TransitionTarget state);
+    void onEntry(EnterableState state);
 
     /**
-     * Handle the exit out of a TransitionTarget.
+     * Handle the exit out of a EnterableState.
      *
-     * @param state The TransitionTarget exited
+     * @param state The EnterableState exited
      */
-    void onExit(TransitionTarget state);
+    void onExit(EnterableState state);
 
     /**
      * Handle the transition.

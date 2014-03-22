@@ -21,9 +21,10 @@ import java.util.Set;
 
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
+import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.State;
-import org.apache.commons.scxml2.model.TransitionTarget;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -36,7 +37,7 @@ public class GroovyClosureTest {
         Assert.assertNotNull(scxml);
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml, new GroovyContext(), new GroovyEvaluator(true));
         Assert.assertNotNull(exec);
-        Set<TransitionTarget> currentStates = SCXMLTestHelper.fireEvent(exec, "turn_on");
+        Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "turn_on");
         Assert.assertEquals(2, currentStates.size());
         String id = ((State)currentStates.iterator().next()).getId();
         Assert.assertTrue(id.equals("closed") || id.equals("cooking"));

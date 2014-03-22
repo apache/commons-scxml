@@ -21,15 +21,14 @@ import java.util.Set;
 
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
+import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.SCXML;
-import org.apache.commons.scxml2.model.TransitionTarget;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 /**
- * Unit tests {@link org.apache.commons.scxml2.io.SCXMLDigester}
  * Test white box nature of <state> element "src" attribute.
  */
 public class StateSrcTest {
@@ -71,7 +70,7 @@ public class StateSrcTest {
         Assert.assertNotNull(scxml);
         exec = SCXMLTestHelper.getExecutor(scxml);
         Assert.assertNotNull(exec);
-        Set<TransitionTarget> states = exec.getCurrentStatus().getStates();
+        Set<EnterableState> states = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, states.size());
         Assert.assertEquals("srctest3", states.iterator().next().getId());
         states = SCXMLTestHelper.fireEvent(exec, "src.test");

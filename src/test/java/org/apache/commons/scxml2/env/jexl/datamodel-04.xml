@@ -41,7 +41,7 @@
         </onexit>
     </state>
 
-    <state id="thirty" final="true"/>
+    <final id="thirty"/>
 
 </scxml>
 

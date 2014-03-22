@@ -94,7 +94,7 @@ public class DatamodelTest {
         exec01 = SCXMLTestHelper.getExecutor(datamodel04jexl,
             new JexlContext(), new JexlEvaluator());
         Assert.assertNotNull(exec01);
-        Set<TransitionTarget> currentStates = exec01.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec01.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("ten", currentStates.iterator().next().getId());
         Map<String, Object> payload = new HashMap<String, Object>();
@@ -121,7 +121,7 @@ public class DatamodelTest {
     private void runtest() throws Exception {
         //// Interleaved
         // exec01
-        Set<TransitionTarget> currentStates = exec01.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec01.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("ten", currentStates.iterator().next().getId());
         exec01 = SCXMLTestHelper.testExecutorSerializability(exec01);
@@ -154,7 +154,7 @@ public class DatamodelTest {
         Assert.assertEquals("forty", currentStates.iterator().next().getId());
     }
 
-    private Set<TransitionTarget> fireEvent(String name, SCXMLExecutor exec) throws Exception {
+    private Set<EnterableState> fireEvent(String name, SCXMLExecutor exec) throws Exception {
         TriggerEvent[] evts = {new TriggerEvent(name,
                 TriggerEvent.SIGNAL_EVENT, null)};
         exec.triggerEvents(evts);

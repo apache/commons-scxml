@@ -37,9 +37,9 @@
 
     </state>
 
-    <state id="twenty" final="true" />
+    <final id="twenty"/>
 
-    <state id="thirty" final="true" />
+    <final id="thirty"/>
 
 </scxml>
 

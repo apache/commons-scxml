@@ -101,7 +101,7 @@ public class Log extends Action {
             final org.apache.commons.logging.Log appLog,
             final Collection<TriggerEvent> derivedEvents)
     throws ModelException, SCXMLExpressionException {
-        Context ctx = scInstance.getContext(getParentTransitionTarget());
+        Context ctx = scInstance.getContext(getParentEnterableState());
         Evaluator eval = scInstance.getEvaluator();
         ctx.setLocal(getNamespacesKey(), getNamespaces());
         appLog.info(label + ": " + String.valueOf(eval.eval(ctx, expr)));

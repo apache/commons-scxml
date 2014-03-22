@@ -184,7 +184,6 @@ public class XPathEvaluator implements Evaluator, Serializable {
 
         /** Serial version UID. */
         private static final long serialVersionUID = 8620558582288851315L;
-        /** Map supplied by digester. */
         private final Map<String, String> namespaces;
 
         /**

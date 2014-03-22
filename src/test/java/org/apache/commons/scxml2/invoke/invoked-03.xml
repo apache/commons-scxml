@@ -28,11 +28,11 @@
         <transition event="state1.next" target="end1" />
     </state>
 
-    <state id="end1" final="true">
+    <final id="end1">
         <onentry>
             <log expr="'    Inner invoke completed'"/>
         </onentry>
-    </state>
+    </final>
 
 </scxml>
 

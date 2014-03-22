@@ -16,8 +16,6 @@
  */
 package org.apache.commons.scxml2.env;
 
-import java.util.LinkedList;
-
 import org.apache.commons.scxml2.model.Transition;
 import org.apache.commons.scxml2.model.TransitionTarget;
 
@@ -54,22 +52,13 @@ public final class LogUtils {
      *                the SCXML document
      */
     public static String getTTPath(final TransitionTarget tt) {
-        TransitionTarget parent = tt.getParent();
-        if (parent == null) {
-            return "/" + tt.getId();
-        } else {
-            LinkedList<TransitionTarget> pathElements = new LinkedList<TransitionTarget>();
-            pathElements.addFirst(tt);
-            while (parent != null) {
-                pathElements.addFirst(parent);
-                parent = parent.getParent();
-            }
-            StringBuffer names = new StringBuffer();
-            for (TransitionTarget pathElement : pathElements) {
-                names.append('/').append(pathElement.getId());
-            }
-            return names.toString();
+        StringBuilder sb = new StringBuilder("/");
+        for (int i = 0; i < tt.getNumberOfAncestors(); i++) {
+            sb.append(tt.getAncestor(i).getId());
+            sb.append("/");
         }
+        sb.append(tt.getId());
+        return sb.toString();
     }
 
     /**

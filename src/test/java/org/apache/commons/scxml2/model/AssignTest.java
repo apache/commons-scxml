@@ -60,7 +60,7 @@ public class AssignTest {
     @Test
     public void testAssignSrc() throws Exception {
         exec = SCXMLTestHelper.getExecutor(assign01);
-        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("assign3", currentStates.iterator().next().getId());
         Assert.assertTrue(exec.getCurrentStatus().isFinal());
@@ -69,7 +69,7 @@ public class AssignTest {
     @Test
     public void testAssignDeep() throws Exception {
         exec = SCXMLTestHelper.getExecutor(assign02);
-        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("assign3", currentStates.iterator().next().getId());
         Assert.assertTrue(exec.getCurrentStatus().isFinal());

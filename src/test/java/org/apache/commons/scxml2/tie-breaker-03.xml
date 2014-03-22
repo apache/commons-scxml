@@ -44,13 +44,13 @@
 
     </state>
 
-    <state id="twenty" final="true" />
+    <final id="twenty"/>
 
-    <state id="thirty" final="true" />
+    <final id="thirty"/>
 
-    <state id="forty" final="true" />
+    <final id="forty"/>
 
-    <state id="fifty" final="true" />
+    <final id="fifty"/>
 
 </scxml>
 

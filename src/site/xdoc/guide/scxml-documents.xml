@@ -62,11 +62,11 @@
               version="1.0"
               initial="hello"&gt;
 
-     &lt;state id="hello" final="true"&gt;
+     &lt;final id="hello"&gt;
       &lt;onentry&gt;
        &lt;log expr="'hello world'" /&gt;
       &lt;/onentry&gt;
-     &lt;/state&gt;
+     &lt;/final&gt;
 
     &lt;/scxml&gt;
    </pre>
@@ -290,11 +290,11 @@
               version="1.0"
               initial="custom"&gt;
 
-     &lt;state id="custom" final="true"&gt;
+     &lt;final id="custom"&gt;
       &lt;onentry&gt;
        &lt;my:hello name="world" /&gt;
       &lt;/onentry&gt;
-     &lt;/state&gt;
+     &lt;/final&gt;
 
     &lt;/scxml&gt;
    </pre>

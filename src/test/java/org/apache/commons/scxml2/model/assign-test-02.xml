@@ -32,7 +32,7 @@
        </data>
    </datamodel>
    <!-- verify the destination contents -->
-   <state id="assign1" final="true">
+   <state id="assign1">
        <transition cond="Data(destination,'rad:bar/rad:a') eq 3 and Data(destination,'rad:bar/rad:b') eq 4" target="assign2" />
    </state>
    <!-- copy the new contents and verify -->
@@ -42,5 +42,5 @@
        </onentry>
        <transition cond="Data(destination,'rad:bar/rad:a') eq 1 and Data(destination,'rad:bar/rad:b') eq 2" target="assign3" />
    </state>
-   <state id="assign3" final="true" />
+   <final id="assign3"/>
 </scxml>

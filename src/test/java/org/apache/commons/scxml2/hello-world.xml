@@ -21,11 +21,11 @@
        version="1.0"
        initial="hello">
 
-    <state id="hello" final="true">
+    <final id="hello">
         <onentry>
             <log expr="'hello world'" />
         </onentry>
-    </state>
+    </final>
 
 </scxml>
 

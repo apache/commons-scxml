@@ -24,8 +24,8 @@ import java.util.Set;
 
 import org.apache.commons.scxml2.env.groovy.GroovyContext;
 import org.apache.commons.scxml2.env.groovy.GroovyEvaluator;
+import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.SCXML;
-import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.TransitionTarget;
 import org.junit.After;
 import org.junit.Assert;
@@ -192,7 +192,7 @@ public class SCXMLExecutorTest {
     public void testSCXMLExecutorPrefix01Sample() throws Exception {
         exec = SCXMLTestHelper.getExecutor(prefix01);
         Assert.assertNotNull(exec);
-        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("ten", currentStates.iterator().next().getId());
         currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
@@ -204,7 +204,7 @@ public class SCXMLExecutorTest {
     public void testSCXMLExecutorTransitions01Sample() throws Exception {
         exec = SCXMLTestHelper.getExecutor(transitions01);
         Assert.assertNotNull(exec);
-        Set<TransitionTarget> currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
+        Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("twenty_one", currentStates.iterator().next().getId());
         currentStates = SCXMLTestHelper.fireEvent(exec, "twenty_one.done");
@@ -218,7 +218,7 @@ public class SCXMLExecutorTest {
     public void testSCXMLExecutorTransitions02Sample() throws Exception {
         exec = SCXMLTestHelper.getExecutor(transitions02);
         Assert.assertNotNull(exec);
-        Set<TransitionTarget> currentStates = SCXMLTestHelper.fireEvent(exec, "ten.stay");
+        Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "ten.stay");
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("ten", currentStates.iterator().next().getId());
         exec = SCXMLTestHelper.testExecutorSerializability(exec);
@@ -234,7 +234,7 @@ public class SCXMLExecutorTest {
     public void testSCXMLExecutorTransitions03Sample() throws Exception {
         exec = SCXMLTestHelper.getExecutor(transitions03);
         Assert.assertNotNull(exec);
-        Set<TransitionTarget> currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
+        Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
         Assert.assertEquals(3, currentStates.size());
         Set<String> expected = new HashSet<String>();
         expected.add("twenty_one_2");
@@ -254,7 +254,7 @@ public class SCXMLExecutorTest {
         Assert.assertNotNull(scxml);
         exec = SCXMLTestHelper.getExecutor(scxml);
         Assert.assertNotNull(exec);
-        Set<TransitionTarget> currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
+        Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
         Assert.assertEquals(3, currentStates.size());
         Set<String> expected = new HashSet<String>();
         expected.add("twenty_one_1");
@@ -297,7 +297,7 @@ public class SCXMLExecutorTest {
     public void testSend01Sample() throws Exception {
         exec = SCXMLTestHelper.getExecutor(send01);
         Assert.assertNotNull(exec);
-        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("ten", currentStates.iterator().next().getId());
         currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
@@ -309,7 +309,7 @@ public class SCXMLExecutorTest {
     public void testSend02TypeSCXMLSample() throws Exception {
         exec = SCXMLTestHelper.getExecutor(send02);
         Assert.assertNotNull(exec);
-        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("ninety", currentStates.iterator().next().getId());
         Assert.assertTrue(exec.getCurrentStatus().isFinal());
@@ -360,13 +360,13 @@ public class SCXMLExecutorTest {
     }
 
     private void checkMicrowave01Sample() throws Exception {
-        Set<TransitionTarget> currentStates = SCXMLTestHelper.fireEvent(exec, "turn_on");
+        Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "turn_on");
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("cooking", currentStates.iterator().next().getId());
     }
 
     private void checkMicrowave02Sample() throws Exception {
-        Set<TransitionTarget> currentStates = SCXMLTestHelper.fireEvent(exec, "turn_on");
+        Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "turn_on");
         Assert.assertEquals(2, currentStates.size());
         String id = (currentStates.iterator().next()).getId();
         Assert.assertTrue(id.equals("closed") || id.equals("cooking"));

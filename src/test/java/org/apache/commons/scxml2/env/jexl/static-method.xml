@@ -22,11 +22,11 @@
        version="1.0"
        initial="static">
 
-    <state id="static" final="true">
+    <final id="static">
         <onentry>
             <log expr="'Current time millis: ' + System.currentTimeMillis()" />
         </onentry>
-    </state>
+    </final>
 
 </scxml>
 

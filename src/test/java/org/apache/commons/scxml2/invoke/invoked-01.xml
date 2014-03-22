@@ -26,7 +26,7 @@
         <transition event="invoked.next" target="state2" />
     </state>
 
-    <state id="state2" final="true" />
+    <final id="state2"/>
 
 </scxml>
 

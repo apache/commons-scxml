@@ -33,6 +33,7 @@ import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.env.jexl.JexlContext;
 import org.apache.commons.scxml2.env.jexl.JexlEvaluator;
 import org.apache.commons.scxml2.io.SCXMLReader;
+import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.Transition;
@@ -297,7 +298,7 @@ public abstract class AbstractStateMachine {
         /**
          * {@inheritDoc}
          */
-        public void onEntry(final TransitionTarget entered) {
+        public void onEntry(final EnterableState entered) {
             invoke(entered.getId());
         }
 
@@ -316,9 +317,9 @@ public abstract class AbstractStateMachine {
         /**
          * No-op.
          *
-         * @param exited The transition target being exited.
+         * @param exited The state being exited.
          */
-        public void onExit(final TransitionTarget exited) {
+        public void onExit(final EnterableState exited) {
             // nothing to do
         }
 

@@ -26,8 +26,8 @@ import org.apache.commons.scxml2.env.SimpleErrorReporter;
 import org.apache.commons.scxml2.env.jexl.JexlContext;
 import org.apache.commons.scxml2.env.jexl.JexlEvaluator;
 import org.apache.commons.scxml2.io.SCXMLReader;
+import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.SCXML;
-import org.apache.commons.scxml2.model.TransitionTarget;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -77,7 +77,7 @@ public class InvokeTest {
         exec.setStateMachine(scxml);
         exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
         exec.go();
-        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("invoker", currentStates.iterator().next().getId());
     }
@@ -92,7 +92,7 @@ public class InvokeTest {
         exec.setStateMachine(scxml);
         exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
         exec.go();
-        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
     }
     
@@ -106,7 +106,7 @@ public class InvokeTest {
         exec.setStateMachine(scxml);
         exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
         exec.go();
-        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         SCXMLTestHelper.fireEvent(exec, "s1.next");
         SCXMLTestHelper.fireEvent(exec, "state1.next");

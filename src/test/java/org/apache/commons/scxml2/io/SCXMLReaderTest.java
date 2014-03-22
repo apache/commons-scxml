@@ -42,6 +42,7 @@ import org.apache.commons.scxml2.model.Action;
 import org.apache.commons.scxml2.model.CustomAction;
 import org.apache.commons.scxml2.model.Data;
 import org.apache.commons.scxml2.model.Datamodel;
+import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.ExternalContent;
 import org.apache.commons.scxml2.model.Final;
 import org.apache.commons.scxml2.model.ModelException;
@@ -203,7 +204,7 @@ public class SCXMLReaderTest {
             "action", MyAction.class);
         cas.add(ca);
         scxml = SCXMLTestHelper.parse(action01, cas);
-        State state = (State) scxml.getInitialTransition().getTargets().get(0);
+        EnterableState state = (EnterableState) scxml.getInitialTransition().getTargets().get(0);
         Assert.assertEquals("actions", state.getId());
         List<Action> actions = state.getOnEntry().getActions();
         Assert.assertEquals(1, actions.size());

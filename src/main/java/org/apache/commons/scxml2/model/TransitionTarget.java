@@ -17,8 +17,6 @@
 package org.apache.commons.scxml2.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * An abstract base class for elements in SCXML that can serve as a
@@ -27,6 +25,7 @@ import java.util.List;
  */
 public abstract class TransitionTarget implements Serializable, Observable {
 
+    private static final TransitionTarget[] ZERO_ANCESTORS = new TransitionTarget[0];
     /**
      * Identifier for this transition target. Other parts of the SCXML
      * document may refer to this &lt;state&gt; using this ID.
@@ -34,51 +33,19 @@ public abstract class TransitionTarget implements Serializable, Observable {
     private String id;
 
     /**
-     * Optional property holding executable content to be run upon
-     * entering this transition target.
-     */
-    private OnEntry onEntry;
-
-    /**
-     * Optional property holding executable content to be run upon
-     * exiting this transition target.
-     */
-    private OnExit onExit;
-
-    /**
-     * Optional property holding the data model for this transition target.
-     */
-    private Datamodel datamodel;
-
-    /**
-     * A list of outgoing Transitions from this state, by document order.
-     */
-    private List<Transition> transitions;
-
-    /**
      * The parent of this transition target (may be null, if the parent
      * is the SCXML document root).
      */
     private TransitionTarget parent;
 
-    /**
-     * List of history states owned by a given state (applies to non-leaf
-     * states).
-     */
-    private List<History> history;
+    private TransitionTarget[] ancestors = ZERO_ANCESTORS;
 
     /**
      * Constructor.
      */
     public TransitionTarget() {
         super();
-        onEntry = new OnEntry(); //empty defaults
-        onEntry.setParent(this);
-        onExit = new OnExit();   //empty defaults
-        onExit.setParent(this);
-        transitions = new ArrayList<Transition>();
         parent = null;
-        history = new ArrayList<History>();
     }
 
     /**
@@ -100,101 +67,19 @@ public abstract class TransitionTarget implements Serializable, Observable {
     }
 
     /**
-     * Get the onentry property.
-     *
-     * @return Returns the onEntry.
+     * @return the number of TransitionTarget ancestors
      */
-    public final OnEntry getOnEntry() {
-        return onEntry;
+    public int getNumberOfAncestors() {
+        return ancestors.length;
     }
 
     /**
-     * Set the onentry property.
-     *
-     * @param onEntry The onEntry to set.
+     * Get the ancestor of this TransitionTarget at specified level
+     * @param level the level of the ancestor to return, zero being top
+     * @return the ancestor at specified level
      */
-    public final void setOnEntry(final OnEntry onEntry) {
-        this.onEntry = onEntry;
-        this.onEntry.setParent(this);
-    }
-
-    /**
-     * Get the onexit property.
-     *
-     * @return Returns the onExit.
-     */
-    public final OnExit getOnExit() {
-        return onExit;
-    }
-
-    /**
-     * Set the onexit property.
-     *
-     * @param onExit The onExit to set.
-     */
-    public final void setOnExit(final OnExit onExit) {
-        this.onExit = onExit;
-        this.onExit.setParent(this);
-    }
-
-    /**
-     * Get the data model for this transition target.
-     *
-     * @return Returns the data model.
-     */
-    public final Datamodel getDatamodel() {
-        return datamodel;
-    }
-
-    /**
-     * Set the data model for this transition target.
-     *
-     * @param datamodel The Datamodel to set.
-     */
-    public final void setDatamodel(final Datamodel datamodel) {
-        this.datamodel = datamodel;
-    }
-
-    /**
-     * Get the list of all outgoing transitions from this state, that
-     * will be candidates for being fired on the given event.
-     *
-     * @param event The event
-     * @return List Returns the candidate transitions for given event
-     */
-    public final List<Transition> getTransitionsList(final String event) {
-        List<Transition> matchingTransitions = null; // since we returned null upto v0.6
-        for (Transition t : transitions) {
-            if ((event == null && t.getEvent() == null)
-                    || (event != null && event.equals(t.getEvent()))) {
-                if (matchingTransitions == null) {
-                    matchingTransitions = new ArrayList<Transition>();
-                }
-                matchingTransitions.add(t);
-            }
-        }
-        return matchingTransitions;
-    }
-
-    /**
-     * Add a transition to the map of all outgoing transitions for
-     * this state.
-     *
-     * @param transition
-     *            The transitions to set.
-     */
-    public final void addTransition(final Transition transition) {
-        transitions.add(transition);
-        transition.setParent(this);
-    }
-
-    /**
-     * Get the outgoing transitions for this state as a java.util.List.
-     *
-     * @return List Returns the transitions list.
-     */
-    public final List<Transition> getTransitionsList() {
-        return transitions;
+    public final TransitionTarget getAncestor(int level) {
+        return ancestors[level];
     }
 
     /**
@@ -203,7 +88,7 @@ public abstract class TransitionTarget implements Serializable, Observable {
      * @return Returns the parent state
      * (null if parent is &lt;scxml&gt; element)
      */
-    public final TransitionTarget getParent() {
+    public TransitionTarget getParent() {
         return parent;
     }
 
@@ -212,65 +97,26 @@ public abstract class TransitionTarget implements Serializable, Observable {
      *
      * @param parent The parent state to set
      */
-    public final void setParent(final TransitionTarget parent) {
-        this.parent = parent;
-    }
-
-    /**
-     * Get the parent State.
-     *
-     * @return The parent State
-     */
-    public final State getParentState() {
-        TransitionTarget tt = this.getParent();
-        if (tt == null) {
-            return null;
-        } else {
-            if (tt instanceof State) {
-                return (State) tt;
-            } else { //tt is Parallel
-                return tt.getParentState();
-            }
+    public void setParent(final TransitionTarget parent) {
+        if (parent == null) {
+            throw new IllegalArgumentException("Parent parameter cannot be null");
+        }
+        if (parent == this) {
+            throw new IllegalArgumentException("Cannot set self as parent");
+        }
+        if (this.parent != parent) {
+            this.parent = parent;
+            updateDescendantsAncestors();
         }
     }
 
     /**
-     * This method is used by XML digester.
-     *
-     * @param h
-     *            History pseudo state
-     *
-     * @since 0.7
+     * Update TransitionTarget descendants their ancestors
      */
-    public final void addHistory(final History h) {
-        history.add(h);
-        h.setParent(this);
+    protected void updateDescendantsAncestors() {
+        ancestors = new TransitionTarget[parent.ancestors.length+1];
+        System.arraycopy(parent.ancestors, 0, ancestors, 0, parent.ancestors.length);
+        ancestors[parent.ancestors.length] = parent;
     }
-
-    /**
-     * Does this state have a history pseudo state.
-     *
-     * @return boolean true if a given state contains at least one
-     *                 history pseudo state
-     *
-     * @since 0.7
-     */
-    public final boolean hasHistory() {
-        return (!history.isEmpty());
-    }
-
-    /**
-     * Get the list of history pseudo states for this state.
-     *
-     * @return a list of all history pseudo states contained by a given state
-     *         (can be empty)
-     * @see #hasHistory()
-     *
-     * @since 0.7
-     */
-    public final List<History> getHistory() {
-        return history;
-    }
-
 }
 

@@ -19,8 +19,7 @@ package org.apache.commons.scxml2;
 import java.net.URL;
 import java.util.Set;
 
-import org.apache.commons.scxml2.model.State;
-import org.apache.commons.scxml2.model.TransitionTarget;
+import org.apache.commons.scxml2.model.EnterableState;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -66,7 +65,7 @@ public class NamespacePrefixedXPathsTest {
     // Same test, since same documents (different expression languages)
     private void runtest(SCXMLExecutor exec) throws Exception {
         // must be in state "ten" at the onset
-        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("ten", currentStates.iterator().next().getId());
 

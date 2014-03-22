@@ -16,9 +16,6 @@
  */
 package org.apache.commons.scxml2.model;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;parallel&gt; SCXML element, which is a wrapper element to
@@ -28,7 +25,7 @@ import java.util.Set;
  * children.
  *
  */
-public class Parallel extends TransitionTarget {
+public class Parallel extends TransitionalState {
 
     /**
      * Serial version UID.
@@ -36,39 +33,16 @@ public class Parallel extends TransitionTarget {
     private static final long serialVersionUID = 2L;
 
     /**
-     * The set of parallel state machines contained in this &lt;parallel&gt;.
-     */
-    private Set<TransitionTarget> children;
-
-    /**
      * Constructor.
      */
     public Parallel() {
-        children = new LinkedHashSet<TransitionTarget>();
     }
 
-    /**
-     * Get the set of child transition targets (may be empty).
-     *
-     * @return Set Returns the children.
-     *
-     * @since 0.7
-     */
-    public final Set<TransitionTarget> getChildren() {
-        return children;
+    @Override
+    public void addChild(final EnterableState es) {
+        // enforce/validate only TransitionalState children are allowed
+        TransitionalState ts = (TransitionalState)es;
+        super.addChild(ts);
     }
-
-    /**
-     * Add a child.
-     *
-     * @param tt A child transition target.
-     *
-     * @since 0.7
-     */
-    public final void addChild(final TransitionTarget tt) {
-        children.add(tt);
-        tt.setParent(this);
-    }
-
 }
 

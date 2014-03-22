@@ -23,6 +23,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.Observable;
 import org.apache.commons.scxml2.model.Transition;
 import org.apache.commons.scxml2.model.TransitionTarget;
@@ -30,7 +31,7 @@ import org.apache.commons.scxml2.model.TransitionTarget;
 /**
  * The registry where SCXML listeners are recorded for nodes of
  * interest such as the <code>SCXML</code> root,
- * <code>TransitionTarget</code>s and <code>Transition</code>s.
+ * <code>EnterableState</code>s and <code>Transition</code>s.
  * The notification registry keeps track of all
  * <code>SCXMLListener</code>s attached and notifies relevant
  * listeners of the events that interest them.
@@ -87,14 +88,14 @@ public final class NotificationRegistry implements Serializable {
     }
 
     /**
-     * Inform all relevant listeners that a TransitionTarget has been
+     * Inform all relevant listeners that a EnterableState has been
      * entered.
      *
      * @param source The Observable
-     * @param state The TransitionTarget that was entered
+     * @param state The EnterableState that was entered
      */
     public synchronized void fireOnEntry(final Observable source,
-            final TransitionTarget state) {
+            final EnterableState state) {
         Set<SCXMLListener> entries = regs.get(source);
         if (entries != null) {
             for (SCXMLListener lst : entries) {
@@ -104,14 +105,14 @@ public final class NotificationRegistry implements Serializable {
     }
 
     /**
-     * Inform all relevant listeners that a TransitionTarget has been
+     * Inform all relevant listeners that a EnterableState has been
      * exited.
      *
      * @param source The Observable
-     * @param state The TransitionTarget that was exited
+     * @param state The EnterableState that was exited
      */
     public synchronized void fireOnExit(final Observable source,
-            final TransitionTarget state) {
+            final EnterableState state) {
         Set<SCXMLListener> entries = regs.get(source);
         if (entries != null) {
             for (SCXMLListener lst : entries) {
@@ -124,8 +125,8 @@ public final class NotificationRegistry implements Serializable {
      * Inform all relevant listeners of a transition that has occured.
      *
      * @param source The Observable
-     * @param from The source TransitionTarget
-     * @param to The destination TransitionTarget
+     * @param from The source EnterableState
+     * @param to The destination EnterableState
      * @param transition The Transition that was taken
      */
     public synchronized void fireOnTransition(final Observable source,

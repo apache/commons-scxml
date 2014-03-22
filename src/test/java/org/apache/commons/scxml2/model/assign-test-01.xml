@@ -65,6 +65,6 @@
 
   </state>
 
-  <state id="assign3" final="true"/>
+  <final id="assign3"/>
 
 </scxml>

@@ -84,7 +84,7 @@
 
     </parallel>
 
-    <state id="thirty" final="true" />
+    <final id="thirty"/>
 
 </scxml>
 

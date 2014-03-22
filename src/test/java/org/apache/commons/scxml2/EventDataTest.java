@@ -22,8 +22,8 @@ import java.util.Set;
 import org.apache.commons.scxml2.env.SimpleScheduler;
 import org.apache.commons.scxml2.env.Tracer;
 import org.apache.commons.scxml2.env.jexl.JexlEvaluator;
+import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.SCXML;
-import org.apache.commons.scxml2.model.TransitionTarget;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -68,7 +68,7 @@ public class EventDataTest {
     public void testEventdata01Sample() throws Exception {
     	exec = SCXMLTestHelper.getExecutor(eventdata01);
         Assert.assertNotNull(exec);
-        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state1", currentStates.iterator().next().getId());
         TriggerEvent te = new TriggerEvent("event.foo",
@@ -93,7 +93,7 @@ public class EventDataTest {
     public void testEventdata02Sample() throws Exception {
     	exec = SCXMLTestHelper.getExecutor(eventdata02);
         Assert.assertNotNull(exec);
-        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state0", currentStates.iterator().next().getId());
         TriggerEvent te1 = new TriggerEvent("connection.alerting",
@@ -113,7 +113,7 @@ public class EventDataTest {
     public void testEventdata03Sample() throws Exception {
         exec = SCXMLTestHelper.getExecutor(eventdata03);
         Assert.assertNotNull(exec);
-        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("ten", currentStates.iterator().next().getId());
         TriggerEvent te = new TriggerEvent("event.foo",

@@ -37,6 +37,7 @@ import org.apache.commons.scxml2.env.jexl.JexlEvaluator;
 import org.apache.commons.scxml2.io.SCXMLReader;
 import org.apache.commons.scxml2.io.SCXMLReader.Configuration;
 import org.apache.commons.scxml2.model.CustomAction;
+import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.TransitionTarget;
@@ -171,22 +172,22 @@ public class SCXMLTestHelper {
     }
 
     public static Context lookupContext(SCXMLExecutor exec,
-            TransitionTarget tt) {
-        return exec.getSCInstance().lookupContext(tt);
+            EnterableState es) {
+        return exec.getSCInstance().lookupContext(es);
     }
 
     public static Context lookupContext(SCXMLExecutor exec,
             String id) {
         TransitionTarget tt = lookupTransitionTarget(exec, id);
-        if (tt == null) {
+        if (tt == null || !(tt instanceof EnterableState)) {
             return null;
         }
-        return exec.getSCInstance().lookupContext(tt);
+        return exec.getSCInstance().lookupContext((EnterableState)tt);
     }
 
     public static void assertState(SCXMLExecutor exec,
             String expectedStateId) throws Exception {
-        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals("Expected 1 simple (leaf) state with id '"
             + expectedStateId + "' but found " + currentStates.size() + " states instead.",
             1, currentStates.size());
@@ -194,23 +195,23 @@ public class SCXMLTestHelper {
             next().getId());
     }
 
-    public static Set<TransitionTarget> fireEvent(SCXMLExecutor exec, String name) throws Exception {
+    public static Set<EnterableState> fireEvent(SCXMLExecutor exec, String name) throws Exception {
         return fireEvent(exec, name, null);
     }
 
-    public static Set<TransitionTarget> fireEvent(SCXMLExecutor exec, String name, Object payload) throws Exception {
+    public static Set<EnterableState> fireEvent(SCXMLExecutor exec, String name, Object payload) throws Exception {
         TriggerEvent[] evts = {new TriggerEvent(name,
                 TriggerEvent.SIGNAL_EVENT, payload)};
         exec.triggerEvents(evts);
         return exec.getCurrentStatus().getStates();
     }
 
-    public static Set<TransitionTarget> fireEvent(SCXMLExecutor exec, TriggerEvent te) throws Exception {
+    public static Set<EnterableState> fireEvent(SCXMLExecutor exec, TriggerEvent te) throws Exception {
         exec.triggerEvent(te);
         return exec.getCurrentStatus().getStates();
     }
 
-    public static Set<TransitionTarget> fireEvents(SCXMLExecutor exec, TriggerEvent[] evts) throws Exception {
+    public static Set<EnterableState> fireEvents(SCXMLExecutor exec, TriggerEvent[] evts) throws Exception {
         exec.triggerEvents(evts);
         return exec.getCurrentStatus().getStates();
     }
@@ -239,7 +240,7 @@ public class SCXMLTestHelper {
 
     public static void assertPostTriggerState(SCXMLExecutor exec,
             TriggerEvent triggerEvent, String expectedStateId) throws Exception {
-        Set<TransitionTarget> currentStates = fireEvent(exec, triggerEvent);
+        Set<EnterableState> currentStates = fireEvent(exec, triggerEvent);
         Assert.assertEquals("Expected 1 simple (leaf) state with id '"
             + expectedStateId + "' on firing event " + triggerEvent
             + " but found " + currentStates.size() + " states instead.",
@@ -254,7 +255,7 @@ public class SCXMLTestHelper {
             Assert.fail("Must specify an array of one or more "
                 + "expected state IDs");
         }
-        Set<TransitionTarget> currentStates = fireEvent(exec, triggerEvent);
+        Set<EnterableState> currentStates = fireEvent(exec, triggerEvent);
         int n = expectedStateIds.length;
         Assert.assertEquals("Expected " + n + " simple (leaf) state(s) "
             + " on firing event " + triggerEvent + " but found "
@@ -337,9 +338,7 @@ public class SCXMLTestHelper {
      * @return The <code>id</code> of the active state.
      */
     public static String getCurrentState(SCXMLExecutor exec) {
-        Set<TransitionTarget> current = exec.getCurrentStatus().getStates();
-        TransitionTarget active = current.iterator().next();
-        return active.getId();
+        return exec.getCurrentStatus().getStates().iterator().next().getId();
     }
 
     /**
@@ -362,9 +361,9 @@ public class SCXMLTestHelper {
             throw new IllegalArgumentException("No target with id '" + id
                 + "' present in state machine.");
         }
-        Set<TransitionTarget> current = exec.getCurrentStatus().getStates();
+        Set<EnterableState> current = exec.getCurrentStatus().getStates();
         current.clear();
-        current.add(active);
+        current.add((EnterableState)active);
     }
 
     public static String removeCarriageReturns(final String original) {

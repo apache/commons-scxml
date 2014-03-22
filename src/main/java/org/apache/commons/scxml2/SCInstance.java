@@ -26,8 +26,10 @@ import java.util.Set;
 import org.apache.commons.scxml2.invoke.Invoker;
 import org.apache.commons.scxml2.invoke.InvokerException;
 import org.apache.commons.scxml2.model.Datamodel;
+import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.History;
 import org.apache.commons.scxml2.model.TransitionTarget;
+import org.apache.commons.scxml2.model.TransitionalState;
 
 /**
  * The <code>SCInstance</code> performs book-keeping functions for
@@ -48,21 +50,21 @@ public class SCInstance implements Serializable {
 
     /**
      * The <code>Map</code> of <code>Context</code>s per
-     * <code>TransitionTarget</code>.
+     * <code>EnterableState</code>.
      */
-    private final Map<TransitionTarget, Context> contexts;
+    private final Map<EnterableState, Context> contexts;
 
     /**
      * The <code>Map</code> of last known configurations per
      * <code>History</code>.
      */
-    private final Map<History, Set<TransitionTarget>> histories;
+    private final Map<History, Set<EnterableState>> histories;
 
     /**
      * <code>Map</code> for recording the run to completion status of
      * composite states.
      */
-    private final Map<TransitionTarget, Boolean> completions;
+    private final Map<EnterableState, Boolean> completions;
 
     /**
      * The <code>Invoker</code> classes <code>Map</code>, keyed by
@@ -74,7 +76,7 @@ public class SCInstance implements Serializable {
      * The <code>Map</code> of active <code>Invoker</code>s, keyed by
      * (leaf) <code>State</code>s.
      */
-    private final Map<TransitionTarget, Invoker> invokers;
+    private final Map<TransitionalState, Invoker> invokers;
 
     /**
      * The evaluator for expressions.
@@ -103,11 +105,11 @@ public class SCInstance implements Serializable {
      */
     SCInstance(final SCXMLExecutor executor) {
         this.notificationRegistry = new NotificationRegistry();
-        this.contexts = Collections.synchronizedMap(new HashMap<TransitionTarget, Context>());
-        this.histories = Collections.synchronizedMap(new HashMap<History, Set<TransitionTarget>>());
+        this.contexts = Collections.synchronizedMap(new HashMap<EnterableState, Context>());
+        this.histories = Collections.synchronizedMap(new HashMap<History, Set<EnterableState>>());
         this.invokerClasses = Collections.synchronizedMap(new HashMap<String, Class<? extends Invoker>>());
-        this.invokers = Collections.synchronizedMap(new HashMap<TransitionTarget, Invoker>());
-        this.completions = Collections.synchronizedMap(new HashMap<TransitionTarget, Boolean>());
+        this.invokers = Collections.synchronizedMap(new HashMap<TransitionalState, Invoker>());
+        this.completions = Collections.synchronizedMap(new HashMap<EnterableState, Boolean>());
         this.evaluator = null;
         this.rootContext = null;
         this.executor = executor;
@@ -176,54 +178,57 @@ public class SCInstance implements Serializable {
      *
      * @param notifRegistry The notification registry.
      */
+    @SuppressWarnings("unused")
     void setNotificationRegistry(final NotificationRegistry notifRegistry) {
         this.notificationRegistry = notifRegistry;
     }
 
     /**
-     * Get the <code>Context</code> for this <code>TransitionTarget</code>.
+     * Get the <code>Context</code> for this <code>EnterableState</code>.
      * If one is not available it is created.
      *
-     * @param transitionTarget The TransitionTarget.
+     * @param state The EnterableState.
      * @return The Context.
      */
-    public Context getContext(final TransitionTarget transitionTarget) {
-        Context context = contexts.get(transitionTarget);
+    public Context getContext(final EnterableState state) {
+        Context context = contexts.get(state);
         if (context == null) {
-            TransitionTarget parent = transitionTarget.getParent();
+            EnterableState parent = state.getParent();
             if (parent == null) {
                 // docroot
                 context = evaluator.newContext(getGlobalScriptContext());
             } else {
                 context = evaluator.newContext(getContext(parent));
             }
-            Datamodel datamodel = transitionTarget.getDatamodel();
-            SCXMLHelper.cloneDatamodel(datamodel, context, evaluator, null);
-            contexts.put(transitionTarget, context);
+            if (state instanceof TransitionalState) {
+                Datamodel datamodel = ((TransitionalState)state).getDatamodel();
+                SCXMLHelper.cloneDatamodel(datamodel, context, evaluator, null);
+            }
+            contexts.put(state, context);
         }
         return context;
     }
 
     /**
-     * Get the <code>Context</code> for this <code>TransitionTarget</code>.
+     * Get the <code>Context</code> for this <code>EnterableState</code>.
      * May return <code>null</code>.
      *
-     * @param transitionTarget The <code>TransitionTarget</code>.
+     * @param state The <code>EnterableState</code>.
      * @return The Context.
      */
-    Context lookupContext(final TransitionTarget transitionTarget) {
-        return contexts.get(transitionTarget);
+    Context lookupContext(final EnterableState state) {
+        return contexts.get(state);
     }
 
     /**
-     * Set the <code>Context</code> for this <code>TransitionTarget</code>.
+     * Set the <code>Context</code> for this <code>EnterableState</code>.
      *
-     * @param transitionTarget The TransitionTarget.
+     * @param state The EnterableState.
      * @param context The Context.
      */
-    void setContext(final TransitionTarget transitionTarget,
+    void setContext(final EnterableState state,
             final Context context) {
-        contexts.put(transitionTarget, context);
+        contexts.put(state, context);
     }
 
     /**
@@ -232,10 +237,10 @@ public class SCInstance implements Serializable {
      * @param history The history.
      * @return Returns the lastConfiguration.
      */
-    public Set<TransitionTarget> getLastConfiguration(final History history) {
-        Set<TransitionTarget> lastConfiguration = histories.get(history);
+    public Set<EnterableState> getLastConfiguration(final History history) {
+        Set<EnterableState> lastConfiguration = histories.get(history);
         if (lastConfiguration == null) {
-            lastConfiguration = new HashSet<TransitionTarget>();
+            lastConfiguration = new HashSet<EnterableState>();
             histories.put(history, lastConfiguration);
         }
         return lastConfiguration;
@@ -248,8 +253,8 @@ public class SCInstance implements Serializable {
      * @param lc The lastConfiguration to set.
      */
     public void setLastConfiguration(final History history,
-            final Set<TransitionTarget> lc) {
-        Set<TransitionTarget> lastConfiguration = getLastConfiguration(history);
+            final Set<EnterableState> lc) {
+        Set<EnterableState> lastConfiguration = getLastConfiguration(history);
         lastConfiguration.clear();
         lastConfiguration.addAll(lc);
     }
@@ -261,11 +266,8 @@ public class SCInstance implements Serializable {
      * @return Whether we have a non-empty last configuration
      */
     public boolean isEmpty(final History history) {
-        Set<TransitionTarget> lastConfiguration = histories.get(history);
-        if (lastConfiguration == null || lastConfiguration.isEmpty()) {
-            return true;
-        }
-        return false;
+        Set<EnterableState> lastConfiguration = histories.get(history);
+        return lastConfiguration == null || lastConfiguration.isEmpty();
     }
 
     /**
@@ -275,7 +277,7 @@ public class SCInstance implements Serializable {
      * @see org.apache.commons.scxml2.SCXMLExecutor#reset()
      */
     public void reset(final History history) {
-        Set<TransitionTarget> lastConfiguration = histories.get(history);
+        Set<EnterableState> lastConfiguration = histories.get(history);
         if (lastConfiguration != null) {
             lastConfiguration.clear();
         }
@@ -334,7 +336,7 @@ public class SCInstance implements Serializable {
             throw new InvokerException("No Invoker registered for type \""
                 + type + "\"");
         }
-        Invoker invoker = null;
+        Invoker invoker;
         try {
             invoker = invokerClass.newInstance();
         } catch (InstantiationException ie) {
@@ -346,27 +348,27 @@ public class SCInstance implements Serializable {
     }
 
     /**
-    * Get the {@link Invoker} for this {@link TransitionTarget}.
+    * Get the {@link Invoker} for this {@link TransitionalState}.
      * May return <code>null</code>. A non-null {@link Invoker} will be
-     * returned if and only if the {@link TransitionTarget} is
+     * returned if and only if the {@link TransitionalState} is
      * currently active and contains an &lt;invoke&gt; child.
      *
-     * @param transitionTarget The <code>TransitionTarget</code>.
+     * @param state The <code>TransitionalState</code>.
      * @return The Invoker.
      */
-    public Invoker getInvoker(final TransitionTarget transitionTarget) {
-        return invokers.get(transitionTarget);
+    public Invoker getInvoker(final TransitionalState state) {
+        return invokers.get(state);
     }
 
     /**
-     * Set the {@link Invoker} for this {@link TransitionTarget}.
+     * Set the {@link Invoker} for this {@link TransitionalState}.
      *
-     * @param transitionTarget The TransitionTarget.
+     * @param state The TransitionalState.
      * @param invoker The Invoker.
      */
-    public void setInvoker(final TransitionTarget transitionTarget,
+    public void setInvoker(final TransitionalState state,
             final Invoker invoker) {
-        invokers.put(transitionTarget, invoker);
+        invokers.put(state, invoker);
     }
 
     /**
@@ -374,41 +376,40 @@ public class SCInstance implements Serializable {
      *
      * @return The map of invokers.
      */
-    public Map<TransitionTarget, Invoker> getInvokers() {
+    public Map<TransitionalState, Invoker> getInvokers() {
         return invokers;
     }
 
     /**
      * Get the completion status for this composite
-     * {@link TransitionTarget}.
+     * {@link EnterableState}.
      *
-     * @param transitionTarget The <code>TransitionTarget</code>.
+     * @param state The <code>EnterableState</code>.
      * @return The completion status.
      *
      * @since 0.7
      */
     @SuppressWarnings("boxing")
-    public boolean isDone(final TransitionTarget transitionTarget) {
-        if (completions.containsKey(transitionTarget)) {
-            return completions.get(transitionTarget);
+    public boolean isDone(final EnterableState state) {
+        if (completions.containsKey(state)) {
+            return completions.get(state);
         }
         return false;
     }
 
     /**
      * Set the completion status for this composite
-     * {@link TransitionTarget}.
+     * {@link EnterableState}.
      *
-     * @param transitionTarget The TransitionTarget.
+     * @param state The EnterableState.
      * @param done The completion status.
      *
      * @since 0.7
      */
     @SuppressWarnings("boxing")
-    public void setDone(final TransitionTarget transitionTarget,
+    public void setDone(final EnterableState state,
             final boolean done) {
-        completions.put(transitionTarget, done);
+        completions.put(state, done);
     }
-
 }
 

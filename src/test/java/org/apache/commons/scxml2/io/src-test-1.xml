@@ -25,7 +25,7 @@
         <transition event="srctest1.done" target="srctest1end"/>
     </state>
 
-    <state id="srctest1end" final="true"/>
+    <final id="srctest1end"/>
 
 </scxml>
 

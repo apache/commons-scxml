@@ -16,7 +16,6 @@
  */
 package org.apache.commons.scxml2.env;
 
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -95,8 +94,7 @@ public class StopWatch extends AbstractStateMachine {
 
     // used by the demonstration (see StopWatchDisplay usecase)
     public String getCurrentState() {
-        Set<TransitionTarget> states = getEngine().getCurrentStatus().getStates();
-        return states.iterator().next().getId();
+        return getEngine().getCurrentStatus().getStates().iterator().next().getId();
     }
 
     private void increment() {

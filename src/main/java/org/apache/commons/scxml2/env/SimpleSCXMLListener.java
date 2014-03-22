@@ -21,6 +21,7 @@ import java.io.Serializable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml2.SCXMLListener;
+import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.Transition;
 import org.apache.commons.scxml2.model.TransitionTarget;
 
@@ -37,18 +38,18 @@ public class SimpleSCXMLListener implements SCXMLListener, Serializable {
 
 
     /**
-     * @see SCXMLListener#onEntry(TransitionTarget)
+     * @see SCXMLListener#onEntry(EnterableState)
      */
-    public void onEntry(final TransitionTarget state) {
+    public void onEntry(final EnterableState state) {
         if (log.isInfoEnabled()) {
             log.info(LogUtils.getTTPath(state));
         }
     }
 
     /**
-     * @see SCXMLListener#onExit(TransitionTarget)
+     * @see SCXMLListener#onExit(EnterableState)
      */
-    public void onExit(final TransitionTarget state) {
+    public void onExit(final EnterableState state) {
         if (log.isInfoEnabled()) {
             log.info(LogUtils.getTTPath(state));
         }

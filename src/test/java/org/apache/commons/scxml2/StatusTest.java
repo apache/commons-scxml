@@ -16,6 +16,7 @@
  */
 package org.apache.commons.scxml2;
 
+import org.apache.commons.scxml2.model.Final;
 import org.apache.commons.scxml2.model.State;
 import org.junit.Assert;
 import org.junit.Before;
@@ -33,8 +34,7 @@ public class StatusTest {
     @Test
     public void testIsFinalStateFalse() {
         State state = new State();
-        state.setFinal(false);
-        
+
         status.getStates().add(state);
         
         Assert.assertFalse(status.isFinal());
@@ -42,8 +42,7 @@ public class StatusTest {
     
     @Test
     public void testIsFinalStateHasParent() {
-        State state = new State();
-        state.setFinal(true);
+        Final state = new Final();
         state.setParent(new State());
         
         status.getStates().add(state);
@@ -53,8 +52,7 @@ public class StatusTest {
     
     @Test
     public void testIsFinalStateHasEvent() {
-        State state = new State();
-        state.setFinal(true);
+        Final state = new Final();
         
         status.getStates().add(state);
         status.getEvents().add(new TriggerEvent("name", TriggerEvent.CALL_EVENT));
@@ -64,8 +62,7 @@ public class StatusTest {
     
     @Test
     public void testIsFinalState() {
-        State state = new State();
-        state.setFinal(true);
+        Final state = new Final();
         
         status.getStates().add(state);
         

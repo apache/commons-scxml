@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.scxml2.Builtin;
-import org.apache.commons.scxml2.model.TransitionTarget;
+import org.apache.commons.scxml2.model.EnterableState;
 
 /**
  * Global JEXL namespace functor, implements Data() and In() operators.
@@ -44,6 +44,7 @@ public final class JexlBuiltin {
      * Gets the ALL_NAMESPACES map from context.
      * @return the ALL_NAMESPACES map
      */
+    @SuppressWarnings("unchecked")
     private Map<String, String> getNamespaces() {
         return (Map<String, String>) context.get("_ALL_NAMESPACES");
     }
@@ -52,8 +53,9 @@ public final class JexlBuiltin {
      * Gets the ALL_STATES set from context.
      * @return the ALL_STATES set
      */
-    private Set<TransitionTarget> getAllStates() {
-        return (Set<TransitionTarget>) context.get("_ALL_STATES");
+    @SuppressWarnings("unchecked")
+    private Set<EnterableState> getAllStates() {
+        return (Set<EnterableState>) context.get("_ALL_STATES");
     }
 
     /**

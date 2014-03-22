@@ -32,7 +32,7 @@
          <log expr="'*****' + dummy" />
         </transition>
     </state>
-    <state id="end" final="true" />
+    <final id="end"/>
 
 </scxml>
 

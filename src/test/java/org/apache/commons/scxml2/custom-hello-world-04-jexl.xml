@@ -55,7 +55,7 @@
         <transition target="end" cond="helloName1 eq 'custom04b'" />
     </state>
 
-    <state id="end" final="true"/>
+    <final id="end"/>
 
 </scxml>
 

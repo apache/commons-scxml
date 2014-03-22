@@ -35,7 +35,7 @@ import org.apache.commons.scxml2.model.SCXML;
 public interface SCXMLSemantics {
 
     /**
-     * Optional post processing immediately following Digester. May be used
+     * Optional post processing immediately following SCXMLReader. May be used
      * for removing pseudo-states etc.
      *
      * @param input

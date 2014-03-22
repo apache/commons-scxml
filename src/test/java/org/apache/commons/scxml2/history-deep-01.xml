@@ -52,7 +52,7 @@
                 <transition event="phase.done" target="phase3"/>
             </state>
 
-            <state id="phase3" final="true" />
+            <final id="phase3"/>
 
         </state>
 
@@ -70,6 +70,6 @@
 
     </state>
 
-    <state id="terminated" final="true"/>
+    <final id="terminated"/>
 
 </scxml>

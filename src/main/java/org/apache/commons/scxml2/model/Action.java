@@ -98,25 +98,25 @@ public abstract class Action implements NamespacePrefixesHolder,
     }
 
     /**
-     * Return the {@link TransitionTarget} whose {@link org.apache.commons.scxml2.Context} this action
+     * Return the {@link EnterableState} whose {@link org.apache.commons.scxml2.Context} this action
      * executes in.
      *
-     * @return The parent {@link TransitionTarget}
-     * @throws ModelException For an unknown TransitionTarget subclass
+     * @return The parent {@link EnterableState}
+     * @throws ModelException For an unknown EnterableState subclass
      *
      * @since 0.9
      */
-    public final TransitionTarget getParentTransitionTarget()
+    public final EnterableState getParentEnterableState()
     throws ModelException {
         if (parent == null && this instanceof Script && ((Script)this).isGlobalScript()) {
-            // global script doesn't have a TransitionTarget
+            // global script doesn't have a EnterableState
             return null;
         }
         TransitionTarget tt = parent.getParent();
-        if (tt instanceof State || tt instanceof Parallel) {
-            return tt;
-        } else if (tt instanceof History || tt instanceof Initial) {
-            return tt.getParent();
+        if (tt instanceof EnterableState) {
+            return (EnterableState)tt;
+        } else if (tt instanceof History) {
+            return ((History)tt).getParent();
         } else {
             throw new ModelException("Unknown TransitionTarget subclass:"
                     + tt.getClass().getName());

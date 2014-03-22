@@ -50,6 +50,7 @@ import org.apache.commons.scxml2.model.Data;
 import org.apache.commons.scxml2.model.Datamodel;
 import org.apache.commons.scxml2.model.Else;
 import org.apache.commons.scxml2.model.ElseIf;
+import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.Raise;
 import org.apache.commons.scxml2.model.ExternalContent;
 import org.apache.commons.scxml2.model.Final;
@@ -67,6 +68,7 @@ import org.apache.commons.scxml2.model.Param;
 import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.Script;
 import org.apache.commons.scxml2.model.Send;
+import org.apache.commons.scxml2.model.SimpleTransition;
 import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.Transition;
 import org.apache.commons.scxml2.model.TransitionTarget;
@@ -150,7 +152,6 @@ public class SCXMLWriter {
     private static final String ELEM_SEND = "send";
     private static final String ELEM_STATE = "state";
     private static final String ELEM_TRANSITION = "transition";
-    //private static final String ELEM_VALIDATE = "validate"; TODO
     private static final String ELEM_VAR = "var";
 
     //---- ATTRIBUTE NAMES ----//
@@ -160,7 +161,6 @@ public class SCXMLWriter {
     private static final String ATTR_EVENT = "event";
     private static final String ATTR_EXMODE = "exmode";
     private static final String ATTR_EXPR = "expr";
-    private static final String ATTR_FINAL = "final";
     private static final String ATTR_HINTS = "hints";
     private static final String ATTR_ID = "id";
     private static final String ATTR_INDEX = "index";
@@ -448,13 +448,13 @@ public class SCXMLWriter {
 
         // Children
         writeDatamodel(writer, scxml.getDatamodel());
-        for (TransitionTarget tt : scxml.getChildren().values()) {
-            if (tt instanceof Final) {
-                writeFinal(writer, (Final) tt);
-            } else if (tt instanceof State) {
-                writeState(writer, (State) tt);
-            } else if (tt instanceof Parallel) {
-                writeParallel(writer, (Parallel) tt);
+        for (EnterableState es : scxml.getChildren()) {
+            if (es instanceof Final) {
+                writeFinal(writer, (Final) es);
+            } else if (es instanceof State) {
+                writeState(writer, (State) es);
+            } else if (es instanceof Parallel) {
+                writeParallel(writer, (Parallel) es);
             }
         }
 
@@ -524,11 +524,6 @@ public class SCXMLWriter {
         writer.writeStartElement(ELEM_STATE);
         writeTransitionTargetId(writer, state);
         writeAV(writer, ATTR_INITIAL, state.getFirst());
-        boolean f = state.isFinal();
-        if (f) {
-            writer.writeAttribute(ATTR_FINAL, "true");
-        }
-
         writeInitial(writer, state.getInitial());
         writeDatamodel(writer, state.getDatamodel());
         writeHistory(writer, state.getHistory());
@@ -541,15 +536,15 @@ public class SCXMLWriter {
         Invoke inv = state.getInvoke();
         if (inv != null) {
             writeInvoke(writer, inv);
-        } else {
-            for (TransitionTarget tt : state.getChildren().values()) {
-                if (tt instanceof Final) {
-                    writeFinal(writer, (Final) tt);
-                } else if (tt instanceof State) {
-                    writeState(writer, (State) tt);
-                } else if (tt instanceof Parallel) {
-                    writeParallel(writer, (Parallel) tt);
-                }
+        }
+
+        for (EnterableState es : state.getChildren()) {
+            if (es instanceof Final) {
+                writeFinal(writer, (Final) es);
+            } else if (es instanceof State) {
+                writeState(writer, (State) es);
+            } else if (es instanceof Parallel) {
+                writeParallel(writer, (Parallel) es);
             }
         }
 
@@ -579,11 +574,18 @@ public class SCXMLWriter {
             writeTransition(writer, t);
         }
 
-        for (TransitionTarget tt : parallel.getChildren()) {
-            if (tt instanceof Final) {
-                writeFinal(writer, (Final) tt);
-            } else if (tt instanceof State) {
-                writeState(writer, (State) tt);
+        Invoke inv = parallel.getInvoke();
+        if (inv != null) {
+            writeInvoke(writer, inv);
+        }
+
+        for (EnterableState es : parallel.getChildren()) {
+            if (es instanceof Final) {
+                writeFinal(writer, (Final) es);
+            } else if (es instanceof State) {
+                writeState(writer, (State) es);
+            } else if (es instanceof Parallel) {
+                writeParallel(writer, (Parallel) es);
             }
         }
 
@@ -605,7 +607,6 @@ public class SCXMLWriter {
         writer.writeStartElement(ELEM_FINAL);
         writeTransitionTargetId(writer, end);
         writeOnEntry(writer, end.getOnEntry());
-        // params
         writeOnExit(writer, end.getOnExit());
         writer.writeEndElement();
     }
@@ -703,12 +704,15 @@ public class SCXMLWriter {
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
      */
-    private static void writeTransition(final XMLStreamWriter writer, final Transition transition)
+    private static void writeTransition(final XMLStreamWriter writer, final SimpleTransition transition)
             throws XMLStreamException {
 
         writer.writeStartElement(ELEM_TRANSITION);
-        writeAV(writer, ATTR_EVENT, transition.getEvent());
-        writeAV(writer, ATTR_COND, SCXMLHelper.escapeXML(transition.getCond()));
+        if (transition instanceof Transition) {
+            writeAV(writer, ATTR_EVENT, ((Transition)transition).getEvent());
+            writeAV(writer, ATTR_COND, SCXMLHelper.escapeXML(((Transition)transition).getCond()));
+        }
+
         writeAV(writer, ATTR_TARGET, transition.getNext());
         if (transition.getType() != null) {
             writeAV(writer, ATTR_TYPE, transition.getType().name());

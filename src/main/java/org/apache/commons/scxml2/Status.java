@@ -22,8 +22,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.scxml2.model.State;
-import org.apache.commons.scxml2.model.TransitionTarget;
+import org.apache.commons.scxml2.model.EnterableState;
+import org.apache.commons.scxml2.model.Final;
 
 /**
  * The encapsulation of the current state of a state machine.
@@ -39,7 +39,7 @@ public class Status implements Serializable {
     /**
      * The states that are currently active.
      */
-    private Set<TransitionTarget> states;
+    private Set<EnterableState> states;
 
     /**
      * The events that are currently queued.
@@ -56,14 +56,13 @@ public class Status implements Serializable {
      */
     public boolean isFinal() {
         boolean rslt = true;
-        for (TransitionTarget tt : states) {
-            State s = (State) tt;
-            if (!s.isFinal()) {
+        for (EnterableState es : states) {
+            if (!(es instanceof Final)) {
                 rslt = false;
                 break;
             }
-            //the status is final only iff these are top-level states
-            if (s.getParent() != null) {
+            //the status is final only if these are top-level states
+            if (es.getParent() != null) {
                 rslt = false;
                 break;
             }
@@ -78,7 +77,7 @@ public class Status implements Serializable {
      * Constructor.
      */
     public Status() {
-        states = new HashSet<TransitionTarget>();
+        states = new HashSet<EnterableState>();
         events = new ArrayList<TriggerEvent>();
     }
 
@@ -87,7 +86,7 @@ public class Status implements Serializable {
      *
      * @return Returns the states configuration - simple (leaf) states only.
      */
-    public Set<TransitionTarget> getStates() {
+    public Set<EnterableState> getStates() {
         return states;
     }
 
@@ -106,7 +105,7 @@ public class Status implements Serializable {
      * @return complete states configuration including simple states and their
      *         complex ancestors up to the root.
      */
-    public Set<TransitionTarget> getAllStates() {
+    public Set<EnterableState> getAllStates() {
         return SCXMLHelper.getAncestorClosure(states, null);
     }
 

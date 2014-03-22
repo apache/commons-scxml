@@ -38,7 +38,7 @@ public class ActionTest {
         transition.setParent(state);
         action.setParent(transition);
 
-        TransitionTarget returnValue = action.getParentTransitionTarget();
+        TransitionTarget returnValue = action.getParentEnterableState();
         
         Assert.assertEquals("on", returnValue.getId());
     }
@@ -58,7 +58,7 @@ public class ActionTest {
         transition.setParent(parallel);
         action.setParent(transition);
 
-        TransitionTarget returnValue = action.getParentTransitionTarget();
+        TransitionTarget returnValue = action.getParentEnterableState();
         
         Assert.assertEquals("on", returnValue.getId());
     }
@@ -78,27 +78,26 @@ public class ActionTest {
         transition.setParent(history);
         action.setParent(transition);
 
-        TransitionTarget returnValue = action.getParentTransitionTarget();
+        TransitionTarget returnValue = action.getParentEnterableState();
         
         Assert.assertEquals("off", returnValue.getId());
     }
     
     @Test
     public void testGetParentStateIsInitial() throws Exception {
-        Transition transition = new Transition();
+        SimpleTransition transition = new SimpleTransition();
         
         Initial initial = new Initial();
-        initial.setId("on");
 
         State state = new State();
         state.setId("off");
 
         initial.setParent(state);
 
-        transition.setParent(initial);
+        initial.setTransition(transition);
         action.setParent(transition);
 
-        TransitionTarget returnValue = action.getParentTransitionTarget();
+        TransitionTarget returnValue = action.getParentEnterableState();
 
         Assert.assertEquals("off", returnValue.getId());
     }

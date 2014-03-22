@@ -146,7 +146,7 @@ public class CustomActionTest {
         List<CustomAction> customActions = new ArrayList<CustomAction>();
         customActions.add(ca1);
         customActions.add(ca2);
-        // (2) Parse the document with a custom digester.
+        // (2) Parse the document
         SCXML scxml = SCXMLTestHelper.parse(custom01, customActions);
         // (3) Get a SCXMLExecutor
         exec = SCXMLTestHelper.getExecutor(scxml);
@@ -171,7 +171,7 @@ public class CustomActionTest {
                              "hello", Hello.class);
         List<CustomAction> customActions = new ArrayList<CustomAction>();
         customActions.add(ca);
-        // (2) Parse the document with a custom digester.
+        // (2) Parse the document
         SCXML scxml = SCXMLTestHelper.parse(external01, customActions);
         // (3) Get a SCXMLExecutor
         exec = SCXMLTestHelper.getExecutor(scxml);
@@ -194,7 +194,7 @@ public class CustomActionTest {
                              "send", Hello.class);
         List<CustomAction> customActions = new ArrayList<CustomAction>();
         customActions.add(ca);
-        // (2) Parse the document with a custom digester.
+        // (2) Parse the document
         SCXML scxml = SCXMLTestHelper.parse(override01, customActions);
         // (3) Get a SCXMLExecutor
         exec = SCXMLTestHelper.getExecutor(scxml);
@@ -218,7 +218,7 @@ public class CustomActionTest {
                              "hello", Hello.class);
         List<CustomAction> customActions = new ArrayList<CustomAction>();
         customActions.add(ca);
-        // (2) Parse the document with a custom digester.
+        // (2) Parse the document
         SCXML scxml = SCXMLTestHelper.parse(payload01, customActions);
         // (3) Get a SCXMLExecutor
         exec = SCXMLTestHelper.getExecutor(scxml);

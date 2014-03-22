@@ -35,10 +35,11 @@ import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.model.Action;
 import org.apache.commons.scxml2.model.CustomAction;
+import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.State;
-import org.apache.commons.scxml2.model.TransitionTarget;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -85,10 +86,9 @@ public class JSExampleTest {
         exec = SCXMLTestHelper.getExecutor(scxml, context, evaluator);
 
         Assert.assertNotNull(exec);
-        Set<TransitionTarget> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
-        Assert.assertEquals("end", ((State)currentStates.iterator().
-            next()).getId());
+        Assert.assertEquals("end", currentStates.iterator().next().getId());
     }
 
     // INNER CLASSES

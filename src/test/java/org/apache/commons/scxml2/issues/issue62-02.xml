@@ -30,6 +30,6 @@
         <transition event="s2.1.done" target="s3"/>
     </state>
 
-    <state id="s3" final="true"/>
+    <final id="s3"/>
 
 </scxml>

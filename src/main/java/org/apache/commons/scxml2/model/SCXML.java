@@ -17,8 +17,9 @@
 package org.apache.commons.scxml2.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -59,10 +60,10 @@ public class SCXML implements Serializable, Observable,
     /**
      * The initial Transition for the SCXML executor.
      */
-    private Transition initialTransition;
+    private SimpleTransition initialTransition;
 
     /**
-     * The initial transition target ID (used by XML Digester only).
+     * The initial transition target ID
      */
     private String initial;
 
@@ -96,7 +97,7 @@ public class SCXML implements Serializable, Observable,
     /**
      * The immediate child targets of this SCXML document root.
      */
-    private Map<String, TransitionTarget> children;
+    private List<EnterableState> children;
 
     /**
      * A global map of all States and Parallels associated with this
@@ -121,7 +122,7 @@ public class SCXML implements Serializable, Observable,
      * Constructor.
      */
     public SCXML() {
-        this.children = new LinkedHashMap<String, TransitionTarget>();
+        this.children = new ArrayList<EnterableState>();
         this.targets = new HashMap<String, TransitionTarget>();
     }
 
@@ -148,7 +149,7 @@ public class SCXML implements Serializable, Observable,
      *
      * @since 2.0
      */
-    public final Transition getInitialTransition() {
+    public final SimpleTransition getInitialTransition() {
         return initialTransition;
     }
 
@@ -160,7 +161,7 @@ public class SCXML implements Serializable, Observable,
      *
      * @since 2.0
      */
-    public final void setInitialTransition(final Transition initialTransition) {
+    public final void setInitialTransition(final SimpleTransition initialTransition) {
         this.initialTransition = initialTransition;
     }
 
@@ -185,37 +186,37 @@ public class SCXML implements Serializable, Observable,
     /**
      * Get the immediate child targets of the SCXML root.
      *
-     * @return Map Returns map of the child targets.
+     * @return List Returns list of the child targets.
      *
      * @since 0.7
      */
-    public final Map<String, TransitionTarget> getChildren() {
+    public final List<EnterableState> getChildren() {
         return children;
     }
 
     /**
-     * Get the first immediate child target of the SCXML root. Return null if there's no child.
+     * Get the first immediate child of the SCXML root. Return null if there's no child.
      *
-     * @return TransitionTarget Returns the first immediate child target of the SCXML root. Return null if there's no child.
+     * @return Returns the first immediate child of the SCXML root. Return null if there's no child.
      *
      * @since 2.0
      */
-    public final TransitionTarget getFirstChild() {
+    public final EnterableState getFirstChild() {
         if (!children.isEmpty()) {
-            return children.values().iterator().next();
+            return children.get(0);
         }
         return null;
     }
 
     /**
-     * Add an immediate child target of the SCXML root.
+     * Add an immediate child of the SCXML root.
      *
-     * @param tt The transition target to be added to the states Map.
+     * @param es The child to be added.
      *
      * @since 0.7
      */
-    public final void addChild(final TransitionTarget tt) {
-        children.put(tt.getId(), tt);
+    public final void addChild(final EnterableState es) {
+        children.add(es);
     }
 
     /**
@@ -308,7 +309,7 @@ public class SCXML implements Serializable, Observable,
      * Set the initial transition target.
      *
      * @param initial The initial transition target
-     * @see #setInitialTransition(Transition)
+     * @see #setInitialTransition(SimpleTransition)
      */
     public final void setInitial(final String initial) {
         this.initial = initial;

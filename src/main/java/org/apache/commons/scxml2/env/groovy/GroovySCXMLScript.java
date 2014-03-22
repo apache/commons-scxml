@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.scxml2.Builtin;
-import org.apache.commons.scxml2.model.TransitionTarget;
+import org.apache.commons.scxml2.model.EnterableState;
 
 import groovy.lang.Binding;
 import groovy.lang.MissingPropertyException;
@@ -62,8 +62,8 @@ public abstract class GroovySCXMLScript extends Script {
      * @return the ALL_STATES set
      */
     @SuppressWarnings("unchecked")
-    private Set<TransitionTarget> getAllStates() {
-        return (Set<TransitionTarget>) context.get("_ALL_STATES");
+    private Set<EnterableState> getAllStates() {
+        return (Set<EnterableState>) context.get("_ALL_STATES");
     }
 
     /**

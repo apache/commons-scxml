@@ -29,7 +29,7 @@ import javax.xml.xpath.XPathFunctionResolver;
 
 import org.apache.commons.scxml2.Builtin;
 import org.apache.commons.scxml2.Context;
-import org.apache.commons.scxml2.model.TransitionTarget;
+import org.apache.commons.scxml2.model.EnterableState;
 
 /**
  * A {@link XPathFunctionResolver} for the Commons SCXML environment.
@@ -113,8 +113,8 @@ public class FunctionResolver implements XPathFunctionResolver, Serializable {
         @Override
         @SuppressWarnings({ "unchecked", "boxing" })
         public Object evaluate(final List args) throws XPathFunctionException {
-            Set<TransitionTarget> allStates =
-                (Set<TransitionTarget>) xctx.get(STATES);
+            Set<EnterableState> allStates =
+                (Set<EnterableState>) xctx.get(STATES);
             return Builtin.isMember(allStates, (String) args.get(0));
         }
 
