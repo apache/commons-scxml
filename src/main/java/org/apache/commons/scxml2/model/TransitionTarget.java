@@ -118,5 +118,24 @@ public abstract class TransitionTarget implements Serializable, Observable {
         System.arraycopy(parent.ancestors, 0, ancestors, 0, parent.ancestors.length);
         ancestors[parent.ancestors.length] = parent;
     }
+
+    /**
+     * Enforce identity equality only
+     * @param other other object to compare with
+     * @return this == other
+     */
+    @Override
+    public final boolean equals(final Object other) {
+        return this == other;
+    }
+
+    /**
+     * Enforce returning identity based hascode
+     * @return {@link System#identityHashCode(Object) System.identityHashCode(this)}
+     */
+    @Override
+    public final int hashCode() {
+        return System.identityHashCode(this);
+    }
 }
 
