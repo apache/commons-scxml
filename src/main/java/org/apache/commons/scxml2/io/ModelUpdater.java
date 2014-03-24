@@ -453,8 +453,12 @@ final class ModelUpdater {
         Parallel parallel = (Parallel) lca;
         Set<TransitionTarget> regions = new HashSet<TransitionTarget>();
         for (TransitionTarget tt : tts) {
-            while (tt.getParent() != parallel) {
+            while (tt != null && tt.getParent() != parallel) {
                 tt = tt.getParent();
+            }
+            if (tt == null) {
+                // target outside lca
+                return false;
             }
             if (!regions.add(tt)) {
                 return false; // One per region
