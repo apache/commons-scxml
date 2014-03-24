@@ -92,7 +92,7 @@ public class History extends TransitionTarget {
     }
 
     @Override
-    public void setParent(final TransitionTarget parent) {
+    public void setParent(final EnterableState parent) {
         // enforce / validate only TransitionalState parents are allowed
         TransitionalState ts = (TransitionalState)parent;
         super.setParent(ts);

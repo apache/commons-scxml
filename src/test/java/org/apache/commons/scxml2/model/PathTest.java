@@ -37,20 +37,20 @@ public class PathTest {
     
     @Test
     public void testConstructorStates() {
-        TransitionTarget source = new State();
+        State source = new State();
         source.setId("1");
 
-        TransitionTarget target = new State();
+        State target = new State();
         target.setId("2");
         
         Path path = new Path(source, target);
         
         Assert.assertNull(path.getPathScope());
         Assert.assertEquals(1, path.getUpwardSegment().size());
-        Assert.assertEquals("1", ((State)path.getUpwardSegment().get(0)).getId());
+        Assert.assertEquals("1", path.getUpwardSegment().get(0).getId());
 
         Assert.assertEquals(1, path.getDownwardSegment().size());
-        Assert.assertEquals("2", ((State)path.getDownwardSegment().get(0)).getId());
+        Assert.assertEquals("2", path.getDownwardSegment().get(0).getId());
         
         Assert.assertFalse(path.isCrossRegion());
     }
@@ -58,12 +58,12 @@ public class PathTest {
     @Test
     public void testConstructorSourceCrossRegion() {
         Parallel region = new Parallel();
-        
-        TransitionTarget source = new State();
+
+        State source = new State();
         source.setId("1");
         source.setParent(region);
-        
-        TransitionTarget target = new State();
+
+        State target = new State();
         target.setId("2");
         
         Path path = new Path(source, target);
@@ -74,11 +74,11 @@ public class PathTest {
     @Test
     public void testConstructorTargetCrossRegion() {
         Parallel region = new Parallel();
-        
-        TransitionTarget source = new State();
+
+        State source = new State();
         source.setId("1");
-        
-        TransitionTarget target = new State();
+
+        State target = new State();
         target.setId("2");
         target.setParent(region);
         
@@ -89,10 +89,10 @@ public class PathTest {
     
     @Test
     public void testConstructorParentTarget() {
-        TransitionTarget source = new State();
+        State source = new State();
         source.setId("1");
 
-        TransitionTarget target = new State();
+        State target = new State();
         target.setId("2");
 
         source.setParent(target);
@@ -104,10 +104,10 @@ public class PathTest {
     
     @Test
     public void testConstructorParentSource() {
-        TransitionTarget source = new State();
+        State source = new State();
         source.setId("1");
 
-        TransitionTarget target = new State();
+        State target = new State();
         target.setId("2");
 
         target.setParent(source);
@@ -119,10 +119,10 @@ public class PathTest {
     
     @Test
     public void testConstructorParent() {
-        TransitionTarget source = new State();
+        State source = new State();
         source.setId("1");
 
-        TransitionTarget target = new State();
+        State target = new State();
         target.setId("2");
 
         State parent = new State();
@@ -138,10 +138,10 @@ public class PathTest {
     
     @Test
     public void testConstructorParentParallel() {
-        TransitionTarget source = new State();
+        State source = new State();
         source.setId("1");
 
-        TransitionTarget target = new State();
+        State target = new State();
         target.setId("2");
 
         Parallel parent = new Parallel();
@@ -157,10 +157,10 @@ public class PathTest {
     
     @Test
     public void testConstructorParentParallelParent() {
-        TransitionTarget source = new State();
+        State source = new State();
         source.setId("1");
 
-        TransitionTarget target = new State();
+        State target = new State();
         target.setId("2");
 
         Parallel parent = new Parallel();
@@ -188,10 +188,10 @@ public class PathTest {
     
     @Test
     public void testGetRegionsExitedNotRegion() {
-        TransitionTarget source = new State();
+        State source = new State();
         source.setId("1");
 
-        TransitionTarget target = new State();
+        State target = new State();
         target.setId("2");
         
         Path path = new Path(source, target);
@@ -201,10 +201,10 @@ public class PathTest {
     
     @Test
     public void testGetRegionsExitedParallel() {
-        TransitionTarget source = new Parallel();
+        Parallel source = new Parallel();
         source.setId("1");
 
-        TransitionTarget target = new Parallel();
+        Parallel target = new Parallel();
         target.setId("2");
         
         Path path = new Path(source, target);
@@ -215,12 +215,12 @@ public class PathTest {
     @Test
     public void testGetRegionsExited() {
         Parallel region = new Parallel();
-        
-        TransitionTarget source = new State();
+
+        State source = new State();
         source.setId("1");
         source.setParent(region);
-        
-        TransitionTarget target = new State();
+
+        State target = new State();
         target.setId("2");
         
         Path path = new Path(source, target);
@@ -238,10 +238,10 @@ public class PathTest {
     
     @Test
     public void testGetRegionsEnteredNotRegion() {
-        TransitionTarget source = new State();
+        State source = new State();
         source.setId("1");
 
-        TransitionTarget target = new State();
+        State target = new State();
         target.setId("2");
         
         Path path = new Path(source, target);
@@ -251,10 +251,10 @@ public class PathTest {
     
     @Test
     public void testGetRegionsEnteredParallel() {
-        TransitionTarget source = new Parallel();
+        Parallel source = new Parallel();
         source.setId("1");
 
-        TransitionTarget target = new Parallel();
+        Parallel target = new Parallel();
         target.setId("2");
         
         Path path = new Path(source, target);
@@ -265,11 +265,11 @@ public class PathTest {
     @Test
     public void testGetRegionsEntered() {
         Parallel region = new Parallel();
-        
-        TransitionTarget source = new State();
+
+        State source = new State();
         source.setId("1");
-        
-        TransitionTarget target = new State();
+
+        State target = new State();
         target.setId("2");
         target.setParent(region);
         

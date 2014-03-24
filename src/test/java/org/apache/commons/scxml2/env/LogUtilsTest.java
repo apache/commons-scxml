@@ -18,7 +18,6 @@ package org.apache.commons.scxml2.env;
 
 import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.Transition;
-import org.apache.commons.scxml2.model.TransitionTarget;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -26,7 +25,7 @@ public class LogUtilsTest {
 
     @Test
     public void testGetTTPathParentNull() {
-        TransitionTarget target = new State();
+        State target = new State();
         target.setId("ID");
         
         Assert.assertEquals("/ID", LogUtils.getTTPath(target));
@@ -34,13 +33,13 @@ public class LogUtilsTest {
     
     @Test
     public void testGetTTPathParent() {
-        TransitionTarget target = new State();
+        State target = new State();
         target.setId("ID");
 
-        TransitionTarget parent1 = new State();
+        State parent1 = new State();
         parent1.setId("parent1");
 
-        TransitionTarget parent2 = new State();
+        State parent2 = new State();
         parent2.setId("parent2");
 
         parent1.setParent(parent2);
@@ -51,10 +50,10 @@ public class LogUtilsTest {
     
     @Test
     public void testTransToString() {
-        TransitionTarget targetTo = new State();
+        State targetTo = new State();
         targetTo.setId("TO");
 
-        TransitionTarget targetFrom = new State();
+        State targetFrom = new State();
         targetFrom.setId("FROM");
         
         Transition transition = new Transition();

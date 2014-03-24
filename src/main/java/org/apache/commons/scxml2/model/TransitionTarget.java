@@ -25,7 +25,7 @@ import java.io.Serializable;
  */
 public abstract class TransitionTarget implements Serializable, Observable {
 
-    private static final TransitionTarget[] ZERO_ANCESTORS = new TransitionTarget[0];
+    private static final EnterableState[] ZERO_ANCESTORS = new EnterableState[0];
     /**
      * Identifier for this transition target. Other parts of the SCXML
      * document may refer to this &lt;state&gt; using this ID.
@@ -36,9 +36,9 @@ public abstract class TransitionTarget implements Serializable, Observable {
      * The parent of this transition target (may be null, if the parent
      * is the SCXML document root).
      */
-    private TransitionTarget parent;
+    private EnterableState parent;
 
-    private TransitionTarget[] ancestors = ZERO_ANCESTORS;
+    private EnterableState[] ancestors = ZERO_ANCESTORS;
 
     /**
      * Constructor.
@@ -78,7 +78,7 @@ public abstract class TransitionTarget implements Serializable, Observable {
      * @param level the level of the ancestor to return, zero being top
      * @return the ancestor at specified level
      */
-    public final TransitionTarget getAncestor(int level) {
+    public final EnterableState getAncestor(int level) {
         return ancestors[level];
     }
 
@@ -88,16 +88,20 @@ public abstract class TransitionTarget implements Serializable, Observable {
      * @return Returns the parent state
      * (null if parent is &lt;scxml&gt; element)
      */
-    public TransitionTarget getParent() {
+    public EnterableState getParent() {
         return parent;
     }
 
     /**
-     * Set the parent TransitionTarget.
+     * Set the parent EnterableState.
+     * <p>
+     * The parent of a TransitionTarget must be of type EnterableState as a History (as only non-EnterableState)
+     * TransitionTarget cannot have children.
+     * </p>
      *
      * @param parent The parent state to set
      */
-    public void setParent(final TransitionTarget parent) {
+    public void setParent(final EnterableState parent) {
         if (parent == null) {
             throw new IllegalArgumentException("Parent parameter cannot be null");
         }
@@ -114,9 +118,10 @@ public abstract class TransitionTarget implements Serializable, Observable {
      * Update TransitionTarget descendants their ancestors
      */
     protected void updateDescendantsAncestors() {
-        ancestors = new TransitionTarget[parent.ancestors.length+1];
-        System.arraycopy(parent.ancestors, 0, ancestors, 0, parent.ancestors.length);
-        ancestors[parent.ancestors.length] = parent;
+        TransitionTarget ttParent = parent;
+        ancestors = new EnterableState[ttParent.ancestors.length+1];
+        System.arraycopy(ttParent.ancestors, 0, ancestors, 0, ttParent.ancestors.length);
+        ancestors[ttParent.ancestors.length] = parent;
     }
 
     /**

@@ -48,25 +48,25 @@ public class SCXMLHelperTest {
 
     @Test
     public void testIsDescendantNullParent() {
-        TransitionTarget state = new State();
-        TransitionTarget context = new State();
+        State state = new State();
+        State context = new State();
         
         Assert.assertFalse(SCXMLHelper.isDescendant(state, context));
     }
     
     @Test
     public void testIsDescendantNotEqual() {
-        TransitionTarget state = new State();
+        State state = new State();
         state.setParent(new State());
-        TransitionTarget context = new State();
+        State context = new State();
         
         Assert.assertFalse(SCXMLHelper.isDescendant(state, context));
     }
     
     @Test
     public void testIsDescendantEqual() {
-        TransitionTarget state = new State();
-        TransitionTarget context = new State();
+        State state = new State();
+        State context = new State();
         state.setParent(context);
         
         Assert.assertTrue(SCXMLHelper.isDescendant(state, context));
@@ -74,9 +74,9 @@ public class SCXMLHelperTest {
     
     @Test
     public void testIsDescendantParentEqual() {
-        TransitionTarget state = new State();
-        TransitionTarget context = new State();
-        TransitionTarget parent = new State();
+        State state = new State();
+        State context = new State();
+        State parent = new State();
 
         parent.setParent(context);
         state.setParent(parent);
@@ -207,7 +207,7 @@ public class SCXMLHelperTest {
     
     @Test
     public void testGetLCASameTarget() {
-        TransitionTarget target = new State();
+        State target = new State();
         target.setId("1");
         
         TransitionTarget returnValue = SCXMLHelper.getLCA(target, target);
@@ -217,10 +217,10 @@ public class SCXMLHelperTest {
 
     @Test
     public void testGetLCAIsDescendant() {
-        TransitionTarget target = new State();
+        State target = new State();
         target.setId("1");
 
-        TransitionTarget parent = new State();
+        State parent = new State();
         parent.setId("2");
 
         target.setParent(parent);
@@ -232,10 +232,10 @@ public class SCXMLHelperTest {
     
     @Test
     public void testGetLCAIsDescendantReverse() {
-        TransitionTarget target = new State();
+        State target = new State();
         target.setId("1");
 
-        TransitionTarget parent = new State();
+        State parent = new State();
         parent.setId("2");
 
         parent.setParent(target); // reversed
@@ -247,10 +247,10 @@ public class SCXMLHelperTest {
 
     @Test
     public void testGetLCANull() {
-        TransitionTarget target = new State();
+        State target = new State();
         target.setId("1");
 
-        TransitionTarget notParent = new State();
+        State notParent = new State();
         notParent.setId("2");
 
         TransitionTarget returnValue = SCXMLHelper.getLCA(target, notParent);
@@ -260,13 +260,13 @@ public class SCXMLHelperTest {
 
     @Test
     public void testGetLCADistantAncestor() {
-        TransitionTarget target1 = new State();
+        State target1 = new State();
         target1.setId("1");
 
-        TransitionTarget target2 = new State();
+        State target2 = new State();
         target2.setId("2");
 
-        TransitionTarget parent = new State();
+        State parent = new State();
         parent.setId("3");
 
         target1.setParent(parent);

@@ -101,27 +101,4 @@ public abstract class EnterableState extends TransitionTarget implements Documen
         this.onExit = onExit;
         this.onExit.setParent(this);
     }
-
-    /**
-     * Set the parent TransitionState.
-     *
-     * @param parent The parent state to set
-     */
-    @Override
-    public void setParent(final TransitionTarget parent) {
-        // enforce / validate only EnterableState parents are allowed
-        EnterableState es = (EnterableState)parent;
-        super.setParent(es);
-    }
-
-    /**
-     * Get the parent EnterableState.
-     *
-     * @return Returns the parent state
-     * (null if parent is &lt;scxml&gt; element)
-     */
-    @Override
-    public EnterableState getParent() {
-        return (EnterableState)super.getParent();
-    }
 }
