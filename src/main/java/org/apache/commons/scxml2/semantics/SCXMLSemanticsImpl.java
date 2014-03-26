@@ -248,12 +248,14 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                                          final ErrorReporter errRep, final SCInstance scInstance) throws ModelException {
         NotificationRegistry nr = scInstance.getNotificationRegistry();
         Collection<TriggerEvent> internalEvents = step.getAfterStatus().getEvents();
-        for (Transition t : step.getTransitList()) {
-            executeContent(t, evtDispatcher, errRep, scInstance, internalEvents);
-            List<TransitionTarget> rtargets = t.getRuntimeTargets();
-            for (TransitionTarget tt : rtargets) {
-                nr.fireOnTransition(t, t.getParent(), tt, t);
-                nr.fireOnTransition(stateMachine, t.getParent(), tt, t);
+        for (SimpleTransition st : step.getTransitList()) {
+            executeContent(st, evtDispatcher, errRep, scInstance, internalEvents);
+            if (st instanceof Transition) {
+                Transition t = (Transition)st;
+                for (TransitionTarget tt : st.getRuntimeTargets()) {
+                    nr.fireOnTransition(st, st.getParent(), tt, t);
+                    nr.fireOnTransition(stateMachine, t.getParent(), tt, t);
+                }
             }
         }
     }
@@ -445,9 +447,16 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
             }
         }
         //remove list (filtered-out list)
-        List<Transition> removeList = new LinkedList<Transition>();
+        List<SimpleTransition> removeList = new LinkedList<SimpleTransition>();
         //iterate over non-filtered transition set
-        for (Transition t : step.getTransitList()) {
+        for (SimpleTransition st : step.getTransitList()) {
+            Transition t;
+            if (st instanceof SimpleTransition) {
+                t = (Transition)st;
+            }
+            else {
+                continue;
+            }
             // event check
             String event = t.getEvent();
             if (!eventMatch(event, allEvents)) {
@@ -555,10 +564,10 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
      * @return Set The target set
      */
     public Set<TransitionTarget> seedTargetSet(final Set<EnterableState> residual,
-            final List<Transition> transitList, final ErrorReporter errRep) {
+            final List<SimpleTransition> transitList, final ErrorReporter errRep) {
         Set<TransitionTarget> seedSet = new HashSet<TransitionTarget>();
         Set<EnterableState> regions = new HashSet<EnterableState>();
-        for (Transition t : transitList) {
+        for (SimpleTransition t : transitList) {
             //iterate over transitions and add target states
             if (t.getTargets().size() > 0) {
                 seedSet.addAll(t.getTargets());
@@ -693,11 +702,13 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
             final ErrorReporter errorReporter, final SCInstance scInstance)
     throws ModelException {
         Set<EnterableState> currentStates = step.getBeforeStatus().getStates();
-        List<Transition> transitions = step.getTransitList();
+        List<SimpleTransition> transitions = step.getTransitList();
         // DetermineExitedStates (currentStates, transitList) -> exitedStates
         Set<TransitionTarget> exitedStates = new HashSet<TransitionTarget>();
-        for (Transition t : transitions) {
-            exitedStates.addAll(SCXMLHelper.getStatesExited(t, currentStates));
+        for (SimpleTransition st : transitions) {
+            if (st instanceof Transition) {
+                exitedStates.addAll(SCXMLHelper.getStatesExited((Transition)st, currentStates));
+            }
         }
         // compute residual states - these are preserved from the previous step
         Set<EnterableState> residual = new HashSet<EnterableState>(currentStates);
@@ -710,7 +721,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
         // BuildOnEntryList (targetSet, seedSet) -> entryList
         Set<EnterableState> entered = SCXMLHelper.getAncestorClosure(targetSet, seedSet);
         seedSet.clear();
-        for (Transition t : transitions) {
+        for (SimpleTransition t : transitions) {
             List<Path> paths = t.getPaths();
             for (Path p : paths) {
                 for (TransitionTarget tt : p.getDownwardSegment()) {

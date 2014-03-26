@@ -18,10 +18,12 @@ package org.apache.commons.scxml2;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.scxml2.model.EnterableState;
-import org.apache.commons.scxml2.model.Transition;
+import org.apache.commons.scxml2.model.SimpleTransition;
 
 /**
  * A logical unit of progression in the execution of a SCXML model.
@@ -58,10 +60,12 @@ public class Step {
      * The list of TransitionTargets that were entered during this step by default
      */
     private List<EnterableState> defaultEntryList;
+
+    private Map<String, SimpleTransition> defaultHistoryTransitionEntryMap;
     /**
      * The list of Transitions taken during this step.
      */
-    private List<Transition> transitList;
+    private List<SimpleTransition> transitList;
 
     /**
      * Constructor.
@@ -90,7 +94,8 @@ public class Step {
         this.exitList = new ArrayList<EnterableState>();
         this.entryList = new ArrayList<EnterableState>();
         this.defaultEntryList = new ArrayList<EnterableState>();
-        this.transitList = new ArrayList<Transition>();
+        this.defaultHistoryTransitionEntryMap = new HashMap<String, SimpleTransition>();
+        this.transitList = new ArrayList<SimpleTransition>();
     }
 
     /**
@@ -136,6 +141,13 @@ public class Step {
     }
 
     /**
+     * @return Returns the defaultHistoryTransitionEntryMap.
+     */
+    public Map<String, SimpleTransition> getDefaultHistoryTransitionEntryMap() {
+        return defaultHistoryTransitionEntryMap;
+    }
+
+    /**
      * @return Returns the exitList.
      */
     public List<EnterableState> getExitList() {
@@ -152,7 +164,7 @@ public class Step {
     /**
      * @return Returns the transitList.
      */
-    public List<Transition> getTransitList() {
+    public List<SimpleTransition> getTransitList() {
         return transitList;
     }
 

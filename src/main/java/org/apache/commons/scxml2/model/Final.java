@@ -36,5 +36,20 @@ public class Final extends EnterableState {
         super();
     }
 
+    /**
+     * @return Returns the State parent
+     */
+    @Override
+    public State getParent() {
+        return (State)super.getParent();
+    }
+
+    /**
+     * Set the parent State.
+     * @param parent The parent state to set
+     */
+    public final void setParent(State parent) {
+        super.setParent(parent);
+    }
 }
 

@@ -36,5 +36,15 @@ public class OnExit extends Executable {
     public OnExit() {
         super();
     }
+
+    /**
+     * Set the EnterableState parent.
+     *
+     * @param parent The parent to set.
+     */
+    @Override
+    public final void setParent(final EnterableState parent) {
+        super.setParent(parent);
+    }
 }
 

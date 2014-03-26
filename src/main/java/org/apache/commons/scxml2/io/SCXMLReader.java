@@ -696,8 +696,11 @@ public final class SCXMLReader {
 
         if (parent == null) {
             scxml.addChild(state);
-        } else {
-            parent.addChild(state);
+        } else if (parent instanceof State) {
+            ((State)parent).addChild(state);
+        }
+        else {
+            ((Parallel)parent).addChild(state);
         }
         scxml.addTarget(state);
         if (configuration.parent != null) {
@@ -787,8 +790,11 @@ public final class SCXMLReader {
 
         if (parent == null) {
             scxml.addChild(parallel);
-        } else {
-            parent.addChild(parallel);
+        } else if (parent instanceof State) {
+            ((State)parent).addChild(parallel);
+        }
+        else {
+            ((Parallel)parent).addChild(parallel);
         }
         scxml.addTarget(parallel);
         if (configuration.parent != null) {

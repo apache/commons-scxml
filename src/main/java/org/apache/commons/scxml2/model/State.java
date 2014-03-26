@@ -120,5 +120,14 @@ public class State extends TransitionalState {
     public final boolean isRegion() {
         return getParent() instanceof  Parallel;
     }
+
+    /**
+     * Adds an EnterableState (State, Final or Parallel) child
+     * @param es the child to add
+     */
+    @Override
+    public final void addChild(final EnterableState es) {
+        super.addChild(es);
+    }
 }
 

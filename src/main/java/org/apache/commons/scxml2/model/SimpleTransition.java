@@ -17,6 +17,7 @@
 package org.apache.commons.scxml2.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +30,8 @@ import java.util.Map;
 public class SimpleTransition extends Executable
         implements NamespacePrefixesHolder, Observable {
 
+    private static final State SCXML_TRANSITION_DOMAIN = new State(){};
+
     /**
      * Serial version UID.
      */
@@ -39,6 +42,24 @@ public class SimpleTransition extends Executable
      * @see {@link #isTypeInternal()}
      */
     private TransitionType type;
+
+    /**
+     * The transition parent itself, or a compound state parent, or null
+     * <p>
+     * If the transition has no targets, its TransitionalState (State or Parallel) parent represents its own transition
+     * domain.
+     * </p>
+     * <p>
+     * If the transition has targets then the transition domain is the compound State parent such that:
+     * <ul>
+     *   <li>all states that are exited or entered as a result of taking this transition are descendants of it</li>
+     *   <li>no descendant of it has this property</li>
+     * </ul>
+     * If there is no such compound State parent, the transition domain effectively becomes the SCXML document itself,
+     * which is indicated by a null (empty) transitionDomain.
+     * </p>
+     */
+    private TransitionalState transitionDomain;
 
     /**
      * Derived effective Transition type.
@@ -81,6 +102,32 @@ public class SimpleTransition extends Executable
         this.paths = new ArrayList<Path>();
     }
 
+    private boolean isCompoundStateParent(TransitionalState ts) {
+        return ts != null && ts instanceof State && ((State)ts).isComposite();
+    }
+
+    /**
+     * Get the TransitionalState (State or Parallel) parent.
+     *
+     * @return Returns the parent.
+     */
+    @Override
+    public TransitionalState getParent() {
+        return (TransitionalState)super.getParent();
+    }
+
+    /**
+     * Set the TransitionalState (State or Parallel) parent
+     * <p>
+     * For transitions of Initial or History elements their TransitionalState parent must be set.
+     * </p>
+     *
+     * @param parent The parent to set.
+     */
+    public final void setParent(final TransitionalState parent) {
+        super.setParent(parent);
+    }
+
     /**
      * @return true if Transition type == internal or false if type == external (default)
      */
@@ -114,29 +161,85 @@ public class SimpleTransition extends Executable
      */
     public final boolean isTypeInternal() {
         if (typeInternal == null) {
+
             // derive typeInternal
+            typeInternal = TransitionType.internal == type && isCompoundStateParent(getParent());
 
-            boolean internal = TransitionType.internal == type;
-
-            if (internal) {
-                internal = (getParent() != null && getParent() instanceof State && ((State)getParent()).isComposite());
-            }
-
-            if (internal && targets.size() > 0) {
+            if (typeInternal && targets.size() > 0) {
                 for (Path p : getPaths()) {
                     // TODO: testing the following actual works and always is correct
                     if (p.getPathScope() == null || p.getPathScope() == getParent()) {
                         continue;
                     }
                     // not a proper descendant
-                    internal = false;
+                    typeInternal = false;
                     break;
                 }
             }
-
-            typeInternal = internal;
         }
         return typeInternal;
+    }
+
+    /**
+     * Returns the transition domain of this transition
+     * <p>
+     * The returned transition domain is either the transition parent itself, or a compound state parent, or null
+     * </p>
+     * <p>
+     * If the transition has no targets, its TransitionalState (State or Parallel) parent represents its own transition
+     * domain.
+     * </p>
+     * <p>
+     * If the transition has targets then the transition domain is the compound State parent such that:
+     * <ul>
+     *   <li>all states that are exited or entered as a result of taking this transition are descendants of it</li>
+     *   <li>no descendant of it has this property</li>
+     * </ul>
+     * If there is no such compound State parent, the transition domain effectively becomes the SCXML document itself,
+     * which is indicated by a null (empty) transitionDomain.
+     * </p>
+     *
+     * @return The transition domain of this transition
+     */
+    public TransitionalState getTransitionDomain() {
+        if (transitionDomain == null) {
+
+            if (getParent() == null) {
+                transitionDomain = SCXML_TRANSITION_DOMAIN;
+            }
+            else {
+                if (targets.size() == 0 || isTypeInternal()) {
+                    transitionDomain = getParent();
+                }
+                else {
+                    // findLCCA
+                    for (int i = getParent().getNumberOfAncestors()-1; i > -1; i--) {
+                        if (isCompoundStateParent(getParent().getAncestor(i))) {
+                            boolean allDescendants = true;
+                            for (TransitionTarget tt : targets) {
+                                if (i > tt.getNumberOfAncestors()) {
+                                    i = tt.getNumberOfAncestors();
+                                    allDescendants = false;
+                                    break;
+                                }
+                                if (tt.getAncestor(i) != getParent().getAncestor(i)) {
+                                    allDescendants = false;
+                                    break;
+                                }
+                            }
+                            if (allDescendants) {
+                                transitionDomain = getParent().getAncestor(i);
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (transitionDomain == null) {
+                    transitionDomain = SCXML_TRANSITION_DOMAIN;
+                }
+            }
+        }
+        return transitionDomain == SCXML_TRANSITION_DOMAIN ? null : transitionDomain;
     }
 
     /**

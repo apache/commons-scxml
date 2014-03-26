@@ -78,7 +78,7 @@ public abstract class TransitionTarget implements Serializable, Observable {
      * @param level the level of the ancestor to return, zero being top
      * @return the ancestor at specified level
      */
-    public final EnterableState getAncestor(int level) {
+    public EnterableState getAncestor(int level) {
         return ancestors[level];
     }
 
@@ -101,7 +101,7 @@ public abstract class TransitionTarget implements Serializable, Observable {
      *
      * @param parent The parent state to set
      */
-    public void setParent(final EnterableState parent) {
+    protected void setParent(final EnterableState parent) {
         if (parent == null) {
             throw new IllegalArgumentException("Parent parameter cannot be null");
         }

@@ -38,10 +38,11 @@ public class Parallel extends TransitionalState {
     public Parallel() {
     }
 
-    @Override
-    public void addChild(final EnterableState es) {
-        // enforce/validate only TransitionalState children are allowed
-        TransitionalState ts = (TransitionalState)es;
+    /**
+     * Add a TransitionalState (State or Parallel) child
+     * @param ts the child to add
+     */
+    public final void addChild(final TransitionalState ts) {
         super.addChild(ts);
     }
 }

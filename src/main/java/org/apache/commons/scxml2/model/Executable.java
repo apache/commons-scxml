@@ -36,7 +36,7 @@ public abstract class Executable implements Serializable {
     /**
      * The parent container, for traceability.
      */
-    private TransitionTarget parent;
+    private EnterableState parent;
 
     /**
      * Constructor.
@@ -68,20 +68,20 @@ public abstract class Executable implements Serializable {
     }
 
     /**
-     * Get the TransitionTarget parent.
+     * Get the EnterableState parent.
      *
      * @return Returns the parent.
      */
-    public final TransitionTarget getParent() {
+    public EnterableState getParent() {
         return parent;
     }
 
     /**
-     * Set the TransitionTarget parent.
+     * Set the EnterableState parent.
      *
      * @param parent The parent to set.
      */
-    public final void setParent(final TransitionTarget parent) {
+    protected void setParent(final EnterableState parent) {
         this.parent = parent;
     }
 }

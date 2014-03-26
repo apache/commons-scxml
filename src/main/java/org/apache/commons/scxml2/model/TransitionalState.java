@@ -77,6 +77,35 @@ public abstract class TransitionalState extends EnterableState {
     }
 
     /**
+     * Get the TransitionalState (State or Parallel) parent.
+     *
+     * @return Returns the parent.
+     */
+    @Override
+    public TransitionalState getParent() {
+        return (TransitionalState)super.getParent();
+    }
+
+    /**
+     * Set the TransitionalState parent
+     *
+     * @param parent The parent to set.
+     */
+    public final void setParent(final TransitionalState parent) {
+        super.setParent(parent);
+    }
+
+    /**
+     * Get the ancestor of this TransitionalState at specified level
+     * @param level the level of the ancestor to return, zero being top
+     * @return the ancestor at specified level
+     */
+    @Override
+    public TransitionalState getAncestor(int level) {
+        return (TransitionalState)super.getAncestor(level);
+    }
+
+    /**
      * Get the list of all outgoing transitions from this state, that
      * will be candidates for being fired on the given event.
      *
@@ -208,7 +237,7 @@ public abstract class TransitionalState extends EnterableState {
      *
      * @since 0.7
      */
-    public void addChild(final EnterableState es) {
+    protected void addChild(final EnterableState es) {
         children.add(es);
         es.setParent(this);
     }

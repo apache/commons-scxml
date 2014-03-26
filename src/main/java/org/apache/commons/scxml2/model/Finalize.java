@@ -35,5 +35,21 @@ public class Finalize extends Executable {
         super();
     }
 
+    /**
+     * @return Returns the TransitionalState parent
+     */
+    @Override
+    public TransitionalState getParent() {
+        return (TransitionalState)super.getParent();
+    }
+
+    /**
+     * Set the TransitionalState parent.
+     *
+     * @param parent The parent to set.
+     */
+    public final void setParent(final TransitionalState parent) {
+        super.setParent(parent);
+    }
 }
 

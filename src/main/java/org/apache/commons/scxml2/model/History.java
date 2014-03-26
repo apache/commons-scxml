@@ -62,8 +62,11 @@ public class History extends TransitionTarget {
      * @param transition The transition to set.
      */
     public final void setTransition(final SimpleTransition transition) {
+        if (getParent() == null) {
+            throw new IllegalStateException("History transition cannot be set before setting its parent");
+        }
         this.transition = transition;
-        this.transition.setParent(this);
+        this.transition.setParent(getParent());
     }
 
     /**
@@ -86,16 +89,21 @@ public class History extends TransitionTarget {
         //shallow is by default
     }
 
+    /**
+     * @return Returns the TransitionalState parent
+     */
     @Override
     public TransitionalState getParent() {
         return (TransitionalState)super.getParent();
     }
 
-    @Override
-    public void setParent(final EnterableState parent) {
-        // enforce / validate only TransitionalState parents are allowed
-        TransitionalState ts = (TransitionalState)parent;
-        super.setParent(ts);
+    /**
+     * Set the TransitionalState parent.
+     *
+     * @param parent The parent to set.
+     */
+    public final void setParent(final TransitionalState parent) {
+        super.setParent(parent);
     }
 }
 
