@@ -41,14 +41,13 @@ public abstract class TransitionalState extends EnterableState {
     private List<History> history;
 
     /**
-     * The Invoke child, which defines an external process that should
+     * The Invoke children, each which defines an external process that should
      * be invoked, immediately after the onentry executable content,
      * and the transitions become candidates after the invoked
      * process has completed its execution.
-     * May occur 0 or 1 times. Incompatible with the state or parallel
-     * property.
+     * May occur 0 or more times.
      */
-    private Invoke invoke;
+    private List<Invoke> invokes;
 
     /**
      * The set of EnterableState children contained in this TransitionalState
@@ -60,6 +59,7 @@ public abstract class TransitionalState extends EnterableState {
         transitions = new ArrayList<Transition>();
         history = new ArrayList<History>();
         children = new ArrayList<EnterableState>();
+        invokes = new ArrayList<Invoke>();
     }
 
     /**
@@ -201,12 +201,12 @@ public abstract class TransitionalState extends EnterableState {
     }
 
     /**
-     * Get the Invoke child (may be null).
+     * Get the Invoke children (may be empty).
      *
      * @return Invoke Returns the invoke.
      */
-    public final Invoke getInvoke() {
-        return invoke;
+    public final List<Invoke> getInvokes() {
+        return invokes;
     }
 
     /**
@@ -215,14 +215,14 @@ public abstract class TransitionalState extends EnterableState {
      * @param invoke
      *            The invoke to set.
      */
-    public final void setInvoke(final Invoke invoke) {
-        this.invoke = invoke;
+    public final void addInvoke(final Invoke invoke) {
+        this.invokes.add(invoke);
     }
 
     /**
      * Get the set of child transition targets (may be empty).
      *
-     * @return Set Returns the children.
+     * @return Returns the children.
      *
      * @since 0.7
      */

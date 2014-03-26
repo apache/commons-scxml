@@ -22,12 +22,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import org.apache.commons.scxml2.invoke.Invoker;
 import org.apache.commons.scxml2.invoke.InvokerException;
 import org.apache.commons.scxml2.model.Datamodel;
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.History;
+import org.apache.commons.scxml2.model.Invoke;
 import org.apache.commons.scxml2.model.TransitionTarget;
 import org.apache.commons.scxml2.model.TransitionalState;
 
@@ -72,11 +74,12 @@ public class SCInstance implements Serializable {
      */
     private final Map<String, Class<? extends Invoker>> invokerClasses;
 
+    private final Map<Invoke, String> invokeIds;
     /**
      * The <code>Map</code> of active <code>Invoker</code>s, keyed by
-     * (leaf) <code>State</code>s.
+     * their <code>invokeId</code>.
      */
-    private final Map<TransitionalState, Invoker> invokers;
+    private final Map<String, Invoker> invokers;
 
     /**
      * The evaluator for expressions.
@@ -108,7 +111,8 @@ public class SCInstance implements Serializable {
         this.contexts = Collections.synchronizedMap(new HashMap<EnterableState, Context>());
         this.histories = Collections.synchronizedMap(new HashMap<History, Set<EnterableState>>());
         this.invokerClasses = Collections.synchronizedMap(new HashMap<String, Class<? extends Invoker>>());
-        this.invokers = Collections.synchronizedMap(new HashMap<TransitionalState, Invoker>());
+        this.invokeIds = Collections.synchronizedMap(new HashMap<Invoke, String>());
+        this.invokers = Collections.synchronizedMap(new HashMap<String, Invoker>());
         this.completions = Collections.synchronizedMap(new HashMap<EnterableState, Boolean>());
         this.evaluator = null;
         this.rootContext = null;
@@ -348,36 +352,44 @@ public class SCInstance implements Serializable {
     }
 
     /**
-    * Get the {@link Invoker} for this {@link TransitionalState}.
+    * Get the {@link Invoker} for this {@link Invoke}.
      * May return <code>null</code>. A non-null {@link Invoker} will be
-     * returned if and only if the {@link TransitionalState} is
-     * currently active and contains an &lt;invoke&gt; child.
+     * returned if and only if the {@link Invoke} parent TransitionalState is
+     * currently active and contains the &lt;invoke&gt; child.
      *
-     * @param state The <code>TransitionalState</code>.
+     * @param invoke The <code>Invoke</code>.
      * @return The Invoker.
      */
-    public Invoker getInvoker(final TransitionalState state) {
-        return invokers.get(state);
+    public Invoker getInvoker(final Invoke invoke) {
+        return invokers.get(invokeIds.get(invoke));
     }
 
     /**
-     * Set the {@link Invoker} for this {@link TransitionalState}.
+     * Set the {@link Invoker} for a {@link Invoke} and returns the unique invokerId for the Invoker
      *
-     * @param state The TransitionalState.
+     * @param invoke The Invoke.
      * @param invoker The Invoker.
+     * @return The invokeId
      */
-    public void setInvoker(final TransitionalState state,
-            final Invoker invoker) {
-        invokers.put(state, invoker);
+    public String setInvoker(final Invoke invoke, final Invoker invoker) {
+        String invokeId = invoke.getId();
+        if (SCXMLHelper.isStringEmpty(invokeId)) {
+            invokeId = UUID.randomUUID().toString();
+        }
+        invokeIds.put(invoke, invokeId);
+        invokers.put(invokeId, invoker);
+        return invokeId;
+    }
+
+    public void removeInvoker(final Invoke invoke) {
+        invokers.remove(invokeIds.remove(invoke));
     }
 
     /**
-     * Return the Map of {@link Invoker}s currently "active".
-     *
-     * @return The map of invokers.
+     * @return Returns the map of current active Invokes and their invokeId
      */
-    public Map<TransitionalState, Invoker> getInvokers() {
-        return invokers;
+    public Map<Invoke, String> getInvokeIds() {
+        return invokeIds;
     }
 
     /**

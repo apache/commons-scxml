@@ -984,7 +984,9 @@ public final class SCXMLReader {
                     configuration.parent.addTarget(child);
                     readInExternalTargets(configuration.parent, child);
                 }
-                s.setInvoke(include.getInvoke());
+                for (Invoke invoke : include.getInvokes()) {
+                    s.addInvoke(invoke);
+                }
                 if (include.getInitial() != null) {
                     s.setInitial(include.getInitial());
                 }
@@ -1111,6 +1113,7 @@ public final class SCXMLReader {
             throws XMLStreamException, ModelException {
 
         Invoke invoke = new Invoke();
+        invoke.setId(readAV(reader, ATTR_ID));
         invoke.setSrc(readAV(reader, ATTR_SRC));
         invoke.setSrcexpr(readAV(reader, ATTR_SRCEXPR));
         invoke.setType(readAV(reader, ATTR_TYPE));
@@ -1150,7 +1153,7 @@ public final class SCXMLReader {
             }
         }
 
-        parent.setInvoke(invoke);
+        parent.addInvoke(invoke);
     }
 
     /**

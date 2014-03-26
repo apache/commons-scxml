@@ -218,23 +218,26 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                            final ErrorReporter errRep, final SCInstance scInstance) throws ModelException {
         NotificationRegistry nr = scInstance.getNotificationRegistry();
         Collection<TriggerEvent> internalEvents = step.getAfterStatus().getEvents();
-        Map<TransitionalState, Invoker> invokers = scInstance.getInvokers();
         // ExecutePhaseActions / OnExit
         for (EnterableState es : step.getExitList()) {
             OnExit oe = es.getOnExit();
             executeContent(oe, evtDispatcher, errRep, scInstance, internalEvents);
-            // check if invoke is active in this state
-            if (invokers.containsKey(es)) {
-                Invoker toCancel = invokers.get(es);
-                try {
-                    toCancel.cancel();
-                } catch (InvokerException ie) {
-                    TriggerEvent te = new TriggerEvent(es.getId()
-                            + ".invoke.cancel.failed", TriggerEvent.ERROR_EVENT);
-                    internalEvents.add(te);
+            if (es instanceof TransitionalState) {
+                // check if invokers are active in this state
+                for (Invoke inv : ((TransitionalState)es).getInvokes()) {
+                    Invoker toCancel = scInstance.getInvoker(inv);
+                    if (toCancel != null) {
+                        try {
+                            toCancel.cancel();
+                        } catch (InvokerException ie) {
+                            TriggerEvent te = new TriggerEvent(es.getId()
+                                    + ".invoke.cancel.failed", TriggerEvent.ERROR_EVENT);
+                            internalEvents.add(te);
+                        }
+                        // done here, don't wait for cancel response
+                        scInstance.removeInvoker(inv);
+                    }
                 }
-                // done here, don't wait for cancel response
-                invokers.remove(es);
             }
             nr.fireOnExit(es, es);
             nr.fireOnExit(stateMachine, es);
@@ -437,10 +440,9 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
         allEvents.addAll(step.getBeforeStatus().getEvents());
         allEvents.addAll(step.getExternalEvents());
         // Finalize invokes, if applicable
-        for (TransitionTarget tt : scInstance.getInvokers().keySet()) {
-            State s = (State) tt;
-            if (finalizeMatch(s.getId(), allEvents)) {
-                Finalize fn = s.getInvoke().getFinalize();
+        for (Map.Entry<Invoke, String> entry : scInstance.getInvokeIds().entrySet()) {
+            if (finalizeMatch(entry.getValue(), allEvents)) {
+                Finalize fn = entry.getKey().getFinalize();
                 if (fn != null) {
                     executeContent(fn, evtDispatcher, errRep, scInstance, step.getAfterStatus().getEvents());
                 }
@@ -768,10 +770,9 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
     throws ModelException {
         Set<TriggerEvent> allEvents = new HashSet<TriggerEvent>();
         allEvents.addAll(Arrays.asList(events));
-        for (Map.Entry<TransitionalState, Invoker> iEntry : scInstance.getInvokers().entrySet()) {
-            String parentId = iEntry.getKey().getId();
-            if (!finalizeMatch(parentId, allEvents)) { // prevent cycles
-                Invoker inv = iEntry.getValue();
+        for (Map.Entry<Invoke, String> entry : scInstance.getInvokeIds().entrySet()) {
+            if (!finalizeMatch(entry.getValue(), allEvents)) { // prevent cycles
+                Invoker inv = scInstance.getInvoker(entry.getKey());
                 try {
                     inv.parentEvents(events);
                 } catch (InvokerException ie) {
@@ -800,82 +801,85 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
             if (es instanceof TransitionalState) {
                 TransitionalState ts = (TransitionalState) es;
                 Context ctx = scInstance.getContext(ts);
-                Invoke i = ts.getInvoke();
-                if (i != null && scInstance.getInvoker(ts) == null) {
-                    String src = i.getSrc();
-                    if (src == null) {
-                        String srcexpr = i.getSrcexpr();
-                        Object srcObj;
+                for (Invoke i : ts.getInvokes()) {
+                    if (i != null && scInstance.getInvoker(i) == null) {
+                        String src = i.getSrc();
+                        if (src == null) {
+                            String srcexpr = i.getSrcexpr();
+                            Object srcObj;
+                            try {
+                                ctx.setLocal(NAMESPACES_KEY, i.getNamespaces());
+                                srcObj = eval.eval(ctx, srcexpr);
+                                ctx.setLocal(NAMESPACES_KEY, null);
+                                src = String.valueOf(srcObj);
+                            } catch (SCXMLExpressionException see) {
+                                errRep.onError(ErrorConstants.EXPRESSION_ERROR,
+                                        see.getMessage(), i);
+                            }
+                        }
+                        String source = src;
+                        PathResolver pr = i.getPathResolver();
+                        if (pr != null) {
+                            source = i.getPathResolver().resolvePath(src);
+                        }
+                        String type = i.getType();
+                        Invoker inv;
                         try {
-                            ctx.setLocal(NAMESPACES_KEY, i.getNamespaces());
-                            srcObj = eval.eval(ctx, srcexpr);
-                            ctx.setLocal(NAMESPACES_KEY, null);
-                            src = String.valueOf(srcObj);
-                        } catch (SCXMLExpressionException see) {
-                            errRep.onError(ErrorConstants.EXPRESSION_ERROR,
-                                    see.getMessage(), i);
+                            inv = scInstance.newInvoker(type);
+                        } catch (InvokerException ie) {
+                            TriggerEvent te = new TriggerEvent(ts.getId()
+                                    + ".invoke.failed", TriggerEvent.ERROR_EVENT);
+                            internalEvents.add(te);
+                            continue;
                         }
-                    }
-                    String source = src;
-                    PathResolver pr = i.getPathResolver();
-                    if (pr != null) {
-                        source = i.getPathResolver().resolvePath(src);
-                    }
-                    String type = i.getType();
-                    Invoker inv;
-                    try {
-                        inv = scInstance.newInvoker(type);
-                    } catch (InvokerException ie) {
-                        TriggerEvent te = new TriggerEvent(ts.getId()
-                                + ".invoke.failed", TriggerEvent.ERROR_EVENT);
-                        internalEvents.add(te);
-                        continue;
-                    }
-                    inv.setParentStateId(ts.getId());
-                    inv.setSCInstance(scInstance);
-                    List<Param> params = i.params();
-                    Map<String, Object> args = new HashMap<String, Object>();
-                    for (Param p : params) {
-                        String argExpr = p.getExpr();
-                        Object argValue = null;
-                        ctx.setLocal(NAMESPACES_KEY, p.getNamespaces());
-                        // Do we have an "expr" attribute?
-                        if (argExpr != null && argExpr.trim().length() > 0) {
-                            try {
-                                argValue = eval.eval(ctx, argExpr);
-                            } catch (SCXMLExpressionException see) {
-                                errRep.onError(ErrorConstants.EXPRESSION_ERROR,
-                                        see.getMessage(), i);
-                            }
-                        } else {
-                            // No. Does value of "name" attribute refer to a valid
-                            // location in the data model?
-                            try {
-                                argValue = eval.evalLocation(ctx, p.getName());
-                                if (argValue == null) {
-                                    // Generate error, 4.3.1 in WD-scxml-20080516
-                                    TriggerEvent te = new TriggerEvent(ts.getId()
-                                            + ERR_ILLEGAL_ALLOC,
-                                            TriggerEvent.ERROR_EVENT);
-                                    internalEvents.add(te);
+                        List<Param> params = i.params();
+                        Map<String, Object> args = new HashMap<String, Object>();
+                        for (Param p : params) {
+                            String argExpr = p.getExpr();
+                            Object argValue = null;
+                            ctx.setLocal(NAMESPACES_KEY, p.getNamespaces());
+                            // Do we have an "expr" attribute?
+                            if (argExpr != null && argExpr.trim().length() > 0) {
+                                try {
+                                    argValue = eval.eval(ctx, argExpr);
+                                } catch (SCXMLExpressionException see) {
+                                    errRep.onError(ErrorConstants.EXPRESSION_ERROR,
+                                            see.getMessage(), i);
                                 }
-                            } catch (SCXMLExpressionException see) {
-                                errRep.onError(ErrorConstants.EXPRESSION_ERROR,
-                                        see.getMessage(), i);
+                            } else {
+                                // No. Does value of "name" attribute refer to a valid
+                                // location in the data model?
+                                try {
+                                    argValue = eval.evalLocation(ctx, p.getName());
+                                    if (argValue == null) {
+                                    // Generate error, 4.3.1 in WD-scxml-20080516
+                                        TriggerEvent te = new TriggerEvent(ts.getId()
+                                                + ERR_ILLEGAL_ALLOC,
+                                                TriggerEvent.ERROR_EVENT);
+                                        internalEvents.add(te);
+                                    }
+                                } catch (SCXMLExpressionException see) {
+                                    errRep.onError(ErrorConstants.EXPRESSION_ERROR,
+                                            see.getMessage(), i);
+                                }
                             }
+                            ctx.setLocal(NAMESPACES_KEY, null);
+                            args.put(p.getName(), argValue);
                         }
-                        ctx.setLocal(NAMESPACES_KEY, null);
-                        args.put(p.getName(), argValue);
+                        String invokeId = scInstance.setInvoker(i, inv);
+                        // TODO: API should reflect this isn't the parent state ID anymore but the invokeId
+                        inv.setParentStateId(invokeId);
+                        inv.setSCInstance(scInstance);
+                        try {
+                            inv.invoke(source, args);
+                        } catch (InvokerException ie) {
+                            TriggerEvent te = new TriggerEvent(ts.getId()
+                                    + ".invoke.failed", TriggerEvent.ERROR_EVENT);
+                            internalEvents.add(te);
+                            scInstance.removeInvoker(i);
+                            continue;
+                        }
                     }
-                    try {
-                        inv.invoke(source, args);
-                    } catch (InvokerException ie) {
-                        TriggerEvent te = new TriggerEvent(ts.getId()
-                                + ".invoke.failed", TriggerEvent.ERROR_EVENT);
-                        internalEvents.add(te);
-                        continue;
-                    }
-                    scInstance.setInvoker(ts, inv);
                 }
             }
         }

@@ -26,6 +26,7 @@ import java.io.Serializable;
 public abstract class TransitionTarget implements Serializable, Observable {
 
     private static final EnterableState[] ZERO_ANCESTORS = new EnterableState[0];
+
     /**
      * Identifier for this transition target. Other parts of the SCXML
      * document may refer to this &lt;state&gt; using this ID.

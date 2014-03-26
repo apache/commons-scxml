@@ -38,6 +38,11 @@ public class Invoke implements NamespacePrefixesHolder, PathResolverHolder,
     private static final long serialVersionUID = 1L;
 
     /**
+     * Identifier for this Invoke.
+     * */
+    private String id;
+
+    /**
      * The type of target to be invoked.
      */
     private String type;
@@ -79,6 +84,24 @@ public class Invoke implements NamespacePrefixesHolder, PathResolverHolder,
      */
     public Invoke() {
         paramsList = Collections.synchronizedList(new ArrayList<Param>());
+    }
+
+    /**
+     * Get the identifier for this invoke (may be null).
+     *
+     * @return Returns the id.
+     */
+    public final String getId() {
+        return id;
+    }
+
+    /**
+     * Set the identifier for this invoke.
+     *
+     * @param id The id to set.
+     */
+    public final void setId(final String id) {
+        this.id = id;
     }
 
     /**
@@ -209,5 +232,23 @@ public class Invoke implements NamespacePrefixesHolder, PathResolverHolder,
         this.namespaces = namespaces;
     }
 
+    /**
+     * Enforce identity equality only
+     * @param other other object to compare with
+     * @return this == other
+     */
+    @Override
+    public final boolean equals(final Object other) {
+        return this == other;
+    }
+
+    /**
+     * Enforce returning identity based hascode
+     * @return {@link System#identityHashCode(Object) System.identityHashCode(this)}
+     */
+    @Override
+    public final int hashCode() {
+        return System.identityHashCode(this);
+    }
 }
 

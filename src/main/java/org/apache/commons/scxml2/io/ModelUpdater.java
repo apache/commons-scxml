@@ -250,9 +250,7 @@ final class ModelUpdater {
             updateTransition(transition, targets);
         }
 
-        // TODO: state must may have multiple invokes
-        Invoke inv = state.getInvoke();
-        if (inv != null) {
+        for (Invoke inv : state.getInvokes()) {
             String type = inv.getType();
             if (SCXMLHelper.isStringEmpty(type)) {
                 logAndThrowModelError(ERR_INVOKE_NO_TYPE,
