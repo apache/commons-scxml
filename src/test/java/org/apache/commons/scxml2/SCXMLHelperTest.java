@@ -112,9 +112,9 @@ public class SCXMLHelperTest {
     @Test
     public void testGetAncestorClosureContainsParent() {
         Set<EnterableState> states = new HashSet<EnterableState>();
-        EnterableState parent = new State();
+        State parent = new State();
         parent.setId("0");
-        EnterableState state = new State();
+        State state = new State();
         state.setId("1");
         state.setParent(parent);
         states.add(state);

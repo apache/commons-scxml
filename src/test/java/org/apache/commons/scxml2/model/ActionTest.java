@@ -75,7 +75,7 @@ public class ActionTest {
         
         history.setParent(state);
 
-        transition.setParent(history);
+        transition.setParent(history.getParent());
         action.setParent(transition);
 
         TransitionTarget returnValue = action.getParentEnterableState();
