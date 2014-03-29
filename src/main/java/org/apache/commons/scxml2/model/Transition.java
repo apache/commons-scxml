@@ -16,6 +16,13 @@
  */
 package org.apache.commons.scxml2.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.StringTokenizer;
+
+import org.apache.commons.scxml2.SCXMLHelper;
+
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;transition&gt; SCXML element. Transition rules are triggered
@@ -31,9 +38,24 @@ public class Transition extends SimpleTransition implements DocumentOrder {
     private int order;
 
     /**
-     * Property that specifies the trigger for this transition.
+     * Property that specifies the trigger(s) for this transition.
      */
     private String event;
+
+    /**
+     * This transition event descriptors
+     */
+    private List<String> events = Collections.emptyList();
+
+    /**
+     * Indicator for a event-less transition
+     */
+    private boolean noEvents;
+
+    /**
+     * Indicator for a transition matching all events (*)
+     */
+    private boolean allEvents;
 
     /**
      * Optional guard condition.
@@ -81,7 +103,7 @@ public class Transition extends SimpleTransition implements DocumentOrder {
      * @param cond The cond to set.
      */
     public void setCond(final String cond) {
-        this.cond = cond;
+        this.cond = SCXMLHelper.isStringEmpty(cond) ? null : cond;
     }
 
     /**
@@ -101,7 +123,56 @@ public class Transition extends SimpleTransition implements DocumentOrder {
      * @param event The event to set.
      */
     public void setEvent(final String event) {
-        this.event = event;
+        this.event = SCXMLHelper.isStringEmpty(event) ? null : event.trim();
+        if (this.event != null) {
+            // 'event' is a space separated list of event descriptors
+            events = new ArrayList<String>();
+            StringTokenizer st = new StringTokenizer(this.event);
+            while (st.hasMoreTokens()) {
+                String token = st.nextToken();
+                if (token.equals("*")) {
+                    events.clear();
+                    events.add(token);
+                    break;
+                }
+                else {
+                    if (token.endsWith("*")) {
+                        token = token.substring(0, token.length()-1);
+                    }
+                    if (token.endsWith(".")) {
+                        token = token.substring(0, token.length()-1);
+                    }
+                    if (token.length() > 0) {
+                        events.add(token);
+                    }
+                }
+            }
+        }
+        else {
+            events = Collections.emptyList();
+        }
+        noEvents = events.isEmpty();
+        allEvents = !noEvents && events.get(0).equals("*");
+    }
+
+    /**
+     * @return The list of this transition event descriptors
+     */
+    public final List<String> getEvents() {
+        return events;
+    }
+
+    /**
+     * @return True if this transition is event-less
+     */
+    public final boolean isNoEventsTransition() {
+        return noEvents;
+    }
+
+    /**
+     * @return True if this transition matches any events (*)
+     */
+    public final boolean isAllEventsTransition() {
+        return allEvents;
     }
 }
-
