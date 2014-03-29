@@ -25,7 +25,7 @@ import java.util.Comparator;
  *   They are ordered with ancestor states before their descendant states,
  *   and the transitions within a state in document order before any descendant states.
  * </p>
- * <p>Note: it is assumed there will be no more than Intger.MAX_VALUE of such elements in a single SCXML document</p>
+ * <p>Note: it is assumed there will be no more than Integer.MAX_VALUE of such elements in a single SCXML document</p>
  */
 public interface DocumentOrder {
 

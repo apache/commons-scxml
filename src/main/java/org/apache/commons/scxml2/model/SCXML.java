@@ -39,12 +39,23 @@ public class SCXML implements Serializable, Observable,
     /**
      * The SCXML XMLNS.
      */
+    @SuppressWarnings("unused")
     public static final String XMLNS = "http://www.w3.org/2005/07/scxml";
 
     /**
      * Reserved prefix for auto generated TransitionTarget id values
      */
     public static final String GENERATED_TT_ID_PREFIX = "_generated_tt_id_";
+
+    /**
+     * The pseudo SCXML {@link SimpleTransition#getTransitionDomain()}
+     */
+    public static final TransitionalState SCXML_TRANSITION_DOMAIN = new TransitionalState(){};
+
+    /**
+     * The predefined observableId with value 0 (zero) for this SCXML state machine
+     */
+    private static final Integer SCXML_OBSERVABLE_ID = 0;
 
     /**
      * The xmlns attribute on the root &lt;smxml&gt; element.
@@ -115,7 +126,6 @@ public class SCXML implements Serializable, Observable,
      * The next auto-generated transition target unique id value
      * @see #generateTransitionTargetId()
      */
-
     private long ttNextId;
 
     /**
@@ -124,6 +134,13 @@ public class SCXML implements Serializable, Observable,
     public SCXML() {
         this.children = new ArrayList<EnterableState>();
         this.targets = new HashMap<String, TransitionTarget>();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final Integer getObservableId() {
+        return SCXML_OBSERVABLE_ID;
     }
 
     /**

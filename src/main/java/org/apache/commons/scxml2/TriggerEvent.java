@@ -41,7 +41,7 @@ public class TriggerEvent implements Serializable {
     public TriggerEvent(final String name, final int type,
             final Object payload) {
         super();
-        this.name = name;
+        this.name = name != null ? name.trim() : "";
         this.type = type;
         this.payload = payload;
     }

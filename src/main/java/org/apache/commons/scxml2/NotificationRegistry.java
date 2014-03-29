@@ -16,8 +16,6 @@
  */
 package org.apache.commons.scxml2;
 
-import java.io.Serializable;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -37,23 +35,18 @@ import org.apache.commons.scxml2.model.TransitionTarget;
  * listeners of the events that interest them.
  *
  */
-public final class NotificationRegistry implements Serializable {
+public final class NotificationRegistry {
 
     /**
-     * Serial version UID.
+     * The Map of all listeners keyed by {@link Observable#getObservableId()}.
      */
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * The Map of all listeners keyed by Observable.
-     */
-    private final Map<Observable, Set<SCXMLListener>> regs;
+    private final Map<Integer, Set<SCXMLListener>> regs;
 
     /**
      * Constructor.
      */
     public NotificationRegistry() {
-        this.regs = Collections.synchronizedMap(new HashMap<Observable, Set<SCXMLListener>>());
+        this.regs = new HashMap<Integer, Set<SCXMLListener>>();
     }
 
     /**
@@ -63,12 +56,14 @@ public final class NotificationRegistry implements Serializable {
      * @param lst The listener
      */
     synchronized void addListener(final Observable source, final SCXMLListener lst) {
-        Set<SCXMLListener> entries = regs.get(source);
-        if (entries == null) {
-            entries = new LinkedHashSet<SCXMLListener>();
-            regs.put(source, entries);
+        if (source != null && source.getObservableId() != null) {
+            Set<SCXMLListener> entries = regs.get(source.getObservableId());
+            if (entries == null) {
+                entries = new LinkedHashSet<SCXMLListener>();
+                regs.put(source.getObservableId(), entries);
+            }
+            entries.add(lst);
         }
-        entries.add(lst);
     }
 
     /**
@@ -78,11 +73,13 @@ public final class NotificationRegistry implements Serializable {
      * @param lst The listener
      */
     synchronized void removeListener(final Observable source, final SCXMLListener lst) {
-        Set<SCXMLListener> entries = regs.get(source);
-        if (entries != null) {
-            entries.remove(lst);
-            if (entries.size() == 0) {
-                regs.remove(source);
+        if (source != null && source.getObservableId() != null) {
+            Set<SCXMLListener> entries = regs.get(source.getObservableId());
+            if (entries != null) {
+                entries.remove(lst);
+                if (entries.size() == 0) {
+                    regs.remove(source.getObservableId());
+                }
             }
         }
     }
@@ -96,10 +93,12 @@ public final class NotificationRegistry implements Serializable {
      */
     public synchronized void fireOnEntry(final Observable source,
             final EnterableState state) {
-        Set<SCXMLListener> entries = regs.get(source);
-        if (entries != null) {
-            for (SCXMLListener lst : entries) {
-                lst.onEntry(state);
+        if (source != null && source.getObservableId() != null) {
+            Set<SCXMLListener> entries = regs.get(source.getObservableId());
+            if (entries != null) {
+                for (SCXMLListener lst : entries) {
+                    lst.onEntry(state);
+                }
             }
         }
     }
@@ -113,10 +112,12 @@ public final class NotificationRegistry implements Serializable {
      */
     public synchronized void fireOnExit(final Observable source,
             final EnterableState state) {
-        Set<SCXMLListener> entries = regs.get(source);
-        if (entries != null) {
-            for (SCXMLListener lst : entries) {
-                lst.onExit(state);
+        if (source != null && source.getObservableId() != null) {
+            Set<SCXMLListener> entries = regs.get(source.getObservableId());
+            if (entries != null) {
+                for (SCXMLListener lst : entries) {
+                    lst.onExit(state);
+                }
             }
         }
     }
@@ -132,13 +133,14 @@ public final class NotificationRegistry implements Serializable {
     public synchronized void fireOnTransition(final Observable source,
             final TransitionTarget from, final TransitionTarget to,
             final Transition transition) {
-        Set<SCXMLListener> entries = regs.get(source);
-        if (entries != null) {
-            for (SCXMLListener lst : entries) {
-                lst.onTransition(from, to, transition);
+        if (source != null && source.getObservableId() != null) {
+            Set<SCXMLListener> entries = regs.get(source.getObservableId());
+            if (entries != null) {
+                for (SCXMLListener lst : entries) {
+                    lst.onTransition(from, to, transition);
+                }
             }
         }
     }
-
 }
 

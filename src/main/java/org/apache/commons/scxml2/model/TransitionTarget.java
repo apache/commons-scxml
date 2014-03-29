@@ -28,6 +28,11 @@ public abstract class TransitionTarget implements Serializable, Observable {
     private static final EnterableState[] ZERO_ANCESTORS = new EnterableState[0];
 
     /**
+     * The id for this {@link Observable} which is unique within the SCXML state machine
+     */
+    private Integer observableId;
+
+    /**
      * Identifier for this transition target. Other parts of the SCXML
      * document may refer to this &lt;state&gt; using this ID.
      */
@@ -47,6 +52,21 @@ public abstract class TransitionTarget implements Serializable, Observable {
     public TransitionTarget() {
         super();
         parent = null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final Integer getObservableId() {
+        return observableId;
+    }
+
+    /**
+     * Sets the observableId for this Observable, which must be unique within the SCXML state machine
+     * @param observableId the observableId
+     */
+    public final void setObservableId(Integer observableId) {
+        this.observableId = observableId;
     }
 
     /**

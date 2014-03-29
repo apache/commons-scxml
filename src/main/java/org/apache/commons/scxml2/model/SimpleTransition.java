@@ -17,7 +17,6 @@
 package org.apache.commons.scxml2.model;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -30,34 +29,25 @@ import java.util.Map;
 public class SimpleTransition extends Executable
         implements NamespacePrefixesHolder, Observable {
 
-    private static final State SCXML_TRANSITION_DOMAIN = new State(){};
-
     /**
      * Serial version UID.
      */
     private static final long serialVersionUID = 2L;
 
     /**
+     * The id for this {@link Observable} which is unique within the SCXML state machine
+     */
+    private Integer observableId;
+
+    /**
      * The Transition type: internal or external (default)
-     * @see {@link #isTypeInternal()}
+     * @see #isTypeInternal()
      */
     private TransitionType type;
 
     /**
-     * The transition parent itself, or a compound state parent, or null
-     * <p>
-     * If the transition has no targets, its TransitionalState (State or Parallel) parent represents its own transition
-     * domain.
-     * </p>
-     * <p>
-     * If the transition has targets then the transition domain is the compound State parent such that:
-     * <ul>
-     *   <li>all states that are exited or entered as a result of taking this transition are descendants of it</li>
-     *   <li>no descendant of it has this property</li>
-     * </ul>
-     * If there is no such compound State parent, the transition domain effectively becomes the SCXML document itself,
-     * which is indicated by a null (empty) transitionDomain.
-     * </p>
+     * The transition domain for this transition.
+     * @see #getTransitionDomain()
      */
     private TransitionalState transitionDomain;
 
@@ -104,6 +94,21 @@ public class SimpleTransition extends Executable
 
     private boolean isCompoundStateParent(TransitionalState ts) {
         return ts != null && ts instanceof State && ((State)ts).isComposite();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final Integer getObservableId() {
+        return observableId;
+    }
+
+    /**
+     * Sets the observableId for this Observable, which must be unique within the SCXML state machine
+     * @param observableId the observableId
+     */
+    public final void setObservableId(Integer observableId) {
+        this.observableId = observableId;
     }
 
     /**
@@ -183,11 +188,7 @@ public class SimpleTransition extends Executable
     /**
      * Returns the transition domain of this transition
      * <p>
-     * The returned transition domain is either the transition parent itself, or a compound state parent, or null
-     * </p>
-     * <p>
-     * If the transition has no targets, its TransitionalState (State or Parallel) parent represents its own transition
-     * domain.
+     * If this transition is target-less, null is returned.
      * </p>
      * <p>
      * If the transition has targets then the transition domain is the compound State parent such that:
@@ -195,20 +196,17 @@ public class SimpleTransition extends Executable
      *   <li>all states that are exited or entered as a result of taking this transition are descendants of it</li>
      *   <li>no descendant of it has this property</li>
      * </ul>
-     * If there is no such compound State parent, the transition domain effectively becomes the SCXML document itself,
-     * which is indicated by a null (empty) transitionDomain.
+     * If there is no such compound state parent, the transition domain effectively becomes the SCXML document itself,
+     * which is indicated by the returned pseudo {@link SCXML#SCXML_TRANSITION_DOMAIN} transitionDomain.
      * </p>
      *
      * @return The transition domain of this transition
      */
     public TransitionalState getTransitionDomain() {
-        if (transitionDomain == null) {
+        if (transitionDomain == null && targets.size() > 0) {
 
-            if (getParent() == null) {
-                transitionDomain = SCXML_TRANSITION_DOMAIN;
-            }
-            else {
-                if (targets.size() == 0 || isTypeInternal()) {
+            if (getParent() != null) {
+                if (isTypeInternal()) {
                     transitionDomain = getParent();
                 }
                 else {
@@ -234,12 +232,12 @@ public class SimpleTransition extends Executable
                         }
                     }
                 }
-                if (transitionDomain == null) {
-                    transitionDomain = SCXML_TRANSITION_DOMAIN;
-                }
+            }
+            if (transitionDomain == null) {
+                transitionDomain = SCXML.SCXML_TRANSITION_DOMAIN;
             }
         }
-        return transitionDomain == SCXML_TRANSITION_DOMAIN ? null : transitionDomain;
+        return transitionDomain;
     }
 
     /**

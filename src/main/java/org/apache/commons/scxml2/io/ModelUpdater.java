@@ -152,7 +152,7 @@ final class ModelUpdater {
      * @throws ModelException If the object model is flawed
      */
     static void updateSCXML(final SCXML scxml) throws ModelException {
-        initDocumentOrder(scxml.getChildren(), 0);
+        initDocumentOrder(scxml.getChildren(), 1);
 
         String initial = scxml.getInitial();
         SimpleTransition initialTransition = new SimpleTransition();
@@ -182,21 +182,63 @@ final class ModelUpdater {
                 updateParallel((Parallel) es, targets);
             }
         }
+
+        scxml.getInitialTransition().setObservableId(1);
+        initObservables(scxml.getChildren(), 2);
     }
 
-    private static int initDocumentOrder(final List<EnterableState> states, final int currentOrder) {
-        int nextOrder = currentOrder;
+    /**
+     * Initialize all {@link org.apache.commons.scxml2.model.DocumentOrder} instances (EnterableState or Transition)
+     * by iterating them in document order setting their document order value.
+     * @param states The list of children states of a parent TransitionalState or the SCXML document itself
+     * @param nextOrder The next to be used order value
+     * @return Returns the next to be used order value
+     */
+    private static int initDocumentOrder(final List<EnterableState> states, int nextOrder) {
         for (EnterableState state : states) {
-            state.setOrder(++nextOrder);
+            state.setOrder(nextOrder++);
             if (state instanceof TransitionalState) {
                 TransitionalState ts = (TransitionalState)state;
                 for (Transition t : ts.getTransitionsList()) {
-                    t.setOrder(++nextOrder);
+                    t.setOrder(nextOrder++);
                 }
                 nextOrder = initDocumentOrder(ts.getChildren(), nextOrder);
             }
         }
         return nextOrder;
+    }
+
+    /**
+     * Initialize all {@link org.apache.commons.scxml2.model.Observable} instances in the SCXML document
+     * by iterating them in document order and seeding them with a unique obeservable id.
+     * @param states The list of children states of a parent TransitionalState or the SCXML document itself
+     * @param nextObservableId The next observable id sequence value to be used
+     * @return Returns the next to be used observable id sequence value
+     */
+    private static int initObservables(final List<EnterableState>states, int nextObservableId) {
+        for (EnterableState es : states) {
+            es.setObservableId(nextObservableId++);
+            if (es instanceof TransitionalState) {
+                TransitionalState ts = (TransitionalState)es;
+                if (ts instanceof State) {
+                    State s = (State)ts;
+                    if (s.getInitial() != null && s.getInitial().getTransition() != null) {
+                        s.getInitial().getTransition().setObservableId(nextObservableId++);
+                    }
+                }
+                for (Transition t : ts.getTransitionsList()) {
+                    t.setObservableId(nextObservableId++);
+                }
+                for (History h : ts.getHistory()) {
+                    h.setObservableId(nextObservableId++);
+                    if (h.getTransition() != null) {
+                        h.getTransition().setObservableId(nextObservableId++);
+                    }
+                }
+                nextObservableId = initObservables(ts.getChildren(), nextObservableId);
+            }
+        }
+        return nextObservableId;
     }
 
     /**

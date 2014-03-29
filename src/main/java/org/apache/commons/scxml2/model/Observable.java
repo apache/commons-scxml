@@ -17,12 +17,18 @@
 package org.apache.commons.scxml2.model;
 
 /**
- * Marker interface to flag elements of the SCXML object model whose progress
+ * Interface for elements of the SCXML object model whose progress
  * can be observed using the {@link org.apache.commons.scxml2.NotificationRegistry}. These include
- * individual {@link TransitionTarget}s, {@link Transition}s or entire state
- * machines, {@link SCXML}.
+ * individual {@link TransitionTarget}s, {@link Transition}s or the entire state
+ * machine {@link SCXML}.
  *
+ * <p>Note: it is assumed there will be no more than Integer.MAX_VALUE of such elements in a single SCXML document</p>
  */
 public interface Observable {
+
+    /**
+     * @return Returns the id for this Observable which is unique within the SCXML state machine
+     */
+    Integer getObservableId();
 }
 
