@@ -324,21 +324,21 @@ public class SCXMLExecutorTest {
 
         Map<String, Object> payload = new HashMap<String, Object>();
 
-        // with _eventdata['keyed'] set to true, transition should happen as expected.
+        // with _event.data set to true, transition should happen as expected.
         payload.put("keyed", Boolean.TRUE);
         SCXMLTestHelper.assertPostTriggerState(exec, "open", payload, "opened");
         // turn back to closed
         SCXMLTestHelper.assertPostTriggerState(exec, "close", payload, "closed");
 
-        // with _eventdata['keyed'] set to false, transition shouldn't happen as expected.
+        // with _event.data set to false, transition shouldn't happen as expected.
         payload.put("keyed", Boolean.FALSE);
         SCXMLTestHelper.assertPostTriggerState(exec, "open", payload, "closed");
 
-        // with _eventdata['keyed'] set to null, transition shouldn't happen as expected.
+        // with _event.data set to null, transition shouldn't happen as expected.
         payload.clear();
         SCXMLTestHelper.assertPostTriggerState(exec, "open", payload, "closed");
 
-        // with _eventdata set to null, transition shouldn't happen as expected.
+        // with _event.data set to null, transition shouldn't happen as expected.
         SCXMLTestHelper.assertPostTriggerState(exec, "open", null, "closed");
 
         // transition to locked for testing

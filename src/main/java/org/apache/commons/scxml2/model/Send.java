@@ -263,7 +263,7 @@ public class Send extends Action implements ExternalContent {
     public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
         // Send attributes evaluation
         EnterableState parentState = getParentEnterableState();
-        Context ctx = exctx.getScInstance().getContext(parentState);
+        Context ctx = exctx.getContext(parentState);
         ctx.setLocal(getNamespacesKey(), getNamespaces());
         Evaluator eval = exctx.getEvaluator();
         // Most attributes of <send> are expressions so need to be

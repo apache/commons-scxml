@@ -22,6 +22,7 @@ import java.util.Set;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.SCXMLExpressionException;
+import org.apache.commons.scxml2.SCXMLSystemContext;
 import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.TransitionTarget;
 import org.junit.Assert;
@@ -59,7 +60,7 @@ public class GroovyEvaluatorTest {
         state1.setId("state1");
         allStates.add(state1);
 
-        ctx.setLocal("_ALL_STATES", allStates);
+        ctx.setLocal(SCXMLSystemContext.VARIABLE_ALL_STATES, allStates);
 
         Assert.assertTrue(eval.evalCond(ctx, "In('state1')"));
     }

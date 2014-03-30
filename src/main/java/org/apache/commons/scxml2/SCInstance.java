@@ -17,11 +17,11 @@
 package org.apache.commons.scxml2;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import org.apache.commons.scxml2.model.Datamodel;
 import org.apache.commons.scxml2.model.EnterableState;
@@ -80,9 +80,14 @@ public class SCInstance implements Serializable {
     private Context rootContext;
 
     /**
-     * The initial script context
+     * The wrapped system context.
      */
-    private Context globalScriptContext;
+    private SCXMLSystemContext systemContext;
+
+    /**
+     * The global context
+     */
+    private Context globalContext;
 
     /**
      * Constructor
@@ -92,9 +97,9 @@ public class SCInstance implements Serializable {
     SCInstance(final SCXMLExecutor executor) {
         this.currentStatus = new Status();
         this.executor = executor;
-        this.contexts = Collections.synchronizedMap(new HashMap<EnterableState, Context>());
-        this.histories = Collections.synchronizedMap(new HashMap<History, Set<EnterableState>>());
-        this.completions = Collections.synchronizedMap(new HashMap<EnterableState, Boolean>());
+        this.contexts = new HashMap<EnterableState, Context>();
+        this.histories = new HashMap<History, Set<EnterableState>>();
+        this.completions = new HashMap<EnterableState, Boolean>();
     }
 
     /**
@@ -114,6 +119,11 @@ public class SCInstance implements Serializable {
         contexts.clear();
         histories.clear();
         completions.clear();
+        if (systemContext != null) {
+            // reset _name system variable
+            String scxmlName = stateMachine.getName() != null ? stateMachine.getName() : "";
+            systemContext.getContext().set(SCXMLSystemContext.VARIABLE_NAME, scxmlName);
+        }
     }
 
     /**
@@ -145,21 +155,46 @@ public class SCInstance implements Serializable {
 
     /**
      * Set the root context.
+     * <p>
+     * Note: clears all other contexts!
+     * </p>
      *
-     * @param context The root context.
+     * @param context The new root context.
      */
     void setRootContext(final Context context) {
         this.rootContext = context;
+        globalContext = null;
+        contexts.clear();
     }
 
-    public Context getGlobalScriptContext() {
-        if (globalScriptContext == null) {
-            Context rootContext = getRootContext();
+    /**
+     * Get the unwrapped (modifiable) system context.
+     *
+     * @return The unwrapped system context.
+     */
+    Context getSystemContext() {
+        if (systemContext == null) {
+            // force initialization of rootContext
+            getRootContext();
             if (rootContext != null) {
-                globalScriptContext = executor.getEvaluator().newContext(getRootContext());
+                systemContext = new SCXMLSystemContext(executor.getEvaluator().newContext(rootContext));
+                systemContext.getContext().set(SCXMLSystemContext.VARIABLE_SESSIONID, UUID.randomUUID().toString());
+                String _name = stateMachine != null && stateMachine.getName() != null ? stateMachine.getName() : "";
+                systemContext.getContext().set(SCXMLSystemContext.VARIABLE_NAME, _name);
             }
         }
-        return globalScriptContext;
+        return systemContext != null ? systemContext.getContext() : null;
+    }
+
+    public Context getGlobalContext() {
+        if (globalContext == null) {
+            // force initialization of systemContext
+            getSystemContext();
+            if (systemContext != null) {
+                globalContext = executor.getEvaluator().newContext(systemContext);
+            }
+        }
+        return globalContext;
     }
 
     /**
@@ -175,7 +210,7 @@ public class SCInstance implements Serializable {
             EnterableState parent = state.getParent();
             if (parent == null) {
                 // docroot
-                context = executor.getEvaluator().newContext(getGlobalScriptContext());
+                context = executor.getEvaluator().newContext(getGlobalContext());
             } else {
                 context = executor.getEvaluator().newContext(getContext(parent));
             }

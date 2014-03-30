@@ -31,7 +31,7 @@
                <send event="'event.bar'" namelist="one two" delay="'100ms'"/>
            </onentry>
            <transition event="event.bar">
-               <log label="'simulatedUser'" expr="_eventdatamap['event.bar'].one + ', ' + _eventdatamap['event.bar'].two"/>
+               <log label="'simulatedUser'" expr="_event.data.one + ', ' + _event.data.two"/>
            </transition>
        </state>
 
@@ -42,10 +42,10 @@
 
            <state id="twenty">
                <transition event="event.bar"
-                   cond="_eventdatamap['event.bar'].one + _eventdatamap['event.bar'].two eq 3"
+                   cond="_event.data.one + _event.data.two eq 3"
                    target="thirty"/>
                <transition event="event.bar">
-                   <log label="'event.bar in twenty state'" expr="_eventdatamap['event.bar'].one + ', ' + _eventdatamap['event.bar'].two"/>
+                   <log label="'event.bar in twenty state'" expr="_event.data.one + ', ' + _event.data.two"/>
                </transition>
            </state>
 

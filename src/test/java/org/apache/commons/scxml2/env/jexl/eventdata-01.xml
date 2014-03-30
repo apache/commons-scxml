@@ -19,25 +19,25 @@
       version="1.0"
       initial="state1">
      <state id="state1">
-           <transition event="event.foo" cond="_eventdata eq 2"
+           <transition event="event.foo" cond="_event.data eq 2"
                        target="state2"/>
-           <transition event="event.foo" cond="_eventdata eq 3"
+           <transition event="event.foo" cond="_event.data eq 3"
                        target="state3"/>
      </state>
      <final id="state2"/>
      <state id="state3">
            <transition event="event.bar" target="state4"
-                       cond="_eventdatamap['event.bar'] eq 4"/>
+                       cond="_event.data eq 4"/>
            <transition event="event.bar" target="state5"
-                       cond="_eventdatamap['event.bar'] eq 5"/>
+                       cond="_event.data eq 5"/>
            <transition event="event.bar" target="state6"
-                       cond="_eventdatamap['event.bar'] eq 6"/>
+                       cond="_event.data eq 6"/>
      </state>
      <final id="state4"/>
      <final id="state5"/>
      <state id="state6">
            <transition event="event.baz" target="state7"
-                       cond="_eventdatamap['event.baz'] eq 7"/>
+                       cond="_event.data eq 7"/>
      </state>
      <final id="state7"/>
 </scxml>

@@ -40,16 +40,6 @@ import org.w3c.dom.Node;
  * the Data() function, for example,
  * &lt;assign location="Data(hotelbooking,'hotel/rooms')" expr="2" /&gt;
  * <p>
- * NOTES:
- * <ol>
- *   <li>To use _eventdatamap with the Javascript evaluator replace all
- *     _eventdatamap[event] operators with _eventdatamap.get(event) or
- *     _eventdatamap.put(event,data).<br/>
- *     (the SCXML _eventdatamap is implemented as a Java HashMap and the
- *     Rhino interpreter does not implement the [] operator on Java Maps).
- *   </li>
- * </ol>
- *
  */
 
 public class JSEvaluator implements Evaluator {

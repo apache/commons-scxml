@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.scxml2.Builtin;
+import org.apache.commons.scxml2.SCXMLSystemContext;
 import org.apache.commons.scxml2.model.EnterableState;
 
 /**
@@ -55,7 +56,7 @@ public final class JexlBuiltin {
      */
     @SuppressWarnings("unchecked")
     private Set<EnterableState> getAllStates() {
-        return (Set<EnterableState>) context.get("_ALL_STATES");
+        return (Set<EnterableState>) context.get(SCXMLSystemContext.VARIABLE_ALL_STATES);
     }
 
     /**

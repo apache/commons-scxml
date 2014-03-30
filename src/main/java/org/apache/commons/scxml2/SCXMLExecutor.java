@@ -46,25 +46,8 @@ import org.apache.commons.scxml2.system.EventVariable;
  *
  * @see SCXMLSemantics
  */
-@SuppressWarnings("unused deprecation") // TODO: remove again after refactoring is done
+@SuppressWarnings("unused") // TODO: remove again after refactoring is done
 public class SCXMLExecutor {
-
-    /**
-     * The special variable for storing single event data / payload.
-     * @deprecated
-     */
-    private static final String EVENT_DATA = "_eventdata";
-
-    /**
-     * The special variable for storing event data / payload,
-     * when multiple events are triggered, keyed by event name.
-     */
-    private static final String EVENT_DATA_MAP = "_eventdatamap";
-
-    /**
-     * The special variable for storing single event data / payload.
-     */
-    private static final String EVENT_VARIABLE = "_event";
 
     /**
      * SCXMLExecutor put into motion without setting a model (state machine).
@@ -193,40 +176,27 @@ public class SCXMLExecutor {
     private void updateStatus(final Step step) {
         getCurrentStatus().getStates().clear();
         getCurrentStatus().getStates().addAll(step.getAfterStatus().getStates());
-        scInstance.getRootContext().setLocal("_ALL_STATES", getCurrentStatus().getAllStates());
+        scInstance.getSystemContext().setLocal(SCXMLSystemContext.VARIABLE_ALL_STATES, getCurrentStatus().getAllStates());
     }
 
     /**
      * @param evt The event being triggered.
      */
-    private void setEventData(final TriggerEvent evt) {
-        Context rootCtx = scInstance.getRootContext();
-        Object eventData = null;
+    private void setSystemEventVariable(final TriggerEvent evt, boolean internalQueue) {
+        Context systemContext = scInstance.getSystemContext();
         EventVariable eventVar = null;
-        Map<String, Object> payloadMap = new HashMap<String, Object>();
-        if (evt != null) { // 0 has retry semantics (eg: see usage in reset())
-            payloadMap.put(evt.getName(), evt.getPayload());
-            eventData = evt.getPayload();
+        if (evt != null) {
+            String eventType = internalQueue ? EventVariable.TYPE_INTERNAL : EventVariable.TYPE_EXTERNAL;
 
-            // NOTE: According to spec 5.10.1, _event.type must be 'platform', 'internal' or 'external'.
-            //       So, error or variable change trigger events can be translated into 'platform' type event variables.
-            //       However, the Send model for <send> element doesn't support any target yet, and so
-            //       'internal' type can't supported either.
-            //       All the others must be 'external'.
-
-            String eventType = EventVariable.TYPE_EXTERNAL;
             final int triggerEventType = evt.getType();
-
             if (triggerEventType == TriggerEvent.ERROR_EVENT || triggerEventType == TriggerEvent.CHANGE_EVENT) {
                 eventType = EventVariable.TYPE_PLATFORM;
             }
 
             // TODO: determine sendid, origin, originType and invokeid based on context later.
-            eventVar = new EventVariable(evt.getName(), eventType, null, null, null, null, eventData);
+            eventVar = new EventVariable(evt.getName(), eventType, null, null, null, null, evt.getPayload());
         }
-        rootCtx.setLocal(EVENT_DATA, eventData);
-        rootCtx.setLocal(EVENT_DATA_MAP, payloadMap);
-        rootCtx.setLocal(EVENT_VARIABLE, eventVar);
+        systemContext.setLocal(SCXMLSystemContext.VARIABLE_EVENT, eventVar);
     }
 
     /**
@@ -460,8 +430,8 @@ public class SCXMLExecutor {
         SCXML stateMachine = getStateMachine();
         Datamodel rootdm = stateMachine.getDatamodel();
         SCXMLHelper.cloneDatamodel(rootdm, rootContext, getEvaluator(), log);
-        if (scInstance.getGlobalScriptContext() != null) {
-            scInstance.getGlobalScriptContext().reset();
+        if (scInstance.getGlobalContext() != null) {
+            scInstance.getGlobalContext().reset();
         }
         // all states and parallels, only states have variable contexts
         for (TransitionTarget tt : stateMachine.getTargets().values()) {
@@ -586,8 +556,10 @@ public class SCXMLExecutor {
 
         Step step;
 
+        boolean internalQueue = false;
+
         do {
-            setEventData(event);
+            setSystemEventVariable(event, internalQueue);
 
             // CreateStep
             step = new Step(event, getCurrentStatus());
@@ -604,6 +576,7 @@ public class SCXMLExecutor {
             // AssignCurrentStatus
             updateStatus(step);
 
+            internalQueue = true;
             event = exctx.nextInternalEvent();
 
         } while (event != null);

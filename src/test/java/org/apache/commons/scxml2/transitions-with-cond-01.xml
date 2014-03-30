@@ -23,17 +23,17 @@
        initial="closed">
 
   <state id="closed">
-    <transition event="open" cond="_eventdata['keyed']" target="opened" />
+    <transition event="open" cond="_event.data['keyed']" target="opened" />
     <transition event="lock" target="locked" />
   </state>
 
   <state id="locked">
-    <transition event="unlock" cond="_eventdata :-( intendedSyntaxError" target="closed" />
+    <transition event="unlock" cond="_event.data :-( intendedSyntaxError" target="closed" />
   </state>
 
   <state id="opened">
     <onentry>
-      <if cond="_eventdata['newface']">
+      <if cond="_event.data['newface']">
         <log expr="'Welcome!'" />
       </if>
     </onentry>

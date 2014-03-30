@@ -29,6 +29,7 @@ import javax.xml.xpath.XPathFunctionResolver;
 
 import org.apache.commons.scxml2.Builtin;
 import org.apache.commons.scxml2.Context;
+import org.apache.commons.scxml2.SCXMLSystemContext;
 import org.apache.commons.scxml2.model.EnterableState;
 
 /**
@@ -44,7 +45,7 @@ public class FunctionResolver implements XPathFunctionResolver, Serializable {
     private static final String NAMESPACE_COMMONS_SCXML =
         "http://commons.apache.org/scxml";
     /** The {@link Context} key to retrieve all the current states. */
-    private static final String STATES = "_ALL_STATES";
+    private static final String STATES = SCXMLSystemContext.VARIABLE_ALL_STATES;
     /** The {@link Context} key to retrieve all the current namespaces. */
     private static final String NAMESPACES = "_ALL_NAMESPACES";
 

@@ -50,7 +50,7 @@
                 expr="cs:Data('jungle','animals/lion/age') +
                       cs:Data('jungle','animals/tiger/age')" />
         </onentry>
-        <transition event="foo" cond="$_eventdata/test/status = 'complete'"
+        <transition event="foo" cond="$_event/data/test/status = 'complete'"
                     target="end" />
     </state>
 

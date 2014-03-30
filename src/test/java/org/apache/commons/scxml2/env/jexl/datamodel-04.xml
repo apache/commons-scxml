@@ -17,7 +17,7 @@
 -->
 <!-- A fictitious state machine used by test cases.
      Meant to illustrate the usage of SCXML <datamodel> element
-     to persist some _eventdata -->
+     to persist some _event.data -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
        version="1.0"
        initial="ten">
@@ -29,15 +29,15 @@
 
     <state id="ten">
         <transition event="ten.done" target="twenty">
-            <assign name="payload" expr="_eventdata" />
+            <assign name="payload" expr="_event.data" />
         </transition>
     </state>
 
     <state id="twenty">
         <transition event="twenty.done" target="thirty" />
         <onexit>
-            <log label="Persisted eventdata.one" expr="payload.one"/>
-            <log label="Persisted eventdata.two" expr="payload.two"/>
+            <log label="Persisted event.data.one" expr="payload.one"/>
+            <log label="Persisted event.data.two" expr="payload.two"/>
         </onexit>
     </state>
 

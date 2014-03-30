@@ -30,7 +30,7 @@ import org.junit.Before;
 import org.junit.Test;
 /**
  * Unit tests {@link org.apache.commons.scxml2.SCXMLExecutor}.
- * Testing special variable "_eventdata"
+ * Testing special variable "_event.data"
  */
 public class EventDataTest {
 
@@ -62,7 +62,7 @@ public class EventDataTest {
     }
 
     /**
-     * Test the SCXML documents, usage of "_eventdata"
+     * Test the SCXML documents, usage of "_event.data"
      */
     @Test
     public void testEventdata01Sample() throws Exception {

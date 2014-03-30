@@ -98,7 +98,7 @@ public class Foreach extends Action implements ActionsContainer {
      */
     @Override
     public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
-        Context ctx = exctx.getScInstance().getContext(getParentEnterableState());
+        Context ctx = exctx.getContext(getParentEnterableState());
         Evaluator eval = exctx.getEvaluator();
         ctx.setLocal(getNamespacesKey(), getNamespaces());
         try {

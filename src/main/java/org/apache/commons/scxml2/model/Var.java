@@ -94,7 +94,7 @@ public class Var extends Action {
      */
     @Override
     public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
-        Context ctx = exctx.getScInstance().getContext(getParentEnterableState());
+        Context ctx = exctx.getContext(getParentEnterableState());
         Evaluator eval = exctx.getEvaluator();
         ctx.setLocal(getNamespacesKey(), getNamespaces());
         Object varObj = eval.eval(ctx, expr);

@@ -24,11 +24,11 @@
        initial="state1">
   <script>
     class Target implements Serializable {
-    private static final long serialVersionUID = 1L;
-    int val;
+      private static final long serialVersionUID = 1L;
+      int val;
     }
     def targets(val) {
-    return target.val eq val;
+      return target.val eq val;
     }
     target = new Target(val: 5)
   </script>

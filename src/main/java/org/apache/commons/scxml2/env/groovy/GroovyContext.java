@@ -128,7 +128,7 @@ public class GroovyContext extends SimpleContext {
         if (scriptBaseClass != null) {
             return scriptBaseClass;
         }
-        if (getParent() != null) {
+        if (getParent() instanceof GroovyContext) {
             return ((GroovyContext)getParent()).getScriptBaseClass();
         }
         return null;

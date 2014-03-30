@@ -23,6 +23,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml2.Context;
+import org.apache.commons.scxml2.SCXMLSystemContext;
 
 /**
  * Simple Context wrapping a map of variables.
@@ -123,12 +124,18 @@ public class SimpleContext implements Context, Serializable {
      * @see org.apache.commons.scxml2.Context#has(java.lang.String)
      */
     public boolean has(final String name) {
-        if (getVars().containsKey(name)) {
-            return true;
-        } else if (parent != null && parent.has(name)) {
-            return true;
-        }
-        return false;
+        return (hasLocal(name) || (parent != null && parent.has(name)));
+    }
+
+    /**
+     * Check if this variable exists, only checking this Context
+     *
+     * @param name The variable name
+     * @return boolean true if this variable exists
+     * @see org.apache.commons.scxml2.Context#hasLocal(java.lang.String)
+     */
+    public boolean hasLocal(final String name) {
+        return (getVars().containsKey(name));
     }
 
     /**
@@ -161,7 +168,7 @@ public class SimpleContext implements Context, Serializable {
      */
     public void setLocal(final String name, final Object value) {
         getVars().put(name, value);
-        if (log.isDebugEnabled() && !name.equals("_ALL_STATES")) {
+        if (log.isDebugEnabled() && !name.equals(SCXMLSystemContext.VARIABLE_ALL_STATES)) {
             log.debug(name + " = " + String.valueOf(value));
         }
     }

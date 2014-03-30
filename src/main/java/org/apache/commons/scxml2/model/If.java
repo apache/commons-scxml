@@ -116,7 +116,7 @@ public class If extends Action implements ActionsContainer {
     @Override
     public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
         EnterableState parentState = getParentEnterableState();
-        Context ctx = exctx.getScInstance().getContext(parentState);
+        Context ctx = exctx.getContext(parentState);
         Evaluator eval = exctx.getEvaluator();
         ctx.setLocal(getNamespacesKey(), getNamespaces());
         Boolean rslt;

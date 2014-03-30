@@ -17,6 +17,7 @@
 package org.apache.commons.scxml2;
 
 import org.apache.commons.logging.Log;
+import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.SCXML;
 
 /**
@@ -46,11 +47,17 @@ public class ActionExecutionContext {
     }
 
     /**
-     * @return Returns the SCInstance
+     * @return Returns the global context
      */
-    // TODO: remove access to SCInstance
-    public SCInstance getScInstance() {
-        return exctx.getScInstance();
+    public Context getGlobalContext() {
+        return exctx.getScInstance().getGlobalContext();
+    }
+
+    /**
+     * @return Returns the context for an EnterableState
+     */
+    public Context getContext(EnterableState state) {
+        return exctx.getScInstance().getContext(state);
     }
 
     /**

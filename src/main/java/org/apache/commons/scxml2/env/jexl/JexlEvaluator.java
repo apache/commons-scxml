@@ -134,8 +134,8 @@ public class JexlEvaluator implements Evaluator, Serializable {
             exp = getJexlEngine().createExpression(expr);
             return exp.evaluate(effective);
         } catch (Exception e) {
-            throw new SCXMLExpressionException("eval('" + expr + "'):"
-                + e.getMessage(), e);
+            String exMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getCanonicalName();
+            throw new SCXMLExpressionException("eval('" + expr + "'): " + exMessage, e);
         }
     }
 
@@ -159,8 +159,8 @@ public class JexlEvaluator implements Evaluator, Serializable {
             exp = getJexlEngine().createExpression(expr);
             return (Boolean) exp.evaluate(effective);
         } catch (Exception e) {
-            throw new SCXMLExpressionException("evalCond('" + expr + "'):"
-                + e.getMessage(), e);
+            String exMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getCanonicalName();
+            throw new SCXMLExpressionException("evalCond('" + expr + "'): " + exMessage, e);
         }
     }
 
@@ -185,8 +185,8 @@ public class JexlEvaluator implements Evaluator, Serializable {
             exp = getJexlEngine().createExpression(expr);
             return (Node) exp.evaluate(effective);
         } catch (Exception e) {
-            throw new SCXMLExpressionException("evalLocation('" + expr + "'):"
-                + e.getMessage(), e);
+            String exMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getCanonicalName();
+            throw new SCXMLExpressionException("evalLocation('" + expr + "'): " + exMessage, e);
         }
     }
 
@@ -211,8 +211,8 @@ public class JexlEvaluator implements Evaluator, Serializable {
             jexlScript = getJexlEngine().createScript(script);
             return jexlScript.execute(effective);
         } catch (Exception e) {
-            throw new SCXMLExpressionException("evalScript('" + script + "'):"
-                + e.getMessage(), e);
+            String exMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getCanonicalName();
+            throw new SCXMLExpressionException("evalScript('" + script + "'): " + exMessage, e);
         }
     }
 

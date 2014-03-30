@@ -145,7 +145,6 @@
     <my:eventdatamaptest />
    </onentry>
    <transition target='in.test' event='ok' >
-    <log expr='"_eventdatamap[ok]=\"" + _eventdatamap.get("ok") + "\""' />
    </transition>
   </state>
 

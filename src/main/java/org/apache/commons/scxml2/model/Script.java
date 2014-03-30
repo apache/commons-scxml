@@ -76,8 +76,7 @@ public class Script extends Action implements BodyContainer {
      */
     @Override
     public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
-        Context ctx = isGlobalScript() ? exctx.getScInstance().getGlobalScriptContext() :
-                exctx.getScInstance().getContext(getParentEnterableState());
+        Context ctx = isGlobalScript() ? exctx.getGlobalContext() : exctx.getContext(getParentEnterableState());
         ctx.setLocal(getNamespacesKey(), getNamespaces());
         Evaluator eval = exctx.getEvaluator();
         eval.evalScript(ctx, getScript());

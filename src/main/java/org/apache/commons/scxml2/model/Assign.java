@@ -177,7 +177,7 @@ public class Assign extends Action implements PathResolverHolder {
     @Override
     public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
         EnterableState parentState = getParentEnterableState();
-        Context ctx = exctx.getScInstance().getContext(parentState);
+        Context ctx = exctx.getContext(parentState);
         Evaluator eval = exctx.getEvaluator();
         ctx.setLocal(getNamespacesKey(), getNamespaces());
         // "location" gets preference over "name"

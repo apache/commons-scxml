@@ -54,7 +54,7 @@ public class WildcardTest {
     }
 
     /**
-     * Test the SCXML documents, usage of "_eventdata"
+     * Test the SCXML documents, usage of "_event.data"
      */
     @Test
     public void testWildcard01Sample() throws Exception {

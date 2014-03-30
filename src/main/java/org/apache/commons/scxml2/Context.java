@@ -60,6 +60,14 @@ public interface Context {
     boolean has(String name);
 
     /**
+     * Check if this variable exists, only checking this Context
+     *
+     * @param name The name of the variable
+     * @return Whether a variable with the name exists in this Context
+     */
+    boolean hasLocal(String name);
+
+    /**
      * Get the Map of all variables in this Context.
      *
      * @return Local variable entries Map
