@@ -17,20 +17,16 @@
 package org.apache.commons.scxml2.model;
 
 import java.io.IOException;
-import java.util.Collection;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.Context;
-import org.apache.commons.scxml2.ErrorReporter;
 import org.apache.commons.scxml2.Evaluator;
-import org.apache.commons.scxml2.EventDispatcher;
 import org.apache.commons.scxml2.PathResolver;
-import org.apache.commons.scxml2.SCInstance;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.SCXMLHelper;
 import org.apache.commons.scxml2.TriggerEvent;
@@ -179,13 +175,10 @@ public class Assign extends Action implements PathResolverHolder {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final EventDispatcher evtDispatcher,
-            final ErrorReporter errRep, final SCInstance scInstance,
-            final Log appLog, final Collection<TriggerEvent> derivedEvents)
-    throws ModelException, SCXMLExpressionException {
+    public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
         EnterableState parentState = getParentEnterableState();
-        Context ctx = scInstance.getContext(parentState);
-        Evaluator eval = scInstance.getEvaluator();
+        Context ctx = exctx.getScInstance().getContext(parentState);
+        Evaluator eval = exctx.getEvaluator();
         ctx.setLocal(getNamespacesKey(), getNamespaces());
         // "location" gets preference over "name"
         if (!SCXMLHelper.isStringEmpty(location)) {
@@ -222,21 +215,23 @@ public class Assign extends Action implements PathResolverHolder {
                     Object valueObject = eval.eval(ctx, expr);
                     SCXMLHelper.setNodeValue(oldNode, valueObject.toString());
                 }
-                if (appLog.isDebugEnabled()) {
-                    appLog.debug("<assign>: data node '" + oldNode.getNodeName()
+                if (exctx.getAppLog().isDebugEnabled()) {
+                    exctx.getAppLog().debug("<assign>: data node '" + oldNode.getNodeName()
                         + "' updated");
                 }
+                /* TODO: send to notificationRegistry instead?
                 TriggerEvent ev = new TriggerEvent(name + ".change",
                     TriggerEvent.CHANGE_EVENT);
-                derivedEvents.add(ev);
+                exctx.addInternalEvent(ev);
+                */
             } else {
-                appLog.error("<assign>: location does not point to"
+                exctx.getAppLog().error("<assign>: location does not point to"
                     + " a <data> node");
             }
         } else {
             // lets try "name" (usage as in Sep '05 WD, useful with <var>)
             if (!ctx.has(name)) {
-                errRep.onError(ErrorConstants.UNDEFINED_VARIABLE, name
+                exctx.getErrorReporter().onError(ErrorConstants.UNDEFINED_VARIABLE, name
                     + " = null", parentState);
             } else {
                 Object varObj;
@@ -246,13 +241,12 @@ public class Assign extends Action implements PathResolverHolder {
                     varObj = eval.eval(ctx, expr);
                 }
                 ctx.set(name, varObj);
-                if (appLog.isDebugEnabled()) {
-                    appLog.debug("<assign>: Set variable '" + name + "' to '"
+                if (exctx.getAppLog().isDebugEnabled()) {
+                    exctx.getAppLog().debug("<assign>: Set variable '" + name + "' to '"
                         + String.valueOf(varObj) + "'");
                 }
-                TriggerEvent ev = new TriggerEvent(name + ".change",
-                    TriggerEvent.CHANGE_EVENT);
-                derivedEvents.add(ev);
+                TriggerEvent ev = new TriggerEvent(name + ".change", TriggerEvent.CHANGE_EVENT);
+                exctx.addInternalEvent(ev);
             }
         }
         ctx.setLocal(getNamespacesKey(), null);

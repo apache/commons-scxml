@@ -19,26 +19,21 @@ package org.apache.commons.scxml2.env.javascript;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
 import org.apache.commons.scxml2.Context;
-import org.apache.commons.scxml2.ErrorReporter;
 import org.apache.commons.scxml2.Evaluator;
-import org.apache.commons.scxml2.EventDispatcher;
-import org.apache.commons.scxml2.SCInstance;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.model.Action;
+import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.model.CustomAction;
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.SCXML;
-import org.apache.commons.scxml2.model.State;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -97,10 +92,8 @@ public class JSExampleTest {
         private static final long serialVersionUID = 1L;
 
         @Override
-        public void execute(EventDispatcher dispatcher, ErrorReporter reporter,
-                SCInstance instance, Log log, Collection<TriggerEvent> events)
-        throws ModelException,SCXMLExpressionException { 
-            events.add(new TriggerEvent("ok",TriggerEvent.SIGNAL_EVENT,"and its ok with me to"));
+        public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
+            exctx.addInternalEvent(new TriggerEvent("ok",TriggerEvent.SIGNAL_EVENT,"and its ok with me to"));
         }
     }
 

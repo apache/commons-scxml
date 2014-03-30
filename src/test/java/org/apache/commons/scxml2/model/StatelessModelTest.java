@@ -119,7 +119,6 @@ public class    StatelessModelTest {
 
     /**
      * Test sharing two SCXML objects between one executor (not recommended)
-     */    
     @Test
     public void testStatelessModelParallelSwapSCXML() throws Exception {
         exec01 = SCXMLTestHelper.getExecutor(scxml01par);
@@ -137,6 +136,7 @@ public class    StatelessModelTest {
         currentStates = fireEvent("state2.event", exec01);
         checkParallelStates(currentStates, "next", null, "exec01");
     }
+     */
 
     private void checkParallelStates(Set<EnterableState> currentStates,
             String s1, String s2, String label) {

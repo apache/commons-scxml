@@ -221,7 +221,7 @@ public class SCXMLExecutorTest {
         Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "ten.stay");
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("ten", currentStates.iterator().next().getId());
-        exec = SCXMLTestHelper.testExecutorSerializability(exec);
+        exec = SCXMLTestHelper.testInstanceSerializability(exec);
         currentStates = SCXMLTestHelper.fireEvent(exec, "ten.self");
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("ten", currentStates.iterator().next().getId());

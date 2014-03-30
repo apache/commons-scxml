@@ -25,7 +25,6 @@ import javax.xml.stream.XMLStreamException;
 
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
-import org.apache.commons.scxml2.SCInstance;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.env.SimpleDispatcher;
@@ -48,8 +47,8 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
     /** Event prefix, all events sent to the parent executor must begin
      *  with this prefix. */
     private String eventPrefix;
-    /** Invoking document's SCInstance. */
-    private SCInstance parentSCInstance;
+    /** Invoking document's SCXMLExecutor */
+    private SCXMLExecutor parentExecutor;
     /** The invoked state machine executor. */
     private SCXMLExecutor executor;
     /** Cancellation status. */
@@ -75,8 +74,8 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
     /**
      * {@inheritDoc}.
      */
-    public void setSCInstance(final SCInstance scInstance) {
-        this.parentSCInstance = scInstance;
+    public void setParentExecutor(final SCXMLExecutor parentExecutor) {
+        this.parentExecutor = parentExecutor;
     }
 
     /**
@@ -94,7 +93,7 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
         } catch (XMLStreamException xse) {
             throw new InvokerException(xse.getMessage(), xse.getCause());
         }
-        Evaluator eval = parentSCInstance.getEvaluator();
+        Evaluator eval = parentExecutor.getEvaluator();
         executor = new SCXMLExecutor(eval,
             new SimpleDispatcher(), new SimpleErrorReporter());
         Context rootCtx = eval.newContext(null);
@@ -113,7 +112,7 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
         if (executor.getCurrentStatus().isFinal()) {
             TriggerEvent te = new TriggerEvent(eventPrefix + invokeDone,
                 TriggerEvent.SIGNAL_EVENT);
-            new AsyncTrigger(parentSCInstance.getExecutor(), te).start();
+            new AsyncTrigger(parentExecutor, te).start();
         }
     }
 
@@ -134,7 +133,7 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
         if (!doneBefore && executor.getCurrentStatus().isFinal()) {
             TriggerEvent te = new TriggerEvent(eventPrefix + invokeDone,
                 TriggerEvent.SIGNAL_EVENT);
-            new AsyncTrigger(parentSCInstance.getExecutor(), te).start();
+            new AsyncTrigger(parentExecutor, te).start();
         }
     }
 
@@ -146,7 +145,7 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
         cancelled = true;
         TriggerEvent te = new TriggerEvent(eventPrefix
             + invokeCancelResponse, TriggerEvent.SIGNAL_EVENT);
-        new AsyncTrigger(parentSCInstance.getExecutor(), te).start();
+        new AsyncTrigger(parentExecutor, te).start();
     }
 
 }

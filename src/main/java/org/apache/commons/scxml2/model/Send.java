@@ -17,18 +17,15 @@
 package org.apache.commons.scxml2.model;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
+import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.Context;
-import org.apache.commons.scxml2.ErrorReporter;
 import org.apache.commons.scxml2.Evaluator;
-import org.apache.commons.scxml2.EventDispatcher;
-import org.apache.commons.scxml2.SCInstance;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.SCXMLHelper;
 import org.apache.commons.scxml2.TriggerEvent;
@@ -58,6 +55,21 @@ public class Send extends Action implements ExternalContent {
      */
     private static final String EVENT_ERR_SEND_TARGETUNAVAILABLE =
         "error.send.targetunavailable";
+
+    /** The suffix in the delay string for milliseconds. */
+    private static final String MILLIS = "ms";
+
+    /** The suffix in the delay string for seconds. */
+    private static final String SECONDS = "s";
+
+    /** The suffix in the delay string for minutes. */
+    private static final String MINUTES = "m";
+
+    /** The number of milliseconds in a second. */
+    private static final long MILLIS_IN_A_SECOND = 1000L;
+
+    /** The number of milliseconds in a minute. */
+    private static final long MILLIS_IN_A_MINUTE = 60000L;
 
     /**
      * The ID of the send message.
@@ -248,15 +260,12 @@ public class Send extends Action implements ExternalContent {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final EventDispatcher evtDispatcher,
-            final ErrorReporter errRep, final SCInstance scInstance,
-            final Log appLog, final Collection<TriggerEvent> derivedEvents)
-    throws ModelException, SCXMLExpressionException {
+    public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
         // Send attributes evaluation
         EnterableState parentState = getParentEnterableState();
-        Context ctx = scInstance.getContext(parentState);
+        Context ctx = exctx.getScInstance().getContext(parentState);
         ctx.setLocal(getNamespacesKey(), getNamespaces());
-        Evaluator eval = scInstance.getEvaluator();
+        Evaluator eval = exctx.getEvaluator();
         // Most attributes of <send> are expressions so need to be
         // evaluated before the EventDispatcher callback
         Object hintsValue = null;
@@ -267,8 +276,8 @@ public class Send extends Action implements ExternalContent {
         if (!SCXMLHelper.isStringEmpty(target)) {
             targetValue = (String) eval.eval(ctx, target);
             if (SCXMLHelper.isStringEmpty(targetValue)
-                    && appLog.isWarnEnabled()) {
-                appLog.warn("<send>: target expression \"" + target
+                    && exctx.getAppLog().isWarnEnabled()) {
+                exctx.getAppLog().warn("<send>: target expression \"" + target
                     + "\" evaluated to null or empty String");
             }
         }
@@ -276,8 +285,8 @@ public class Send extends Action implements ExternalContent {
         if (!SCXMLHelper.isStringEmpty(type)) {
             typeValue = (String) eval.eval(ctx, type);
             if (SCXMLHelper.isStringEmpty(typeValue)
-                    && appLog.isWarnEnabled()) {
-                appLog.warn("<send>: type expression \"" + type
+                    && exctx.getAppLog().isWarnEnabled()) {
+                exctx.getAppLog().warn("<send>: type expression \"" + type
                     + "\" evaluated to null or empty String");
             }
         } else {
@@ -293,7 +302,7 @@ public class Send extends Action implements ExternalContent {
                 Object varObj = ctx.get(varName);
                 if (varObj == null) {
                     //considered as a warning here
-                    errRep.onError(ErrorConstants.UNDEFINED_VARIABLE,
+                    exctx.getErrorReporter().onError(ErrorConstants.UNDEFINED_VARIABLE,
                             varName + " = null", parentState);
                 }
                 params.put(varName, varObj);
@@ -304,15 +313,15 @@ public class Send extends Action implements ExternalContent {
             Object delayValue = eval.eval(ctx, delay);
             if (delayValue != null) {
                 String delayString = delayValue.toString();
-                wait = parseDelay(delayString, appLog);
+                wait = parseDelay(delayString, exctx.getAppLog());
             }
         }
         String eventValue = event;
         if (!SCXMLHelper.isStringEmpty(event)) {
             eventValue = (String) eval.eval(ctx, event);
             if (SCXMLHelper.isStringEmpty(eventValue)
-                    && appLog.isWarnEnabled()) {
-                appLog.warn("<send>: event expression \"" + event
+                    && exctx.getAppLog().isWarnEnabled()) {
+                exctx.getAppLog().warn("<send>: event expression \"" + event
                     + "\" evaluated to null or empty String");
             }
         }
@@ -322,21 +331,21 @@ public class Send extends Action implements ExternalContent {
             if (SCXMLHelper.isStringEmpty(targetValue)) {
                 // TODO: Remove both short-circuit passes in v1.0
                 if (wait == 0L) {
-                    if (appLog.isDebugEnabled()) {
-                        appLog.debug("<send>: Enqueued event '" + eventValue
+                    if (exctx.getAppLog().isDebugEnabled()) {
+                        exctx.getAppLog().debug("<send>: Enqueued event '" + eventValue
                             + "' with no delay");
                     }
-                    derivedEvents.add(new TriggerEvent(eventValue,
+                    exctx.addInternalEvent(new TriggerEvent(eventValue,
                         TriggerEvent.SIGNAL_EVENT, params));
                     return;
                 }
             } else {
                 // We know of no other
-                if (appLog.isWarnEnabled()) {
-                    appLog.warn("<send>: Unavailable target - "
+                if (exctx.getAppLog().isWarnEnabled()) {
+                    exctx.getAppLog().warn("<send>: Unavailable target - "
                         + targetValue);
                 }
-                derivedEvents.add(new TriggerEvent(
+                exctx.addInternalEvent(new TriggerEvent(
                     EVENT_ERR_SEND_TARGETUNAVAILABLE,
                     TriggerEvent.ERROR_EVENT));
                 // short-circuit the EventDispatcher
@@ -344,14 +353,14 @@ public class Send extends Action implements ExternalContent {
             }
         }
         ctx.setLocal(getNamespacesKey(), null);
-        if (appLog.isDebugEnabled()) {
-            appLog.debug("<send>: Dispatching event '" + eventValue
+        if (exctx.getAppLog().isDebugEnabled()) {
+            exctx.getAppLog().debug("<send>: Dispatching event '" + eventValue
                 + "' to target '" + targetValue + "' of target type '"
                 + typeValue + "' with suggested delay of " + wait
                 + "ms");
         }
         // Else, let the EventDispatcher take care of it
-        evtDispatcher.send(sendid, targetValue, typeValue, eventValue,
+        exctx.getEventDispatcher().send(sendid, targetValue, typeValue, eventValue,
             params, hintsValue, wait, externalNodes);
     }
 
@@ -392,24 +401,7 @@ public class Send extends Action implements ExternalContent {
             wait *= multiplier;
 
         }
-
         return wait;
     }
-
-    /** The suffix in the delay string for milliseconds. */
-    private static final String MILLIS = "ms";
-
-    /** The suffix in the delay string for seconds. */
-    private static final String SECONDS = "s";
-
-    /** The suffix in the delay string for minutes. */
-    private static final String MINUTES = "m";
-
-    /** The number of milliseconds in a second. */
-    private static final long MILLIS_IN_A_SECOND = 1000L;
-
-    /** The number of milliseconds in a minute. */
-    private static final long MILLIS_IN_A_MINUTE = 60000L;
-
 }
 

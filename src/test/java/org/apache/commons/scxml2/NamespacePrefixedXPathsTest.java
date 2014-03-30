@@ -82,7 +82,7 @@ public class NamespacePrefixedXPathsTest {
         currentStates = SCXMLTestHelper.fireEvent(exec, "twenty.done");
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("thirty", currentStates.iterator().next().getId());
-        exec = SCXMLTestHelper.testExecutorSerializability(exec);
+        exec = SCXMLTestHelper.testInstanceSerializability(exec);
 
         // Tests XPath on SCXML actions, set while exiting "twenty"
         String retvalstr = (String) exec.getRootContext().get("retval");

@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,12 +30,9 @@ import org.apache.commons.logging.LogConfigurationException;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.impl.LogFactoryImpl;
 import org.apache.commons.logging.impl.SimpleLog;
-import org.apache.commons.scxml2.ErrorReporter;
-import org.apache.commons.scxml2.EventDispatcher;
-import org.apache.commons.scxml2.SCInstance;
+import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.SCXMLTestHelper;
-import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.io.SCXMLReader.Configuration;
 import org.apache.commons.scxml2.model.Action;
 import org.apache.commons.scxml2.model.CustomAction;
@@ -338,10 +334,7 @@ public class SCXMLReaderTest {
         private List<Node> nodes = new ArrayList<Node>();
 
         @Override
-        public void execute(EventDispatcher evtDispatcher,
-                ErrorReporter errRep, SCInstance scInstance, Log appLog,
-                Collection<TriggerEvent> derivedEvents)
-        throws ModelException, SCXMLExpressionException {
+        public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
             // Not relevant to test
         }
 

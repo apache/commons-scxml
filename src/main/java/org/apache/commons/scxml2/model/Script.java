@@ -16,16 +16,10 @@
  */
 package org.apache.commons.scxml2.model;
 
-import java.util.Collection;
-
-import org.apache.commons.logging.Log;
+import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.Context;
-import org.apache.commons.scxml2.ErrorReporter;
 import org.apache.commons.scxml2.Evaluator;
-import org.apache.commons.scxml2.EventDispatcher;
-import org.apache.commons.scxml2.SCInstance;
 import org.apache.commons.scxml2.SCXMLExpressionException;
-import org.apache.commons.scxml2.TriggerEvent;
 
 /**
  * The class in this SCXML object model that corresponds to the
@@ -81,14 +75,11 @@ public class Script extends Action implements BodyContainer {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final EventDispatcher evtDispatcher,
-            final ErrorReporter errRep, final SCInstance scInstance,
-            final Log appLog, final Collection<TriggerEvent> derivedEvents)
-    throws ModelException, SCXMLExpressionException {
-        Context ctx = isGlobalScript() ? scInstance.getGlobalScriptContext() :
-                scInstance.getContext(getParentEnterableState());
+    public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
+        Context ctx = isGlobalScript() ? exctx.getScInstance().getGlobalScriptContext() :
+                exctx.getScInstance().getContext(getParentEnterableState());
         ctx.setLocal(getNamespacesKey(), getNamespaces());
-        Evaluator eval = scInstance.getEvaluator();
+        Evaluator eval = exctx.getEvaluator();
         eval.evalScript(ctx, getScript());
         ctx.setLocal(getNamespacesKey(), null);
     }

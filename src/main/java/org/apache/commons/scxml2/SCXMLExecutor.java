@@ -16,23 +16,21 @@
  */
 package org.apache.commons.scxml2;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml2.invoke.Invoker;
+import org.apache.commons.scxml2.invoke.InvokerException;
 import org.apache.commons.scxml2.model.Datamodel;
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.History;
 import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.Observable;
 import org.apache.commons.scxml2.model.SCXML;
-import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.TransitionTarget;
 import org.apache.commons.scxml2.model.TransitionalState;
 import org.apache.commons.scxml2.semantics.SCXMLSemanticsImpl;
@@ -48,14 +46,8 @@ import org.apache.commons.scxml2.system.EventVariable;
  *
  * @see SCXMLSemantics
  */
-@SuppressWarnings("deprecation") // TODO: remove again after refactoring is done
-public class SCXMLExecutor implements Serializable {
-
-    /**
-     * Serial version UID.
-     */
-    private static final long serialVersionUID = 1L;
-
+@SuppressWarnings("unused deprecation") // TODO: remove again after refactoring is done
+public class SCXMLExecutor {
 
     /**
      * The special variable for storing single event data / payload.
@@ -85,14 +77,9 @@ public class SCXMLExecutor implements Serializable {
     private Log log = LogFactory.getLog(SCXMLExecutor.class);
 
     /**
-     * The stateMachine being executed.
+     * The evaluator for expressions.
      */
-    private SCXML stateMachine;
-
-    /**
-     * The current status of the stateMachine.
-     */
-    private Status currentStatus;
+    private Evaluator evaluator;
 
     /**
      * The event dispatcher to interface with external documents etc.
@@ -103,6 +90,11 @@ public class SCXMLExecutor implements Serializable {
      * The environment specific error reporter.
      */
     private ErrorReporter errorReporter = null;
+
+    /**
+     * The notification registry.
+     */
+    private NotificationRegistry notificationRegistry;
 
     /**
      * Run-to-completion.
@@ -120,6 +112,22 @@ public class SCXMLExecutor implements Serializable {
     private SCInstance scInstance;
 
     /**
+     * The external event queue
+     */
+    private final Queue<TriggerEvent> externalEventQueue = new ConcurrentLinkedQueue<TriggerEvent>();
+
+    /**
+     * The <code>Invoker</code> classes <code>Map</code>, keyed by
+     * &lt;invoke&gt; target types (specified using "type" attribute).
+     */
+    private final Map<String, Class<? extends Invoker>> invokerClasses;
+
+    /**
+     * The state machine execution context
+     */
+    private SCXMLExecutionContext exctx;
+
+    /**
      * Get the state chart instance for this executor.
      *
      * @return The SCInstance for this executor.
@@ -129,12 +137,48 @@ public class SCXMLExecutor implements Serializable {
     }
 
     /**
+     * Detach the current SCInstance to allow external serialization.
+     * <p>
+     * {@link #attachInstance(SCInstance)} can be used to re-attach a previously detached instance
+     * </p>
+     * <p>
+     * Note: until an instance is re-attached, no operations are allowed (and probably throw exceptions) except
+     * for {@link #addEvent(TriggerEvent)} which might still be used (concurrently) by running Invokers, or
+     * {@link #hasPendingEvents()} to check for possible pending events.
+     * </p>
+     * @return the detached instance
+     */
+    public SCInstance detachInstance() {
+        SCInstance instance = scInstance;
+        scInstance.setExecutor(null);
+        scInstance = null;
+        return instance;
+    }
+
+    /**
+     * Re-attach a previously detached SCInstance.
+     * <p>
+     * Note: an already attached instance will get overwritten (and thus lost).
+     * </p>
+     * @param instance An previously detached SCInstance
+     */
+    public void attachInstance(SCInstance instance) {
+        if (scInstance != null ) {
+            scInstance.setExecutor(null);
+        }
+        scInstance = instance;
+        if (scInstance != null) {
+            scInstance.setExecutor(this);
+        }
+    }
+
+    /**
      * Log the current set of active states.
      */
     private void logState() {
         if (log.isDebugEnabled()) {
             StringBuilder sb = new StringBuilder("Current States: [ ");
-            for (EnterableState es : currentStatus.getStates()) {
+            for (EnterableState es : getCurrentStatus().getStates()) {
                 sb.append(es.getId()).append(", ");
             }
             int length = sb.length();
@@ -147,61 +191,42 @@ public class SCXMLExecutor implements Serializable {
      * @param step The most recent Step
      */
     private void updateStatus(final Step step) {
-        currentStatus = step.getAfterStatus();
-        scInstance.getRootContext().setLocal("_ALL_STATES",
-                SCXMLHelper.getAncestorClosure(currentStatus.getStates(), null));
-        setEventData(currentStatus.getEvents().toArray(new TriggerEvent[currentStatus.getEvents().size()]));
+        getCurrentStatus().getStates().clear();
+        getCurrentStatus().getStates().addAll(step.getAfterStatus().getStates());
+        scInstance.getRootContext().setLocal("_ALL_STATES", getCurrentStatus().getAllStates());
     }
 
     /**
-     * @param evts The events being triggered.
-     * @return Object[] Previous values.
+     * @param evt The event being triggered.
      */
-    private Object[] setEventData(final TriggerEvent[] evts) {
+    private void setEventData(final TriggerEvent evt) {
         Context rootCtx = scInstance.getRootContext();
-        Object[] oldData = { rootCtx.get(EVENT_DATA), rootCtx.get(EVENT_DATA_MAP), rootCtx.get(EVENT_VARIABLE) };
-        int len = evts.length;
-        if (len > 0) { // 0 has retry semantics (eg: see usage in reset())
-            Object eventData = null;
-            EventVariable eventVar = null;
-            Map<String, Object> payloadMap = new HashMap<String, Object>();
-            for (TriggerEvent te : evts) {
-                payloadMap.put(te.getName(), te.getPayload());
+        Object eventData = null;
+        EventVariable eventVar = null;
+        Map<String, Object> payloadMap = new HashMap<String, Object>();
+        if (evt != null) { // 0 has retry semantics (eg: see usage in reset())
+            payloadMap.put(evt.getName(), evt.getPayload());
+            eventData = evt.getPayload();
+
+            // NOTE: According to spec 5.10.1, _event.type must be 'platform', 'internal' or 'external'.
+            //       So, error or variable change trigger events can be translated into 'platform' type event variables.
+            //       However, the Send model for <send> element doesn't support any target yet, and so
+            //       'internal' type can't supported either.
+            //       All the others must be 'external'.
+
+            String eventType = EventVariable.TYPE_EXTERNAL;
+            final int triggerEventType = evt.getType();
+
+            if (triggerEventType == TriggerEvent.ERROR_EVENT || triggerEventType == TriggerEvent.CHANGE_EVENT) {
+                eventType = EventVariable.TYPE_PLATFORM;
             }
-            if (len == 1) {
-                // we have only one event
-                eventData = evts[0].getPayload();
 
-                // NOTE: According to spec 5.10.1, _event.type must be 'platform', 'internal' or 'external'.
-                //       So, error or variable change trigger events can be translated into 'platform' type event variables.
-                //       However, the Send model for <send> element doesn't support any target yet, and so
-                //       'internal' type can't supported either.
-                //       All the others must be 'external'.
-
-                String eventType = EventVariable.TYPE_EXTERNAL;
-                final int triggerEventType = evts[0].getType();
-
-                if (triggerEventType == TriggerEvent.ERROR_EVENT || triggerEventType == TriggerEvent.CHANGE_EVENT) {
-                    eventType = EventVariable.TYPE_PLATFORM;
-                }
-
-                // TODO: determine sendid, origin, originType and invokeid based on context later.
-                eventVar = new EventVariable(evts[0].getName(), eventType, null, null, null, null, eventData);
-            }
-            rootCtx.setLocal(EVENT_DATA, eventData);
-            rootCtx.setLocal(EVENT_DATA_MAP, payloadMap);
-            rootCtx.setLocal(EVENT_VARIABLE, eventVar);
+            // TODO: determine sendid, origin, originType and invokeid based on context later.
+            eventVar = new EventVariable(evt.getName(), eventType, null, null, null, null, eventData);
         }
-        return oldData;
-    }
-
-    /**
-     * @param oldData The old values to restore to.
-     */
-    private void restoreEventData(final Object[] oldData) {
-        scInstance.getRootContext().setLocal(EVENT_DATA, oldData[0]);
-        scInstance.getRootContext().setLocal(EVENT_DATA_MAP, oldData[1]);
-        scInstance.getRootContext().setLocal(EVENT_VARIABLE, oldData[2]);
+        rootCtx.setLocal(EVENT_DATA, eventData);
+        rootCtx.setLocal(EVENT_DATA_MAP, payloadMap);
+        rootCtx.setLocal(EVENT_VARIABLE, eventVar);
     }
 
     /**
@@ -234,10 +259,9 @@ public class SCXMLExecutor implements Serializable {
     public SCXMLExecutor(final Evaluator expEvaluator,
                          final EventDispatcher evtDisp, final ErrorReporter errRep,
                          final SCXMLSemantics semantics) {
+        this.evaluator = expEvaluator;
         this.eventdispatcher = evtDisp;
         this.errorReporter = errRep;
-        this.currentStatus = new Status();
-        this.stateMachine = null;
         if (semantics == null) {
             // Use default semantics, if none provided
             this.semantics = new SCXMLSemanticsImpl();
@@ -245,7 +269,9 @@ public class SCXMLExecutor implements Serializable {
             this.semantics = semantics;
         }
         this.scInstance = new SCInstance(this);
-        this.scInstance.setEvaluator(expEvaluator);
+        this.notificationRegistry = new NotificationRegistry();
+        this.invokerClasses = new HashMap<String, Class<? extends Invoker>>();
+        this.exctx = new SCXMLExecutionContext(this);
     }
 
     /**
@@ -254,7 +280,7 @@ public class SCXMLExecutor implements Serializable {
      * @return The current Status
      */
     public synchronized Status getCurrentStatus() {
-        return currentStatus;
+        return scInstance.getCurrentStatus();
     }
 
     /**
@@ -264,7 +290,7 @@ public class SCXMLExecutor implements Serializable {
      * @param evaluator The evaluator to set.
      */
     public void setEvaluator(final Evaluator evaluator) {
-        this.scInstance.setEvaluator(evaluator);
+        this.evaluator = evaluator;
     }
 
     /**
@@ -273,7 +299,7 @@ public class SCXMLExecutor implements Serializable {
      * @return Evaluator The evaluator in use.
      */
     public Evaluator getEvaluator() {
-        return scInstance.getEvaluator();
+        return evaluator;
     }
 
     /**
@@ -308,7 +334,7 @@ public class SCXMLExecutor implements Serializable {
      * @return Returns the stateMachine.
      */
     public SCXML getStateMachine() {
-        return stateMachine;
+        return scInstance.getStateMachine();
     }
 
     /**
@@ -318,7 +344,9 @@ public class SCXMLExecutor implements Serializable {
      * @param stateMachine The stateMachine to set.
      */
     public void setStateMachine(final SCXML stateMachine) {
-        this.stateMachine = semantics.normalizeStateMachine(stateMachine, errorReporter);
+        exctx.reset();
+        scInstance.setStateMachine(semantics.normalizeStateMachine(stateMachine, errorReporter));
+        externalEventQueue.clear();
     }
 
     /**
@@ -355,6 +383,25 @@ public class SCXMLExecutor implements Serializable {
      */
     public void setEventdispatcher(final EventDispatcher eventdispatcher) {
         this.eventdispatcher = eventdispatcher;
+    }
+
+    /**
+     * Get the notification registry.
+     *
+     * @return The notification registry.
+     */
+    public NotificationRegistry getNotificationRegistry() {
+        return notificationRegistry;
+    }
+
+    /**
+     * Set the notification registry.
+     *
+     * @param notifRegistry The notification registry.
+     */
+    @SuppressWarnings("unused")
+    void setNotificationRegistry(final NotificationRegistry notifRegistry) {
+        this.notificationRegistry = notifRegistry;
     }
 
     /**
@@ -402,17 +449,17 @@ public class SCXMLExecutor implements Serializable {
      *         model problem.
      */
     public synchronized void reset() throws ModelException {
-        // Reset all variable contexts
-        Context rootCtx = scInstance.getRootContext();
-        // Clone root datamodel
-        if (stateMachine == null) {
+        if (getStateMachine() == null) {
             log.error(ERR_NO_STATE_MACHINE);
             throw new ModelException(ERR_NO_STATE_MACHINE);
-        } else {
-            Datamodel rootdm = stateMachine.getDatamodel();
-            SCXMLHelper.cloneDatamodel(rootdm, rootCtx,
-                    scInstance.getEvaluator(), log);
         }
+        // Reset all variable contexts
+        exctx.reset();
+        Context rootContext = scInstance.getRootContext();
+        // Clone root datamodel
+        SCXML stateMachine = getStateMachine();
+        Datamodel rootdm = stateMachine.getDatamodel();
+        SCXMLHelper.cloneDatamodel(rootdm, rootContext, getEvaluator(), log);
         if (scInstance.getGlobalScriptContext() != null) {
             scInstance.getGlobalScriptContext().reset();
         }
@@ -424,30 +471,33 @@ public class SCXMLExecutor implements Serializable {
                     context.reset();
                     if (tt instanceof TransitionalState) {
                         Datamodel dm = ((TransitionalState)tt).getDatamodel();
-                        SCXMLHelper.cloneDatamodel(dm, context, scInstance.getEvaluator(), log);
+                        SCXMLHelper.cloneDatamodel(dm, context, getEvaluator(), log);
                     }
                 }
             } else if (tt instanceof History) {
                 scInstance.reset((History) tt);
             }
         }
-        // CreateEmptyStatus
-        currentStatus = new Status();
-        Step step = new Step(null, currentStatus);
+        // Clear currentStatus
+        getCurrentStatus().getStates().clear();
+        Step step = new Step(null, getCurrentStatus());
         // execute global script if defined
-        semantics.executeGlobalScript(step, stateMachine, eventdispatcher, errorReporter, scInstance);
+        semantics.executeGlobalScript(exctx, step);
         // DetermineInitialStates
-        semantics.determineInitialStates(step, stateMachine, errorReporter, scInstance);
+        semantics.determineInitialStates(exctx, step);
         // enter initial states
-        semantics.enterStates(step, stateMachine, eventdispatcher, errorReporter, scInstance);
+        semantics.enterStates(exctx, step);
         // AssignCurrentStatus
         updateStatus(step);
         // Execute Immediate Transitions
-        if (superStep && currentStatus.getEvents().size() > 0) {
-            this.triggerEvents(new TriggerEvent[0]);
+
+        TriggerEvent event = exctx.nextInternalEvent();
+
+        if (event != null) {
+            handleEvent(event);
         } else {
             // InitiateInvokes only after state machine has stabilized
-            semantics.initiateInvokes(step, errorReporter, scInstance);
+            semantics.initiateInvokes(this, exctx, step);
             logState();
         }
     }
@@ -463,7 +513,10 @@ public class SCXMLExecutor implements Serializable {
      */
     public void triggerEvent(final TriggerEvent evt)
             throws ModelException {
-        triggerEvents(new TriggerEvent[]{evt});
+        if (evt != null) {
+            externalEventQueue.add(evt);
+        }
+        triggerEvents();
     }
 
     /**
@@ -476,47 +529,88 @@ public class SCXMLExecutor implements Serializable {
      * @throws ModelException in case there is a fatal SCXML object
      *            model problem.
      */
-    public synchronized void triggerEvents(final TriggerEvent[] evts)
+    public void triggerEvents(final TriggerEvent[] evts)
             throws ModelException {
-        // Set event data, saving old values
-        Object[] oldData = setEventData(evts);
+        if (evts != null) {
+            for (TriggerEvent evt : evts) {
+                if (evt != null) {
+                    externalEventQueue.add(evt);
+                }
+            }
+        }
+        triggerEvents();
+    }
 
-        // Forward events (external only) to any existing invokes,
-        // and finalize processing
-        semantics.processInvokes(evts, errorReporter, scInstance);
+    /**
+     * Add a new external event, which may be done concurrently, and even when the current SCInstance is detached.
+     * <p>
+     * No processing of the vent will be done, until the next triggerEvent methods is invoked.
+     * </p>
+     * @param evt an external event
+     */
+    public void addEvent(final TriggerEvent evt) {
+        if (evt != null) {
+            externalEventQueue.add(evt);
+        }
+    }
 
-        List<TriggerEvent> evs = new ArrayList<TriggerEvent>(Arrays.asList(evts));
+    /**
+     * @return Returns true if there are pending external events to be processed.
+     */
+    public boolean hasPendingEvents() {
+        return !externalEventQueue.isEmpty();
+    }
+
+    /**
+     * Trigger all pending and incoming events, until there are no more pending events
+     * @throws ModelException in case there is a fatal SCXML object model problem.
+     */
+    public void triggerEvents() throws ModelException {
+        TriggerEvent evt;
+        while ((evt = externalEventQueue.poll()) != null) {
+            // Forward events (external only) to any existing invokes,
+            // and finalize processing
+            semantics.processInvokes(exctx, evt);
+            handleEvent(evt);
+        }
+    }
+
+    /**
+     * The internal worker method for handling the next external event
+     * @param evt an external event
+     * @throws ModelException in case there is a fatal SCXML object model problem.
+     */
+    protected void handleEvent(final TriggerEvent evt)
+            throws ModelException {
+        TriggerEvent event = evt;
+
         Step step;
 
         do {
+            setEventData(event);
+
             // CreateStep
-            step = new Step(evs, currentStatus);
+            step = new Step(event, getCurrentStatus());
             // EnumerateReachableTransitions
-            semantics.enumerateReachableTransitions(stateMachine, step,
-                errorReporter);
+            semantics.enumerateReachableTransitions(exctx, step);
             // FilterTransitionSet
-            semantics.filterTransitionsSet(step, eventdispatcher,
-                errorReporter, scInstance);
+            semantics.filterTransitionsSet(exctx, step);
             // FollowTransitions
-            semantics.followTransitions(step, errorReporter, scInstance);
+            semantics.followTransitions(exctx, step);
             // UpdateHistoryStates
-            semantics.updateHistoryStates(step, errorReporter, scInstance);
+            semantics.updateHistoryStates(exctx, step);
             // ExecuteActions
-            semantics.executeActions(step, stateMachine, eventdispatcher,
-                errorReporter, scInstance);
+            semantics.executeActions(exctx, step);
             // AssignCurrentStatus
             updateStatus(step);
-            // ***Cleanup external events if superStep
-            if (superStep) {
-                evs.clear();
-            }
-        } while (superStep && currentStatus.getEvents().size() > 0);
+
+            event = exctx.nextInternalEvent();
+
+        } while (event != null);
 
         // InitiateInvokes only after state machine has stabilized
-        semantics.initiateInvokes(step, errorReporter, scInstance);
+        semantics.initiateInvokes(this, exctx, step);
 
-        // Restore event data
-        restoreEventData(oldData);
         logState();
     }
 
@@ -527,7 +621,7 @@ public class SCXMLExecutor implements Serializable {
      * @param listener The SCXMLListener.
      */
     public void addListener(final Observable observable, final SCXMLListener listener) {
-        scInstance.getNotificationRegistry().addListener(observable, listener);
+        notificationRegistry.addListener(observable, listener);
     }
 
     /**
@@ -538,8 +632,7 @@ public class SCXMLExecutor implements Serializable {
      */
     public void removeListener(final Observable observable,
             final SCXMLListener listener) {
-        scInstance.getNotificationRegistry().removeListener(observable,
-                listener);
+        notificationRegistry.removeListener(observable, listener);
     }
 
     /**
@@ -551,7 +644,7 @@ public class SCXMLExecutor implements Serializable {
      */
     public void registerInvokerClass(final String type,
             final Class<? extends Invoker> invokerClass) {
-        scInstance.registerInvokerClass(type, invokerClass);
+        invokerClasses.put(type, invokerClass);
     }
 
     /**
@@ -562,7 +655,33 @@ public class SCXMLExecutor implements Serializable {
      *             attribute of &lt;invoke&gt; tag).
      */
     public void unregisterInvokerClass(final String type) {
-        scInstance.unregisterInvokerClass(type);
+        invokerClasses.remove(type);
+    }
+
+    /**
+     * Create a new {@link Invoker}
+     *
+     * @param type The type of the target being invoked.
+     * @return An {@link Invoker} for the specified type, if an
+     *         invoker class is registered against that type,
+     *         <code>null</code> otherwise.
+     * @throws org.apache.commons.scxml2.invoke.InvokerException When a suitable {@link Invoker} cannot
+     *                          be instantiated.
+     */
+    Invoker newInvoker(final String type)
+            throws InvokerException {
+        Class<? extends Invoker> invokerClass = invokerClasses.get(type);
+        if (invokerClass == null) {
+            throw new InvokerException("No Invoker registered for type \""
+                    + type + "\"");
+        }
+        try {
+            return invokerClass.newInstance();
+        } catch (InstantiationException ie) {
+            throw new InvokerException(ie.getMessage(), ie.getCause());
+        } catch (IllegalAccessException iae) {
+            throw new InvokerException(iae.getMessage(), iae.getCause());
+        }
     }
 }
 

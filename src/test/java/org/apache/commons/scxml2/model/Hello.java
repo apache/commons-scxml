@@ -16,12 +16,7 @@
  */
 package org.apache.commons.scxml2.model;
 
-import java.util.Collection;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.scxml2.ErrorReporter;
-import org.apache.commons.scxml2.EventDispatcher;
-import org.apache.commons.scxml2.SCInstance;
+import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.TriggerEvent;
 
@@ -61,17 +56,14 @@ public class Hello extends Action {
     }
 
     @Override
-    public void execute(final EventDispatcher evtDispatcher,
-            final ErrorReporter errRep, final SCInstance scInstance,
-            final Log appLog, final Collection<TriggerEvent> derivedEvents)
-    throws ModelException, SCXMLExpressionException {
-        if (appLog.isInfoEnabled()) {
-            appLog.info("Hello " + name);
+    public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
+        if (exctx.getAppLog().isInfoEnabled()) {
+            exctx.getAppLog().info("Hello " + name);
         }
         // For derived events payload testing
         TriggerEvent event =
             new TriggerEvent("helloevent", TriggerEvent.SIGNAL_EVENT, name);
-        derivedEvents.add(event);
+        exctx.addInternalEvent(event);
         callbacks++;
     }
 }

@@ -16,9 +16,6 @@
  */
 package org.apache.commons.scxml2.semantics;
 
-import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,10 +30,11 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.ErrorReporter;
 import org.apache.commons.scxml2.Evaluator;
-import org.apache.commons.scxml2.EventDispatcher;
 import org.apache.commons.scxml2.NotificationRegistry;
 import org.apache.commons.scxml2.PathResolver;
 import org.apache.commons.scxml2.SCInstance;
+import org.apache.commons.scxml2.SCXMLExecutionContext;
+import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.SCXMLHelper;
 import org.apache.commons.scxml2.SCXMLSemantics;
@@ -53,14 +51,15 @@ import org.apache.commons.scxml2.model.Finalize;
 import org.apache.commons.scxml2.model.History;
 import org.apache.commons.scxml2.model.Initial;
 import org.apache.commons.scxml2.model.Invoke;
+import org.apache.commons.scxml2.model.OnEntry;
+import org.apache.commons.scxml2.model.OnExit;
+import org.apache.commons.scxml2.model.Param;
+import org.apache.commons.scxml2.model.Path;
+import org.apache.commons.scxml2.model.Script;
 import org.apache.commons.scxml2.model.SimpleTransition;
 import org.apache.commons.scxml2.model.TransitionalState;
 import org.apache.commons.scxml2.model.ModelException;
-import org.apache.commons.scxml2.model.OnEntry;
-import org.apache.commons.scxml2.model.OnExit;
 import org.apache.commons.scxml2.model.Parallel;
-import org.apache.commons.scxml2.model.Param;
-import org.apache.commons.scxml2.model.Path;
 import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.Transition;
@@ -74,7 +73,7 @@ import org.apache.commons.scxml2.model.TransitionTarget;
  * <p>Custom semantics can be created by subclassing this class.</p>
  */
 @SuppressWarnings("unused") // TODO: remove when done refactoring
-public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
+public class SCXMLSemanticsImpl implements SCXMLSemantics {
 
     /**
      * Serial version UID.
@@ -118,37 +117,35 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
 
     /**
      * Implements prefix match, that is, if, for example,
-     * &quot;mouse.click&quot; is a member of eventOccurrences and a
+     * &quot;mouse.click&quot; is the event and a
      * transition is triggered by &quot;mouse&quot;, the method returns true.
      *
      * @param transEvent
      *            a trigger event of a transition
-     * @param eventOccurrences
-     *            current events
+     * @param event
+     *            current event
      * @return true/false
      */
     protected boolean eventMatch(final String transEvent,
-                                 final Set<TriggerEvent> eventOccurrences) {
+                                 final TriggerEvent event) {
         if (SCXMLHelper.isStringEmpty(transEvent)) { // Eventless transition
             return true;
         } else {
             String trimTransEvent = transEvent.trim();
-            for (TriggerEvent te : eventOccurrences) {
-                String event = te.getName();
-                if (event == null) {
-                    continue; // Unnamed events
-                }
-                String trimEvent = event.trim();
-                if (trimEvent.equals(trimTransEvent)) {
-                    return true; // Match
-                } else if (te.getType() != TriggerEvent.CHANGE_EVENT
-                        && trimTransEvent.equals("*")) {
-                    return true; // Wildcard, skip gen'ed ones like .done etc.
-                } else if (trimTransEvent.endsWith(".*")
-                        && trimEvent.startsWith(trimTransEvent.substring(0,
-                        trimTransEvent.length() - 1))) {
-                    return true; // Prefixed wildcard
-                }
+            String name = event.getName();
+            if (name == null) {
+                return false;
+            }
+            String trimName = name.trim();
+            if (trimName.equals(trimTransEvent)) {
+                return true; // Match
+            } else if (event.getType() != TriggerEvent.CHANGE_EVENT
+                    && trimTransEvent.equals("*")) {
+                return true; // Wildcard, skip gen'ed ones like .done etc.
+            } else if (trimTransEvent.endsWith(".*")
+                    && trimName.startsWith(trimTransEvent.substring(0,
+                    trimTransEvent.length() - 1))) {
+                return true; // Prefixed wildcard
             }
             return false;
         }
@@ -160,127 +157,104 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
      * @param parentStateId
      *            the ID of the parent state of the &lt;invoke&gt; holding
      *            the &lt;finalize&gt;
-     * @param eventOccurrences
-     *            current events
+     * @param event
+     *            current event
      * @return true/false
      */
     protected boolean finalizeMatch(final String parentStateId,
-                                    final Set<TriggerEvent> eventOccurrences) {
+                                    final TriggerEvent event) {
         String prefix = parentStateId + ".invoke."; // invoke prefix
-        for (TriggerEvent te : eventOccurrences) {
-            String evt = te.getName();
-            if (evt != null && evt.trim().startsWith(prefix)) {
-                return true;
-            }
+        String name = event.getName();
+        if (name != null && name.trim().startsWith(prefix)) {
+            return true;
         }
         return false;
     }
 
-    protected void executeContent(Executable exec, final EventDispatcher evtDispatcher, final ErrorReporter errRep,
-                                  final SCInstance scInstance, final Collection<TriggerEvent> internalEvents)
+    protected void executeContent(SCXMLExecutionContext ctx, Executable exec)
             throws ModelException {
 
         try {
             for (Action action : exec.getActions()) {
-                action.execute(evtDispatcher, errRep, scInstance, appLog, internalEvents);
+                action.execute(ctx.getActionExecutionContext());
             }
         } catch (SCXMLExpressionException e) {
-            errRep.onError(ErrorConstants.EXPRESSION_ERROR, e.getMessage(), exec);
+            ctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR, e.getMessage(), exec);
         }
     }
 
     /**
-     * @param input
-     *            SCXML state machine
+     * Optional post processing immediately following SCXMLReader. May be used
+     * for removing pseudo-states etc.
+     *
+     * @param input  SCXML state machine
+     * @param errRep ErrorReporter callback
      * @return normalized SCXML state machine, pseudo states are removed, etc.
-     * @param errRep
-     *            ErrorReporter callback
      */
-    public SCXML normalizeStateMachine(final SCXML input,
-                                       final ErrorReporter errRep) {
+    public SCXML normalizeStateMachine(final SCXML input, final ErrorReporter errRep) {
         //it is a no-op for now
         return input;
     }
 
-    public void executeGlobalScript(final Step step, final SCXML stateMachine, final EventDispatcher evtDispatcher,
-                                    final ErrorReporter errRep, final SCInstance scInstance) throws ModelException {
-        if (stateMachine.getGlobalScript() != null) {
+    public void executeGlobalScript(final SCXMLExecutionContext ctx, final Step step) throws ModelException {
+        Script globalScript = ctx.getStatemachine().getGlobalScript();
+        if ( globalScript != null) {
             try {
-                stateMachine.getGlobalScript().execute(evtDispatcher, errRep, scInstance, appLog,
-                        step.getAfterStatus().getEvents());
+                globalScript.execute(ctx.getActionExecutionContext());
             } catch (SCXMLExpressionException e) {
-                errRep.onError(ErrorConstants.EXPRESSION_ERROR, e.getMessage(), stateMachine);
+                ctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR, e.getMessage(), ctx.getStatemachine());
             }
         }
     }
 
-    public void exitStates(final Step step, final SCXML stateMachine, final EventDispatcher evtDispatcher,
-                           final ErrorReporter errRep, final SCInstance scInstance) throws ModelException {
-        NotificationRegistry nr = scInstance.getNotificationRegistry();
-        Collection<TriggerEvent> internalEvents = step.getAfterStatus().getEvents();
+    public void exitStates(final SCXMLExecutionContext ctx, final Step step) throws ModelException {
+        NotificationRegistry nr = ctx.getNotificationRegistry();
         // ExecutePhaseActions / OnExit
         for (EnterableState es : step.getExitList()) {
             OnExit oe = es.getOnExit();
-            executeContent(oe, evtDispatcher, errRep, scInstance, internalEvents);
+            executeContent(ctx, oe);
             if (es instanceof TransitionalState) {
                 // check if invokers are active in this state
                 for (Invoke inv : ((TransitionalState)es).getInvokes()) {
-                    Invoker toCancel = scInstance.getInvoker(inv);
-                    if (toCancel != null) {
-                        try {
-                            toCancel.cancel();
-                        } catch (InvokerException ie) {
-                            TriggerEvent te = new TriggerEvent(es.getId()
-                                    + ".invoke.cancel.failed", TriggerEvent.ERROR_EVENT);
-                            internalEvents.add(te);
-                        }
-                        // done here, don't wait for cancel response
-                        scInstance.removeInvoker(inv);
-                    }
+                    ctx.cancelInvoker(inv);
                 }
             }
             nr.fireOnExit(es, es);
-            nr.fireOnExit(stateMachine, es);
-            TriggerEvent te = new TriggerEvent(es.getId() + ".exit",
-                    TriggerEvent.CHANGE_EVENT);
-            internalEvents.add(te);
+            nr.fireOnExit(ctx.getStatemachine(), es);
+            TriggerEvent te = new TriggerEvent(es.getId() + ".exit", TriggerEvent.CHANGE_EVENT);
+            ctx.addInternalEvent(te);
         }
     }
 
-    public void executeTransitionContent(final Step step, final SCXML stateMachine, final EventDispatcher evtDispatcher,
-                                         final ErrorReporter errRep, final SCInstance scInstance) throws ModelException {
-        NotificationRegistry nr = scInstance.getNotificationRegistry();
-        Collection<TriggerEvent> internalEvents = step.getAfterStatus().getEvents();
+    public void executeTransitionContent(final SCXMLExecutionContext ctx, final Step step) throws ModelException {
+        NotificationRegistry nr = ctx.getNotificationRegistry();
         for (SimpleTransition st : step.getTransitList()) {
-            executeContent(st, evtDispatcher, errRep, scInstance, internalEvents);
+            executeContent(ctx, st);
             if (st instanceof Transition) {
                 Transition t = (Transition)st;
                 for (TransitionTarget tt : st.getRuntimeTargets()) {
                     nr.fireOnTransition(st, st.getParent(), tt, t);
-                    nr.fireOnTransition(stateMachine, t.getParent(), tt, t);
+                    nr.fireOnTransition(ctx.getStatemachine(), t.getParent(), tt, t);
                 }
             }
         }
     }
 
-    public void enterStates(final Step step, final SCXML stateMachine, final EventDispatcher evtDispatcher,
-                            final ErrorReporter errRep, final SCInstance scInstance) throws ModelException {
-        NotificationRegistry nr = scInstance.getNotificationRegistry();
-        Collection<TriggerEvent> internalEvents = step.getAfterStatus().getEvents();
+    public void enterStates(final SCXMLExecutionContext ctx, final Step step) throws ModelException {
+        NotificationRegistry nr = ctx.getNotificationRegistry();
         for (EnterableState es : step.getEntryList()) {
             OnEntry oe = es.getOnEntry();
-            executeContent(oe, evtDispatcher, errRep, scInstance, internalEvents);
+            executeContent(ctx, oe);
             nr.fireOnEntry(es, es);
-            nr.fireOnEntry(stateMachine, es);
-            TriggerEvent te = new TriggerEvent(es.getId() + ".entry",
-                    TriggerEvent.CHANGE_EVENT);
-            internalEvents.add(te);
+            nr.fireOnEntry(ctx.getStatemachine(), es);
+            TriggerEvent te = new TriggerEvent(es.getId() + ".entry", TriggerEvent.CHANGE_EVENT);
+            ctx.addInternalEvent(te);
             // actions in initial transition (if any) and .done events
             if (es instanceof State) {
                 State ts = (State) es;
                 Initial ini = ts.getInitial();
                 if (ts.isComposite() && ini != null) { // TODO: use step.getDefaultEntrySet().contains(tt) instead
-                    executeContent(ini.getTransition(), evtDispatcher, errRep, scInstance, internalEvents);
+                    executeContent(ctx, ini.getTransition());
                 }
             }
             else if (es instanceof Final) {
@@ -289,11 +263,9 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                 if (parent != null) {
                     prefix = parent.getId();
                 }
-                te = new TriggerEvent(prefix + ".done",
-                        TriggerEvent.CHANGE_EVENT);
-                internalEvents.add(te);
+                ctx.addInternalEvent(new TriggerEvent(prefix + ".done",TriggerEvent.CHANGE_EVENT));
                 if (parent != null) {
-                    scInstance.setDone(parent, true);
+                    ctx.getScInstance().setDone(parent, true);
                 }
                 if (parent != null && parent.isRegion()) {
                     //3.4 we got a region, which is finalized
@@ -303,15 +275,13 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                     int pCount = p.getChildren().size();
                     for (TransitionTarget ttreg : p.getChildren()) {
                         State reg = (State) ttreg;
-                        if (scInstance.isDone(reg)) {
+                        if (ctx.getScInstance().isDone(reg)) {
                             finCount++;
                         }
                     }
                     if (finCount == pCount) {
-                        te = new TriggerEvent(p.getId() + ".done",
-                                TriggerEvent.CHANGE_EVENT);
-                        internalEvents.add(te);
-                        scInstance.setDone(p, true);
+                        ctx.addInternalEvent(new TriggerEvent(p.getId() + ".done",TriggerEvent.CHANGE_EVENT));
+                        ctx.getScInstance().setDone(p, true);
                     }
                 }
             }
@@ -319,27 +289,21 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
     }
 
     /**
-     * @param step
-     *            provides target states and entry list to fill in [out]
-     * @param stateMachine
-     *            SCXML state machine [in]
-     * @param errRep
-     *            ErrorReporter callback [inout]
-     * @param scInstance
-     *            The state chart instance [in]
-     * @throws org.apache.commons.scxml2.model.ModelException
-     *             in case there is a fatal SCXML object model problem.
+     * Determining the initial state(s) for this state machine.
+     *
+     * @param ctx  provides the execution context
+     * @param step provides target states and entry list to fill in [out]
+     *
+     * @throws org.apache.commons.scxml2.model.ModelException in case there is a fatal SCXML object model problem.
      */
-    public void determineInitialStates(final Step step, final SCXML stateMachine, final ErrorReporter errRep,
-                                       final SCInstance scInstance)
-            throws ModelException {
-        SimpleTransition t = stateMachine.getInitialTransition();
+    public void determineInitialStates(final SCXMLExecutionContext ctx, final Step step) throws ModelException {
+        SimpleTransition t = ctx.getStatemachine().getInitialTransition();
         if (t == null) {
-            errRep.onError(ErrorConstants.NO_INITIAL,
-                    "SCXML initialstate is missing!", stateMachine);
+            ctx.getErrorReporter().onError(ErrorConstants.NO_INITIAL,
+                    "SCXML initialstate is missing!", ctx.getStatemachine());
         } else {
             Set<EnterableState> states = step.getAfterStatus().getStates();
-            states.addAll(determineTargetStates(new HashSet<TransitionTarget>(t.getTargets()), errRep, scInstance));
+            states.addAll(determineTargetStates(ctx, new HashSet<TransitionTarget>(t.getTargets())));
             //set of ALL entered states (even if initialState is a jump-over)
             Set<EnterableState> onEntry = SCXMLHelper.getAncestorClosure(states, null);
             step.getEntryList().addAll(onEntry);
@@ -351,40 +315,24 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
     /**
      * Executes all OnExit/Transition/OnEntry transitional actions.
      *
-     * @param step
-     *            provides EntryList, TransitList, ExitList gets
-     *            updated its AfterStatus/Events
-     * @param stateMachine
-     *            state machine - SCXML instance
-     * @param evtDispatcher
-     *            the event dispatcher - EventDispatcher instance
-     * @param errRep
-     *            error reporter
-     * @param scInstance
-     *            The state chart instance
-     * @throws ModelException
-     *             in case there is a fatal SCXML object model problem.
+     * @param ctx  provides the execution context
+     * @param step provides EntryList, TransitList, ExitList gets updated its AfterStatus/Events
+     *
+     * @throws org.apache.commons.scxml2.model.ModelException in case there is a fatal SCXML object model problem.
      */
-    public void executeActions(final Step step, final SCXML stateMachine,
-                               final EventDispatcher evtDispatcher,
-                               final ErrorReporter errRep, final SCInstance scInstance)
-            throws ModelException {
-        exitStates(step, stateMachine, evtDispatcher, errRep, scInstance);
-        executeTransitionContent(step, stateMachine, evtDispatcher, errRep, scInstance);
-        enterStates(step, stateMachine, evtDispatcher, errRep, scInstance);
+    public void executeActions(final SCXMLExecutionContext ctx, final Step step) throws ModelException {
+        exitStates(ctx, step);
+        executeTransitionContent(ctx, step);
+        enterStates(ctx, step);
     }
 
     /**
-     * @param stateMachine
-     *            a SM to traverse [in]
-     * @param step
-     *            with current status and list of transitions to populate
-     *            [inout]
-     * @param errRep
-     *            ErrorReporter callback [inout]
+     * Enumerate all the reachable transitions.
+     *
+     * @param ctx  provides the execution context
+     * @param step with current status and list of transitions to populate
      */
-    public void enumerateReachableTransitions(final SCXML stateMachine,
-            final Step step, final ErrorReporter errRep) {
+    public void enumerateReachableTransitions(final SCXMLExecutionContext ctx, final Step step) {
         // prevents adding the same transition multiple times
         Set<Transition> transSet = new HashSet<Transition>();
         // prevents visiting the same state multiple times
@@ -413,38 +361,27 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
     }
 
     /**
-     * @param step
-     *            [inout]
-     * @param evtDispatcher
-     *            The {@link EventDispatcher} [in]
-     * @param errRep
-     *            ErrorReporter callback [inout]
-     * @param scInstance
-     *            The state chart instance [in]
-     * @throws ModelException
-     *             in case there is a fatal SCXML object model problem.
+     * Filter the transitions set, eliminate those whose guard conditions
+     * are not satisfied.
+     *
+     * @param ctx  provides the execution context
+     * @param step with current status
+     *
+     * @throws org.apache.commons.scxml2.model.ModelException in case there is a fatal SCXML object model problem.
      */
-    public void filterTransitionsSet(final Step step,
-            final EventDispatcher evtDispatcher,
-            final ErrorReporter errRep, final SCInstance scInstance)
-    throws ModelException {
+    public void filterTransitionsSet(final SCXMLExecutionContext ctx, final Step step) throws ModelException {
         /*
-         * - filter transition set by applying events
-         * (step/beforeStatus/events + step/externalEvents) (local check)
+         * - filter transition set by applying step.event
          * - evaluating guard conditions for
          * each transition (local check) - transition precedence (bottom-up)
          * as defined by SCXML specs
          */
-        Set<TriggerEvent> allEvents = new HashSet<TriggerEvent>(step.getBeforeStatus().getEvents().size()
-            + step.getExternalEvents().size());
-        allEvents.addAll(step.getBeforeStatus().getEvents());
-        allEvents.addAll(step.getExternalEvents());
         // Finalize invokes, if applicable
-        for (Map.Entry<Invoke, String> entry : scInstance.getInvokeIds().entrySet()) {
-            if (finalizeMatch(entry.getValue(), allEvents)) {
+        for (Map.Entry<Invoke, String> entry : ctx.getInvokeIds().entrySet()) {
+            if (finalizeMatch(entry.getValue(), step.getEvent())) {
                 Finalize fn = entry.getKey().getFinalize();
                 if (fn != null) {
-                    executeContent(fn, evtDispatcher, errRep, scInstance, step.getAfterStatus().getEvents());
+                    executeContent(ctx, fn);
                 }
             }
         }
@@ -453,7 +390,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
         //iterate over non-filtered transition set
         for (SimpleTransition st : step.getTransitList()) {
             Transition t;
-            if (st instanceof SimpleTransition) {
+            if (st instanceof Transition) {
                 t = (Transition)st;
             }
             else {
@@ -461,7 +398,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
             }
             // event check
             String event = t.getEvent();
-            if (!eventMatch(event, allEvents)) {
+            if (!eventMatch(event, step.getEvent())) {
                 // t has a non-empty event which is not triggered
                 removeList.add(t);
                 continue; //makes no sense to eval guard cond.
@@ -475,20 +412,22 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                 // Note: a History Transition may NOT have a cond or event specified, so here we are ensured that
                 //       only EnterableState Transitions are evaluated
                 try {
-                    Context ctx = scInstance.getContext((EnterableState)t.getParent());
-                    ctx.setLocal(NAMESPACES_KEY, t.getNamespaces());
-                    rslt = scInstance.getEvaluator().evalCond(ctx,
-                        t.getCond());
+                    Context context = ctx.getScInstance().getContext((EnterableState)t.getParent());
+                    context.setLocal(NAMESPACES_KEY, t.getNamespaces());
+                    rslt = ctx.getEvaluator().evalCond(context,
+                            t.getCond());
                     if (rslt == null) {
                         if (appLog.isDebugEnabled()) {
-                            appLog.debug("Treating as false because the cond expression was evaluated as null: '" + t.getCond() + "'");
+                            appLog.debug("Treating as false because the cond expression was evaluated as null: '" +
+                                    t.getCond() + "'");
                         }
                         rslt = Boolean.FALSE;
                     }
-                    ctx.setLocal(NAMESPACES_KEY, null);
+                    context.setLocal(NAMESPACES_KEY, null);
                 } catch (SCXMLExpressionException e) {
                     rslt = Boolean.FALSE;
-                    errRep.onError(ErrorConstants.EXPRESSION_ERROR, "Treating as false due to error: " + e.getMessage(), t);
+                    ctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR, "Treating as false due to error: " +
+                            e.getMessage(), t);
                     // TODO: place the error 'error.execution' in the internal event queue. (section "3.12.2 Errors")
                 }
             }
@@ -500,7 +439,6 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
         // apply event + guard condition filter
         step.getTransitList().removeAll(removeList);
         // cleanup temporary structures
-        allEvents.clear();
         removeList.clear();
         // optimization - global precedence potentially applies
         // only if there are multiple enabled transitions
@@ -593,18 +531,13 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
     }
 
     /**
-     * @param targets
-     *            a set seeded in previous step [inout]
-     * @param errRep
-     *            ErrorReporter callback [inout]
-     * @param scInstance
-     *            The state chart instance [in]
-     * @throws ModelException On illegal configuration
-     * @see #seedTargetSet(Set, List, ErrorReporter)
+     * @param ctx     provides the execution context
+     * @param targets a set seeded in previous step [inout]
+     * @throws org.apache.commons.scxml2.model.ModelException On illegal configuration
+     * @see #seedTargetSet(java.util.Set, java.util.List, org.apache.commons.scxml2.ErrorReporter)
      */
-    public Set<EnterableState> determineTargetStates(final Set<TransitionTarget> targets,
-            final ErrorReporter errRep, final SCInstance scInstance)
-    throws ModelException {
+    public Set<EnterableState> determineTargetStates(SCXMLExecutionContext ctx, final Set<TransitionTarget> targets)
+            throws ModelException {
         LinkedList<TransitionTarget> wrkSet = new LinkedList<TransitionTarget>(targets);
         Set<EnterableState> states = new HashSet<EnterableState>();
         while (!wrkSet.isEmpty()) {
@@ -618,8 +551,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                     states.add(st); //leaf
                 } else {
                     // composite state
-                    List<TransitionTarget> initialStates = st.getInitial().getTransition().
-                        getTargets();
+                    List<TransitionTarget> initialStates = st.getInitial().getTransition().getTargets();
                     wrkSet.addAll(initialStates);
                 }
             } else if (tt instanceof Parallel) {
@@ -630,10 +562,10 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                 }
             } else if (tt instanceof History) {
                 History h = (History) tt;
-                if (scInstance.isEmpty(h)) {
+                if (ctx.getScInstance().isEmpty(h)) {
                     wrkSet.addAll(h.getTransition().getRuntimeTargets());
                 } else {
-                    wrkSet.addAll(scInstance.getLastConfiguration(h));
+                    wrkSet.addAll(ctx.getScInstance().getLastConfiguration(h));
                 }
             } else {
                 throw new ModelException("Unknown TransitionTarget subclass:"
@@ -647,15 +579,10 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
      * Go over the exit list and update history information for
      * relevant states.
      *
-     * @param step
-     *            [inout]
-     * @param errRep
-     *            ErrorReporter callback [inout]
-     * @param scInstance
-     *            The state chart instance [inout]
+     * @param ctx  provides the execution context
+     * @param step The current Step
      */
-    public void updateHistoryStates(final Step step,
-            final ErrorReporter errRep, final SCInstance scInstance) {
+    public void updateHistoryStates(SCXMLExecutionContext ctx, final Step step) {
         Set<EnterableState> oldStates = step.getBeforeStatus().getStates();
         for (EnterableState es : step.getExitList()) {
             if (es instanceof TransitionalState) {
@@ -674,14 +601,14 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                                     }
                                 }
                             }
-                            scInstance.setLastConfiguration(h, deep);
+                            ctx.getScInstance().setLastConfiguration(h, deep);
                         } else {
                             if (shallow == null) {
                                 //calculate shallow history for a given state once
                                 shallow = new HashSet<EnterableState>(ts.getChildren());
                                 shallow.retainAll(SCXMLHelper.getAncestorClosure(oldStates, null));
                             }
-                            scInstance.setLastConfiguration(h, shallow);
+                            ctx.getScInstance().setLastConfiguration(h, shallow);
                         }
                     }
                 }
@@ -693,16 +620,12 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
      * Follow the candidate transitions for this execution Step, and update the
      * lists of entered and exited states accordingly.
      *
+     * @param ctx  provides the execution context
      * @param step The current Step
-     * @param errorReporter The ErrorReporter for the current environment
-     * @param scInstance The state chart instance
      *
-     * @throws ModelException
-     *             in case there is a fatal SCXML object model problem.
+     * @throws org.apache.commons.scxml2.model.ModelException in case there is a fatal SCXML object model problem.
      */
-    public void followTransitions(final Step step,
-            final ErrorReporter errorReporter, final SCInstance scInstance)
-    throws ModelException {
+    public void followTransitions(final SCXMLExecutionContext ctx, final Step step) throws ModelException {
         Set<EnterableState> currentStates = step.getBeforeStatus().getStates();
         List<SimpleTransition> transitions = step.getTransitList();
         // DetermineExitedStates (currentStates, transitList) -> exitedStates
@@ -716,10 +639,10 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
         Set<EnterableState> residual = new HashSet<EnterableState>(currentStates);
         residual.removeAll(exitedStates);
         // SeedTargetSet (residual, transitList) -> seedSet
-        Set<TransitionTarget> seedSet = seedTargetSet(residual, transitions, errorReporter);
+        Set<TransitionTarget> seedSet = seedTargetSet(residual, transitions, ctx.getErrorReporter());
         // DetermineTargetStates (initialTargetSet) -> targetSet
         Set<EnterableState> targetSet = step.getAfterStatus().getStates();
-        targetSet.addAll(determineTargetStates(seedSet, errorReporter, scInstance));
+        targetSet.addAll(determineTargetStates(ctx, seedSet));
         // BuildOnEntryList (targetSet, seedSet) -> entryList
         Set<EnterableState> entered = SCXMLHelper.getAncestorClosure(targetSet, seedSet);
         seedSet.clear();
@@ -736,45 +659,38 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
         // Check whether the computed state config is legal
         targetSet.addAll(residual);
         residual.clear();
-        if (!SCXMLHelper.isLegalConfig(targetSet, errorReporter)) {
+        if (!SCXMLHelper.isLegalConfig(targetSet, ctx.getErrorReporter())) {
             throw new ModelException("Illegal state machine configuration!");
         }
         // sort onEntry and onExit according state hierarchy
         for (TransitionTarget tt : exitedStates) {
             step.getExitList().add((EnterableState)tt);
         }
-        Collections.sort(step.getExitList(),DocumentOrder.documentOrderComparator);
+        Collections.sort(step.getExitList(),DocumentOrder.reverseDocumentOrderComparator);
         step.getEntryList().addAll(entered);
-        Collections.sort(step.getEntryList(), DocumentOrder.reverseDocumentOrderComparator);
+        Collections.sort(step.getEntryList(), DocumentOrder.documentOrderComparator);
         for (EnterableState es : step.getEntryList()) {
             if (es instanceof State) {
-                scInstance.setDone(es, false);
+                ctx.getScInstance().setDone(es, false);
             }
         }
     }
+
     /**
-     * Process any existing invokes, includes forwarding external events,
-     * and executing any finalize handlers.
+     * Forward events to invoked activities, execute finalize handlers.
      *
-     * @param events
-     *            The events to be forwarded
-     * @param errRep
-     *            ErrorReporter callback
-     * @param scInstance
-     *            The state chart instance
-     * @throws ModelException
-     *             in case there is a fatal SCXML object model problem.
+     * @param ctx    provides the execution context
+     * @param event The events to be forwarded
+     *
+     * @throws org.apache.commons.scxml2.model.ModelException in case there is a fatal SCXML object model problem.
      */
-    public void processInvokes(final TriggerEvent[] events,
-            final ErrorReporter errRep, final SCInstance scInstance)
-    throws ModelException {
+    public void processInvokes(final SCXMLExecutionContext ctx, final TriggerEvent event) throws ModelException {
         Set<TriggerEvent> allEvents = new HashSet<TriggerEvent>();
-        allEvents.addAll(Arrays.asList(events));
-        for (Map.Entry<Invoke, String> entry : scInstance.getInvokeIds().entrySet()) {
-            if (!finalizeMatch(entry.getValue(), allEvents)) { // prevent cycles
-                Invoker inv = scInstance.getInvoker(entry.getKey());
+        for (Map.Entry<Invoke, String> entry : ctx.getInvokeIds().entrySet()) {
+            if (!finalizeMatch(entry.getValue(), event)) { // prevent cycles
+                Invoker inv = ctx.getInvoker(entry.getKey());
                 try {
-                    inv.parentEvents(events);
+                    inv.parentEvents(new TriggerEvent[]{event});
                 } catch (InvokerException ie) {
                     appLog.error(ie.getMessage(), ie);
                     throw new ModelException(ie.getMessage(), ie.getCause());
@@ -784,37 +700,31 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
     }
 
     /**
-     * Initiate any new invokes.
+     * Initiate any new invoked activities.
      *
-     * @param step
-     *            The current Step
-     * @param errRep
-     *            ErrorReporter callback
-     * @param scInstance
-     *            The state chart instance
+     * @param ctx  provides the execution context
+     * @param step The current Step
      */
-    public void initiateInvokes(final Step step, final ErrorReporter errRep,
-            final SCInstance scInstance) {
-        Evaluator eval = scInstance.getEvaluator();
-        Collection<TriggerEvent> internalEvents = step.getAfterStatus().getEvents();
+    public void initiateInvokes(final SCXMLExecutor executor, final SCXMLExecutionContext ctx, final Step step) {
+        SCInstance scInstance = ctx.getScInstance();
+        Evaluator eval = ctx.getEvaluator();
         for (EnterableState es : step.getAfterStatus().getStates()) {
             if (es instanceof TransitionalState) {
                 TransitionalState ts = (TransitionalState) es;
-                Context ctx = scInstance.getContext(ts);
+                Context context = scInstance.getContext(ts);
                 for (Invoke i : ts.getInvokes()) {
-                    if (i != null && scInstance.getInvoker(i) == null) {
+                    if (i != null && ctx.getInvoker(i) == null) {
                         String src = i.getSrc();
                         if (src == null) {
                             String srcexpr = i.getSrcexpr();
                             Object srcObj;
                             try {
-                                ctx.setLocal(NAMESPACES_KEY, i.getNamespaces());
-                                srcObj = eval.eval(ctx, srcexpr);
-                                ctx.setLocal(NAMESPACES_KEY, null);
+                                context.setLocal(NAMESPACES_KEY, i.getNamespaces());
+                                srcObj = eval.eval(context, srcexpr);
+                                context.setLocal(NAMESPACES_KEY, null);
                                 src = String.valueOf(srcObj);
                             } catch (SCXMLExpressionException see) {
-                                errRep.onError(ErrorConstants.EXPRESSION_ERROR,
-                                        see.getMessage(), i);
+                                ctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR, see.getMessage(), i);
                             }
                         }
                         String source = src;
@@ -822,14 +732,11 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                         if (pr != null) {
                             source = i.getPathResolver().resolvePath(src);
                         }
-                        String type = i.getType();
                         Invoker inv;
                         try {
-                            inv = scInstance.newInvoker(type);
+                            inv = ctx.newInvoker(i.getType());
                         } catch (InvokerException ie) {
-                            TriggerEvent te = new TriggerEvent(ts.getId()
-                                    + ".invoke.failed", TriggerEvent.ERROR_EVENT);
-                            internalEvents.add(te);
+                            ctx.addInternalEvent(new TriggerEvent(ts.getId()+ ".invoke.failed", TriggerEvent.ERROR_EVENT));
                             continue;
                         }
                         List<Param> params = i.params();
@@ -837,46 +744,39 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics, Serializable {
                         for (Param p : params) {
                             String argExpr = p.getExpr();
                             Object argValue = null;
-                            ctx.setLocal(NAMESPACES_KEY, p.getNamespaces());
+                            context.setLocal(NAMESPACES_KEY, p.getNamespaces());
                             // Do we have an "expr" attribute?
                             if (argExpr != null && argExpr.trim().length() > 0) {
                                 try {
-                                    argValue = eval.eval(ctx, argExpr);
+                                    argValue = eval.eval(context, argExpr);
                                 } catch (SCXMLExpressionException see) {
-                                    errRep.onError(ErrorConstants.EXPRESSION_ERROR,
-                                            see.getMessage(), i);
+                                    ctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR, see.getMessage(), i);
                                 }
                             } else {
                                 // No. Does value of "name" attribute refer to a valid
                                 // location in the data model?
                                 try {
-                                    argValue = eval.evalLocation(ctx, p.getName());
+                                    argValue = eval.evalLocation(context, p.getName());
                                     if (argValue == null) {
-                                    // Generate error, 4.3.1 in WD-scxml-20080516
-                                        TriggerEvent te = new TriggerEvent(ts.getId()
-                                                + ERR_ILLEGAL_ALLOC,
-                                                TriggerEvent.ERROR_EVENT);
-                                        internalEvents.add(te);
+                                        // Generate error, 4.3.1 in WD-scxml-20080516
+                                        ctx.addInternalEvent(new TriggerEvent(ts.getId()+ ERR_ILLEGAL_ALLOC,TriggerEvent.ERROR_EVENT));
                                     }
                                 } catch (SCXMLExpressionException see) {
-                                    errRep.onError(ErrorConstants.EXPRESSION_ERROR,
-                                            see.getMessage(), i);
+                                    ctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR, see.getMessage(), i);
                                 }
                             }
-                            ctx.setLocal(NAMESPACES_KEY, null);
+                            context.setLocal(NAMESPACES_KEY, null);
                             args.put(p.getName(), argValue);
                         }
-                        String invokeId = scInstance.setInvoker(i, inv);
+                        String invokeId = ctx.setInvoker(i, inv);
                         // TODO: API should reflect this isn't the parent state ID anymore but the invokeId
                         inv.setParentStateId(invokeId);
-                        inv.setSCInstance(scInstance);
+                        inv.setParentExecutor(executor);
                         try {
                             inv.invoke(source, args);
                         } catch (InvokerException ie) {
-                            TriggerEvent te = new TriggerEvent(ts.getId()
-                                    + ".invoke.failed", TriggerEvent.ERROR_EVENT);
-                            internalEvents.add(te);
-                            scInstance.removeInvoker(i);
+                            ctx.addInternalEvent(new TriggerEvent(ts.getId()+ ".invoke.failed", TriggerEvent.ERROR_EVENT));
+                            ctx.removeInvoker(i);
                             continue;
                         }
                     }

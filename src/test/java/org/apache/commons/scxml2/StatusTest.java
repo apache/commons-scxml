@@ -51,16 +51,6 @@ public class StatusTest {
     }
     
     @Test
-    public void testIsFinalStateHasEvent() {
-        Final state = new Final();
-        
-        status.getStates().add(state);
-        status.getEvents().add(new TriggerEvent("name", TriggerEvent.CALL_EVENT));
-        
-        Assert.assertFalse(status.isFinal());
-    }
-    
-    @Test
     public void testIsFinalState() {
         Final state = new Final();
         

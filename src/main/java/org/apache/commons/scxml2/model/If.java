@@ -17,17 +17,12 @@
 package org.apache.commons.scxml2.model;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
+import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.Context;
-import org.apache.commons.scxml2.ErrorReporter;
 import org.apache.commons.scxml2.Evaluator;
-import org.apache.commons.scxml2.EventDispatcher;
-import org.apache.commons.scxml2.SCInstance;
 import org.apache.commons.scxml2.SCXMLExpressionException;
-import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.semantics.ErrorConstants;
 
 /**
@@ -119,26 +114,25 @@ public class If extends Action implements ActionsContainer {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final EventDispatcher evtDispatcher,
-            final ErrorReporter errRep, final SCInstance scInstance,
-            final Log appLog, final Collection<TriggerEvent> derivedEvents)
-    throws ModelException, SCXMLExpressionException {
+    public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
         EnterableState parentState = getParentEnterableState();
-        Context ctx = scInstance.getContext(parentState);
-        Evaluator eval = scInstance.getEvaluator();
+        Context ctx = exctx.getScInstance().getContext(parentState);
+        Evaluator eval = exctx.getEvaluator();
         ctx.setLocal(getNamespacesKey(), getNamespaces());
         Boolean rslt;
         try {
             rslt = eval.evalCond(ctx, cond);
             if (rslt == null) {
-                if (appLog.isDebugEnabled()) {
-                    appLog.debug("Treating as false because the cond expression was evaluated as null: '" + cond + "'");
+                if (exctx.getAppLog().isDebugEnabled()) {
+                    exctx.getAppLog().debug("Treating as false because the cond expression was evaluated as null: '"
+                            + cond + "'");
                 }
                 rslt = Boolean.FALSE;
             }
         } catch (SCXMLExpressionException e) {
             rslt = Boolean.FALSE;
-            errRep.onError(ErrorConstants.EXPRESSION_ERROR, "Treating as false due to error: " + e.getMessage(), this);
+            exctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR, "Treating as false due to error: "
+                    + e.getMessage(), this);
             // TODO: place the error 'error.execution' in the internal event queue. (section "3.12.2 Errors")
         }
         execute = rslt;
@@ -146,7 +140,7 @@ public class If extends Action implements ActionsContainer {
         // The "if" statement is a "container"
         for (Action aa : actions) {
             if (execute && !(aa instanceof ElseIf)) {
-                aa.execute(evtDispatcher, errRep, scInstance, appLog, derivedEvents);
+                aa.execute(exctx);
             } else if (execute && aa instanceof ElseIf) {
                 break;
             } else if (aa instanceof Else) {

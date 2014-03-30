@@ -25,18 +25,19 @@ import org.apache.commons.scxml2.env.jexl.JexlEvaluator;
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.History;
 import org.apache.commons.scxml2.model.State;
-import org.apache.commons.scxml2.model.TransitionTarget;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 public class SCInstanceTest {
 
+    private SCXMLExecutor executor;
     private SCInstance instance;
     
     @Before
     public void setUp() {
-        instance = new SCInstance(null);
+        executor = new SCXMLExecutor();
+        instance = executor.getSCInstance();
     }
     
     @Test
@@ -56,9 +57,9 @@ public class SCInstanceTest {
     @Test
     public void testGetRootContextEvaluator() {
         Evaluator evaluator = new JexlEvaluator();
-        
-        instance.setEvaluator(evaluator);
-        
+
+        executor.setEvaluator(evaluator);
+
         Assert.assertTrue(instance.getRootContext() instanceof JexlContext);
     }
     
@@ -85,7 +86,7 @@ public class SCInstanceTest {
         instance.setRootContext(context);
 
         Evaluator evaluator = new JexlEvaluator();
-        instance.setEvaluator(evaluator);
+        executor.setEvaluator(evaluator);
 
         Assert.assertEquals("value", instance.getContext(target).get("name"));
         Assert.assertEquals("value", instance.lookupContext(target).get("name"));
@@ -106,7 +107,7 @@ public class SCInstanceTest {
         instance.setRootContext(context);
 
         Evaluator evaluator = new JexlEvaluator();
-        instance.setEvaluator(evaluator);
+        executor.setEvaluator(evaluator);
 
         Assert.assertEquals("value", instance.getContext(target).get("name"));
         Assert.assertEquals("value", instance.lookupContext(target).get("name"));

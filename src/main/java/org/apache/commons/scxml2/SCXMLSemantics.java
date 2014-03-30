@@ -38,160 +38,95 @@ public interface SCXMLSemantics {
      * Optional post processing immediately following SCXMLReader. May be used
      * for removing pseudo-states etc.
      *
-     * @param input
-     *            SCXML state machine
+     * @param input  SCXML state machine
+     * @param errRep ErrorReporter callback
      * @return normalized SCXML state machine, pseudo states are removed, etc.
-     * @param errRep
-     *            ErrorReporter callback
      */
     SCXML normalizeStateMachine(final SCXML input, final ErrorReporter errRep);
 
-    public void executeGlobalScript(final Step step, final SCXML stateMachine, final EventDispatcher evtDispatcher,
-                                    final ErrorReporter errRep, final SCInstance scInstance) throws ModelException;
+    public void executeGlobalScript(final SCXMLExecutionContext context, final Step step) throws ModelException;
 
-    public void exitStates(final Step step, final SCXML stateMachine, final EventDispatcher evtDispatcher,
-                           final ErrorReporter errRep, final SCInstance scInstance) throws ModelException;
+    public void exitStates(final SCXMLExecutionContext ctx, final Step step) throws ModelException;
 
-    public void executeTransitionContent(final Step step, final SCXML stateMachine, final EventDispatcher evtDispatcher,
-                                         final ErrorReporter errRep, final SCInstance scInstance) throws ModelException;
+    public void executeTransitionContent(final SCXMLExecutionContext ctx, final Step step) throws ModelException;
 
-    public void enterStates(final Step step, final SCXML stateMachine, final EventDispatcher evtDispatcher,
-                            final ErrorReporter errRep, final SCInstance scInstance) throws ModelException;
+    public void enterStates(final SCXMLExecutionContext ctx, final Step step) throws ModelException;
 
     /**
      * Determining the initial state(s) for this state machine.
      *
-     * @param step
-     *            provides target states and entry list to fill in [out]
-     * @param stateMachine
-     *            SCXML state machine
-     * @param errRep
-     *            ErrorReporter callback
-     * @param scInstance
-     *            The state chart instance
+     * @param ctx  provides the execution context
+     * @param step provides target states and entry list to fill in [out]
      *
-     * @throws ModelException
-     *             in case there is a fatal SCXML object model problem.
+     * @throws org.apache.commons.scxml2.model.ModelException in case there is a fatal SCXML object model problem.
      */
-    void determineInitialStates(final Step step, final SCXML stateMachine, final ErrorReporter errRep,
-            final SCInstance scInstance)
-    throws ModelException;
+    void determineInitialStates(final SCXMLExecutionContext ctx, final Step step) throws ModelException;
 
     /**
      * Executes all OnExit/Transition/OnEntry transitional actions.
      *
-     * @param step
-     *            provides EntryList, TransitList, ExitList gets
-     *            updated its AfterStatus/Events
-     * @param stateMachine
-     *            state machine - SCXML instance
-     * @param evtDispatcher
-     *            the event dispatcher - EventDispatcher instance
-     * @param errRep
-     *            error reporter
-     * @param scInstance
-     *            The state chart instance
+     * @param ctx  provides the execution context
+     * @param step provides EntryList, TransitList, ExitList gets updated its AfterStatus/Events
      *
-     * @throws ModelException
-     *             in case there is a fatal SCXML object model problem.
+     * @throws org.apache.commons.scxml2.model.ModelException in case there is a fatal SCXML object model problem.
      */
-    void executeActions(final Step step, final SCXML stateMachine,
-            final EventDispatcher evtDispatcher, final ErrorReporter errRep,
-            final SCInstance scInstance)
-    throws ModelException;
+    void executeActions(final SCXMLExecutionContext ctx, final Step step) throws ModelException;
 
     /**
      * Enumerate all the reachable transitions.
      *
-     * @param stateMachine
-     *            a state machine to traverse
-     * @param step
-     *            with current status and list of transitions to populate
-     * @param errRep
-     *            ErrorReporter callback
+     * @param ctx  provides the execution context
+     * @param step with current status and list of transitions to populate
      */
-    void enumerateReachableTransitions(final SCXML stateMachine,
-            final Step step, final ErrorReporter errRep);
+    void enumerateReachableTransitions(final SCXMLExecutionContext ctx, final Step step);
 
     /**
      * Filter the transitions set, eliminate those whose guard conditions
      * are not satisfied.
      *
-     * @param step
-     *            with current status
-     * @param evtDispatcher
-     *            the event dispatcher - EventDispatcher instance
-     * @param errRep
-     *            ErrorReporter callback
-     * @param scInstance
-     *            The state chart instance
+     * @param ctx  provides the execution context
+     * @param step with current status
      *
-     * @throws ModelException
-     *             in case there is a fatal SCXML object model problem.
+     * @throws org.apache.commons.scxml2.model.ModelException in case there is a fatal SCXML object model problem.
      */
-    void filterTransitionsSet(final Step step,
-            final EventDispatcher evtDispatcher, final ErrorReporter errRep,
-            final SCInstance scInstance)
-    throws ModelException;
+    void filterTransitionsSet(final SCXMLExecutionContext ctx, final Step step) throws ModelException;
 
     /**
      * Follow the candidate transitions for this execution Step, and update the
      * lists of entered and exited states accordingly.
      *
+     * @param ctx  provides the execution context
      * @param step The current Step
-     * @param errorReporter The ErrorReporter for the current environment
-     * @param scInstance The state chart instance
      *
-     * @throws ModelException
-     *             in case there is a fatal SCXML object model problem.
+     * @throws org.apache.commons.scxml2.model.ModelException in case there is a fatal SCXML object model problem.
      */
-    void followTransitions(final Step step, final ErrorReporter errorReporter,
-            final SCInstance scInstance)
-    throws ModelException;
+    void followTransitions(final SCXMLExecutionContext ctx, final Step step) throws ModelException;
 
     /**
      * Go over the exit list and update history information for
      * relevant states.
      *
-     * @param step
-     *            The current Step
-     * @param errRep
-     *            ErrorReporter callback
-     * @param scInstance
-     *            The state chart instance
+     * @param ctx  provides the execution context
+     * @param step The current Step
      */
-    void updateHistoryStates(final Step step, final ErrorReporter errRep,
-            final SCInstance scInstance);
+    void updateHistoryStates(final SCXMLExecutionContext ctx, final Step step);
 
     /**
      * Forward events to invoked activities, execute finalize handlers.
      *
-     * @param events
-     *            The events to be forwarded
-     * @param errRep
-     *            ErrorReporter callback
-     * @param scInstance
-     *            The state chart instance
+     * @param ctx    provides the execution context
+     * @param event The event to be forwarded
      *
-     * @throws ModelException
-     *             in case there is a fatal SCXML object model problem.
+     * @throws org.apache.commons.scxml2.model.ModelException in case there is a fatal SCXML object model problem.
      */
-    void processInvokes(final TriggerEvent[] events,
-            final ErrorReporter errRep, final SCInstance scInstance)
-    throws ModelException;
+    void processInvokes(final SCXMLExecutionContext ctx, final TriggerEvent event) throws ModelException;
 
     /**
      * Initiate any new invoked activities.
      *
-     * @param step
-     *            The current Step
-     * @param errRep
-     *            ErrorReporter callback
-     * @param scInstance
-     *            The state chart instance
-     *
+     * @param ctx  provides the execution context
+     * @param step The current Step
      */
-    void initiateInvokes(final Step step, final ErrorReporter errRep,
-            final SCInstance scInstance);
+    void initiateInvokes(final SCXMLExecutor executor, final SCXMLExecutionContext ctx, final Step step);
 }
 

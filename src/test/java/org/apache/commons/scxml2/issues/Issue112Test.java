@@ -18,19 +18,14 @@ package org.apache.commons.scxml2.issues;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.scxml2.ErrorReporter;
-import org.apache.commons.scxml2.EventDispatcher;
-import org.apache.commons.scxml2.SCInstance;
+import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.SCXMLTestHelper;
-import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.model.Action;
 import org.apache.commons.scxml2.model.CustomAction;
 import org.apache.commons.scxml2.model.ModelException;
@@ -125,10 +120,7 @@ public class Issue112Test {
         }
 
         @Override
-        public void execute(EventDispatcher evtDispatcher,
-                ErrorReporter errRep, SCInstance scInstance, Log appLog,
-                Collection<TriggerEvent> derivedEvents)
-        throws ModelException, SCXMLExpressionException {
+        public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
 
             Application.QUEUE.add(event);
 

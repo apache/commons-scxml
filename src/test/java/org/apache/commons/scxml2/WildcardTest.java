@@ -63,7 +63,7 @@ public class WildcardTest {
         Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state1", currentStates.iterator().next().getId());
-        exec = SCXMLTestHelper.testExecutorSerializability(exec);
+        exec = SCXMLTestHelper.testInstanceSerializability(exec);
         currentStates = SCXMLTestHelper.fireEvent(exec, "foo.bar.baz");
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state4", currentStates.iterator().next().getId());

@@ -17,15 +17,10 @@
 package org.apache.commons.scxml2.model;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.scxml2.ErrorReporter;
-import org.apache.commons.scxml2.EventDispatcher;
-import org.apache.commons.scxml2.SCInstance;
+import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.SCXMLExpressionException;
-import org.apache.commons.scxml2.TriggerEvent;
 
 /**
  * An abstract base class for executable elements in SCXML,
@@ -126,24 +121,14 @@ public abstract class Action implements NamespacePrefixesHolder,
     /**
      * Execute this action instance.
      *
-     * @param evtDispatcher The EventDispatcher for this execution instance
-     * @param errRep        The ErrorReporter to broadcast any errors
-     *                      during execution.
-     * @param scInstance    The state machine execution instance information.
-     * @param appLog        The application Log.
-     * @param derivedEvents The collection to which any internal events
-     *                      arising from the execution of this action
-     *                      must be added.
+     * @param exctx The ActionExecutionContext for this execution instance
      *
      * @throws ModelException If the execution causes the model to enter
      *                        a non-deterministic state.
      * @throws SCXMLExpressionException If the execution involves trying
      *                        to evaluate an expression which is malformed.
      */
-    public abstract void execute(final EventDispatcher evtDispatcher,
-        final ErrorReporter errRep, final SCInstance scInstance,
-        final Log appLog, final Collection<TriggerEvent> derivedEvents)
-    throws ModelException, SCXMLExpressionException;
+    public abstract void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException;
 
     /**
      * Return the key under which the current document namespaces are saved

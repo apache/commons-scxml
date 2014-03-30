@@ -140,10 +140,10 @@ public class HistoryTest {
         Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "flow.pause");
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("interrupted", currentStates.iterator().next().getId());
-        exec = SCXMLTestHelper.testExecutorSerializability(exec);
+        exec = SCXMLTestHelper.testInstanceSerializability(exec);
         currentStates = SCXMLTestHelper.fireEvent(exec, "flow.resume");
         Assert.assertEquals(1, currentStates.size());
-        exec = SCXMLTestHelper.testExecutorSerializability(exec);
+        exec = SCXMLTestHelper.testInstanceSerializability(exec);
         return currentStates.iterator().next().getId();
     }
 

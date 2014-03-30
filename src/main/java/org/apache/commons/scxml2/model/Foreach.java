@@ -18,17 +18,12 @@ package org.apache.commons.scxml2.model;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
+import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.Context;
-import org.apache.commons.scxml2.ErrorReporter;
 import org.apache.commons.scxml2.Evaluator;
-import org.apache.commons.scxml2.EventDispatcher;
-import org.apache.commons.scxml2.SCInstance;
 import org.apache.commons.scxml2.SCXMLExpressionException;
-import org.apache.commons.scxml2.TriggerEvent;
 
 /**
  * The class in this SCXML object model that corresponds to the
@@ -102,12 +97,9 @@ public class Foreach extends Action implements ActionsContainer {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final EventDispatcher evtDispatcher,
-                        final ErrorReporter errRep, final SCInstance scInstance,
-                        final Log appLog, final Collection<TriggerEvent> derivedEvents)
-            throws ModelException, SCXMLExpressionException {
-        Context ctx = scInstance.getContext(getParentEnterableState());
-        Evaluator eval = scInstance.getEvaluator();
+    public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
+        Context ctx = exctx.getScInstance().getContext(getParentEnterableState());
+        Evaluator eval = exctx.getEvaluator();
         ctx.setLocal(getNamespacesKey(), getNamespaces());
         try {
             Object arrayObject = eval.eval(ctx,array);
@@ -118,7 +110,7 @@ public class Foreach extends Action implements ActionsContainer {
                         ctx.setLocal(index, currentIndex);
                         // The "foreach" statement is a "container"
                         for (Action aa : actions) {
-                            aa.execute(evtDispatcher, errRep, scInstance, appLog, derivedEvents);
+                            aa.execute(exctx);
                         }
                     }
                 }
@@ -139,7 +131,7 @@ public class Foreach extends Action implements ActionsContainer {
                         }
                         // The "foreach" statement is a "container"
                         for (Action aa : actions) {
-                            aa.execute(evtDispatcher, errRep, scInstance, appLog, derivedEvents);
+                            aa.execute(exctx);
                         }
                         currentIndex++;
                     }

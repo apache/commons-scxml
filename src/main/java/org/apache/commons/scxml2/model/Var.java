@@ -16,14 +16,9 @@
  */
 package org.apache.commons.scxml2.model;
 
-import java.util.Collection;
-
-import org.apache.commons.logging.Log;
+import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.Context;
-import org.apache.commons.scxml2.ErrorReporter;
 import org.apache.commons.scxml2.Evaluator;
-import org.apache.commons.scxml2.EventDispatcher;
-import org.apache.commons.scxml2.SCInstance;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.TriggerEvent;
 
@@ -98,23 +93,19 @@ public class Var extends Action {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final EventDispatcher evtDispatcher,
-            final ErrorReporter errRep, final SCInstance scInstance,
-            final Log appLog, final Collection<TriggerEvent> derivedEvents)
-    throws ModelException, SCXMLExpressionException {
-        Context ctx = scInstance.getContext(getParentEnterableState());
-        Evaluator eval = scInstance.getEvaluator();
+    public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
+        Context ctx = exctx.getScInstance().getContext(getParentEnterableState());
+        Evaluator eval = exctx.getEvaluator();
         ctx.setLocal(getNamespacesKey(), getNamespaces());
         Object varObj = eval.eval(ctx, expr);
         ctx.setLocal(getNamespacesKey(), null);
         ctx.setLocal(name, varObj);
-        if (appLog.isDebugEnabled()) {
-            appLog.debug("<var>: Defined variable '" + name
+        if (exctx.getAppLog().isDebugEnabled()) {
+            exctx.getAppLog().debug("<var>: Defined variable '" + name
                 + "' with initial value '" + String.valueOf(varObj) + "'");
         }
-        TriggerEvent ev = new TriggerEvent(name + ".change",
-                TriggerEvent.CHANGE_EVENT);
-        derivedEvents.add(ev);
+        TriggerEvent ev = new TriggerEvent(name + ".change", TriggerEvent.CHANGE_EVENT);
+        exctx.addInternalEvent(ev);
     }
 }
 

@@ -71,7 +71,7 @@ public class WizardsTest {
         Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state1", currentStates.iterator().next().getId());
-        exec = SCXMLTestHelper.testExecutorSerializability(exec);
+        exec = SCXMLTestHelper.testInstanceSerializability(exec);
         currentStates = SCXMLTestHelper.fireEvent(exec, "event2");
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state2", currentStates.iterator().next().getId());
@@ -81,7 +81,7 @@ public class WizardsTest {
         currentStates = SCXMLTestHelper.fireEvent(exec, "event3");
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state3", currentStates.iterator().next().getId());
-        exec = SCXMLTestHelper.testExecutorSerializability(exec);
+        exec = SCXMLTestHelper.testInstanceSerializability(exec);
         currentStates = SCXMLTestHelper.fireEvent(exec, "event3"); // ensure we stay put
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state3", currentStates.iterator().next().getId());
@@ -99,7 +99,7 @@ public class WizardsTest {
         Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state2", currentStates.iterator().next().getId());
-        exec = SCXMLTestHelper.testExecutorSerializability(exec);
+        exec = SCXMLTestHelper.testInstanceSerializability(exec);
         currentStates = SCXMLTestHelper.fireEvent(exec, "event4");
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state4", currentStates.iterator().next().getId());

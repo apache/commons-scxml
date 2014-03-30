@@ -17,13 +17,15 @@
 package org.apache.commons.scxml2;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.SimpleTransition;
+import org.apache.commons.scxml2.model.TransitionalState;
 
 /**
  * A logical unit of progression in the execution of a SCXML model.
@@ -32,9 +34,9 @@ import org.apache.commons.scxml2.model.SimpleTransition;
 public class Step {
 
     /**
-     * The external events in this step.
+     * The event in this step.
      */
-    private Collection<TriggerEvent> externalEvents;
+    private TriggerEvent event;
 
     /**
      * The status before this step.
@@ -57,9 +59,9 @@ public class Step {
     private List<EnterableState> entryList;
 
     /**
-     * The list of TransitionTargets that were entered during this step by default
+     * The set of TransitionTargets that were entered during this step by default
      */
-    private List<EnterableState> defaultEntryList;
+    private Set<EnterableState> defaultEntrySet;
 
     private Map<String, SimpleTransition> defaultHistoryTransitionEntryMap;
     /**
@@ -68,23 +70,16 @@ public class Step {
     private List<SimpleTransition> transitList;
 
     /**
-     * Constructor.
-      */
-    public Step() {
-        this(null, null);
-    }
+     * The set of activated states which invokes need to be invoked after the current macro step.
+     */
+    private Set<TransitionalState> statesToInvoke;
 
     /**
-     * @param externalEvents The external events received in this
-     *     unit of progression
+     * @param event The event received in this unit of progression
      * @param beforeStatus The before status
      */
-    public Step(final Collection<TriggerEvent> externalEvents, final Status beforeStatus) {
-        if (externalEvents != null) {
-            this.externalEvents = externalEvents;
-        } else {
-            this.externalEvents = new ArrayList<TriggerEvent>();
-        }
+    public Step(TriggerEvent event, final Status beforeStatus) {
+        this.event = event;
         if (beforeStatus != null) {
             this.beforeStatus = beforeStatus;
         } else {
@@ -93,9 +88,10 @@ public class Step {
         this.afterStatus = new Status();
         this.exitList = new ArrayList<EnterableState>();
         this.entryList = new ArrayList<EnterableState>();
-        this.defaultEntryList = new ArrayList<EnterableState>();
+        this.defaultEntrySet = new HashSet<EnterableState>();
         this.defaultHistoryTransitionEntryMap = new HashMap<String, SimpleTransition>();
         this.transitList = new ArrayList<SimpleTransition>();
+        this.statesToInvoke = new HashSet<TransitionalState>();
     }
 
     /**
@@ -106,24 +102,10 @@ public class Step {
     }
 
     /**
-     * @param afterStatus The afterStatus to set.
-     */
-    public void setAfterStatus(final Status afterStatus) {
-        this.afterStatus = afterStatus;
-    }
-
-    /**
      * @return Returns the beforeStatus.
      */
     public Status getBeforeStatus() {
         return beforeStatus;
-    }
-
-    /**
-     * @param beforeStatus The beforeStatus to set.
-     */
-    public void setBeforeStatus(final Status beforeStatus) {
-        this.beforeStatus = beforeStatus;
     }
 
     /**
@@ -134,10 +116,10 @@ public class Step {
     }
 
     /**
-     * @return Returns the defaultEntryList.
+     * @return Returns the defaultEntrySet.
      */
-    public List<EnterableState> getDefaultEntryList() {
-        return defaultEntryList;
+    public Set<EnterableState> getDefaultEntrySet() {
+        return defaultEntrySet;
     }
 
     /**
@@ -155,10 +137,10 @@ public class Step {
     }
 
     /**
-     * @return Returns the externalEvents.
+     * @return Returns the current event.
      */
-    public Collection<TriggerEvent> getExternalEvents() {
-        return externalEvents;
+    public TriggerEvent getEvent() {
+        return event;
     }
 
     /**
@@ -168,5 +150,11 @@ public class Step {
         return transitList;
     }
 
+    /**
+     * @return Returns the set of activated states which invokes need to be invoked after the current macro step.
+     */
+    public Set<TransitionalState> getStatesToInvoke() {
+        return statesToInvoke;
+    }
 }
 

@@ -16,12 +16,7 @@
  */
 package org.apache.commons.scxml2.model;
 
-import java.util.Collection;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.scxml2.ErrorReporter;
-import org.apache.commons.scxml2.EventDispatcher;
-import org.apache.commons.scxml2.SCInstance;
+import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.TriggerEvent;
 
@@ -72,17 +67,13 @@ public class Raise extends Action {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final EventDispatcher evtDispatcher,
-            final ErrorReporter errRep, final SCInstance scInstance,
-            final Log appLog, final Collection<TriggerEvent> derivedEvents)
-    throws ModelException, SCXMLExpressionException {
+    public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
 
-        if (appLog.isDebugEnabled()) {
-            appLog.debug("<raise>: Adding event '" + event
-                + "' to list of derived events.");
+        if (exctx.getAppLog().isDebugEnabled()) {
+            exctx.getAppLog().debug("<raise>: Adding event '" + event + "' to list of derived events.");
         }
         TriggerEvent ev = new TriggerEvent(event, TriggerEvent.SIGNAL_EVENT);
-        derivedEvents.add(ev);
+        exctx.addInternalEvent(ev);
 
     }
 }

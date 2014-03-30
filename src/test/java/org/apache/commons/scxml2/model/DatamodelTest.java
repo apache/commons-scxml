@@ -124,7 +124,7 @@ public class DatamodelTest {
         Set<EnterableState> currentStates = exec01.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("ten", currentStates.iterator().next().getId());
-        exec01 = SCXMLTestHelper.testExecutorSerializability(exec01);
+        exec01 = SCXMLTestHelper.testInstanceSerializability(exec01);
         currentStates = fireEvent("ten.done", exec01);
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("twenty", currentStates.iterator().next().getId());
@@ -136,12 +136,12 @@ public class DatamodelTest {
         currentStates = fireEvent("twenty.done", exec01);
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("thirty", currentStates.iterator().next().getId());
-        exec01 = SCXMLTestHelper.testExecutorSerializability(exec01);
+        exec01 = SCXMLTestHelper.testInstanceSerializability(exec01);
         // exec02
         currentStates = fireEvent("ten.done", exec02);
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("twenty", currentStates.iterator().next().getId());
-        exec02 = SCXMLTestHelper.testExecutorSerializability(exec02);
+        exec02 = SCXMLTestHelper.testInstanceSerializability(exec02);
         currentStates = fireEvent("twenty.done", exec02);
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("thirty", currentStates.iterator().next().getId());

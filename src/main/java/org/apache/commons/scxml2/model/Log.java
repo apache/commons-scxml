@@ -16,15 +16,10 @@
  */
 package org.apache.commons.scxml2.model;
 
-import java.util.Collection;
-
+import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.Context;
-import org.apache.commons.scxml2.ErrorReporter;
 import org.apache.commons.scxml2.Evaluator;
-import org.apache.commons.scxml2.EventDispatcher;
-import org.apache.commons.scxml2.SCInstance;
 import org.apache.commons.scxml2.SCXMLExpressionException;
-import org.apache.commons.scxml2.TriggerEvent;
 
 /**
  * The class in this SCXML object model that corresponds to the
@@ -96,15 +91,11 @@ public class Log extends Action {
      * {@inheritDoc}
      */
     @Override
-    public void execute(final EventDispatcher evtDispatcher,
-            final ErrorReporter errRep, final SCInstance scInstance,
-            final org.apache.commons.logging.Log appLog,
-            final Collection<TriggerEvent> derivedEvents)
-    throws ModelException, SCXMLExpressionException {
-        Context ctx = scInstance.getContext(getParentEnterableState());
-        Evaluator eval = scInstance.getEvaluator();
+    public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
+        Context ctx = exctx.getScInstance().getContext(getParentEnterableState());
+        Evaluator eval = exctx.getEvaluator();
         ctx.setLocal(getNamespacesKey(), getNamespaces());
-        appLog.info(label + ": " + String.valueOf(eval.eval(ctx, expr)));
+        exctx.getAppLog().info(label + ": " + String.valueOf(eval.eval(ctx, expr)));
         ctx.setLocal(getNamespacesKey(), null);
     }
 }

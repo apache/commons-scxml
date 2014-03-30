@@ -17,8 +17,6 @@
 package org.apache.commons.scxml2;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -42,11 +40,6 @@ public class Status implements Serializable {
     private Set<EnterableState> states;
 
     /**
-     * The events that are currently queued.
-     */
-    private Collection<TriggerEvent> events;
-
-    /**
      * Have we reached a final configuration for this state machine.
      *
      * True - if all the states are final and there are not events
@@ -55,22 +48,20 @@ public class Status implements Serializable {
      * @return Whether a final configuration has been reached.
      */
     public boolean isFinal() {
-        boolean rslt = true;
-        for (EnterableState es : states) {
-            if (!(es instanceof Final)) {
-                rslt = false;
-                break;
-            }
-            //the status is final only if these are top-level states
-            if (es.getParent() != null) {
-                rslt = false;
-                break;
+        return getFinalState() != null;
+    }
+
+    /**
+     * @return Returns the single top level active final state or null otherwise
+     */
+    public Final getFinalState() {
+        if (states.size() == 1) {
+            EnterableState es = states.iterator().next();
+            if (es instanceof Final && es.getParent() == null) {
+                return (Final)es;
             }
         }
-        if (!events.isEmpty()) {
-            rslt = false;
-        }
-        return rslt;
+        return null;
     }
 
     /**
@@ -78,7 +69,6 @@ public class Status implements Serializable {
      */
     public Status() {
         states = new HashSet<EnterableState>();
-        events = new ArrayList<TriggerEvent>();
     }
 
     /**
@@ -88,15 +78,6 @@ public class Status implements Serializable {
      */
     public Set<EnterableState> getStates() {
         return states;
-    }
-
-    /**
-     * Get the events that are currently queued.
-     *
-     * @return The events that are currently queued.
-     */
-    public Collection<TriggerEvent> getEvents() {
-        return events;
     }
 
     /**

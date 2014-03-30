@@ -18,7 +18,7 @@ package org.apache.commons.scxml2.invoke;
 
 import java.util.Map;
 
-import org.apache.commons.scxml2.SCInstance;
+import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.TriggerEvent;
 
 /**
@@ -51,7 +51,7 @@ import org.apache.commons.scxml2.TriggerEvent;
  *   <li>Instantiation via {@link Class#newInstance()}
  *       (Invoker implementation requires accessible constructor).</li>
  *   <li>Configuration (setters for parent state ID and
- *       {@link SCInstance}).</li>
+ *       {@link SCXMLExecutor}).</li>
  *   <li>Initiation of invoked activity via invoke() method, passing
  *       the source URI and the map of params.</li>
  *   <li>Zero or more bi-directional event triggering.</li>
@@ -78,12 +78,12 @@ public interface Invoker {
     void setParentStateId(String parentStateId);
 
     /**
-     * Set the "context" of the parent state machine, which provides the
+     * Set the execution "context" of the parent state machine, which provides the
      * channel.
      *
-     * @param scInstance The "context" of the parent state machine.
+     * @param parentExecutor The execution "context" of the parent state machine.
      */
-    void setSCInstance(SCInstance scInstance);
+    void setParentExecutor(SCXMLExecutor parentExecutor);
 
     /**
      * Begin this invocation.

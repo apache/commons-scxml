@@ -16,24 +16,19 @@
  */
 package org.apache.commons.scxml2.invoke;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.TriggerEvent;
-import org.apache.commons.scxml2.model.ModelException;
 
 /**
- * Trigger the given {@link TriggerEvent} (or array of) on the given
+ * Trigger the given {@link TriggerEvent} on the given
  * state machine executor asynchronously, once.
  */
 class AsyncTrigger implements Runnable {
 
     /** The state machine executor. */
     private final SCXMLExecutor executor;
-    /** The event(s) to be triggered. */
-    private final TriggerEvent[] events;
-    /** The log. */
-    private final Log log = LogFactory.getLog(AsyncTrigger.class);
+    /** The event to be triggered. */
+    private final TriggerEvent event;
 
     /**
      * Constructor.
@@ -43,12 +38,11 @@ class AsyncTrigger implements Runnable {
      */
     AsyncTrigger(final SCXMLExecutor executor, final TriggerEvent event) {
         this.executor = executor;
-        this.events = new TriggerEvent[1];
-        this.events[0] = event;
+        this.event = event;
     }
 
     /**
-     * Fire the trigger(s) asynchronously.
+     * Fire the trigger asynchronously.
      */
     public void start() {
         new Thread(this).start();
@@ -58,13 +52,7 @@ class AsyncTrigger implements Runnable {
      * Fire the event(s).
      */
     public void run() {
-        try {
-            synchronized (executor) {
-                executor.triggerEvents(events);
-            }
-        } catch (ModelException me) {
-            log.error(me.getMessage(), me);
-        }
+        executor.addEvent(event);
     }
 
 }
