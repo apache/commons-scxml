@@ -93,7 +93,7 @@ public class JSExampleTest {
 
         @Override
         public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
-            exctx.addInternalEvent(new TriggerEvent("ok",TriggerEvent.SIGNAL_EVENT,"and its ok with me to"));
+            exctx.getInternalIOProcessor().addEvent(new TriggerEvent("ok",TriggerEvent.SIGNAL_EVENT,"and its ok with me to"));
         }
     }
 

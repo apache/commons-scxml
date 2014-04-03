@@ -82,11 +82,10 @@ public class ActionExecutionContext {
     }
 
     /**
-     * Add an event to the internal queue
-     * @param event The event
+     * @return Returns the I/O Processor for the internal event queue
      */
-    public void addInternalEvent(TriggerEvent event) {
-        exctx.addInternalEvent(event);
+    public SCXMLIOProcessor getInternalIOProcessor() {
+        return exctx;
     }
 
     /**

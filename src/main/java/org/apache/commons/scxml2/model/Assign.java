@@ -244,7 +244,7 @@ public class Assign extends Action implements PathResolverHolder {
                         + String.valueOf(varObj) + "'");
                 }
                 TriggerEvent ev = new TriggerEvent(name + ".change", TriggerEvent.CHANGE_EVENT);
-                exctx.addInternalEvent(ev);
+                exctx.getInternalIOProcessor().addEvent(ev);
             }
         }
         ctx.setLocal(getNamespacesKey(), null);

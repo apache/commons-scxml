@@ -333,8 +333,8 @@ public class Send extends Action implements ExternalContent {
                         exctx.getAppLog().debug("<send>: Enqueued event '" + eventValue
                             + "' with no delay");
                     }
-                    exctx.addInternalEvent(new TriggerEvent(eventValue,
-                        TriggerEvent.SIGNAL_EVENT, params));
+                    exctx.getInternalIOProcessor().addEvent(
+                            new TriggerEvent(eventValue, TriggerEvent.SIGNAL_EVENT, params));
                     return;
                 }
             } else {
@@ -343,9 +343,8 @@ public class Send extends Action implements ExternalContent {
                     exctx.getAppLog().warn("<send>: Unavailable target - "
                         + targetValue);
                 }
-                exctx.addInternalEvent(new TriggerEvent(
-                    EVENT_ERR_SEND_TARGETUNAVAILABLE,
-                    TriggerEvent.ERROR_EVENT));
+                exctx.getInternalIOProcessor().addEvent(
+                        new TriggerEvent(EVENT_ERR_SEND_TARGETUNAVAILABLE, TriggerEvent.ERROR_EVENT));
                 // short-circuit the EventDispatcher
                 return;
             }

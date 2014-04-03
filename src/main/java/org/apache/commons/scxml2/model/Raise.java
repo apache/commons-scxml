@@ -73,7 +73,7 @@ public class Raise extends Action {
             exctx.getAppLog().debug("<raise>: Adding event '" + event + "' to list of derived events.");
         }
         TriggerEvent ev = new TriggerEvent(event, TriggerEvent.SIGNAL_EVENT);
-        exctx.addInternalEvent(ev);
+        exctx.getInternalIOProcessor().addEvent(ev);
 
     }
 }

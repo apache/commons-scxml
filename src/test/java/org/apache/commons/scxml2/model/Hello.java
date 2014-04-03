@@ -63,7 +63,7 @@ public class Hello extends Action {
         // For derived events payload testing
         TriggerEvent event =
             new TriggerEvent("helloevent", TriggerEvent.SIGNAL_EVENT, name);
-        exctx.addInternalEvent(event);
+        exctx.getInternalIOProcessor().addEvent(event);
         callbacks++;
     }
 }

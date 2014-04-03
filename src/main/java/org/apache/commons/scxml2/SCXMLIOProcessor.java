@@ -17,13 +17,13 @@
 package org.apache.commons.scxml2;
 
 /**
- * The SCXML I/O Processor provides the interface for an external system or invoked child SCXML process
- * ({@link org.apache.commons.scxml2.invoke.Invoker}) to asynchronously send events to the SCXMLExecutor.
+ * The SCXML I/O Processor provides the interface for either an internal process or an external system or invoked child
+ * SCXML process ({@link org.apache.commons.scxml2.invoke.Invoker}) to send events into the SCXML processor queue.
  */
 public interface SCXMLIOProcessor {
 
     /**
-     * Send an asynchronous event to the SCXMLExecutor
+     * Send an event into the SCXML processor queue
      * <p>
      * @param event the event to send
      */

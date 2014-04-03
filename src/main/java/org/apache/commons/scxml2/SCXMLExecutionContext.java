@@ -37,7 +37,7 @@ import org.apache.commons.scxml2.model.SCXML;
  * SCXMLExecutionContext provides all the services and internal data used during the interpretation of an SCXML
  * statemachine across micro and macro steps
  */
-public class SCXMLExecutionContext {
+public class SCXMLExecutionContext implements SCXMLIOProcessor {
 
     /**
      * SCXML Execution Logger for the application.
@@ -120,12 +120,16 @@ public class SCXMLExecutionContext {
         this.errorReporter = errorReporter != null ? errorReporter : new SimpleErrorReporter();
         this.notificationRegistry = new NotificationRegistry();
 
-        this.scInstance = new SCInstance(this.evaluator, this.errorReporter);
+        this.scInstance = new SCInstance(this, this.evaluator, this.errorReporter);
         this.actionExecutionContext = new ActionExecutionContext(this);
     }
 
     public SCXMLIOProcessor getExternalIOProcessor() {
         return externalIOProcessor;
+    }
+
+    public SCXMLIOProcessor getInternalIOProcessor() {
+        return this;
     }
 
     /**
@@ -407,7 +411,7 @@ public class SCXMLExecutionContext {
                 invokers.get(invokeId).cancel();
             } catch (InvokerException ie) {
                 TriggerEvent te = new TriggerEvent("failed.invoke.cancel."+invokeId, TriggerEvent.ERROR_EVENT);
-                addInternalEvent(te);
+                addEvent(te);
             }
             removeInvoker(invoke);
         }
@@ -417,7 +421,8 @@ public class SCXMLExecutionContext {
      * Add an event to the internal event queue
      * @param event The event
      */
-    public void addInternalEvent(TriggerEvent event) {
+    @Override
+    public void addEvent(TriggerEvent event) {
         internalEventQueue.add(event);
     }
 

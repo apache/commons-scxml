@@ -105,7 +105,7 @@ public class Var extends Action {
                 + "' with initial value '" + String.valueOf(varObj) + "'");
         }
         TriggerEvent ev = new TriggerEvent(name + ".change", TriggerEvent.CHANGE_EVENT);
-        exctx.addInternalEvent(ev);
+        exctx.getInternalIOProcessor().addEvent(ev);
     }
 }
 

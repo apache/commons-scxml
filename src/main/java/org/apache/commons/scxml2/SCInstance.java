@@ -77,6 +77,11 @@ public class SCInstance implements Serializable {
     private final Status currentStatus;
 
     /**
+     * The SCXML I/O Processor for the internal event queue
+     */
+    private transient SCXMLIOProcessor internalIOProcessor;
+
+    /**
      * The Evaluator used for this state machine instance.
      */
     private transient Evaluator evaluator;
@@ -113,11 +118,13 @@ public class SCInstance implements Serializable {
 
     /**
      * Constructor
-     *
+     * @param internalIOProcessor The I/O Processor for the internal event queue
      * @param evaluator The evaluator
      * @param errorReporter The error reporter
      */
-    protected SCInstance(final Evaluator evaluator, final ErrorReporter errorReporter) {
+    protected SCInstance(final SCXMLIOProcessor internalIOProcessor, final Evaluator evaluator,
+                         final ErrorReporter errorReporter) {
+        this.internalIOProcessor = internalIOProcessor;
         this.evaluator = evaluator;
         this.errorReporter = errorReporter;
         this.currentStatus = new Status();
@@ -153,12 +160,20 @@ public class SCInstance implements Serializable {
     /**
      * Detach this state machine instance to allow external serialization.
      * <p>
-     * This clears the evaluator and errorReporter members.
+     * This clears the internal I/O processor, evaluator and errorReporter members.
      * </p>
      */
     protected void detach() {
         this.evaluator = null;
         this.errorReporter = null;
+    }
+
+    /**
+     * Sets the I/O Processor for the internal event queue
+     * @param internalIOProcessor
+     */
+    protected void setInternalIOProcessor(SCXMLIOProcessor internalIOProcessor) {
+        this.internalIOProcessor = internalIOProcessor;
     }
 
     /**
@@ -259,6 +274,9 @@ public class SCInstance implements Serializable {
                     value = evaluator.eval(ctx, datum.getExpr());
                     ctx.setLocal(Context.NAMESPACES_KEY, null);
                 } catch (SCXMLExpressionException see) {
+                    if (internalIOProcessor != null) {
+                        internalIOProcessor.addEvent(new TriggerEvent(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT));
+                    }
                     errorReporter.onError(ErrorConstants.EXPRESSION_ERROR, see.getMessage(), datum);
                 }
                 ctx.setLocal(datum.getId(), value);

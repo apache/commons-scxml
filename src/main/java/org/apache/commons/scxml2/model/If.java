@@ -23,6 +23,7 @@ import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.SCXMLExpressionException;
+import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.semantics.ErrorConstants;
 
 /**
@@ -131,9 +132,9 @@ public class If extends Action implements ActionsContainer {
             }
         } catch (SCXMLExpressionException e) {
             rslt = Boolean.FALSE;
+            exctx.getInternalIOProcessor().addEvent(new TriggerEvent(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT));
             exctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR, "Treating as false due to error: "
                     + e.getMessage(), this);
-            // TODO: place the error 'error.execution' in the internal event queue. (section "3.12.2 Errors")
         }
         execute = rslt;
         ctx.setLocal(getNamespacesKey(), null);

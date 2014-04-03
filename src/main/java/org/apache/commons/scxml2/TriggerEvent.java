@@ -92,6 +92,37 @@ public class TriggerEvent implements Serializable {
     public static final int CANCEL_EVENT = 6;
 
     /**
+     * The predefined SCXML 'error.execution' Event name
+     * <p>
+     * Indicates that an error internal to the execution of the document has occurred, such as one arising from
+     * expression evaluation.
+     * </p>
+     * @see: <a href="http://www.w3.org/TR/2014/CR-scxml-20140313/#errorsAndEvents">
+     *     http://www.w3.org/TR/2014/CR-scxml-20140313/#errorsAndEvents</a>
+     */
+    public static final String ERROR_EXECUTION = "error.execution";
+
+    /**
+     * The predefined SCXML 'error.communication' Event name
+     * <p>
+     * Indicates that an error has occurred while trying to communicate with an external entity.
+     * </p>
+     * @see: <a href="http://www.w3.org/TR/2014/CR-scxml-20140313/#errorsAndEvents">
+     *     http://www.w3.org/TR/2014/CR-scxml-20140313/#errorsAndEvents</a>
+     */
+    public static final String ERROR_COMMUNICATION = "error.communication";
+
+    /**
+     * The predefined SCXML 'error.platform' Event name
+     * <p>
+     * Indicates that a platform- or application-specific error has occurred.
+     * </p>
+     * @see: <a href="http://www.w3.org/TR/2014/CR-scxml-20140313/#errorsAndEvents">
+     *     http://www.w3.org/TR/2014/CR-scxml-20140313/#errorsAndEvents</a>
+     */
+    public static final String ERROR_PLATFORM = "error.platform";
+
+    /**
      * The event name.
      *
      */
