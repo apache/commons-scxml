@@ -131,10 +131,15 @@
      also be used to generate SCXML documents and code from a state chart.
     </li>
     <li>
-     <a href="http://commons.apache.org/sandbox/gsoc/2010/scxml-js/">Commons SCXML - JavaScript</a> -
-     This project aims develop an SCXML-to-JavaScript compiler optimized for User Interface development on
-     the World Wide Web and generate graphical depictions of statecharts for testing and simulation.
+      <a href="https://github.com/jbeard4/SCION">SCION</a> - SCION provides an implementation of SCXML in portable
+      JavaScript.
+      <p>In the browser, SCION can be used to facilitate the development of rich, web-based user interfaces with complex
+         behavioural requirements; on the server, SCION can be used to manage asynchronous control flow.</p>
     </li>
+     <li>
+       <a href="https://github.com/jbeard4/SCION-Java">SCION-Java</a> -
+       SCION-Java provides lightweight bindings to the SCION library for Java.
+     </li>
     <li>
      <a href="http://code.google.com/p/scxmlgui/">scxmlgui</a> -
      This project aims to provide a simple GUI to edit SCXML state charts.
