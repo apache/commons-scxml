@@ -16,6 +16,9 @@
  */
 package org.apache.commons.scxml2.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * An abstract base class for state elements in SCXML that can be entered, such as State, Parallel or Final.
  */
@@ -27,23 +30,21 @@ public abstract class EnterableState extends TransitionTarget implements Documen
     private int order;
 
     /**
-     * Optional property holding executable content to be run upon
+     * List of optional OnEntry elements holding executable content to be run upon
      * entering this transition target.
      */
-    private OnEntry onEntry;
+    private List<OnEntry> onEntries;
 
     /**
-     * Optional property holding executable content to be run upon
+     * List of optional OnExit elements holding executable content to be run upon
      * exiting this transition target.
      */
-    private OnExit onExit;
+    private List<OnExit> onExits;
 
     public EnterableState() {
         super();
-        onEntry = new OnEntry(); //empty defaults
-        onEntry.setParent(this);
-        onExit = new OnExit();   //empty defaults
-        onExit.setParent(this);
+        onEntries = new ArrayList<OnEntry>();
+        onExits = new ArrayList<OnExit>();
     }
 
     /**
@@ -65,40 +66,49 @@ public abstract class EnterableState extends TransitionTarget implements Documen
     }
 
     /**
-     * Get the onentry property.
+     * Get the OnEntry elements.
      *
-     * @return Returns the onEntry.
+     * @return Returns the onEntry elements
      */
-    public final OnEntry getOnEntry() {
-        return onEntry;
+    public final List<OnEntry> getOnEntries() {
+        return onEntries;
     }
 
     /**
-     * Set the onentry property.
+     * Adds an OnEntry element
      *
-     * @param onEntry The onEntry to set.
+     * @param onEntry The onEntry to add.
      */
-    public final void setOnEntry(final OnEntry onEntry) {
-        this.onEntry = onEntry;
-        this.onEntry.setParent(this);
+    public final void addOnEntry(final OnEntry onEntry) {
+        onEntry.setParent(this);
+        onEntries.add(onEntry);
     }
 
     /**
-     * Get the onexit property.
+     * Get the OnExit elements
      *
-     * @return Returns the onExit.
+     * @return Returns the onExit elements
      */
-    public final OnExit getOnExit() {
-        return onExit;
+    public final List<OnExit> getOnExits() {
+        return onExits;
     }
 
     /**
-     * Set the onexit property.
+     * Add an OnExit element
      *
-     * @param onExit The onExit to set.
+     * @param onExit The onExit to add.
      */
-    public final void setOnExit(final OnExit onExit) {
-        this.onExit = onExit;
-        this.onExit.setParent(this);
+    public final void addOnExit(final OnExit onExit) {
+        onExit.setParent(this);
+        onExits.add(onExit);
     }
+
+    /**
+     * Check whether this is an atomic state.
+     * <p>
+     * An atomic state is a state of type Final or of type State without children,
+     * </p>
+     * @return Returns true if this is an atomic state.
+     */
+    public abstract boolean isAtomicState();
 }

@@ -19,6 +19,7 @@ package org.apache.commons.scxml2.env;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.TransitionTarget;
 
 /**
@@ -49,7 +50,7 @@ public class StopWatch extends AbstractStateMachine {
     /** The display decorations. */
     private static final String DELIM = ":", DOT = ".", EMPTY = "", ZERO = "0";
 
-    public StopWatch() {
+    public StopWatch() throws ModelException {
         super(StopWatch.class.getClassLoader().
             getResource("org/apache/commons/scxml2/env/stopwatch.xml"));
     }

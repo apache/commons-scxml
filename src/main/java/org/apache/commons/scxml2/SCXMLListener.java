@@ -52,9 +52,10 @@ public interface SCXMLListener {
      * @param from The source TransitionTarget
      * @param to The destination TransitionTarget
      * @param transition The Transition taken
+     * @param event The event name triggering the transition
      */
     void onTransition(TransitionTarget from, TransitionTarget to,
-            Transition transition);
+            Transition transition, String event);
 
 }
 

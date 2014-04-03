@@ -29,7 +29,6 @@ import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.EventDispatcher;
 import org.apache.commons.scxml2.SCXMLExecutor;
-import org.apache.commons.scxml2.SCXMLHelper;
 import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.env.SimpleScheduler;
 import org.apache.commons.scxml2.env.Tracer;
@@ -114,7 +113,7 @@ public final class StandaloneUtils {
                     rootCtx.setLocal(name, value);
                     System.out.println("Set variable " + name + " to "
                         + value);
-                } else if (SCXMLHelper.isStringEmpty(event)
+                } else if (event == null || event.trim().length() == 0
                            || event.equalsIgnoreCase("null")) {
                     TriggerEvent[] evts = {new TriggerEvent(null,
                         TriggerEvent.SIGNAL_EVENT, null)};

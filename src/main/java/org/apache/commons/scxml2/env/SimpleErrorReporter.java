@@ -24,6 +24,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml2.ErrorReporter;
+import org.apache.commons.scxml2.model.Data;
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.Executable;
 import org.apache.commons.scxml2.model.SCXML;
@@ -104,6 +105,10 @@ public class SimpleErrorReporter implements ErrorReporter, Serializable {
             if (errCtx instanceof Executable) {
                 TransitionTarget parent = ((Executable) errCtx).getParent();
                 msg.append("Expression error inside " + LogUtils.getTTPath(parent));
+            }
+            else if (errCtx instanceof Data) {
+                // Data expression error
+                msg.append("Expression error for data element with id "+((Data)errCtx).getId());
             }
             else if (errCtx instanceof SCXML) {
                 // Global Script

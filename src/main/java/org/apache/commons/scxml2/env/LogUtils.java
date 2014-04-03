@@ -34,9 +34,9 @@ public final class LogUtils {
      * @return String The human readable log entry
      */
     public static String transToString(final TransitionTarget from,
-            final TransitionTarget to, final Transition transition) {
-        StringBuffer buf = new StringBuffer("transition (");
-        buf.append("event = ").append(transition.getEvent());
+            final TransitionTarget to, final Transition transition, String event) {
+        StringBuffer buf = new StringBuffer("(");
+        buf.append("event = ").append(event);
         buf.append(", cond = ").append(transition.getCond());
         buf.append(", from = ").append(getTTPath(from));
         buf.append(", to = ").append(getTTPath(to));

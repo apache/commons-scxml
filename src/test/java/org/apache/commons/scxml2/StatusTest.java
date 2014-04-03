@@ -16,6 +16,9 @@
  */
 package org.apache.commons.scxml2;
 
+import java.util.Set;
+
+import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.Final;
 import org.apache.commons.scxml2.model.State;
 import org.junit.Assert;
@@ -58,5 +61,26 @@ public class StatusTest {
         
         Assert.assertTrue(status.isFinal());
     }
-    
+
+    @Test
+    public void testGetAllStatesEmptyStatus() {
+
+        Set<EnterableState> returnValue = status.getAllStates();
+
+        Assert.assertEquals(0, returnValue.size());
+    }
+
+    @Test
+    public void testGetAllStatesContainsParent() {
+        State parent = new State();
+        parent.setId("0");
+        State state = new State();
+        state.setId("1");
+        state.setParent(parent);
+        status.getStates().add(state);
+
+        Set<EnterableState> returnValue = status.getAllStates();
+
+        Assert.assertEquals(2, returnValue.size());
+    }
 }

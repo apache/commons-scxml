@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.scxml2.Builtin;
+import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.SCXMLSystemContext;
 import org.apache.commons.scxml2.model.EnterableState;
 
@@ -55,7 +56,7 @@ public abstract class GroovySCXMLScript extends Script {
      */
     @SuppressWarnings("unchecked")
     private Map<String, String> getNamespaces() {
-        return (Map<String, String>) context.get("_ALL_NAMESPACES");
+        return (Map<String, String>) context.get(Context.NAMESPACES_KEY);
     }
 
     /**
@@ -64,7 +65,7 @@ public abstract class GroovySCXMLScript extends Script {
      */
     @SuppressWarnings("unchecked")
     private Set<EnterableState> getAllStates() {
-        return (Set<EnterableState>) context.get(SCXMLSystemContext.VARIABLE_ALL_STATES);
+        return (Set<EnterableState>) context.get(SCXMLSystemContext.ALL_STATES_KEY);
     }
 
     /**

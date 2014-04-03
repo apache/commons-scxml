@@ -24,8 +24,8 @@
 
     <state id="ten">
         <!-- twenty should win, document order -->
-        <transition event="ten.done" target="twenty" />
-        <transition event="ten.done" target="thirty" />
+        <transition event="done.state.ten" target="twenty" />
+        <transition event="done.state.ten" target="thirty" />
     </state>
 
     <final id="twenty"/>

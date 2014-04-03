@@ -60,7 +60,7 @@ public class GroovyEvaluatorTest {
         state1.setId("state1");
         allStates.add(state1);
 
-        ctx.setLocal(SCXMLSystemContext.VARIABLE_ALL_STATES, allStates);
+        ctx.setLocal(SCXMLSystemContext.ALL_STATES_KEY, allStates);
 
         Assert.assertTrue(eval.evalCond(ctx, "In('state1')"));
     }

@@ -45,9 +45,7 @@ public class FunctionResolver implements XPathFunctionResolver, Serializable {
     private static final String NAMESPACE_COMMONS_SCXML =
         "http://commons.apache.org/scxml";
     /** The {@link Context} key to retrieve all the current states. */
-    private static final String STATES = SCXMLSystemContext.VARIABLE_ALL_STATES;
-    /** The {@link Context} key to retrieve all the current namespaces. */
-    private static final String NAMESPACES = "_ALL_NAMESPACES";
+    private static final String STATES = SCXMLSystemContext.ALL_STATES_KEY;
 
     /** Functions map. */
     private final Map<FunctionKey, XPathFunction> functions =
@@ -138,7 +136,7 @@ public class FunctionResolver implements XPathFunctionResolver, Serializable {
         @SuppressWarnings("unchecked")
         public Object evaluate(final List args) throws XPathFunctionException {
             Map<String, String> namespaces =
-                (Map<String, String>) xctx.get(NAMESPACES);
+                (Map<String, String>) xctx.get(Context.NAMESPACES_KEY);
             Object node = xctx.get((String) args.get(0));
             return Builtin.data(namespaces, node, (String) args.get(1));
         }
@@ -163,7 +161,7 @@ public class FunctionResolver implements XPathFunctionResolver, Serializable {
         @SuppressWarnings("unchecked")
         public Object evaluate(final List args) throws XPathFunctionException {
             Map<String, String> namespaces =
-                (Map<String, String>) xctx.get(NAMESPACES);
+                (Map<String, String>) xctx.get(Context.NAMESPACES_KEY);
             Object node = xctx.get((String) args.get(0));
             return Builtin.dataNode(namespaces, node, (String) args.get(1));
         }

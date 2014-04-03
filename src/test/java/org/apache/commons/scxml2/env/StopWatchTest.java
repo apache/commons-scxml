@@ -29,7 +29,7 @@ public class StopWatchTest {
      * Set up instance variables required by this test case.
      */
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         stopWatch = new StopWatch();
     }
 

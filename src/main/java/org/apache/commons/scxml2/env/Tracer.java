@@ -107,11 +107,11 @@ public class Tracer implements ErrorHandler, ErrorReporter,
     }
 
     /**
-     * @see SCXMLListener#onTransition(TransitionTarget,TransitionTarget,Transition)
+     * @see SCXMLListener#onTransition(TransitionTarget,TransitionTarget,Transition,String)
      */
     public void onTransition(final TransitionTarget from,
-            final TransitionTarget to, final Transition transition) {
-        scxmlListener.onTransition(from, to, transition);
+            final TransitionTarget to, final Transition transition, final String event) {
+        scxmlListener.onTransition(from, to, transition, event);
     }
 
     /**

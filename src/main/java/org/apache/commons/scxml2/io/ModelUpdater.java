@@ -24,7 +24,6 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.scxml2.SCXMLHelper;
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.History;
 import org.apache.commons.scxml2.model.Initial;
@@ -170,7 +169,6 @@ final class ModelUpdater {
             // If 'initial' is not specified, the default initial state is
             // the first child state in document order.
             initialTransition.getTargets().add(scxml.getFirstChild());
-            initialTransition.getPaths(); // init paths
         }
 
         scxml.setInitialTransition(initialTransition);
@@ -261,7 +259,7 @@ final class ModelUpdater {
             }
             SimpleTransition initialTransition = ini.getTransition();
             updateTransition(initialTransition, targets);
-            List<TransitionTarget> initialStates = initialTransition.getTargets();
+            Set<TransitionTarget> initialStates = initialTransition.getTargets();
             // we have to allow for an indirect descendant initial (targets)
             //check that initialState is a descendant of s
             if (initialStates.size() == 0) {
@@ -269,7 +267,7 @@ final class ModelUpdater {
                         new Object[] {getName(state)});
             } else {
                 for (TransitionTarget initialState : initialStates) {
-                    if (!SCXMLHelper.isDescendant(initialState, state)) {
+                    if (!initialState.isDescendantOf(state)) {
                         logAndThrowModelError(ERR_STATE_BAD_INIT,
                                 new Object[] {getName(state)});
                     }
@@ -293,22 +291,14 @@ final class ModelUpdater {
         }
 
         for (Invoke inv : state.getInvokes()) {
-            String type = inv.getType();
-            if (SCXMLHelper.isStringEmpty(type)) {
-                logAndThrowModelError(ERR_INVOKE_NO_TYPE,
-                        new Object[] {getName(state)});
+            if (inv.getType() == null) {
+                logAndThrowModelError(ERR_INVOKE_NO_TYPE, new Object[] {getName(state)});
             }
-            String src = inv.getSrc();
-            boolean noSrc = SCXMLHelper.isStringEmpty(src);
-            String srcexpr = inv.getSrcexpr();
-            boolean noSrcexpr = SCXMLHelper.isStringEmpty(srcexpr);
-            if (noSrc && noSrcexpr) {
-                logAndThrowModelError(ERR_INVOKE_NO_SRC,
-                        new Object[] {getName(state)});
+            if (inv.getSrc() == null && inv.getSrcexpr() == null) {
+                logAndThrowModelError(ERR_INVOKE_NO_SRC, new Object[] {getName(state)});
             }
-            if (!noSrc && !noSrcexpr) {
-                logAndThrowModelError(ERR_INVOKE_AMBIGUOUS_SRC,
-                        new Object[] {getName(state)});
+            if (inv.getSrc() != null && inv.getSrcexpr() != null) {
+                logAndThrowModelError(ERR_INVOKE_AMBIGUOUS_SRC, new Object[] {getName(state)});
             }
         }
 
@@ -366,7 +356,7 @@ final class ModelUpdater {
         }
         else {
             updateTransition(transition, targets);
-            List<TransitionTarget> historyStates = transition.getTargets();
+            Set<TransitionTarget> historyStates = transition.getTargets();
             if (historyStates.size() == 0) {
                 logAndThrowModelError(ERR_STATE_NO_HIST,
                         new Object[] {getName(parent)});
@@ -380,7 +370,7 @@ final class ModelUpdater {
                     }
                 } else {
                     // Deep history
-                    if (!SCXMLHelper.isDescendant(historyState, parent)) {
+                    if (!historyState.isDescendantOf(parent)) {
                         logAndThrowModelError(ERR_STATE_BAD_DEEP_HIST,
                                 new Object[] {getName(parent)});
                     }
@@ -402,8 +392,8 @@ final class ModelUpdater {
         if (next == null) { // stay transition
             return;
         }
-        List<TransitionTarget> tts = transition.getTargets();
-        if (tts.size() == 0) {
+        Set<TransitionTarget> tts = transition.getTargets();
+        if (tts.isEmpty()) {
             // 'next' is a space separated list of transition target IDs
             StringTokenizer ids = new StringTokenizer(next);
             while (ids.hasMoreTokens()) {
@@ -423,7 +413,6 @@ final class ModelUpdater {
                 }
             }
         }
-        transition.getPaths(); // init paths
     }
 
     /**
@@ -455,16 +444,16 @@ final class ModelUpdater {
         String name = "anonymous transition target";
         if (tt instanceof State) {
             name = "anonymous state";
-            if (!SCXMLHelper.isStringEmpty(tt.getId())) {
+            if (tt.getId() != null) {
                 name = "state with ID \"" + tt.getId() + "\"";
             }
         } else if (tt instanceof Parallel) {
             name = "anonymous parallel";
-            if (!SCXMLHelper.isStringEmpty(tt.getId())) {
+            if (tt.getId() != null) {
                 name = "parallel with ID \"" + tt.getId() + "\"";
             }
         } else {
-            if (!SCXMLHelper.isStringEmpty(tt.getId())) {
+            if (tt.getId() != null) {
                 name = "transition target with ID \"" + tt.getId() + "\"";
             }
         }
@@ -473,37 +462,45 @@ final class ModelUpdater {
 
     /**
      * If a transition has multiple targets, then they satisfy the following
-     * criteria.
+     * criteria:
      * <ul>
-     *  <li>They must belong to the regions of the same parallel</li>
-     *  <li>All regions must be represented with exactly one target</li>
+     *  <li>No target is an ancestor of any other target on the list</li>
+     *  <li>A full legal state configuration results when all ancestors and default initial descendants have been added.
+     *  <br/>This means that they all must share the same least common parallel ancestor.
+     *  </li>
      * </ul>
      *
      * @param tts The transition targets
      * @return Whether this is a legal configuration
+     * @see <a href=http://www.w3.org/TR/2014/CR-scxml-20140313/#LegalStateConfigurations">
+     *     http://www.w3.org/TR/2014/CR-scxml-20140313/#LegalStateConfigurations</a>
      */
-    private static boolean verifyTransitionTargets(final List<TransitionTarget> tts) {
+    private static boolean verifyTransitionTargets(final Set<TransitionTarget> tts) {
         if (tts.size() <= 1) { // No contention
             return true;
         }
-        TransitionTarget lca = SCXMLHelper.getLCA(tts.get(0), tts.get(1));
-        if (lca == null || !(lca instanceof Parallel)) {
-            return false; // Must have a Parallel LCA
-        }
-        Parallel parallel = (Parallel) lca;
-        Set<TransitionTarget> regions = new HashSet<TransitionTarget>();
+
+        Set<EnterableState> parents = new HashSet<EnterableState>();
         for (TransitionTarget tt : tts) {
-            while (tt != null && tt.getParent() != parallel) {
-                tt = tt.getParent();
+            boolean hasParallelParent = false;
+            for (int i = tt.getNumberOfAncestors()-1; i > -1; i--) {
+                EnterableState parent = tt.getAncestor(i);
+                if (parent instanceof Parallel) {
+                    hasParallelParent = true;
+                    // keep on 'reading' as a parallel may have a parent parallel (and even intermediate states)
+                }
+                else {
+                    if (!parents.add(parent)) {
+                        // this TransitionTarget is an descendant of another, or shares the same Parallel region
+                        return false;
+                    }
+                }
             }
-            if (tt == null) {
-                // target outside lca
+            if (!hasParallelParent || !(tt.getAncestor(0) instanceof Parallel)) {
+                // multiple targets MUST all be children of a shared parallel
                 return false;
             }
-            if (!regions.add(tt)) {
-                return false; // One per region
-            }
         }
-        return regions.size() == parallel.getChildren().size();
-    }
+        return true;
+   }
 }

@@ -40,7 +40,7 @@
         </transition>
 
         <!-- "regular" transition -->
-        <transition event="ten.done" target="twenty">
+        <transition event="done.state.ten" target="twenty">
             <assign name="foo" expr="foo + 1" />
             <log expr="'Foo is:' + foo" />
         </transition>

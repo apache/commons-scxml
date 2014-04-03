@@ -16,9 +16,9 @@
  */
 package org.apache.commons.scxml2.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * The class in this SCXML object model that corresponds to the
@@ -52,30 +52,28 @@ public class SimpleTransition extends Executable
     private TransitionalState transitionDomain;
 
     /**
+     * Internal flag indicating a null transitionDomain was derived to be the SCXML Document itself.
+     */
+    private boolean scxmlTransitionDomain;
+
+    /**
      * Derived effective Transition type.
      * @see #isTypeInternal()
      */
     private Boolean typeInternal;
 
     /**
-     * Optional property that specifies the new state(s) or parallel
+     * Optional property that specifies the new state(s) or parallel(s)
      * element to transition to. May be specified by reference or in-line.
      * If multiple state(s) are specified, they must belong to the regions
      * of the same parallel.
      */
-    private List<TransitionTarget> targets;
+    private Set<TransitionTarget> targets;
 
     /**
      * The transition target ID
      */
     private String next;
-
-    /**
-     * The path(s) for this transition, one per target, in the same order
-     * as <code>targets</code>.
-     * @see Path
-     */
-    private List<Path> paths;
 
     /**
      * The current XML namespaces in the SCXML document for this action node,
@@ -88,8 +86,7 @@ public class SimpleTransition extends Executable
      */
     public SimpleTransition() {
         super();
-        this.targets = new ArrayList<TransitionTarget>();
-        this.paths = new ArrayList<Path>();
+        this.targets = new HashSet<TransitionTarget>();
     }
 
     private boolean isCompoundStateParent(TransitionalState ts) {
@@ -171,14 +168,11 @@ public class SimpleTransition extends Executable
             typeInternal = TransitionType.internal == type && isCompoundStateParent(getParent());
 
             if (typeInternal && targets.size() > 0) {
-                for (Path p : getPaths()) {
-                    // TODO: testing the following actual works and always is correct
-                    if (p.getPathScope() == null || p.getPathScope() == getParent()) {
-                        continue;
+                for (TransitionTarget tt : targets) {
+                    if (!tt.isDescendantOf(getParent())) {
+                        typeInternal = false;
+                        break;
                     }
-                    // not a proper descendant
-                    typeInternal = false;
-                    break;
                 }
             }
         }
@@ -188,7 +182,10 @@ public class SimpleTransition extends Executable
     /**
      * Returns the transition domain of this transition
      * <p>
-     * If this transition is target-less, null is returned.
+     * If this transition is target-less OR if its transition domain is the SCXML document itself, null is returned.
+     * </p>
+     * <p>
+     * This method therefore only is useful to be invoked if the transition has targets!
      * </p>
      * <p>
      * If the transition has targets then the transition domain is the compound State parent such that:
@@ -197,13 +194,14 @@ public class SimpleTransition extends Executable
      *   <li>no descendant of it has this property</li>
      * </ul>
      * If there is no such compound state parent, the transition domain effectively becomes the SCXML document itself,
-     * which is indicated by the returned pseudo {@link SCXML#SCXML_TRANSITION_DOMAIN} transitionDomain.
+     * which is not a (Transitional)State, and thus null will be returned instead.
      * </p>
      *
      * @return The transition domain of this transition
      */
     public TransitionalState getTransitionDomain() {
-        if (transitionDomain == null && targets.size() > 0) {
+        TransitionalState ts = transitionDomain;
+        if (ts == null && targets.size() > 0 && !scxmlTransitionDomain) {
 
             if (getParent() != null) {
                 if (isTypeInternal()) {
@@ -215,7 +213,7 @@ public class SimpleTransition extends Executable
                         if (isCompoundStateParent(getParent().getAncestor(i))) {
                             boolean allDescendants = true;
                             for (TransitionTarget tt : targets) {
-                                if (i > tt.getNumberOfAncestors()) {
+                                if (i >= tt.getNumberOfAncestors()) {
                                     i = tt.getNumberOfAncestors();
                                     allDescendants = false;
                                     break;
@@ -233,11 +231,12 @@ public class SimpleTransition extends Executable
                     }
                 }
             }
-            if (transitionDomain == null) {
-                transitionDomain = SCXML.SCXML_TRANSITION_DOMAIN;
+            ts = transitionDomain;
+            if (ts == null) {
+                scxmlTransitionDomain = true;
             }
         }
-        return transitionDomain;
+        return ts;
     }
 
     /**
@@ -259,35 +258,14 @@ public class SimpleTransition extends Executable
     }
 
     /**
-     * Get the list of transition targets (may be an empty list).
+     * Get the set of transition targets (may be an empty list).
      *
      * @return Returns the target(s) as specified in SCXML markup.
      * <p>Remarks: Is <code>empty</code> for &quot;stay&quot; transitions.
-     * Contains parent (the source node) for &quot;self&quot; transitions.</p>
      *
      * @since 0.7
      */
-    public final List<TransitionTarget> getTargets() {
-        return targets;
-    }
-
-    /**
-     * Get the list of runtime transition target, which always contains
-     * atleast one TransitionTarget instance.
-     *
-     * @return Returns the actual targets of a transition at runtime.
-     * <p>Remarks: For both the &quot;stay&quot; and &quot;self&quot;
-     * transitions it returns parent (the source node). This method should
-     * never return an empty list or <code>null</code>.</p>
-     *
-     * @since 0.7
-     */
-    public final List<TransitionTarget> getRuntimeTargets() {
-        if (targets.size() == 0) {
-            List<TransitionTarget> runtimeTargets = new ArrayList<TransitionTarget>();
-            runtimeTargets.add(getParent());
-            return runtimeTargets;
-        }
+    public final Set<TransitionTarget> getTargets() {
         return targets;
     }
 
@@ -309,27 +287,5 @@ public class SimpleTransition extends Executable
      */
     public final void setNext(final String next) {
         this.next = next;
-    }
-
-    /**
-     * Get the path(s) of this transiton.
-     *
-     * @see Path
-     * @return List returns the list of transition path(s)
-     *
-     * @since 0.7
-     */
-    public final List<Path> getPaths() {
-        if (paths.size() == 0) {
-            if (targets.size() > 0) {
-                int i = 0;
-                for (TransitionTarget tt : targets) {
-                    paths.add(i++, new Path(getParent(), tt));
-                }
-            } else {
-                paths.add(new Path(getParent(), null));
-            }
-        }
-        return paths;
     }
 }

@@ -69,7 +69,7 @@
                  expr="Data(rootdata,'pre1:root/pre2:foo/pre3:bar') + Data(data10,'root/pre1:foo/bar')" />
         </onentry>
 
-        <transition event="ten.done"
+        <transition event="done.state.ten"
                     cond="tentest eq 11"
                     target="twenty" />
 
@@ -102,7 +102,7 @@
 
 
         <!-- Redefine namespace prefixes -->
-        <transition event="twenty.done"
+        <transition event="done.state.twenty"
                     xmlns:ns1="scheme://namespace.test.domain/1"
                     xmlns:ns2="scheme://namespace.test.domain/2"
                     cond="Data(data20,'ns1:root/ns2:foo') eq 20 and Data(rootdata,'ns1:root/ns2:foo/ns3:bar') eq 2"
@@ -146,7 +146,7 @@
 
         </datamodel>
 
-        <transition event="thirty.done"
+        <transition event="done.state.thirty"
          xmlns:ns1="scheme://namespace.test.domain/1"
          xmlns:ns2="scheme://namespace.test.domain/2"
          xmlns:ns3="scheme://namespace.test.domain/3"
@@ -177,7 +177,7 @@
 
         </datamodel>
 
-        <transition event="forty.done"
+        <transition event="done.state.forty"
          cond="Data(data40,'root/ns1:foo/@ns2:attfoo') + Data(data41,'ns3:root/ns4:foo') eq 81"
          target="fifty" />
 
@@ -205,7 +205,7 @@
 
         </datamodel>
 
-        <transition event="fifty.done"
+        <transition event="done.state.fifty"
          xmlns:ns1="scheme://namespace.test.domain/1"
          xmlns:ns2="scheme://namespace.test.domain/2"
          xmlns:ns3="scheme://namespace.test.domain/3"
@@ -237,7 +237,7 @@
 
         </datamodel>
 
-        <transition event="sixty.done"
+        <transition event="done.state.sixty"
          xmlns:pre1="scheme://namespace.test.domain/1"
          xmlns:pre2="scheme://namespace.test.domain/2"
          xmlns:pre3="scheme://namespace.test.domain/3"

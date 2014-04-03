@@ -39,11 +39,11 @@
         </history>
 
         <state id="phase1">
-            <transition event="phase.done" target="phase2"/>
+            <transition event="done.state.phase" target="phase2"/>
         </state>
 
         <state id="phase2">
-            <transition event="phase.done" target="phase3"/>
+            <transition event="done.state.phase" target="phase3"/>
         </state>
 
         <final id="phase3"/>

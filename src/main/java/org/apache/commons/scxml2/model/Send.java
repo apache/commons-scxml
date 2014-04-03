@@ -27,7 +27,6 @@ import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.SCXMLExpressionException;
-import org.apache.commons.scxml2.SCXMLHelper;
 import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.semantics.ErrorConstants;
 import org.w3c.dom.Node;
@@ -269,22 +268,22 @@ public class Send extends Action implements ExternalContent {
         // Most attributes of <send> are expressions so need to be
         // evaluated before the EventDispatcher callback
         Object hintsValue = null;
-        if (!SCXMLHelper.isStringEmpty(hints)) {
+        if (hints != null) {
             hintsValue = eval.eval(ctx, hints);
         }
         String targetValue = target;
-        if (!SCXMLHelper.isStringEmpty(target)) {
+        if (target != null) {
             targetValue = (String) eval.eval(ctx, target);
-            if (SCXMLHelper.isStringEmpty(targetValue)
+            if ((targetValue == null || targetValue.trim().length() == 0)
                     && exctx.getAppLog().isWarnEnabled()) {
                 exctx.getAppLog().warn("<send>: target expression \"" + target
                     + "\" evaluated to null or empty String");
             }
         }
         String typeValue;
-        if (!SCXMLHelper.isStringEmpty(type)) {
+        if (type != null) {
             typeValue = (String) eval.eval(ctx, type);
-            if (SCXMLHelper.isStringEmpty(typeValue)
+            if ((typeValue == null || typeValue.trim().length() == 0)
                     && exctx.getAppLog().isWarnEnabled()) {
                 exctx.getAppLog().warn("<send>: type expression \"" + type
                     + "\" evaluated to null or empty String");
@@ -294,7 +293,7 @@ public class Send extends Action implements ExternalContent {
             typeValue = TYPE_SCXML;
         }
         Map<String, Object> params = null;
-        if (!SCXMLHelper.isStringEmpty(namelist)) {
+        if (namelist != null) {
             StringTokenizer tkn = new StringTokenizer(namelist);
             params = new HashMap<String, Object>(tkn.countTokens());
             while (tkn.hasMoreTokens()) {
@@ -309,7 +308,7 @@ public class Send extends Action implements ExternalContent {
             }
         }
         long wait = 0L;
-        if (!SCXMLHelper.isStringEmpty(delay)) {
+        if (delay != null) {
             Object delayValue = eval.eval(ctx, delay);
             if (delayValue != null) {
                 String delayString = delayValue.toString();
@@ -317,10 +316,9 @@ public class Send extends Action implements ExternalContent {
             }
         }
         String eventValue = event;
-        if (!SCXMLHelper.isStringEmpty(event)) {
+        if (event != null) {
             eventValue = (String) eval.eval(ctx, event);
-            if (SCXMLHelper.isStringEmpty(eventValue)
-                    && exctx.getAppLog().isWarnEnabled()) {
+            if ((eventValue == null || eventValue.trim().length() == 0) && exctx.getAppLog().isWarnEnabled()) {
                 exctx.getAppLog().warn("<send>: event expression \"" + event
                     + "\" evaluated to null or empty String");
             }
@@ -328,7 +326,7 @@ public class Send extends Action implements ExternalContent {
         // Lets see if we should handle it ourselves
         if (typeValue != null
               && typeValue.trim().equalsIgnoreCase(TYPE_SCXML)) {
-            if (SCXMLHelper.isStringEmpty(targetValue)) {
+            if (targetValue == null || targetValue.trim().length() == 0) {
                 // TODO: Remove both short-circuit passes in v1.0
                 if (wait == 0L) {
                     if (exctx.getAppLog().isDebugEnabled()) {
@@ -378,7 +376,7 @@ public class Send extends Action implements ExternalContent {
         long wait = 0L;
         long multiplier = 1L;
 
-        if (!SCXMLHelper.isStringEmpty(delayString)) {
+        if (delayString != null && delayString.trim().length() > 0) {
 
             String trimDelay = delayString.trim();
             String numericDelay = trimDelay;

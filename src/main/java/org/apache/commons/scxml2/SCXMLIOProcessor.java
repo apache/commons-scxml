@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -14,32 +13,19 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
--->
-<!--
-  Used by TieBreakerTest
--->
-<scxml xmlns="http://www.w3.org/2005/07/scxml"
-       version="1.0"
-       initial="ten">
+ */
+package org.apache.commons.scxml2;
 
-    <state id="ten">
-        <initial>
-            <transition target="eleven"/>
-        </initial>
+/**
+ * The SCXML I/O Processor provides the interface for an external system or invoked child SCXML process
+ * ({@link org.apache.commons.scxml2.invoke.Invoker}) to asynchronously send events to the SCXMLExecutor.
+ */
+public interface SCXMLIOProcessor {
 
-        <transition event="done.state.ten" target="twenty" />
-
-        <state id="eleven">
-            <!-- thirty wins since eleven trumps
-                 ten in the state hierarchy -->
-            <transition event="done.state.ten" target="thirty" />
-        </state>
-
-    </state>
-
-    <final id="twenty"/>
-
-    <final id="thirty"/>
-
-</scxml>
-
+    /**
+     * Send an asynchronous event to the SCXMLExecutor
+     * <p>
+     * @param event the event to send
+     */
+    void addEvent(TriggerEvent event);
+}

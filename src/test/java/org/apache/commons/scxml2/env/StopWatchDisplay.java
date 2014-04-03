@@ -31,6 +31,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.apache.commons.scxml2.model.ModelException;
+
 
 /**
  * Quick GUI to demonstrate the SCXML driven stopwatch.
@@ -50,7 +52,7 @@ public class StopWatchDisplay extends JFrame
     private StopWatch stopWatch;
     private Image watchImage, watchIcon;
 
-    public StopWatchDisplay() {
+    public StopWatchDisplay() throws ModelException {
         super("SCXML stopwatch");
         stopWatch = new StopWatch();
         setupUI();
@@ -143,7 +145,7 @@ public class StopWatchDisplay extends JFrame
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         new StopWatchDisplay();
     }
 

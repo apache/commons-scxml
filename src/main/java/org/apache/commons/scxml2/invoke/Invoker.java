@@ -18,7 +18,8 @@ package org.apache.commons.scxml2.invoke;
 
 import java.util.Map;
 
-import org.apache.commons.scxml2.SCXMLExecutor;
+import org.apache.commons.scxml2.Evaluator;
+import org.apache.commons.scxml2.SCXMLIOProcessor;
 import org.apache.commons.scxml2.TriggerEvent;
 
 /**
@@ -28,10 +29,10 @@ import org.apache.commons.scxml2.TriggerEvent;
  *
  * <p>Invocable activities must first register an Invoker implementation class
  * for the appropriate "target" (attribute of &lt;invoke&gt;) with the
- * parent <code>SCXMLExecutor</code>.</p>
+ * parent <code>SCXMLParentIOProcessor</code>.</p>
  *
  * <p>The communication link between the parent state machine executor and
- * the invoked activity is a bi-directional events pipe.</p>
+ * the invoked activity is a asynchronous bi-directional events pipe.</p>
  *
  * <p>All events triggered on the parent state machine get forwarded to the
  * invoked activity. The processing semantics for these events depend
@@ -42,16 +43,15 @@ import org.apache.commons.scxml2.TriggerEvent;
  * when it concludes. It may fire additional events before the "done"
  * event. The semantics of any additional events depend upon the
  * "target". The invoked activity must not fire any events after the "done"
- * event. The name of the special "done" event must be the ID of the parent
- * state wherein the corresponding &lt;invoke&gt; resides, with the String
- * ".invoke.done" appended.</p>
+ * event. The name of the special "done" event must be "done.invoke.id" with
+ * the ID of the parent state wherein the corresponding &lt;invoke&gt; resides,</p>
  *
  * <p>The Invoker "lifecycle" is outlined below:
  *  <ol>
  *   <li>Instantiation via {@link Class#newInstance()}
  *       (Invoker implementation requires accessible constructor).</li>
- *   <li>Configuration (setters for parent state ID and
- *       {@link SCXMLExecutor}).</li>
+ *   <li>Configuration (setters for invoke ID and
+ *       {@link org.apache.commons.scxml2.SCXMLIOProcessor}).</li>
  *   <li>Initiation of invoked activity via invoke() method, passing
  *       the source URI and the map of params.</li>
  *   <li>Zero or more bi-directional event triggering.</li>
@@ -61,29 +61,35 @@ import org.apache.commons.scxml2.TriggerEvent;
  *
  * <p><b>Note:</b> The semantics of &lt;invoke&gt; are necessarily
  * asynchronous, tending towards long(er) running interactions with external
- * processes. Implementations must not communicate with the parent state
+ * processes. Implementations cannot communicate with the parent state
  * machine executor in a synchronous manner. For synchronous
  * communication semantics, use &lt;event&gt; or custom actions instead.</p>
  */
 public interface Invoker {
 
     /**
-     * Set the state ID of the owning state for the &lt;invoke&gt;.
+     * Set the invoke ID provided by the parent state machine executor
      * Implementations must use this ID for constructing the event name for
      * the special "done" event (and optionally, for other event names
      * as well).
      *
-     * @param parentStateId The ID of the parent state.
+     * @param invokeId The invoke ID provided by the parent state machine executor.
      */
-    void setParentStateId(String parentStateId);
+    void setInvokeId(String invokeId);
 
     /**
-     * Set the execution "context" of the parent state machine, which provides the
+     * Set I/O Processor of the parent state machine, which provides the
      * channel.
      *
-     * @param parentExecutor The execution "context" of the parent state machine.
+     * @param parentIOProcessor The I/O Processor of the parent state machine.
      */
-    void setParentExecutor(SCXMLExecutor parentExecutor);
+    void setParentIOProcessor(SCXMLIOProcessor parentIOProcessor);
+
+    /**
+     * Set the Evaluator to be used by the child state machine (to ensure/enforce a compatible data model)
+     * @param evaluator the Evaluator to be used
+     */
+    void setEvaluator(Evaluator evaluator);
 
     /**
      * Begin this invocation.
@@ -97,18 +103,18 @@ public interface Invoker {
     throws InvokerException;
 
     /**
-     * Forwards the events triggered on the parent state machine
+     * Forwards the event triggered on the parent state machine
      * on to the invoked activity.
      *
-     * @param evts
-     *            an array of external events which triggered during the last
+     * @param event
+     *            an external event which triggered during the last
      *            time quantum
      *
      * @throws InvokerException In case there is a fatal problem with
      *                          processing the events forwarded by the
      *                          parent state machine.
      */
-    void parentEvents(TriggerEvent[] evts)
+    void parentEvent(TriggerEvent event)
     throws InvokerException;
 
     /**

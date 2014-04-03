@@ -16,7 +16,7 @@
  */
 package org.apache.commons.scxml2.invoke;
 
-import org.apache.commons.scxml2.SCXMLExecutor;
+import org.apache.commons.scxml2.SCXMLIOProcessor;
 import org.apache.commons.scxml2.TriggerEvent;
 
 /**
@@ -25,19 +25,19 @@ import org.apache.commons.scxml2.TriggerEvent;
  */
 class AsyncTrigger implements Runnable {
 
-    /** The state machine executor. */
-    private final SCXMLExecutor executor;
+    /** The SCXML state machine I/O Processor to deliver the event to. */
+    private final SCXMLIOProcessor ioProcessor;
     /** The event to be triggered. */
     private final TriggerEvent event;
 
     /**
      * Constructor.
      *
-     * @param executor The {@link SCXMLExecutor} to trigger the event on.
+     * @param ioProcessor The {@link org.apache.commons.scxml2.SCXMLIOProcessor} to trigger the event on.
      * @param event The {@link TriggerEvent}.
      */
-    AsyncTrigger(final SCXMLExecutor executor, final TriggerEvent event) {
-        this.executor = executor;
+    AsyncTrigger(final SCXMLIOProcessor ioProcessor, final TriggerEvent event) {
+        this.ioProcessor = ioProcessor;
         this.event = event;
     }
 
@@ -52,7 +52,7 @@ class AsyncTrigger implements Runnable {
      * Fire the event(s).
      */
     public void run() {
-        executor.addEvent(event);
+        ioProcessor.addEvent(event);
     }
 
 }

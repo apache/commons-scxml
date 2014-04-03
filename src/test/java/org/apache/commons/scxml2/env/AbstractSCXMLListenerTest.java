@@ -82,11 +82,11 @@ public class AbstractSCXMLListenerTest {
                 }
 
                 /**
-                 * @see SCXMLListener#onTransition(TransitionTarget,TransitionTarget,Transition)
+                 * @see SCXMLListener#onTransition(TransitionTarget,TransitionTarget,Transition,String)
                  */
                 @Override
                 public void onTransition(TransitionTarget from, TransitionTarget to,
-                                         Transition transition) {
+                                         Transition transition, String event) {
                     heardOnTransition = true;
                 }
             };
@@ -96,10 +96,10 @@ public class AbstractSCXMLListenerTest {
         Assert.assertFalse("heardOnTransition == false", heardOnTransition);
         listener0.onEntry(to);
         listener0.onExit(to);
-        listener0.onTransition(from, to, transition);
+        listener0.onTransition(from, to, transition, null);
         Assert.assertTrue("heardOnEntry", heardOnEntry);
         Assert.assertTrue("heardOnExit", heardOnExit);
-        Assert.assertTrue("heardOnExit", heardOnTransition);
+        Assert.assertTrue("heardOnTransition", heardOnTransition);
     }
 
     @Test
@@ -127,7 +127,7 @@ public class AbstractSCXMLListenerTest {
         Assert.assertFalse("heardOnTransition == false", heardOnTransition);
         listener1.onEntry(to);
         listener1.onExit(to);
-        listener1.onTransition(from, to, transition);
+        listener1.onTransition(from, to, transition, null);
         Assert.assertTrue("heardOnEntry", heardOnEntry);
         Assert.assertTrue("heardOnExit", heardOnExit);
         Assert.assertFalse("heardOnTransition == false", heardOnTransition);
@@ -150,7 +150,7 @@ public class AbstractSCXMLListenerTest {
             Assert.assertFalse("heardOnTransition == false", heardOnTransition);
         listener2.onEntry(to);
         listener2.onExit(to);
-        listener2.onTransition(from, to, transition);
+        listener2.onTransition(from, to, transition, null);
         Assert.assertTrue("heardOnEntry", heardOnEntry);
         Assert.assertFalse("heardOnExit == false", heardOnExit);
         Assert.assertFalse("heardOnTransition == false", heardOnTransition);
@@ -167,7 +167,7 @@ public class AbstractSCXMLListenerTest {
             Assert.assertFalse("heardOnTransition == false", heardOnTransition);
         listener3.onEntry(to);
         listener3.onExit(to);
-        listener3.onTransition(from, to, transition);
+        listener3.onTransition(from, to, transition, null);
         Assert.assertFalse("heardOnEntry == false", heardOnEntry);
         Assert.assertFalse("heardOnExit == false", heardOnExit);
         Assert.assertFalse("heardOnTransition == false", heardOnTransition);

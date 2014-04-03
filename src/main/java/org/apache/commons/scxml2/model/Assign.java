@@ -28,11 +28,9 @@ import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.PathResolver;
 import org.apache.commons.scxml2.SCXMLExpressionException;
-import org.apache.commons.scxml2.SCXMLHelper;
 import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.semantics.ErrorConstants;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
+import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
 /**
@@ -181,7 +179,7 @@ public class Assign extends Action implements PathResolverHolder {
         Evaluator eval = exctx.getEvaluator();
         ctx.setLocal(getNamespacesKey(), getNamespaces());
         // "location" gets preference over "name"
-        if (!SCXMLHelper.isStringEmpty(location)) {
+        if (location != null) {
             Node oldNode = eval.evalLocation(ctx, location);
             if (oldNode != null) {
                 //// rvalue may be ...
@@ -213,7 +211,7 @@ public class Assign extends Action implements PathResolverHolder {
                 } catch (SCXMLExpressionException see) {
                     // or something else, stuff toString() into lvalue
                     Object valueObject = eval.eval(ctx, expr);
-                    SCXMLHelper.setNodeValue(oldNode, valueObject.toString());
+                    setNodeValue(oldNode, valueObject.toString());
                 }
                 if (exctx.getAppLog().isDebugEnabled()) {
                     exctx.getAppLog().debug("<assign>: data node '" + oldNode.getNodeName()
@@ -250,6 +248,43 @@ public class Assign extends Action implements PathResolverHolder {
             }
         }
         ctx.setLocal(getNamespacesKey(), null);
+    }
+
+    /**
+     * Set node value, depending on its type, from a String.
+     *
+     * @param node A Node whose value is to be set
+     * @param value The new value
+     */
+    private void setNodeValue(final Node node, final String value) {
+        switch(node.getNodeType()) {
+            case Node.ATTRIBUTE_NODE:
+                node.setNodeValue(value);
+                break;
+            case Node.ELEMENT_NODE:
+                //remove all text children
+                if (node.hasChildNodes()) {
+                    Node child = node.getFirstChild();
+                    while (child != null) {
+                        if (child.getNodeType() == Node.TEXT_NODE) {
+                            node.removeChild(child);
+                        }
+                        child = child.getNextSibling();
+                    }
+                }
+                //create a new text node and append
+                Text txt = node.getOwnerDocument().createTextNode(value);
+                node.appendChild(txt);
+                break;
+            case Node.TEXT_NODE:
+            case Node.CDATA_SECTION_NODE:
+                ((CharacterData) node).setData(value);
+                break;
+            default:
+                String err = "Trying to set value of a strange Node type: "
+                        + node.getNodeType();
+                throw new IllegalArgumentException(err);
+        }
     }
 
     /**

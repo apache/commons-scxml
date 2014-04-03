@@ -19,15 +19,20 @@ package org.apache.commons.scxml2;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import org.apache.commons.scxml2.model.Data;
 import org.apache.commons.scxml2.model.Datamodel;
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.History;
+import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.TransitionalState;
+import org.apache.commons.scxml2.semantics.ErrorConstants;
+import org.w3c.dom.Node;
 
 /**
  * The <code>SCInstance</code> performs book-keeping functions for
@@ -42,6 +47,26 @@ public class SCInstance implements Serializable {
     private static final long serialVersionUID = 2L;
 
     /**
+     * SCInstance cannot be initialized without setting a state machine.
+     */
+    private static final String ERR_NO_STATE_MACHINE = "SCInstance: State machine not set";
+
+    /**
+     * SCInstance cannot be initialized without setting an evaluator.
+     */
+    private static final String ERR_NO_EVALUATOR = "SCInstance: Evaluator not set";
+
+    /**
+     * SCInstance cannot be initialized without setting an error reporter.
+     */
+    private static final String ERR_NO_ERROR_REPORTER = "SCInstance: ErrorReporter not set";
+
+    /**
+     * Flag indicating the state machine instance has been initialized (before).
+     */
+    private boolean initialized;
+
+    /**
      * The stateMachine being executed.
      */
     private SCXML stateMachine;
@@ -52,27 +77,24 @@ public class SCInstance implements Serializable {
     private final Status currentStatus;
 
     /**
-     * The owning state machine executor.
+     * The Evaluator used for this state machine instance.
      */
-    private transient SCXMLExecutor executor;
+    private transient Evaluator evaluator;
 
     /**
-     * The <code>Map</code> of <code>Context</code>s per
-     * <code>EnterableState</code>.
+     * The error reporter.
      */
-    private final Map<EnterableState, Context> contexts;
+    private transient ErrorReporter errorReporter = null;
 
     /**
-     * The <code>Map</code> of last known configurations per
-     * <code>History</code>.
+     * The map of contexts per EnterableState.
      */
-    private final Map<History, Set<EnterableState>> histories;
+    private final Map<EnterableState, Context> contexts = new HashMap<EnterableState, Context>();
 
     /**
-     * <code>Map</code> for recording the run to completion status of
-     * composite states.
+     * The map of last known configurations per History.
      */
-    private final Map<EnterableState, Boolean> completions;
+    private final Map<History, Set<EnterableState>> histories = new HashMap<History, Set<EnterableState>>();
 
     /**
      * The root context.
@@ -92,14 +114,86 @@ public class SCInstance implements Serializable {
     /**
      * Constructor
      *
-     * @param executor The executor that this instance is attached to.
+     * @param evaluator The evaluator
+     * @param errorReporter The error reporter
      */
-    SCInstance(final SCXMLExecutor executor) {
+    protected SCInstance(final Evaluator evaluator, final ErrorReporter errorReporter) {
+        this.evaluator = evaluator;
+        this.errorReporter = errorReporter;
         this.currentStatus = new Status();
-        this.executor = executor;
-        this.contexts = new HashMap<EnterableState, Context>();
-        this.histories = new HashMap<History, Set<EnterableState>>();
-        this.completions = new HashMap<EnterableState, Boolean>();
+    }
+
+    /**
+     * (re)Initializes the state machine instance, clearing all variable contexts, histories and current status,
+     * and clones the SCXML root datamodel into the root context.
+     * @throws ModelException if the state machine hasn't been setup for this instance
+     */
+    protected void initialize() throws ModelException {
+        if (stateMachine == null) {
+            throw new ModelException(ERR_NO_STATE_MACHINE);
+        }
+        if (evaluator == null) {
+            throw new ModelException(ERR_NO_EVALUATOR);
+        }
+        if (errorReporter == null) {
+            throw new ModelException(ERR_NO_ERROR_REPORTER);
+        }
+        systemContext = null;
+        globalContext = null;
+        contexts.clear();
+        histories.clear();
+        currentStatus.clear();
+
+        // Clone root datamodel
+        Datamodel rootdm = stateMachine.getDatamodel();
+        cloneDatamodel(rootdm, getRootContext(), evaluator, errorReporter);
+        initialized = true;
+    }
+
+    /**
+     * Detach this state machine instance to allow external serialization.
+     * <p>
+     * This clears the evaluator and errorReporter members.
+     * </p>
+     */
+    protected void detach() {
+        this.evaluator = null;
+        this.errorReporter = null;
+    }
+
+    /**
+     * Set or re-attach the evaluator
+     * <p>
+     * If this state machine instance has been initialized before, it will be initialized again, destroying all existing
+     * state!
+     * </p>
+     * @param evaluator The evaluator for this state machine instance.
+     * @throws ModelException if an attempt is made to set a null value for the evaluator
+     */
+    protected void setEvaluator(Evaluator evaluator) throws ModelException {
+        if (evaluator == null) {
+            throw new ModelException(ERR_NO_EVALUATOR);
+        }
+        if (this.evaluator != null && initialized) {
+            this.evaluator = evaluator;
+            // change of evaluator after initialization: re-initialize
+            initialize();
+        }
+        else {
+            this.evaluator = evaluator;
+        }
+    }
+
+    /**
+     * Set or re-attach the error reporter
+     * @param errorReporter The error reporter for this state machine instance.
+     * @throws ModelException if an attempt is made to set a null value for the error reporter
+     */
+    protected void setErrorReporter(ErrorReporter errorReporter) throws ModelException {
+        if (errorReporter == null) {
+            throw new ModelException(ERR_NO_ERROR_REPORTER);
+        }
+        this.errorReporter = errorReporter;
     }
 
     /**
@@ -110,19 +204,67 @@ public class SCInstance implements Serializable {
     }
 
     /**
-     * Sets the state machine for this instance
+     * Sets the state machine for this instance.
+     * <p>
+     * If this state machine instance has been initialized before, it will be initialized again, destroying all existing
+     * state!
+     * </p>
      * @param stateMachine The state machine for this instance
+     * @throws ModelException if an attempt is made to set a null value for the state machine
      */
-    void setStateMachine(SCXML stateMachine) {
-        this.stateMachine = stateMachine;
-        currentStatus.getStates().clear();
-        contexts.clear();
-        histories.clear();
-        completions.clear();
-        if (systemContext != null) {
-            // reset _name system variable
-            String scxmlName = stateMachine.getName() != null ? stateMachine.getName() : "";
-            systemContext.getContext().set(SCXMLSystemContext.VARIABLE_NAME, scxmlName);
+    protected void setStateMachine(SCXML stateMachine) throws ModelException {
+        if (stateMachine == null) {
+            throw new ModelException(ERR_NO_STATE_MACHINE);
+        }
+        if (this.stateMachine != null && initialized) {
+            this.stateMachine = stateMachine;
+            // change of state machine after initialization: re-initialize
+            initialize();
+        }
+        else {
+            this.stateMachine = stateMachine;
+        }
+    }
+
+    /**
+     * Clone data model.
+     *
+     * @param ctx The context to clone to.
+     * @param datamodel The datamodel to clone.
+     * @param evaluator The expression evaluator.
+     * @param errorReporter The error reporter
+     */
+    protected void cloneDatamodel(final Datamodel datamodel, final Context ctx, final Evaluator evaluator,
+                                      final ErrorReporter errorReporter) {
+        if (datamodel == null) {
+            return;
+        }
+        List<Data> data = datamodel.getData();
+        if (data == null) {
+            return;
+        }
+        for (Data datum : data) {
+            Node datumNode = datum.getNode();
+            Node valueNode = null;
+            if (datumNode != null) {
+                valueNode = datumNode.cloneNode(true);
+            }
+            // prefer "src" over "expr" over "inline"
+            if (datum.getSrc() != null) {
+                ctx.setLocal(datum.getId(), valueNode);
+            } else if (datum.getExpr() != null) {
+                Object value = null;
+                try {
+                    ctx.setLocal(Context.NAMESPACES_KEY, datum.getNamespaces());
+                    value = evaluator.eval(ctx, datum.getExpr());
+                    ctx.setLocal(Context.NAMESPACES_KEY, null);
+                } catch (SCXMLExpressionException see) {
+                    errorReporter.onError(ErrorConstants.EXPRESSION_ERROR, see.getMessage(), datum);
+                }
+                ctx.setLocal(datum.getId(), value);
+            } else {
+                ctx.setLocal(datum.getId(), valueNode);
+            }
         }
     }
 
@@ -134,37 +276,29 @@ public class SCInstance implements Serializable {
     }
 
     /**
-     * Re-attach the executor
-     * @param executor The executor that this instance will be re-attached to.
-     */
-    void setExecutor(SCXMLExecutor executor) {
-        this.executor = executor;
-    }
-
-    /**
      * Get the root context.
      *
      * @return The root context.
      */
     public Context getRootContext() {
-        if (rootContext == null && executor.getEvaluator() != null) {
-            rootContext = executor.getEvaluator().newContext(null);
+        if (rootContext == null && evaluator != null) {
+            rootContext = evaluator.newContext(null);
         }
         return rootContext;
     }
 
     /**
-     * Set the root context.
-     * <p>
-     * Note: clears all other contexts!
-     * </p>
-     *
+     * Set or replace the root context.
      * @param context The new root context.
      */
-    void setRootContext(final Context context) {
+    protected void setRootContext(final Context context) {
         this.rootContext = context;
-        globalContext = null;
-        contexts.clear();
+        // force initialization of rootContext
+        getRootContext();
+        if (systemContext != null) {
+            // re-parent the system context
+            systemContext.setSystemContext(evaluator.newContext(rootContext));
+        }
     }
 
     /**
@@ -172,37 +306,39 @@ public class SCInstance implements Serializable {
      *
      * @return The unwrapped system context.
      */
-    Context getSystemContext() {
+    public Context getSystemContext() {
         if (systemContext == null) {
             // force initialization of rootContext
             getRootContext();
             if (rootContext != null) {
-                systemContext = new SCXMLSystemContext(executor.getEvaluator().newContext(rootContext));
-                systemContext.getContext().set(SCXMLSystemContext.VARIABLE_SESSIONID, UUID.randomUUID().toString());
+                systemContext = new SCXMLSystemContext(evaluator.newContext(rootContext));
+                systemContext.getContext().set(SCXMLSystemContext.SESSIONID_KEY, UUID.randomUUID().toString());
                 String _name = stateMachine != null && stateMachine.getName() != null ? stateMachine.getName() : "";
-                systemContext.getContext().set(SCXMLSystemContext.VARIABLE_NAME, _name);
+                systemContext.getContext().set(SCXMLSystemContext.SCXML_NAME_KEY, _name);
             }
         }
         return systemContext != null ? systemContext.getContext() : null;
     }
 
+    /**
+     * @return Returns the global context, which is the top context <em>within</em> the state machine.
+     */
     public Context getGlobalContext() {
         if (globalContext == null) {
             // force initialization of systemContext
             getSystemContext();
             if (systemContext != null) {
-                globalContext = executor.getEvaluator().newContext(systemContext);
+                globalContext = evaluator.newContext(systemContext);
             }
         }
         return globalContext;
     }
 
     /**
-     * Get the <code>Context</code> for this <code>EnterableState</code>.
-     * If one is not available it is created.
+     * Get the context for an EnterableState or create one if not created before.
      *
      * @param state The EnterableState.
-     * @return The Context.
+     * @return The context.
      */
     public Context getContext(final EnterableState state) {
         Context context = contexts.get(state);
@@ -210,13 +346,13 @@ public class SCInstance implements Serializable {
             EnterableState parent = state.getParent();
             if (parent == null) {
                 // docroot
-                context = executor.getEvaluator().newContext(getGlobalContext());
+                context = evaluator.newContext(getGlobalContext());
             } else {
-                context = executor.getEvaluator().newContext(getContext(parent));
+                context = evaluator.newContext(getContext(parent));
             }
             if (state instanceof TransitionalState) {
                 Datamodel datamodel = ((TransitionalState)state).getDatamodel();
-                SCXMLHelper.cloneDatamodel(datamodel, context, executor.getEvaluator(), null);
+                cloneDatamodel(datamodel, context, evaluator, errorReporter);
             }
             contexts.put(state, context);
         }
@@ -224,21 +360,24 @@ public class SCInstance implements Serializable {
     }
 
     /**
-     * Get the <code>Context</code> for this <code>EnterableState</code>.
-     * May return <code>null</code>.
+     * Get the context for an EnterableState if available.
      *
-     * @param state The <code>EnterableState</code>.
-     * @return The Context.
+     * <p>Note: used for testing purposes only</p>
+     *
+     * @param state The EnterableState
+     * @return The context or null if not created yet.
      */
     Context lookupContext(final EnterableState state) {
         return contexts.get(state);
     }
 
     /**
-     * Set the <code>Context</code> for this <code>EnterableState</code>.
+     * Set the context for an EnterableState
+     *
+     * <p>Note: used for testing purposes only</p>
      *
      * @param state The EnterableState.
-     * @param context The Context.
+     * @param context The context.
      */
     void setContext(final EnterableState state,
             final Context context) {
@@ -287,46 +426,15 @@ public class SCInstance implements Serializable {
     /**
      * Resets the history state.
      *
+     * <p>Note: used for testing purposes only</p>
+     *
      * @param history The history.
-     * @see org.apache.commons.scxml2.SCXMLExecutor#reset()
      */
     public void reset(final History history) {
         Set<EnterableState> lastConfiguration = histories.get(history);
         if (lastConfiguration != null) {
             lastConfiguration.clear();
         }
-    }
-
-    /**
-     * Get the completion status for this composite
-     * {@link EnterableState}.
-     *
-     * @param state The <code>EnterableState</code>.
-     * @return The completion status.
-     *
-     * @since 0.7
-     */
-    @SuppressWarnings("boxing")
-    public boolean isDone(final EnterableState state) {
-        if (completions.containsKey(state)) {
-            return completions.get(state);
-        }
-        return false;
-    }
-
-    /**
-     * Set the completion status for this composite
-     * {@link EnterableState}.
-     *
-     * @param state The EnterableState.
-     * @param done The completion status.
-     *
-     * @since 0.7
-     */
-    @SuppressWarnings("boxing")
-    public void setDone(final EnterableState state,
-            final boolean done) {
-        completions.put(state, done);
     }
 }
 

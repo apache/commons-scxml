@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 import org.apache.commons.scxml2.ActionExecutionContext;
+import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 
 /**
@@ -40,12 +41,6 @@ public abstract class Action implements NamespacePrefixesHolder,
      * preserved for deferred XPath evaluation.
      */
     private Map<String, String> namespaces;
-
-    /**
-     * Current document namespaces are saved under this key in the parent
-     * state's context.
-     */
-    private static final String NAMESPACES_KEY = "_ALL_NAMESPACES";
 
     /**
      * Constructor.
@@ -137,7 +132,7 @@ public abstract class Action implements NamespacePrefixesHolder,
      * @return The namespaces key
      */
     protected static String getNamespacesKey() {
-        return NAMESPACES_KEY;
+        return Context.NAMESPACES_KEY;
     }
 
 }

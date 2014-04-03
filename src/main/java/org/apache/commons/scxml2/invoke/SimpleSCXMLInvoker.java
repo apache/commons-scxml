@@ -26,6 +26,7 @@ import javax.xml.stream.XMLStreamException;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.SCXMLExecutor;
+import org.apache.commons.scxml2.SCXMLIOProcessor;
 import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.env.SimpleDispatcher;
 import org.apache.commons.scxml2.env.SimpleErrorReporter;
@@ -44,38 +45,35 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
     private static final long serialVersionUID = 1L;
     /** Parent state ID. */
     private String parentStateId;
-    /** Event prefix, all events sent to the parent executor must begin
-     *  with this prefix. */
-    private String eventPrefix;
-    /** Invoking document's SCXMLExecutor */
-    private SCXMLExecutor parentExecutor;
+    /** Invoking document's external I/O Processor */
+    private SCXMLIOProcessor parentIOProcessor;
+    /** The Evaluator provided by the parent executor */
+    private Evaluator evaluator;
     /** The invoked state machine executor. */
     private SCXMLExecutor executor;
     /** Cancellation status. */
     private boolean cancelled;
 
-    //// Constants
-    /** Prefix for all events sent to the parent state machine. */
-    private static String invokePrefix = ".invoke.";
-    /** Suffix for invoke done event. */
-    private static String invokeDone = "done";
-    /** Suffix for invoke cancel response event. */
-    private static String invokeCancelResponse = "cancel.response";
-
     /**
      * {@inheritDoc}.
      */
-    public void setParentStateId(final String parentStateId) {
-        this.parentStateId = parentStateId;
-        this.eventPrefix = this.parentStateId + invokePrefix;
+    public void setInvokeId(final String invokeId) {
+        this.parentStateId = invokeId;
         this.cancelled = false;
     }
 
     /**
      * {@inheritDoc}.
      */
-    public void setParentExecutor(final SCXMLExecutor parentExecutor) {
-        this.parentExecutor = parentExecutor;
+    public void setParentIOProcessor(SCXMLIOProcessor parentIOProcessor) {
+        this.parentIOProcessor = parentIOProcessor;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    public void setEvaluator(final Evaluator evaluator) {
+        this.evaluator = evaluator;
     }
 
     /**
@@ -83,7 +81,7 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
      */
     public void invoke(final String source, final Map<String, Object> params)
     throws InvokerException {
-        SCXML scxml = null;
+        SCXML scxml;
         try {
             scxml = SCXMLReader.read(new URL(source));
         } catch (ModelException me) {
@@ -93,15 +91,18 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
         } catch (XMLStreamException xse) {
             throw new InvokerException(xse.getMessage(), xse.getCause());
         }
-        Evaluator eval = parentExecutor.getEvaluator();
-        executor = new SCXMLExecutor(eval,
-            new SimpleDispatcher(), new SimpleErrorReporter());
-        Context rootCtx = eval.newContext(null);
+        executor = new SCXMLExecutor(evaluator, new SimpleDispatcher(), new SimpleErrorReporter());
+        Context rootCtx = evaluator.newContext(null);
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             rootCtx.setLocal(entry.getKey(), entry.getValue());
         }
         executor.setRootContext(rootCtx);
-        executor.setStateMachine(scxml);
+        try {
+            executor.setStateMachine(scxml);
+        }
+        catch (ModelException me) {
+            throw new InvokerException(me);
+        }
         executor.addListener(scxml, new SimpleSCXMLListener());
         executor.registerInvokerClass("scxml", this.getClass());
         try {
@@ -110,30 +111,28 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
             throw new InvokerException(me.getMessage(), me.getCause());
         }
         if (executor.getCurrentStatus().isFinal()) {
-            TriggerEvent te = new TriggerEvent(eventPrefix + invokeDone,
-                TriggerEvent.SIGNAL_EVENT);
-            new AsyncTrigger(parentExecutor, te).start();
+            TriggerEvent te = new TriggerEvent("done.invoke."+parentStateId, TriggerEvent.SIGNAL_EVENT);
+            new AsyncTrigger(parentIOProcessor, te).start();
         }
     }
 
     /**
      * {@inheritDoc}.
      */
-    public void parentEvents(final TriggerEvent[] evts)
+    public void parentEvent(final TriggerEvent evt)
     throws InvokerException {
         if (cancelled) {
             return; // no further processing should take place
         }
         boolean doneBefore = executor.getCurrentStatus().isFinal();
         try {
-            executor.triggerEvents(evts);
+            executor.triggerEvent(evt);
         } catch (ModelException me) {
             throw new InvokerException(me.getMessage(), me.getCause());
         }
         if (!doneBefore && executor.getCurrentStatus().isFinal()) {
-            TriggerEvent te = new TriggerEvent(eventPrefix + invokeDone,
-                TriggerEvent.SIGNAL_EVENT);
-            new AsyncTrigger(parentExecutor, te).start();
+            TriggerEvent te = new TriggerEvent("done.invoke."+parentStateId,TriggerEvent.SIGNAL_EVENT);
+            new AsyncTrigger(parentIOProcessor, te).start();
         }
     }
 
@@ -143,9 +142,11 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
     public void cancel()
     throws InvokerException {
         cancelled = true;
-        TriggerEvent te = new TriggerEvent(eventPrefix
-            + invokeCancelResponse, TriggerEvent.SIGNAL_EVENT);
-        new AsyncTrigger(parentExecutor, te).start();
+        try {
+            executor.triggerEvent(new TriggerEvent("cancel.invoke."+parentStateId, TriggerEvent.CANCEL_EVENT));
+        } catch (ModelException me) {
+            throw new InvokerException(me.getMessage(), me.getCause());
+        }
     }
 
 }

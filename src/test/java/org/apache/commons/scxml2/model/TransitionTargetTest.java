@@ -17,28 +17,45 @@
 package org.apache.commons.scxml2.model;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
-public class TransitionTest {
+public class TransitionTargetTest {
 
-    private Transition transition;
-    
-    @Before
-    public void setUp() {
-        transition = new Transition();
-    }
-        
     @Test
-    public void testGetTargets() {
-        Assert.assertEquals(0, transition.getTargets().size());
-
+    public void testIsDescendantNullParent() {
         State state = new State();
-        state.setId("1");
+        State context = new State();
 
-        transition.getTargets().add(state);
+        Assert.assertFalse(state.isDescendantOf(context));
+    }
 
-        Assert.assertEquals(1, transition.getTargets().size());
-        Assert.assertEquals("1", transition.getTargets().iterator().next().getId());
+    @Test
+    public void testIsDescendantNotEqual() {
+        State state = new State();
+        state.setParent(new State());
+        State context = new State();
+
+        Assert.assertFalse(state.isDescendantOf(context));
+    }
+
+    @Test
+    public void testIsDescendantEqual() {
+        State state = new State();
+        State context = new State();
+        state.setParent(context);
+
+        Assert.assertTrue(state.isDescendantOf(context));
+    }
+
+    @Test
+    public void testIsDescendantParentEqual() {
+        State state = new State();
+        State context = new State();
+        State parent = new State();
+
+        parent.setParent(context);
+        state.setParent(parent);
+
+        Assert.assertTrue(state.isDescendantOf(context));
     }
 }

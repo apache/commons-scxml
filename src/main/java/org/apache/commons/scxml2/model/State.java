@@ -93,12 +93,20 @@ public class State extends TransitionalState {
     }
 
     /**
+     * {@inheritDoc}
+     * @return Returns true if this State has no children
+     */
+    public final boolean isAtomicState() {
+        return getChildren().isEmpty();
+    }
+
+    /**
      * Check whether this is a simple (leaf) state (UML terminology).
      *
      * @return true if this is a simple state, otherwise false
      */
     public final boolean isSimple() {
-        return getChildren().isEmpty();
+        return isAtomicState();
     }
 
     /**

@@ -25,9 +25,12 @@ import java.util.UUID;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.scxml2.env.SimpleDispatcher;
+import org.apache.commons.scxml2.env.SimpleErrorReporter;
 import org.apache.commons.scxml2.invoke.Invoker;
 import org.apache.commons.scxml2.invoke.InvokerException;
 import org.apache.commons.scxml2.model.Invoke;
+import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.SCXML;
 
 /**
@@ -42,19 +45,49 @@ public class SCXMLExecutionContext {
     private Log appLog = LogFactory.getLog(SCXMLExecutionContext.class);
 
     /**
-     * The executor this execution context belongs to.
-     */
-    private final SCXMLExecutor executor;
-
-    /**
      * The action execution context instance, providing restricted access to this execution context
      */
     private final ActionExecutionContext actionExecutionContext;
 
     /**
+     * The SCInstance.
+     */
+    private SCInstance scInstance;
+
+    /**
+     * The evaluator for expressions.
+     */
+    private Evaluator evaluator;
+
+    /**
+     * The external IOProcessor for Invokers to communicate back on
+     */
+    private SCXMLIOProcessor externalIOProcessor;
+
+    /**
+     * The event dispatcher to interface with external documents etc.
+     */
+    private EventDispatcher eventdispatcher;
+
+    /**
+     * The environment specific error reporter.
+     */
+    private ErrorReporter errorReporter = null;
+
+    /**
+     * The notification registry.
+     */
+    private NotificationRegistry notificationRegistry;
+
+    /**
      * The internal event queue
      */
     private final Queue<TriggerEvent> internalEventQueue = new LinkedList<TriggerEvent>();
+
+    /**
+     * The Invoker classes map, keyed by invoke target types (specified using "type" attribute).
+     */
+    private final Map<String, Class<? extends Invoker>> invokerClasses = new HashMap<String, Class<? extends Invoker>>();
 
     /**
      * The map storing the unique invokeId for an Invoke with an active Invoker
@@ -73,12 +106,26 @@ public class SCXMLExecutionContext {
 
     /**
      * Constructor
-     * @param executor the executor this execution context belongs to
+     *
+     * @param externalIOProcessor The external IO Processor
+     * @param evaluator The evaluator
+     * @param eventDispatcher The event dispatcher, if null a SimpleDispatcher instance will be used
+     * @param errorReporter The error reporter, if null a SimpleErrorReporter instance will be used
      */
-    SCXMLExecutionContext(SCXMLExecutor executor) {
-        this.executor = executor;
+    protected SCXMLExecutionContext(SCXMLIOProcessor externalIOProcessor, Evaluator evaluator,
+                                    EventDispatcher eventDispatcher, ErrorReporter errorReporter) {
+        this.externalIOProcessor = externalIOProcessor;
+        this.evaluator = evaluator;
+        this.eventdispatcher = eventDispatcher != null ? eventDispatcher : new SimpleDispatcher();
+        this.errorReporter = errorReporter != null ? errorReporter : new SimpleErrorReporter();
+        this.notificationRegistry = new NotificationRegistry();
+
+        this.scInstance = new SCInstance(this.evaluator, this.errorReporter);
         this.actionExecutionContext = new ActionExecutionContext(this);
-        running = true;
+    }
+
+    public SCXMLIOProcessor getExternalIOProcessor() {
+        return externalIOProcessor;
     }
 
     /**
@@ -103,16 +150,20 @@ public class SCXMLExecutionContext {
     }
 
     /**
-     * Internal reset which will cancel all current active Invokers, clear the internal event queue and mark the
+     * Initialize method which will cancel all current active Invokers, clear the internal event queue and mark the
      * state machine process as running (again).
+     *
+     * @throws ModelException if the state machine instance failed to initialize.
      */
-    void reset() {
+    public void initialize() throws ModelException {
+        running = false;
         if (!invokeIds.isEmpty()) {
             for (Invoke invoke : new ArrayList<Invoke>(invokeIds.keySet())) {
                 cancelInvoker(invoke);
             }
         }
         internalEventQueue.clear();
+        scInstance.initialize();
         running = true;
     }
 
@@ -126,43 +177,176 @@ public class SCXMLExecutionContext {
     /**
      * @return Returns the state machine
      */
-    public SCXML getStatemachine() {
-        return executor.getStateMachine();
+    public SCXML getStateMachine() {
+        return scInstance.getStateMachine();
+    }
+
+    /**
+     * Set or replace the state machine to be executed
+     * <p>
+     * If the state machine instance has been initialized before, it will be initialized again, destroying all existing
+     * state!
+     * </p>
+     * @param stateMachine The state machine to set
+     * @throws ModelException if attempting to set a null value or the state machine instance failed to re-initialize
+     */
+    protected void setStateMachine(SCXML stateMachine) throws ModelException {
+        scInstance.setStateMachine(stateMachine);
     }
 
     /**
      * @return Returns the SCInstance
      */
     public SCInstance getScInstance() {
-        return executor.getSCInstance();
+        return scInstance;
     }
 
     /**
      * @return Returns The evaluator.
      */
     public Evaluator getEvaluator() {
-        return executor.getEvaluator();
+        return evaluator;
+    }
+
+    /**
+     * Set or replace the evaluator
+     * <p>
+     * If the state machine instance has been initialized before, it will be initialized again, destroying all existing
+     * state!
+     * </p>
+     * @param evaluator The evaluator to set
+     * @throws ModelException if attempting to set a null value or the state machine instance failed to re-initialize
+     */
+    protected void setEvaluator(Evaluator evaluator) throws ModelException {
+        scInstance.setEvaluator(evaluator);
+        this.evaluator = evaluator;
     }
 
     /**
      * @return Returns the error reporter
      */
     public ErrorReporter getErrorReporter() {
-        return executor.getErrorReporter();
+        return errorReporter;
+    }
+
+    /**
+     * Set or replace the error reporter
+     *
+     * @param errorReporter The error reporter to set, if null a SimpleErrorReporter instance will be used instead
+     */
+    protected void setErrorReporter(ErrorReporter errorReporter) {
+        this.errorReporter = errorReporter != null ? errorReporter : new SimpleErrorReporter();
+        try {
+            scInstance.setErrorReporter(errorReporter);
+        }
+        catch (ModelException me) {
+            // won't happen
+            return;
+        }
     }
 
     /**
      * @return Returns the event dispatcher
      */
     public EventDispatcher getEventDispatcher() {
-        return executor.getEventdispatcher();
+        return eventdispatcher;
+    }
+
+    /**
+     * Set or replace the event dispatch
+     *
+     * @param eventdispatcher The event dispatcher to set, if null a SimpleDispatcher instance will be used instead
+     */
+    protected void setEventdispatcher(EventDispatcher eventdispatcher) {
+        this.eventdispatcher = eventdispatcher != null ? eventdispatcher : new SimpleDispatcher();
     }
 
     /**
      * @return Returns the notification registry
      */
     public NotificationRegistry getNotificationRegistry() {
-        return executor.getNotificationRegistry();
+        return notificationRegistry;
+    }
+
+    /**
+     * Detach the current SCInstance to allow external serialization.
+     * <p>
+     * {@link #attachInstance(SCInstance)} can be used to re-attach a previously detached instance
+     * </p>
+     * @return the detached instance
+     */
+    protected SCInstance detachInstance() {
+        SCInstance instance = scInstance;
+        scInstance.detach();
+        scInstance = null;
+        return instance;
+    }
+
+    /**
+     * Re-attach a previously detached SCInstance.
+     * <p>
+     * Note: an already attached instance will get overwritten (and thus lost).
+     * </p>
+     * @param instance An previously detached SCInstance
+     */
+    protected void attachInstance(SCInstance instance) {
+        if (scInstance != null ) {
+            scInstance.detach();
+        }
+        scInstance = instance;
+        if (scInstance != null) {
+            scInstance.detach();
+            try {
+                scInstance.setEvaluator(evaluator);
+                scInstance.setErrorReporter(errorReporter);
+            }
+            catch (ModelException me) {
+                // should not happen
+                return;
+            }
+        }
+    }
+
+    /**
+     * Register an Invoker for this target type.
+     *
+     * @param type The target type (specified by "type" attribute of the invoke element).
+     * @param invokerClass The Invoker class.
+     */
+    protected void registerInvokerClass(final String type, final Class<? extends Invoker> invokerClass) {
+        invokerClasses.put(type, invokerClass);
+    }
+
+    /**
+     * Remove the Invoker registered for this target type (if there is one registered).
+     *
+     * @param type The target type (specified by "type" attribute of the invoke element).
+     */
+    protected void unregisterInvokerClass(final String type) {
+        invokerClasses.remove(type);
+    }
+
+    /**
+     * Create a new {@link Invoker}
+     *
+     * @param type The type of the target being invoked.
+     * @return An {@link Invoker} for the specified type, if an
+     *         invoker class is registered against that type,
+     *         <code>null</code> otherwise.
+     * @throws InvokerException When a suitable {@link Invoker} cannot be instantiated.
+     */
+    public Invoker newInvoker(final String type) throws InvokerException {
+        Class<? extends Invoker> invokerClass = invokerClasses.get(type);
+        if (invokerClass == null) {
+            throw new InvokerException("No Invoker registered for type \"" + type + "\"");
+        }
+        try {
+            return invokerClass.newInstance();
+        } catch (InstantiationException ie) {
+            throw new InvokerException(ie.getMessage(), ie.getCause());
+        } catch (IllegalAccessException iae) {
+            throw new InvokerException(iae.getMessage(), iae.getCause());
+        }
     }
 
     /**
@@ -179,20 +363,6 @@ public class SCXMLExecutionContext {
     }
 
     /**
-     * Create a new {@link Invoker}
-     *
-     * @param type The type of the target being invoked.
-     * @return An {@link Invoker} for the specified type, if an
-     *         invoker class is registered against that type,
-     *         <code>null</code> otherwise.
-     * @throws InvokerException When a suitable {@link Invoker} cannot
-     *                          be instantiated.
-     */
-    public Invoker newInvoker(String type) throws InvokerException {
-        return executor.newInvoker(type);
-    }
-
-    /**
      * Set the {@link Invoker} for a {@link Invoke} and returns the unique invokerId for the Invoker
      *
      * @param invoke The Invoke.
@@ -201,7 +371,7 @@ public class SCXMLExecutionContext {
      */
     public String setInvoker(final Invoke invoke, final Invoker invoker) {
         String invokeId = invoke.getId();
-        if (SCXMLHelper.isStringEmpty(invokeId)) {
+        if (invokeId == null) {
             invokeId = UUID.randomUUID().toString();
         }
         invokeIds.put(invoke, invokeId);
@@ -236,8 +406,7 @@ public class SCXMLExecutionContext {
             try {
                 invokers.get(invokeId).cancel();
             } catch (InvokerException ie) {
-                TriggerEvent te = new TriggerEvent(invokeId
-                        + ".invoke.cancel.failed", TriggerEvent.ERROR_EVENT);
+                TriggerEvent te = new TriggerEvent("failed.invoke.cancel."+invokeId, TriggerEvent.ERROR_EVENT);
                 addInternalEvent(te);
             }
             removeInvoker(invoke);
@@ -245,7 +414,7 @@ public class SCXMLExecutionContext {
     }
 
     /**
-     * Add an event to the internal queue
+     * Add an event to the internal event queue
      * @param event The event
      */
     public void addInternalEvent(TriggerEvent event) {
@@ -253,9 +422,16 @@ public class SCXMLExecutionContext {
     }
 
     /**
-     * @return Returns the next event from the internal queue, if available
+     * @return Returns the next event from the internal event queue, if available
      */
-    TriggerEvent nextInternalEvent() {
+    public TriggerEvent nextInternalEvent() {
         return internalEventQueue.poll();
+    }
+
+    /**
+     * @return Returns true if the internal event queue isn't empty
+     */
+    public boolean hasPendingInternalEvent() {
+        return !internalEventQueue.isEmpty();
     }
 }

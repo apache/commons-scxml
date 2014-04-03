@@ -45,10 +45,10 @@ public abstract class AbstractSCXMLListener implements SCXMLListener {
     }
 
     /**
-* @see SCXMLListener#onTransition(TransitionTarget,TransitionTarget,Transition)
+* @see SCXMLListener#onTransition(TransitionTarget,TransitionTarget,Transition,String)
      */
     public void onTransition(final TransitionTarget from,
-            final TransitionTarget to, final Transition transition) {
+            final TransitionTarget to, final Transition transition, final String event) {
         // empty
     }
 

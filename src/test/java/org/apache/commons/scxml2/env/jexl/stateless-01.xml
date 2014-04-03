@@ -31,7 +31,7 @@
         </onentry>
 
         <state id="ten">
-            <transition event="ten.done" cond="instancevar eq 20"
+            <transition event="done.state.ten" cond="instancevar eq 20"
                         target="twenty" />
             <onexit>
                 <assign name="instancevar" expr="30" />
@@ -39,7 +39,7 @@
         </state>
 
         <state id="twenty">
-            <transition event="twenty.done" cond="instancevar eq 30"
+            <transition event="done.state.twenty" cond="instancevar eq 30"
                         target="thirty" />
         </state>
 

@@ -119,7 +119,7 @@ public class JSEvaluatorTest {
             evaluator = new JSEvaluator();
             fsm       = new SCXMLExecutor();
 
-            context.set("_ALL_NAMESPACES",null);
+            context.set(Context.NAMESPACES_KEY,null);
 
             fsm.setEvaluator   (evaluator);
             fsm.setRootContext (context);

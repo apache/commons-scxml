@@ -70,7 +70,7 @@ public class NamespacePrefixedXPathsTest {
         Assert.assertEquals("ten", currentStates.iterator().next().getId());
 
         // should move to "twenty"
-        currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
+        currentStates = SCXMLTestHelper.fireEvent(exec, "done.state.ten");
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("twenty", currentStates.iterator().next().getId());
 
@@ -79,7 +79,7 @@ public class NamespacePrefixedXPathsTest {
         Assert.assertEquals(Double.valueOf("11"), retval);
 
         // On to "thirty"
-        currentStates = SCXMLTestHelper.fireEvent(exec, "twenty.done");
+        currentStates = SCXMLTestHelper.fireEvent(exec, "done.state.twenty");
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("thirty", currentStates.iterator().next().getId());
         exec = SCXMLTestHelper.testInstanceSerializability(exec);
@@ -89,20 +89,20 @@ public class NamespacePrefixedXPathsTest {
         Assert.assertEquals("Equal to 20", retvalstr);
 
         // and so on ...
-        currentStates = SCXMLTestHelper.fireEvent(exec, "thirty.done");
+        currentStates = SCXMLTestHelper.fireEvent(exec, "done.state.thirty");
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("forty", currentStates.iterator().next().getId());
 
-        currentStates = SCXMLTestHelper.fireEvent(exec, "forty.done");
+        currentStates = SCXMLTestHelper.fireEvent(exec, "done.state.forty");
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("fifty", currentStates.iterator().next().getId());
 
-        currentStates = SCXMLTestHelper.fireEvent(exec, "fifty.done");
+        currentStates = SCXMLTestHelper.fireEvent(exec, "done.state.fifty");
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("sixty", (currentStates.iterator().
             next()).getId());
 
-        currentStates = SCXMLTestHelper.fireEvent(exec, "sixty.done");
+        currentStates = SCXMLTestHelper.fireEvent(exec, "done.state.sixty");
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("seventy", currentStates.iterator().next().getId());
 

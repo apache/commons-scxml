@@ -19,8 +19,9 @@ package org.apache.commons.scxml2.invoke;
 import java.net.URL;
 import java.util.Map;
 
-import org.apache.commons.scxml2.SCInstance;
+import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.SCXMLExecutor;
+import org.apache.commons.scxml2.SCXMLIOProcessor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.env.jexl.JexlContext;
@@ -117,15 +118,19 @@ public class InvokeParamNameTest {
             // Not needed
         }
 
-        public void parentEvents(TriggerEvent[] evts) throws InvokerException {
+        public void parentEvent(TriggerEvent evt) throws InvokerException {
             // Not needed
         }
 
-        public void setParentStateId(String parentStateId) {
+        public void setInvokeId(String invokeId) {
             // Not needed    
         }
 
-        public void setParentExecutor(SCXMLExecutor parentExecutor) {
+        public void setEvaluator(Evaluator evaluator) {
+            // Not needed
+        }
+
+        public void setParentIOProcessor(SCXMLIOProcessor parentIOProcessor) {
             // Not needed    
         }
     }

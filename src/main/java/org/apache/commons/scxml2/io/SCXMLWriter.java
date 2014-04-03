@@ -42,7 +42,6 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.scxml2.SCXMLHelper;
 import org.apache.commons.scxml2.model.Action;
 import org.apache.commons.scxml2.model.Assign;
 import org.apache.commons.scxml2.model.Cancel;
@@ -156,6 +155,7 @@ public class SCXMLWriter {
 
     //---- ATTRIBUTE NAMES ----//
     private static final String ATTR_ARRAY = "array";
+    private static final String ATTR_AUTOFORWARD = "autoforward";
     private static final String ATTR_COND = "cond";
     private static final String ATTR_DELAY = "delay";
     private static final String ATTR_EVENT = "event";
@@ -347,6 +347,59 @@ public class SCXMLWriter {
     }
 
     //---------------------- PRIVATE UTILITY METHODS ----------------------//
+
+    /**
+     * Escape XML strings for serialization.
+     * The basic algorithm is taken from Commons Lang (see oacl.Entities.java)
+     *
+     * @param str A string to be escaped
+     * @return The escaped string
+     */
+    private static String escapeXML(final String str) {
+        if (str == null) {
+            return null;
+        }
+
+        // Make the writer an arbitrary bit larger than the source string
+        int len = str.length();
+        StringWriter stringWriter = new StringWriter(len + 8);
+
+        for (int i = 0; i < len; i++) {
+            char c = str.charAt(i);
+            String entityName = null; // Look for XML 1.0 predefined entities
+            switch (c) {
+                case '"':
+                    entityName = "quot";
+                    break;
+                case '&':
+                    entityName = "amp";
+                    break;
+                case '<':
+                    entityName = "lt";
+                    break;
+                case '>':
+                    entityName = "gt";
+                    break;
+                default:
+            }
+            if (entityName == null) {
+                if (c > 0x7F) {
+                    stringWriter.write("&#");
+                    stringWriter.write(Integer.toString(c));
+                    stringWriter.write(';');
+                } else {
+                    stringWriter.write(c);
+                }
+            } else {
+                stringWriter.write('&');
+                stringWriter.write(entityName);
+                stringWriter.write(';');
+            }
+        }
+
+        return stringWriter.toString();
+    }
+
     /**
      * Write out the Commons SCXML object model using the supplied {@link Configuration}.
      * Exactly one of the stream, writer or result parameters must be provided.
@@ -488,8 +541,8 @@ public class SCXMLWriter {
                 } else {
                     writer.writeStartElement(ELEM_DATA);
                     writeAV(writer, ATTR_ID, d.getId());
-                    writeAV(writer, ATTR_SRC, SCXMLHelper.escapeXML(d.getSrc()));
-                    writeAV(writer, ATTR_EXPR, SCXMLHelper.escapeXML(d.getExpr()));
+                    writeAV(writer, ATTR_SRC, escapeXML(d.getSrc()));
+                    writeAV(writer, ATTR_EXPR, escapeXML(d.getExpr()));
                     writer.writeEndElement();
                 }
             }
@@ -527,7 +580,9 @@ public class SCXMLWriter {
         writeInitial(writer, state.getInitial());
         writeDatamodel(writer, state.getDatamodel());
         writeHistory(writer, state.getHistory());
-        writeOnEntry(writer, state.getOnEntry());
+        for (OnEntry onentry : state.getOnEntries()) {
+            writeOnEntry(writer, onentry);
+        }
 
         for (Transition t : state.getTransitionsList()) {
             writeTransition(writer, t);
@@ -547,7 +602,9 @@ public class SCXMLWriter {
             }
         }
 
-        writeOnExit(writer, state.getOnExit());
+        for (OnExit onexit : state.getOnExits()) {
+            writeOnExit(writer, onexit);
+        }
         writer.writeEndElement();
     }
 
@@ -567,7 +624,9 @@ public class SCXMLWriter {
 
         writeDatamodel(writer, parallel.getDatamodel());
         writeHistory(writer, parallel.getHistory());
-        writeOnEntry(writer, parallel.getOnEntry());
+        for (OnEntry onentry : parallel.getOnEntries()) {
+            writeOnEntry(writer, onentry);
+        }
 
         for (Transition t : parallel.getTransitionsList()) {
             writeTransition(writer, t);
@@ -587,7 +646,9 @@ public class SCXMLWriter {
             }
         }
 
-        writeOnExit(writer, parallel.getOnExit());
+        for (OnExit onexit : parallel.getOnExits()) {
+            writeOnExit(writer, onexit);
+        }
         writer.writeEndElement();
     }
 
@@ -604,8 +665,12 @@ public class SCXMLWriter {
 
         writer.writeStartElement(ELEM_FINAL);
         writeTransitionTargetId(writer, end);
-        writeOnEntry(writer, end.getOnEntry());
-        writeOnExit(writer, end.getOnExit());
+        for (OnEntry onentry : end.getOnEntries()) {
+            writeOnEntry(writer, onentry);
+        }
+        for (OnExit onexit : end.getOnExits()) {
+            writeOnExit(writer, onexit);
+        }
         writer.writeEndElement();
     }
 
@@ -669,8 +734,9 @@ public class SCXMLWriter {
     private static void writeOnEntry(final XMLStreamWriter writer, final OnEntry onentry)
             throws XMLStreamException {
 
-        if (onentry != null && onentry.getActions().size() > 0) {
+        if (onentry != null && (onentry.isRaiseEvent() || onentry.getActions().size() > 0 )) {
             writer.writeStartElement(ELEM_ONENTRY);
+            writeAV(writer, ATTR_EVENT, onentry.getRaiseEvent());
             writeExecutableContent(writer, onentry.getActions());
             writer.writeEndElement();
         }
@@ -687,8 +753,9 @@ public class SCXMLWriter {
     private static void writeOnExit(final XMLStreamWriter writer, final OnExit onexit)
             throws XMLStreamException {
 
-        if (onexit != null && onexit.getActions().size() > 0) {
+        if (onexit != null && (onexit.isRaiseEvent() || onexit.getActions().size() > 0)) {
             writer.writeStartElement(ELEM_ONEXIT);
+            writeAV(writer, ATTR_EVENT, onexit.getRaiseEvent());
             writeExecutableContent(writer, onexit.getActions());
             writer.writeEndElement();
         }
@@ -708,7 +775,7 @@ public class SCXMLWriter {
         writer.writeStartElement(ELEM_TRANSITION);
         if (transition instanceof Transition) {
             writeAV(writer, ATTR_EVENT, ((Transition)transition).getEvent());
-            writeAV(writer, ATTR_COND, SCXMLHelper.escapeXML(((Transition)transition).getCond()));
+            writeAV(writer, ATTR_COND, escapeXML(((Transition)transition).getCond()));
         }
 
         writeAV(writer, ATTR_TARGET, transition.getNext());
@@ -735,11 +802,12 @@ public class SCXMLWriter {
         writeAV(writer, ATTR_SRC, invoke.getSrc());
         writeAV(writer, ATTR_SRCEXPR, invoke.getSrcexpr());
         writeAV(writer, ATTR_TYPE, invoke.getType());
+        writeAV(writer, ATTR_AUTOFORWARD, invoke.getAutoForward());
 
         for (Param p : invoke.params()) {
             writer.writeStartElement(ELEM_PARAM);
             writeAV(writer, ATTR_NAME, p.getName());
-            writeAV(writer, ATTR_EXPR, SCXMLHelper.escapeXML(p.getExpr()));
+            writeAV(writer, ATTR_EXPR, escapeXML(p.getExpr()));
             writer.writeEndElement();
         }
         writeFinalize(writer, invoke.getFinalize());
@@ -787,7 +855,7 @@ public class SCXMLWriter {
                 writeAV(writer, ATTR_LOCATION, asn.getLocation());
                 writeAV(writer, ATTR_NAME, asn.getName());
                 writeAV(writer, ATTR_SRC, asn.getSrc());
-                writeAV(writer, ATTR_EXPR, SCXMLHelper.escapeXML(asn.getExpr()));
+                writeAV(writer, ATTR_EXPR, escapeXML(asn.getExpr()));
                 writer.writeEndElement();
             } else if (a instanceof Send) {
                 writeSend(writer, (Send) a);
@@ -802,7 +870,7 @@ public class SCXMLWriter {
                 Log lg = (Log) a;
                 writer.writeStartElement(XMLNS_SCXML, ELEM_LOG);
                 writeAV(writer, ATTR_LABEL, lg.getLabel());
-                writeAV(writer, ATTR_EXPR, SCXMLHelper.escapeXML(lg.getExpr()));
+                writeAV(writer, ATTR_EXPR, escapeXML(lg.getExpr()));
                 writer.writeEndElement();
             } else if (a instanceof Raise) {
                 Raise e = (Raise) a;
@@ -821,13 +889,13 @@ public class SCXMLWriter {
             } else if (a instanceof ElseIf) {
                 ElseIf eif = (ElseIf) a;
                 writer.writeStartElement(XMLNS_SCXML, ELEM_ELSEIF);
-                writeAV(writer, ATTR_COND, SCXMLHelper.escapeXML(eif.getCond()));
+                writeAV(writer, ATTR_COND, escapeXML(eif.getCond()));
                 writer.writeEndElement();
             } else if (a instanceof Var) {
                 Var v = (Var) a;
                 writer.writeStartElement(XMLNS_COMMONS_SCXML, ELEM_VAR);
                 writeAV(writer, ATTR_NAME, v.getName());
-                writeAV(writer, ATTR_EXPR, SCXMLHelper.escapeXML(v.getExpr()));
+                writeAV(writer, ATTR_EXPR, escapeXML(v.getExpr()));
                 writer.writeEndElement();
             } else {
                 writer.writeComment("Custom action with class name '" + a.getClass().getName() + "' not serialized");
@@ -872,7 +940,7 @@ public class SCXMLWriter {
             throws XMLStreamException {
 
         writer.writeStartElement(ELEM_IF);
-        writeAV(writer, ATTR_COND, SCXMLHelper.escapeXML(iff.getCond()));
+        writeAV(writer, ATTR_COND, escapeXML(iff.getCond()));
         writeExecutableContent(writer, iff.getActions());
         writer.writeEndElement();
     }
@@ -891,7 +959,7 @@ public class SCXMLWriter {
         writer.writeStartElement(ELEM_FOREACH);
         writeAV(writer, ATTR_ITEM, foreach.getItem());
         writeAV(writer, ATTR_INDEX, foreach.getIndex());
-        writeAV(writer, ATTR_ARRAY, SCXMLHelper.escapeXML(foreach.getArray()));
+        writeAV(writer, ATTR_ARRAY, escapeXML(foreach.getArray()));
         writeExecutableContent(writer, foreach.getActions());
         writer.writeEndElement();
     }
@@ -956,6 +1024,22 @@ public class SCXMLWriter {
             throws XMLStreamException {
         if (value != null) {
             writer.writeAttribute(localName, value);
+        }
+    }
+
+    /**
+     * Write out this attribute, if the value is not <code>null</code>.
+     *
+     * @param writer The {@link XMLStreamWriter} in use for the serialization.
+     * @param localName The local name of the attribute.
+     * @param value The attribute value.
+     *
+     * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
+     */
+    private static void writeAV(final XMLStreamWriter writer, final String localName, final Boolean value)
+            throws XMLStreamException {
+        if (value != null) {
+            writer.writeAttribute(localName, value.toString());
         }
     }
 

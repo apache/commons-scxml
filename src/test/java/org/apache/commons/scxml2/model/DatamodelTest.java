@@ -100,12 +100,12 @@ public class DatamodelTest {
         Map<String, Object> payload = new HashMap<String, Object>();
         payload.put("one", "1");
         payload.put("two", "2");
-        TriggerEvent te = new TriggerEvent("ten.done", TriggerEvent.SIGNAL_EVENT, payload);
+        TriggerEvent te = new TriggerEvent("done.state.ten", TriggerEvent.SIGNAL_EVENT, payload);
         SCXMLTestHelper.fireEvent(exec01, te);
         currentStates = exec01.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("twenty", currentStates.iterator().next().getId());
-        SCXMLTestHelper.fireEvent(exec01, "twenty.done");
+        SCXMLTestHelper.fireEvent(exec01, "done.state.twenty");
         currentStates = exec01.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("thirty", currentStates.iterator().next().getId());
@@ -125,7 +125,7 @@ public class DatamodelTest {
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("ten", currentStates.iterator().next().getId());
         exec01 = SCXMLTestHelper.testInstanceSerializability(exec01);
-        currentStates = fireEvent("ten.done", exec01);
+        currentStates = fireEvent("done.state.ten", exec01);
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("twenty", currentStates.iterator().next().getId());
         // exec02
@@ -133,23 +133,23 @@ public class DatamodelTest {
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("ten", currentStates.iterator().next().getId());
         // exec01
-        currentStates = fireEvent("twenty.done", exec01);
+        currentStates = fireEvent("done.state.twenty", exec01);
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("thirty", currentStates.iterator().next().getId());
         exec01 = SCXMLTestHelper.testInstanceSerializability(exec01);
         // exec02
-        currentStates = fireEvent("ten.done", exec02);
+        currentStates = fireEvent("done.state.ten", exec02);
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("twenty", currentStates.iterator().next().getId());
         exec02 = SCXMLTestHelper.testInstanceSerializability(exec02);
-        currentStates = fireEvent("twenty.done", exec02);
+        currentStates = fireEvent("done.state.twenty", exec02);
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("thirty", currentStates.iterator().next().getId());
-        currentStates = fireEvent("thirty.done", exec02);
+        currentStates = fireEvent("done.state.thirty", exec02);
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("forty", currentStates.iterator().next().getId());
         // exec01
-        currentStates = fireEvent("thirty.done", exec01);
+        currentStates = fireEvent("done.state.thirty", exec01);
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("forty", currentStates.iterator().next().getId());
     }

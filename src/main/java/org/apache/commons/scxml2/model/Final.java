@@ -51,5 +51,13 @@ public class Final extends EnterableState {
     public final void setParent(State parent) {
         super.setParent(parent);
     }
+
+    /**
+     * {@inheritDoc}
+     * @return Returns always true (a state of type Final is always atomic)
+     */
+    public final boolean isAtomicState() {
+        return true;
+    }
 }
 

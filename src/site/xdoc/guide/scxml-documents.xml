@@ -268,7 +268,7 @@
          and an outbound transition out of the &lt;parallel&gt;
          from any region causes the state machine to exit all
          regions.</li>
-     <li>When all regions reach a "final" state, an "id.done" event
+     <li>When all regions reach a "final" state, an "done.state.id" event
          is fired, where "id" is the id of the parent &lt;parallel&gt;
          </li>
     </ul>

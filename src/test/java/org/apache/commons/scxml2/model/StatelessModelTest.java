@@ -173,7 +173,7 @@ public class    StatelessModelTest {
         Set<EnterableState> currentStates = exec01.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("ten", currentStates.iterator().next().getId());
-        currentStates = fireEvent("ten.done", exec01);
+        currentStates = fireEvent("done.state.ten", exec01);
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("twenty", currentStates.iterator().next().getId());
         // exec02
@@ -181,14 +181,14 @@ public class    StatelessModelTest {
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("ten", currentStates.iterator().next().getId());
         // exec01
-        currentStates = fireEvent("twenty.done", exec01);
+        currentStates = fireEvent("done.state.twenty", exec01);
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("thirty", currentStates.iterator().next().getId());
         // exec02
-        currentStates = fireEvent("ten.done", exec02);
+        currentStates = fireEvent("done.state.ten", exec02);
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("twenty", currentStates.iterator().next().getId());
-        currentStates = fireEvent("twenty.done", exec02);
+        currentStates = fireEvent("done.state.twenty", exec02);
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("thirty", currentStates.iterator().next().getId());
     }
@@ -198,11 +198,11 @@ public class    StatelessModelTest {
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("ten", (currentStates.iterator().
             next()).getId());
-        currentStates = fireEvent("ten.done", exec01);
+        currentStates = fireEvent("done.state.ten", exec01);
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("twenty", (currentStates.iterator().
             next()).getId());
-        currentStates = fireEvent("twenty.done", exec01);
+        currentStates = fireEvent("done.state.twenty", exec01);
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("thirty", (currentStates.iterator().
             next()).getId());

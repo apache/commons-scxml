@@ -101,7 +101,7 @@
 
         </state>
 
-        <transition event="para.done" target="end"/>
+        <transition event="done.state.para" target="end"/>
 
         <onexit>
             <assign location="Data(root, 'root/count')" expr="Data(root, 'root/count') + 1"/>

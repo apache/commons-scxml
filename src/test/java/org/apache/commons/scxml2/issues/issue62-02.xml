@@ -27,7 +27,7 @@
             <transition target="s2.1"/>
         </initial>
         <state id="s2.1" src="issue62-02-ext.xml#e1" />
-        <transition event="s2.1.done" target="s3"/>
+        <transition event="done.state.s2.1" target="s3"/>
     </state>
 
     <final id="s3"/>

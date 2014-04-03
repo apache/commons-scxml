@@ -24,10 +24,44 @@ import org.apache.commons.scxml2.model.SCXML;
  * <a href="http://www.w3.org/TR/2014/CR-scxml-20140313/#AlgorithmforSCXMLInterpretation">
  *     W3C SCXML Algorithm for SCXML Interpretation</a>
  * from the <code>SCXMLExecutor</code> and therefore make it pluggable.</p>
- *
- * <p>Semantics agnostic utility functions and common operators as defined in
- * UML can be found in the <code>SCXMLHelper</code> or attached directly to
- * the SCXML model elements.</p>
+ * <p>
+ * From an SCXML execution POV, there are only three entry points needed into the Algorithm, namely:
+ * <ul>
+ *     <li>Performing the initialization of the state machine and completing a first macro step,
+ *     see: {@link #firstStep(SCXMLExecutionContext)}. The state machine thereafter should be ready
+ *     for processing external events (or be terminated already)</li>
+ *     <li>Processing a single external event and completing the macro step for it, after which the
+ *     state machine should be ready for processing another external event (if any), or be terminated already.
+ *     See: {@link #nextStep(SCXMLExecutionContext, TriggerEvent)}.
+ *     </li>
+ *     <li>Finally, if the state machine terminated ({@link SCXMLExecutionContext#isRunning()} == false), after either
+ *     of the above steps, finalize the state machine by performing the final step.
+ *     See: {@link #finalStep(SCXMLExecutionContext)}.
+ *     </li>
+ * </ul>
+ * </p>
+ * <p>After a state machine has been terminated you can re-initialize the execution context, and start again.</p>
+ * <p>
+ * Except for the loading of the SCXML document and (re)initializing the {@link SCXMLExecutionContext}, the above steps
+ * represent the <b>interpret</b>,<b>mainEventLoop</b> and <b>exitInterpreter</b> entry points specified in Algorithm
+ * for SCXML Interpretation, but more practically and logically broken into separate steps so that the blocking wait
+ * for external events can be handled externally.
+ * </p>
+ * <p>
+ *  These three entry points are the only interface methods used by the SCXMLExecutor. It is up to the
+ *  specific SCXMLSemantics implementation to provide the concrete handling for these according to the Algorithm in
+ *  the SCXML specification (or possibly something else/different).
+ * </p>
+ * <p>
+ * The default {@link org.apache.commons.scxml2.semantics.SCXMLSemanticsImpl} provides an implementation of the
+ * specification, and can easily be overridden/customized as a whole or only on specific parts of the Algorithm
+ * implementation.
+ * </p>
+ * <p>
+ * Note that both the {@link #firstStep(SCXMLExecutionContext)} and {@link #nextStep(SCXMLExecutionContext, TriggerEvent)}
+ * first run to completion for any internal events raised before returning, as expected and required by the SCXML
+ * specification, so it is currently not possible to 'manage' internal event processing externally.
+ * </p>
  *
  * <p>Specific semantics can be created by subclassing
  * <code>org.apache.commons.scxml2.semantics.SCXMLSemanticsImpl</code>.</p>
@@ -44,89 +78,76 @@ public interface SCXMLSemantics {
      */
     SCXML normalizeStateMachine(final SCXML input, final ErrorReporter errRep);
 
-    public void executeGlobalScript(final SCXMLExecutionContext context, final Step step) throws ModelException;
-
-    public void exitStates(final SCXMLExecutionContext ctx, final Step step) throws ModelException;
-
-    public void executeTransitionContent(final SCXMLExecutionContext ctx, final Step step) throws ModelException;
-
-    public void enterStates(final SCXMLExecutionContext ctx, final Step step) throws ModelException;
+    /**
+     * First step in the execution of an SCXML state machine.
+     * <p>
+     * In the default implementation, this will first (re)initialize the state machine instance, destroying any existing
+     * state!
+     * </p>
+     * <p>
+     * The first step is corresponding to the Algorithm for SCXML processing from the interpret() procedure to the
+     * mainLoop() procedure up to the blocking wait for an external event.
+     * </p>
+     * <p>
+     * This step should complete the SCXML initial execution and a subsequent macroStep to stabilize the state machine
+     * again before returning.
+     * </p>
+     * <p>
+     * If the state machine no longer is running after all this, first the {@link #finalStep(SCXMLExecutionContext)}
+     * should be called for cleanup before returning.
+     * </p>
+     * @param exctx The execution context for this step
+     * @throws ModelException if the state machine instance failed to initialize or a SCXML model error occurred during
+     * the execution.
+     */
+    void firstStep(final SCXMLExecutionContext exctx) throws ModelException;
 
     /**
-     * Determining the initial state(s) for this state machine.
-     *
-     * @param ctx  provides the execution context
-     * @param step provides target states and entry list to fill in [out]
-     *
-     * @throws org.apache.commons.scxml2.model.ModelException in case there is a fatal SCXML object model problem.
+     * Next step in the execution of an SCXML state machine.
+     * <p>
+     * The next step is corresponding to the Algorithm for SCXML processing mainEventLoop() procedure after receiving an
+     * external event, up to the blocking wait for another external event.
+     * </p>
+     * <p>
+     * If the state machine isn't {@link SCXMLExecutionContext#isRunning()} (any more), this method should do nothing.
+     * </p>
+     * <p>
+     * If the provided event is a {@link TriggerEvent#CANCEL_EVENT}, the state machine should stop running.
+     * </p>
+     * <p>
+     * Otherwise, the event must be set in the {@link SCXMLSystemContext} and processing of the event then should start,
+     * and if the event leads to any transitions a microStep for this event should be performed, followed up by a
+     * macroStep to stabilize the state machine again before returning.
+     * </p>
+     * <p>
+     * If the state machine no longer is running after all this, first the {@link #finalStep(SCXMLExecutionContext)}
+     * should be called for cleanup before returning.
+     * </p>
+     * @param exctx The execution context for this step
+     * @param event The event to process
+     * @throws ModelException if a SCXML model error occurred during the execution.
      */
-    void determineInitialStates(final SCXMLExecutionContext ctx, final Step step) throws ModelException;
+    void nextStep(final SCXMLExecutionContext exctx, final TriggerEvent event) throws ModelException;
 
     /**
-     * Executes all OnExit/Transition/OnEntry transitional actions.
-     *
-     * @param ctx  provides the execution context
-     * @param step provides EntryList, TransitList, ExitList gets updated its AfterStatus/Events
-     *
-     * @throws org.apache.commons.scxml2.model.ModelException in case there is a fatal SCXML object model problem.
+     * The final step in the execution of an SCXML state machine.
+     * <p>
+     * This final step is corresponding to the Algorithm for SCXML processing exitInterpreter() procedure, after the
+     * state machine stopped running.
+     * </p>
+     * <p>
+     * If the state machine still is {@link SCXMLExecutionContext#isRunning()} invoking this method should simply
+     * do nothing.
+     * </p>
+     * <p>
+     * This final step should first exit all remaining active states and cancel any active invokers, before handling
+     * the possible donedata element for the last final state.
+     * </p>
+     * <p>
+     *  <em>NOTE: the current implementation does not yet provide final donedata handling.</em>
+     * </p>
+     * @param exctx The execution context for this step
+     * @throws ModelException if a SCXML model error occurred during the execution.
      */
-    void executeActions(final SCXMLExecutionContext ctx, final Step step) throws ModelException;
-
-    /**
-     * Enumerate all the reachable transitions.
-     *
-     * @param ctx  provides the execution context
-     * @param step with current status and list of transitions to populate
-     */
-    void enumerateReachableTransitions(final SCXMLExecutionContext ctx, final Step step);
-
-    /**
-     * Filter the transitions set, eliminate those whose guard conditions
-     * are not satisfied.
-     *
-     * @param ctx  provides the execution context
-     * @param step with current status
-     *
-     * @throws org.apache.commons.scxml2.model.ModelException in case there is a fatal SCXML object model problem.
-     */
-    void filterTransitionsSet(final SCXMLExecutionContext ctx, final Step step) throws ModelException;
-
-    /**
-     * Follow the candidate transitions for this execution Step, and update the
-     * lists of entered and exited states accordingly.
-     *
-     * @param ctx  provides the execution context
-     * @param step The current Step
-     *
-     * @throws org.apache.commons.scxml2.model.ModelException in case there is a fatal SCXML object model problem.
-     */
-    void followTransitions(final SCXMLExecutionContext ctx, final Step step) throws ModelException;
-
-    /**
-     * Go over the exit list and update history information for
-     * relevant states.
-     *
-     * @param ctx  provides the execution context
-     * @param step The current Step
-     */
-    void updateHistoryStates(final SCXMLExecutionContext ctx, final Step step);
-
-    /**
-     * Forward events to invoked activities, execute finalize handlers.
-     *
-     * @param ctx    provides the execution context
-     * @param event The event to be forwarded
-     *
-     * @throws org.apache.commons.scxml2.model.ModelException in case there is a fatal SCXML object model problem.
-     */
-    void processInvokes(final SCXMLExecutionContext ctx, final TriggerEvent event) throws ModelException;
-
-    /**
-     * Initiate any new invoked activities.
-     *
-     * @param ctx  provides the execution context
-     * @param step The current Step
-     */
-    void initiateInvokes(final SCXMLExecutor executor, final SCXMLExecutionContext ctx, final Step step);
+    void finalStep(final SCXMLExecutionContext exctx) throws ModelException;
 }
-

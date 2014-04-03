@@ -99,7 +99,7 @@ public abstract class AbstractStateMachine {
      *                      describes the &quot;lifecycle&quot; of the
      *                      instances of this class.
      */
-    public AbstractStateMachine(final URL scxmlDocument) {
+    public AbstractStateMachine(final URL scxmlDocument) throws ModelException {
         // default is JEXL
         this(scxmlDocument, new JexlContext(), new JexlEvaluator());
     }
@@ -117,7 +117,7 @@ public abstract class AbstractStateMachine {
      * @see Evaluator
      */
     public AbstractStateMachine(final URL scxmlDocument,
-            final Context rootCtx, final Evaluator evaluator) {
+            final Context rootCtx, final Evaluator evaluator) throws ModelException {
         log = LogFactory.getLog(this.getClass());
         try {
             stateMachine = SCXMLReader.read(scxmlDocument);
@@ -140,7 +140,7 @@ public abstract class AbstractStateMachine {
      *
      * @since 0.7
      */
-    public AbstractStateMachine(final SCXML stateMachine) {
+    public AbstractStateMachine(final SCXML stateMachine) throws ModelException {
         // default is JEXL
         this(stateMachine, new JexlContext(), new JexlEvaluator());
     }
@@ -160,7 +160,7 @@ public abstract class AbstractStateMachine {
      * @since 0.7
      */
     public AbstractStateMachine(final SCXML stateMachine,
-            final Context rootCtx, final Evaluator evaluator) {
+            final Context rootCtx, final Evaluator evaluator) throws ModelException {
         log = LogFactory.getLog(this.getClass());
         initialize(stateMachine, rootCtx, evaluator);
     }
@@ -173,11 +173,10 @@ public abstract class AbstractStateMachine {
      * @param evaluator The expression evaluator
      */
     private void initialize(final SCXML stateMachine,
-            final Context rootCtx, final Evaluator evaluator) {
+            final Context rootCtx, final Evaluator evaluator) throws ModelException {
         engine = new SCXMLExecutor(evaluator, new SimpleDispatcher(),
             new SimpleErrorReporter());
         engine.setStateMachine(stateMachine);
-        engine.setSuperStep(true);
         engine.setRootContext(rootCtx);
         engine.addListener(stateMachine, new EntryListener());
         try {
@@ -308,9 +307,10 @@ public abstract class AbstractStateMachine {
          * @param from The &quot;source&quot; transition target.
          * @param to The &quot;destination&quot; transition target.
          * @param transition The transition being followed.
+         * @param event The event triggering the transition
          */
         public void onTransition(final TransitionTarget from,
-                final TransitionTarget to, final Transition transition) {
+                final TransitionTarget to, final Transition transition, final String event) {
             // nothing to do
         }
 

@@ -25,7 +25,7 @@
             <log expr="'Invoker ...'"/>
         </onentry>
         <invoke type="scxml" src="invoked-03.xml"/>
-        <transition event="invoker.invoke.done" target="end">
+        <transition event="done.invoke.invoker" target="end">
             <log expr="'  Outer invoke completed'"/>
         </transition>
     </state>

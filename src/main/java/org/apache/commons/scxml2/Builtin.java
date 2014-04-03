@@ -32,8 +32,7 @@ import javax.xml.xpath.XPathFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml2.model.TransitionTarget;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 
 /**
  * Implementations of builtin functions defined by the SCXML
@@ -144,11 +143,9 @@ public class Builtin implements Serializable {
      * @return The first node matching the path, coerced to a String, or null
      *         if no nodes match.
      */
-    public static Object data(final Map<String, String> namespaces, final Object data,
-            final String path) {
+    public static Object data(final Map<String, String> namespaces, final Object data, final String path) {
         Object retVal = null;
-        String strVal = SCXMLHelper.getNodeValue(dataNode(namespaces,
-            data, path));
+        String strVal = getNodeValue(dataNode(namespaces, data, path));
         // try as a double
         try {
             double d = Double.parseDouble(strVal);
@@ -164,6 +161,45 @@ public class Builtin implements Serializable {
             }
         }
         return retVal;
+    }
+
+    /**
+     * Retrieve a DOM node value as a string depending on its type.
+     *
+     * @param node A node to be retreived
+     * @return The value as a string
+     */
+    private static String getNodeValue(final Node node) {
+        String result = "";
+        if (node == null) {
+            return result;
+        }
+        switch(node.getNodeType()) {
+            case Node.ATTRIBUTE_NODE:
+                result = node.getNodeValue();
+                break;
+            case Node.ELEMENT_NODE:
+                if (node.hasChildNodes()) {
+                    Node child = node.getFirstChild();
+                    StringBuilder buf = new StringBuilder();
+                    while (child != null) {
+                        if (child.getNodeType() == Node.TEXT_NODE) {
+                            buf.append(((CharacterData) child).getData());
+                        }
+                        child = child.getNextSibling();
+                    }
+                    result = buf.toString();
+                }
+                break;
+            case Node.TEXT_NODE:
+            case Node.CDATA_SECTION_NODE:
+                result = ((CharacterData) node).getData();
+                break;
+            default:
+                String err = "Trying to get value of a strange Node type: " + node.getNodeType();
+                throw new IllegalArgumentException(err);
+        }
+        return result.trim();
     }
 
     /**

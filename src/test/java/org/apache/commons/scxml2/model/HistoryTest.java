@@ -148,7 +148,7 @@ public class HistoryTest {
     }
 
     private String nextPhase() throws Exception {
-        Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "phase.done");
+        Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "done.state.phase");
         Assert.assertEquals(1, currentStates.size());
         return currentStates.iterator().next().getId();
     }

@@ -42,7 +42,7 @@ public class SimpleSCXMLListener implements SCXMLListener, Serializable {
      */
     public void onEntry(final EnterableState state) {
         if (log.isInfoEnabled()) {
-            log.info(LogUtils.getTTPath(state));
+            log.info("enter " + LogUtils.getTTPath(state));
         }
     }
 
@@ -51,17 +51,17 @@ public class SimpleSCXMLListener implements SCXMLListener, Serializable {
      */
     public void onExit(final EnterableState state) {
         if (log.isInfoEnabled()) {
-            log.info(LogUtils.getTTPath(state));
+            log.info("exit " + LogUtils.getTTPath(state));
         }
     }
 
     /**
-* @see SCXMLListener#onTransition(TransitionTarget,TransitionTarget,Transition)
+* @see SCXMLListener#onTransition(TransitionTarget,TransitionTarget,Transition,String)
      */
     public void onTransition(final TransitionTarget from,
-            final TransitionTarget to, final Transition transition) {
+            final TransitionTarget to, final Transition transition, String event) {
         if (log.isInfoEnabled()) {
-            log.info(LogUtils.transToString(from, to, transition));
+            log.info("transition " + LogUtils.transToString(from, to, transition, event));
         }
     }
 

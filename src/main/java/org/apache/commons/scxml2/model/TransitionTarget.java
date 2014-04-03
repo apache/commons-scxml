@@ -146,6 +146,19 @@ public abstract class TransitionTarget implements Serializable, Observable {
     }
 
     /**
+     * Checks whether this transition target (State or Parallel) is a
+     * descendant of the transition target context.
+     *
+     * @param context
+     *            TransitionTarget context - a potential ancestor
+     * @return true if this is a descendant of context, false otherwise
+     */
+    public final boolean isDescendantOf(TransitionTarget context) {
+        return getNumberOfAncestors() > context.getNumberOfAncestors()
+                && getAncestor(context.getNumberOfAncestors()) == context;
+    }
+    
+    /**
      * Enforce identity equality only
      * @param other other object to compare with
      * @return this == other

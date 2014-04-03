@@ -21,8 +21,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.apache.commons.scxml2.SCXMLHelper;
-
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;transition&gt; SCXML element. Transition rules are triggered
@@ -103,7 +101,7 @@ public class Transition extends SimpleTransition implements DocumentOrder {
      * @param cond The cond to set.
      */
     public void setCond(final String cond) {
-        this.cond = SCXMLHelper.isStringEmpty(cond) ? null : cond;
+        this.cond = cond;
     }
 
     /**
@@ -123,7 +121,7 @@ public class Transition extends SimpleTransition implements DocumentOrder {
      * @param event The event to set.
      */
     public void setEvent(final String event) {
-        this.event = SCXMLHelper.isStringEmpty(event) ? null : event.trim();
+        this.event = event == null ? null : event.trim();
         if (this.event != null) {
             // 'event' is a space separated list of event descriptors
             events = new ArrayList<String>();

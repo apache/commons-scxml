@@ -27,18 +27,18 @@
             <transition target="eleven"/>
         </initial>
 
-        <transition event="ten.done" target="twenty" />
+        <transition event="done.state.ten" target="twenty" />
 
-        <transition event="ten.done" target="thirty" />
+        <transition event="done.state.ten" target="thirty" />
 
         <state id="eleven">
 
             <!-- forty wins due to document order and the fact
                  that since eleven trumps ten in the state
-                 heirarchy -->
-            <transition event="ten.done" target="forty" />
+                 hierarchy -->
+            <transition event="done.state.ten" target="forty" />
 
-            <transition event="ten.done" target="fifty" />
+            <transition event="done.state.ten" target="fifty" />
 
         </state>
 

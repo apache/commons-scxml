@@ -20,7 +20,7 @@
        initial="ten">
 
     <state id="ten">
-        <transition event="ten.done"
+        <transition event="done.state.ten"
          target="twenty" />
     </state>
 

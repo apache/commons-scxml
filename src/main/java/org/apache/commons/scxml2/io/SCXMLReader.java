@@ -48,7 +48,6 @@ import javax.xml.validation.Validator;
 
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml2.PathResolver;
-import org.apache.commons.scxml2.SCXMLHelper;
 import org.apache.commons.scxml2.env.SimpleErrorHandler;
 import org.apache.commons.scxml2.env.URLResolver;
 import org.apache.commons.scxml2.model.Action;
@@ -208,6 +207,15 @@ public final class SCXMLReader {
             +" required attribute \"{1}\" value at {2}";
 
     /**
+     * Error message when the target of the URI fragment in a &lt;state&gt;'s
+     * &quot;src&quot; attribute is not a &lt;state&gt; or &lt;final&gt; in
+     * the referenced document.
+     */
+    private static final String ERR_ATTRIBUTE_NOT_BOOLEAN = "Illegal value \"{0}\""
+            + "for attribute \"{1}\" in element <{2}> at {3}."
+            +" Only the value \"true\" or \"false\" is allowed.";
+
+    /**
      * Error message when the element (state|parallel|final|history) uses an id value
      * with the reserved prefix {@link SCXML#GENERATED_TT_ID_PREFIX}.
      */
@@ -260,6 +268,7 @@ public final class SCXMLReader {
 
     //---- ATTRIBUTE NAMES ----//
     private static final String ATTR_ARRAY = "array";
+    private static final String ATTR_AUTOFORWARD = "autoforward";
     private static final String ATTR_COND = "cond";
     private static final String ATTR_DELAY = "delay";
     private static final String ATTR_EVENT = "event";
@@ -813,6 +822,8 @@ public final class SCXMLReader {
                             parallel.addTransition(readTransition(reader, configuration));
                         } else if (ELEM_STATE.equals(name)) {
                             readState(reader, configuration, scxml, parallel);
+                        } else if (ELEM_PARALLEL.equals(name)) {
+                            readParallel(reader, configuration, scxml, parallel);
                         } else if (ELEM_ONENTRY.equals(name)) {
                             readOnEntry(reader, configuration, parallel);
                         } else if (ELEM_ONEXIT.equals(name)) {
@@ -971,8 +982,12 @@ public final class SCXMLReader {
             if (source instanceof State && ts instanceof State) {
                 State s = (State) ts;
                 State include = (State) source;
-                s.setOnEntry(include.getOnEntry());
-                s.setOnExit(include.getOnExit());
+                for (OnEntry onentry : include.getOnEntries()) {
+                    s.addOnEntry(onentry);
+                }
+                for (OnExit onexit : include.getOnExits()) {
+                    s.addOnExit(onexit);
+                }
                 s.setDatamodel(include.getDatamodel());
                 List<History> histories = include.getHistory();
                 for (History h : histories) {
@@ -1117,6 +1132,7 @@ public final class SCXMLReader {
         invoke.setSrc(readAV(reader, ATTR_SRC));
         invoke.setSrcexpr(readAV(reader, ATTR_SRCEXPR));
         invoke.setType(readAV(reader, ATTR_TYPE));
+        invoke.setAutoForward(readBooleanAV(reader, ELEM_INVOKE, ATTR_AUTOFORWARD));
         invoke.setPathResolver(configuration.pathResolver);
         readNamespaces(configuration, invoke);
 
@@ -1333,8 +1349,9 @@ public final class SCXMLReader {
             throws XMLStreamException, ModelException {
 
         OnEntry onentry = new OnEntry();
+        onentry.setRaiseEvent(readBooleanAV(reader, ELEM_ONENTRY, ATTR_EVENT));
         readExecutableContext(reader, configuration, onentry, null);
-        es.setOnEntry(onentry);
+        es.addOnEntry(onentry);
     }
 
     /**
@@ -1353,8 +1370,9 @@ public final class SCXMLReader {
             throws XMLStreamException, ModelException {
 
         OnExit onexit = new OnExit();
+        onexit.setRaiseEvent(readBooleanAV(reader, ELEM_ONEXIT, ATTR_EVENT));
         readExecutableContext(reader, configuration, onexit, null);
-        es.setOnExit(onexit);
+        es.addOnExit(onexit);
     }
 
     /**
@@ -2107,6 +2125,14 @@ public final class SCXMLReader {
     }
 
     /**
+     * @param input input string to check if null or empty after trim
+     * @return null if input is null or empty after trim()
+     */
+    private static String nullIfEmpty(String input) {
+        return input == null || input.trim().length()==0 ? null : input.trim();
+    }
+
+    /**
      * Get the attribute value at the current reader location.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
@@ -2115,7 +2141,30 @@ public final class SCXMLReader {
      * @return The value of the attribute.
      */
     private static String readAV(final XMLStreamReader reader, final String attrLocalName) {
-        return reader.getAttributeValue(XMLNS_DEFAULT, attrLocalName);
+        return nullIfEmpty(reader.getAttributeValue(XMLNS_DEFAULT, attrLocalName));
+    }
+
+    /**
+     * Get the Boolean attribute value at the current reader location.
+     *
+     * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
+     * @param elementName The name of the element for which the attribute value is needed.
+     * @param attrLocalName The attribute name whose value is needed.
+     *
+     * @return The Boolean value of the attribute.
+     * @throws ModelException When the attribute value is not empty but neither "true" or "false".
+     */
+    private static Boolean readBooleanAV(final XMLStreamReader reader, final String elementName,
+                                         final String attrLocalName)
+            throws ModelException {
+        String value = nullIfEmpty(reader.getAttributeValue(XMLNS_DEFAULT, attrLocalName));
+        Boolean result = "true".equals(value) ? Boolean.TRUE : "false".equals(value) ? Boolean.FALSE : null;
+        if (result == null && value != null) {
+            MessageFormat msgFormat = new MessageFormat(ERR_ATTRIBUTE_NOT_BOOLEAN);
+            String errMsg = msgFormat.format(new Object[] {value, attrLocalName, elementName, reader.getLocation()});
+            throw new ModelException(errMsg);
+        }
+        return result;
     }
 
     /**
@@ -2130,8 +2179,8 @@ public final class SCXMLReader {
      */
     private static String readRequiredAV(final XMLStreamReader reader, final String elementName, final String attrLocalName)
             throws ModelException {
-        String value = reader.getAttributeValue(XMLNS_DEFAULT, attrLocalName);
-        if (SCXMLHelper.isStringEmpty(value)) {
+        String value = nullIfEmpty(reader.getAttributeValue(XMLNS_DEFAULT, attrLocalName));
+        if (value == null) {
             MessageFormat msgFormat = new MessageFormat(ERR_REQUIRED_ATTRIBUTE_MISSING);
             String errMsg = msgFormat.format(new Object[] {elementName, attrLocalName, reader.getLocation()});
             throw new ModelException(errMsg);
@@ -2143,7 +2192,7 @@ public final class SCXMLReader {
                                                             final String elementName)
             throws ModelException {
         String id = readAV(reader, ATTR_ID);
-        if (SCXMLHelper.isStringEmpty(id)) {
+        if (id == null) {
             id = scxml.generateTransitionTargetId();
         }
         else if (id.startsWith(SCXML.GENERATED_TT_ID_PREFIX)) {

@@ -168,7 +168,7 @@ public class SimpleContext implements Context, Serializable {
      */
     public void setLocal(final String name, final Object value) {
         getVars().put(name, value);
-        if (log.isDebugEnabled() && !name.equals(SCXMLSystemContext.VARIABLE_ALL_STATES)) {
+        if (log.isDebugEnabled() && !name.equals(SCXMLSystemContext.ALL_STATES_KEY)) {
             log.debug(name + " = " + String.valueOf(value));
         }
     }

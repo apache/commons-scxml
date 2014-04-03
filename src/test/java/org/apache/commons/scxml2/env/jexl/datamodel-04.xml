@@ -28,13 +28,13 @@
     </datamodel>
 
     <state id="ten">
-        <transition event="ten.done" target="twenty">
+        <transition event="done.state.ten" target="twenty">
             <assign name="payload" expr="_event.data" />
         </transition>
     </state>
 
     <state id="twenty">
-        <transition event="twenty.done" target="thirty" />
+        <transition event="done.state.twenty" target="thirty" />
         <onexit>
             <log label="Persisted event.data.one" expr="payload.one"/>
             <log label="Persisted event.data.two" expr="payload.two"/>

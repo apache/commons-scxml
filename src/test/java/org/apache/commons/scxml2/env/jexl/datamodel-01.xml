@@ -68,7 +68,7 @@
                  first argument is the named XML data tree and the second is
                  the XPath expression to a node whose value is to be
                  examined  -->
-            <transition event="ten.done"
+            <transition event="done.state.ten"
              cond="mainvar eq 10 and Data(maindata,'root/a/b/c') eq 'beta'"
              target="twenty" />
             <onexit>
@@ -82,7 +82,7 @@
             <onentry>
                 <assign name="mainvar" expr="20" />
             </onentry>
-            <transition event="twenty.done"
+            <transition event="done.state.twenty"
              cond="Data(maindata,'root/a/b/c') eq 'gamma' and mainvar eq 20"
              target="thirty" />
             <onexit>
@@ -99,7 +99,7 @@
                  the Data() function. Note that data "docdata"
                  did not have a node at 'root/foo/a/b/d' to begin with,
                  the XML tree was manipulated by the <assign> above -->
-            <transition event="thirty.done"
+            <transition event="done.state.thirty"
              cond="Data(docdata,'root/foo/a/b/d') + Data(docdata,'root/foo/a/b/e') eq 579.789"
              target="forty" />
         </state>

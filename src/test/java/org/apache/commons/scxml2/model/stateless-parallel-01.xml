@@ -41,7 +41,7 @@
             <final id="state2.final"/>
         </state>
 
-        <transition event="main.done" target="next" />
+        <transition event="done.state.main" target="next" />
 
     </parallel>
 

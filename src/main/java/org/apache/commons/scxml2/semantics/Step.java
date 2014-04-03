@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.scxml2;
+package org.apache.commons.scxml2.semantics;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.SimpleTransition;
 import org.apache.commons.scxml2.model.TransitionalState;
@@ -39,80 +40,43 @@ public class Step {
     private TriggerEvent event;
 
     /**
-     * The status before this step.
+     * The set of states that were exited during this step.
      */
-    private Status beforeStatus;
+    private Set<EnterableState> exitSet;
 
     /**
-     * The status after this step.
+     * The set of states that were entered during this step.
      */
-    private Status afterStatus;
+    private Set<EnterableState> entrySet;
 
     /**
-     * The list of TransitionTargets that were exited during this step.
-     */
-    private List<EnterableState> exitList;
-
-    /**
-     * The list of TransitionTargets that were entered during this step.
-     */
-    private List<EnterableState> entryList;
-
-    /**
-     * The set of TransitionTargets that were entered during this step by default
+     * The set of states that were entered during this step by default
      */
     private Set<EnterableState> defaultEntrySet;
 
-    private Map<String, SimpleTransition> defaultHistoryTransitionEntryMap;
+    private Map<TransitionalState, SimpleTransition> defaultHistoryTransitionEntryMap;
     /**
      * The list of Transitions taken during this step.
      */
     private List<SimpleTransition> transitList;
 
     /**
-     * The set of activated states which invokes need to be invoked after the current macro step.
-     */
-    private Set<TransitionalState> statesToInvoke;
-
-    /**
      * @param event The event received in this unit of progression
-     * @param beforeStatus The before status
      */
-    public Step(TriggerEvent event, final Status beforeStatus) {
+    public Step(TriggerEvent event) {
         this.event = event;
-        if (beforeStatus != null) {
-            this.beforeStatus = beforeStatus;
-        } else {
-            this.beforeStatus = new Status();
-        }
-        this.afterStatus = new Status();
-        this.exitList = new ArrayList<EnterableState>();
-        this.entryList = new ArrayList<EnterableState>();
+        this.exitSet = new HashSet<EnterableState>();
+        this.entrySet = new HashSet<EnterableState>();
         this.defaultEntrySet = new HashSet<EnterableState>();
-        this.defaultHistoryTransitionEntryMap = new HashMap<String, SimpleTransition>();
+        this.defaultHistoryTransitionEntryMap = new HashMap<TransitionalState, SimpleTransition>();
         this.transitList = new ArrayList<SimpleTransition>();
-        this.statesToInvoke = new HashSet<TransitionalState>();
     }
 
     /**
-     * @return Returns the afterStatus.
+     * @return Returns the entrySet.
      */
-    public Status getAfterStatus() {
-        return afterStatus;
-    }
-
-    /**
-     * @return Returns the beforeStatus.
-     */
-    public Status getBeforeStatus() {
-        return beforeStatus;
-    }
-
-    /**
-     * @return Returns the entryList.
-     */
-    public List<EnterableState> getEntryList() {
-        return entryList;
+    public Set<EnterableState> getEntrySet() {
+        return entrySet;
     }
 
     /**
@@ -125,15 +89,15 @@ public class Step {
     /**
      * @return Returns the defaultHistoryTransitionEntryMap.
      */
-    public Map<String, SimpleTransition> getDefaultHistoryTransitionEntryMap() {
+    public Map<TransitionalState, SimpleTransition> getDefaultHistoryTransitionEntryMap() {
         return defaultHistoryTransitionEntryMap;
     }
 
     /**
-     * @return Returns the exitList.
+     * @return Returns the exitSet.
      */
-    public List<EnterableState> getExitList() {
-        return exitList;
+    public Set<EnterableState> getExitSet() {
+        return exitSet;
     }
 
     /**
@@ -148,13 +112,6 @@ public class Step {
      */
     public List<SimpleTransition> getTransitList() {
         return transitList;
-    }
-
-    /**
-     * @return Returns the set of activated states which invokes need to be invoked after the current macro step.
-     */
-    public Set<TransitionalState> getStatesToInvoke() {
-        return statesToInvoke;
     }
 }
 

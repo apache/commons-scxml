@@ -42,8 +42,8 @@ public class ActionExecutionContext {
     /**
      * @return Returns the state machine
      */
-    public SCXML getStatemachine() {
-        return exctx.getStatemachine();
+    public SCXML getStateMachine() {
+        return exctx.getStateMachine();
     }
 
     /**

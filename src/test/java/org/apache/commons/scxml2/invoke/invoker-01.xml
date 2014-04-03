@@ -30,7 +30,7 @@
                 <log expr="'Finalizing ...'" />
             </finalize>
         </invoke>
-        <transition event="invoker.invoke.done" target="end" />
+        <transition event="done.invoke.invoker" target="end" />
     </state>
 
     <final id="end"/>

@@ -55,7 +55,7 @@ public class SCInstanceTest {
     }
     
     @Test
-    public void testGetRootContextEvaluator() {
+    public void testGetRootContextEvaluator() throws Exception {
         Evaluator evaluator = new JexlEvaluator();
 
         executor.setEvaluator(evaluator);
@@ -77,7 +77,7 @@ public class SCInstanceTest {
     }
     
     @Test
-    public void testGetContextNullParent() {
+    public void testGetContextNullParent() throws Exception {
         State target = new State();
         target.setId("1");
 
@@ -93,7 +93,7 @@ public class SCInstanceTest {
     }
 
     @Test
-    public void testGetContextParent() {
+    public void testGetContextParent() throws Exception {
         State target = new State();
         target.setId("1");
         

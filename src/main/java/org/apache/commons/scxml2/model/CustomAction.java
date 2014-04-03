@@ -17,7 +17,6 @@
 package org.apache.commons.scxml2.model;
 
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.scxml2.SCXMLHelper;
 
 import org.apache.commons.logging.Log;
 
@@ -92,7 +91,7 @@ public class CustomAction {
     public CustomAction(final String namespaceURI, final String localName,
             final Class<? extends Action> actionClass) {
         Log log = LogFactory.getLog(CustomAction.class);
-        if (SCXMLHelper.isStringEmpty(namespaceURI)) {
+        if (namespaceURI == null || namespaceURI.trim().length() == 0) {
             log.error(ERR_NO_NAMESPACE);
             throw new IllegalArgumentException(ERR_NO_NAMESPACE);
         }
@@ -100,12 +99,11 @@ public class CustomAction {
             log.error(ERR_RESERVED_NAMESPACE);
             throw new IllegalArgumentException(ERR_RESERVED_NAMESPACE);
         }
-        if (SCXMLHelper.isStringEmpty(localName)) {
+        if (localName == null || localName.trim().length() == 0) {
             log.error(ERR_NO_LOCAL_NAME);
             throw new IllegalArgumentException(ERR_NO_LOCAL_NAME);
         }
-        if (actionClass == null
-                || !Action.class.isAssignableFrom(actionClass)) {
+        if (actionClass == null || !Action.class.isAssignableFrom(actionClass)) {
             log.error(ERR_NOT_AN_ACTION);
             throw new IllegalArgumentException(ERR_NOT_AN_ACTION);
         }

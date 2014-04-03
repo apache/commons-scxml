@@ -129,15 +129,16 @@ public final class NotificationRegistry {
      * @param from The source EnterableState
      * @param to The destination EnterableState
      * @param transition The Transition that was taken
+     * @param event The event name triggering the transition
      */
     public synchronized void fireOnTransition(final Observable source,
             final TransitionTarget from, final TransitionTarget to,
-            final Transition transition) {
+            final Transition transition, final String event) {
         if (source != null && source.getObservableId() != null) {
             Set<SCXMLListener> entries = regs.get(source.getObservableId());
             if (entries != null) {
                 for (SCXMLListener lst : entries) {
-                    lst.onTransition(from, to, transition);
+                    lst.onTransition(from, to, transition, event);
                 }
             }
         }

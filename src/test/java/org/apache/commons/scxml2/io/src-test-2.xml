@@ -21,7 +21,7 @@
        initial="srctest2">
 
     <state id="srctest2" src="src-test-3.xml">
-        <transition event="srctest2.done" target="srctest2end"/>
+        <transition event="done.state.srctest2" target="srctest2end"/>
     </state>
 
     <final id="srctest2end"/>

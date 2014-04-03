@@ -82,7 +82,7 @@ public class TieBreakerTest {
         Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("ten", currentStates.iterator().next().getId());
-        currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
+        currentStates = SCXMLTestHelper.fireEvent(exec, "done.state.ten");
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("twenty", currentStates.iterator().next().getId());
     }
@@ -94,7 +94,7 @@ public class TieBreakerTest {
         Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("eleven", currentStates.iterator().next().getId());
-        currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
+        currentStates = SCXMLTestHelper.fireEvent(exec, "done.state.ten");
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("thirty", currentStates.iterator().next().getId());
     }
@@ -106,7 +106,7 @@ public class TieBreakerTest {
         Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("eleven", currentStates.iterator().next().getId());
-        currentStates = SCXMLTestHelper.fireEvent(exec, "ten.done");
+        currentStates = SCXMLTestHelper.fireEvent(exec, "done.state.ten");
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("forty", currentStates.iterator().next().getId());
     }

@@ -31,6 +31,11 @@ public class OnExit extends Executable {
     private static final long serialVersionUID = 1L;
 
     /**
+     * An indicator whether to raise the non-standard "exit.state.id" internal event after executing this OnExit
+     */
+    private Boolean raiseEvent;
+
+    /**
      * Constructor.
      */
     public OnExit() {
@@ -45,6 +50,29 @@ public class OnExit extends Executable {
     @Override
     public final void setParent(final EnterableState parent) {
         super.setParent(parent);
+    }
+
+    /**
+     * @return Returns true if the non-standard internal "exit.state.id" event will be raised after executing this OnExit
+     */
+    public final boolean isRaiseEvent() {
+        return raiseEvent != null && raiseEvent;
+    }
+
+    /**
+     * @return Returns the indicator whether to raise the non-standard "exit.state.id" internal event after executing
+     *         this OnExit. When null no event will be raised
+     */
+    public final Boolean getRaiseEvent() {
+        return raiseEvent;
+    }
+
+    /**
+     * Set the indicator whether to raise the non-standard "exit.state.id" internal event after executing this OnExit.
+     * @param raiseEvent The indicator, when null no event will be raised
+     */
+    public final void setRaiseEvent(final Boolean raiseEvent) {
+        this.raiseEvent = raiseEvent;
     }
 }
 

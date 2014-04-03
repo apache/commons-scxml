@@ -37,22 +37,17 @@ public class Status implements Serializable {
     /**
      * The states that are currently active.
      */
-    private Set<EnterableState> states;
+    private final Set<EnterableState> states = new HashSet<EnterableState>();
 
     /**
-     * Have we reached a final configuration for this state machine.
-     *
-     * True - if all the states are final and there are not events
-     * pending from the last step. False - otherwise.
-     *
-     * @return Whether a final configuration has been reached.
+     * @return Whether the state machine terminated AND we reached a top level Final state.
      */
     public boolean isFinal() {
         return getFinalState() != null;
     }
 
     /**
-     * @return Returns the single top level active final state or null otherwise
+     * @return Returns the single top level final state in which the state machine terminated, or null otherwise
      */
     public Final getFinalState() {
         if (states.size() == 1) {
@@ -62,13 +57,6 @@ public class Status implements Serializable {
             }
         }
         return null;
-    }
-
-    /**
-     * Constructor.
-     */
-    public Status() {
-        states = new HashSet<EnterableState>();
     }
 
     /**
@@ -87,8 +75,21 @@ public class Status implements Serializable {
      *         complex ancestors up to the root.
      */
     public Set<EnterableState> getAllStates() {
-        return SCXMLHelper.getAncestorClosure(states, null);
+        Set<EnterableState> allStates = new HashSet<EnterableState>(states.size() * 2);
+        for (EnterableState es : states) {
+            EnterableState state = es;
+            while (state != null && allStates.add(state)) {
+                state = state.getParent();
+            }
+        }
+        return allStates;
     }
 
+    /**
+     * Clears the status
+     */
+    public void clear() {
+        states.clear();
+    }
 }
 

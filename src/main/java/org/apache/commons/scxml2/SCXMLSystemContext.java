@@ -40,24 +40,23 @@ public class SCXMLSystemContext implements Context, Serializable {
      * The protected system variables names as defined in the SCXML specification
      * @see <a href="http://www.w3.org/TR/scxml/#SystemVariables">http://www.w3.org/TR/scxml/#SystemVariables</a>
      */
-    public static final String VARIABLE_EVENT = "_event";
-    public static final String VARIABLE_SESSIONID = "_sessionid";
-    public static final String VARIABLE_NAME = "_name";
-    public static final String VARIABLE_IOPROCESSORS = "_ioprocessors";
-    public static final String VARIABLE_X = "_x";
+    public static final String EVENT_KEY = "_event";
+    public static final String SESSIONID_KEY = "_sessionid";
+    public static final String SCXML_NAME_KEY = "_name";
+    public static final String IOPROCESSORS_KEY = "_ioprocessors";
+    public static final String X_KEY = "_x";
 
     /**
      * Commons SCXML internal system variable holding the current SCXML configuration of all (including ancestors)
      * active states.
      */
-    public static final String VARIABLE_ALL_STATES = "_ALL_STATES";
+    public static final String ALL_STATES_KEY = "_ALL_STATES";
 
     /**
      * The set of protected system variables names
      */
     private static final Set<String> PROTECTED_NAMES = new HashSet<String>(Arrays.asList(
-            new String[] { VARIABLE_EVENT, VARIABLE_SESSIONID, VARIABLE_NAME, VARIABLE_IOPROCESSORS, VARIABLE_X
-                    , VARIABLE_ALL_STATES }
+            new String[] {EVENT_KEY, SESSIONID_KEY, SCXML_NAME_KEY, IOPROCESSORS_KEY, X_KEY, ALL_STATES_KEY}
     ));
 
     /**
@@ -67,13 +66,25 @@ public class SCXMLSystemContext implements Context, Serializable {
     private Context systemContext;
 
     /**
+     * Initialize or replace systemContext
+     * @param systemContext the system context to set
+     */
+    void setSystemContext(Context systemContext) {
+        if (this.systemContext != null) {
+            // replace systemContext
+            systemContext.getVars().putAll(this.systemContext.getVars());
+        }
+        this.systemContext = systemContext;
+        this.protectedVars = Collections.unmodifiableMap(systemContext.getVars());
+    }
+
+    /**
      * The unmodifiable wrapped variables map from the wrapped system context
      */
     private Map<String, Object> protectedVars;
 
     public SCXMLSystemContext(Context systemContext) {
-        this.systemContext = systemContext;
-        this.protectedVars = Collections.unmodifiableMap(systemContext.getVars());
+        setSystemContext(systemContext);
     }
 
     @Override

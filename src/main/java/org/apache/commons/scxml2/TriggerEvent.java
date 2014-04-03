@@ -86,6 +86,12 @@ public class TriggerEvent implements Serializable {
     public static final int ERROR_EVENT = 5;
 
     /**
+     * <code>CANCEL_EVENT</code>.
+     *
+     */
+    public static final int CANCEL_EVENT = 6;
+
+    /**
      * The event name.
      *
      */

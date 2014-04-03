@@ -48,11 +48,6 @@ public class SCXML implements Serializable, Observable,
     public static final String GENERATED_TT_ID_PREFIX = "_generated_tt_id_";
 
     /**
-     * The pseudo SCXML {@link SimpleTransition#getTransitionDomain()}
-     */
-    public static final TransitionalState SCXML_TRANSITION_DOMAIN = new TransitionalState(){};
-
-    /**
      * The predefined observableId with value 0 (zero) for this SCXML state machine
      */
     private static final Integer SCXML_OBSERVABLE_ID = 0;

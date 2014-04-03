@@ -152,7 +152,7 @@ public class XPathEvaluator implements Evaluator, Serializable {
         fnResolver.setContext(xctx);
         XPath xpath = factory.newXPath();
         NamespaceContext nsCtx =
-            new ExpressionNSContext((Map<String, String>) ctx.get("_ALL_NAMESPACES"));
+            new ExpressionNSContext((Map<String, String>) ctx.get(Context.NAMESPACES_KEY));
         xpath.setNamespaceContext(nsCtx);
         return xpath;
     }

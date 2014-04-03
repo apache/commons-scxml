@@ -28,6 +28,7 @@ import org.apache.commons.scxml2.Builtin;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.SCXMLExpressionException;
+import org.apache.commons.scxml2.SCXMLSystemContext;
 import org.w3c.dom.Node;
 
 /**
@@ -101,8 +102,8 @@ public class JSEvaluator implements Evaluator {
             Bindings     bindings = engine.getBindings     (ScriptContext.ENGINE_SCOPE);
 
             // ... replace built-in functions
-            String jsExpression = IN_FN.matcher(expression).replaceAll("_builtin.isMember(_ALL_STATES, ");
-            jsExpression = DATA_FN.matcher(jsExpression).replaceAll("_builtin.data(_ALL_NAMESPACES, ");
+            String jsExpression = IN_FN.matcher(expression).replaceAll("_builtin.isMember("+SCXMLSystemContext.ALL_STATES_KEY +", ");
+            jsExpression = DATA_FN.matcher(jsExpression).replaceAll("_builtin.data("+Context.NAMESPACES_KEY+", ");
 
             // ... evaluate
             return engine.eval(jsExpression,new JSBindings(context,bindings));
@@ -161,8 +162,8 @@ public class JSEvaluator implements Evaluator {
 
             // ... replace built-in functions
             String jsExpression = IN_FN.matcher(expression).replaceAll("_builtin.isMember(_ALL_STATES, ");
-            jsExpression = DATA_FN.matcher(jsExpression).replaceFirst("_builtin.dataNode(_ALL_NAMESPACES, ");
-            jsExpression = DATA_FN.matcher(jsExpression).replaceAll("_builtin.data(_ALL_NAMESPACES, ");
+            jsExpression = DATA_FN.matcher(jsExpression).replaceFirst("_builtin.dataNode("+Context.NAMESPACES_KEY+", ");
+            jsExpression = DATA_FN.matcher(jsExpression).replaceAll("_builtin.data("+Context.NAMESPACES_KEY+", ");
 
             // ... evaluate
             return (Node) engine.eval(jsExpression,new JSBindings(context,bindings));

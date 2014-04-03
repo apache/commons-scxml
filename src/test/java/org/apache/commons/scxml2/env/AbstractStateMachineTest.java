@@ -18,6 +18,7 @@ package org.apache.commons.scxml2.env;
 
 import java.net.URL;
 
+import org.apache.commons.scxml2.model.ModelException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -42,7 +43,7 @@ public class AbstractStateMachineTest {
 
         private boolean fooCalled;
 
-        public Foo(final URL scxmlDocument) {
+        public Foo(final URL scxmlDocument) throws ModelException {
             super(scxmlDocument);
         }
 
@@ -59,7 +60,7 @@ public class AbstractStateMachineTest {
 
         private boolean barCalled;
 
-        public Bar(final URL scxmlDocument) {
+        public Bar(final URL scxmlDocument) throws ModelException {
             super(scxmlDocument);
         }
 

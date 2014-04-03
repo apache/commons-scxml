@@ -159,7 +159,6 @@ public class SCXMLTestHelper {
         }
         exec.addListener(scxml, trc);
         exec.setRootContext(context);
-        exec.setSuperStep(true);
         exec.setStateMachine(scxml);
         exec.go();
         Assert.assertNotNull(exec);

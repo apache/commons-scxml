@@ -60,8 +60,8 @@ public class LogUtilsTest {
         transition.setCond("condition");
         transition.setEvent("event happened");
         
-        Assert.assertEquals( "transition (event = event happened, cond = condition, from = /FROM, to = /TO)", 
-                                        LogUtils.transToString(targetFrom, targetTo, transition));
+        Assert.assertEquals( "(event = event happened, cond = condition, from = /FROM, to = /TO)",
+                                        LogUtils.transToString(targetFrom, targetTo, transition, transition.getEvent()));
     }
 
 }

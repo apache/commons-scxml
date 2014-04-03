@@ -59,6 +59,11 @@ public class Invoke implements NamespacePrefixesHolder, PathResolverHolder,
     private String srcexpr;
 
     /**
+     * A flag indicating whether to forward events to the invoked process.
+     */
+    private Boolean autoForward;
+
+    /**
      * The List of the params to be sent to the invoked process.
      */
     private final List<Param> paramsList;
@@ -158,6 +163,29 @@ public class Invoke implements NamespacePrefixesHolder, PathResolverHolder,
      */
     public final void setSrcexpr(final String srcexpr) {
         this.srcexpr = srcexpr;
+    }
+
+
+    /**
+     * @return Returns true if all external events should be forwarded to the invoked process.
+     */
+    public final boolean isAutoForward() {
+        return autoForward != null && autoForward;
+    }
+
+    /**
+     * @return Returns the flag indicating whether to forward events to the invoked process.
+     */
+    public final Boolean getAutoForward() {
+        return autoForward;
+    }
+
+    /**
+     * Set the flag indicating whether to forward events to the invoked process.
+     * @param autoForward the flag
+     */
+    public final void setAutoForward(final Boolean autoForward) {
+        this.autoForward = autoForward;
     }
 
     /**

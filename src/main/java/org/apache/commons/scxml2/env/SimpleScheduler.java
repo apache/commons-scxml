@@ -28,7 +28,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml2.EventDispatcher;
 import org.apache.commons.scxml2.SCXMLExecutor;
-import org.apache.commons.scxml2.SCXMLHelper;
 import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.model.ModelException;
 import org.w3c.dom.Node;
@@ -120,10 +119,9 @@ public class SimpleScheduler implements EventDispatcher, Serializable {
         }
 
         // We only handle the "scxml" type (which is the default too)
-        if (SCXMLHelper.isStringEmpty(type)
-                || type.trim().equalsIgnoreCase(TYPE_SCXML)) {
+        if (type == null || type.equalsIgnoreCase(TYPE_SCXML)) {
 
-            if (!SCXMLHelper.isStringEmpty(target)) {
+            if (target != null) {
                 // We know of no other target
                 if (log.isWarnEnabled()) {
                     log.warn("<send>: Unavailable target - " + target);
