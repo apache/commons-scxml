@@ -41,7 +41,7 @@
         The work needed towards Commons SCXML 2.0 has been divided in a set of high-level targets and corresponding
         milestones:
       </p>
-      <subsection name="Milestone 0: Cleanup (done)">
+      <subsection name="Milestone 0: Cleanup (completed: 2014-03-11)">
         <p>
           The first and already completed target was to cleanup and clean out no longer relevant or even no longer
           working features, or features which would make it very hard or complicated to keep working and supported
@@ -61,7 +61,7 @@
           contains several fixes and enhancements (like Groovy language support).
         </p>
       </subsection>
-      <subsection name="Milestone 1: Redesign semantics and processing components">
+      <subsection name="Milestone 1: Redesign semantics and processing components (completed: 2014-04-03)">
         <p>
           The target for milestone 1 is a redesign and better separation of concerns of the main SCXML processing
           components: SCXMLSemantics, SCXMLExecutor and SCInstance.
@@ -114,6 +114,12 @@
               </p>
             </li>
           </ul>
+        </p>
+        <p>
+          This milestone has now been completed and the most prominent changes and new features can be reviewed
+          through JIRA issues <a href="https://issues.apache.org/jira/browse/SCXML-196" target="_blank">SCXML-196</a>,
+          <a href="https://issues.apache.org/jira/browse/SCXML-197" target="_blank">SCXML-197</a> as well as
+          <a href="https://issues.apache.org/jira/browse/SCXML-200" target="_blank">SCXML-200</a>.
         </p>
       </subsection>
       <subsection name="Milestone 2: Datamodel and data manipulation alignment">
