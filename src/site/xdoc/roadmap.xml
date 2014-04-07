@@ -122,8 +122,8 @@
           <a href="https://issues.apache.org/jira/browse/SCXML-200" target="_blank">SCXML-200</a>.
         </p>
       </subsection>
-      <subsection name="Milestone 2: Datamodel and data manipulation alignment">
-        <p>The target for milestone 2 is to get better alignment with the SCXML datamodel specification.</p>
+      <subsection name="Milestone 2: Datamodel and expression language aligment">
+        <p>The main target for milestone 2 is to get better alignment with the SCXML datamodel specification.</p>
         <p>
           The Commons SCXML datamodel and context features are very flexible and can be defined and redefined in a
           hierarchical way (per state element). However this also makes it much more complex to manage, especially for
@@ -149,24 +149,15 @@
           It is the intend to also retain the current flexible Commons SCXML datamodel and context features, but
           provide this as custom extension, no longer as default.
         </p>
+        <p>The additional target is to be able to now <em>run</em> a substantial number of the
+          <a href="http://www.w3.org/Voice/2013/scxml-irp/" target="_blank">SCXML IPR tests</a>. Currently almost
+          all still fail because of (simple) expression language issues, so fixing and improving the language support
+          is an important goal as well.</p>
       </subsection>
-      <subsection name="Milestone 3: SCXML model alignment">
+      <subsection name="Milestone 3: External communications support">
         <p>
-          The target for milestone 3 is to complete the support for the remaining SCXML model elements.
-        </p>
-        <p>
-          The current Commons SCXML is still missing implementation of some SCXML element features, or is providing
-          functionality or behavior not compliant with the specification.
-        </p>
-      </subsection>
-      <subsection name="Milestone 4: Session management, external communications and environment variables">
-        <p>
-          The target for milestone 4 is to complete the remaining SCXML Processor and SCXML I/O Processor required
-          features for session management and external communications (send and invoke elements).
-        </p>
-        <p>
-          There are several requirements and restrictions with respect to environment variables which also needs to be
-          supported.
+          The target for milestone 3 is to complete the remaining SCXML Processor and SCXML I/O Processor required
+          features for external communications (send and invoke elements).
         </p>
       </subsection>
       <subsection name="Commons SCXML 2.0 release">
