@@ -43,7 +43,8 @@
     <p>The basic modus operandi for an engine is simple - when an event is
     triggered, figure out which (if any) transition(s) to follow, and
     transit to the new set of states executing any specified actions along
-    the way. The default semantics available in the Commons SCXML distribution
+    the way. The default semantics available in the Commons SCXML distribution,
+    which is based upon the SCXML specification rules for the Algorithm for SCXML processing,
     can be replaced with custom semantics provided by the user using the
     <code>SCXMLExecutor</code> constructor that takes the
     <code>SCXMLSemantics</code> parameter i.e. the engine semantics are
@@ -83,9 +84,9 @@
     </ul>
 
     <p>To implement any of the above choices, the user may extend the
-    default <code>SCXMLSemantics</code> implementation, override the
-    <code>filterTransitionsSet()</code> method (or write a new implementation
-    from scratch), and plug in the new semantics while instantiating the
+    default <code>SCXMLSemantics</code> implementation, override one or more
+    of the existing implemention methods, or even write a new implementation
+    from scratch, and plug in the new semantics while instantiating the
     <code>SCXMLExecutor</code>. The pluggability allows differing semantics
     to be developed for the Commons SCXML engine, independent of the Commons
     SCXML codebase.</p>
