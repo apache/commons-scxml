@@ -77,6 +77,11 @@ public class SCInstance implements Serializable {
     private final Status currentStatus;
 
     /**
+     * Running status for this state machine
+     */
+    private boolean running;
+
+    /**
      * The SCXML I/O Processor for the internal event queue
      */
     private transient SCXMLIOProcessor internalIOProcessor;
@@ -136,6 +141,7 @@ public class SCInstance implements Serializable {
      * @throws ModelException if the state machine hasn't been setup for this instance
      */
     protected void initialize() throws ModelException {
+        running = false;
         if (stateMachine == null) {
             throw new ModelException(ERR_NO_STATE_MACHINE);
         }
@@ -291,6 +297,26 @@ public class SCInstance implements Serializable {
      */
     public Status getCurrentStatus() {
         return currentStatus;
+    }
+
+
+    /**
+     * @return Returns if the state machine is running
+     */
+    public boolean isRunning() {
+        return running;
+    }
+
+    /**
+     * Sets the running status of the state machine
+     * @param running flag indicating the running status of the state machine
+     * @throws IllegalStateException Exception thrown if trying to set the state machine running when in a Final state
+     */
+    protected void setRunning(final boolean running) throws IllegalStateException {
+        if (!this.running && running && currentStatus.isFinal()) {
+            throw new IllegalStateException("The state machine is in a Final state and cannot be set running again");
+        }
+        this.running = running;
     }
 
     /**

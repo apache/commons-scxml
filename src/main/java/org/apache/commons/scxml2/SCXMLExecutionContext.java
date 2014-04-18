@@ -100,11 +100,6 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     private final Map<String, Invoker> invokers = new HashMap<String, Invoker>();
 
     /**
-     * Running status for this state machine
-     */
-    private boolean running;
-
-    /**
      * Constructor
      *
      * @param externalIOProcessor The external IO Processor
@@ -143,14 +138,14 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
      * @return Returns true if this state machine is running
      */
     public boolean isRunning() {
-        return running;
+        return scInstance.isRunning();
     }
 
     /**
      * Stop a running state machine
      */
     public void stopRunning() {
-        this.running = false;
+        scInstance.setRunning(false);
     }
 
     /**
@@ -160,7 +155,6 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
      * @throws ModelException if the state machine instance failed to initialize.
      */
     public void initialize() throws ModelException {
-        running = false;
         if (!invokeIds.isEmpty()) {
             for (Invoke invoke : new ArrayList<Invoke>(invokeIds.keySet())) {
                 cancelInvoker(invoke);
@@ -168,7 +162,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
         }
         internalEventQueue.clear();
         scInstance.initialize();
-        running = true;
+        scInstance.setRunning(true);
     }
 
     /**
@@ -245,7 +239,6 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
         }
         catch (ModelException me) {
             // won't happen
-            return;
         }
     }
 
@@ -306,7 +299,6 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
             }
             catch (ModelException me) {
                 // should not happen
-                return;
             }
         }
     }
