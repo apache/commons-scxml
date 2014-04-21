@@ -248,6 +248,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
         exitStates(exctx, step, statesToInvoke);
         executeTransitionContent(exctx, step);
         enterStates(exctx, step, statesToInvoke);
+        step.clearIntermediateState();
     }
 
     /**
@@ -258,14 +259,11 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * @throws ModelException if the result of taking the transitions would lead to an illegal configuration
      */
     public void buildStep(final SCXMLExecutionContext exctx, final Step step) throws ModelException {
-        step.getExitSet().clear();
-        step.getEntrySet().clear();
-        step.getDefaultEntrySet().clear();
-        step.getDefaultHistoryTransitionEntryMap().clear();
+        step.clearIntermediateState();
 
-        // compute exitSet, if there is something to exit
+        // compute exitSet, if there is something to exit and record their History configurations if applicable
         if (!exctx.getScInstance().getCurrentStatus().getStates().isEmpty()) {
-            computeExitSet(step, exctx.getScInstance().getCurrentStatus().getAllStates());
+            computeExitSet(step, exctx.getScInstance().getCurrentStatus());
         }
         // compute entrySet
         computeEntrySet(exctx, step);
@@ -339,11 +337,15 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * This method corresponds to the Algorithm for SCXML processing computeExitSet() procedure.
      * <p>
      * @param step The step containing the list of transitions to be taken
-     * @param configuration The current configuration of the state machine ({@link Status#getAllStates()}).
+     * @param currentStatus The current status of the state machine ({@link SCInstance#getCurrentStatus()}).
      */
-    public void computeExitSet(final Step step, final Set<EnterableState> configuration) {
-        for (SimpleTransition st : step.getTransitList()) {
-            computeExitSet(st, step.getExitSet(), configuration);
+    public void computeExitSet(final Step step, final Status currentStatus) {
+        if (!currentStatus.getStates().isEmpty()) {
+            Set<EnterableState> configuration = currentStatus.getAllStates();
+            for (SimpleTransition st : step.getTransitList()) {
+                computeExitSet(st, step.getExitSet(), configuration);
+            }
+            recordHistory(step, currentStatus.getStates(), configuration);
         }
     }
 
@@ -367,6 +369,52 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                 for (EnterableState state : configuration) {
                     if (state.isDescendantOf(transitionDomain)) {
                         exitSet.add(state);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Record the history configurations for states to exit if applicable and temporarily store this in the step.
+     * <p>
+     * These history configurations must be pre-recorded as they might impact (re)entrance calculation during
+     * {@link #computeEntrySet(SCXMLExecutionContext, Step)}.
+     * </p>
+     * <p>
+     * Only after the new configuration has been validated (see: {@link #isLegalConfig(Set, ErrorReporter)}), the
+     * history configurations will be persisted during the actual {@link #exitStates(SCXMLExecutionContext, Step, Set)}
+     * processing.
+     * </p>
+     * @param step The step containing the list of states to exit, and the map to record the new history configurations
+     * @param states The current set of active atomic states in the state machine
+     * @param allStates The current set of all active states in the state machine
+     */
+    public void recordHistory(final Step step, final Set<EnterableState> states, final Set<EnterableState> allStates) {
+        for (EnterableState es : step.getExitSet()) {
+            if (es instanceof TransitionalState && ((TransitionalState)es).hasHistory()) {
+                TransitionalState ts = (TransitionalState)es;
+                Set<EnterableState> shallow = null;
+                Set<EnterableState> deep = null;
+                for (History h : ts.getHistory()) {
+                    if (h.isDeep()) {
+                        if (deep == null) {
+                            //calculate deep history for a given state once
+                            deep = new HashSet<EnterableState>();
+                            for (EnterableState ott : states) {
+                                if (ott.isDescendantOf(es)) {
+                                    deep.add(ott);
+                                }
+                            }
+                        }
+                        step.getNewHistoryConfigurations().put(h, deep);
+                    } else {
+                        if (shallow == null) {
+                            //calculate shallow history for a given state once
+                            shallow = new HashSet<EnterableState>(ts.getChildren());
+                            shallow.retainAll(allStates);
+                        }
+                        step.getNewHistoryConfigurations().put(h, shallow);
                     }
                 }
             }
@@ -420,14 +468,18 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                                               final TransitionTarget tt) {
         if (tt instanceof History) {
             History h = (History) tt;
-            if (exctx.getScInstance().isEmpty(h)) {
-                step.getDefaultHistoryTransitionEntryMap().put(h.getParent(), h.getTransition());
+            Set<EnterableState> lastConfiguration = step.getNewHistoryConfigurations().get(h);
+            if (lastConfiguration == null) {
+                lastConfiguration = exctx.getScInstance().getLastConfiguration(h);
+            }
+            if (lastConfiguration.isEmpty()) {
+                step.getDefaultHistoryTransitions().put(h.getParent(), h.getTransition());
                 for (TransitionTarget dtt : h.getTransition().getTargets()) {
                     addDescendantStatesToEnter(exctx, step, dtt);
                     addAncestorStatesToEnter(exctx, step, dtt, tt.getParent());
                 }
             } else {
-                for (TransitionTarget dtt : exctx.getScInstance().getLastConfiguration(h)) {
+                for (TransitionTarget dtt : lastConfiguration) {
                     addDescendantStatesToEnter(exctx, step, dtt);
                     addAncestorStatesToEnter(exctx, step, dtt, tt.getParent());
                 }
@@ -841,39 +893,15 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
         if (step.getExitSet().isEmpty()) {
             return;
         }
-        Set<EnterableState> configuration = null;
         ArrayList<EnterableState> exitList = new ArrayList<EnterableState>(step.getExitSet());
         Collections.sort(exitList, DocumentOrder.reverseDocumentOrderComparator);
 
         for (EnterableState es : exitList) {
 
             if (es instanceof TransitionalState && ((TransitionalState)es).hasHistory()) {
-                TransitionalState ts = (TransitionalState)es;
-                Set<EnterableState> shallow = null;
-                Set<EnterableState> deep = null;
-                for (History h : ts.getHistory()) {
-                    if (h.isDeep()) {
-                        if (deep == null) {
-                            //calculate deep history for a given state once
-                            deep = new HashSet<EnterableState>();
-                            for (EnterableState ott : exctx.getScInstance().getCurrentStatus().getStates()) {
-                                if (ott.isDescendantOf(es)) {
-                                    deep.add(ott);
-                                }
-                            }
-                        }
-                        exctx.getScInstance().setLastConfiguration(h, deep);
-                    } else {
-                        if (shallow == null) {
-                            //calculate shallow history for a given state once
-                            if (configuration == null) {
-                                configuration = exctx.getScInstance().getCurrentStatus().getAllStates();
-                            }
-                            shallow = new HashSet<EnterableState>(ts.getChildren());
-                            shallow.retainAll(configuration);
-                        }
-                        exctx.getScInstance().setLastConfiguration(h, shallow);
-                    }
+                // persist the new history configurations for this state to exit
+                for (History h : ((TransitionalState)es).getHistory()) {
+                    exctx.getScInstance().setLastConfiguration(h, step.getNewHistoryConfigurations().get(h));
                 }
             }
 
@@ -977,7 +1005,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
         Collections.sort(entryList, DocumentOrder.documentOrderComparator);
         for (EnterableState es : entryList) {
             if (es.isAtomicState()) {
-                // only track actomic active states in Status
+                // only track atomic active states in Status
                 exctx.getScInstance().getCurrentStatus().getStates().add(es);
             }
             if (es instanceof TransitionalState && !((TransitionalState)es).getInvokes().isEmpty()) {
@@ -999,7 +1027,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                 executeContent(exctx, ((State)es).getInitial().getTransition());
             }
             if (es instanceof TransitionalState) {
-                SimpleTransition hTransition = step.getDefaultHistoryTransitionEntryMap().get(es);
+                SimpleTransition hTransition = step.getDefaultHistoryTransitions().get(es);
                 if (hTransition != null) {
                     executeContent(exctx, hTransition);
                 }

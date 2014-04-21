@@ -25,6 +25,7 @@ import java.util.Set;
 
 import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.model.EnterableState;
+import org.apache.commons.scxml2.model.History;
 import org.apache.commons.scxml2.model.SimpleTransition;
 import org.apache.commons.scxml2.model.TransitionalState;
 
@@ -54,7 +55,16 @@ public class Step {
      */
     private Set<EnterableState> defaultEntrySet;
 
-    private Map<TransitionalState, SimpleTransition> defaultHistoryTransitionEntryMap;
+    /**
+     * The map of default History transitions to be executed as result of entering states in this step.
+     */
+    private Map<TransitionalState, SimpleTransition> defaultHistoryTransitions;
+
+    /**
+     * The map of new History configurations created as result of exiting states in this step
+     */
+    private Map<History, Set<EnterableState>> newHistoryConfigurations;
+
     /**
      * The list of Transitions taken during this step.
      */
@@ -68,8 +78,20 @@ public class Step {
         this.exitSet = new HashSet<EnterableState>();
         this.entrySet = new HashSet<EnterableState>();
         this.defaultEntrySet = new HashSet<EnterableState>();
-        this.defaultHistoryTransitionEntryMap = new HashMap<TransitionalState, SimpleTransition>();
+        this.defaultHistoryTransitions = new HashMap<TransitionalState, SimpleTransition>();
+        this.newHistoryConfigurations = new HashMap<History, Set<EnterableState>>();
         this.transitList = new ArrayList<SimpleTransition>();
+    }
+
+    /**
+     * Ensure the intermediate state of this step is cleared before start processing the event and/or transitions
+     */
+    public void clearIntermediateState() {
+        exitSet.clear();
+        entrySet.clear();
+        defaultEntrySet.clear();
+        defaultHistoryTransitions.clear();
+        newHistoryConfigurations.clear();
     }
 
     /**
@@ -87,10 +109,17 @@ public class Step {
     }
 
     /**
-     * @return Returns the defaultHistoryTransitionEntryMap.
+     * @return Returns the map of default History transitions to be executed as result of entering states in this step
      */
-    public Map<TransitionalState, SimpleTransition> getDefaultHistoryTransitionEntryMap() {
-        return defaultHistoryTransitionEntryMap;
+    public Map<TransitionalState, SimpleTransition> getDefaultHistoryTransitions() {
+        return defaultHistoryTransitions;
+    }
+
+    /**
+     * @return Returns the map of new History configurations created as result of exiting states in this step
+     */
+    public Map<History, Set<EnterableState>> getNewHistoryConfigurations() {
+        return newHistoryConfigurations;
     }
 
     /**

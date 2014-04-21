@@ -144,7 +144,7 @@ public class SCInstanceTest {
     
     @Test
     public void testIsEmpty() {
-        Assert.assertTrue(instance.isEmpty(new History()));
+        Assert.assertTrue(instance.getLastConfiguration(new History()).isEmpty());
     }
     
     @Test
@@ -158,7 +158,7 @@ public class SCInstanceTest {
         
         instance.setLastConfiguration(history, configuration);  
 
-        Assert.assertFalse(instance.isEmpty(history));
+        Assert.assertFalse(instance.getLastConfiguration(history).isEmpty());
     }
     
     @Test
@@ -172,9 +172,9 @@ public class SCInstanceTest {
         
         instance.setLastConfiguration(history, configuration);  
 
-        instance.reset(history);
+        instance.resetConfiguration(history);
         
-        Assert.assertTrue(instance.isEmpty(history));
+        Assert.assertTrue(instance.getLastConfiguration(history).isEmpty());
     }
     
 }

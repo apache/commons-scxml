@@ -17,6 +17,7 @@
 package org.apache.commons.scxml2;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -437,8 +438,7 @@ public class SCInstance implements Serializable {
     public Set<EnterableState> getLastConfiguration(final History history) {
         Set<EnterableState> lastConfiguration = histories.get(history);
         if (lastConfiguration == null) {
-            lastConfiguration = new HashSet<EnterableState>();
-            histories.put(history, lastConfiguration);
+            lastConfiguration = Collections.emptySet();
         }
         return lastConfiguration;
     }
@@ -451,20 +451,7 @@ public class SCInstance implements Serializable {
      */
     public void setLastConfiguration(final History history,
             final Set<EnterableState> lc) {
-        Set<EnterableState> lastConfiguration = getLastConfiguration(history);
-        lastConfiguration.clear();
-        lastConfiguration.addAll(lc);
-    }
-
-    /**
-     * Check whether we have prior history.
-     *
-     * @param history The history.
-     * @return Whether we have a non-empty last configuration
-     */
-    public boolean isEmpty(final History history) {
-        Set<EnterableState> lastConfiguration = histories.get(history);
-        return lastConfiguration == null || lastConfiguration.isEmpty();
+        histories.put(history, new HashSet<EnterableState>(lc));
     }
 
     /**
@@ -474,11 +461,8 @@ public class SCInstance implements Serializable {
      *
      * @param history The history.
      */
-    public void reset(final History history) {
-        Set<EnterableState> lastConfiguration = histories.get(history);
-        if (lastConfiguration != null) {
-            lastConfiguration.clear();
-        }
+    public void resetConfiguration(final History history) {
+        histories.remove(history);
     }
 }
 
