@@ -98,7 +98,7 @@ public abstract class Action implements NamespacePrefixesHolder,
      */
     public final EnterableState getParentEnterableState()
     throws ModelException {
-        if (parent == null && this instanceof Script && ((Script)this).isGlobalScript()) {
+        if (parent == null || (this instanceof Script && ((Script)this).isGlobalScript())) {
             // global script doesn't have a EnterableState
             return null;
         }
