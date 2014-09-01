@@ -329,11 +329,6 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
 
         // go
         semantics.firstStep(exctx);
-
-        if (!exctx.isRunning()) {
-            semantics.finalStep(exctx);
-        }
-
         logState();
     }
 
@@ -416,11 +411,6 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
 
     protected void eventStep(TriggerEvent event) throws ModelException {
         semantics.nextStep(exctx, event);
-
-        if (!exctx.isRunning()) {
-            semantics.finalStep(exctx);
-        }
-
         logState();
     }
 
