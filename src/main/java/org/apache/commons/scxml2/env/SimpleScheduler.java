@@ -126,13 +126,7 @@ public class SimpleScheduler implements EventDispatcher, Serializable {
                 if (log.isWarnEnabled()) {
                     log.warn("<send>: Unavailable target - " + target);
                 }
-                try {
-                    this.executor.triggerEvent(new TriggerEvent(
-                        EVENT_ERR_SEND_TARGETUNAVAILABLE,
-                        TriggerEvent.ERROR_EVENT));
-                } catch (ModelException me) {
-                    log.error(me.getMessage(), me);
-                }
+                this.executor.addEvent(new TriggerEvent(EVENT_ERR_SEND_TARGETUNAVAILABLE,TriggerEvent.ERROR_EVENT));
                 return; // done
             }
 
@@ -232,12 +226,7 @@ public class SimpleScheduler implements EventDispatcher, Serializable {
         @Override
         public void run() {
             timers.remove(sendId);
-            try {
-                executor.triggerEvent(new TriggerEvent(event,
-                    TriggerEvent.SIGNAL_EVENT, payload));
-            } catch (ModelException me) {
-                log.error(me.getMessage(), me);
-            }
+            executor.addEvent(new TriggerEvent(event, TriggerEvent.SIGNAL_EVENT, payload));
             if (log.isDebugEnabled()) {
                 log.debug("Fired event '" + event + "' as scheduled by "
                     + "<send> with id '" + sendId + "'");

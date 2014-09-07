@@ -370,9 +370,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
      */
     public void triggerEvent(final TriggerEvent evt)
             throws ModelException {
-        if (evt != null) {
-            externalEventQueue.add(evt);
-        }
+        addEvent(evt);
         triggerEvents();
     }
 
@@ -390,9 +388,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
             throws ModelException {
         if (evts != null) {
             for (TriggerEvent evt : evts) {
-                if (evt != null) {
-                    externalEventQueue.add(evt);
-                }
+                addEvent(evt);
             }
         }
         triggerEvents();
@@ -438,4 +434,3 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
         }
     }
 }
-
