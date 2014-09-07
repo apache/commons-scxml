@@ -34,7 +34,8 @@ public class SimpleContext implements Context, Serializable {
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
     /** Implementation independent log category. */
-    private Log log = LogFactory.getLog(Context.class);
+    private static final Log DEFAULT_LOG = LogFactory.getLog(Context.class);
+    private Log log = DEFAULT_LOG;
     /** The parent Context to this Context. */
     private Context parent;
     /** The Map of variables and their values in this Context. */
@@ -107,8 +108,9 @@ public class SimpleContext implements Context, Serializable {
      * @see org.apache.commons.scxml2.Context#get(java.lang.String)
      */
     public Object get(final String name) {
-        if (getVars().containsKey(name)) {
-            return getVars().get(name);
+        Object localValue = getVars().get(name);
+        if (localValue != null) {
+            return localValue;
         } else if (parent != null) {
             return parent.get(name);
         } else {
