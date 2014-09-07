@@ -681,6 +681,9 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                     return false;
                 }
             }
+            else if (!transition.isAllEventsTransition()) {
+                return false;
+            }
         }
         else if (!transition.isNoEventsTransition()) {
             return false;
