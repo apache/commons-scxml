@@ -107,7 +107,9 @@ public class Foreach extends Action implements ActionsContainer {
                 if (arrayObject.getClass().isArray()) {
                     for (int currentIndex = 0, size = Array.getLength(arrayObject); currentIndex < size; currentIndex++) {
                         ctx.setLocal(item, Array.get(arrayObject, currentIndex));
-                        ctx.setLocal(index, currentIndex);
+                        if (index != null) {
+                            ctx.setLocal(index, currentIndex);
+                        }
                         // The "foreach" statement is a "container"
                         for (Action aa : actions) {
                             aa.execute(exctx);
