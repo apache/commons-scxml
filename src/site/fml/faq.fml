@@ -143,10 +143,32 @@
     Can multiple threads safely interact with an instance of SCXMLExecutor?
    </question>
    <answer>
-    To a certain extent. Things such as firing events on a state machine or
-    reseting it are threadsafe. The underlying state machine needs to
-    model any race conditions correctly. You have to worry about
-    synchronizing access to other bits if you need to.
+   <p>
+    To a certain extent. The execution of an SCXML state machine through an SCXMLExecutor instance may only be done,
+    as per the specification, sequentially.
+   </p>
+   <p>
+    Multiple threads may 'send' or 'register' new events on a state machine through its #addEvent methods, which
+    then will be processed sequentially by the SCXMLExecutor.
+   </p>
+   <p>
+    If such events are registered while the state machine is executing, these will processed automatically
+    before the state machine 'returns' in a stable state.
+   </p>
+   <p>
+    If such events are registered or added while the state machine is in a stable state, the SCXMLExecutor its
+    #triggerEvents method will have to be invoked for the state machine to proceed with processing these events.
+   </p>
+   <p>
+    The SCXMLExecutor methods themselves are not thread save, and thus it is the responsibility of the 'manager' of the
+    SCXMLExecutor, typically the thread creating and initializing the state machine to also execute the state machine
+    and check upon its state.
+   </p>
+   <p>
+    Other threads collaborating with the state machine however should refrain to only use the #addEvent methods, or
+    otherwise be (externally) coordinated such that only one thread at a time is triggering the execution of the state
+    machine.
+   </p>
    </answer>
   </faq>
 
@@ -155,7 +177,14 @@
     Are SCXMLExecutor instances serializable?
    </question>
    <answer>
-    Yes, as long as all associated user-defined content is too.
+   <p>
+    No, but the SCInstance of an SCXMLExecutor, which contains all the 'state' of the state machine including the SCXML
+    document itself, is serializable after detaching through its #detachInstance method as long as all associated
+    user-defined content is too.
+   </p>
+   <p>
+    A detached SCInstance can be re-attached to the SCXMLExecutor using its #attachInstance method.
+   </p>
    </answer>
   </faq>
 
