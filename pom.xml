@@ -230,6 +230,23 @@
           </ignorePathsToDelete>
         </configuration>
       </plugin>
+      <!-- add convenience support for command-line testing and debugging using
+           the org.apache.commons.scxml2.test.StandaloneJexlExpressions class
+
+           Example usage: mvn exec:java -Dexec.args="test.scxml"
+
+           See StandaloneJexlExpressions.java for further instructions
+       -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.3.2</version>
+        <configuration>
+          <mainClass>org.apache.commons.scxml2.test.StandaloneJexlExpressions</mainClass>
+          <classpathScope>test</classpathScope>
+          <cleanupDaemonThreads>false</cleanupDaemonThreads>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
