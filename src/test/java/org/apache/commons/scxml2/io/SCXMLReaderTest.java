@@ -192,7 +192,25 @@ public class SCXMLReaderTest {
         Final foo = (Final) scxml.getInitialTransition().getTargets().iterator().next();
         Assert.assertEquals("foo", foo.getId());
     }
-    
+
+    @Test
+    public void testSCXMLValidTransitionTargets() throws Exception {
+        // ModelUpdater will fail on invalid transition targets
+        SCXMLTestHelper.parse(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/scxml-valid-transition-targets-test.xml"));
+    }
+
+    @Test(expected=org.apache.commons.scxml2.model.ModelException.class)
+    public void testSCXMLInValidTransitionTargets1() throws Exception {
+        // ModelUpdater will fail on invalid transition targets
+        SCXMLTestHelper.parse(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/scxml-invalid-transition-targets-test1.xml"));
+    }
+
+    @Test(expected=org.apache.commons.scxml2.model.ModelException.class)
+    public void testSCXMLInValidTransitionTargets2() throws Exception {
+        // ModelUpdater will fail on invalid transition targets
+        SCXMLTestHelper.parse(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/scxml-invalid-transition-targets-test2.xml"));
+    }
+
     @Test
     public void testSCXMLReaderCustomActionWithBodyTextSample() throws Exception {
         List<CustomAction> cas = new ArrayList<CustomAction>();

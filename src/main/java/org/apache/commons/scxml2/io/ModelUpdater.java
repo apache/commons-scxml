@@ -17,7 +17,6 @@
 package org.apache.commons.scxml2.io;
 
 import java.text.MessageFormat;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -472,35 +471,35 @@ final class ModelUpdater {
      *
      * @param tts The transition targets
      * @return Whether this is a legal configuration
-     * @see <a href=http://www.w3.org/TR/2014/CR-scxml-20140313/#LegalStateConfigurations">
-     *     http://www.w3.org/TR/2014/CR-scxml-20140313/#LegalStateConfigurations</a>
+     * @see <a href=http://www.w3.org/TR/scxml/#LegalStateConfigurations">
+     *     http://www.w3.org/TR/scxml/#LegalStateConfigurations</a>
      */
     private static boolean verifyTransitionTargets(final Set<TransitionTarget> tts) {
-        if (tts.size() <= 1) { // No contention
+        if (tts.size() < 2) { // No contention
             return true;
         }
-
-        Set<EnterableState> parents = new HashSet<EnterableState>();
+        TransitionTarget first = null;
+        int i = 0;
         for (TransitionTarget tt : tts) {
-            boolean hasParallelParent = false;
-            for (int i = tt.getNumberOfAncestors()-1; i > -1; i--) {
-                EnterableState parent = tt.getAncestor(i);
-                if (parent instanceof Parallel) {
-                    hasParallelParent = true;
-                    // keep on 'reading' as a parallel may have a parent parallel (and even intermediate states)
-                }
-                else {
-                    if (!parents.add(parent)) {
-                        // this TransitionTarget is an descendant of another, or shares the same Parallel region
-                        return false;
-                    }
-                }
+            if (first == null) {
+                first = tt;
+                i = tt.getNumberOfAncestors();
+                continue;
             }
-            if (!hasParallelParent || !(tt.getAncestor(0) instanceof Parallel)) {
-                // multiple targets MUST all be children of a shared parallel
+            // find least common ancestor
+            for (i = Math.min(i, tt.getNumberOfAncestors()); i > 0 && first.getAncestor(i-1) != tt.getAncestor(i-1); i--) ;
+            if (i == 0) {
+                // no common ancestor
                 return false;
             }
+            // ensure no target is an ancestor of any other target on the list
+            for (TransitionTarget other : tts) {
+                if (other != tt && other.isDescendantOf(tt) || tt.isDescendantOf(other)) {
+                    return false;
+                }
+            }
         }
-        return true;
+        // least common ancestor must be a parallel
+        return first != null && i > 0 && first.getAncestor(i-1) instanceof Parallel;
    }
 }

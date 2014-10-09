@@ -66,6 +66,10 @@ public class SCXMLTestHelper {
         return Integer.toString(++sequence);
     }
 
+    public static URL getResource(String name) {
+        return SCXMLTestHelper.class.getClassLoader().getResource(name);
+    }
+
     public static SCXML parse(final URL url) throws Exception {
         return parse(url, null);
     }
