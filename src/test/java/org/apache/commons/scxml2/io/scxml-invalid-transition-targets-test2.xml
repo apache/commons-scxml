@@ -20,17 +20,17 @@
      http://www.w3.org/TR/scxml/#LegalStateConfigurations
 -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0"
-       initial="s1c1p1s0 s1c1p1s1 s1c1p2s0">
+       initial="s1s1p1s0 s1s1p1s1 s1s1p2s0">
   <state id="s1">
     <state id="s1s1">
       <state id="s1s1s1"/>
       <parallel id="s1s1p1">
-        <state id="s1c1p1s0"/>
-        <state id="s1c1p1s1"/>
-        <state id="s1c1p1s2"/>
+        <state id="s1s1p1s0"/>
+        <state id="s1s1p1s1"/>
+        <state id="s1s1p1s2"/>
       </parallel>
       <parallel id="s1s1p2">
-        <state id="s1c1p2s0"/>
+        <state id="s1s1p2s0"/>
       </parallel>
     </state>
   </state>
