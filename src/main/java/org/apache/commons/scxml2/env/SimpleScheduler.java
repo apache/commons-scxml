@@ -29,7 +29,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml2.EventDispatcher;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.TriggerEvent;
-import org.apache.commons.scxml2.model.ModelException;
 import org.w3c.dom.Node;
 
 /**
@@ -100,14 +99,14 @@ public class SimpleScheduler implements EventDispatcher, Serializable {
     /**
     @see EventDispatcher#send(String,String,String,String,Map,Object,long,List)
      */
-    public void send(final String sendId, final String target,
+    public void send(final String id, final String target,
             final String type, final String event,
             final Map<String, Object> params, final Object hints, final long delay,
             final List<Node> externalNodes) {
         // Log callback
         if (log.isInfoEnabled()) {
             StringBuffer buf = new StringBuffer();
-            buf.append("send ( sendId: ").append(sendId);
+            buf.append("send ( id: ").append(id);
             buf.append(", target: ").append(target);
             buf.append(", type: ").append(type);
             buf.append(", event: ").append(event);
@@ -133,12 +132,12 @@ public class SimpleScheduler implements EventDispatcher, Serializable {
             if (delay > 0L) {
                 // Need to schedule this one
                 Timer timer = new Timer(true);
-                timer.schedule(new DelayedEventTask(sendId, event, params), delay);
-                timers.put(sendId, timer);
+                timer.schedule(new DelayedEventTask(id, event, params), delay);
+                timers.put(id, timer);
                 if (log.isDebugEnabled()) {
                     log.debug("Scheduled event '" + event + "' with delay "
                         + delay + "ms, as specified by <send> with id '"
-                        + sendId + "'");
+                        + id + "'");
                 }
             }
             // else short-circuited by Send#execute()
@@ -183,7 +182,7 @@ public class SimpleScheduler implements EventDispatcher, Serializable {
         /**
          * The ID of the &lt;send&gt; element.
          */
-        private String sendId;
+        private String id;
 
         /**
          * The event name.
@@ -198,24 +197,24 @@ public class SimpleScheduler implements EventDispatcher, Serializable {
         /**
          * Constructor.
          *
-         * @param sendId The ID of the send element.
+         * @param id The ID of the send element.
          * @param event The name of the event to be triggered.
          */
-        DelayedEventTask(final String sendId, final String event) {
-            this(sendId, event, null);
+        DelayedEventTask(final String id, final String event) {
+            this(id, event, null);
         }
 
         /**
          * Constructor for events with payload.
          *
-         * @param sendId The ID of the send element.
+         * @param id The ID of the send element.
          * @param event The name of the event to be triggered.
          * @param payload The event payload, if any.
          */
-        DelayedEventTask(final String sendId, final String event,
+        DelayedEventTask(final String id, final String event,
                 final Map<String, Object> payload) {
             super();
-            this.sendId = sendId;
+            this.id = id;
             this.event = event;
             this.payload = payload;
         }
@@ -225,11 +224,11 @@ public class SimpleScheduler implements EventDispatcher, Serializable {
          */
         @Override
         public void run() {
-            timers.remove(sendId);
+            timers.remove(id);
             executor.addEvent(new TriggerEvent(event, TriggerEvent.SIGNAL_EVENT, payload));
             if (log.isDebugEnabled()) {
                 log.debug("Fired event '" + event + "' as scheduled by "
-                    + "<send> with id '" + sendId + "'");
+                    + "<send> with id '" + id + "'");
             }
         }
 

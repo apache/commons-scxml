@@ -66,6 +66,12 @@ public class SCXMLSystemContext implements Context, Serializable {
     private Context systemContext;
 
     /**
+     * The auto-generated next sessionId prefixed ID
+     * @see #generateSessionId()
+     */
+    private long nextSessionSequenceId;
+
+    /**
      * Initialize or replace systemContext
      * @param systemContext the system context to set
      */
@@ -85,6 +91,10 @@ public class SCXMLSystemContext implements Context, Serializable {
 
     public SCXMLSystemContext(Context systemContext) {
         setSystemContext(systemContext);
+    }
+
+    public String generateSessionId() {
+        return getContext().get(SESSIONID_KEY) + "-" + nextSessionSequenceId++;
     }
 
     @Override

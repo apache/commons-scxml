@@ -21,7 +21,7 @@
 
     <state id="state1">
         <onentry>
-            <send event="'invoked.next'" />
+            <send event="invoked.next" />
         </onentry>
         <transition event="invoked.next" target="state2" />
     </state>

@@ -56,13 +56,13 @@ public final class SimpleDispatcher implements EventDispatcher, Serializable {
     /**
     @see EventDispatcher#send(String,String,String,String,Map,Object,long,List)
      */
-    public void send(final String sendId, final String target,
+    public void send(final String id, final String target,
             final String type, final String event,
             final Map<String, Object> params, final Object hints, final long delay,
             final List<Node> externalNodes) {
         if (log.isInfoEnabled()) {
             StringBuffer buf = new StringBuffer();
-            buf.append("send ( sendId: ").append(sendId);
+            buf.append("send ( id: ").append(id);
             buf.append(", target: ").append(target);
             buf.append(", type: ").append(type);
             buf.append(", event: ").append(event);

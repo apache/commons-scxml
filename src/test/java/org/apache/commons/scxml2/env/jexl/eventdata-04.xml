@@ -28,7 +28,7 @@
            </datamodel>
 
            <onentry>
-               <send event="'event.bar'" namelist="one two" delay="'100ms'"/>
+               <send event="event.bar" namelist="one two" delay="100ms"/>
            </onentry>
            <transition event="event.bar">
                <log label="'simulatedUser'" expr="_event.data.one + ', ' + _event.data.two"/>

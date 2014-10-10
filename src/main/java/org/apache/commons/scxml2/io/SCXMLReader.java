@@ -271,11 +271,14 @@ public final class SCXMLReader {
     private static final String ATTR_AUTOFORWARD = "autoforward";
     private static final String ATTR_COND = "cond";
     private static final String ATTR_DELAY = "delay";
+    private static final String ATTR_DELAYEXPR = "delayexpr";
     private static final String ATTR_EVENT = "event";
+    private static final String ATTR_EVENTEXPR = "eventexpr";
     private static final String ATTR_EXMODE = "exmode";
     private static final String ATTR_EXPR = "expr";
     private static final String ATTR_HINTS = "hints";
     private static final String ATTR_ID = "id";
+    private static final String ATTR_IDLOCATION = "idlocation";
     private static final String ATTR_INDEX = "index";
     private static final String ATTR_INITIAL = "initial";
     private static final String ATTR_ITEM = "item";
@@ -288,7 +291,9 @@ public final class SCXMLReader {
     private static final String ATTR_SRC = "src";
     private static final String ATTR_SRCEXPR = "srcexpr";
     private static final String ATTR_TARGET = "target";
+    private static final String ATTR_TARGETEXPR = "targetexpr";
     private static final String ATTR_TYPE = "type";
+    private static final String ATTR_TYPEEXPR = "typeexpr";
     private static final String ATTR_VERSION = "version";
 
     //------------------------- PUBLIC API METHODS -------------------------//
@@ -1756,13 +1761,58 @@ public final class SCXMLReader {
         }
 
         Send send = new Send();
+        send.setId(readAV(reader, ATTR_ID));
+        String attrValue = readAV(reader, ATTR_IDLOCATION);
+        if (attrValue != null) {
+            if (send.getId() != null) {
+                reportConflictingAttribute(reader, configuration, ELEM_SEND, ATTR_ID, ATTR_IDLOCATION);
+            }
+            else {
+                send.setIdlocation(attrValue);
+            }
+        }
         send.setDelay(readAV(reader, ATTR_DELAY));
+        attrValue = readAV(reader, ATTR_DELAYEXPR);
+        if (attrValue != null) {
+            if (send.getDelay() != null) {
+                reportConflictingAttribute(reader, configuration, ELEM_SEND, ATTR_DELAY, ATTR_DELAYEXPR);
+            }
+            else {
+                send.setDelayexpr(attrValue);
+            }
+        }
         send.setEvent(readAV(reader, ATTR_EVENT));
+        attrValue = readAV(reader, ATTR_EVENTEXPR);
+        if (attrValue != null) {
+            if (send.getEvent() != null) {
+                reportConflictingAttribute(reader, configuration, ELEM_SEND, ATTR_EVENT, ATTR_EVENTEXPR);
+            }
+            else {
+                send.setEventexpr(attrValue);
+            }
+        }
         send.setHints(readAV(reader, ATTR_HINTS));
         send.setNamelist(readAV(reader, ATTR_NAMELIST));
-        send.setSendid(readAV(reader, ATTR_SENDID));
         send.setTarget(readAV(reader, ATTR_TARGET));
+        attrValue = readAV(reader, ATTR_TARGETEXPR);
+        if (attrValue != null) {
+            if (send.getTarget() != null) {
+                reportConflictingAttribute(reader, configuration, ELEM_SEND, ATTR_TARGET, ATTR_TARGETEXPR);
+            }
+            else {
+                send.setTargetexpr(attrValue);
+            }
+        }
         send.setType(readAV(reader, ATTR_TYPE));
+        attrValue = readAV(reader, ATTR_TYPEEXPR);
+        if (attrValue != null) {
+            if (send.getType() != null) {
+                reportConflictingAttribute(reader, configuration, ELEM_SEND, ATTR_TYPE, ATTR_TYPEEXPR);
+            }
+            else {
+                send.setTypeexpr(attrValue);
+            }
+        }
         readNamespaces(configuration, send);
 
         Node body = readNode(reader, configuration, XMLNS_SCXML, ELEM_SEND, new String [] {});
@@ -2238,6 +2288,41 @@ public final class SCXMLReader {
                 .append("> in namespace \"").append(nsURI)
                 .append("\" as child of <").append(parent)
                 .append("> at ").append(reader.getLocation());
+        if (!configuration.isSilent() && log.isWarnEnabled()) {
+            log.warn(sb.toString());
+        }
+        if (configuration.isStrict()) {
+            throw new ModelException(sb.toString());
+        }
+        XMLReporter reporter = configuration.reporter;
+        if (reporter != null) {
+            reporter.report(sb.toString(), "COMMONS_SCXML", null, reader.getLocation());
+        }
+    }
+
+    /**
+     * Report a conflicting attribute via the {@link XMLReporter} if available and the class
+     * {@link org.apache.commons.logging.Log}.
+     *
+     * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
+     * @param configuration The {@link Configuration} to use while parsing.
+     * @param element The element name.
+     * @param attr The attribute with which a conflict is detected.
+     * @param conflictingAttr The conflicting attribute
+     *
+     * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
+     * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
+     *                        errors in the SCXML document that may not be identified by the schema).
+     */
+    private static void reportConflictingAttribute(final XMLStreamReader reader, final Configuration configuration,
+                                             final String element, final String attr, final String conflictingAttr)
+            throws XMLStreamException, ModelException {
+
+        org.apache.commons.logging.Log log = LogFactory.getLog(SCXMLReader.class);
+        StringBuilder sb = new StringBuilder();
+        sb.append("Ignoring <").append(element).append("> attribute \"").append(conflictingAttr)
+                .append("\" which conflicts with already defined attribute \"").append(attr)
+                .append("\" at ").append(reader.getLocation());
         if (!configuration.isSilent() && log.isWarnEnabled()) {
             log.warn(sb.toString());
         }

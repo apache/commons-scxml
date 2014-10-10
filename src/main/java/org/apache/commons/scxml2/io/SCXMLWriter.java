@@ -158,11 +158,14 @@ public class SCXMLWriter {
     private static final String ATTR_AUTOFORWARD = "autoforward";
     private static final String ATTR_COND = "cond";
     private static final String ATTR_DELAY = "delay";
+    private static final String ATTR_DELAYEXPR = "delayexpr";
     private static final String ATTR_EVENT = "event";
+    private static final String ATTR_EVENTEXPR = "eventexpr";
     private static final String ATTR_EXMODE = "exmode";
     private static final String ATTR_EXPR = "expr";
     private static final String ATTR_HINTS = "hints";
     private static final String ATTR_ID = "id";
+    private static final String ATTR_IDLOCATION = "idlocation";
     private static final String ATTR_INDEX = "index";
     private static final String ATTR_INITIAL = "initial";
     private static final String ATTR_ITEM = "item";
@@ -175,7 +178,9 @@ public class SCXMLWriter {
     private static final String ATTR_SRC = "src";
     private static final String ATTR_SRCEXPR = "srcexpr";
     private static final String ATTR_TARGET = "target";
+    private static final String ATTR_TARGETEXPR = "targetexpr";
     private static final String ATTR_TYPE = "type";
+    private static final String ATTR_TYPEEXPR = "typeexpr";
     private static final String ATTR_VERSION = "version";
 
     //------------------------- STATIC MEMBERS -------------------------//
@@ -915,11 +920,16 @@ public class SCXMLWriter {
             throws XMLStreamException {
 
         writer.writeStartElement(XMLNS_SCXML, ELEM_SEND);
-        writeAV(writer, ATTR_SENDID, send.getSendid());
+        writeAV(writer, ATTR_ID, send.getId());
+        writeAV(writer, ATTR_IDLOCATION, send.getIdlocation());
         writeAV(writer, ATTR_EVENT, send.getEvent());
+        writeAV(writer, ATTR_EVENTEXPR, send.getEventexpr());
         writeAV(writer, ATTR_TARGET, send.getTarget());
+        writeAV(writer, ATTR_TARGETEXPR, send.getTargetexpr());
         writeAV(writer, ATTR_TYPE, send.getType());
+        writeAV(writer, ATTR_TYPEEXPR, send.getTypeexpr());
         writeAV(writer, ATTR_DELAY, send.getDelay());
+        writeAV(writer, ATTR_DELAYEXPR, send.getDelayexpr());
         writeAV(writer, ATTR_NAMELIST, send.getNamelist());
         writeAV(writer, ATTR_HINTS, send.getHints());
 

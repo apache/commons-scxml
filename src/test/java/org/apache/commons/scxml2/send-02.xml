@@ -25,49 +25,49 @@
          the state "seventy", then hop over and end up in "ninety" -->
     <state id="ten">
         <onentry>
-            <send event="'done.state.' + 'ten'" />
+            <send eventexpr="'done.state.' + 'ten'" />
         </onentry>
         <transition event="done.state.ten" target="twenty" />
     </state>
 
     <state id="twenty">
         <onentry>
-            <send event="'done.state.twenty'" type="'scxml'" />
+            <send event="done.state.twenty" type="scxml" />
         </onentry>
         <transition event="done.state.twenty" target="thirty" />
     </state>
 
     <state id="thirty">
         <onentry>
-            <send event="'done.state.thirty'" type="' sCxML  '" />
+            <send event="done.state.thirty" type=" sCxML  " />
         </onentry>
         <transition event="done.state.thirty" target="forty" />
     </state>
 
     <state id="forty">
         <onentry>
-            <send event="'done.state.forty'" type=" " target=" " />
+            <send event="done.state.forty" type=" " target=" " />
         </onentry>
         <transition event="done.state.forty" target="fifty" />
     </state>
 
     <state id="fifty">
         <onentry>
-            <send event="'done.state.fifty'" target="'  '" />
+            <send event="done.state.fifty" target="  " />
         </onentry>
         <transition event="done.state.fifty" target="sixty" />
     </state>
 
     <state id="sixty">
         <onentry>
-            <send event="'done.state.sixty'" type="'scxml'" target=" " />
+            <send event="done.state.sixty" type="scxml" target=" " />
         </onentry>
         <transition event="done.state.sixty" target="seventy" />
     </state>
 
     <state id="seventy">
         <onentry>
-            <send event="'done.state.seventy'" type="'scxml'" target="'foo'" />
+            <send event="done.state.seventy" type="scxml" target="foo" />
         </onentry>
 
         <!-- This transition should not be followed since

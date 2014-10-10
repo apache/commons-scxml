@@ -171,7 +171,7 @@ public class SCXMLReaderTest {
         List<Action> actions = ten2twenty.getActions();
         Assert.assertEquals(1, actions.size());
         Send send = (Send) actions.get(0);
-        Assert.assertEquals("send1", send.getSendid());
+        Assert.assertEquals("send1", send.getId());
         /* Serialize
         scxmlAsString = serialize(scxml);
         Assert.assertNotNull(scxmlAsString);

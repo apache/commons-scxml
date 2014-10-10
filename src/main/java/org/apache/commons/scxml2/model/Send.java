@@ -27,9 +27,12 @@ import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.SCXMLExpressionException;
+import org.apache.commons.scxml2.SCXMLSystemContext;
 import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.semantics.ErrorConstants;
 import org.w3c.dom.Node;
+import org.w3c.dom.Text;
+import org.w3c.dom.CharacterData;
 
 /**
  * The class in this SCXML object model that corresponds to the
@@ -73,23 +76,43 @@ public class Send extends Action implements ExternalContent {
     /**
      * The ID of the send message.
      */
-    private String sendid;
+    private String id;
 
     /**
-     * An expression returning the target location of the event.
+     * Path expression evaluating to a location within a previously defined XML data tree.
+     */
+    private String idlocation;
+
+    /**
+     * The target location of the event.
      */
     private String target;
 
+
     /**
-     * The type of the Event I/O Processor that the event.
-     * should be dispatched to
+     * An expression specifying the target location of the event.
+     */
+    private String targetexpr;
+
+    /**
+     * The type of the Event I/O Processor that the event should be dispatched to.
      */
     private String type;
 
     /**
-     * The event is dispatched after the delay interval elapses.
+     * An expression defining the type of the Event I/O Processor that the event should be dispatched to.
+     */
+    private String typeexpr;
+
+    /**
+     * The delay the event is dispatched after.
      */
     private String delay;
+
+    /**
+     * An expression defining the delay the event is dispatched after.
+     */
+    private String delayexpr;
 
     /**
      * The data containing information which may be used by the
@@ -113,11 +136,31 @@ public class Send extends Action implements ExternalContent {
     private String event;
 
     /**
+     * An expression defining the type of event being generated.
+     */
+    private String eventexpr;
+
+    /**
      * Constructor.
      */
     public Send() {
         super();
         this.externalNodes = new ArrayList<Node>();
+    }
+
+    /**
+     * @return the idlocation
+     */
+    public String getIdlocation() {
+        return idlocation;
+    }
+
+    /**
+     * Set the idlocation expression
+     * @param idlocation The idlocation expression
+     */
+    public void setIdlocation(final String idlocation) {
+        this.idlocation = idlocation;
     }
 
     /**
@@ -136,6 +179,21 @@ public class Send extends Action implements ExternalContent {
      */
     public final void setDelay(final String delay) {
         this.delay = delay;
+    }
+
+    /**
+     * @return The delay expression
+     */
+    public String getDelayexpr() {
+        return delayexpr;
+    }
+
+    /**
+     * Set the delay expression
+     * @param delayexpr The delay expression to set
+     */
+    public void setDelayexpr(final String delayexpr) {
+        this.delayexpr = delayexpr;
     }
 
     /**
@@ -186,19 +244,19 @@ public class Send extends Action implements ExternalContent {
     /**
      * Get the identifier for this &lt;send&gt; element.
      *
-     * @return String Returns the sendid.
+     * @return String Returns the id.
      */
-    public final String getSendid() {
-        return sendid;
+    public final String getId() {
+        return id;
     }
 
     /**
      * Set the identifier for this &lt;send&gt; element.
      *
-     * @param sendid The sendid to set.
+     * @param id The id to set.
      */
-    public final void setSendid(final String sendid) {
-        this.sendid = sendid;
+    public final void setId(final String id) {
+        this.id = id;
     }
 
     /**
@@ -220,6 +278,21 @@ public class Send extends Action implements ExternalContent {
     }
 
     /**
+     * @return The target expression
+     */
+    public String getTargetexpr() {
+        return targetexpr;
+    }
+
+    /**
+     * Set the target expression
+     * @param targetexpr The target expression to set
+     */
+    public void setTargetexpr(final String targetexpr) {
+        this.targetexpr = targetexpr;
+    }
+
+    /**
      * Get the type for this &lt;send&gt; element.
      *
      * @return String Returns the type.
@@ -235,6 +308,21 @@ public class Send extends Action implements ExternalContent {
      */
     public final void setType(final String type) {
         this.type = type;
+    }
+
+    /**
+     * @return The type expression
+     */
+    public String getTypeexpr() {
+        return typeexpr;
+    }
+
+    /**
+     * Sets the type expression
+     * @param typeexpr The type expression to set
+     */
+    public void setTypeexpr(final String typeexpr) {
+        this.typeexpr = typeexpr;
     }
 
     /**
@@ -256,6 +344,21 @@ public class Send extends Action implements ExternalContent {
     }
 
     /**
+     * @return The event expression
+     */
+    public String getEventexpr() {
+        return eventexpr;
+    }
+
+    /**
+     * Sets the event expression
+     * @param eventexpr The event expression to set
+     */
+    public void setEventexpr(final String eventexpr) {
+        this.eventexpr = eventexpr;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -271,25 +374,41 @@ public class Send extends Action implements ExternalContent {
         if (hints != null) {
             hintsValue = eval.eval(ctx, hints);
         }
+        if (id == null) {
+            id = ((SCXMLSystemContext)exctx.getGlobalContext().getParent()).generateSessionId();
+            if (idlocation != null) {
+                Node location = eval.evalLocation(ctx, idlocation);
+                if (location != null) {
+                    setNodeValue(location, id);
+                }
+                else {
+                    throw new ModelException("<send>: idlocation does not point to a <data> node");
+                }
+            }
+        }
         String targetValue = target;
-        if (target != null) {
-            targetValue = (String) eval.eval(ctx, target);
+        if (targetValue == null && targetexpr != null) {
+            targetValue = (String) eval.eval(ctx, targetexpr);
             if ((targetValue == null || targetValue.trim().length() == 0)
                     && exctx.getAppLog().isWarnEnabled()) {
-                exctx.getAppLog().warn("<send>: target expression \"" + target
+                exctx.getAppLog().warn("<send>: target expression \"" + targetexpr
                     + "\" evaluated to null or empty String");
             }
         }
-        String typeValue;
-        if (type != null) {
-            typeValue = (String) eval.eval(ctx, type);
+        String typeValue = type;
+        if (typeValue == null && typeexpr != null) {
+            typeValue = (String) eval.eval(ctx, typeexpr);
             if ((typeValue == null || typeValue.trim().length() == 0)
                     && exctx.getAppLog().isWarnEnabled()) {
-                exctx.getAppLog().warn("<send>: type expression \"" + type
+                exctx.getAppLog().warn("<send>: type expression \"" + typeexpr
                     + "\" evaluated to null or empty String");
             }
-        } else {
+        }
+        if (typeValue == null) {
             // must default to 'scxml' when unspecified
+            typeValue = TYPE_SCXML;
+        }
+        else if (!TYPE_SCXML.equals(typeValue) && typeValue.trim().equalsIgnoreCase(TYPE_SCXML)) {
             typeValue = TYPE_SCXML;
         }
         Map<String, Object> params = null;
@@ -308,24 +427,30 @@ public class Send extends Action implements ExternalContent {
             }
         }
         long wait = 0L;
-        if (delay != null) {
+        String delayString = delay;
+        if (delayString == null && delayexpr != null) {
             Object delayValue = eval.eval(ctx, delay);
             if (delayValue != null) {
-                String delayString = delayValue.toString();
-                wait = parseDelay(delayString, exctx.getAppLog());
+                delayString = delayValue.toString();
             }
         }
+        if (delayString != null) {
+            wait = parseDelay(delayString, exctx.getAppLog());
+        }
         String eventValue = event;
-        if (event != null) {
-            eventValue = (String) eval.eval(ctx, event);
+        if (eventValue == null && eventexpr != null) {
+            eventValue = (String) eval.eval(ctx, eventexpr);
             if ((eventValue == null || eventValue.trim().length() == 0) && exctx.getAppLog().isWarnEnabled()) {
-                exctx.getAppLog().warn("<send>: event expression \"" + event
-                    + "\" evaluated to null or empty String");
+                throw new SCXMLExpressionException("<send>: event expression \"" + eventexpr
+                        + "\" evaluated to null or empty String");
             }
         }
         // Lets see if we should handle it ourselves
-        if (typeValue != null
-              && typeValue.trim().equalsIgnoreCase(TYPE_SCXML)) {
+        if (typeValue != null && TYPE_SCXML.equals(typeValue)) {
+            if (eventValue == null) {
+                // event required when type == http://www.w3.org/TR/scxml/#SCXMLEventProcessor
+                throw new ModelException("Event parameter is required for <send> with type=\"scxml\"");
+            }
             if (targetValue == null || targetValue.trim().length() == 0) {
                 // TODO: Remove both short-circuit passes in v1.0
                 if (wait == 0L) {
@@ -357,7 +482,7 @@ public class Send extends Action implements ExternalContent {
                 + "ms");
         }
         // Else, let the EventDispatcher take care of it
-        exctx.getEventDispatcher().send(sendid, targetValue, typeValue, eventValue,
+        exctx.getEventDispatcher().send(id, targetValue, typeValue, eventValue,
             params, hintsValue, wait, externalNodes);
     }
 
@@ -399,6 +524,43 @@ public class Send extends Action implements ExternalContent {
 
         }
         return wait;
+    }
+
+    /**
+     * Set node value, depending on its type, from a String.
+     *
+     * @param node A Node whose value is to be set
+     * @param value The new value
+     */
+    private void setNodeValue(final Node node, final String value) {
+        switch(node.getNodeType()) {
+            case Node.ATTRIBUTE_NODE:
+                node.setNodeValue(value);
+                break;
+            case Node.ELEMENT_NODE:
+                //remove all text children
+                if (node.hasChildNodes()) {
+                    Node child = node.getFirstChild();
+                    while (child != null) {
+                        if (child.getNodeType() == Node.TEXT_NODE) {
+                            node.removeChild(child);
+                        }
+                        child = child.getNextSibling();
+                    }
+                }
+                //create a new text node and append
+                Text txt = node.getOwnerDocument().createTextNode(value);
+                node.appendChild(txt);
+                break;
+            case Node.TEXT_NODE:
+            case Node.CDATA_SECTION_NODE:
+                ((CharacterData) node).setData(value);
+                break;
+            default:
+                String err = "Trying to set value of a strange Node type: "
+                        + node.getNodeType();
+                throw new IllegalArgumentException(err);
+        }
     }
 }
 

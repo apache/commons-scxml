@@ -40,7 +40,7 @@ public interface EventDispatcher {
     /**
      * Send this message to the target.
      *
-     * @param sendId The ID of the send message
+     * @param id The ID of the send message
      * @param target An expression returning the target location of the event
      * @param type The type of the Event I/O Processor that the event should
      *  be dispatched to
@@ -53,7 +53,7 @@ public interface EventDispatcher {
      * @param externalNodes The list of external nodes associated with
      *  the &lt;send&gt; element.
      */
-    void send(String sendId, String target, String type,
+    void send(String id, String target, String type,
             String event, Map<String, Object> params, Object hints,
             long delay, List<Node> externalNodes);
 
