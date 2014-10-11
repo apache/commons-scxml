@@ -476,11 +476,15 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                 step.getDefaultHistoryTransitions().put(h.getParent(), h.getTransition());
                 for (TransitionTarget dtt : h.getTransition().getTargets()) {
                     addDescendantStatesToEnter(exctx, step, dtt);
+                }
+                for (TransitionTarget dtt : h.getTransition().getTargets()) {
                     addAncestorStatesToEnter(exctx, step, dtt, tt.getParent());
                 }
             } else {
                 for (TransitionTarget dtt : lastConfiguration) {
                     addDescendantStatesToEnter(exctx, step, dtt);
+                }
+                for (TransitionTarget dtt : lastConfiguration) {
                     addAncestorStatesToEnter(exctx, step, dtt, tt.getParent());
                 }
             }
@@ -499,6 +503,8 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                 step.getDefaultEntrySet().add(es);
                 for (TransitionTarget dtt : ((State)es).getInitial().getTransition().getTargets()) {
                     addDescendantStatesToEnter(exctx, step, dtt);
+                }
+                for (TransitionTarget dtt : ((State)es).getInitial().getTransition().getTargets()) {
                     addAncestorStatesToEnter(exctx, step, dtt, tt);
                 }
             }
