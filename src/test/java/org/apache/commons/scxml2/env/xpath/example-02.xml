@@ -16,7 +16,7 @@
   * limitations under the License.
 -->
 <!-- SCXML XPath environment: example script using XPath with namespaces -->
-<scxml xmlns="http://www.w3.org/2005/07/scxml" initial="start" version="1.0"
+<scxml xmlns="http://www.w3.org/2005/07/scxml" initial="start" datamodel="xpath" version="1.0"
        xmlns:a="http://example.com/a"
        xmlns:b="http://example.com/b"
        xmlns:c="http://example.com/c">

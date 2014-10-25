@@ -16,49 +16,18 @@
  */
 package org.apache.commons.scxml2.model;
 
-import java.net.URL;
 import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.TriggerEvent;
-import org.apache.commons.scxml2.env.SimpleSCXMLListener;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 /**
  * Unit tests {@link org.apache.commons.scxml2.SCXMLExecutor}.
  */
-public class    StatelessModelTest {
-
-    // Test data
-    private URL stateless01jexl, stateless01par;
-    private SCXML scxml01jexl, scxml01par, scxml02par;
-    private SCXMLExecutor exec01, exec02;
-
-    /**
-     * Set up instance variables required by this test case.
-     */
-    @Before
-    public void setUp() throws Exception {
-        stateless01jexl = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/env/jexl/stateless-01.xml");
-        stateless01par = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/model/stateless-parallel-01.xml");
-        scxml01jexl = SCXMLTestHelper.parse(stateless01jexl);
-        scxml01par = SCXMLTestHelper.parse(stateless01par);
-        scxml02par = SCXMLTestHelper.parse(stateless01par);
-    }
-
-    /**
-     * Tear down instance variables required by this test case.
-     */
-    @After
-    public void tearDown() {
-        stateless01jexl = null;
-    }
+public class StatelessModelTest {
 
     /**
      * Test the stateless model, simultaneous executions, JEXL expressions
@@ -66,12 +35,13 @@ public class    StatelessModelTest {
     @Test
     public void testStatelessModelSimultaneousJexl() throws Exception {
     	// parse once, use many times
-        exec01 = SCXMLTestHelper.getExecutor(scxml01jexl);
-        Assert.assertNotNull(exec01);
-        exec02 = SCXMLTestHelper.getExecutor(scxml01jexl);
-        Assert.assertNotNull(exec02);
+        SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/env/jexl/stateless-01.xml");
+        SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor(scxml);
+        exec01.go();
+        SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor(scxml);
+        exec02.go();
         Assert.assertFalse(exec01 == exec02);
-        runSimultaneousTest();
+        runSimultaneousTest(exec01, exec02);
     }
 
     /**
@@ -80,10 +50,11 @@ public class    StatelessModelTest {
     @Test
     public void testStatelessModelSequentialJexl() throws Exception {
         // rinse and repeat
+        SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/env/jexl/stateless-01.xml");
         for (int i = 0; i < 3; i++) {
-            exec01 = SCXMLTestHelper.getExecutor(scxml01jexl);
-            Assert.assertNotNull(exec01);
-            runSequentialTest();
+            SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor(scxml);
+            exec01.go();
+            runSequentialTest(exec01);
         }
     }
 
@@ -92,10 +63,11 @@ public class    StatelessModelTest {
      */    
     @Test
     public void testStatelessModelParallelSharedSCXML() throws Exception {
-        exec01 = SCXMLTestHelper.getExecutor(scxml01par);
-        Assert.assertNotNull(exec01);
-        exec02 = SCXMLTestHelper.getExecutor(scxml01par);
-        Assert.assertNotNull(exec02);
+        SCXML scxml01par = SCXMLTestHelper.parse("org/apache/commons/scxml2/model/stateless-parallel-01.xml");
+        SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor(scxml01par);
+        exec01.go();
+        SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor(scxml01par);
+        exec02.go();
         Assert.assertFalse(exec01 == exec02);
 
         Set<EnterableState> currentStates = exec01.getCurrentStatus().getStates();
@@ -118,11 +90,14 @@ public class    StatelessModelTest {
     }
 
     /**
-     * Test sharing two SCXML objects between one executor (not recommended)
+     * TODO: Test sharing two SCXML objects between one executor (not recommended)
+     *
     @Test
     public void testStatelessModelParallelSwapSCXML() throws Exception {
-        exec01 = SCXMLTestHelper.getExecutor(scxml01par);
-        Assert.assertNotNull(exec01);
+        SCXML scxml01par = SCXMLTestHelper.parse("org/apache/commons/scxml2/model/stateless-parallel-01.xml");
+        SCXML scxml02par = SCXMLTestHelper.parse("org/apache/commons/scxml2/model/stateless-parallel-01.xml");
+        SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor(scxml01par);
+        exec01.go();
         Assert.assertTrue(scxml01par != scxml02par);
 
         Set<EnterableState> currentStates = exec01.getCurrentStatus().getStates();
@@ -132,7 +107,6 @@ public class    StatelessModelTest {
         checkParallelStates(currentStates, "state1.final", "state2.init", "exec01");
         exec01.setStateMachine(scxml02par);
         exec01.addListener(scxml02par, new SimpleSCXMLListener());
-
         currentStates = fireEvent("state2.event", exec01);
         checkParallelStates(currentStates, "next", null, "exec01");
     }
@@ -167,7 +141,7 @@ public class    StatelessModelTest {
         Assert.fail(label + " in unexpected state " + cs1);
     }
 
-    private void runSimultaneousTest() throws Exception {
+    private void runSimultaneousTest(SCXMLExecutor exec01, SCXMLExecutor exec02) throws Exception {
         //// Interleaved
         // exec01
         Set<EnterableState> currentStates = exec01.getCurrentStatus().getStates();
@@ -193,16 +167,16 @@ public class    StatelessModelTest {
         Assert.assertEquals("thirty", currentStates.iterator().next().getId());
     }
 
-    private void runSequentialTest() throws Exception {
-        Set<EnterableState> currentStates = exec01.getCurrentStatus().getStates();
+    private void runSequentialTest(SCXMLExecutor exec) throws Exception {
+        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("ten", (currentStates.iterator().
             next()).getId());
-        currentStates = fireEvent("done.state.ten", exec01);
+        currentStates = fireEvent("done.state.ten", exec);
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("twenty", (currentStates.iterator().
             next()).getId());
-        currentStates = fireEvent("done.state.twenty", exec01);
+        currentStates = fireEvent("done.state.twenty", exec);
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("thirty", (currentStates.iterator().
             next()).getId());

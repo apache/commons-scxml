@@ -16,15 +16,10 @@
  */
 package org.apache.commons.scxml2.model;
 
-import java.net.URL;
-
+import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
-import org.apache.commons.scxml2.env.jexl.JexlContext;
-import org.apache.commons.scxml2.env.jexl.JexlEvaluator;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 /**
  * Unit tests {@link org.apache.commons.scxml2.model.Assign}.
@@ -38,63 +33,29 @@ import org.junit.Test;
  */
 public class ActionsTest {
 
-    // Test data
-    private URL actionsSample01, actionsSample02, actionsSample03;
-    private JexlEvaluator evaluator;
-    private JexlContext ctx;
-    private SCXMLExecutor exec;
-
-    /**
-     * Set up instance variables required by this test case.
-     */
-    @Before
-    public void setUp() {
-        actionsSample01 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/model/actions-state-test.xml");
-        actionsSample02 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/model/actions-parallel-test.xml");
-        actionsSample03 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/model/actions-initial-test.xml");
-        evaluator = new JexlEvaluator();
-        ctx = new JexlContext();
-    }
-
-    /**
-     * Tear down instance variables required by this test case.
-     */
-    @After
-    public void tearDown() {
-        actionsSample01 = actionsSample02 = actionsSample03 = null;
-        evaluator = null;
-        ctx = null;
-        exec = null;
-    }
-
-    /**
-     * Test the implementation
-     */    
     @Test
     public void testStateActions() throws Exception {
-        SCXML scxml = SCXMLTestHelper.parse(actionsSample01);
-        runTest(scxml);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/actions-state-test.xml");
+        exec.go();
+        runTest(exec);
     }
     
     @Test
     public void testParallelActions() throws Exception {
-        SCXML scxml = SCXMLTestHelper.parse(actionsSample02);
-        runTest(scxml);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/actions-parallel-test.xml");
+        exec.go();
+        runTest(exec);
     }
     
     @Test
     public void testInitialActions() throws Exception {
-        SCXML scxml = SCXMLTestHelper.parse(actionsSample03);
-        runTest(scxml);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/actions-initial-test.xml");
+        exec.go();
+        runTest(exec);
     }
 
-    private void runTest(SCXML scxml) throws Exception {
-        exec = SCXMLTestHelper.getExecutor(scxml, ctx, evaluator);
-        JexlContext ctx = (JexlContext) SCXMLTestHelper.lookupContext(exec,
-            "actionsTest");
+    private void runTest(SCXMLExecutor exec) throws Exception {
+        Context ctx = SCXMLTestHelper.lookupContext(exec, "actionsTest");
         Assert.assertEquals(ctx.get("foo"), "foobar");
         Assert.assertEquals("Missed event transition",
             true, ctx.get("eventsent"));

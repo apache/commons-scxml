@@ -16,50 +16,21 @@
  */
 package org.apache.commons.scxml2.model;
 
-import java.net.URL;
 import java.util.Set;
 
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 /**
  * Unit tests for &lt;assign&gt; element, particular the "src" attribute.
  */
 public class AssignTest {
 
-    // Test data
-    private URL assign01, assign02;
-    private SCXMLExecutor exec;
-
-    /**
-     * Set up instance variables required by this test case.
-     */
-    @Before
-    public void setUp() {
-        assign01 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/model/assign-test-01.xml");
-        assign02 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/model/assign-test-02.xml");
-    }
-
-    /**
-     * Tear down instance variables required by this test case.
-     */
-    @After
-    public void tearDown() {
-        assign01 = assign02 = null;
-        exec = null;
-    }
-
-    /**
-     * Test the implementation
-     */    
     @Test
     public void testAssignSrc() throws Exception {
-        exec = SCXMLTestHelper.getExecutor(assign01);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/assign-test-01.xml");
+        exec.go();
         Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("assign3", currentStates.iterator().next().getId());
@@ -68,7 +39,8 @@ public class AssignTest {
     
     @Test
     public void testAssignDeep() throws Exception {
-        exec = SCXMLTestHelper.getExecutor(assign02);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/assign-test-02.xml");
+        exec.go();
         Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("assign3", currentStates.iterator().next().getId());

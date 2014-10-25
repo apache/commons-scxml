@@ -22,8 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.scxml2.Context;
-import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.SCXMLTestHelper;
@@ -35,9 +33,7 @@ import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.SCXML;
 
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -46,41 +42,16 @@ import org.junit.Test;
  */
 public class JSExampleTest {
 
-    // Test data
-    private URL example01;
-    private SCXMLExecutor exec;
-
-    /**
-     * Set up instance variables required by this test case.
-     */
-    @Before
-    public void setUp() {
-        example01 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/env/javascript/example-01.xml");
-    }
-
-    /**
-     * Tear down instance variables required by this test case.
-     */
-    @After
-    public void tearDown() {
-        example01 = null;
-    }
-
     // TEST METHODS
     @Test
     public void testExample01Sample() throws Exception {
 
         List<CustomAction> actions  = new ArrayList<CustomAction>();        
-        actions.add(new CustomAction("http://my.custom-actions.domain",
-            "eventdatamaptest", EventDataMapTest.class));
+        actions.add(new CustomAction("http://my.custom-actions.domain", "eventdatamaptest", EventDataMapTest.class));
 
-        SCXML scxml = SCXMLTestHelper.parse(example01,actions);
-        Evaluator evaluator = new JSEvaluator();
-        Context context = new JSContext();
-        exec = SCXMLTestHelper.getExecutor(scxml, context, evaluator);
-
-        Assert.assertNotNull(exec);
+        SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/env/javascript/example-01.xml", actions);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
+        exec.go();
         Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("end", currentStates.iterator().next().getId());

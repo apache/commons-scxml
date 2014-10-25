@@ -16,13 +16,10 @@
  */
 package org.apache.commons.scxml2;
 
-import java.net.URL;
 import java.util.Set;
 
 import org.apache.commons.scxml2.model.EnterableState;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 /**
  * Unit tests {@link org.apache.commons.scxml2.SCXMLExecutor}.
@@ -30,36 +27,13 @@ import org.junit.Test;
  */
 public class WildcardTest {
 
-    // Test data
-    private URL wildcard01, wildcard02;
-    private SCXMLExecutor exec;
-
-    /**
-     * Set up instance variables required by this test case.
-     */
-    @Before
-    public void setUp() {
-        wildcard01 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/env/jexl/wildcard-01.xml");
-        wildcard02 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/env/jexl/wildcard-02.xml");
-    }
-
-    /**
-     * Tear down instance variables required by this test case.
-     */
-    @After
-    public void tearDown() {
-        wildcard01 = wildcard02 = null;
-    }
-
     /**
      * Test the SCXML documents, usage of "_event.data"
      */
     @Test
     public void testWildcard01Sample() throws Exception {
-    	exec = SCXMLTestHelper.getExecutor(wildcard01);
-        Assert.assertNotNull(exec);
+    	SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/wildcard-01.xml");
+        exec.go();
         Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state1", currentStates.iterator().next().getId());
@@ -71,8 +45,8 @@ public class WildcardTest {
 
     @Test
     public void testWildcard02Sample() throws Exception {
-        exec = SCXMLTestHelper.getExecutor(SCXMLTestHelper.parse(wildcard02));
-        Assert.assertNotNull(exec);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/wildcard-02.xml");
+        exec.go();
         Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state2", currentStates.iterator().next().getId());

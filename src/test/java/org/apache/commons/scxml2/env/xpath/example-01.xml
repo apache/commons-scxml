@@ -17,7 +17,7 @@
 -->
 <!-- SCXML XPath environment: example script -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
-       xmlns:cs="http://commons.apache.org/scxml" initial="start"
+       xmlns:cs="http://commons.apache.org/scxml" initial="start" datamodel="xpath"
        version="1.0">
 
     <datamodel>
@@ -38,17 +38,17 @@
     <state id="start">
         <onentry>
             <log label="Lion"
-                 expr="cs:Data('jungle','animals/lion/name')" />
+                 expr="$jungle/animals/lion/name" />
         </onentry>
-        <transition cond="cs:Data('jungle','animals/lion/age') = 12"
+        <transition cond="$jungle/animals/lion/age = 12"
                     target="mid" />
     </state>
 
     <state id="mid">
         <onentry>
             <log label="Total age"
-                expr="cs:Data('jungle','animals/lion/age') +
-                      cs:Data('jungle','animals/tiger/age')" />
+                expr="$jungle/animals/lion/age +
+                      $jungle/animals/tiger/age" />
         </onentry>
         <transition event="foo" cond="$_event/data/test/status = 'complete'"
                     target="end" />

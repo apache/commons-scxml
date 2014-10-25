@@ -16,14 +16,11 @@
  */
 package org.apache.commons.scxml2;
 
-import java.net.URL;
 import java.util.Set;
 
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.TransitionTarget;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 /**
  * Unit tests for testing conflict resolution amongst multiple transitions
@@ -39,46 +36,10 @@ import org.junit.Test;
  */
 public class TieBreakerTest {
 
-    // Test data
-    private URL tiebreaker01, tiebreaker02, tiebreaker03, tiebreaker04,
-        tiebreaker05, tiebreaker06;
-    private SCXMLExecutor exec;
-
-    /**
-     * Set up instance variables required by this test case.
-     */
-    @Before
-    public void setUp() {
-        tiebreaker01 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/tie-breaker-01.xml");
-        tiebreaker02 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/tie-breaker-02.xml");
-        tiebreaker03 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/tie-breaker-03.xml");
-        tiebreaker04 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/tie-breaker-04.xml");
-        tiebreaker05 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/tie-breaker-05.xml");
-        tiebreaker06 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/tie-breaker-06.xml");
-    }
-
-    /**
-     * Tear down instance variables required by this test case.
-     */
-    @After
-    public void tearDown() {
-        tiebreaker01 = tiebreaker02 = tiebreaker03 = tiebreaker04 =
-            tiebreaker05 = tiebreaker06 = null;
-    }
-
-    /**
-     * Test the implementation
-     */
     @Test
     public void testTieBreaker01() throws Exception {
-        exec = SCXMLTestHelper.getExecutor(tiebreaker01);
-        Assert.assertNotNull(exec);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/tie-breaker-01.xml");
+        exec.go();
         Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("ten", currentStates.iterator().next().getId());
@@ -89,8 +50,8 @@ public class TieBreakerTest {
 
     @Test
     public void testTieBreaker02() throws Exception {
-        exec = SCXMLTestHelper.getExecutor(tiebreaker02);
-        Assert.assertNotNull(exec);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/tie-breaker-02.xml");
+        exec.go();
         Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("eleven", currentStates.iterator().next().getId());
@@ -101,8 +62,8 @@ public class TieBreakerTest {
 
     @Test
     public void testTieBreaker03() throws Exception {
-        exec = SCXMLTestHelper.getExecutor(tiebreaker03);
-        Assert.assertNotNull(exec);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/tie-breaker-03.xml");
+        exec.go();
         Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("eleven", currentStates.iterator().next().getId());
@@ -113,8 +74,8 @@ public class TieBreakerTest {
 
     @Test
     public void testTieBreaker04() throws Exception {
-        exec = SCXMLTestHelper.getExecutor(tiebreaker04);
-        Assert.assertNotNull(exec);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/tie-breaker-04.xml");
+        exec.go();
         Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "event_2");
         Assert.assertEquals(1, currentStates.size());
         currentStates = SCXMLTestHelper.fireEvent(exec, "event_1");
@@ -123,8 +84,8 @@ public class TieBreakerTest {
 
     @Test
     public void testTieBreaker05() throws Exception {
-        exec = SCXMLTestHelper.getExecutor(tiebreaker05);
-        Assert.assertNotNull(exec);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/tie-breaker-05.xml");
+        exec.go();
         Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(3, currentStates.size());
         for (TransitionTarget tt : currentStates) {
@@ -143,10 +104,9 @@ public class TieBreakerTest {
 
     @Test
     public void testTieBreaker06() throws Exception {
-        exec = SCXMLTestHelper.getExecutor(SCXMLTestHelper.parse(tiebreaker06));
-        Assert.assertNotNull(exec);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/tie-breaker-06.xml");
+        exec.go();
         Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
     }
 }
-

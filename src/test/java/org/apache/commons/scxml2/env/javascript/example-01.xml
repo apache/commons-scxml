@@ -20,6 +20,7 @@
        xmlns:scxml  = 'http://commons.apache.org/scxml'
        xmlns:my     = 'http://my.custom-actions.domain'
        initial      = 'start'
+       datamodel    = "ecmascript"
        version      = '1.0'>
 
   <!-- DATA MODEL -->

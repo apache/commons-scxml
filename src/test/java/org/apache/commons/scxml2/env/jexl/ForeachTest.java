@@ -16,11 +16,8 @@
  */
 package org.apache.commons.scxml2.env.jexl;
 
-import java.net.URL;
-
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
-import org.apache.commons.scxml2.model.SCXML;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -31,11 +28,8 @@ public class ForeachTest {
 
     @Test
     public void testForeach() throws Exception {
-        URL document = this.getClass().getClassLoader().getResource("org/apache/commons/scxml2/env/jexl/foreach.xml");
-        SCXML scxml = SCXMLTestHelper.parse(document);
-        Assert.assertNotNull(scxml);
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml, new JexlContext(), new JexlEvaluator());
-        Assert.assertNotNull(exec);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/foreach.xml");
+        exec.go();
         Assert.assertTrue(exec.getCurrentStatus().isFinal());
     }
 }

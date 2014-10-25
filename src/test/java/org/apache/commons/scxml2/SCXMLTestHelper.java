@@ -33,12 +33,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.scxml2.env.SimpleDispatcher;
 import org.apache.commons.scxml2.env.Tracer;
-import org.apache.commons.scxml2.env.jexl.JexlEvaluator;
 import org.apache.commons.scxml2.io.SCXMLReader;
 import org.apache.commons.scxml2.io.SCXMLReader.Configuration;
 import org.apache.commons.scxml2.model.CustomAction;
 import org.apache.commons.scxml2.model.EnterableState;
-import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.TransitionTarget;
 import org.junit.Assert;
@@ -55,14 +53,13 @@ public class SCXMLTestHelper {
      * "target" directory (so it can be removed via a clean build).
      */
     public static final String SERIALIZATION_DIR = "target/serialization";
-    public static final String SERIALIZATION_FILE_PREFIX =
-        SERIALIZATION_DIR + "/scxml";
+    public static final String SERIALIZATION_FILE_PREFIX = SERIALIZATION_DIR + "/scxml";
     public static final String SERIALIZATION_FILE_SUFFIX = ".ser";
 
     // Generate a unique sequence number for the serialization files
     private static int sequence=0;
 
-    private synchronized static String getSequenceNumber(){
+    private synchronized static String getSequenceNumber() {
         return Integer.toString(++sequence);
     }
 
@@ -70,15 +67,24 @@ public class SCXMLTestHelper {
         return SCXMLTestHelper.class.getClassLoader().getResource(name);
     }
 
+    public static SCXML parse(final String scxmlResource) throws Exception {
+        Assert.assertNotNull(scxmlResource);
+        return parse(getResource(scxmlResource), null);
+    }
+
     public static SCXML parse(final URL url) throws Exception {
         return parse(url, null);
     }
 
+    public static SCXML parse(final String scxmlResource, final List<CustomAction> customActions) throws Exception {
+        Assert.assertNotNull(scxmlResource);
+        return parse(getResource(scxmlResource), customActions);
+    }
+
     public static SCXML parse(final URL url, final List<CustomAction> customActions) throws Exception {
         Assert.assertNotNull(url);
-        SCXML scxml = null;
         Configuration configuration = new Configuration(null, null, customActions);
-        scxml = SCXMLReader.read(url, configuration);
+        SCXML scxml = SCXMLReader.read(url, configuration);
         Assert.assertNotNull(scxml);
         SCXML roundtrip = testModelSerializability(scxml);
         return roundtrip;
@@ -86,101 +92,42 @@ public class SCXMLTestHelper {
 
     public static SCXML parse(final Reader scxmlReader, final List<CustomAction> customActions) throws Exception {
         Assert.assertNotNull(scxmlReader);
-        SCXML scxml = null;
         Configuration configuration = new Configuration(null, null, customActions);
-        scxml = SCXMLReader.read(scxmlReader, configuration);
+        SCXML scxml = SCXMLReader.read(scxmlReader, configuration);
         Assert.assertNotNull(scxml);
         SCXML roundtrip = testModelSerializability(scxml);
         return roundtrip;
     }
 
     public static SCXMLExecutor getExecutor(final URL url) throws Exception {
-        SCXML scxml = parse(url);
-        Evaluator evaluator = new JexlEvaluator();
-        return getExecutor(evaluator, scxml);
+        return getExecutor(parse(url), null);
     }
 
-    public static SCXMLExecutor getExecutor(final URL url,
-            final Evaluator evaluator) throws Exception {
-        SCXML scxml = parse(url);
-        return getExecutor(evaluator, scxml);
+    public static SCXMLExecutor getExecutor(String scxmlResource) throws Exception {
+        return getExecutor(parse(scxmlResource), null);
     }
 
     public static SCXMLExecutor getExecutor(SCXML scxml) throws Exception {
         return getExecutor(scxml, null);
     }
 
-    public static SCXMLExecutor getExecutor(SCXML scxml,
-            SCXMLSemantics semantics) throws Exception {
-        Evaluator evaluator = new JexlEvaluator();
-        Context context = evaluator.newContext(null);
-        EventDispatcher ed = new SimpleDispatcher();
+    public static SCXMLExecutor getExecutor(final URL url, final Evaluator evaluator) throws Exception {
+        return getExecutor(parse(url), evaluator);
+    }
+
+    public static SCXMLExecutor getExecutor(SCXML scxml, Evaluator evaluator) throws Exception {
         Tracer trc = new Tracer();
-        return getExecutor(context, evaluator, scxml, ed, trc, semantics);
-    }
-
-    public static SCXMLExecutor getExecutor(Evaluator evaluator, SCXML scxml) throws Exception {
-        EventDispatcher ed = new SimpleDispatcher();
-        Tracer trc = new Tracer();
-        Assert.assertNotNull("Null evaluator", evaluator);
-        Context context = evaluator.newContext(null);
-        return getExecutor(context, evaluator, scxml, ed, trc);
-    }
-
-    public static SCXMLExecutor getExecutor(final URL url, final Context ctx,
-            final Evaluator evaluator) throws Exception {
-        SCXML scxml = parse(url);
-        EventDispatcher ed = new SimpleDispatcher();
-        Tracer trc = new Tracer();
-        return getExecutor(ctx, evaluator, scxml, ed, trc);
-    }
-
-    public static SCXMLExecutor getExecutor(final SCXML scxml,
-            final Context ctx, final Evaluator evaluator) throws Exception {
-        EventDispatcher ed = new SimpleDispatcher();
-        Tracer trc = new Tracer();
-        return getExecutor(ctx, evaluator, scxml, ed, trc);
-    }
-
-    public static SCXMLExecutor getExecutor(Context context,
-            Evaluator evaluator, SCXML scxml, EventDispatcher ed, Tracer trc) throws Exception {
-        return getExecutor(context, evaluator, scxml, ed, trc, null);
-    }
-
-    public static SCXMLExecutor getExecutor(Context context,
-            Evaluator evaluator, SCXML scxml, EventDispatcher ed,
-            Tracer trc, SCXMLSemantics semantics) throws Exception {
-        Assert.assertNotNull(evaluator);
-        Assert.assertNotNull(context);
-        Assert.assertNotNull(scxml);
-        Assert.assertNotNull(ed);
-        Assert.assertNotNull(trc);
-        SCXMLExecutor exec = null;
-        if (semantics == null) {
-            exec = new SCXMLExecutor(evaluator, ed, trc);
-        } else {
-            exec = new SCXMLExecutor(evaluator, ed, trc, semantics);
-        }
-        exec.addListener(scxml, trc);
-        exec.setRootContext(context);
+        SCXMLExecutor exec = new SCXMLExecutor(evaluator, new SimpleDispatcher(), trc);
         exec.setStateMachine(scxml);
-        exec.go();
-        Assert.assertNotNull(exec);
+        exec.addListener(scxml, trc);
         return exec;
     }
 
-    public static TransitionTarget lookupTransitionTarget(SCXMLExecutor exec,
-            String id) {
+    public static TransitionTarget lookupTransitionTarget(SCXMLExecutor exec, String id) {
         return exec.getStateMachine().getTargets().get(id);
     }
 
-    public static Context lookupContext(SCXMLExecutor exec,
-            EnterableState es) {
-        return exec.getSCInstance().lookupContext(es);
-    }
-
-    public static Context lookupContext(SCXMLExecutor exec,
-            String id) {
+    public static Context lookupContext(SCXMLExecutor exec, String id) {
         TransitionTarget tt = lookupTransitionTarget(exec, id);
         if (tt == null || !(tt instanceof EnterableState)) {
             return null;
@@ -188,8 +135,7 @@ public class SCXMLTestHelper {
         return exec.getSCInstance().lookupContext((EnterableState)tt);
     }
 
-    public static void assertState(SCXMLExecutor exec,
-            String expectedStateId) throws Exception {
+    public static void assertState(SCXMLExecutor exec, String expectedStateId) throws Exception {
         Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals("Expected 1 simple (leaf) state with id '"
             + expectedStateId + "' but found " + currentStates.size() + " states instead.",
@@ -203,8 +149,7 @@ public class SCXMLTestHelper {
     }
 
     public static Set<EnterableState> fireEvent(SCXMLExecutor exec, String name, Object payload) throws Exception {
-        TriggerEvent[] evts = {new TriggerEvent(name,
-                TriggerEvent.SIGNAL_EVENT, payload)};
+        TriggerEvent[] evts = {new TriggerEvent(name, TriggerEvent.SIGNAL_EVENT, payload)};
         exec.triggerEvents(evts);
         return exec.getCurrentStatus().getStates();
     }
@@ -332,58 +277,9 @@ public class SCXMLTestHelper {
     }
 
     /**
-     * Get the active leaf state for this executor instance.
-     * Assumes no usage of &lt;parallel&gt;.
-     *
-     * @param exec The {@link SCXMLExecutor} instance whose active state is
-     *             being queried.
-     * @return The <code>id</code> of the active state.
-     */
-    public static String getCurrentState(SCXMLExecutor exec) {
-        return exec.getCurrentStatus().getStates().iterator().next().getId();
-    }
-
-    /**
-     * Set the active leaf state for this executor instance.
-     * Assumes no usage of &lt;parallel&gt;.
-     *
-     * @param exec The {@link SCXMLExecutor} instance whose active state is
-     *             to be set.
-     * @param id The <code>id</code> of the state to be made active.
-     */
-    public static void setCurrentState(SCXMLExecutor exec, final String id) {
-        try {
-            exec.reset();
-        } catch (ModelException me) {
-            throw new IllegalArgumentException("Provided SCXMLExecutor "
-                + "instance cannot be reset.");
-        }
-        TransitionTarget active = exec.getStateMachine().getTargets().get(id);
-        if (active == null) {
-            throw new IllegalArgumentException("No target with id '" + id
-                + "' present in state machine.");
-        }
-        Set<EnterableState> current = exec.getCurrentStatus().getStates();
-        current.clear();
-        current.add((EnterableState)active);
-    }
-
-    public static String removeCarriageReturns(final String original) {
-        StringBuffer buf = new StringBuffer();
-        for (int i = 0; i < original.length(); i++) {
-            char c = original.charAt(i);
-            if (c != '\r') {
-                buf.append(c);
-            }
-        }
-        return buf.toString();
-    }
-
-    /**
      * Discourage instantiation.
      */
     private SCXMLTestHelper() {
         super();
     }
-
 }

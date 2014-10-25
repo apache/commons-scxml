@@ -18,6 +18,7 @@
 <!-- A fictitious state machine used by test cases. -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
        version="1.0"
+       datamodel="jexl"
        initial="start">
 
     <datamodel>

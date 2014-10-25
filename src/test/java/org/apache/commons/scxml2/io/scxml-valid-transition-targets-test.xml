@@ -19,7 +19,7 @@
      can be reached as validated by ModuleUpdater#verifyTransitionTargets and according to the rules in
      http://www.w3.org/TR/scxml/#LegalStateConfigurations
 -->
-<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0"
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="jexl"
        initial="s1s1p1s1 s1s1p1s2 s1s1p1s3">
   <state id="s1">
     <state id="s1s1">

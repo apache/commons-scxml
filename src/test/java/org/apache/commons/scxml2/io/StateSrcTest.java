@@ -16,60 +16,23 @@
  */
 package org.apache.commons.scxml2.io;
 
-import java.net.URL;
 import java.util.Set;
 
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.ModelException;
-import org.apache.commons.scxml2.model.SCXML;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 /**
  * Test white box nature of <state> element "src" attribute.
  */
 public class StateSrcTest {
 
-    // Test data
-    private URL src01, src04, src05;
-    private SCXML scxml;
-    private SCXMLExecutor exec;
-
-    /**
-     * Set up instance variables required by this test case.
-     */
-    @Before
-    public void setUp() {
-        src01 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/io/src-test-1.xml");
-        src04 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/io/src-test-4.xml");
-        src05 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/io/src-test-5.xml");
-    }
-
-    /**
-     * Tear down instance variables required by this test case.
-     */
-    @After
-    public void tearDown() {
-        src01 = src04 = src05 = null;
-        scxml = null;
-        exec = null;
-    }
-
-    /**
-     * Test the implementation
-     */    
     @Test
     public void testRecursiveSrcInclude() throws Exception {
-        scxml = SCXMLTestHelper.parse(src01);
-        Assert.assertNotNull(scxml);
-        exec = SCXMLTestHelper.getExecutor(scxml);
-        Assert.assertNotNull(exec);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/io/src-test-1.xml");
+        exec.go();
         Set<EnterableState> states = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, states.size());
         Assert.assertEquals("srctest3", states.iterator().next().getId());
@@ -82,7 +45,7 @@ public class StateSrcTest {
     @Test
     public void testBadSrcInclude() throws Exception {
         try {
-            scxml = SCXMLReader.read(src04);
+            SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/src-test-4.xml"));
             Assert.fail("Document with bad <state> src attribute shouldn't be parsed!");
         } catch (ModelException me) {
             Assert.assertTrue("Unexpected error message for bad <state> 'src' URI",
@@ -93,7 +56,7 @@ public class StateSrcTest {
     @Test
     public void testBadSrcFragmentInclude() throws Exception {
         try {
-            scxml = SCXMLReader.read(src05);
+            SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/src-test-5.xml"));
             Assert.fail("Document with bad <state> src attribute shouldn't be parsed!");
         } catch (ModelException me) {
             Assert.assertTrue("Unexpected error message for bad <state> 'src' URI fragment",

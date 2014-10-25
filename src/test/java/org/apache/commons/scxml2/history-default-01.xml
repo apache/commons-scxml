@@ -19,7 +19,7 @@
    This document is an example of specifying default transitions for
    history states (if the parent state has never been visited before)
 -->
-<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0"
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="jexl"
        initial="state1">
 
     <state id="state1">

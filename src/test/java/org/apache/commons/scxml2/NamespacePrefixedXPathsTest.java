@@ -16,13 +16,10 @@
  */
 package org.apache.commons.scxml2;
 
-import java.net.URL;
 import java.util.Set;
 
 import org.apache.commons.scxml2.model.EnterableState;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -30,36 +27,15 @@ import org.junit.Test;
  */
 public class NamespacePrefixedXPathsTest {
 
-    // Test data
-    private URL datamodel03jexl;
-    private SCXMLExecutor exec01;
-
-    /**
-     * Set up instance variables required by this test case.
-     */
-    @Before
-    public void setUp() throws Exception {
-        datamodel03jexl = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/env/jexl/datamodel-03.xml");
-        exec01 = SCXMLTestHelper.getExecutor(datamodel03jexl);
-    }
-
-    /**
-     * Tear down instance variables required by this test case.
-     */
-    @After
-    public void tearDown() {
-        datamodel03jexl = null;
-        exec01 = null;
-    }
-
     /**
      * Test the XPath evaluation
      */
     // JEXL
     @Test
     public void testNamespacePrefixedXPathsJexl() throws Exception {
-        runtest(exec01);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/datamodel-03.xml");
+        exec.go();
+        runtest(exec);
     }
 
     // Same test, since same documents (different expression languages)

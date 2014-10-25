@@ -19,6 +19,7 @@
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
        xmlns:my="http://my.custom-actions.domain/CUSTOM"
        version="1.0"
+       datamodel="jexl"
        initial="custom">
 
     <final id="custom">

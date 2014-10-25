@@ -17,7 +17,8 @@
 -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
        version="1.0"
-       initial="script">
+       initial="script"
+       datamodel="ecmascript">
 
     <datamodel>
         <data id="x" expr="1"/>

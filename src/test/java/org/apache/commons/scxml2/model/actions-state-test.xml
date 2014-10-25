@@ -17,6 +17,7 @@
 -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
        xmlns:cs="http://commons.apache.org/scxml"
+       datamodel="jexl"
        version="1.0"
        initial="actionsTest">
   

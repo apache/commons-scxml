@@ -23,8 +23,8 @@ import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLExpressionException;
+import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.io.SCXMLReader;
-import org.apache.commons.scxml2.model.SCXML;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,6 +54,7 @@ public class JSEvaluatorTest {
     private static final String SCRIPT         = "<?xml version='1.0'?>" +
                                                  "<scxml xmlns        = 'http://www.w3.org/2005/07/scxml' " +
                                                         "xmlns:scxml  = 'http://commons.apache.org/scxml' " +
+                                                        "datamodel = 'ecmascript' " +
                                                         "initial = 'start' "  +
                                                         "version      = '1.0'>" +
                                                   "<datamodel>"           +
@@ -99,7 +100,6 @@ public class JSEvaluatorTest {
 
     // TEST VARIABLES
 
-    private SCXML         scxml;
     private Context       context;
     private Evaluator     evaluator;
     private SCXMLExecutor fsm;
@@ -112,19 +112,10 @@ public class JSEvaluatorTest {
      */
     @Before
     public void setUp() throws Exception {
-            StringReader reader = new StringReader(SCRIPT);
-
-            scxml     = SCXMLReader.read(reader);
-            context   = new JSContext();
-            evaluator = new JSEvaluator();
-            fsm       = new SCXMLExecutor();
-
+            fsm = SCXMLTestHelper.getExecutor(SCXMLReader.read(new StringReader(SCRIPT)));
+            evaluator = fsm.getEvaluator();
+            context = fsm.getRootContext();
             context.set(Context.NAMESPACES_KEY,null);
-
-            fsm.setEvaluator   (evaluator);
-            fsm.setRootContext (context);
-            fsm.setStateMachine(scxml);
-            fsm.reset          ();
     }
 
     // CLASS METHODS

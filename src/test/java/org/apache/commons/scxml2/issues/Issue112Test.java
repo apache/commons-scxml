@@ -16,7 +16,6 @@
  */
 package org.apache.commons.scxml2.issues;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,25 +40,11 @@ import org.junit.Test;
  */
 public class Issue112Test {
 
-    private URL queue01;
-    private SCXMLExecutor exec;
-
-    /**
-     * Set up instance variables required by this test case.
-     */
-    @Before
-    public void setUp() {
-        queue01 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/issues/queue-01.xml");
-    }
-
     /**
      * Tear down instance variables required by this test case.
      */
     @After
     public void tearDown() {
-        queue01 = null;
-        exec = null;
         Application.QUEUE.clear();
     }
 
@@ -69,14 +54,13 @@ public class Issue112Test {
     public void test01issue112() throws Exception {
 
         CustomAction ca1 =
-            new CustomAction("http://my.custom-actions.domain/CUSTOM",
-                             "enqueue", Enqueue.class);
+            new CustomAction("http://my.custom-actions.domain/CUSTOM", "enqueue", Enqueue.class);
         List<CustomAction> customActions = new ArrayList<CustomAction>();
         customActions.add(ca1);
 
-        SCXML scxml = SCXMLTestHelper.parse(queue01, customActions);
-
-        exec = SCXMLTestHelper.getExecutor(scxml);
+        SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/issues/queue-01.xml", customActions);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
+        exec.go();
         Assert.assertEquals("init", exec.getCurrentStatus().getStates().
                 iterator().next().getId());
 

@@ -20,6 +20,7 @@
 -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0"
        xmlns:cs="http://commons.apache.org/scxml"
+       datamodel="groovy"
        initial="microwave">
 
   <!--  trivial microwave oven example -->

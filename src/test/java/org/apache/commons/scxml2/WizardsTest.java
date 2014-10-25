@@ -17,20 +17,13 @@
 package org.apache.commons.scxml2;
 
 import java.io.Serializable;
-import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.scxml2.env.Tracer;
-import org.apache.commons.scxml2.env.jexl.JexlContext;
-import org.apache.commons.scxml2.env.jexl.JexlEvaluator;
 import org.apache.commons.scxml2.model.EnterableState;
-import org.apache.commons.scxml2.model.SCXML;
 
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Node;
 /**
@@ -38,35 +31,13 @@ import org.w3c.dom.Node;
  */
 public class WizardsTest {
 
-    // Test data
-    private URL wizard01, wizard02;
-    private SCXMLExecutor exec;
-
-    /**
-     * Set up instance variables required by this test case.
-     */
-    @Before
-    public void setUp() {
-        wizard01 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/env/jexl/wizard-01.xml");
-        wizard02 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/env/jexl/wizard-02.xml");
-    }
-
-    /**
-     * Tear down instance variables required by this test case.
-     */
-    @After
-    public void tearDown() {
-        wizard01 = wizard02 = null;
-    }
-
     /**
      * Test the wizard style SCXML documents, and send usage
      */
     @Test
     public void testWizard01Sample() throws Exception {
-    	exec = SCXMLTestHelper.getExecutor(wizard01);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/wizard-01.xml");
+        exec.go();
         Assert.assertNotNull(exec);
         Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
@@ -89,11 +60,9 @@ public class WizardsTest {
 
     @Test
     public void testWizard02Sample() throws Exception {
-        SCXML scxml = SCXMLTestHelper.parse(wizard02);
-        exec = SCXMLTestHelper.getExecutor(new JexlContext(),
-            new JexlEvaluator(), scxml, new TestEventDispatcher(),
-            new Tracer());
-        Assert.assertNotNull(exec);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/wizard-02.xml");
+        exec.setEventdispatcher(new TestEventDispatcher());
+        exec.go();
         // If you change this, you must also change
         // the TestEventDispatcher
         Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();

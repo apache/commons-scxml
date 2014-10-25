@@ -16,12 +16,8 @@
  */
 package org.apache.commons.scxml2.issues;
 
-import java.net.URL;
-
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -30,38 +26,17 @@ import org.junit.Test;
  */
 public class Issue64Test {
 
-    private URL works, fails;
-    private SCXMLExecutor exec;
-
-    /**
-     * Set up instance variables required by this test case.
-     */
-    @Before
-    public void setUp() {
-        works = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/issues/issue64-01.xml");
-        fails = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/issues/issue64-02.xml");
-    }
-
-    /**
-     * Tear down instance variables required by this test case.
-     */
-    @After
-    public void tearDown() {
-        works = fails = null;
-        exec = null;
-    }
-    
     @Test
     public void test01issue64() throws Exception {
-        exec = SCXMLTestHelper.getExecutor(SCXMLTestHelper.parse(works));
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/issues/issue64-01.xml");
+        exec.go();
         SCXMLTestHelper.assertPostTriggerState(exec, "show.bug", "end");
     }
     
     @Test
     public void test02issue64() throws Exception {
-        exec = SCXMLTestHelper.getExecutor(SCXMLTestHelper.parse(fails));
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/issues/issue64-02.xml");
+        exec.go();
         SCXMLTestHelper.assertPostTriggerState(exec, "show.bug", "end");
     }
 }

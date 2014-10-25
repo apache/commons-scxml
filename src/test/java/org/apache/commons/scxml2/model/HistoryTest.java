@@ -16,54 +16,18 @@
  */
 package org.apache.commons.scxml2.model;
 
-import java.net.URL;
 import java.util.Set;
 
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 public class HistoryTest {
 
-    // Test data
-    private History history;
-    private URL shallow01, deep01, defaults01, parallel01;
-    private SCXMLExecutor exec;
-
-    /**
-     * Set up instance variables required by this test case.
-     */   
-    @Before
-    public void setUp() {
-        history = new History();
-        shallow01 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/history-shallow-01.xml");
-        deep01 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/history-deep-01.xml");
-        defaults01 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/history-default-01.xml");
-        parallel01 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/history-parallel-01.xml");
-    }
-
-    /**
-     * Tear down instance variables required by this test case.
-     */
-    @After
-    public void tearDown() {
-        history = null;
-        shallow01 = deep01 = defaults01 = parallel01 = null;
-        exec = null;
-    }
-
-    /**
-     * Test the implementation
-     */    
     @Test
     public void testSetTypeDeep() {
+        History history = new History();
         history.setType("deep");
         
         Assert.assertTrue(history.isDeep());
@@ -71,6 +35,7 @@ public class HistoryTest {
         
     @Test
     public void testSetTypeNotDeep() {
+        History history = new History();
         history.setType("shallow");
         
         Assert.assertFalse(history.isDeep());
@@ -78,19 +43,22 @@ public class HistoryTest {
     
     @Test
     public void testShallowHistory01() throws Exception {
-        exec = SCXMLTestHelper.getExecutor(shallow01);
-        runHistoryFlow();
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/history-shallow-01.xml");
+        exec.go();
+        runHistoryFlow(exec);
     }
     
     @Test
     public void testDeepHistory01() throws Exception {
-        exec = SCXMLTestHelper.getExecutor(deep01);
-        runHistoryFlow();
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/history-deep-01.xml");
+        exec.go();
+        runHistoryFlow(exec);
     }
     
     @Test
     public void testHistoryDefaults01() throws Exception {
-        exec = SCXMLTestHelper.getExecutor(defaults01);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/history-default-01.xml");
+        exec.go();
         Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state11", currentStates.iterator().next().getId());
@@ -104,7 +72,8 @@ public class HistoryTest {
     
     @Test
     public void testHistoryParallel01() throws Exception {
-        exec = SCXMLTestHelper.getExecutor(parallel01);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/history-parallel-01.xml");
+        exec.go();
         Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         SCXMLTestHelper.assertState(exec, "off_call");
@@ -119,35 +88,35 @@ public class HistoryTest {
         SCXMLTestHelper.assertPostTriggerStates(exec, "alternate", new String[] { "held", "on_call" });
     }
 
-    private void runHistoryFlow() throws Exception {
+    private void runHistoryFlow(SCXMLExecutor exec) throws Exception {
         Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("phase1", currentStates.iterator().next().getId());
-        Assert.assertEquals("phase1", pauseAndResume());
-        Assert.assertEquals("phase2", nextPhase());
+        Assert.assertEquals("phase1", pauseAndResume(exec));
+        Assert.assertEquals("phase2", nextPhase(exec));
         // pause and resume couple of times for good measure
-        Assert.assertEquals("phase2", pauseAndResume());
-        Assert.assertEquals("phase2", pauseAndResume());
-        Assert.assertEquals("phase3", nextPhase());
-        Assert.assertEquals("phase3", pauseAndResume());
+        Assert.assertEquals("phase2", pauseAndResume(exec));
+        Assert.assertEquals("phase2", pauseAndResume(exec));
+        Assert.assertEquals("phase3", nextPhase(exec));
+        Assert.assertEquals("phase3", pauseAndResume(exec));
         exec.reset();
         currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("phase1", currentStates.iterator().next().getId());
     }
 
-    private String pauseAndResume() throws Exception {
+    private String pauseAndResume(SCXMLExecutor exec) throws Exception {
         Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "flow.pause");
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("interrupted", currentStates.iterator().next().getId());
         exec = SCXMLTestHelper.testInstanceSerializability(exec);
         currentStates = SCXMLTestHelper.fireEvent(exec, "flow.resume");
         Assert.assertEquals(1, currentStates.size());
-        exec = SCXMLTestHelper.testInstanceSerializability(exec);
+        SCXMLTestHelper.testInstanceSerializability(exec);
         return currentStates.iterator().next().getId();
     }
 
-    private String nextPhase() throws Exception {
+    private String nextPhase(SCXMLExecutor exec) throws Exception {
         Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "done.state.phase");
         Assert.assertEquals(1, currentStates.size());
         return currentStates.iterator().next().getId();

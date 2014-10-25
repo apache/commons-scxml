@@ -20,8 +20,6 @@ import java.io.StringReader;
 
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
-import org.apache.commons.scxml2.env.jexl.JexlContext;
-import org.apache.commons.scxml2.env.jexl.JexlEvaluator;
 import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.SCXML;
 import org.junit.Test;
@@ -43,7 +41,7 @@ import static org.junit.Assert.fail;
 public class SCXMLRequiredAttributesTest {
 
     private static final String VALID_SCXML =
-            "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" version=\"1.0\">\n" +
+            "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" datamodel=\"jexl\" version=\"1.0\">\n" +
                     "  <state id=\"s1\">\n" +
                     "    <transition target=\"fine\">\n" +
                     "      <if cond=\"true\"><log expr=\"'hello'\"/></if>\n" +
@@ -99,7 +97,7 @@ public class SCXMLRequiredAttributesTest {
                     "</scxml>";
 
     private static final String SCXML_WITH_ASSIGN_WITHOUT_LOCATION =
-            "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" version=\"1.0\">\n" +
+            "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" datamodel=\"jexl\" version=\"1.0\">\n" +
                     "  <datamodel><data id=\"x\"></data></datamodel>\n" +
                     "  <state id=\"s1\">\n" +
                     "    <transition target=\"fine\">\n" +
@@ -150,7 +148,7 @@ public class SCXMLRequiredAttributesTest {
                     "</scxml>";
 
     private static final String SCXML_WITH_FOREACH =
-            "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" version=\"1.0\">\n" +
+            "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" datamodel=\"jexl\" version=\"1.0\">\n" +
                     "  <state id=\"s1\">\n" +
                     "    <transition target=\"fine\">\n" +
                     "      <foreach array=\"[1,2]\" item=\"x\"></foreach>\n" +
@@ -162,8 +160,8 @@ public class SCXMLRequiredAttributesTest {
     @Test
     public void testValidSCXML() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse(new StringReader(VALID_SCXML), null);
-        assertNotNull(scxml);
-        SCXMLExecutor exec = executeSCXML(scxml);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
+        exec.go();
         assertTrue(exec.getCurrentStatus().isFinal());
     }
 
@@ -236,8 +234,8 @@ public class SCXMLRequiredAttributesTest {
     @Test
     public void testSCXMLWithAssignWithoutLocation() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse(new StringReader(SCXML_WITH_ASSIGN_WITHOUT_LOCATION), null);
-        assertNotNull(scxml);
-        SCXMLExecutor exec = executeSCXML(scxml);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
+        exec.go();
         assertTrue(exec.getCurrentStatus().isFinal());
     }
 
@@ -254,8 +252,7 @@ public class SCXMLRequiredAttributesTest {
 
     @Test
     public void testSCXMLParamWithName() throws Exception {
-        SCXML scxml = SCXMLTestHelper.parse(new StringReader(SCXML_WITH_PARAM_AND_NAME), null);
-        assertNotNull(scxml);
+        SCXMLTestHelper.parse(new StringReader(SCXML_WITH_PARAM_AND_NAME), null);
         // Note: cannot execute this instance without providing proper <invoke> src attribute
     }
 
@@ -284,14 +281,8 @@ public class SCXMLRequiredAttributesTest {
     @Test
     public void testSCXMLWithForEach() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse(new StringReader(SCXML_WITH_FOREACH), null);
-        assertNotNull(scxml);
-        SCXMLExecutor exec = executeSCXML(scxml);
-        assertTrue(exec.getCurrentStatus().isFinal());
-    }
-
-    private SCXMLExecutor executeSCXML(SCXML scxml) throws Exception {
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml, new JexlContext(), new JexlEvaluator());
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
         exec.go();
-        return exec;
+        assertTrue(exec.getCurrentStatus().isFinal());
     }
 }

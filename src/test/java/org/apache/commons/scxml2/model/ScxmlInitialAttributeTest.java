@@ -24,8 +24,6 @@ import java.io.StringReader;
 
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
-import org.apache.commons.scxml2.env.jexl.JexlContext;
-import org.apache.commons.scxml2.env.jexl.JexlEvaluator;
 import org.junit.Test;
 
 public class ScxmlInitialAttributeTest {
@@ -60,7 +58,8 @@ public class ScxmlInitialAttributeTest {
         assertEquals("The initial state ID reading was wrong.", "s1", scxml.getInitial());
         TransitionTarget tt = scxml.getInitialTransition().getTargets().iterator().next();
         assertEquals("The initial state resolution was wrong.", "s1", tt.getId());
-        SCXMLExecutor exec = executeSCXML(scxml);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
+        exec.go();
         assertEquals(scxml.getTargets().get("s1"), exec.getCurrentStatus().getStates().iterator().next());
     }
 
@@ -70,7 +69,8 @@ public class ScxmlInitialAttributeTest {
         assertNull(scxml.getInitial());
         TransitionTarget tt = scxml.getInitialTransition().getTargets().iterator().next();
         assertEquals("The initial state resolution was wrong.", "s1", tt.getId());
-        SCXMLExecutor exec = executeSCXML(scxml);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
+        exec.go();
         assertEquals(scxml.getTargets().get("s1"), exec.getCurrentStatus().getStates().iterator().next());
     }
 
@@ -83,11 +83,4 @@ public class ScxmlInitialAttributeTest {
             // expected because of the non-existing initial state id
         }
     }
-
-    private SCXMLExecutor executeSCXML(SCXML scxml) throws Exception {
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml, new JexlContext(), new JexlEvaluator());
-        exec.go();
-        return exec;
-    }
-
 }

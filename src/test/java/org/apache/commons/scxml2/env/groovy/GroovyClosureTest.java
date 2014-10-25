@@ -22,8 +22,6 @@ import java.util.Set;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.model.EnterableState;
-import org.apache.commons.scxml2.model.SCXML;
-import org.apache.commons.scxml2.model.State;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -32,14 +30,12 @@ public class GroovyClosureTest {
 
     @Test
     public void testGroovyClosure() throws Exception {
-        URL groovyClosure = this.getClass().getClassLoader().getResource("org/apache/commons/scxml2/env/groovy/groovy-closure.xml");
-        SCXML scxml = SCXMLTestHelper.parse(groovyClosure);
-        Assert.assertNotNull(scxml);
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml, new GroovyContext(), new GroovyEvaluator(true));
-        Assert.assertNotNull(exec);
+        URL groovyClosure = SCXMLTestHelper.getResource("org/apache/commons/scxml2/env/groovy/groovy-closure.xml");
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor(groovyClosure, new GroovyEvaluator(true));
+        exec.go();
         Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "turn_on");
         Assert.assertEquals(2, currentStates.size());
-        String id = ((State)currentStates.iterator().next()).getId();
+        String id = currentStates.iterator().next().getId();
         Assert.assertTrue(id.equals("closed") || id.equals("cooking"));
     }
 }

@@ -19,6 +19,7 @@
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
        xmlns:rad="http://foo/bar"
        version="1.0"
+       datamodel="jexl"
        initial="assign1">
   
   <state id="assign1">

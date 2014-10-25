@@ -16,7 +16,6 @@
  */
 package org.apache.commons.scxml2.invoke;
 
-import java.net.URL;
 import java.util.Map;
 
 import org.apache.commons.scxml2.Evaluator;
@@ -24,8 +23,6 @@ import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLIOProcessor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.TriggerEvent;
-import org.apache.commons.scxml2.env.jexl.JexlContext;
-import org.apache.commons.scxml2.env.jexl.JexlEvaluator;
 import org.apache.commons.scxml2.model.ModelException;
 import org.junit.After;
 import org.junit.Assert;
@@ -37,7 +34,6 @@ import org.w3c.dom.Node;
 // Tests for 4.3.1 in WD-scxml-20080516
 public class InvokeParamNameTest {
 
-    private URL invoker04;
     private SCXMLExecutor exec;
 
     static String lastSource;
@@ -45,17 +41,14 @@ public class InvokeParamNameTest {
     
     @Before
     public void setUp() throws Exception {
-        invoker04 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/invoke/invoker-04.xml");
-        exec = SCXMLTestHelper.getExecutor(invoker04,
-                new JexlContext(), new JexlEvaluator());
+        exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/invoke/invoker-04.xml");
         exec.registerInvokerClass("x-test", DummyInvoker.class);
+        exec.go();
     }
     
     @After
     public void tearDown() {
         exec.unregisterInvokerClass("x-test");    
-        invoker04 = null;
     }
     
     private void trigger() throws ModelException {

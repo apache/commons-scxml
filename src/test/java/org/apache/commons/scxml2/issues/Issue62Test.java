@@ -16,16 +16,13 @@
  */
 package org.apache.commons.scxml2.issues;
 
-import java.net.URL;
 import java.util.Set;
 
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.model.EnterableState;
 
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -34,34 +31,10 @@ import org.junit.Test;
  */
 public class Issue62Test {
 
-    private URL test01, test02, test03;
-    private SCXMLExecutor exec;
-
-    /**
-     * Set up instance variables required by this test case.
-     */
-    @Before
-    public void setUp() {
-        test01 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/issues/issue62-01.xml");
-        test02 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/issues/issue62-02.xml");
-        test03 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/issues/issue62-03.xml");
-    }
-
-    /**
-     * Tear down instance variables required by this test case.
-     */
-    @After
-    public void tearDown() {
-        test01 = test02 = null;
-        exec = null;
-    }
-    
     @Test
     public void test01issue62() throws Exception {
-        exec = SCXMLTestHelper.getExecutor(test01);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/issues/issue62-01.xml");
+        exec.go();
         Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("s1.1", currentStates.iterator().next().getId());
@@ -70,17 +43,19 @@ public class Issue62Test {
     
     @Test
     public void test02issue62() throws Exception {
-        exec = SCXMLTestHelper.getExecutor(test02);
-        fragmenttest();
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/issues/issue62-02.xml");
+        exec.go();
+        fragmenttest(exec);
     }
     
     @Test
     public void test03issue62() throws Exception {
-        exec = SCXMLTestHelper.getExecutor(SCXMLTestHelper.parse(test03));
-        fragmenttest();
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/issues/issue62-03.xml");
+        exec.go();
+        fragmenttest(exec);
     }
 
-    private void fragmenttest() throws Exception {
+    private void fragmenttest(SCXMLExecutor exec) throws Exception {
         Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("s1", currentStates.iterator().next().getId());

@@ -21,6 +21,7 @@
        xmlns:my="http://my.custom-actions.domain/CUSTOM1"
        xmlns:foo="http://my.custom-actions.domain/CUSTOM2"
        version="1.0"
+       datamodel="jexl"
        initial="custom">
 
     <final id="custom">

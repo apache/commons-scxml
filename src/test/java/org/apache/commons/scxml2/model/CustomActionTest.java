@@ -16,48 +16,23 @@
  */
 package org.apache.commons.scxml2.model;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 public class CustomActionTest {
 
-    private URL hello01, custom01, external01, override01, payload01;
-    private SCXMLExecutor exec;
-
     /**
      * Set up instance variables required by this test case.
      */
     @Before
     public void setUp() {
-        hello01 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/hello-world.xml");
-        custom01 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/custom-hello-world-01.xml");
-        external01 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/external-hello-world.xml");
-        override01 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/custom-hello-world-03.xml");
-        payload01 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/custom-hello-world-04-jexl.xml");
-
         Hello.callbacks = 0;
-    }
-
-    /**
-     * Tear down instance variables required by this test case.
-     */
-    @After
-    public void tearDown() {
-        hello01 = custom01 = external01 = payload01 = null;
-        exec = null;
     }
 
     @Test
@@ -123,7 +98,8 @@ public class CustomActionTest {
     @Test
     public void testHelloWorld() throws Exception {
         // (1) Get a SCXMLExecutor
-        exec = SCXMLTestHelper.getExecutor(hello01);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/hello-world.xml");
+        exec.go();
         // (2) Single, final state
         Assert.assertEquals("hello", (exec.getCurrentStatus().getStates().
                 iterator().next()).getId());
@@ -147,9 +123,10 @@ public class CustomActionTest {
         customActions.add(ca1);
         customActions.add(ca2);
         // (2) Parse the document
-        SCXML scxml = SCXMLTestHelper.parse(custom01, customActions);
+        SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/custom-hello-world-01.xml", customActions);
         // (3) Get a SCXMLExecutor
-        exec = SCXMLTestHelper.getExecutor(scxml);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
+        exec.go();
         // (4) Single, final state
         Assert.assertEquals("custom", (exec.getCurrentStatus().getStates().
                 iterator().next()).getId());
@@ -172,9 +149,10 @@ public class CustomActionTest {
         List<CustomAction> customActions = new ArrayList<CustomAction>();
         customActions.add(ca);
         // (2) Parse the document
-        SCXML scxml = SCXMLTestHelper.parse(external01, customActions);
+        SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/external-hello-world.xml", customActions);
         // (3) Get a SCXMLExecutor
-        exec = SCXMLTestHelper.getExecutor(scxml);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
+        exec.go();
         // (4) Single, final state
         Assert.assertEquals("custom", (exec.getCurrentStatus().getStates().
             iterator().next()).getId());
@@ -195,9 +173,10 @@ public class CustomActionTest {
         List<CustomAction> customActions = new ArrayList<CustomAction>();
         customActions.add(ca);
         // (2) Parse the document
-        SCXML scxml = SCXMLTestHelper.parse(override01, customActions);
+        SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/custom-hello-world-03.xml", customActions);
         // (3) Get a SCXMLExecutor
-        exec = SCXMLTestHelper.getExecutor(scxml);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
+        exec.go();
         // (4) Single, final state
         Assert.assertEquals("custom", (exec.getCurrentStatus().getStates().
             iterator().next()).getId());
@@ -219,9 +198,10 @@ public class CustomActionTest {
         List<CustomAction> customActions = new ArrayList<CustomAction>();
         customActions.add(ca);
         // (2) Parse the document
-        SCXML scxml = SCXMLTestHelper.parse(payload01, customActions);
+        SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/custom-hello-world-04-jexl.xml", customActions);
         // (3) Get a SCXMLExecutor
-        exec = SCXMLTestHelper.getExecutor(scxml);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
+        exec.go();
         // (4) Single, final state
         Assert.assertEquals("Invalid intermediate state",
                      "custom1", (exec.getCurrentStatus().getStates().

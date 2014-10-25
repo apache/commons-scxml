@@ -23,14 +23,10 @@ import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.env.SimpleDispatcher;
 import org.apache.commons.scxml2.env.SimpleErrorReporter;
-import org.apache.commons.scxml2.env.jexl.JexlContext;
-import org.apache.commons.scxml2.env.jexl.JexlEvaluator;
 import org.apache.commons.scxml2.io.SCXMLReader;
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.SCXML;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -39,41 +35,13 @@ import org.junit.Test;
  */
 public class InvokeTest {
 
-    // Test data
-    private URL invoke01, invoke02, invoke03;
-    private SCXMLExecutor exec;
-
-    /**
-     * Set up instance variables required by this test case.
-     */
-    @Before
-    public void setUp() {
-        invoke01 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/invoke/invoker-01.xml");
-        invoke02 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/invoke/invoker-02.xml");
-        invoke03 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/invoke/invoker-03.xml");
-    }
-
-    /**
-     * Tear down instance variables required by this test case.
-     */
-    @After
-    public void tearDown() {
-        invoke01 = invoke02 = invoke03 = null;
-    }
-
     /**
      * Test the SCXML documents, usage of &lt;invoke&gt;
      */    
     @Test
     public void testInvoke01Sample() throws Exception {
-        SCXML scxml = SCXMLReader.read(invoke01);
-        exec = new SCXMLExecutor(new JexlEvaluator(), new SimpleDispatcher(),
-            new SimpleErrorReporter());
-        Assert.assertNotNull(exec);
-        exec.setRootContext(new JexlContext());
+        SCXML scxml = SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/invoke/invoker-01.xml"));
+        SCXMLExecutor exec = new SCXMLExecutor(null, new SimpleDispatcher(), new SimpleErrorReporter());
         exec.setStateMachine(scxml);
         exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
         exec.go();
@@ -84,11 +52,8 @@ public class InvokeTest {
     
     @Test
     public void testInvoke02Sample() throws Exception {
-        SCXML scxml = SCXMLReader.read(invoke02);
-        exec = new SCXMLExecutor(new JexlEvaluator(), new SimpleDispatcher(),
-            new SimpleErrorReporter());
-        Assert.assertNotNull(exec);
-        exec.setRootContext(new JexlContext());
+        SCXML scxml = SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/invoke/invoker-02.xml"));
+        SCXMLExecutor exec = new SCXMLExecutor(null, new SimpleDispatcher(), new SimpleErrorReporter());
         exec.setStateMachine(scxml);
         exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
         exec.go();
@@ -98,11 +63,8 @@ public class InvokeTest {
     
     @Test
     public void testInvoke03Sample() throws Exception {
-        SCXML scxml = SCXMLReader.read(invoke03);
-        exec = new SCXMLExecutor(new JexlEvaluator(), new SimpleDispatcher(),
-            new SimpleErrorReporter());
-        Assert.assertNotNull(exec);
-        exec.setRootContext(new JexlContext());
+        SCXML scxml = SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/invoke/invoker-03.xml"));
+        SCXMLExecutor exec = new SCXMLExecutor(null, new SimpleDispatcher(), new SimpleErrorReporter());
         exec.setStateMachine(scxml);
         exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
         exec.go();

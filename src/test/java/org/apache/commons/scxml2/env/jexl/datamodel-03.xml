@@ -19,10 +19,11 @@
      prefixed XPath expressions in the Commons SCXML Data() function.
      Used by org.apache.commons.scxml2.NamespacePrefixedPathsTest.
      Also serves as testing the underlying functionality of the
-     underlying parsing technology (here, Digester 1.8) -->
+     underlying parsing technology -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
        xmlns:cs="http://commons.apache.org/scxml"
        version="1.0"
+       datamodel="jexl"
        initial="ten">
 
      <!-- Root data model -->

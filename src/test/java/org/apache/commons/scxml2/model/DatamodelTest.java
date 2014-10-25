@@ -16,7 +16,6 @@
  */
 package org.apache.commons.scxml2.model;
 
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -24,76 +23,40 @@ import java.util.Set;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.TriggerEvent;
-import org.apache.commons.scxml2.env.jexl.JexlContext;
-import org.apache.commons.scxml2.env.jexl.JexlEvaluator;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 /**
  * Unit tests {@link org.apache.commons.scxml2.SCXMLExecutor}.
  */
 public class DatamodelTest {
 
-    // Test data
-    private URL datamodel01jexl, datamodel02jexl, datamodel04jexl, datamodel05jexl;
-    private SCXMLExecutor exec01, exec02;
-
-    /**
-     * Set up instance variables required by this test case.
-     */
-    @Before
-    public void setUp() {
-        datamodel01jexl = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/env/jexl/datamodel-01.xml");
-        datamodel02jexl = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/env/jexl/datamodel-02.xml");
-        datamodel04jexl = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/env/jexl/datamodel-04.xml");
-        datamodel05jexl = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/env/jexl/datamodel-05.xml");
-    }
-
-    /**
-     * Tear down instance variables required by this test case.
-     */
-    @After
-    public void tearDown() {
-        datamodel01jexl = datamodel02jexl = datamodel04jexl = datamodel05jexl = null;
-    }
-
     /**
      * Test the stateless model, simultaneous executions
      */    
     @Test
     public void testDatamodelSimultaneousJexl() throws Exception {
-        exec01 = SCXMLTestHelper.getExecutor(datamodel01jexl,
-            new JexlContext(), new JexlEvaluator());
-        Assert.assertNotNull(exec01);
-        exec02 = SCXMLTestHelper.getExecutor(datamodel01jexl,
-            new JexlContext(), new JexlEvaluator());
-        Assert.assertNotNull(exec02);
+        SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/datamodel-01.xml");
+        exec01.go();
+        SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/datamodel-01.xml");
+        exec02.go();
         Assert.assertFalse(exec01 == exec02);
-        runtest();
+        runtest(exec01, exec02);
     }
     
     @Test
     public void testDatamodelNamespacePrefixedXPaths() throws Exception {
-        exec01 = SCXMLTestHelper.getExecutor(datamodel02jexl,
-            new JexlContext(), new JexlEvaluator());
-        Assert.assertNotNull(exec01);
-        exec02 = SCXMLTestHelper.getExecutor(datamodel02jexl,
-                new JexlContext(), new JexlEvaluator());
-        Assert.assertNotNull(exec02);
+        SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/datamodel-02.xml");
+        exec01.go();
+        SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/datamodel-02.xml");
+        exec02.go();
         Assert.assertFalse(exec01 == exec02);
-        runtest();
+        runtest(exec01, exec02);
     }
     
     @Test
     public void testDatamodel04Jexl() throws Exception {
-        exec01 = SCXMLTestHelper.getExecutor(datamodel04jexl,
-            new JexlContext(), new JexlEvaluator());
-        Assert.assertNotNull(exec01);
+        SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/datamodel-04.xml");
+        exec01.go();
         Set<EnterableState> currentStates = exec01.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("ten", currentStates.iterator().next().getId());
@@ -113,12 +76,12 @@ public class DatamodelTest {
     
     @Test
     public void testDatamodel05Jexl() throws Exception {
-        exec01 = SCXMLTestHelper.getExecutor(datamodel05jexl);
-        Assert.assertNotNull(exec01);
+        SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/datamodel-05.xml");
+        exec01.go();
         SCXMLTestHelper.assertState(exec01, "end");
     }
 
-    private void runtest() throws Exception {
+    private void runtest(SCXMLExecutor exec01, SCXMLExecutor exec02) throws Exception {
         //// Interleaved
         // exec01
         Set<EnterableState> currentStates = exec01.getCurrentStatus().getStates();

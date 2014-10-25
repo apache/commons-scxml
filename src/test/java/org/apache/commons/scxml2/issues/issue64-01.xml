@@ -18,6 +18,7 @@
 <!-- Correct SCXML document -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
        version="1.0"
+       datamodel="jexl"
        initial="tranbug">
 
     <state id="tranbug">

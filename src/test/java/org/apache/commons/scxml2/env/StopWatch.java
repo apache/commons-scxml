@@ -20,7 +20,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.commons.scxml2.model.ModelException;
-import org.apache.commons.scxml2.model.TransitionTarget;
 
 /**
  * A SCXML document driven stop watch.

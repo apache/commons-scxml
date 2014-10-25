@@ -22,9 +22,7 @@ import java.util.Set;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.model.EnterableState;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -33,34 +31,14 @@ import org.junit.Test;
  */
 public class SerializableInitialBaseScriptTest {
 
-    // Test data
-    private URL scxml;
-    private SCXMLExecutor exec;
-
-    /**
-     * Set up instance variables required by this test case.
-     */
-    @Before
-    public void setUp() {
-        scxml = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/env/groovy/serializable-initial-base-script.xml");
-    }
-
-    /**
-     * Tear down instance variables required by this test case.
-     */
-    @After
-    public void tearDown() {
-        scxml = null;
-    }
-
     /**
      * Testing Groovy initial base script usage and validating serializable
      */
     @Test
     public void testSerializableInitialBaseScriptSample() throws Exception {
-    	exec = SCXMLTestHelper.getExecutor(scxml, new GroovyContext(), new GroovyEvaluator(true));
-        Assert.assertNotNull(exec);
+        URL scxml = SCXMLTestHelper.getResource("org/apache/commons/scxml2/env/groovy/serializable-initial-base-script.xml");
+    	SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml, new GroovyEvaluator(true));
+        exec.go();
         Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state1", currentStates.iterator().next().getId());

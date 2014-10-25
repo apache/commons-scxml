@@ -16,17 +16,13 @@
  */
 package org.apache.commons.scxml2;
 
-import java.net.URL;
 import java.util.Set;
 
 import org.apache.commons.scxml2.env.SimpleScheduler;
 import org.apache.commons.scxml2.env.Tracer;
-import org.apache.commons.scxml2.env.jexl.JexlEvaluator;
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.SCXML;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 /**
  * Unit tests {@link org.apache.commons.scxml2.SCXMLExecutor}.
@@ -34,40 +30,13 @@ import org.junit.Test;
  */
 public class EventDataTest {
 
-    // Test data
-    private URL eventdata01, eventdata02, eventdata03, eventdata04;
-    private SCXMLExecutor exec;
-
-    /**
-     * Set up instance variables required by this test case.
-     */
-    @Before
-    public void setUp() {
-        eventdata01 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/env/jexl/eventdata-01.xml");
-        eventdata02 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/env/jexl/eventdata-02.xml");
-        eventdata03 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/env/jexl/eventdata-03.xml");
-        eventdata04 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/env/jexl/eventdata-04.xml");
-    }
-
-    /**
-     * Tear down instance variables required by this test case.
-     */
-    @After
-    public void tearDown() {
-        eventdata01 = eventdata02 = eventdata03 = eventdata04 = null;
-    }
-
     /**
      * Test the SCXML documents, usage of "_event.data"
      */
     @Test
     public void testEventdata01Sample() throws Exception {
-    	exec = SCXMLTestHelper.getExecutor(eventdata01);
-        Assert.assertNotNull(exec);
+    	SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/eventdata-01.xml");
+        exec.go();
         Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state1", currentStates.iterator().next().getId());
@@ -91,8 +60,8 @@ public class EventDataTest {
 
     @Test
     public void testEventdata02Sample() throws Exception {
-    	exec = SCXMLTestHelper.getExecutor(eventdata02);
-        Assert.assertNotNull(exec);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/eventdata-02.xml");
+        exec.go();
         Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state0", currentStates.iterator().next().getId());
@@ -111,8 +80,8 @@ public class EventDataTest {
 
     @Test
     public void testEventdata03Sample() throws Exception {
-        exec = SCXMLTestHelper.getExecutor(eventdata03);
-        Assert.assertNotNull(exec);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/eventdata-03.xml");
+        exec.go();
         Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("ten", currentStates.iterator().next().getId());
@@ -125,10 +94,9 @@ public class EventDataTest {
 
     @Test
     public void testEventdata04Sample() throws Exception {
-        SCXML scxml = SCXMLTestHelper.parse(eventdata04);
+        SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/env/jexl/eventdata-03.xml");
         Tracer trc = new Tracer();
-        exec = new SCXMLExecutor(new JexlEvaluator(), null, trc);
-        Assert.assertNotNull(exec);
+        SCXMLExecutor exec = new SCXMLExecutor(null, null, trc);
         exec.setEventdispatcher(new SimpleScheduler(exec));
         exec.addListener(scxml, trc);
         exec.setStateMachine(scxml);

@@ -16,46 +16,25 @@
  */
 package org.apache.commons.scxml2.model;
 
-import java.net.URL;
 import java.util.List;
 
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 public class StateTest {
 
-    // Test data
-    private State state;
-    private URL state01;
-    private SCXMLExecutor exec;
-
-    @Before
-    public void setUp() {
-        state = new State();
-        state01 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/model/state-01.xml");
-    }
-
-    @After
-    public void tearDown() {
-        state01 = null;
-        exec = null;
-    }
-    
     @Test
     public void testGetTransitionsListNull() {
+        State state = new State();
         Assert.assertNull(state.getTransitionsList("event"));
     }
         
     @Test
     public void testGetTransitionsList() {
-        
+        State state = new State();
         state.getTransitionsList().add(new Transition());
-        
         Assert.assertNotNull(state.getTransitionsList(null));
     }
         
@@ -63,7 +42,8 @@ public class StateTest {
     public void testAddTransitionDoesNotContainKey() {
         Transition transition = new Transition();
         transition.setEvent("event");
-        
+
+        State state = new State();
         state.addTransition(transition);
         
         List<Transition> events = state.getTransitionsList("event");
@@ -80,6 +60,7 @@ public class StateTest {
         Transition transition2 = new Transition();
         transition2.setEvent("event");
 
+        State state = new State();
         state.addTransition(transition1);
         state.addTransition(transition2);
         
@@ -96,6 +77,7 @@ public class StateTest {
         Transition transition2 = new Transition();
         transition2.setEvent("event");
 
+        State state = new State();
         state.addTransition(transition1);
         state.addTransition(transition2);
         
@@ -106,13 +88,15 @@ public class StateTest {
         
     @Test
     public void testHasHistoryEmpty() {
+        State state = new State();
         Assert.assertFalse(state.hasHistory());
     }
     
     @Test
     public void testHasHistory() {
         History history = new History();
-        
+
+        State state = new State();
         state.addHistory(history);
         
         Assert.assertTrue(state.hasHistory());
@@ -120,6 +104,7 @@ public class StateTest {
         
     @Test
     public void testIsSimple() {
+        State state = new State();
         Assert.assertTrue(state.isSimple());
     }
         
@@ -127,8 +112,7 @@ public class StateTest {
     public void testIsSimpleHasChildren() {
         State state1 = new State();
         
-        // redundant cast to remove deprecation warning
-        // could be removed in v1.0
+        State state = new State();
         state.addChild(state1);
         
         Assert.assertFalse(state.isSimple());
@@ -136,13 +120,15 @@ public class StateTest {
         
     @Test
     public void testIsCompositeFalse() {
+        State state = new State();
         Assert.assertFalse(state.isComposite());
     }
         
     @Test
     public void testIsCompositeParallel() {
         State child = new State();
-        
+
+        State state = new State();
         state.addChild(child);
         
         Assert.assertTrue(state.isComposite());
@@ -151,9 +137,8 @@ public class StateTest {
     @Test
     public void testIsCompositeHasChildren() {
         State state1 = new State();
-        
-        // redundant cast to remove deprecation warning
-        // could be removed in v1.0
+
+        State state = new State();
         state.addChild(state1);
         
         Assert.assertTrue(state.isComposite());
@@ -161,6 +146,7 @@ public class StateTest {
         
     @Test
     public void testIsRegion() {
+        State state = new State();
         state.setParent(new Parallel());
         
         Assert.assertTrue(state.isRegion());
@@ -168,6 +154,7 @@ public class StateTest {
         
     @Test
     public void testIsRegionNotParallel() {
+        State state = new State();
         state.setParent(new State());
         
         Assert.assertFalse(state.isRegion());
@@ -175,11 +162,8 @@ public class StateTest {
     
     @Test
     public void testInitialAttribute() throws Exception {
-        SCXML scxml = SCXMLTestHelper.parse(state01);
-        Assert.assertNotNull(scxml);
-        exec = SCXMLTestHelper.getExecutor(scxml);
-        Assert.assertNotNull(exec);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/state-01.xml");
+        exec.go();
         Assert.assertEquals("s11", exec.getCurrentStatus().getStates().iterator().next().getId());
     }
-
 }

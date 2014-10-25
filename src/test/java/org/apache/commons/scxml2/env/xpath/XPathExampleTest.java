@@ -17,21 +17,14 @@
 
 package org.apache.commons.scxml2.env.xpath;
 
-import java.net.URL;
 import java.util.Set;
 
-import org.apache.commons.scxml2.Context;
-import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.model.EnterableState;
-import org.apache.commons.scxml2.model.SCXML;
-import org.apache.commons.scxml2.model.State;
 
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -40,30 +33,6 @@ import org.junit.Test;
  */
 public class XPathExampleTest {
 
-    // Test data
-    private URL example01, example02;
-    private SCXMLExecutor exec;
-
-    /**
-     * Set up instance variables required by this test case.
-     */
-    @Before
-    public void setUp() {
-        example01 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/env/xpath/example-01.xml");
-        example02 = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/env/xpath/example-02.xml");
-    }
-
-    /**
-     * Tear down instance variables required by this test case.
-     */
-    @After
-    public void tearDown() {
-        example01 = example02 = null;
-    }
-
-    // TEST METHODS
     /* TODO: disabled test because the XPathContext cannot yet resolve $_event/data
              and the old $_eventdata system variable has been removed.
              this probably requires replacing the XPathContext handling with Commons JXPath or similar solution
@@ -71,17 +40,11 @@ public class XPathExampleTest {
     */
     public void testExample01Sample() throws Exception {
 
-        SCXML scxml = SCXMLTestHelper.parse(example01);
-        Evaluator evaluator = null;
-        evaluator = new XPathEvaluator();
-        Context context = new XPathContext(null);
-        exec = SCXMLTestHelper.getExecutor(scxml, context, evaluator);
-
-        Assert.assertNotNull(exec);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/xpath/example-01.xml");
+        exec.go();
         Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
-        Assert.assertEquals("mid", ((State)currentStates.iterator().
-            next()).getId());
+        Assert.assertEquals("mid", currentStates.iterator().next().getId());
 
         String payload = "<test xmlns=''><status>complete</status></test>";
         SCXMLTestHelper.assertPostTriggerState(exec,
@@ -94,18 +57,12 @@ public class XPathExampleTest {
     @Test
     public void testExample02Sample() throws Exception {
 
-        SCXML scxml = SCXMLTestHelper.parse(example02);
-        Evaluator evaluator = null;
-        evaluator = new XPathEvaluator();
-        Context context = new XPathContext(null);
-        exec = SCXMLTestHelper.getExecutor(scxml, context, evaluator);
-
-        Assert.assertNotNull(exec);
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/xpath/example-02.xml");
+        exec.go();
         Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("end", currentStates.iterator().next().getId());
 
     }
-
 }
 
