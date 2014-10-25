@@ -27,8 +27,10 @@ import javax.script.ScriptEngineManager;
 import org.apache.commons.scxml2.Builtin;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
+import org.apache.commons.scxml2.EvaluatorProvider;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.SCXMLSystemContext;
+import org.apache.commons.scxml2.model.SCXML;
 import org.w3c.dom.Node;
 
 /**
@@ -46,6 +48,26 @@ import org.w3c.dom.Node;
 public class JSEvaluator implements Evaluator {
 
     // CONSTANTS
+
+    private static final String SUPPORTED_DATAMODEL = "ecmascript";
+
+    public static class JSEvaluatorProvider implements EvaluatorProvider {
+
+        @Override
+        public String getSupportedDatamodel() {
+            return SUPPORTED_DATAMODEL;
+        }
+
+        @Override
+        public Evaluator getEvaluator() {
+            return new JSEvaluator();
+        }
+
+        @Override
+        public Evaluator getEvaluator(final SCXML document) {
+            return new JSEvaluator();
+        }
+    }
 
     /** Pattern for recognizing the SCXML In() special predicate. */
     private static final Pattern IN_FN = Pattern.compile("In\\(");
@@ -67,6 +89,12 @@ public class JSEvaluator implements Evaluator {
     }
 
     // INSTANCE METHODS
+
+    @Override
+    public String getSupportedDatamodel() {
+        return SUPPORTED_DATAMODEL;
+    }
+
 
     /**
      * Creates a child context.

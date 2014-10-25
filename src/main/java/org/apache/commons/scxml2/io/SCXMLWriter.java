@@ -157,6 +157,7 @@ public class SCXMLWriter {
     private static final String ATTR_ARRAY = "array";
     private static final String ATTR_AUTOFORWARD = "autoforward";
     private static final String ATTR_COND = "cond";
+    private static final String ATTR_DATAMODEL = "datamodel";
     private static final String ATTR_DELAY = "delay";
     private static final String ATTR_DELAYEXPR = "delayexpr";
     private static final String ATTR_EVENT = "event";
@@ -489,6 +490,7 @@ public class SCXMLWriter {
         // Attributes
         writeAV(writer, ATTR_VERSION, scxml.getVersion());
         writeAV(writer, ATTR_INITIAL, scxml.getInitial());
+        writeAV(writer, ATTR_DATAMODEL, scxml.getDatamodelType());
         writeAV(writer, ATTR_NAME, scxml.getName());
         writeAV(writer, ATTR_PROFILE, scxml.getProfile());
         writeAV(writer, ATTR_EXMODE, scxml.getExmode());

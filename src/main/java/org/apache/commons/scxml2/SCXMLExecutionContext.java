@@ -190,6 +190,8 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
      */
     protected void setStateMachine(SCXML stateMachine) throws ModelException {
         scInstance.setStateMachine(stateMachine);
+        // synchronize possible derived evaluator
+        this.evaluator = scInstance.getEvaluator();
     }
 
     /**
@@ -216,8 +218,9 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
      * @throws ModelException if attempting to set a null value or the state machine instance failed to re-initialize
      */
     protected void setEvaluator(Evaluator evaluator) throws ModelException {
-        scInstance.setEvaluator(evaluator);
-        this.evaluator = evaluator;
+        scInstance.setEvaluator(evaluator, false);
+        // synchronize possible derived evaluator
+        this.evaluator = scInstance.getEvaluator();
     }
 
     /**
@@ -294,7 +297,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
         if (scInstance != null) {
             scInstance.detach();
             try {
-                scInstance.setEvaluator(evaluator);
+                scInstance.setEvaluator(evaluator, true);
                 scInstance.setErrorReporter(errorReporter);
             }
             catch (ModelException me) {

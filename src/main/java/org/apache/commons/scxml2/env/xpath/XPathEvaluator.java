@@ -33,8 +33,10 @@ import javax.xml.xpath.XPathFunction;
 
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
+import org.apache.commons.scxml2.EvaluatorProvider;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.env.xpath.FunctionResolver.FunctionKey;
+import org.apache.commons.scxml2.model.SCXML;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -48,6 +50,28 @@ public class XPathEvaluator implements Evaluator, Serializable {
 
     /** Serial version UID. */
     private static final long serialVersionUID = -3578920670869493294L;
+
+    private static final String SUPPORTED_DATAMODEL = "xpath";
+
+    public static class XPathEvaluatorProvider implements EvaluatorProvider {
+
+        @Override
+        public String getSupportedDatamodel() {
+            return SUPPORTED_DATAMODEL;
+        }
+
+        @Override
+        public Evaluator getEvaluator() {
+            return new XPathEvaluator();
+        }
+
+        @Override
+        public Evaluator getEvaluator(final SCXML document) {
+            return new XPathEvaluator();
+        }
+    }
+
+
     /** Pattern for recognizing the Commons SCXML Data() builtin function. */
     private static final Pattern dataFct = Pattern.compile("Data\\(");
 
@@ -61,7 +85,7 @@ public class XPathEvaluator implements Evaluator, Serializable {
     /**
      * No argument constructor.
      */
-    public XPathEvaluator() throws InstantiationException {
+    public XPathEvaluator() {
         fnResolver = new FunctionResolver();
         factory = XPathFactory.newInstance();
         factory.setXPathFunctionResolver(fnResolver);
@@ -73,10 +97,14 @@ public class XPathEvaluator implements Evaluator, Serializable {
      *
      * @param functions The user-defined XPath functions to use.
      */
-    public XPathEvaluator(final Map<FunctionKey, XPathFunction> functions)
-    throws InstantiationException {
+    public XPathEvaluator(final Map<FunctionKey, XPathFunction> functions) {
         this();
         fnResolver.addFunctions(functions);
+    }
+
+    @Override
+    public String getSupportedDatamodel() {
+        return SUPPORTED_DATAMODEL;
     }
 
     /**
@@ -160,14 +188,15 @@ public class XPathEvaluator implements Evaluator, Serializable {
     /**
      * Create dummy context node for XPath evaluation context.
      */
-    private Document getDummyContextNode() throws InstantiationException {
+    private Document getDummyContextNode() throws RuntimeException {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             dbf.setNamespaceAware(true);
             return dbf.newDocumentBuilder().newDocument();
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
-            throw new InstantiationException("Cannot create dummy context " +
-                " node for XPath evaluator");
+            throw new RuntimeException("Cannot create dummy context node for XPath evaluator");
         }
     }
 

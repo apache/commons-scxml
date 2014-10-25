@@ -53,11 +53,6 @@ public class SCInstance implements Serializable {
     private static final String ERR_NO_STATE_MACHINE = "SCInstance: State machine not set";
 
     /**
-     * SCInstance cannot be initialized without setting an evaluator.
-     */
-    private static final String ERR_NO_EVALUATOR = "SCInstance: Evaluator not set";
-
-    /**
      * SCInstance cannot be initialized without setting an error reporter.
      */
     private static final String ERR_NO_ERROR_REPORTER = "SCInstance: ErrorReporter not set";
@@ -147,7 +142,11 @@ public class SCInstance implements Serializable {
             throw new ModelException(ERR_NO_STATE_MACHINE);
         }
         if (evaluator == null) {
-            throw new ModelException(ERR_NO_EVALUATOR);
+            evaluator = EvaluatorFactory.getEvaluator(stateMachine);
+        }
+        if (stateMachine.getDatamodelType() != null && !stateMachine.getDatamodelType().equals(evaluator.getSupportedDatamodel())) {
+            throw new ModelException("Incompatible SCXML document datamodel type \""+stateMachine.getDatamodelType()+"\""
+                    + " for evaluator "+evaluator.getClass().getName()+" supported datamodel \""+evaluator.getSupportedDatamodel()+"\"");
         }
         if (errorReporter == null) {
             throw new ModelException(ERR_NO_ERROR_REPORTER);
@@ -186,24 +185,29 @@ public class SCInstance implements Serializable {
     /**
      * Set or re-attach the evaluator
      * <p>
-     * If this state machine instance has been initialized before, it will be initialized again, destroying all existing
-     * state!
+     * If not re-attaching and this state machine instance has been initialized before,
+     * it will be initialized again, destroying all existing state!
      * </p>
      * @param evaluator The evaluator for this state machine instance.
-     * @throws ModelException if an attempt is made to set a null value for the evaluator
      */
-    protected void setEvaluator(Evaluator evaluator) throws ModelException {
-        if (evaluator == null) {
-            throw new ModelException(ERR_NO_EVALUATOR);
+    protected void setEvaluator(Evaluator evaluator, boolean reAttach) throws ModelException {
+        this.evaluator = evaluator;
+        if (initialized) {
+            if (!reAttach) {
+                // change of evaluator after initialization: re-initialize
+                initialize();
+            }
+            else if (evaluator == null) {
+                throw new ModelException("SCInstance: re-attached without Evaluator");
+            }
         }
-        if (this.evaluator != null && initialized) {
-            this.evaluator = evaluator;
-            // change of evaluator after initialization: re-initialize
-            initialize();
-        }
-        else {
-            this.evaluator = evaluator;
-        }
+    }
+
+    /**
+     * @return Return the current evaluator
+     */
+    protected Evaluator getEvaluator() {
+        return evaluator;
     }
 
     /**
@@ -238,14 +242,8 @@ public class SCInstance implements Serializable {
         if (stateMachine == null) {
             throw new ModelException(ERR_NO_STATE_MACHINE);
         }
-        if (this.stateMachine != null && initialized) {
-            this.stateMachine = stateMachine;
-            // change of state machine after initialization: re-initialize
-            initialize();
-        }
-        else {
-            this.stateMachine = stateMachine;
-        }
+        this.stateMachine = stateMachine;
+        initialize();
     }
 
     /**

@@ -27,9 +27,11 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
+import org.apache.commons.scxml2.EvaluatorProvider;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.SCXMLSystemContext;
 import org.apache.commons.scxml2.env.EffectiveContextMap;
+import org.apache.commons.scxml2.model.SCXML;
 import org.w3c.dom.Node;
 
 /**
@@ -42,6 +44,26 @@ public class GroovyEvaluator implements Evaluator, Serializable {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
+
+    private static final String SUPPORTED_DATAMODEL = "groovy";
+
+    public static class GroovyEvaluatorProvider implements EvaluatorProvider {
+
+        @Override
+        public String getSupportedDatamodel() {
+            return SUPPORTED_DATAMODEL;
+        }
+
+        @Override
+        public Evaluator getEvaluator() {
+            return new GroovyEvaluator();
+        }
+
+        @Override
+        public Evaluator getEvaluator(final SCXML document) {
+            return new GroovyEvaluator();
+        }
+    }
 
     /** Error message if evaluation context is not a GroovyContext. */
     private static final String ERR_CTX_TYPE = "Error evaluating Groovy "
@@ -127,6 +149,12 @@ public class GroovyEvaluator implements Evaluator, Serializable {
     }
 
     /* SCXMLEvaluator implementation methods */
+
+
+    @Override
+    public String getSupportedDatamodel() {
+        return SUPPORTED_DATAMODEL;
+    }
 
     /**
      * Evaluate an expression.

@@ -26,6 +26,12 @@ import org.w3c.dom.Node;
 public interface Evaluator {
 
     /**
+     * Get the datamodel type supported by this Evaluator
+     * @return The supported datamodel type
+     */
+    String getSupportedDatamodel();
+
+    /**
      * Evaluate an expression.
      *
      * @param ctx variable context

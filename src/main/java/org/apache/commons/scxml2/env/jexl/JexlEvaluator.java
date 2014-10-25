@@ -25,8 +25,10 @@ import org.apache.commons.jexl2.JexlEngine;
 import org.apache.commons.jexl2.Script;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
+import org.apache.commons.scxml2.EvaluatorProvider;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.env.EffectiveContextMap;
+import org.apache.commons.scxml2.model.SCXML;
 import org.w3c.dom.Node;
 
 /**
@@ -42,9 +44,31 @@ public class JexlEvaluator implements Evaluator, Serializable {
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
 
+    private static final String SUPPORTED_DATAMODEL = "jexl";
+
+    public static class JexlEvaluatorProvider implements EvaluatorProvider {
+
+        @Override
+        public String getSupportedDatamodel() {
+            return SUPPORTED_DATAMODEL;
+        }
+
+        @Override
+        public Evaluator getEvaluator() {
+            return new JexlEvaluator();
+        }
+
+        @Override
+        public Evaluator getEvaluator(final SCXML document) {
+            return new JexlEvaluator();
+        }
+    }
+
     /** Error message if evaluation context is not a JexlContext. */
     private static final String ERR_CTX_TYPE = "Error evaluating JEXL "
         + "expression, Context must be a org.apache.commons.scxml2.env.jexl.JexlContext";
+
+
 
     /** The internal JexlEngine instance to use. */
     private transient volatile JexlEngine jexlEngine;
@@ -106,6 +130,11 @@ public class JexlEvaluator implements Evaluator, Serializable {
             engine.setStrict(strict);
             this.jexlEngineStrict = strict;
         }
+    }
+
+    @Override
+    public String getSupportedDatamodel() {
+        return SUPPORTED_DATAMODEL;
     }
 
     /**

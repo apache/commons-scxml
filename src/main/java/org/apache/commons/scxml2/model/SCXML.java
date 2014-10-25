@@ -88,6 +88,12 @@ public class SCXML implements Serializable, Observable,
      */
     private String exmode;
 
+
+    /**
+     * The datamodel (type) as specified as attribute on this document
+     */
+    private String datamodelType;
+
     /**
      * Optional property holding the data model for this SCXML document.
      * This gets merged with the root context and potentially hides any
@@ -381,5 +387,20 @@ public class SCXML implements Serializable, Observable,
 		this.exmode = exmode;
 	}
 
+    /**
+     * Get the datamodel type as specified as attribute on this document
+     * @return The datamodel type of this document
+     */
+    public String getDatamodelType() {
+        return datamodelType;
+    }
+
+    /**
+     * Sets the datamodel type as specified as attribute on this document
+     * @param datamodelType The datamodel type
+     */
+    public void setDatamodelType(final String datamodelType) {
+        this.datamodelType = datamodelType;
+    }
 }
 

@@ -270,6 +270,7 @@ public final class SCXMLReader {
     private static final String ATTR_ARRAY = "array";
     private static final String ATTR_AUTOFORWARD = "autoforward";
     private static final String ATTR_COND = "cond";
+    private static final String ATTR_DATAMODEL = "datamodel";
     private static final String ATTR_DELAY = "delay";
     private static final String ATTR_DELAYEXPR = "delayexpr";
     private static final String ATTR_EVENT = "event";
@@ -620,6 +621,7 @@ public final class SCXMLReader {
     private static void readSCXML(final XMLStreamReader reader, final Configuration configuration, final SCXML scxml)
             throws IOException, ModelException, XMLStreamException {
 
+        scxml.setDatamodelType(readAV(reader, ATTR_DATAMODEL));
         scxml.setExmode(readAV(reader, ATTR_EXMODE));
         scxml.setInitial(readAV(reader, ATTR_INITIAL));
         scxml.setName(readAV(reader, ATTR_NAME));
