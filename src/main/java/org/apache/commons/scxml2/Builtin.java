@@ -17,18 +17,12 @@
 package org.apache.commons.scxml2;
 
 import java.io.Serializable;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.namespace.NamespaceContext;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-
+import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.jxpath.JXPathException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml2.model.TransitionTarget;
@@ -92,9 +86,9 @@ public class Builtin implements Serializable {
             return null;
         }
         Node dataNode = (Node) data;
-        NodeList result = null;
+        List result;
         try {
-            XPath xpath = XPathFactory.newInstance().newXPath();
+            JXPathContext context = JXPathContext.newContext(dataNode);
             if (namespaces == null || namespaces.size() == 0) {
                 Log log = LogFactory.getLog(Builtin.class);
                 if (log.isDebugEnabled()) {
@@ -103,16 +97,17 @@ public class Builtin implements Serializable {
                         + path);
                 }
             } else {
-                xpath.setNamespaceContext(new ExpressionNSContext(namespaces));
+                for (String prefix : namespaces.keySet()) {
+                    context.registerNamespace(prefix, namespaces.get(prefix));
+                }
             }
-            result = (NodeList) xpath.evaluate(path, dataNode,
-                XPathConstants.NODESET);
-        } catch (XPathExpressionException xee) {
+            result = context.selectNodes(path);
+        } catch (JXPathException xee) {
             Log log = LogFactory.getLog(Builtin.class);
             log.error(xee.getMessage(), xee);
             return null;
         }
-        int length = result.getLength();
+        int length = result.size();
         if (length == 0) {
             Log log = LogFactory.getLog(Builtin.class);
             log.warn("Data(): No nodes matching the XPath expression \""
@@ -124,7 +119,7 @@ public class Builtin implements Serializable {
                 log.warn("Data(): Multiple (" + length + ") nodes matching XPath expression \""
                     + path + "\", returning first");
             }
-            return result.item(0);
+            return (Node)result.get(0);
         }
     }
 
@@ -166,7 +161,7 @@ public class Builtin implements Serializable {
     /**
      * Retrieve a DOM node value as a string depending on its type.
      *
-     * @param node A node to be retreived
+     * @param node A node to be retrieved
      * @return The value as a string
      */
     private static String getNodeValue(final Node node) {
@@ -201,94 +196,5 @@ public class Builtin implements Serializable {
         }
         return result.trim();
     }
-
-    /**
-     * XPath {@link NamespaceContext} for Commons SCXML expressions.
-     *
-     * <b>Code duplication:</b> Also in XPathEvaluator.java. Class is not
-     * meant to be part of any public API and will be removed when parser
-     * is no longer using Commons Digester.
-     */
-    private static final class ExpressionNSContext
-    implements Serializable, NamespaceContext {
-
-        /** Serial version UID. */
-        private static final long serialVersionUID = 8620558582288851315L;
-        private final Map<String, String> namespaces;
-
-        /**
-         * Constructor.
-         *
-         * @param namespaces The current namespace map.
-         */
-        ExpressionNSContext(final Map<String, String> namespaces) {
-            this.namespaces = namespaces;
-        }
-
-        /**
-         * @see NamespaceContext#getNamespaceURI(String)
-         */
-        @Override
-        public String getNamespaceURI(final String prefix) {
-            return namespaces.get(prefix);
-        }
-
-        /**
-         * @see NamespaceContext#getPrefix(String)
-         *
-         * First matching key in iteration order is returned, and the
-         * iteration order depends on the underlying <code>namespaces</code>
-         * {@link Map} implementation.
-         */
-        @Override
-        public String getPrefix(final String namespaceURI) {
-            return (String) getKeys(namespaceURI, true);
-        }
-
-        /**
-         * @see NamespaceContext#getPrefixes(String)
-         *
-         * The iteration order depends on the underlying <code>namespaces</code>
-         * {@link Map} implementation.
-         */
-        @Override
-        @SuppressWarnings("unchecked")
-        public Iterator<String> getPrefixes(final String namespaceURI) {
-            return (Iterator<String>) getKeys(namespaceURI, false);
-        }
-
-        /**
-         * Get prefix key(s) for given namespaceURI value.
-         *
-         * If <code>one</code>, first matching key in iteration order is
-         * returned, and the iteration order depends on the underlying
-         * <code>namespaces</code> {@link Map} implementation.
-         * Otherwise, an iterator to all matching keys is returned.
-         *
-         * @param value The value whose key is required
-         * @param one At most one matching key is returned
-         * @return The required prefix key(s)
-         */
-        private Object getKeys(final String value, final boolean one) {
-            List<String> prefixes = new LinkedList<String>();
-            if (namespaces.containsValue(value)) {
-                for (Map.Entry<String, String> entry : namespaces.entrySet()) {
-                    String v = entry.getValue();
-                    if ((value == null && v == null) ||
-                            (value != null && value.equals(v))) {
-                        String prefix = entry.getKey();
-                        if (one) {
-                            return prefix;
-                        } else {
-                            prefixes.add(prefix);
-                        }
-                    }
-                }
-            }
-            return one ? null : prefixes.iterator();
-        }
-
-    }
-
 }
 

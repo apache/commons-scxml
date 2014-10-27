@@ -17,27 +17,21 @@
 package org.apache.commons.scxml2.env.xpath;
 
 import java.io.Serializable;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import javax.xml.namespace.NamespaceContext;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-import javax.xml.xpath.XPathFunction;
-
+import org.apache.commons.jxpath.ClassFunctions;
+import org.apache.commons.jxpath.FunctionLibrary;
+import org.apache.commons.jxpath.Functions;
+import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.jxpath.JXPathException;
+import org.apache.commons.jxpath.PackageFunctions;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.EvaluatorProvider;
 import org.apache.commons.scxml2.SCXMLExpressionException;
-import org.apache.commons.scxml2.env.xpath.FunctionResolver.FunctionKey;
+import org.apache.commons.scxml2.env.EffectiveContextMap;
 import org.apache.commons.scxml2.model.SCXML;
-import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 /**
@@ -75,31 +69,34 @@ public class XPathEvaluator implements Evaluator, Serializable {
     /** Pattern for recognizing the Commons SCXML Data() builtin function. */
     private static final Pattern dataFct = Pattern.compile("Data\\(");
 
-    /** The factory specialized for the Commons SCXML environment. */
-    private final XPathFactory factory;
-    /** The XPathFunctionResolver in use. */
-    private final FunctionResolver fnResolver;
-    /** The dummyContextNode node for XPath evaluation. */
-    private final Document dummyContextNode;
+    private static final JXPathContext jxpathRootContext = JXPathContext.newContext(null);
+
+    static {
+        FunctionLibrary xpathFunctions = new FunctionLibrary();
+        xpathFunctions.addFunctions(new ClassFunctions(XPathFunctions.class, "cs"));
+        xpathFunctions.addFunctions(new ClassFunctions(XPathFunctions.class, null));
+        // default generic JXPath functions
+        xpathFunctions.addFunctions(new PackageFunctions("", null));
+        jxpathRootContext.setFunctions(xpathFunctions);
+    }
+
+    private JXPathContext jxpathContext;
 
     /**
      * No argument constructor.
      */
     public XPathEvaluator() {
-        fnResolver = new FunctionResolver();
-        factory = XPathFactory.newInstance();
-        factory.setXPathFunctionResolver(fnResolver);
-        dummyContextNode = getDummyContextNode();
+        jxpathContext = jxpathRootContext;
     }
 
     /**
-     * Constructor supporting user-defined {@link XPathFunction}s.
+     * Constructor supporting user-defined JXPath {@link Functions}.
      *
-     * @param functions The user-defined XPath functions to use.
+     * @param functions The user-defined JXPath functions to use.
      */
-    public XPathEvaluator(final Map<FunctionKey, XPathFunction> functions) {
-        this();
-        fnResolver.addFunctions(functions);
+    public XPathEvaluator(final Functions functions) {
+        jxpathContext = JXPathContext.newContext(jxpathRootContext, null);
+        jxpathContext.setFunctions(functions);
     }
 
     @Override
@@ -113,10 +110,11 @@ public class XPathEvaluator implements Evaluator, Serializable {
     @Override
     public Object eval(final Context ctx, final String expr)
             throws SCXMLExpressionException {
-        XPath xpath = getXPath(ctx);
+        JXPathContext context = getContext(ctx);
+        String evalExpr = dataFct.matcher(expr).replaceFirst("DataNode(");
         try {
-            return xpath.evaluate(expr, dummyContextNode, XPathConstants.STRING);
-        } catch (XPathExpressionException xee) {
+            return context.getValue(evalExpr, String.class);
+        } catch (JXPathException xee) {
             throw new SCXMLExpressionException(xee.getMessage(), xee);
         }
     }
@@ -127,10 +125,10 @@ public class XPathEvaluator implements Evaluator, Serializable {
     @Override
     public Boolean evalCond(final Context ctx, final String expr)
             throws SCXMLExpressionException {
-        XPath xpath = getXPath(ctx);
+        JXPathContext context = getContext(ctx);
         try {
-            return (Boolean) xpath.evaluate(expr, dummyContextNode, XPathConstants.BOOLEAN);
-        } catch (XPathExpressionException xee) {
+            return (Boolean)context.getValue(expr, Boolean.class);
+        } catch (JXPathException xee) {
             throw new SCXMLExpressionException(xee.getMessage(), xee);
         }
     }
@@ -143,10 +141,10 @@ public class XPathEvaluator implements Evaluator, Serializable {
             throws SCXMLExpressionException {
         String evalExpr = dataFct.matcher(expr).
             replaceFirst("DataNode(");
-        XPath xpath = getXPath(ctx);
+        JXPathContext context = getContext(ctx);
         try {
-            return (Node) xpath.evaluate(evalExpr, dummyContextNode, XPathConstants.NODE);
-        } catch (XPathExpressionException xee) {
+            return (Node)context.selectSingleNode(evalExpr);
+        } catch (JXPathException xee) {
             throw new SCXMLExpressionException(xee.getMessage(), xee);
         }
     }
@@ -167,126 +165,17 @@ public class XPathEvaluator implements Evaluator, Serializable {
         return new XPathContext(parent);
     }
 
-    /**
-     * Get configures XPath from the factory.
-     */
+
     @SuppressWarnings("unchecked")
-    private XPath getXPath(final Context ctx) throws SCXMLExpressionException {
-        if (!(ctx instanceof XPathContext)) {
-            throw new SCXMLExpressionException("XPathEvaluator needs XPathContext");
-        }
-        XPathContext xctx = (XPathContext) ctx;
-        factory.setXPathVariableResolver(xctx);
-        fnResolver.setContext(xctx);
-        XPath xpath = factory.newXPath();
-        NamespaceContext nsCtx =
-            new ExpressionNSContext((Map<String, String>) ctx.get(Context.NAMESPACES_KEY));
-        xpath.setNamespaceContext(nsCtx);
-        return xpath;
-    }
-
-    /**
-     * Create dummy context node for XPath evaluation context.
-     */
-    private Document getDummyContextNode() throws RuntimeException {
-        try {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            dbf.setNamespaceAware(true);
-            return dbf.newDocumentBuilder().newDocument();
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException("Cannot create dummy context node for XPath evaluator");
-        }
-    }
-
-
-    /**
-     * XPath {@link NamespaceContext} for Commons SCXML expressions.
-     *
-     * <b>Code duplication:</b> Also in Builtin.java. Class is not meant to be
-     * part of any public API and will be removed when parser is no longer
-     * using Commons Digester.
-     */
-    private static final class ExpressionNSContext
-    implements Serializable, NamespaceContext {
-
-        /** Serial version UID. */
-        private static final long serialVersionUID = 8620558582288851315L;
-        private final Map<String, String> namespaces;
-
-        /**
-         * Constructor.
-         *
-         * @param namespaces The current namespace map.
-         */
-        ExpressionNSContext(final Map<String, String> namespaces) {
-            this.namespaces = namespaces;
-        }
-
-        /**
-         * @see NamespaceContext#getNamespaceURI(String)
-         */
-        @Override
-        public String getNamespaceURI(final String prefix) {
-            return namespaces.get(prefix);
-        }
-
-        /**
-         * @see NamespaceContext#getPrefix(String)
-         *
-         * First matching key in iteration order is returned, and the
-         * iteration order depends on the underlying <code>namespaces</code>
-         * {@link Map} implementation.
-         */
-        @Override
-        public String getPrefix(final String namespaceURI) {
-            return (String) getKeys(namespaceURI, true);
-        }
-
-        /**
-         * @see NamespaceContext#getPrefixes(String)
-         *
-         * The iteration order depends on the underlying <code>namespaces</code>
-         * {@link Map} implementation.
-         */
-        @Override
-        @SuppressWarnings("unchecked")
-        public Iterator<String> getPrefixes(final String namespaceURI) {
-            return (Iterator<String>) getKeys(namespaceURI, false);
-        }
-
-        /**
-         * Get prefix key(s) for given namespaceURI value.
-         *
-         * If <code>one</code>, first matching key in iteration order is
-         * returned, and the iteration order depends on the underlying
-         * <code>namespaces</code> {@link Map} implementation.
-         * Otherwise, an iterator to all matching keys is returned.
-         *
-         * @param value The value whose key is required
-         * @param one At most one matching key is returned
-         * @return The required prefix key(s)
-         */
-        private Object getKeys(final String value, final boolean one) {
-            List<String> prefixes = new LinkedList<String>();
-            if (namespaces.containsValue(value)) {
-                for (Map.Entry<String, String> entry : namespaces.entrySet()) {
-                    String v = entry.getValue();
-                    if ((value == null && v == null) ||
-                            (value != null && value.equals(v))) {
-                        String prefix = entry.getKey();
-                        if (one) {
-                            return prefix;
-                        } else {
-                            prefixes.add(prefix);
-                        }
-                    }
-                }
+    private JXPathContext getContext(final Context ctx) throws SCXMLExpressionException {
+        JXPathContext context = JXPathContext.newContext(jxpathContext, new EffectiveContextMap(ctx));
+        context.setVariables(new ContextVariables(ctx));
+        Map<String, String> namespaces = (Map<String, String>) ctx.get(Context.NAMESPACES_KEY);
+        if (namespaces != null) {
+            for (String prefix : namespaces.keySet()) {
+                context.registerNamespace(prefix, namespaces.get(prefix));
             }
-            return one ? null : prefixes.iterator();
         }
-
+        return context;
     }
-
 }

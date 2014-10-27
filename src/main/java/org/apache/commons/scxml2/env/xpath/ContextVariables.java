@@ -18,61 +18,44 @@ package org.apache.commons.scxml2.env.xpath;
 
 import org.apache.commons.jxpath.Variables;
 import org.apache.commons.scxml2.Context;
-import org.apache.commons.scxml2.env.SimpleContext;
 
 /**
- * A {@link Context} implementation for JXPath environments.
- *
+ * JXPath Variables mapping for SCXML Context
  */
-public class XPathContext extends SimpleContext
-implements Context, Variables {
+public class ContextVariables implements Variables {
 
-    /** Serial version UID. */
-    private static final long serialVersionUID = -6803159294612685806L;
+    private final Context ctx;
 
-    /**
-     * No argument constructor.
-     *
-     */
-    public XPathContext() {
-        super();
-    }
-
-    /**
-     * Constructor for cascading contexts.
-     *
-     * @param parent The parent context. Can be null.
-     */
-    public XPathContext(final Context parent) {
-        super(parent);
+    public ContextVariables(Context ctx) {
+        this.ctx = ctx;
     }
 
     @Override
     public boolean isDeclaredVariable(final String varName) {
-        return has(varName);
+        return ctx.has(varName);
     }
 
     @Override
     public Object getVariable(final String varName) {
-        return get(varName);
+        return ctx.get(varName);
     }
 
     @Override
     public void declareVariable(final String varName, final Object value) {
-        set(varName, value);
+        ctx.set(varName, value);
     }
 
     @Override
     public void undeclareVariable(final String varName) {
-        if (has(varName)) {
-            Context ctx = this;
-            while (!ctx.hasLocal(varName)) {
-                ctx = ctx.getParent();
-                if (ctx == null) {
+        if (ctx.has(varName)) {
+            Context cctx = ctx;
+            while (!cctx.hasLocal(varName)) {
+                cctx = cctx.getParent();
+                if (cctx == null) {
                     return;
                 }
             }
-            ctx.getVars().remove(varName);
+            cctx.getVars().remove(varName);
         }
     }
 }
