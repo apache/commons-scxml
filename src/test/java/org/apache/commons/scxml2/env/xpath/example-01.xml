@@ -35,24 +35,19 @@
         </data>
     </datamodel>
 
-    <state id="start">
-        <onentry>
-            <log label="Lion"
-                 expr="$jungle/animals/lion/name" />
-        </onentry>
-        <transition cond="$jungle/animals/lion/age = 12"
-                    target="mid" />
-    </state>
+  <state id="start">
+    <onentry>
+      <log label="Lion" expr="$jungle/animals/lion/name" />
+    </onentry>
+    <transition cond="jungle/animals/lion/age = 12" target="mid" />
+  </state>
 
-    <state id="mid">
-        <onentry>
-            <log label="Total age"
-                expr="$jungle/animals/lion/age +
-                      $jungle/animals/tiger/age" />
-        </onentry>
-        <transition event="foo" cond="$_event/data/test/status = 'complete'"
-                    target="end" />
-    </state>
+  <state id="mid">
+    <onentry>
+      <log label="Total age" expr="$jungle/animals/lion/age + jungle/animals/tiger/age" />
+    </onentry>
+    <transition event="foo" cond="$_event/data/test/status = 'complete'" target="end" />
+  </state>
 
     <final id="end"/>
 

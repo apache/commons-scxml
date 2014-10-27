@@ -33,11 +33,7 @@ import org.junit.Test;
  */
 public class XPathExampleTest {
 
-    /* TODO: disabled test because the XPathContext cannot yet resolve $_event/data
-             and the old $_eventdata system variable has been removed.
-             this probably requires replacing the XPathContext handling with Commons JXPath or similar solution
     @Test
-    */
     public void testExample01Sample() throws Exception {
 
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/xpath/example-01.xml");
