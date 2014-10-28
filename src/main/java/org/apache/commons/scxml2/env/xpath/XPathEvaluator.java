@@ -18,7 +18,6 @@ package org.apache.commons.scxml2.env.xpath;
 
 import java.io.Serializable;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import org.apache.commons.jxpath.ClassFunctions;
 import org.apache.commons.jxpath.FunctionLibrary;
@@ -65,17 +64,12 @@ public class XPathEvaluator implements Evaluator, Serializable {
         }
     }
 
-
-    /** Pattern for recognizing the Commons SCXML Data() builtin function. */
-    private static final Pattern dataFct = Pattern.compile("Data\\(");
-
     private static final JXPathContext jxpathRootContext = JXPathContext.newContext(null);
 
     static {
         FunctionLibrary xpathFunctions = new FunctionLibrary();
-        xpathFunctions.addFunctions(new ClassFunctions(XPathFunctions.class, "cs"));
         xpathFunctions.addFunctions(new ClassFunctions(XPathFunctions.class, null));
-        // default generic JXPath functions
+        // also restore default generic JXPath functions
         xpathFunctions.addFunctions(new PackageFunctions("", null));
         jxpathRootContext.setFunctions(xpathFunctions);
     }
@@ -111,9 +105,8 @@ public class XPathEvaluator implements Evaluator, Serializable {
     public Object eval(final Context ctx, final String expr)
             throws SCXMLExpressionException {
         JXPathContext context = getContext(ctx);
-        String evalExpr = dataFct.matcher(expr).replaceFirst("DataNode(");
         try {
-            return context.getValue(evalExpr, String.class);
+            return context.getValue(expr, String.class);
         } catch (JXPathException xee) {
             throw new SCXMLExpressionException(xee.getMessage(), xee);
         }
@@ -139,11 +132,9 @@ public class XPathEvaluator implements Evaluator, Serializable {
     @Override
     public Node evalLocation(final Context ctx, final String expr)
             throws SCXMLExpressionException {
-        String evalExpr = dataFct.matcher(expr).
-            replaceFirst("DataNode(");
         JXPathContext context = getContext(ctx);
         try {
-            return (Node)context.selectSingleNode(evalExpr);
+            return (Node)context.selectSingleNode(expr);
         } catch (JXPathException xee) {
             throw new SCXMLExpressionException(xee.getMessage(), xee);
         }
