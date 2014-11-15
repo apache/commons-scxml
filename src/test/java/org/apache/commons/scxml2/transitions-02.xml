@@ -30,19 +30,19 @@
 
         <!-- stay transition -->
         <transition event="ten.stay">
-            <assign name="foo" expr="foo + 1" />
+            <assign location="foo" expr="foo + 1" />
             <log expr="'Foo is:' + foo" />
         </transition>
 
         <!-- self transition -->
         <transition event="ten.self" target="ten">
-            <assign name="foo" expr="foo + 1" />
+            <assign location="foo" expr="foo + 1" />
             <log expr="'Foo is:' + foo" />
         </transition>
 
         <!-- "regular" transition -->
         <transition event="done.state.ten" target="twenty">
-            <assign name="foo" expr="foo + 1" />
+            <assign location="foo" expr="foo + 1" />
             <log expr="'Foo is:' + foo" />
         </transition>
 

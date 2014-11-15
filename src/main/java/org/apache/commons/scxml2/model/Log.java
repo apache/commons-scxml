@@ -95,7 +95,7 @@ public class Log extends Action {
         Context ctx = exctx.getContext(getParentEnterableState());
         Evaluator eval = exctx.getEvaluator();
         ctx.setLocal(getNamespacesKey(), getNamespaces());
-        exctx.getAppLog().info(label + ": " + String.valueOf(eval.eval(ctx, expr)));
+        exctx.getAppLog().info(label + ": " + String.valueOf(getTextContentIfNodeResult(eval.eval(ctx, expr))));
         ctx.setLocal(getNamespacesKey(), null);
     }
 }

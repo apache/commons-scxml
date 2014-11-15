@@ -226,9 +226,9 @@ public class JSEvaluatorTest {
      */    
     @Test
     public void testDataModelExpressions() throws Exception {
-        Assert.assertEquals("Invalid result: " + "Data(forest,'tree/branch/twig')",
+        Assert.assertEquals("Invalid result: " + "Data('string($forest/tree/branch/twig)')",
                      "leaf",
-                     evaluator.eval(context,"Data(forest,'tree/branch/twig')"));
+                     evaluator.eval(context,"Data('string($forest/tree/branch/twig)')"));
     }
 
     /**
@@ -240,8 +240,8 @@ public class JSEvaluatorTest {
         Assert.assertNull(context.get("forestx"));
 
         try {
-            evaluator.eval(context,"Data(forestx,'tree/branch/twig')");
-            Assert.fail          ("Evaluated invalid Data() expression: " + "Data(forestx,'tree/branch/twig')");
+            evaluator.eval(context,"Data(forestx,'string($forestx/tree/branch/twig)')");
+            Assert.fail          ("Evaluated invalid Data() expression: " + "Data('string($forestx/tree/branch/twig)')");
 
         } catch (SCXMLExpressionException x) {
             // expected, ignore
@@ -257,14 +257,14 @@ public class JSEvaluatorTest {
             Assert.assertNotNull(context.get("forest"));
             XPath  xpath = XPathFactory.newInstance().newXPath();
             Node   node  = (Node)   context.get("forest");
-            Node   twig  = (Node)   xpath.evaluate("tree/branch/twig",        node,XPathConstants.NODE);
+            Node   twig  = (Node)   xpath.evaluate("tree/branch/twig", node, XPathConstants.NODE);
 
-            Assert.assertTrue  ("Invalid result: " + "Data(forest,'tree/branch/twig')",
-                          evaluator.evalLocation(context,"Data(forest,'tree/branch/twig')") instanceof Element);
+            Assert.assertTrue  ("Invalid result: " + "Data(forest,'$forest/tree/branch/twig')",
+                          evaluator.eval(context,"Data('$forest/tree/branch/twig')") instanceof Element);
 
-            Assert.assertSame ("Incorrect node returned: " + "Data(forest,'tree/branch/twig')",
+            Assert.assertSame ("Incorrect node returned: " + "Data('$forest/tree/branch/twig')",
                          twig,
-                         evaluator.evalLocation(context,"Data(forest,'tree/branch/twig')"));
+                         evaluator.eval(context,"Data('$forest/tree/branch/twig')"));
     }
 
     /**
@@ -274,8 +274,8 @@ public class JSEvaluatorTest {
     @Test
     public void testInvalidDataModelLocations() throws Exception {
             Assert.assertNotNull(context.get("forest"));
-            Assert.assertNull("Invalid result: " + "Data(forest,'tree/branch/twigx')",
-                       evaluator.evalLocation(context,"Data(forest,'tree/branch/twigx')"));
+            Assert.assertNull("Invalid result: " + "Data('$forest/tree/branch/twigx')",
+                       evaluator.eval(context,"Data('$forest/tree/branch/twigx')"));
     }
 
     /**

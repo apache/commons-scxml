@@ -38,10 +38,10 @@
     </datamodel>
 
     <onentry>
-        <assign location="Data(foo,'root/foo')" src="assign-src.xml"/>
+        <assign location="Location('foo/root/foo')" src="assign-src.xml"/>
     </onentry>
 
-    <transition cond="Data(foo,'root/foo/a') + Data(bar,'root/bar') eq 15"
+    <transition cond="Data('number(foo/root/foo/root/a)') + Data('number(bar/root/bar)') eq 15"
                 target="assign2" />
 
   </state>
@@ -58,10 +58,10 @@
     </datamodel>
 
     <onentry>
-        <assign location="Data(jira51data1,'rad:timeout')" expr="Data(jira51data2,'rad:short')"/>
+        <assign location="Location('jira51data1/rad:timeout')" expr="Data('jira51data2/rad:short/text()')"/>
     </onentry>
 
-    <transition cond="Data(jira51data1,'rad:timeout') eq 20"
+    <transition cond="Data('number(jira51data1/rad:timeout)') eq 20"
                 target="assign3" />
 
   </state>

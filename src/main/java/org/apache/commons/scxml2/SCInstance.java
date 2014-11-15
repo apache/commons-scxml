@@ -25,6 +25,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.apache.commons.scxml2.env.SimpleContext;
 import org.apache.commons.scxml2.model.Data;
 import org.apache.commons.scxml2.model.Datamodel;
 import org.apache.commons.scxml2.model.EnterableState;
@@ -33,6 +37,8 @@ import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.TransitionalState;
 import org.apache.commons.scxml2.semantics.ErrorConstants;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
@@ -144,8 +150,8 @@ public class SCInstance implements Serializable {
         if (evaluator == null) {
             evaluator = EvaluatorFactory.getEvaluator(stateMachine);
         }
-        if (stateMachine.getDatamodelType() != null && !stateMachine.getDatamodelType().equals(evaluator.getSupportedDatamodel())) {
-            throw new ModelException("Incompatible SCXML document datamodel type \""+stateMachine.getDatamodelType()+"\""
+        if (stateMachine.getDatamodelName() != null && !stateMachine.getDatamodelName().equals(evaluator.getSupportedDatamodel())) {
+            throw new ModelException("Incompatible SCXML document datamodel \""+stateMachine.getDatamodelName()+"\""
                     + " for evaluator "+evaluator.getClass().getName()+" supported datamodel \""+evaluator.getSupportedDatamodel()+"\"");
         }
         if (errorReporter == null) {
@@ -170,13 +176,14 @@ public class SCInstance implements Serializable {
      * </p>
      */
     protected void detach() {
+        this.internalIOProcessor = null;
         this.evaluator = null;
         this.errorReporter = null;
     }
 
     /**
      * Sets the I/O Processor for the internal event queue
-     * @param internalIOProcessor
+     * @param internalIOProcessor the I/O Processor
      */
     protected void setInternalIOProcessor(SCXMLIOProcessor internalIOProcessor) {
         this.internalIOProcessor = internalIOProcessor;
@@ -256,7 +263,7 @@ public class SCInstance implements Serializable {
      */
     protected void cloneDatamodel(final Datamodel datamodel, final Context ctx, final Evaluator evaluator,
                                       final ErrorReporter errorReporter) {
-        if (datamodel == null) {
+        if (datamodel == null || Evaluator.NULL_DATA_MODEL.equals(evaluator.getSupportedDatamodel())) {
             return;
         }
         List<Data> data = datamodel.getData();
@@ -264,6 +271,10 @@ public class SCInstance implements Serializable {
             return;
         }
         for (Data datum : data) {
+            if (ctx.has(datum.getId())) {
+                // earlier or externally defined 'initial' value found: do not overwrite
+                continue;
+            }
             Node datumNode = datum.getNode();
             Node valueNode = null;
             if (datumNode != null) {
@@ -273,7 +284,7 @@ public class SCInstance implements Serializable {
             if (datum.getSrc() != null) {
                 ctx.setLocal(datum.getId(), valueNode);
             } else if (datum.getExpr() != null) {
-                Object value = null;
+                Object value;
                 try {
                     ctx.setLocal(Context.NAMESPACES_KEY, datum.getNamespaces());
                     value = evaluator.eval(ctx, datum.getExpr());
@@ -283,8 +294,33 @@ public class SCInstance implements Serializable {
                         internalIOProcessor.addEvent(new TriggerEvent(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT));
                     }
                     errorReporter.onError(ErrorConstants.EXPRESSION_ERROR, see.getMessage(), datum);
+                    continue;
                 }
-                ctx.setLocal(datum.getId(), value);
+                if (Evaluator.XPATH_DATA_MODEL.equals(evaluator.getSupportedDatamodel())) {
+                    try {
+                        Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+                        // TODO: should use SCXML namespace here?
+                        Element dataNode = document.createElement("data");
+                        dataNode.setAttribute("id", datum.getId());
+                        ctx.setLocal(datum.getId(), dataNode);
+                        evaluator.evalAssign(ctx, "$" + datum.getId(), value, Evaluator.AssignType.REPLACE_CHILDREN, null);
+                    }
+                    catch (ParserConfigurationException pce) {
+                        if (internalIOProcessor != null) {
+                            internalIOProcessor.addEvent(new TriggerEvent(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT));
+                        }
+                        errorReporter.onError(ErrorConstants.EXECUTION_ERROR, pce.getMessage(), datum);
+                    }
+                    catch (SCXMLExpressionException see) {
+                        if (internalIOProcessor != null) {
+                            internalIOProcessor.addEvent(new TriggerEvent(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT));
+                        }
+                        errorReporter.onError(ErrorConstants.EXPRESSION_ERROR, see.getMessage(), datum);
+                    }
+                }
+                else {
+                    ctx.setLocal(datum.getId(), value);
+                }
             } else {
                 ctx.setLocal(datum.getId(), valueNode);
             }
@@ -325,7 +361,8 @@ public class SCInstance implements Serializable {
      */
     public Context getRootContext() {
         if (rootContext == null && evaluator != null) {
-            rootContext = evaluator.newContext(null);
+            rootContext = Evaluator.NULL_DATA_MODEL.equals(evaluator.getSupportedDatamodel())
+                    ? new SimpleContext() : evaluator.newContext(null);
         }
         return rootContext;
     }
@@ -354,7 +391,9 @@ public class SCInstance implements Serializable {
             // force initialization of rootContext
             getRootContext();
             if (rootContext != null) {
-                systemContext = new SCXMLSystemContext(evaluator.newContext(rootContext));
+                Context internalContext = Evaluator.NULL_DATA_MODEL.equals(evaluator.getSupportedDatamodel()) ?
+                        new SimpleContext(systemContext) : evaluator.newContext(rootContext);
+                systemContext = new SCXMLSystemContext(internalContext);
                 systemContext.getContext().set(SCXMLSystemContext.SESSIONID_KEY, UUID.randomUUID().toString());
                 String _name = stateMachine != null && stateMachine.getName() != null ? stateMachine.getName() : "";
                 systemContext.getContext().set(SCXMLSystemContext.SCXML_NAME_KEY, _name);

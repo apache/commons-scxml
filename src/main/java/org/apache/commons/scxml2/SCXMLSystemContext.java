@@ -141,6 +141,11 @@ public class SCXMLSystemContext implements Context, Serializable {
         return systemContext.getParent();
     }
 
+    @Override
+    public SCXMLSystemContext getSystemContext() {
+        return this;
+    }
+
     /**
      * @return Returns the wrapped (modifiable) system context
      */

@@ -37,7 +37,7 @@
 
   <state id="start">
     <onentry>
-      <log label="Lion" expr="$jungle/animals/lion/name" />
+      <log label="Lion" expr="string(/jungle/animals/lion/name)" />
     </onentry>
     <transition cond="jungle/animals/lion/age = 12" target="mid" />
   </state>

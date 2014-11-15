@@ -109,20 +109,6 @@ final class ModelUpdater {
                     + " belonging to {1}";
 
     /**
-     * Error message when an &lt;invoke&gt; does not specify a "type"
-     * attribute.
-     */
-    private static final String ERR_INVOKE_NO_TYPE = "{0} contains "
-            + "<invoke> with no \"type\" attribute specified.";
-
-    /**
-     * Error message when an &lt;invoke&gt; does not specify a "src"
-     * or a "srcexpr" attribute.
-     */
-    private static final String ERR_INVOKE_NO_SRC = "{0} contains "
-            + "<invoke> without a \"src\" or \"srcexpr\" attribute specified.";
-
-    /**
      * Error message when an &lt;invoke&gt; specifies both "src" and "srcexpr"
      * attributes.
      */
@@ -290,12 +276,6 @@ final class ModelUpdater {
         }
 
         for (Invoke inv : state.getInvokes()) {
-            if (inv.getType() == null) {
-                logAndThrowModelError(ERR_INVOKE_NO_TYPE, new Object[] {getName(state)});
-            }
-            if (inv.getSrc() == null && inv.getSrcexpr() == null) {
-                logAndThrowModelError(ERR_INVOKE_NO_SRC, new Object[] {getName(state)});
-            }
             if (inv.getSrc() != null && inv.getSrcexpr() != null) {
                 logAndThrowModelError(ERR_INVOKE_AMBIGUOUS_SRC, new Object[] {getName(state)});
             }

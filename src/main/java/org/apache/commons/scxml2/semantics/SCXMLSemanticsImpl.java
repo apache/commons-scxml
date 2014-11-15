@@ -25,10 +25,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.ErrorReporter;
-import org.apache.commons.scxml2.Evaluator;
-import org.apache.commons.scxml2.PathResolver;
 import org.apache.commons.scxml2.SCInstance;
 import org.apache.commons.scxml2.SCXMLExecutionContext;
 import org.apache.commons.scxml2.SCXMLExpressionException;
@@ -47,7 +46,6 @@ import org.apache.commons.scxml2.model.History;
 import org.apache.commons.scxml2.model.Invoke;
 import org.apache.commons.scxml2.model.OnEntry;
 import org.apache.commons.scxml2.model.OnExit;
-import org.apache.commons.scxml2.model.Param;
 import org.apache.commons.scxml2.model.Script;
 import org.apache.commons.scxml2.model.SimpleTransition;
 import org.apache.commons.scxml2.model.TransitionalState;
@@ -1074,82 +1072,15 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * @param statesToInvoke the set of activated states which invokes need to be invoked
      */
     public void initiateInvokes(final SCXMLExecutionContext exctx,
-                                final Set<TransitionalState> statesToInvoke) {
-        SCInstance scInstance = exctx.getScInstance();
-        Evaluator eval = exctx.getEvaluator();
+                                final Set<TransitionalState> statesToInvoke) throws ModelException {
+        ActionExecutionContext aexctx = exctx.getActionExecutionContext();
         for (TransitionalState ts : statesToInvoke) {
-            if (ts.getInvokes().isEmpty()) {
-                continue;
-            }
-            Context context = scInstance.getContext(ts);
-            for (Invoke i : ts.getInvokes()) {
-                String src = i.getSrc();
-                if (src == null) {
-                    String srcexpr = i.getSrcexpr();
-                    Object srcObj;
-                    try {
-                        context.setLocal(Context.NAMESPACES_KEY, i.getNamespaces());
-                        srcObj = eval.eval(context, srcexpr);
-                        context.setLocal(Context.NAMESPACES_KEY, null);
-                        src = String.valueOf(srcObj);
-                    } catch (SCXMLExpressionException see) {
-                        exctx.getInternalIOProcessor().addEvent(new TriggerEvent(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT));
-                        exctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR, see.getMessage(), i);
-                    }
-                }
-                String source = src;
-                PathResolver pr = i.getPathResolver();
-                if (pr != null) {
-                    source = i.getPathResolver().resolvePath(src);
-                }
-                Invoker inv;
-                try {
-                    inv = exctx.newInvoker(i.getType());
-                } catch (InvokerException ie) {
-                    exctx.getInternalIOProcessor().addEvent(new TriggerEvent("failed.invoke."+ts.getId(), TriggerEvent.ERROR_EVENT));
-                    continue;
-                }
-                List<Param> params = i.params();
-                Map<String, Object> args = new HashMap<String, Object>();
-                for (Param p : params) {
-                    String argExpr = p.getExpr();
-                    Object argValue = null;
-                    context.setLocal(Context.NAMESPACES_KEY, p.getNamespaces());
-                    // Do we have an "expr" attribute?
-                    if (argExpr != null && argExpr.trim().length() > 0) {
-                        try {
-                            argValue = eval.eval(context, argExpr);
-                        } catch (SCXMLExpressionException see) {
-                            exctx.getInternalIOProcessor().addEvent(new TriggerEvent(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT));
-                            exctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR, see.getMessage(), i);
-                        }
-                    } else {
-                        // No. Does value of "name" attribute refer to a valid
-                        // location in the data model?
-                        try {
-                            argValue = eval.evalLocation(context, p.getName());
-                            if (argValue == null) {
-                                // Generate error, 4.3.1 in WD-scxml-20080516
-                                exctx.getInternalIOProcessor().addEvent(new TriggerEvent(ts.getId() + ERR_ILLEGAL_ALLOC, TriggerEvent.ERROR_EVENT));
-                            }
-                        } catch (SCXMLExpressionException see) {
-                            exctx.getInternalIOProcessor().addEvent(new TriggerEvent(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT));
-                            exctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR, see.getMessage(), i);
-                        }
-                    }
-                    context.setLocal(Context.NAMESPACES_KEY, null);
-                    args.put(p.getName(), argValue);
-                }
-                String invokeId = exctx.setInvoker(i, inv);
-                inv.setInvokeId(invokeId);
-                inv.setParentIOProcessor(exctx.getExternalIOProcessor());
-                inv.setEvaluator(exctx.getEvaluator());
-                try {
-                    inv.invoke(source, args);
-                } catch (InvokerException ie) {
-                    exctx.getInternalIOProcessor().addEvent(new TriggerEvent("failed.invoke."+ts.getId(), TriggerEvent.ERROR_EVENT));
-                    exctx.removeInvoker(i);
-                }
+            for (Invoke invoke : ts.getInvokes()) {
+                Context ctx = aexctx.getContext(invoke.getParentEnterableState());
+                String invokerManagerKey = invoke.getInvokerManagerKey();
+                ctx.setLocal(invokerManagerKey, exctx);
+                invoke.execute(aexctx);
+                ctx.setLocal(invokerManagerKey, null);
             }
         }
     }

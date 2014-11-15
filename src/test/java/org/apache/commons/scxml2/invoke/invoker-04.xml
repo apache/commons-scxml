@@ -36,21 +36,14 @@
     
     <state id="first">
         <invoke src="FirstTestSrc" type="x-test">
-            <param name="ding" expr="Data(foo,'node()')"/>   
+            <param name="ding" expr="Data('string($foo)')"/>
         </invoke>
         <transition event="test.trigger" target="second"/>
     </state>
 
     <state id="second">
         <invoke src="SecondTestSrc" type="x-test">
-            <param name="Data(foo,'node()')"/>   
-        </invoke>
-        <transition event="test.trigger" target="third"/>
-    </state>
-    
-    <state id="third">
-        <invoke src="ThirdTestSrc" type="x-test">
-            <param name="Data(foo,'gibberish')"/>   
+            <param name="dang" expr="Data('$foo/node()')"/>
         </invoke>
     </state>
 </scxml>

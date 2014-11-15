@@ -14,28 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.scxml2.env.jexl;
+package org.apache.commons.scxml2.env.javascript;
 
 import org.apache.commons.scxml2.Builtin;
+import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.XPathBuiltin;
 
 /**
- * Global JEXL namespace functor, providing the standard SCXML In() operator and the Commons SCXML extensions
+ * Custom Javascript engine function providing the SCXML In() predicate and the Commons SCXML extensions
  * for Data() and Location() to support XPath datamodel access.
  */
-public final class JexlBuiltin {
+public class JSFunctions {
+
     /**
      * The context currently in use for evaluation.
      */
-    private final JexlContext context;
+    private Context ctx;
 
     /**
      * Creates a new instance, wraps the context.
-     * @param ctxt the context in use
+     * @param ctx the context in use
      */
-    public JexlBuiltin(final JexlContext ctxt) {
-        context = ctxt;
+    public JSFunctions(Context ctx) {
+        this.ctx = ctx;
     }
 
     /**
@@ -44,7 +46,7 @@ public final class JexlBuiltin {
      * @return true if this state is currently active
      */
     public boolean In(final String state) {
-        return Builtin.isMember(context, state);
+        return Builtin.isMember(ctx, state);
     }
 
     /**
@@ -52,8 +54,8 @@ public final class JexlBuiltin {
      * @param expression the XPath expression
      * @return the data matching the expression
      */
-    public Object Data(final String expression) throws SCXMLExpressionException {
-        return XPathBuiltin.eval(context, expression);
+    public Object Data(String expression) throws SCXMLExpressionException {
+        return XPathBuiltin.eval(ctx, expression);
     }
 
     /**
@@ -61,7 +63,7 @@ public final class JexlBuiltin {
      * @param expression the XPath expression
      * @return the location matching the expression
      */
-    public Object Location(final String expression) throws SCXMLExpressionException {
-        return XPathBuiltin.evalLocation(context, expression);
+    public Object Location(String expression) throws SCXMLExpressionException {
+        return XPathBuiltin.evalLocation(ctx, expression);
     }
 }

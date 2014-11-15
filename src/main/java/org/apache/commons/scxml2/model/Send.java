@@ -16,30 +16,23 @@
  */
 package org.apache.commons.scxml2.model;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.SCXMLExpressionException;
+import org.apache.commons.scxml2.SCXMLIOProcessor;
 import org.apache.commons.scxml2.SCXMLSystemContext;
-import org.apache.commons.scxml2.TriggerEvent;
-import org.apache.commons.scxml2.semantics.ErrorConstants;
-import org.w3c.dom.Node;
-import org.w3c.dom.Text;
-import org.w3c.dom.CharacterData;
 
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;send&gt; SCXML element.
  *
  */
-public class Send extends Action implements ExternalContent {
+public class Send extends NamelistHolder implements ContentContainer {
 
     /**
      * Serial version UID.
@@ -52,25 +45,28 @@ public class Send extends Action implements ExternalContent {
     private static final String TYPE_SCXML = "scxml";
 
     /**
-     * The spec mandated derived event when target cannot be reached
-     * for TYPE_SCXML.
+     * The suffix in the delay string for milliseconds.
      */
-    private static final String EVENT_ERR_SEND_TARGETUNAVAILABLE =
-        "error.send.targetunavailable";
-
-    /** The suffix in the delay string for milliseconds. */
     private static final String MILLIS = "ms";
 
-    /** The suffix in the delay string for seconds. */
+    /**
+     * The suffix in the delay string for seconds.
+     */
     private static final String SECONDS = "s";
 
-    /** The suffix in the delay string for minutes. */
+    /**
+     * The suffix in the delay string for minutes.
+     */
     private static final String MINUTES = "m";
 
-    /** The number of milliseconds in a second. */
+    /**
+     * The number of milliseconds in a second.
+     */
     private static final long MILLIS_IN_A_SECOND = 1000L;
 
-    /** The number of milliseconds in a minute. */
+    /**
+     * The number of milliseconds in a minute.
+     */
     private static final long MILLIS_IN_A_MINUTE = 60000L;
 
     /**
@@ -115,20 +111,9 @@ public class Send extends Action implements ExternalContent {
     private String delayexpr;
 
     /**
-     * The data containing information which may be used by the
-     * implementing platform to configure the event processor.
+     * The data containing information which may be used by the implementing platform to configure the event processor.
      */
     private String hints;
-
-    /**
-     * The namelist to the sent.
-     */
-    private String namelist;
-
-    /**
-     * The list of external nodes associated with this &lt;send&gt; element.
-     */
-    private List<Node> externalNodes;
 
     /**
      * The type of event being generated.
@@ -141,11 +126,15 @@ public class Send extends Action implements ExternalContent {
     private String eventexpr;
 
     /**
+     * The &lt;content/&gt; of this send
+     */
+    private Content content;
+
+    /**
      * Constructor.
      */
     public Send() {
         super();
-        this.externalNodes = new ArrayList<Node>();
     }
 
     /**
@@ -157,6 +146,7 @@ public class Send extends Action implements ExternalContent {
 
     /**
      * Set the idlocation expression
+     *
      * @param idlocation The idlocation expression
      */
     public void setIdlocation(final String idlocation) {
@@ -190,19 +180,11 @@ public class Send extends Action implements ExternalContent {
 
     /**
      * Set the delay expression
+     *
      * @param delayexpr The delay expression to set
      */
     public void setDelayexpr(final String delayexpr) {
         this.delayexpr = delayexpr;
-    }
-
-    /**
-     * Get the list of external namespaced child nodes.
-     *
-     * @return List Returns the list of externalnodes.
-     */
-    public final List<Node> getExternalNodes() {
-        return externalNodes;
     }
 
     /**
@@ -221,24 +203,6 @@ public class Send extends Action implements ExternalContent {
      */
     public final void setHints(final String hints) {
         this.hints = hints;
-    }
-
-    /**
-     * Get the namelist.
-     *
-     * @return String Returns the namelist.
-     */
-    public final String getNamelist() {
-        return namelist;
-    }
-
-    /**
-     * Set the namelist.
-     *
-     * @param namelist The namelist to set.
-     */
-    public final void setNamelist(final String namelist) {
-        this.namelist = namelist;
     }
 
     /**
@@ -286,6 +250,7 @@ public class Send extends Action implements ExternalContent {
 
     /**
      * Set the target expression
+     *
      * @param targetexpr The target expression to set
      */
     public void setTargetexpr(final String targetexpr) {
@@ -319,6 +284,7 @@ public class Send extends Action implements ExternalContent {
 
     /**
      * Sets the type expression
+     *
      * @param typeexpr The type expression to set
      */
     public void setTypeexpr(final String typeexpr) {
@@ -352,6 +318,7 @@ public class Send extends Action implements ExternalContent {
 
     /**
      * Sets the event expression
+     *
      * @param eventexpr The event expression to set
      */
     public void setEventexpr(final String eventexpr) {
@@ -359,8 +326,27 @@ public class Send extends Action implements ExternalContent {
     }
 
     /**
+     * Returns the content
+     *
+     * @return the content
+     */
+    public Content getContent() {
+        return content;
+    }
+
+    /**
+     * Sets the content
+     *
+     * @param content the content to set
+     */
+    public void setContent(final Content content) {
+        this.content = content;
+    }
+
+    /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("unchecked")
     @Override
     public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
         // Send attributes evaluation
@@ -375,61 +361,53 @@ public class Send extends Action implements ExternalContent {
             hintsValue = eval.eval(ctx, hints);
         }
         if (id == null) {
-            id = ((SCXMLSystemContext)exctx.getGlobalContext().getParent()).generateSessionId();
+            id = ctx.getSystemContext().generateSessionId();
             if (idlocation != null) {
-                Node location = eval.evalLocation(ctx, idlocation);
-                if (location != null) {
-                    setNodeValue(location, id);
-                }
-                else {
-                    throw new ModelException("<send>: idlocation does not point to a <data> node");
-                }
+                eval.evalAssign(ctx, idlocation, id, Evaluator.AssignType.REPLACE_CHILDREN, null);
             }
         }
         String targetValue = target;
         if (targetValue == null && targetexpr != null) {
-            targetValue = (String) eval.eval(ctx, targetexpr);
+            targetValue = (String) getTextContentIfNodeResult(eval.eval(ctx, targetexpr));
             if ((targetValue == null || targetValue.trim().length() == 0)
                     && exctx.getAppLog().isWarnEnabled()) {
                 exctx.getAppLog().warn("<send>: target expression \"" + targetexpr
-                    + "\" evaluated to null or empty String");
+                        + "\" evaluated to null or empty String");
             }
         }
         String typeValue = type;
         if (typeValue == null && typeexpr != null) {
-            typeValue = (String) eval.eval(ctx, typeexpr);
+            typeValue = (String) getTextContentIfNodeResult(eval.eval(ctx, typeexpr));
             if ((typeValue == null || typeValue.trim().length() == 0)
                     && exctx.getAppLog().isWarnEnabled()) {
                 exctx.getAppLog().warn("<send>: type expression \"" + typeexpr
-                    + "\" evaluated to null or empty String");
+                        + "\" evaluated to null or empty String");
             }
         }
         if (typeValue == null) {
             // must default to 'scxml' when unspecified
             typeValue = TYPE_SCXML;
-        }
-        else if (!TYPE_SCXML.equals(typeValue) && typeValue.trim().equalsIgnoreCase(TYPE_SCXML)) {
+        } else if (!TYPE_SCXML.equals(typeValue) && typeValue.trim().equalsIgnoreCase(TYPE_SCXML)) {
             typeValue = TYPE_SCXML;
         }
-        Map<String, Object> params = null;
-        if (namelist != null) {
-            StringTokenizer tkn = new StringTokenizer(namelist);
-            params = new HashMap<String, Object>(tkn.countTokens());
-            while (tkn.hasMoreTokens()) {
-                String varName = tkn.nextToken();
-                Object varObj = ctx.get(varName);
-                if (varObj == null) {
-                    //considered as a warning here
-                    exctx.getErrorReporter().onError(ErrorConstants.UNDEFINED_VARIABLE,
-                            varName + " = null", parentState);
-                }
-                params.put(varName, varObj);
+        Object payload = null;
+        Map<String, Object> payloadDataMap = new HashMap<String, Object>();
+        addNamelistDataToPayload(exctx, payloadDataMap);
+        addParamsToPayload(exctx, payloadDataMap);
+        if (!payloadDataMap.isEmpty()) {
+            payload = makeEventPayload(eval, payloadDataMap);
+        }
+        else if (content != null) {
+            if (content.getExpr() != null) {
+                payload = clonePayloadValue(eval.eval(ctx, content.getExpr()));
+            } else {
+                payload = clonePayloadValue(content.getBody());
             }
         }
         long wait = 0L;
         String delayString = delay;
         if (delayString == null && delayexpr != null) {
-            Object delayValue = eval.eval(ctx, delay);
+            Object delayValue = getTextContentIfNodeResult(eval.eval(ctx, delayexpr));
             if (delayValue != null) {
                 delayString = delayValue.toString();
             }
@@ -439,63 +417,34 @@ public class Send extends Action implements ExternalContent {
         }
         String eventValue = event;
         if (eventValue == null && eventexpr != null) {
-            eventValue = (String) eval.eval(ctx, eventexpr);
+            eventValue = (String) getTextContentIfNodeResult(eval.eval(ctx, eventexpr));
             if ((eventValue == null || eventValue.trim().length() == 0) && exctx.getAppLog().isWarnEnabled()) {
                 throw new SCXMLExpressionException("<send>: event expression \"" + eventexpr
                         + "\" evaluated to null or empty String");
             }
         }
-        // Lets see if we should handle it ourselves
-        if (typeValue != null && TYPE_SCXML.equals(typeValue)) {
-            if (eventValue == null) {
-                // event required when type == http://www.w3.org/TR/scxml/#SCXMLEventProcessor
-                throw new ModelException("Event parameter is required for <send> with type=\"scxml\"");
-            }
-            if (targetValue == null || targetValue.trim().length() == 0) {
-                // TODO: Remove both short-circuit passes in v1.0
-                if (wait == 0L) {
-                    if (exctx.getAppLog().isDebugEnabled()) {
-                        exctx.getAppLog().debug("<send>: Enqueued event '" + eventValue
-                            + "' with no delay");
-                    }
-                    exctx.getInternalIOProcessor().addEvent(
-                            new TriggerEvent(eventValue, TriggerEvent.SIGNAL_EVENT, params));
-                    return;
-                }
-            } else {
-                // We know of no other
-                if (exctx.getAppLog().isWarnEnabled()) {
-                    exctx.getAppLog().warn("<send>: Unavailable target - "
-                        + targetValue);
-                }
-                exctx.getInternalIOProcessor().addEvent(
-                        new TriggerEvent(EVENT_ERR_SEND_TARGETUNAVAILABLE, TriggerEvent.ERROR_EVENT));
-                // short-circuit the EventDispatcher
-                return;
-            }
-        }
+        Map<String, SCXMLIOProcessor> ioProcessors = (Map<String, SCXMLIOProcessor>) ctx.get(SCXMLSystemContext.IOPROCESSORS_KEY);
         ctx.setLocal(getNamespacesKey(), null);
         if (exctx.getAppLog().isDebugEnabled()) {
             exctx.getAppLog().debug("<send>: Dispatching event '" + eventValue
-                + "' to target '" + targetValue + "' of target type '"
-                + typeValue + "' with suggested delay of " + wait
-                + "ms");
+                    + "' to target '" + targetValue + "' of target type '"
+                    + typeValue + "' with suggested delay of " + wait
+                    + "ms");
         }
-        // Else, let the EventDispatcher take care of it
-        exctx.getEventDispatcher().send(id, targetValue, typeValue, eventValue,
-            params, hintsValue, wait, externalNodes);
+        exctx.getEventDispatcher().send(ioProcessors, id, targetValue, typeValue, eventValue,
+                payload, hintsValue, wait);
     }
 
     /**
      * Parse delay.
      *
      * @param delayString The String value of the delay, in CSS2 format
-     * @param appLog The application log
+     * @param appLog      The application log
      * @return The parsed delay in milliseconds
      * @throws SCXMLExpressionException If the delay cannot be parsed
      */
     private long parseDelay(final String delayString, final Log appLog)
-    throws SCXMLExpressionException {
+            throws SCXMLExpressionException {
 
         long wait = 0L;
         long multiplier = 1L;
@@ -524,43 +473,6 @@ public class Send extends Action implements ExternalContent {
 
         }
         return wait;
-    }
-
-    /**
-     * Set node value, depending on its type, from a String.
-     *
-     * @param node A Node whose value is to be set
-     * @param value The new value
-     */
-    private void setNodeValue(final Node node, final String value) {
-        switch(node.getNodeType()) {
-            case Node.ATTRIBUTE_NODE:
-                node.setNodeValue(value);
-                break;
-            case Node.ELEMENT_NODE:
-                //remove all text children
-                if (node.hasChildNodes()) {
-                    Node child = node.getFirstChild();
-                    while (child != null) {
-                        if (child.getNodeType() == Node.TEXT_NODE) {
-                            node.removeChild(child);
-                        }
-                        child = child.getNextSibling();
-                    }
-                }
-                //create a new text node and append
-                Text txt = node.getOwnerDocument().createTextNode(value);
-                node.appendChild(txt);
-                break;
-            case Node.TEXT_NODE:
-            case Node.CDATA_SECTION_NODE:
-                ((CharacterData) node).setData(value);
-                break;
-            default:
-                String err = "Trying to set value of a strange Node type: "
-                        + node.getNodeType();
-                throw new IllegalArgumentException(err);
-        }
     }
 }
 

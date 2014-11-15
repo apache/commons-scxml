@@ -25,14 +25,19 @@ import org.apache.commons.scxml2.SCXMLSystemContext;
 import org.apache.commons.scxml2.model.EnterableState;
 
 /**
- * JXPath custom extension functions providing the SCXML In() function
+ * Commons JXPath custom extension function providing the SCXML In() predicate
  */
 public class XPathFunctions {
 
+    /**
+     * Provides the SCXML standard In() predicate for SCXML documents.
+     * @param expressionContext The context currently in use for evaluation
+     * @param state The State ID to compare with
+     * @return true if this state is currently active
+     */
     @SuppressWarnings("unchecked")
     public static boolean In(ExpressionContext expressionContext, String state) {
         Variables variables = expressionContext.getJXPathContext().getVariables();
-        Set<EnterableState> allStates = (Set<EnterableState>) variables.getVariable(SCXMLSystemContext.ALL_STATES_KEY);
-        return Builtin.isMember(allStates, state);
+        return Builtin.isMember((Set<EnterableState>) variables.getVariable(SCXMLSystemContext.ALL_STATES_KEY), state);
     }
 }

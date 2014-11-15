@@ -60,6 +60,11 @@ public class ErrorConstants {
      */
     public static final String EXPRESSION_ERROR = "EXPRESSION_ERROR";
 
+    /**
+     * An execution error.
+     */
+    public static final String EXECUTION_ERROR = "EXECUTION_ERROR";
+
     //---------------------------------------------- STATIC CONSTANTS ONLY
 
     /**

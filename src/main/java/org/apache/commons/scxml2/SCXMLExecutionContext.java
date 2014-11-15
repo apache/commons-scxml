@@ -17,11 +17,11 @@
 package org.apache.commons.scxml2;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
-import java.util.UUID;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,7 +37,7 @@ import org.apache.commons.scxml2.model.SCXML;
  * SCXMLExecutionContext provides all the services and internal data used during the interpretation of an SCXML
  * statemachine across micro and macro steps
  */
-public class SCXMLExecutionContext implements SCXMLIOProcessor {
+public class SCXMLExecutionContext implements SCXMLIOProcessor, InvokerManager {
 
     /**
      * SCXML Execution Logger for the application.
@@ -100,6 +100,11 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     private final Map<String, Invoker> invokers = new HashMap<String, Invoker>();
 
     /**
+     * The Map of the current ioProcessors
+     */
+    private final Map<String, SCXMLIOProcessor> ioProcessors = new HashMap<String, SCXMLIOProcessor>();
+
+    /**
      * Constructor
      *
      * @param externalIOProcessor The external IO Processor
@@ -117,6 +122,11 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
 
         this.scInstance = new SCInstance(this, this.evaluator, this.errorReporter);
         this.actionExecutionContext = new ActionExecutionContext(this);
+
+        ioProcessors.put(SCXMLIOProcessor.DEFAULT_EVENT_PROCESSOR, getExternalIOProcessor());
+        ioProcessors.put(SCXMLIOProcessor.SCXML_EVENT_PROCESSOR, getExternalIOProcessor());
+        ioProcessors.put(SCXMLIOProcessor.INTERNAL_EVENT_PROCESSOR, getInternalIOProcessor());
+        initializeIOProcessors();
     }
 
     public SCXMLIOProcessor getExternalIOProcessor() {
@@ -162,6 +172,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
         }
         internalEventQueue.clear();
         scInstance.initialize();
+        initializeIOProcessors();
         scInstance.setRunning(true);
     }
 
@@ -192,6 +203,16 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
         scInstance.setStateMachine(stateMachine);
         // synchronize possible derived evaluator
         this.evaluator = scInstance.getEvaluator();
+        initializeIOProcessors();
+    }
+
+    /**
+     * The SCXML specification section "C.1.1 _ioprocessors Value" states that the SCXMLEventProcessor <em>must</em>
+     * maintain a 'location' field inside its entry in the _ioprocessors environment variable.
+     * @return the 'location' of the SCXMLEventProcessor
+     */
+    public String getLocation() {
+        return null;
     }
 
     /**
@@ -221,6 +242,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
         scInstance.setEvaluator(evaluator, false);
         // synchronize possible derived evaluator
         this.evaluator = scInstance.getEvaluator();
+        initializeIOProcessors();
     }
 
     /**
@@ -269,6 +291,15 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     }
 
     /**
+     * Initialize the _ioprocessors environment variable, which only can be done when the evaluator is available
+     */
+    protected void initializeIOProcessors() {
+        if (scInstance.getEvaluator() != null) {
+            getScInstance().getSystemContext().setLocal(SCXMLSystemContext.IOPROCESSORS_KEY, Collections.unmodifiableMap(ioProcessors));
+        }
+    }
+
+    /**
      * Detach the current SCInstance to allow external serialization.
      * <p>
      * {@link #attachInstance(SCInstance)} can be used to re-attach a previously detached instance
@@ -278,6 +309,9 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     protected SCInstance detachInstance() {
         SCInstance instance = scInstance;
         scInstance.detach();
+        Map<String, Object> systemVars = scInstance.getSystemContext().getVars();
+        systemVars.remove(SCXMLSystemContext.IOPROCESSORS_KEY);
+        systemVars.remove(SCXMLSystemContext.EVENT_KEY);
         scInstance = null;
         return instance;
     }
@@ -297,8 +331,10 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
         if (scInstance != null) {
             scInstance.detach();
             try {
+                scInstance.setInternalIOProcessor(this);
                 scInstance.setEvaluator(evaluator, true);
                 scInstance.setErrorReporter(errorReporter);
+                initializeIOProcessors();
             }
             catch (ModelException me) {
                 // should not happen
@@ -362,20 +398,19 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     }
 
     /**
-     * Set the {@link Invoker} for a {@link Invoke} and returns the unique invokerId for the Invoker
+     * Register the active {@link Invoker} for a {@link Invoke}
      *
      * @param invoke The Invoke.
      * @param invoker The Invoker.
-     * @return The invokeId
+     * @throws InvokerException when the Invoker doesn't have an invokerId
      */
-    public String setInvoker(final Invoke invoke, final Invoker invoker) {
-        String invokeId = invoke.getId();
+    public void registerInvoker(final Invoke invoke, final Invoker invoker) throws InvokerException {
+        String invokeId = invoker.getInvokeId();
         if (invokeId == null) {
-            invokeId = UUID.randomUUID().toString();
+            throw new InvokerException("Registering an Invoker without invokerId");
         }
         invokeIds.put(invoke, invokeId);
         invokers.put(invokeId, invoker);
-        return invokeId;
     }
 
     /**

@@ -29,7 +29,7 @@
         </onentry>
 
         <transition event="helloevent" target="middle1">
-            <assign name="helloName1" expr="_event.data" />
+            <assign location="helloName1" expr="_event.data" />
         </transition>
     </state>
 
@@ -47,7 +47,7 @@
         </onentry>
 
         <transition event="helloevent" target="custom3">
-            <assign name="helloName1" expr="_event.data" />
+            <assign location="helloName1" expr="_event.data" />
         </transition>
     </state>
 

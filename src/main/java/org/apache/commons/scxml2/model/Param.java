@@ -37,6 +37,12 @@ public class Param implements NamespacePrefixesHolder, Serializable {
     private String name;
 
     /**
+     * Left hand side expression evaluating to a location within
+     * a previously defined XML data tree.
+     */
+    private String location;
+
+    /**
      * The param expression, may be null.
      */
     private String expr;
@@ -70,6 +76,24 @@ public class Param implements NamespacePrefixesHolder, Serializable {
      */
     public final void setName(final String name) {
         this.name = name;
+    }
+
+    /**
+     * Get the location for a previously defined XML data tree.
+     *
+     * @return Returns the location.
+     */
+    public String getLocation() {
+        return location;
+    }
+
+    /**
+     * Set the location for a previously defined XML data tree.
+     *
+     * @param location The location.
+     */
+    public void setLocation(final String location) {
+        this.location = location;
     }
 
     /**

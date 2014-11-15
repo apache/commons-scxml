@@ -54,6 +54,14 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
     /** Cancellation status. */
     private boolean cancelled;
 
+
+    /**
+     * {@inheritDoc}.
+     */
+    public String getInvokeId() {
+        return parentStateId;
+    }
+
     /**
      * {@inheritDoc}.
      */

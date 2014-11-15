@@ -57,11 +57,11 @@
 
     <state id="start">
         <onentry>
-            <log label="XML subtree copy - delete (should be foo)" expr="Data(hotel, 'hotel/stay/delete')"/>
-            <assign location="Data(hotel, 'hotel/stay')" expr="Data(airline, 'flight/dates[2]')"/>
-            <log label="XML subtree copy - delete (should be empty)" expr="Data(hotel, 'hotel/stay/delete')"/>
+            <log label="XML subtree copy - delete (should be foo)" expr="Data('string($hotel/hotel/stay/delete)')"/>
+            <assign location="Location('$hotel/hotel/stay')" expr="Data('$airline/flight/dates[2]/*')"/>
+            <log label="XML subtree copy - delete (should be empty)" expr="Data('string($hotel/hotel/stay/delete)')"/>
         </onentry>
-        <transition cond="Data(hotel, 'hotel/stay/startdate') eq '01/26/2009'" target="end" />
+        <transition cond="Data('string($hotel/hotel/stay/startdate)') eq '01/26/2009'" target="end" />
     </state>
 
     <final id="end"/>

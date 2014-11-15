@@ -90,9 +90,9 @@ public class SCXML implements Serializable, Observable,
 
 
     /**
-     * The datamodel (type) as specified as attribute on this document
+     * The datamodel name as specified as "datamodel" attribute on this document
      */
-    private String datamodelType;
+    private String datamodelName;
 
     /**
      * Optional property holding the data model for this SCXML document.
@@ -388,19 +388,19 @@ public class SCXML implements Serializable, Observable,
 	}
 
     /**
-     * Get the datamodel type as specified as attribute on this document
-     * @return The datamodel type of this document
+     * Get the datamodel name as specified as attribute on this document
+     * @return The datamodel name of this document
      */
-    public String getDatamodelType() {
-        return datamodelType;
+    public String getDatamodelName() {
+        return datamodelName;
     }
 
     /**
-     * Sets the datamodel type as specified as attribute on this document
-     * @param datamodelType The datamodel type
+     * Sets the datamodel name as specified as attribute on this document
+     * @param datamodelName The datamodel name
      */
-    public void setDatamodelType(final String datamodelType) {
-        this.datamodelType = datamodelType;
+    public void setDatamodelName(final String datamodelName) {
+        this.datamodelName = datamodelName;
     }
 }
 

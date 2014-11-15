@@ -44,11 +44,6 @@ import org.apache.commons.scxml2.semantics.SCXMLSemanticsImpl;
 public class SCXMLExecutor implements SCXMLIOProcessor {
 
     /**
-     * SCXMLExecutor put into motion without setting a model (state machine).
-     */
-    private static final String ERR_NO_STATE_MACHINE = "SCXMLExecutor: State machine not set";
-
-    /**
      * The Logger for the SCXMLExecutor.
      */
     private Log log = LogFactory.getLog(SCXMLExecutor.class);

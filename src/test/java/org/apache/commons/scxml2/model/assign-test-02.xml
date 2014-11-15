@@ -33,14 +33,14 @@
    </datamodel>
    <!-- verify the destination contents -->
    <state id="assign1">
-       <transition cond="Data(destination,'rad:bar/rad:a') eq 3 and Data(destination,'rad:bar/rad:b') eq 4" target="assign2" />
+       <transition cond="Data('number(destination/rad:bar/rad:a)') eq 3 and Data('number(destination/rad:bar/rad:b)') eq 4" target="assign2" />
    </state>
    <!-- copy the new contents and verify -->
    <state id="assign2">
        <onentry>
-           <assign location="Data(destination,'rad:bar')" expr="Data(source,'rad:foo')" />
+           <assign location="Location('destination/rad:bar')" expr="Data('source/rad:foo/*')" />
        </onentry>
-       <transition cond="Data(destination,'rad:bar/rad:a') eq 1 and Data(destination,'rad:bar/rad:b') eq 2" target="assign3" />
+       <transition cond="Data('number(destination/rad:bar/rad:a)') eq 1 and Data('number(destination/rad:bar/rad:b)') eq 2" target="assign3" />
    </state>
    <final id="assign3"/>
 </scxml>

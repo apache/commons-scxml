@@ -34,7 +34,7 @@
               y = 3 * 4;
               var z = 'foo';
             </script>
-            <assign name="z" expr="'bar'"/> <!-- z is defined by script -->
+            <assign location="z" expr="'bar'"/> <!-- z is defined by script -->
         </onentry>
         <transition target="end" cond="x == 2 &amp;&amp; y == 12 &amp;&amp; z == 'bar'"/>
     </state>

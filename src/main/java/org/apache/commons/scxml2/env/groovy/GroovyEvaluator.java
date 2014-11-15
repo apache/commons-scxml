@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,9 +31,9 @@ import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.EvaluatorProvider;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.SCXMLSystemContext;
+import org.apache.commons.scxml2.XPathBuiltin;
 import org.apache.commons.scxml2.env.EffectiveContextMap;
 import org.apache.commons.scxml2.model.SCXML;
-import org.w3c.dom.Node;
 
 /**
  * Evaluator implementation enabling use of Groovy expressions in SCXML documents.
@@ -45,13 +46,18 @@ public class GroovyEvaluator implements Evaluator, Serializable {
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
 
-    private static final String SUPPORTED_DATAMODEL = "groovy";
+    /**
+     * Unique context variable name used for temporary reference to assign data (thus must be a valid variable name)
+     */
+    private static final String ASSIGN_VARIABLE_NAME = "a"+UUID.randomUUID().toString().replace('-','x');
+
+    public static final String SUPPORTED_DATA_MODEL = "groovy";
 
     public static class GroovyEvaluatorProvider implements EvaluatorProvider {
 
         @Override
         public String getSupportedDatamodel() {
-            return SUPPORTED_DATAMODEL;
+            return SUPPORTED_DATA_MODEL;
         }
 
         @Override
@@ -153,7 +159,7 @@ public class GroovyEvaluator implements Evaluator, Serializable {
 
     @Override
     public String getSupportedDatamodel() {
-        return SUPPORTED_DATAMODEL;
+        return SUPPORTED_DATA_MODEL;
     }
 
     /**
@@ -175,13 +181,14 @@ public class GroovyEvaluator implements Evaluator, Serializable {
             throw new SCXMLExpressionException(ERR_CTX_TYPE);
         }
 
-        GroovyContext groovyCtx = (GroovyContext) ctx;
+        final GroovyContext groovyCtx = (GroovyContext) ctx;
         if (groovyCtx.getGroovyEvaluator() == null) {
             groovyCtx.setGroovyEvaluator(this);
         }
         try {
             return getScript(getEffectiveContext(groovyCtx), groovyCtx.getScriptBaseClass(), expr).run();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             String exMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getCanonicalName();
             throw new SCXMLExpressionException("eval('" + expr + "'): " + exMessage, e);
         }
@@ -200,12 +207,13 @@ public class GroovyEvaluator implements Evaluator, Serializable {
             throw new SCXMLExpressionException(ERR_CTX_TYPE);
         }
 
-        GroovyContext groovyCtx = (GroovyContext) ctx;
+        final GroovyContext groovyCtx = (GroovyContext) ctx;
         if (groovyCtx.getGroovyEvaluator() == null) {
             groovyCtx.setGroovyEvaluator(this);
         }
         try {
-            return (Boolean)getScript(getEffectiveContext(groovyCtx), groovyCtx.getScriptBaseClass(), expr).run();
+            final Object result = getScript(getEffectiveContext(groovyCtx), groovyCtx.getScriptBaseClass(), expr).run();
+            return result == null ? Boolean.FALSE : (Boolean)result;
         } catch (Exception e) {
             String exMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getCanonicalName();
             throw new SCXMLExpressionException("evalCond('" + expr + "'): " + exMessage, e);
@@ -216,9 +224,12 @@ public class GroovyEvaluator implements Evaluator, Serializable {
      * @see Evaluator#evalLocation(Context, String)
      */
     @Override
-    public Node evalLocation(final Context ctx, final String expr) throws SCXMLExpressionException {
+    public Object evalLocation(final Context ctx, final String expr) throws SCXMLExpressionException {
         if (expr == null) {
             return null;
+        }
+        else if (ctx.has(expr)) {
+            return expr;
         }
 
         if (!(ctx instanceof GroovyContext)) {
@@ -231,11 +242,38 @@ public class GroovyEvaluator implements Evaluator, Serializable {
         }
         try {
             final GroovyContext effective = getEffectiveContext(groovyCtx);
-            effective.setEvaluatingLocation(true);
-            return (Node)getScript(effective, groovyCtx.getScriptBaseClass(), expr).run();
+            return getScript(effective, groovyCtx.getScriptBaseClass(), expr).run();
         } catch (Exception e) {
             String exMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getCanonicalName();
             throw new SCXMLExpressionException("evalLocation('" + expr + "'): " + exMessage, e);
+        }
+    }
+
+    /**
+     * @see Evaluator#evalAssign(Context, String, Object, AssignType, String)
+     */
+    public void evalAssign(final Context ctx, final String location, final Object data, final AssignType type,
+                           final String attr) throws SCXMLExpressionException {
+
+        final Object loc = evalLocation(ctx, location);
+        if (loc != null) {
+
+            if (XPathBuiltin.isXPathLocation(ctx, loc)) {
+                XPathBuiltin.assign(ctx, loc, data, type, attr);
+            }
+            else {
+                final StringBuilder sb = new StringBuilder(location).append("=").append(ASSIGN_VARIABLE_NAME);
+                try {
+                    ctx.getVars().put(ASSIGN_VARIABLE_NAME, data);
+                    eval(ctx, sb.toString());
+                }
+                finally {
+                    ctx.getVars().remove(ASSIGN_VARIABLE_NAME);
+                }
+            }
+        }
+        else {
+            throw new SCXMLExpressionException("evalAssign - cannot resolve location: '" + location + "'");
         }
     }
 
@@ -252,22 +290,21 @@ public class GroovyEvaluator implements Evaluator, Serializable {
             throw new SCXMLExpressionException(ERR_CTX_TYPE);
         }
 
-        GroovyContext groovyCtx = (GroovyContext) ctx;
+        final GroovyContext groovyCtx = (GroovyContext) ctx;
         if (groovyCtx.getGroovyEvaluator() == null) {
             groovyCtx.setGroovyEvaluator(this);
         }
         try {
             final GroovyContext effective = getEffectiveContext(groovyCtx);
-            effective.setEvaluatingLocation(true);
-            boolean inGlobalContext = groovyCtx.getParent() instanceof SCXMLSystemContext;
-            Script script = getScript(effective, groovyCtx.getScriptBaseClass(), scriptSource);
-            Object result = script.run();
+            final boolean inGlobalContext = groovyCtx.getParent() instanceof SCXMLSystemContext;
+            final Script script = getScript(effective, groovyCtx.getScriptBaseClass(), scriptSource);
+            final Object result = script.run();
             if (inGlobalContext && useInitialScriptAsBaseScript) {
                 groovyCtx.setScriptBaseClass(script.getClass().getName());
             }
             return result;
         } catch (Exception e) {
-            String exMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getCanonicalName();
+            final String exMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getCanonicalName();
             throw new SCXMLExpressionException("evalScript('" + scriptSource + "'): " + exMessage, e);
         }
     }
@@ -297,7 +334,7 @@ public class GroovyEvaluator implements Evaluator, Serializable {
      * @return The effective GroovyContext for the path leading up to
      *         document root.
      */
-    private GroovyContext getEffectiveContext(final GroovyContext nodeCtx) {
-        return new GroovyContext(new EffectiveContextMap(nodeCtx), this);
+    protected GroovyContext getEffectiveContext(final GroovyContext nodeCtx) {
+        return new GroovyContext(nodeCtx, new EffectiveContextMap(nodeCtx), this);
     }
 }

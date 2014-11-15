@@ -31,7 +31,7 @@
     <parallel id="para">
 
         <onentry>
-            <assign location="Data(root, 'root/count')" expr="Data(root, 'root/count') + 1"/>
+            <assign location="Location('root/root/count')" expr="Data('number(root/root/count)') + 1"/>
         </onentry>
 
         <state id="para1">
@@ -40,30 +40,30 @@
                 <transition target="para11"/>
             </initial>
             <onentry>
-                <assign location="Data(root, 'root/count')" expr="Data(root, 'root/count') + 1"/>
+                <assign location="Location('root/root/count')" expr="Data('number(root/root/count)') + 1"/>
             </onentry>
 
             <state id="para11">
                 <onentry>
-                    <assign location="Data(root, 'root/count')" expr="Data(root, 'root/count') + 1"/>
+                      <assign location="Location('root/root/count')" expr="Data('number(root/root/count)') + 1"/>
                 </onentry>
                 <transition event="foo" target="para12"/>
                 <onexit>
-                    <assign location="Data(root, 'root/count')" expr="Data(root, 'root/count') + 1"/>
+                      <assign location="Location('root/root/count')" expr="Data('number(root/root/count)') + 1"/>
                 </onexit>
             </state>
 
             <final id="para12">
                 <onentry>
-                    <assign location="Data(root, 'root/count')" expr="Data(root, 'root/count') + 1"/>
+                    <assign location="Location('root/root/count')" expr="Data('number(root/root/count)') + 1"/>
                 </onentry>
                 <onexit>
-                    <assign location="Data(root, 'root/count')" expr="Data(root, 'root/count') + 1"/>
+                    <assign location="Location('root/root/count')" expr="Data('number(root/root/count)') + 1"/>
                 </onexit>
             </final>
 
             <onexit>
-                <assign location="Data(root, 'root/count')" expr="Data(root, 'root/count') + 1"/>
+                <assign location="Location('root/root/count')" expr="Data('number(root/root/count)') + 1"/>
             </onexit>
 
         </state>
@@ -74,30 +74,30 @@
                 <transition target="para21"/>
             </initial>
             <onentry>
-                <assign location="Data(root, 'root/count')" expr="Data(root, 'root/count') + 1"/>
+                <assign location="Location('root/root/count')" expr="Data('number(root/root/count)') + 1"/>
             </onentry>
 
             <state id="para21">
                 <onentry>
-                    <assign location="Data(root, 'root/count')" expr="Data(root, 'root/count') + 1"/>
+                    <assign location="Location('root/root/count')" expr="Data('number(root/root/count)') + 1"/>
                 </onentry>
                 <transition event="bar" target="para22"/>
                 <onexit>
-                    <assign location="Data(root, 'root/count')" expr="Data(root, 'root/count') + 1"/>
+                    <assign location="Location('root/root/count')" expr="Data('number(root/root/count)') + 1"/>
                 </onexit>
             </state>
 
             <final id="para22">
                 <onentry>
-                    <assign location="Data(root, 'root/count')" expr="Data(root, 'root/count') + 1"/>
+                    <assign location="Location('root/root/count')" expr="Data('number(root/root/count)') + 1"/>
                 </onentry>
                 <onexit>
-                    <assign location="Data(root, 'root/count')" expr="Data(root, 'root/count') + 1"/>
+                    <assign location="Location('root/root/count')" expr="Data('number(root/root/count)') + 1"/>
                 </onexit>
             </final>
 
             <onexit>
-                <assign location="Data(root, 'root/count')" expr="Data(root, 'root/count') + 1"/>
+                <assign location="Location('root/root/count')" expr="Data('number(root/root/count)') + 1"/>
             </onexit>
 
         </state>
@@ -105,7 +105,7 @@
         <transition event="done.state.para" target="end"/>
 
         <onexit>
-            <assign location="Data(root, 'root/count')" expr="Data(root, 'root/count') + 1"/>
+            <assign location="Location('root/root/count')" expr="Data('number(root/root/count)') + 1"/>
         </onexit>
 
     </parallel>

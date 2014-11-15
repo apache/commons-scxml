@@ -61,16 +61,16 @@
 
       <!-- start cooking -->
       <transition event="door_close" target="cooking">
-        <assign name="door_closed" expr="true"/>
+        <assign location="door_closed" expr="true"/>
       </transition>
     </state>
 
     <state id="cooking">
       <transition event="door_open" target="idle">
-        <assign name="door_closed" expr="false"/>
+        <assign location="door_closed" expr="false"/>
       </transition> 
       <transition event="time" target="cooking">
-        <assign name="timer" expr="timer + 1"/>
+        <assign location="timer" expr="timer + 1"/>
       </transition>
     </state>
 

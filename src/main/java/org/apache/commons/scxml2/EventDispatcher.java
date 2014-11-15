@@ -16,10 +16,7 @@
  */
 package org.apache.commons.scxml2;
 
-import java.util.List;
 import java.util.Map;
-
-import org.w3c.dom.Node;
 
 /**
  * The event controller interface used to send messages containing
@@ -40,22 +37,19 @@ public interface EventDispatcher {
     /**
      * Send this message to the target.
      *
+     * @param ioProcessors the available SCXMLIOProcessors, the same map as the SCXML system variable _ioprocessors
      * @param id The ID of the send message
      * @param target An expression returning the target location of the event
      * @param type The type of the Event I/O Processor that the event should
      *  be dispatched to
      * @param event The type of event being generated.
-     * @param params A list of zero or more whitespace separated variable
-     *  names to be included with the event.
+     * @param data The event payload
      * @param hints The data containing information which may be
      *  used by the implementing platform to configure the event processor
      * @param delay The event is dispatched after the delay interval elapses
-     * @param externalNodes The list of external nodes associated with
-     *  the &lt;send&gt; element.
      */
-    void send(String id, String target, String type,
-            String event, Map<String, Object> params, Object hints,
-            long delay, List<Node> externalNodes);
+    void send(Map<String, SCXMLIOProcessor> ioProcessors, String id, String target, String type, String event,
+              Object data, Object hints, long delay);
 
 }
 

@@ -25,6 +25,7 @@ import org.apache.commons.scxml2.env.jexl.JexlEvaluator;
 import org.apache.commons.scxml2.env.xpath.XPathEvaluator;
 import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.SCXML;
+import static org.apache.commons.scxml2.Evaluator.DEFAULT_DATA_MODEL;
 
 /**
  * A static singleton factory for {@link EvaluatorProvider}s by supported SCXML datamodel type.
@@ -35,7 +36,7 @@ import org.apache.commons.scxml2.model.SCXML;
  * <p>
  *  The builtin supported providers are:
  *  <ul>
- *      <li>no datamodel (default) or datamodel="jexl": {@link JexlEvaluator.JexlEvaluatorProvider}</li>
+ *      <li>no or empty datamodel (default) or datamodel="jexl": {@link JexlEvaluator.JexlEvaluatorProvider}</li>
  *      <li>datamodel="ecmascript": {@link JSEvaluator.JSEvaluatorProvider}</li>
  *      <li>datamodel="groovy": {@link GroovyEvaluator.GroovyEvaluatorProvider}</li>
  *      <li>datamodel="xpath": {@link XPathEvaluator.XPathEvaluatorProvider}</li>
@@ -47,8 +48,8 @@ import org.apache.commons.scxml2.model.SCXML;
  *  </p>
  *  <p>
  *  The default provider can be overridden using the {@link #setDefaultProvider(EvaluatorProvider)} which will
- *  register the provider under an empty ("") value for the datamodel.<br/>
- *  Note: this is <em>not</em> the same as datamodel="null" (which currently is not (yet) supported)!
+ *  register the provider under the {@link Evaluator#DEFAULT_DATA_MODEL} ("") value for the datamodel.<br/>
+ *  Note: this is <em>not</em> the same as datamodel="null"!
  * </p>
  */
 public class EvaluatorFactory {
@@ -58,45 +59,49 @@ public class EvaluatorFactory {
     private final Map<String, EvaluatorProvider> providers = new ConcurrentHashMap<String, EvaluatorProvider>();
 
     private EvaluatorFactory() {
-        providers.put("xpath", new XPathEvaluator.XPathEvaluatorProvider());
-        providers.put("ecmascript", new JSEvaluator.JSEvaluatorProvider());
-        providers.put("groovy", new GroovyEvaluator.GroovyEvaluatorProvider());
-        providers.put("jexl", new JexlEvaluator.JexlEvaluatorProvider());
-        providers.put("", providers.get("jexl"));
+        providers.put(XPathEvaluator.SUPPORTED_DATA_MODEL, new XPathEvaluator.XPathEvaluatorProvider());
+        providers.put(JSEvaluator.SUPPORTED_DATA_MODEL, new JSEvaluator.JSEvaluatorProvider());
+        providers.put(GroovyEvaluator.SUPPORTED_DATA_MODEL, new GroovyEvaluator.GroovyEvaluatorProvider());
+        providers.put(JexlEvaluator.SUPPORTED_DATA_MODEL, new JexlEvaluator.JexlEvaluatorProvider());
+        providers.put(DEFAULT_DATA_MODEL, providers.get(JexlEvaluator.SUPPORTED_DATA_MODEL));
     }
 
     public static void setDefaultProvider(EvaluatorProvider defaultProvider) {
-        INSTANCE.providers.put("", defaultProvider);
+        INSTANCE.providers.put(DEFAULT_DATA_MODEL, defaultProvider);
     }
 
+    @SuppressWarnings("unused")
     public static EvaluatorProvider getDefaultProvider() {
-        return INSTANCE.providers.get("");
+        return INSTANCE.providers.get(DEFAULT_DATA_MODEL);
     }
 
-    public static EvaluatorProvider getEvaluatorProvider(String datamodelType) {
-        return INSTANCE.providers.get(datamodelType == null ? "" : datamodelType);
+    @SuppressWarnings("unused")
+    public static EvaluatorProvider getEvaluatorProvider(String datamodelName) {
+        return INSTANCE.providers.get(datamodelName == null ? DEFAULT_DATA_MODEL : datamodelName);
     }
 
+    @SuppressWarnings("unused")
     public static void registerEvaluatorProvider(EvaluatorProvider provider) {
         INSTANCE.providers.put(provider.getSupportedDatamodel(), provider);
     }
 
-    public static void unregisterEvaluatorProvider(String datamodelType) {
-        INSTANCE.providers.remove(datamodelType == null ? "" : datamodelType);
+    @SuppressWarnings("unused")
+    public static void unregisterEvaluatorProvider(String datamodelName) {
+        INSTANCE.providers.remove(datamodelName == null ? DEFAULT_DATA_MODEL : datamodelName);
     }
 
     /**
-     * Returns a dedicated Evaluator instance for a specific SCXML document its documentmodel type.
+     * Returns a dedicated Evaluator instance for a specific SCXML document its documentmodel.
      * <p>If no SCXML document is provided a default Evaluator will be returned.</p>
      * @param document The document to return a dedicated Evaluator for. May be null to retrieve the default Evaluator.
      * @return a new and not sharable Evaluator instance for the provided document, or a default Evaluator otherwise
-     * @throws ModelException If the SCXML document datamodel type is not supported.
+     * @throws ModelException If the SCXML document datamodel is not supported.
      */
     public static Evaluator getEvaluator(SCXML document) throws ModelException {
-        String datamodelType = document != null ? document.getDatamodelType() : null;
-        EvaluatorProvider provider = INSTANCE.providers.get(datamodelType == null ? "" : datamodelType);
+        String datamodelName = document != null ? document.getDatamodelName() : null;
+        EvaluatorProvider provider = INSTANCE.providers.get(datamodelName == null ? DEFAULT_DATA_MODEL : datamodelName);
         if (provider == null) {
-            throw new ModelException("Unsupported SCXML document datamodel type \""+(datamodelType)+"\"");
+            throw new ModelException("Unsupported SCXML document datamodel \""+(datamodelName)+"\"");
         }
         return document != null ? provider.getEvaluator(document) : provider.getEvaluator();
     }

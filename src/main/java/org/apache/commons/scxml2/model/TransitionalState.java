@@ -217,6 +217,7 @@ public abstract class TransitionalState extends EnterableState {
      */
     public final void addInvoke(final Invoke invoke) {
         this.invokes.add(invoke);
+        invoke.setParentEnterableState(this);
     }
 
     /**

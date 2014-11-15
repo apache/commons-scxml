@@ -16,18 +16,17 @@
  */
 package org.apache.commons.scxml2;
 
-import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.scxml2.env.SimpleDispatcher;
 import org.apache.commons.scxml2.model.EnterableState;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.w3c.dom.Node;
+
 /**
- * Unit tests {@link org.apache.commons.scxml2.SCXMLExecutor}.
+ * Unit tests
  */
 public class WizardsTest {
 
@@ -74,25 +73,33 @@ public class WizardsTest {
         Assert.assertEquals("state4", currentStates.iterator().next().getId());
     }
 
-    static class TestEventDispatcher implements EventDispatcher, Serializable {
+    static class TestEventDispatcher extends SimpleDispatcher {
         private static final long serialVersionUID = 1L;
         // If you change this, you must also change testWizard02Sample()
+
         int callback = 0;
-        public void send(String id, String target, String type,
-                String event, Map<String, Object> params, Object hints, long delay,
-                List<Node> externalNodes) {
-            int i = ((Integer) params.get("aValue")).intValue();
-            switch (callback) {
-                case 0:
-                    Assert.assertTrue(i == 2); // state2
-                    callback++;
-                    break;
-                case 1:
-                    Assert.assertTrue(i == 4); // state4
-                    callback++;
-                    break;
-                default:
-                    Assert.fail("More than 2 TestEventDispatcher <send> callbacks");
+
+        @SuppressWarnings("unchecked")
+        public void send(Map<String, SCXMLIOProcessor> ioProcessors, String id, String target, String type,
+                String event, Object data, Object hints, long delay) {
+            if ("foo".equals(type)) {
+                Map<String, Object> params = (Map<String, Object>)data;
+                int i = ((Integer) params.get("aValue"));
+                switch (callback) {
+                    case 0:
+                        Assert.assertTrue(i == 2); // state2
+                        callback++;
+                        break;
+                    case 1:
+                        Assert.assertTrue(i == 4); // state4
+                        callback++;
+                        break;
+                    default:
+                        Assert.fail("More than 2 TestEventDispatcher <send> callbacks for type \"foo\"");
+                }
+            }
+            else {
+                super.send(ioProcessors, id, target, type, event, data, hints, delay);
             }
         }
         public void cancel(String sendId) {

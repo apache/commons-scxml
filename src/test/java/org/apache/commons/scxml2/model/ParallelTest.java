@@ -16,15 +16,10 @@
  */
 package org.apache.commons.scxml2.model;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.scxml2.Builtin;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.junit.Assert;
 import org.junit.Test;
-import org.w3c.dom.Node;
 
 public class ParallelTest {
 
@@ -48,17 +43,13 @@ public class ParallelTest {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/parallel-03.xml");
         exec.go();
         SCXMLTestHelper.assertPostTriggerStates(exec, "dummy.event", new String[] { "para11", "para21" });
-        Node data = (Node) exec.getRootContext().get("root");
-        Map<String, String> namespaces = new HashMap<String, String>();
-        namespaces.put("", "http://www.w3.org/2005/07/scxml");
-        Object count = Builtin.data(namespaces, data, "root/count");
+        Object count = exec.getEvaluator().eval(exec.getRootContext(),"Data('string(root/root/count)')");
         Assert.assertEquals("5.0", count.toString());
         SCXMLTestHelper.assertPostTriggerStates(exec, "foo", new String[] { "para12", "para21" });
-        count = Builtin.data(namespaces, data, "root/count");
+        count = exec.getEvaluator().eval(exec.getRootContext(),"Data('string(root/root/count)')");
         Assert.assertEquals("7.0", count.toString());
         SCXMLTestHelper.assertPostTriggerState(exec, "bar", "end");
-        count = Builtin.data(namespaces, data, "root/count");
+        count = exec.getEvaluator().eval(exec.getRootContext(),"Data('string(root/root/count)')");
         Assert.assertEquals("14.0", count.toString());
     }
-
 }

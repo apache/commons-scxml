@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -14,31 +13,26 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
--->
-<scxml xmlns="http://www.w3.org/2005/07/scxml"
-       version="1.0"
-       datamodel="jexl"
-       initial="script">
+ */
+package org.apache.commons.scxml2.model;
 
-    <datamodel>
-        <data id="x" expr="1"/>
-    </datamodel>
+/**
+ * A <code>ContentContainer</code> represents an element in the SCXML
+ * document that may have a (single) child &lt;content/&gt; element
+ */
 
-    <state id="script">
-        <datamodel>
-            <data id="y" expr="2"/>
-        </datamodel>
-        <onentry>
-            <script>
-              x = y;
-              y = 3 * 4;
-              z = 'foo';
-            </script>
-            <assign location="z" expr="'bar'"/> <!-- z is defined by script -->
-        </onentry>
-        <transition target="end" cond="x eq 2 and y eq 12 and z eq 'bar'"/>
-    </state>
+public interface ContentContainer {
 
-    <final id="end"/>
+    /**
+     * Returns the content
+     *
+     * @return the content
+     */
+    Content getContent();
 
-</scxml>
+    /**
+     * Sets the content
+     * @param content the content to set
+     */
+    void setContent(Content content);
+}

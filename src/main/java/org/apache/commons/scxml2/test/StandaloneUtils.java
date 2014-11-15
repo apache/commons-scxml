@@ -27,10 +27,8 @@ import javax.xml.stream.XMLStreamException;
 
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
-import org.apache.commons.scxml2.EventDispatcher;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.TriggerEvent;
-import org.apache.commons.scxml2.env.SimpleScheduler;
 import org.apache.commons.scxml2.env.Tracer;
 import org.apache.commons.scxml2.invoke.SimpleSCXMLInvoker;
 import org.apache.commons.scxml2.io.SCXMLReader;
@@ -82,8 +80,6 @@ public final class StandaloneUtils {
             }
             System.out.println(SCXMLWriter.write(doc));
             SCXMLExecutor exec = new SCXMLExecutor(evaluator, null, trc);
-            EventDispatcher ed = new SimpleScheduler(exec);
-            exec.setEventdispatcher(ed);
             exec.setStateMachine(doc);
             exec.addListener(doc, trc);
             exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
@@ -113,7 +109,7 @@ public final class StandaloneUtils {
                     rootCtx.setLocal(name, value);
                     System.out.println("Set variable " + name + " to "
                         + value);
-                } else if (event == null || event.trim().length() == 0
+                } else if (event.trim().length() == 0
                            || event.equalsIgnoreCase("null")) {
                     TriggerEvent[] evts = {new TriggerEvent(null,
                         TriggerEvent.SIGNAL_EVENT, null)};

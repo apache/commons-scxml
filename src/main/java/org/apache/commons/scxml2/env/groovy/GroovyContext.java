@@ -41,12 +41,6 @@ public class GroovyContext extends SimpleContext {
 
     private static final Log log = LogFactory.getLog(GroovyContext.class);
 
-    /**
-     * Internal flag to indicate whether it is to evaluate a location
-     * that returns a Node within an XML data tree.
-     */
-    private boolean evaluatingLocation = false;
-
     private String scriptBaseClass;
     private GroovyEvaluator evaluator;
     private GroovyContextBinding binding;
@@ -71,8 +65,8 @@ public class GroovyContext extends SimpleContext {
      *
      * @param initialVars The initial set of variables.
      */
-    public GroovyContext(final Map<String, Object> initialVars, GroovyEvaluator evaluator) {
-        super(initialVars);
+    public GroovyContext(final Context parent, final Map<String, Object> initialVars, GroovyEvaluator evaluator) {
+        super(parent, initialVars);
         this.evaluator = evaluator;
     }
 
@@ -92,22 +86,6 @@ public class GroovyContext extends SimpleContext {
 
     protected void setGroovyEvaluator(GroovyEvaluator evaluator) {
         this.evaluator = evaluator;
-    }
-
-    /**
-     * Returns the internal flag to indicate whether it is to evaluate a location
-     * that returns a Node within an XML data tree.
-     */
-    public boolean isEvaluatingLocation() {
-        return evaluatingLocation;
-    }
-
-    /**
-     * Sets the internal flag to indicate whether it is to evaluate a location
-     * that returns a Node within an XML data tree.
-     */
-    public void setEvaluatingLocation(boolean evaluatingLocation) {
-        this.evaluatingLocation = evaluatingLocation;
     }
 
     @Override

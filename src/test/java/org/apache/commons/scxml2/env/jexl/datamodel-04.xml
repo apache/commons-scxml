@@ -30,7 +30,7 @@
 
     <state id="ten">
         <transition event="done.state.ten" target="twenty">
-            <assign name="payload" expr="_event.data" />
+            <assign location="payload" expr="_event.data" />
         </transition>
     </state>
 

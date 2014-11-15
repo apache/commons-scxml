@@ -47,6 +47,7 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.PathResolver;
 import org.apache.commons.scxml2.env.SimpleErrorHandler;
 import org.apache.commons.scxml2.env.URLResolver;
@@ -54,12 +55,15 @@ import org.apache.commons.scxml2.model.Action;
 import org.apache.commons.scxml2.model.ActionsContainer;
 import org.apache.commons.scxml2.model.Assign;
 import org.apache.commons.scxml2.model.Cancel;
+import org.apache.commons.scxml2.model.Content;
+import org.apache.commons.scxml2.model.ContentContainer;
 import org.apache.commons.scxml2.model.CustomAction;
 import org.apache.commons.scxml2.model.Data;
 import org.apache.commons.scxml2.model.Datamodel;
 import org.apache.commons.scxml2.model.Else;
 import org.apache.commons.scxml2.model.ElseIf;
 import org.apache.commons.scxml2.model.EnterableState;
+import org.apache.commons.scxml2.model.ParamsContainer;
 import org.apache.commons.scxml2.model.TransitionalState;
 import org.apache.commons.scxml2.model.Raise;
 import org.apache.commons.scxml2.model.Executable;
@@ -268,6 +272,7 @@ public final class SCXMLReader {
 
     //---- ATTRIBUTE NAMES ----//
     private static final String ATTR_ARRAY = "array";
+    private static final String ATTR_ATTR = "attr";
     private static final String ATTR_AUTOFORWARD = "autoforward";
     private static final String ATTR_COND = "cond";
     private static final String ATTR_DATAMODEL = "datamodel";
@@ -621,7 +626,7 @@ public final class SCXMLReader {
     private static void readSCXML(final XMLStreamReader reader, final Configuration configuration, final SCXML scxml)
             throws IOException, ModelException, XMLStreamException {
 
-        scxml.setDatamodelType(readAV(reader, ATTR_DATAMODEL));
+        scxml.setDatamodelName(readAV(reader, ATTR_DATAMODEL));
         scxml.setExmode(readAV(reader, ATTR_EXMODE));
         scxml.setInitial(readAV(reader, ATTR_INITIAL));
         scxml.setName(readAV(reader, ATTR_NAME));
@@ -662,12 +667,7 @@ public final class SCXMLReader {
                     break;
                 case XMLStreamConstants.END_ELEMENT:
                     popNamespaces(reader, configuration);
-                    nsURI = reader.getNamespaceURI();
-                    name = reader.getLocalName();
-                    if (XMLNS_SCXML.equals(nsURI) && ELEM_SCXML.equals(name)) {
-                        break loop;
-                    }
-                    break;
+                    break loop;
                 default:
             }
         }
@@ -760,12 +760,7 @@ public final class SCXMLReader {
                     break;
                 case XMLStreamConstants.END_ELEMENT:
                     popNamespaces(reader, configuration);
-                    nsURI = reader.getNamespaceURI();
-                    name = reader.getLocalName();
-                    if (XMLNS_SCXML.equals(nsURI) && ELEM_STATE.equals(name)) {
-                        break loop;
-                    }
-                    break;
+                    break loop;
                 default:
             }
         }
@@ -850,12 +845,7 @@ public final class SCXMLReader {
                     break;
                 case XMLStreamConstants.END_ELEMENT:
                     popNamespaces(reader, configuration);
-                    nsURI = reader.getNamespaceURI();
-                    name = reader.getLocalName();
-                    if (XMLNS_SCXML.equals(nsURI) && ELEM_PARALLEL.equals(name)) {
-                        break loop;
-                    }
-                    break;
+                    break loop;
                 default:
             }
         }
@@ -913,12 +903,7 @@ public final class SCXMLReader {
                     break;
                 case XMLStreamConstants.END_ELEMENT:
                     popNamespaces(reader, configuration);
-                    nsURI = reader.getNamespaceURI();
-                    name = reader.getLocalName();
-                    if (XMLNS_SCXML.equals(nsURI) && ELEM_FINAL.equals(name)) {
-                        break loop;
-                    }
-                    break;
+                    break loop;
                 default:
             }
         }
@@ -952,7 +937,7 @@ public final class SCXMLReader {
         }
 
         // Parse external document
-        SCXML externalSCXML = null;
+        SCXML externalSCXML;
         try {
             externalSCXML = SCXMLReader.readInternal(configuration, new URL(location), null, null, null, null);
         } catch (Exception e) {
@@ -1082,12 +1067,7 @@ public final class SCXMLReader {
                     break;
                 case XMLStreamConstants.END_ELEMENT:
                     popNamespaces(reader, configuration);
-                    nsURI = reader.getNamespaceURI();
-                    name = reader.getLocalName();
-                    if (XMLNS_SCXML.equals(nsURI) && ELEM_DATAMODEL.equals(name)) {
-                        break loop;
-                    }
-                    break;
+                    break loop;
                 default:
             }
         }
@@ -1115,7 +1095,7 @@ public final class SCXMLReader {
         datum.setId(readRequiredAV(reader, ELEM_DATA, ATTR_ID));
         datum.setExpr(readAV(reader, ATTR_EXPR));
         readNamespaces(configuration, datum);
-        datum.setNode(readNode(reader, configuration, XMLNS_SCXML, ELEM_DATA, new String[] {"id"}));
+        datum.setNode(readNode(reader, configuration, XMLNS_SCXML, ELEM_DATA, new String[]{"id"}));
         dm.addData(datum);
     }
 
@@ -1156,7 +1136,7 @@ public final class SCXMLReader {
                         } else if (ELEM_FINALIZE.equals(name)) {
                             readFinalize(reader, configuration, parent, invoke);
                         } else if (ELEM_CONTENT.equals(name)) {
-                            readContent(reader, configuration, parent, invoke);
+                            readContent(reader, configuration, invoke);
                         } else {
                             reportIgnoredElement(reader, configuration, ELEM_INVOKE, nsURI, name);
                         }
@@ -1166,12 +1146,7 @@ public final class SCXMLReader {
                     break;
                 case XMLStreamConstants.END_ELEMENT:
                     popNamespaces(reader, configuration);
-                    nsURI = reader.getNamespaceURI();
-                    name = reader.getLocalName();
-                    if (XMLNS_SCXML.equals(nsURI) && ELEM_INVOKE.equals(name)) {
-                        break loop;
-                    }
-                    break;
+                    break loop;
                 default:
             }
         }
@@ -1184,19 +1159,36 @@ public final class SCXMLReader {
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
-     * @param parent The parent {@link Invoke} for this param.
+     * @param parent The parent {@link org.apache.commons.scxml2.model.ParamsContainer} for this param.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readParam(final XMLStreamReader reader, final Configuration configuration,
-                                  final Invoke parent)
+                                  final ParamsContainer parent)
             throws XMLStreamException, ModelException {
 
         Param param = new Param();
         param.setName(readRequiredAV(reader, ELEM_PARAM, ATTR_NAME));
-        param.setExpr(readAV(reader, ATTR_EXPR));
+        String location = readAV(reader, ATTR_LOCATION);
+        String expr = readAV(reader, ATTR_EXPR);
+        if (expr != null) {
+            if (location != null) {
+                reportConflictingAttribute(reader, configuration, ELEM_PARAM, ATTR_LOCATION, ATTR_EXPR);
+            }
+            else {
+                param.setExpr(expr);
+            }
+        }
+        else if (location == null) {
+            // force error missing required location or expr: use location attr for this
+            param.setLocation(readRequiredAV(reader, ELEM_PARAM, ATTR_LOCATION));
+        }
+        else {
+            param.setLocation(location);
+        }
         readNamespaces(configuration, param);
-        parent.addParam(param);
+        parent.getParams().add(param);
+        skipToEndElement(reader);
     }
 
     /**
@@ -1226,16 +1218,32 @@ public final class SCXMLReader {
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
-     * @param state The {@link TransitionalState} which contains the parent {@link Invoke}.
-     * @param invoke The parent {@link Invoke} for this content.
+     * @param contentContainer The {@link ContentContainer} for this content.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readContent(final XMLStreamReader reader, final Configuration configuration,
-                                    final TransitionalState state, final Invoke invoke)
+                                    final ContentContainer contentContainer)
             throws XMLStreamException {
 
-        // TODO content support
+        Content content = new Content();
+        content.setExpr(readAV(reader, ATTR_EXPR));
+        if (content.getExpr() != null) {
+            skipToEndElement(reader);
+        }
+        else {
+            Node body = readNode(reader, configuration, XMLNS_SCXML, ELEM_CONTENT, new String[]{});
+            if (body.hasChildNodes()) {
+                NodeList children = body.getChildNodes();
+                if (children.getLength() == 1 && children.item(0).getNodeType() == Node.TEXT_NODE) {
+                    content.setBody(children.item(0).getNodeValue());
+                }
+                else {
+                    content.setBody(body);
+                }
+            }
+        }
+        contentContainer.setContent(content);
     }
 
     /**
@@ -1274,12 +1282,7 @@ public final class SCXMLReader {
                     break;
                 case XMLStreamConstants.END_ELEMENT:
                     popNamespaces(reader, configuration);
-                    nsURI = reader.getNamespaceURI();
-                    name = reader.getLocalName();
-                    if (XMLNS_SCXML.equals(nsURI) && ELEM_INITIAL.equals(name)) {
-                        break loop;
-                    }
-                    break;
+                    break loop;
                 default:
             }
         }
@@ -1329,12 +1332,7 @@ public final class SCXMLReader {
                     break;
                 case XMLStreamConstants.END_ELEMENT:
                     popNamespaces(reader, configuration);
-                    nsURI = reader.getNamespaceURI();
-                    name = reader.getLocalName();
-                    if (XMLNS_SCXML.equals(nsURI) && ELEM_HISTORY.equals(name)) {
-                        break loop;
-                    }
-                    break;
+                    break loop;
                 default:
             }
         }
@@ -1534,12 +1532,7 @@ public final class SCXMLReader {
                     break;
                 case XMLStreamConstants.END_ELEMENT:
                     popNamespaces(reader, configuration);
-                    nsURI = reader.getNamespaceURI();
-                    name = reader.getLocalName();
-                    if (XMLNS_SCXML.equals(nsURI) && end.equals(name)) {
-                        break loop;
-                    }
-                    break;
+                    break loop;
                 default:
             }
         }
@@ -1567,15 +1560,17 @@ public final class SCXMLReader {
             // In particular, the <send> and <raise> elements MUST NOT occur.
             reportIgnoredElement(reader, configuration, ELEM_FINALIZE, XMLNS_SCXML, ELEM_RAISE);
         }
-
-        Raise raise = new Raise();
-        raise.setEvent(readAV(reader, ATTR_EVENT));
-        readNamespaces(configuration, raise);
-        raise.setParent(executable);
-        if (parent != null) {
-            parent.addAction(raise);
-        } else {
-            executable.addAction(raise);
+        else {
+            Raise raise = new Raise();
+            raise.setEvent(readAV(reader, ATTR_EVENT));
+            readNamespaces(configuration, raise);
+            raise.setParent(executable);
+            if (parent != null) {
+                parent.addAction(raise);
+            } else {
+                executable.addAction(raise);
+            }
+            skipToEndElement(reader);
         }
     }
 
@@ -1626,6 +1621,7 @@ public final class SCXMLReader {
         readNamespaces(configuration, elseif);
         elseif.setParent(executable);
         iff.addAction(elseif);
+        skipToEndElement(reader);
     }
 
     /**
@@ -1646,6 +1642,7 @@ public final class SCXMLReader {
         readNamespaces(configuration, els);
         els.setParent(executable);
         iff.addAction(els);
+        skipToEndElement(reader);
     }
 
     /**
@@ -1702,6 +1699,7 @@ public final class SCXMLReader {
         } else {
             executable.addAction(log);
         }
+        skipToEndElement(reader);
     }
 
     /**
@@ -1720,13 +1718,22 @@ public final class SCXMLReader {
 
         Assign assign = new Assign();
         assign.setExpr(readAV(reader, ATTR_EXPR));
-        assign.setName(readAV(reader, ATTR_NAME));
-        if (assign.getName() != null && assign.getName().trim().length() > 0) {
-            // if 'non-standard' name attribute is defined, don't require location (as per the spec. 20130831)
-            assign.setLocation(readAV(reader, ATTR_LOCATION));
+        assign.setLocation(readRequiredAV(reader, ELEM_ASSIGN, ATTR_LOCATION));
+        String attrValue = readAV(reader, ATTR_TYPE);
+        if (attrValue != null) {
+            assign.setType(Evaluator.AssignType.fromValue(attrValue));
+            if (assign.getType() == null) {
+                reportIgnoredAttribute(reader, configuration, ELEM_ASSIGN, ATTR_TYPE, attrValue);
+            }
         }
-        else {
-            assign.setLocation(readRequiredAV(reader, ELEM_ASSIGN, ATTR_LOCATION));
+        attrValue = readAV(reader, ATTR_ATTR);
+        if (attrValue != null) {
+            if (Evaluator.AssignType.ADD_ATTRIBUTE.equals(assign.getType())) {
+                assign.setAttr(attrValue);
+            }
+            else {
+                reportIgnoredAttribute(reader, configuration, ELEM_ASSIGN, ATTR_ATTR, attrValue);
+            }
         }
         assign.setSrc(readAV(reader, ATTR_SRC));
         assign.setPathResolver(configuration.pathResolver);
@@ -1737,6 +1744,7 @@ public final class SCXMLReader {
         } else {
             executable.addAction(assign);
         }
+        skipToEndElement(reader);
     }
 
     /**
@@ -1760,6 +1768,7 @@ public final class SCXMLReader {
             // [...] the executable content inside <finalize> MUST NOT raise events or invoke external actions.
             // In particular, the <send> and <raise> elements MUST NOT occur.
             reportIgnoredElement(reader, configuration, ELEM_FINALIZE, XMLNS_SCXML, ELEM_SEND);
+            return;
         }
 
         Send send = new Send();
@@ -1817,11 +1826,40 @@ public final class SCXMLReader {
         }
         readNamespaces(configuration, send);
 
-        Node body = readNode(reader, configuration, XMLNS_SCXML, ELEM_SEND, new String [] {});
-        NodeList childNodes = body.getChildNodes();
-        List<Node> externalNodes = send.getExternalNodes();
-        for (int i = 0; i < childNodes.getLength(); i++) {
-            externalNodes.add(childNodes.item(i));
+        loop : while (reader.hasNext()) {
+            String name, nsURI;
+            switch (reader.next()) {
+                case XMLStreamConstants.START_ELEMENT:
+                    pushNamespaces(reader, configuration);
+                    nsURI = reader.getNamespaceURI();
+                    name = reader.getLocalName();
+                    if (XMLNS_SCXML.equals(nsURI)) {
+                        if (ELEM_PARAM.equals(name)) {
+                            if (send.getContent() == null) {
+                                readParam(reader, configuration, send);
+                            }
+                            else {
+                                reportIgnoredElement(reader, configuration, ELEM_SEND, nsURI, name);
+                            }
+                        } else if (ELEM_CONTENT.equals(name)) {
+                            if (send.getNamelist() == null && send.getParams().isEmpty()) {
+                                readContent(reader, configuration, send);
+                            }
+                            else {
+                                reportIgnoredElement(reader, configuration, ELEM_SEND, nsURI, name);
+                            }
+                        } else {
+                            reportIgnoredElement(reader, configuration, ELEM_SEND, nsURI, name);
+                        }
+                    } else {
+                        reportIgnoredElement(reader, configuration, ELEM_SEND, nsURI, name);
+                    }
+                    break;
+                case XMLStreamConstants.END_ELEMENT:
+                    popNamespaces(reader, configuration);
+                    break loop;
+                default:
+            }
         }
 
         send.setParent(executable);
@@ -1854,6 +1892,7 @@ public final class SCXMLReader {
         } else {
             executable.addAction(cancel);
         }
+        skipToEndElement(reader);
     }
 
     /**
@@ -1872,7 +1911,7 @@ public final class SCXMLReader {
 
         Script script = new Script();
         readNamespaces(configuration, script);
-        script.setBody(readBody(reader, configuration, XMLNS_SCXML, ELEM_SCRIPT));
+        script.setBody(readBody(reader));
         script.setParent(executable);
         if (parent != null) {
             parent.addAction(script);
@@ -1899,7 +1938,7 @@ public final class SCXMLReader {
         Script globalScript = new Script();
         globalScript.setGlobalScript(true);
         readNamespaces(configuration, globalScript);
-        globalScript.setBody(readBody(reader, configuration, XMLNS_SCXML, ELEM_SCRIPT));
+        globalScript.setBody(readBody(reader));
         scxml.setGlobalScript(globalScript);
     }
 
@@ -1927,6 +1966,7 @@ public final class SCXMLReader {
         } else {
             executable.addAction(var);
         }
+        skipToEndElement(reader);
     }
 
     /**
@@ -1946,7 +1986,7 @@ public final class SCXMLReader {
             throws XMLStreamException {
 
         // Instantiate custom action
-        Object actionObject = null;
+        Object actionObject;
         String className = customAction.getActionClass().getName();
         ClassLoader cl = configuration.customActionClassLoader;
         if (configuration.useContextClassLoaderForCustomActions) {
@@ -1955,7 +1995,7 @@ public final class SCXMLReader {
         if (cl == null) {
             cl = SCXMLReader.class.getClassLoader();
         }
-        Class<?> clazz = null;
+        Class<?> clazz;
         try {
             clazz = cl.loadClass(className);
             actionObject = clazz.newInstance();
@@ -1976,7 +2016,7 @@ public final class SCXMLReader {
             String name = reader.getAttributeLocalName(i);
             String value = reader.getAttributeValue(i);
             String setter = "set" + name.substring(0, 1).toUpperCase() + name.substring(1);
-            Method method = null;
+            Method method;
             try {
                 method = clazz.getMethod(setter, String.class);
                 method.invoke(action, value);
@@ -2002,6 +2042,9 @@ public final class SCXMLReader {
                 externalNodes.add(childNodes.item(i));
             }
         }
+        else {
+            skipToEndElement(reader);
+        }
 
         // Wire in the action and add to parent
         readNamespaces(configuration, action);
@@ -2018,10 +2061,8 @@ public final class SCXMLReader {
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
-     * @param namespaceURI The namespace URI of the parent element (we will stop parsing into DOM nodes when we reach
-     *                     the corresponding end tag)
-     * @param localName The local name of the parent element (we will stop parsing into DOM nodes when we reach the
-     *                  corresponding end tag)
+     * @param namespaceURI The namespace URI of the parent element
+     * @param localName The local name of the parent element
      * @param attrs The attributes that will be read into the root DOM node.
      *
      * @return The parsed content as a DOM {@link Node}.
@@ -2033,7 +2074,7 @@ public final class SCXMLReader {
             throws XMLStreamException {
 
         // Create a document in which to build the DOM node
-        Document document = null;
+        Document document;
         try {
             document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
         } catch (ParserConfigurationException pce) {
@@ -2042,18 +2083,15 @@ public final class SCXMLReader {
 
         // This root element will be returned, add any attributes as specified
         Element root = document.createElementNS(namespaceURI, localName);
-        for (int i = 0; i < attrs.length; i++) {
-            Attr attr = document.createAttributeNS(XMLNS_DEFAULT, attrs[i]);
-            attr.setValue(readAV(reader, attrs[i]));
+        for (final String attr1 : attrs) {
+            Attr attr = document.createAttributeNS(XMLNS_DEFAULT, attr1);
+            attr.setValue(readAV(reader, attr1));
             root.setAttributeNodeNS(attr);
         }
         document.appendChild(root);
 
-        // <data> can have only one child element, flags to skip any text nodes on either side
-        boolean one = (XMLNS_SCXML.equals(namespaceURI) && ELEM_DATA.equals(localName));
-        boolean text = false;
+        boolean children = false;
         Node parent = root;
-        String nodeNSURI = null, nodeName = null;
 
         // Convert stream to DOM node(s) while maintaining parent child relationships
         loop : while (reader.hasNext()) {
@@ -2061,14 +2099,14 @@ public final class SCXMLReader {
             Node child = null;
             switch (reader.next()) {
                 case XMLStreamConstants.START_ELEMENT:
+                    if (!children && root.hasChildNodes()) {
+                        // remove any children
+                        root.setTextContent(null);
+                    }
+                    children = true;
                     pushNamespaces(reader, configuration);
                     nsURI = reader.getNamespaceURI();
                     name = reader.getLocalName();
-                    if (!text) {
-                        nodeNSURI = nsURI;
-                        nodeName = name;
-                        text = true;
-                    }
                     Element elem = document.createElementNS(nsURI, name);
                     for (int i = 0; i < reader.getAttributeCount(); i++) {
                         nsURI = reader.getAttributeNamespace(i);
@@ -2087,30 +2125,23 @@ public final class SCXMLReader {
                 case XMLStreamConstants.SPACE:
                 case XMLStreamConstants.CHARACTERS:
                 case XMLStreamConstants.ENTITY_REFERENCE:
-                    if (text || !one) {
+                    if (!children || parent != root) {
                         child = document.createTextNode(reader.getText());
                     }
                     break;
                 case XMLStreamConstants.CDATA:
+                    children = true;
                     child = document.createCDATASection(reader.getText());
                     break;
                 case XMLStreamConstants.COMMENT:
+                    children = true;
                     child = document.createComment(reader.getText());
                     break;
                 case XMLStreamConstants.END_ELEMENT:
                     popNamespaces(reader, configuration);
-                    nsURI = reader.getNamespaceURI();
-                    name = reader.getLocalName();
-                    if (namespaceURI.equals(nsURI) && localName.equals(name)) {
-                        break loop;
-                    }
-                    if (((nodeNSURI == null && nsURI == null) || (nodeNSURI != null && nodeNSURI.equals(nsURI)))
-                            && name.equals(nodeName)) {
-                        text = false;
-                    }
                     parent = parent.getParentNode();
                     if (parent == document) {
-                        parent = root;
+                        break loop;
                     }
                     break;
                 default: // rest is ignored
@@ -2119,6 +2150,9 @@ public final class SCXMLReader {
                 parent.appendChild(child);
             }
         }
+        if (!children && root.hasChildNodes()) {
+            root.setTextContent(root.getTextContent().trim());
+        }
         return root;
     }
 
@@ -2126,31 +2160,25 @@ public final class SCXMLReader {
      * Read the following body contents into a String.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
-     * @param configuration The {@link Configuration} to use while parsing.
-     * @param namespaceURI The namespace URI of the parent element (we will stop reading content when we reach
-     *                     the corresponding end tag)
-     * @param localName The local name of the parent element (we will stop reading content when we reach the
-     *                  corresponding end tag)
      *
      * @return The body content read into a String.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
-    private static String readBody(final XMLStreamReader reader, final Configuration configuration,
-                                   final String namespaceURI, final String localName)
+    private static String readBody(final XMLStreamReader reader)
             throws XMLStreamException {
 
-        StringBuffer body = new StringBuffer();
+        StringBuilder body = new StringBuilder();
         org.apache.commons.logging.Log log;
 
-        // Add all body content to StringBuffer
+        // Add all body content to StringBuilder
         loop : while (reader.hasNext()) {
-            String name, nsURI;
             switch (reader.next()) {
                 case XMLStreamConstants.START_ELEMENT:
                     log = LogFactory.getLog(SCXMLReader.class);
-                    log.warn("Ignoring XML content in <script> element, encountered start tag with local name: "
+                    log.warn("Ignoring XML content in <script> element, encountered element with local name: "
                             + reader.getLocalName());
+                    skipToEndElement(reader);
                     break;
                 case XMLStreamConstants.SPACE:
                 case XMLStreamConstants.CHARACTERS:
@@ -2160,16 +2188,7 @@ public final class SCXMLReader {
                     body.append(reader.getText());
                     break;
                 case XMLStreamConstants.END_ELEMENT:
-                    nsURI = reader.getNamespaceURI();
-                    name = reader.getLocalName();
-                    if (namespaceURI.equals(nsURI) && localName.equals(name)) {
-                        popNamespaces(reader, configuration);
-                        break loop;
-                    }
-                    log = LogFactory.getLog(SCXMLReader.class);
-                    log.warn("Ignoring XML content in <script> element, encountered end tag with local name: "
-                            + reader.getLocalName());
-                    break;
+                    break loop;
                 default: // rest is ignored
             }
         }
@@ -2290,6 +2309,59 @@ public final class SCXMLReader {
                 .append("> in namespace \"").append(nsURI)
                 .append("\" as child of <").append(parent)
                 .append("> at ").append(reader.getLocation());
+        if (!configuration.isSilent() && log.isWarnEnabled()) {
+            log.warn(sb.toString());
+        }
+        if (configuration.isStrict()) {
+            throw new ModelException(sb.toString());
+        }
+        XMLReporter reporter = configuration.reporter;
+        if (reporter != null) {
+            reporter.report(sb.toString(), "COMMONS_SCXML", null, reader.getLocation());
+        }
+        skipToEndElement(reader);
+    }
+
+    /**
+     * Advances the XMLStreamReader until after the end of the current element: all children will be skipped as well
+     * @param reader the reader
+     * @throws XMLStreamException
+     */
+    private static void skipToEndElement(final XMLStreamReader reader) throws XMLStreamException {
+        int elementsToSkip = 1;
+        while (elementsToSkip > 0 && reader.hasNext()) {
+            int next = reader.next();
+            if (next == XMLStreamConstants.START_ELEMENT) {
+                elementsToSkip++;
+            }
+            else if (next == XMLStreamConstants.END_ELEMENT) {
+                elementsToSkip--;
+            }
+        }
+    }
+
+    /**
+     * Report an ignored attribute via the {@link XMLReporter} if available and the class
+     * {@link org.apache.commons.logging.Log}.
+     *
+     * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
+     * @param configuration The {@link Configuration} to use while parsing.
+     * @param element The element name.
+     * @param attr The attribute which is ignored.
+     * @param value The value of the attribute which is ignored.
+     *
+     * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
+     * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
+     *                        errors in the SCXML document that may not be identified by the schema).
+     */
+    private static void reportIgnoredAttribute(final XMLStreamReader reader, final Configuration configuration,
+                                               final String element, final String attr, final String value)
+            throws XMLStreamException, ModelException {
+
+        org.apache.commons.logging.Log log = LogFactory.getLog(SCXMLReader.class);
+        StringBuilder sb = new StringBuilder();
+        sb.append("Ignoring unknown or invalid <").append(element).append("> attribute ").append(attr)
+                .append("=\"").append(value).append("\" at ").append(reader.getLocation());
         if (!configuration.isSilent() && log.isWarnEnabled()) {
             log.warn(sb.toString());
         }
@@ -2434,7 +2506,7 @@ public final class SCXMLReader {
 
             URL scxmlSchema = new URL("TODO"); // TODO, point to appropriate location
             SchemaFactory schemaFactory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
-            Schema schema = null;
+            Schema schema;
             try {
                 schema = schemaFactory.newSchema(scxmlSchema);
             } catch (SAXException se) {

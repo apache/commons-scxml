@@ -18,7 +18,6 @@ package org.apache.commons.scxml2;
 
 import java.util.Set;
 
-import org.apache.commons.scxml2.env.SimpleScheduler;
 import org.apache.commons.scxml2.env.Tracer;
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.SCXML;
@@ -97,7 +96,6 @@ public class EventDataTest {
         SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/env/jexl/eventdata-03.xml");
         Tracer trc = new Tracer();
         SCXMLExecutor exec = new SCXMLExecutor(null, null, trc);
-        exec.setEventdispatcher(new SimpleScheduler(exec));
         exec.addListener(scxml, trc);
         exec.setStateMachine(scxml);
         exec.go();

@@ -41,6 +41,8 @@ public class SimpleContext implements Context, Serializable {
     /** The Map of variables and their values in this Context. */
     private Map<String, Object> vars;
 
+    protected final SCXMLSystemContext systemContext;
+
     /**
      * Constructor.
      *
@@ -57,14 +59,6 @@ public class SimpleContext implements Context, Serializable {
     public SimpleContext(final Context parent) {
         this(parent, null);
     }
-    /**
-     * Constructor.
-     *
-     * @param initialVars A pre-populated initial variables map
-     */
-    public SimpleContext(final Map<String, Object> initialVars) {
-        this(null, initialVars);
-    }
 
     /**
      * Constructor.
@@ -74,6 +68,8 @@ public class SimpleContext implements Context, Serializable {
      */
     public SimpleContext(final Context parent, final Map<String, Object> initialVars) {
         this.parent = parent;
+        this.systemContext = parent instanceof SCXMLSystemContext ?
+                (SCXMLSystemContext) parent : parent != null ? parent.getSystemContext() : null;
         if (initialVars == null) {
             setVars(new HashMap<String, Object>());
         } else {
@@ -157,6 +153,15 @@ public class SimpleContext implements Context, Serializable {
      */
     public Context getParent() {
         return parent;
+    }
+
+    /**
+     * Get the SCXMLSystemContext for this Context, should not be null unless this is the root Context
+     *
+     * @return The SCXMLSystemContext in a chained Context environment
+     */
+    public final SCXMLSystemContext getSystemContext() {
+        return systemContext;
     }
 
     /**

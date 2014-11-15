@@ -33,10 +33,12 @@ public class GroovyEvaluatorTest {
 
     private String BAD_EXPRESSION = ">";
     private Context ctx;
+    private Context rootCtx;
 
     @Before
     public void before() {
-        ctx = new GroovyContext();
+        rootCtx = new GroovyContext();
+        ctx = new GroovyContext(new SCXMLSystemContext(rootCtx), null);
     }
 
     @Test
@@ -60,7 +62,7 @@ public class GroovyEvaluatorTest {
         state1.setId("state1");
         allStates.add(state1);
 
-        ctx.setLocal(SCXMLSystemContext.ALL_STATES_KEY, allStates);
+        rootCtx.set(SCXMLSystemContext.ALL_STATES_KEY, allStates);
 
         Assert.assertTrue(eval.evalCond(ctx, "In('state1')"));
     }

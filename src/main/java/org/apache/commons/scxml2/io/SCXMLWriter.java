@@ -45,6 +45,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml2.model.Action;
 import org.apache.commons.scxml2.model.Assign;
 import org.apache.commons.scxml2.model.Cancel;
+import org.apache.commons.scxml2.model.Content;
 import org.apache.commons.scxml2.model.Data;
 import org.apache.commons.scxml2.model.Datamodel;
 import org.apache.commons.scxml2.model.Else;
@@ -73,6 +74,7 @@ import org.apache.commons.scxml2.model.Transition;
 import org.apache.commons.scxml2.model.TransitionTarget;
 import org.apache.commons.scxml2.model.Var;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * <p>Utility class for serializing the Commons SCXML Java object
@@ -128,7 +130,7 @@ public class SCXMLWriter {
     //---- ELEMENT NAMES ----//
     private static final String ELEM_ASSIGN = "assign";
     private static final String ELEM_CANCEL = "cancel";
-    //private static final String ELEM_CONTENT = "content"; TODO
+    private static final String ELEM_CONTENT = "content";
     private static final String ELEM_DATA = "data";
     private static final String ELEM_DATAMODEL = "datamodel";
     private static final String ELEM_ELSE = "else";
@@ -155,6 +157,7 @@ public class SCXMLWriter {
 
     //---- ATTRIBUTE NAMES ----//
     private static final String ATTR_ARRAY = "array";
+    private static final String ATTR_ATTR = "attr";
     private static final String ATTR_AUTOFORWARD = "autoforward";
     private static final String ATTR_COND = "cond";
     private static final String ATTR_DATAMODEL = "datamodel";
@@ -490,7 +493,7 @@ public class SCXMLWriter {
         // Attributes
         writeAV(writer, ATTR_VERSION, scxml.getVersion());
         writeAV(writer, ATTR_INITIAL, scxml.getInitial());
-        writeAV(writer, ATTR_DATAMODEL, scxml.getDatamodelType());
+        writeAV(writer, ATTR_DATAMODEL, scxml.getDatamodelName());
         writeAV(writer, ATTR_NAME, scxml.getName());
         writeAV(writer, ATTR_PROFILE, scxml.getProfile());
         writeAV(writer, ATTR_EXMODE, scxml.getExmode());
@@ -811,13 +814,15 @@ public class SCXMLWriter {
         writeAV(writer, ATTR_TYPE, invoke.getType());
         writeAV(writer, ATTR_AUTOFORWARD, invoke.getAutoForward());
 
-        for (Param p : invoke.params()) {
+        for (Param p : invoke.getParams()) {
             writer.writeStartElement(ELEM_PARAM);
             writeAV(writer, ATTR_NAME, p.getName());
+            writeAV(writer, ATTR_LOCATION, p.getLocation());
             writeAV(writer, ATTR_EXPR, escapeXML(p.getExpr()));
             writer.writeEndElement();
         }
         writeFinalize(writer, invoke.getFinalize());
+        writeContent(writer, invoke.getContent());
 
         writer.writeEndElement();
     }
@@ -860,7 +865,10 @@ public class SCXMLWriter {
                 Assign asn = (Assign) a;
                 writer.writeStartElement(XMLNS_SCXML, ELEM_ASSIGN);
                 writeAV(writer, ATTR_LOCATION, asn.getLocation());
-                writeAV(writer, ATTR_NAME, asn.getName());
+                if (asn.getType() != null) {
+                    writeAV(writer, ATTR_TYPE, asn.getType().value());
+                }
+                writeAV(writer, ATTR_ATTR, asn.getAttr());
                 writeAV(writer, ATTR_SRC, asn.getSrc());
                 writeAV(writer, ATTR_EXPR, escapeXML(asn.getExpr()));
                 writer.writeEndElement();
@@ -935,7 +943,14 @@ public class SCXMLWriter {
         writeAV(writer, ATTR_NAMELIST, send.getNamelist());
         writeAV(writer, ATTR_HINTS, send.getHints());
 
-        writeExternalContent(writer, send);
+        for (Param p : send.getParams()) {
+            writer.writeStartElement(ELEM_PARAM);
+            writeAV(writer, ATTR_NAME, p.getName());
+            writeAV(writer, ATTR_LOCATION, p.getLocation());
+            writeAV(writer, ATTR_EXPR, escapeXML(p.getExpr()));
+            writer.writeEndElement();
+        }
+        writeContent(writer, send.getContent());
 
         writer.writeEndElement();
     }
@@ -974,6 +989,40 @@ public class SCXMLWriter {
         writeAV(writer, ATTR_ARRAY, escapeXML(foreach.getArray()));
         writeExecutableContent(writer, foreach.getActions());
         writer.writeEndElement();
+    }
+
+    /**
+     * Write the {@link Content} element.
+     *
+     * @param writer The {@link XMLStreamWriter} in use for the serialization.
+     * @param content The content element to write.
+     *
+     * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
+     */
+    private static void writeContent(final XMLStreamWriter writer, final Content content)
+            throws XMLStreamException {
+
+        if (content != null) {
+            writer.writeStartElement(ELEM_CONTENT);
+            writeAV(writer, ATTR_EXPR, content.getExpr());
+            if (content.getBody() != null) {
+                if (content.getBody() instanceof Node) {
+                    NodeList nodeList = ((Node)content.getBody()).getChildNodes();
+                    if (nodeList.getLength() > 0 && XFORMER == null) {
+                        writer.writeComment("External content was not serialized");
+                    }
+                    else {
+                        for (int i = 0, size = nodeList.getLength(); i < size; i++) {
+                            writeNode(writer, nodeList.item(i));
+                        }
+                    }
+                }
+                else {
+                    writer.writeCharacters(content.getBody().toString());
+                }
+            }
+            writer.writeEndElement();
+        }
     }
 
     /**

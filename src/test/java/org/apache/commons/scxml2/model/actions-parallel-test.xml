@@ -27,11 +27,11 @@
       <cs:var name="delta" expr="1+2+3" />
       <cs:var name="eventsent"/>
       <if cond="delta le 3">
-        <assign name="foo" expr="'bar'" />
+        <assign location="foo" expr="'bar'" />
       <elseif cond="delta eq 3"/>
-        <assign name="foo" expr="'fubar'" />
+        <assign location="foo" expr="'fubar'" />
       <else/>
-        <assign name="foo" expr="'foobar'" />
+        <assign location="foo" expr="'foobar'" />
       </if>
       <cs:var name="drink" expr="'water'" />
       <cs:var name="eat" expr="'flies'" />
@@ -44,7 +44,7 @@
     </onentry>
 
     <transition event="event.test">
-      <assign name="eventsent" expr="true"/>
+      <assign location="eventsent" expr="true"/>
     </transition>
 
     <!-- dummy regions -->

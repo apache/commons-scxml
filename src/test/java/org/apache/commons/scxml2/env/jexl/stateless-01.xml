@@ -35,7 +35,7 @@
             <transition event="done.state.ten" cond="instancevar eq 20"
                         target="twenty" />
             <onexit>
-                <assign name="instancevar" expr="30" />
+                <assign location="instancevar" expr="30" />
             </onexit>
         </state>
 

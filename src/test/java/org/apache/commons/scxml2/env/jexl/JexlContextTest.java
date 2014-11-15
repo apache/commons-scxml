@@ -34,7 +34,7 @@ public class JexlContextTest {
     public void testPrepopulated() {
         Map<String, Object> m = new HashMap<String, Object>();
         m.put("foo", "bar");
-        JexlContext ctx = new JexlContext(m);
+        JexlContext ctx = new JexlContext(null, m);
         Assert.assertNotNull(ctx);
         Assert.assertEquals(1, ctx.getVars().size());
         String fooValue = (String) ctx.get("foo");
@@ -45,7 +45,7 @@ public class JexlContextTest {
     public void testSetVars() {
         Map<String, Object> m = new HashMap<String, Object>();
         m.put("foo", "bar");
-        JexlContext ctx = new JexlContext(m);
+        JexlContext ctx = new JexlContext(null, m);
         Assert.assertNotNull(ctx);
         Assert.assertEquals(1, ctx.getVars().size());
         String fooValue = (String) ctx.get("foo");

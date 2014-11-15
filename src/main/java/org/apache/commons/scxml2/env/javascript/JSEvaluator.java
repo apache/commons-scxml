@@ -17,6 +17,7 @@
 
 package org.apache.commons.scxml2.env.javascript;
 
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 import javax.script.Bindings;
@@ -24,14 +25,12 @@ import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
-import org.apache.commons.scxml2.Builtin;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.EvaluatorProvider;
 import org.apache.commons.scxml2.SCXMLExpressionException;
-import org.apache.commons.scxml2.SCXMLSystemContext;
+import org.apache.commons.scxml2.XPathBuiltin;
 import org.apache.commons.scxml2.model.SCXML;
-import org.w3c.dom.Node;
 
 /**
  * Embedded JavaScript expression evaluator for SCXML expressions. This
@@ -47,15 +46,18 @@ import org.w3c.dom.Node;
 
 public class JSEvaluator implements Evaluator {
 
-    // CONSTANTS
+    /**
+     * Unique context variable name used for temporary reference to assign data (thus must be a valid variable name)
+     */
+    private static final String ASSIGN_VARIABLE_NAME = "a"+UUID.randomUUID().toString().replace('-','x');
 
-    private static final String SUPPORTED_DATAMODEL = "ecmascript";
+    public static final String SUPPORTED_DATA_MODEL = Evaluator.ECMASCRIPT_DATA_MODEL;
 
     public static class JSEvaluatorProvider implements EvaluatorProvider {
 
         @Override
         public String getSupportedDatamodel() {
-            return SUPPORTED_DATAMODEL;
+            return SUPPORTED_DATA_MODEL;
         }
 
         @Override
@@ -73,6 +75,8 @@ public class JSEvaluator implements Evaluator {
     private static final Pattern IN_FN = Pattern.compile("In\\(");
     /** Pattern for recognizing the Commons SCXML Data() builtin function. */
     private static final Pattern DATA_FN = Pattern.compile("Data\\(");
+    /** Pattern for recognizing the Commons SCXML Location() builtin function. */
+    private static final Pattern LOCATION_FN = Pattern.compile("Location\\(");
 
     // INSTANCE VARIABLES
 
@@ -85,16 +89,14 @@ public class JSEvaluator implements Evaluator {
      */
     public JSEvaluator() {
         factory = new ScriptEngineManager();
-        factory.put("_builtin", new Builtin());
     }
 
     // INSTANCE METHODS
 
     @Override
     public String getSupportedDatamodel() {
-        return SUPPORTED_DATAMODEL;
+        return SUPPORTED_DATA_MODEL;
     }
-
 
     /**
      * Creates a child context.
@@ -130,11 +132,14 @@ public class JSEvaluator implements Evaluator {
             Bindings     bindings = engine.getBindings     (ScriptContext.ENGINE_SCOPE);
 
             // ... replace built-in functions
-            String jsExpression = IN_FN.matcher(expression).replaceAll("_builtin.isMember("+SCXMLSystemContext.ALL_STATES_KEY +", ");
-            jsExpression = DATA_FN.matcher(jsExpression).replaceAll("_builtin.data("+Context.NAMESPACES_KEY+", ");
+            String jsExpression = IN_FN.matcher(expression).replaceAll("_builtin.In(");
+            jsExpression = DATA_FN.matcher(jsExpression).replaceAll("_builtin.Data(");
+            jsExpression = LOCATION_FN.matcher(jsExpression).replaceAll("_builtin.Location(");
 
             // ... evaluate
-            return engine.eval(jsExpression,new JSBindings(context,bindings));
+            JSBindings jsBindings = new JSBindings(context, bindings);
+            jsBindings.put("_builtin", new JSFunctions(context));
+            return engine.eval(jsExpression,jsBindings);
 
         } catch (Exception x) {
             throw new SCXMLExpressionException("Error evaluating ['" + expression + "'] " + x);
@@ -155,14 +160,14 @@ public class JSEvaluator implements Evaluator {
      */
     @Override
     public Boolean evalCond(Context context,String expression) throws SCXMLExpressionException {
-        Object object;
+        final Object result = eval(context,expression);
 
-        if ((object = eval(context,expression)) == null) {
+        if (result == null) {
            return Boolean.FALSE;
         }
 
-        if (object instanceof Boolean) {
-           return (Boolean) object;
+        if (result instanceof Boolean) {
+           return (Boolean)result;
         }
 
         throw new SCXMLExpressionException("Invalid boolean expression: " + expression);
@@ -181,23 +186,41 @@ public class JSEvaluator implements Evaluator {
      * @throws SCXMLExpressionException Thrown if the expression was invalid.
      */
     @Override
-    public Node evalLocation(Context context,String expression) throws SCXMLExpressionException {
-        try {
+    public Object evalLocation(Context context,String expression) throws SCXMLExpressionException {
+        if (expression == null) {
+            return null;
+        }
+        else if (context.has(expression)) {
+            return expression;
+        }
+        return eval(context, expression);
+    }
 
-            // ... initialize
-            ScriptEngine engine   = factory.getEngineByName("JavaScript");
-            Bindings     bindings = engine.getBindings     (ScriptContext.ENGINE_SCOPE);
+    /**
+     * @see Evaluator#evalAssign(Context, String, Object, AssignType, String)
+     */
+    public void evalAssign(final Context ctx, final String location, final Object data, final AssignType type,
+                           final String attr) throws SCXMLExpressionException {
 
-            // ... replace built-in functions
-            String jsExpression = IN_FN.matcher(expression).replaceAll("_builtin.isMember(_ALL_STATES, ");
-            jsExpression = DATA_FN.matcher(jsExpression).replaceFirst("_builtin.dataNode("+Context.NAMESPACES_KEY+", ");
-            jsExpression = DATA_FN.matcher(jsExpression).replaceAll("_builtin.data("+Context.NAMESPACES_KEY+", ");
+        Object loc = evalLocation(ctx, location);
+        if (loc != null) {
 
-            // ... evaluate
-            return (Node) engine.eval(jsExpression,new JSBindings(context,bindings));
-
-        } catch (Exception x) {
-            throw new SCXMLExpressionException("Error evaluating ['" + expression + "'] " + x);
+            if (XPathBuiltin.isXPathLocation(ctx, loc)) {
+                XPathBuiltin.assign(ctx, loc, data, type, attr);
+            }
+            else {
+                StringBuilder sb = new StringBuilder(location).append("=").append(ASSIGN_VARIABLE_NAME);
+                try {
+                    ctx.getVars().put(ASSIGN_VARIABLE_NAME, data);
+                    eval(ctx, sb.toString());
+                }
+                finally {
+                    ctx.getVars().remove(ASSIGN_VARIABLE_NAME);
+                }
+            }
+        }
+        else {
+            throw new SCXMLExpressionException("evalAssign - cannot resolve location: '" + location + "'");
         }
     }
 
@@ -220,6 +243,4 @@ public class JSEvaluator implements Evaluator {
     throws SCXMLExpressionException {
         return eval(ctx, script);
     }
-
 }
-

@@ -64,19 +64,16 @@
 
         <onentry>
             <cs:var xmlns:pre1="scheme://namespace.test.domain/1"
-                 xmlns:pre2="scheme://namespace.test.domain/2"
-                 xmlns:pre3="scheme://namespace.test.domain/3"
-                 name="tentest"
-                 expr="Data(rootdata,'pre1:root/pre2:foo/pre3:bar') + Data(data10,'root/pre1:foo/bar')" />
+                    xmlns:pre2="scheme://namespace.test.domain/2"
+                    xmlns:pre3="scheme://namespace.test.domain/3"
+                    name="tentest"
+                    expr="Data('number($rootdata/pre1:root/pre2:foo/pre3:bar)') + Data('number($data10/root/pre1:foo/bar)')" />
         </onentry>
 
-        <transition event="done.state.ten"
-                    cond="tentest eq 11"
-                    target="twenty" />
+        <transition event="done.state.ten" cond="tentest eq 11" target="twenty" />
 
         <onexit>
-            <assign name="retval"
-                    expr="tentest" />
+            <assign location="retval" expr="tentest" />
         </onexit>
 
     </state>
@@ -97,8 +94,7 @@
         </datamodel>
 
         <onentry>
-            <assign location="Data(rootdata,'ns1:root/ns2:foo/ns3:bar')"
-                    expr="2" />
+            <assign location="Location('$rootdata/ns1:root/ns2:foo/ns3:bar')" expr="2" />
         </onentry>
 
 
@@ -106,7 +102,7 @@
         <transition event="done.state.twenty"
                     xmlns:ns1="scheme://namespace.test.domain/1"
                     xmlns:ns2="scheme://namespace.test.domain/2"
-                    cond="Data(data20,'ns1:root/ns2:foo') eq 20 and Data(rootdata,'ns1:root/ns2:foo/ns3:bar') eq 2"
+                    cond="Data('string($data20/ns1:root/ns2:foo)') eq 20 and Data('string($rootdata/ns1:root/ns2:foo/ns3:bar)') eq 2"
                     target="thirty" />
 
         <onexit>
@@ -114,17 +110,17 @@
             <!-- Redefine different prefixes bound to above namespaces -->
             <if xmlns:pre1="scheme://namespace.test.domain/1"
                 xmlns:pre2="scheme://namespace.test.domain/2"
-                cond="Data(data20,'pre1:root/pre2:foo') lt 20">
+                cond="Data('number($data20/pre1:root/pre2:foo)') lt 20">
 
-                <assign name="retval" expr="'Less than 20'" />
+                <assign location="retval" expr="'Less than 20'" />
 
-            <elseif cond="Data(data20,'pre1:root/pre2:foo') eq 20" />
+            <elseif cond="Data('number($data20/pre1:root/pre2:foo)') eq 20" />
 
-                <assign name="retval" expr="'Equal to 20'" />
+                <assign location="retval" expr="'Equal to 20'" />
 
             <else/>
 
-                <assign name="retval" expr="'Greater than 20'" />
+                <assign location="retval" expr="'Greater than 20'" />
 
             </if>
 
@@ -151,7 +147,7 @@
          xmlns:ns1="scheme://namespace.test.domain/1"
          xmlns:ns2="scheme://namespace.test.domain/2"
          xmlns:ns3="scheme://namespace.test.domain/3"
-         cond="Data(data30,'ns1:root/ns2:foo/@ns3:attfoo') + Data(data30,'ns1:root/ns2:foo/@attbar') eq 330"
+         cond="Data('number($data30/ns1:root/ns2:foo/@ns3:attfoo)') + Data('number($data30/ns1:root/ns2:foo/@attbar)') eq 330"
          target="forty" />
 
     </state>
@@ -179,7 +175,7 @@
         </datamodel>
 
         <transition event="done.state.forty"
-         cond="Data(data40,'root/ns1:foo/@ns2:attfoo') + Data(data41,'ns3:root/ns4:foo') eq 81"
+         cond="Data('number($data40/root/ns1:foo/@ns2:attfoo)') + Data('number($data41/ns3:root/ns4:foo)') eq 81"
          target="fifty" />
 
     </state>
@@ -211,7 +207,7 @@
          xmlns:ns2="scheme://namespace.test.domain/2"
          xmlns:ns3="scheme://namespace.test.domain/3"
          xmlns:ns4="scheme://namespace.test.domain/4"
-         cond="Data(data50,'ns1:root/ns2:foo/@ns3:attfoo') + Data(rootdata,'ns1:root/ns2:foo/ns3:bar') eq 52"
+         cond="Data('number($data50/ns1:root/ns2:foo/@ns3:attfoo)') + Data('number($rootdata/ns1:root/ns2:foo/ns3:bar)') eq 52"
          target="sixty" />
 
     </state>
@@ -243,11 +239,11 @@
          xmlns:pre2="scheme://namespace.test.domain/2"
          xmlns:pre3="scheme://namespace.test.domain/3"
          xmlns:pre4="scheme://namespace.test.domain/4"
-         cond="Data(data60,'root/pre1:foo/@pre2:attfoo') + Data(data61,'pre3:root/pre4:foo/@attfoo') eq 121"
+         cond="Data('number($data60/root/pre1:foo/@pre2:attfoo)') + Data('number($data61/pre3:root/pre4:foo/@attfoo)') eq 121"
          target="seventy">
 
             <!-- should be 121 -->
-            <log expr="Data(data60,'root/pre1:foo/@pre2:attfoo') + Data(data61,'pre3:root/pre4:foo/@attfoo')"/>
+            <log expr="Data('number($data60/root/pre1:foo/@pre2:attfoo)') + Data('number($data61/pre3:root/pre4:foo/@attfoo)')"/>
 
         </transition>
 

@@ -32,12 +32,6 @@ public class JexlContext extends SimpleContext
     private static final long serialVersionUID = 1L;
 
     /**
-     * Internal flag to indicate whether it is to evaluate a location
-     * that returns a Node within an XML data tree.
-     */
-    private boolean evaluatingLocation = false;
-
-    /**
      * Constructor.
      */
     public JexlContext() {
@@ -46,11 +40,11 @@ public class JexlContext extends SimpleContext
 
     /**
      * Constructor with initial vars.
-     *
+     * @param parent The parent context
      * @param initialVars The initial set of variables.
      */
-    public JexlContext(final Map<String, Object> initialVars) {
-        super(initialVars);
+    public JexlContext(final Context parent, final Map<String, Object> initialVars) {
+        super(parent, initialVars);
     }
 
     /**
@@ -61,22 +55,5 @@ public class JexlContext extends SimpleContext
     public JexlContext(final Context parent) {
         super(parent);
     }
-
-    /**
-     * Returns the internal flag to indicate whether it is to evaluate a location
-     * that returns a Node within an XML data tree.
-     */
-    public boolean isEvaluatingLocation() {
-        return evaluatingLocation;
-    }
-
-    /**
-     * Sets the internal flag to indicate whether it is to evaluate a location
-     * that returns a Node within an XML data tree.
-     */
-    public void setEvaluatingLocation(boolean evaluatingLocation) {
-        this.evaluatingLocation = evaluatingLocation;
-    }
-
 }
 

@@ -16,21 +16,29 @@
  */
 package org.apache.commons.scxml2.model;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.scxml2.ActionExecutionContext;
+import org.apache.commons.scxml2.Context;
+import org.apache.commons.scxml2.Evaluator;
+import org.apache.commons.scxml2.InvokerManager;
 import org.apache.commons.scxml2.PathResolver;
+import org.apache.commons.scxml2.SCXMLExpressionException;
+import org.apache.commons.scxml2.SCXMLIOProcessor;
+import org.apache.commons.scxml2.SCXMLSystemContext;
+import org.apache.commons.scxml2.TriggerEvent;
+import org.apache.commons.scxml2.invoke.Invoker;
+import org.apache.commons.scxml2.invoke.InvokerException;
+import org.apache.commons.scxml2.semantics.ErrorConstants;
+import org.w3c.dom.Node;
 
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;invoke&gt; SCXML element.
  *
  */
-public class Invoke implements NamespacePrefixesHolder, PathResolverHolder,
-        Serializable {
+public class Invoke extends NamelistHolder implements PathResolverHolder, ContentContainer {
 
     /**
      * Serial version UID.
@@ -38,14 +46,34 @@ public class Invoke implements NamespacePrefixesHolder, PathResolverHolder,
     private static final long serialVersionUID = 1L;
 
     /**
+     * The default context variable key under which the InvokerManager is provided
+     */
+    private static final String INVOKER_MANAGER_KEY = "_INVOKER_MANAGER";
+
+    /**
+     * The default target type.
+     */
+    private static final String TYPE_SCXML = "scxml";
+
+    /**
      * Identifier for this Invoke.
      * */
     private String id;
 
     /**
+     * Path expression evaluating to a location within a previously defined XML data tree.
+     */
+    private String idlocation;
+
+    /**
      * The type of target to be invoked.
      */
     private String type;
+
+    /**
+     * An expression defining the type of the target to be invoked.
+     */
+    private String typeexpr;
 
     /**
      * The source URL for the external service.
@@ -64,11 +92,6 @@ public class Invoke implements NamespacePrefixesHolder, PathResolverHolder,
     private Boolean autoForward;
 
     /**
-     * The List of the params to be sent to the invoked process.
-     */
-    private final List<Param> paramsList;
-
-    /**
      * The &lt;finalize&gt; child, may be null.
      */
     private Finalize finalize;
@@ -79,17 +102,11 @@ public class Invoke implements NamespacePrefixesHolder, PathResolverHolder,
     private PathResolver pathResolver;
 
     /**
-     * The current XML namespaces in the SCXML document for this action node,
-     * preserved for deferred XPath evaluation.
+     * The &lt;content/&gt; of this invoke
      */
-    private Map<String, String> namespaces;
+    private Content content;
 
-    /**
-     * Default no-args constructor.
-     */
-    public Invoke() {
-        paramsList = Collections.synchronizedList(new ArrayList<Param>());
-    }
+    private EnterableState parent;
 
     /**
      * Get the identifier for this invoke (may be null).
@@ -110,6 +127,21 @@ public class Invoke implements NamespacePrefixesHolder, PathResolverHolder,
     }
 
     /**
+     * @return the idlocation
+     */
+    public String getIdlocation() {
+        return idlocation;
+    }
+
+    /**
+     * Set the idlocation expression
+     * @param idlocation The idlocation expression
+     */
+    public void setIdlocation(final String idlocation) {
+        this.idlocation = idlocation;
+    }
+
+    /**
      * Get the type for this &lt;invoke&gt; element.
      *
      * @return String Returns the type.
@@ -125,6 +157,21 @@ public class Invoke implements NamespacePrefixesHolder, PathResolverHolder,
      */
     public final void setType(final String type) {
         this.type = type;
+    }
+
+    /**
+     * @return The type expression
+     */
+    public String getTypeexpr() {
+        return typeexpr;
+    }
+
+    /**
+     * Sets the type expression
+     * @param typeexpr The type expression to set
+     */
+    public void setTypeexpr(final String typeexpr) {
+        this.typeexpr = typeexpr;
     }
 
     /**
@@ -189,24 +236,6 @@ public class Invoke implements NamespacePrefixesHolder, PathResolverHolder,
     }
 
     /**
-     * Get the list of {@link Param}s.
-     *
-     * @return List The params list.
-     */
-    public final List<Param> params() {
-        return paramsList;
-    }
-
-    /**
-     * Add this param to this invoke.
-     *
-     * @param param The invoke parameter.
-     */
-    public final void addParam(final Param param) {
-        paramsList.add(param);
-    }
-
-    /**
      * Get the Finalize for this Invoke.
      *
      * @return Finalize The Finalize for this Invoke.
@@ -243,24 +272,6 @@ public class Invoke implements NamespacePrefixesHolder, PathResolverHolder,
     }
 
     /**
-     * Get the XML namespaces at this action node in the SCXML document.
-     *
-     * @return Returns the map of namespaces.
-     */
-    public final Map<String, String> getNamespaces() {
-        return namespaces;
-    }
-
-    /**
-     * Set the XML namespaces at this action node in the SCXML document.
-     *
-     * @param namespaces The document namespaces.
-     */
-    public final void setNamespaces(final Map<String, String> namespaces) {
-        this.namespaces = namespaces;
-    }
-
-    /**
      * Enforce identity equality only
      * @param other other object to compare with
      * @return this == other
@@ -278,5 +289,139 @@ public class Invoke implements NamespacePrefixesHolder, PathResolverHolder,
     public final int hashCode() {
         return System.identityHashCode(this);
     }
-}
 
+    /**
+     * Returns the content
+     *
+     * @return the content
+     */
+    public Content getContent() {
+        return content;
+    }
+
+    /**
+     * @return The local context variable name under which the InvokerManager is provided to the Invoke
+     */
+    public String getInvokerManagerKey() {
+        return INVOKER_MANAGER_KEY;
+    }
+
+    /**
+     * Sets the content
+     *
+     * @param content the content to set
+     */
+    public void setContent(final Content content) {
+        this.content = content;
+    }
+
+    /**
+     * Get the parent EnterableState.
+     *
+     * @return Returns the parent state
+     */
+    public EnterableState getParentEnterableState() {
+        return parent;
+    }
+
+    /**
+     * Set the parent EnterableState.
+     * @param parent The parent state to set
+     */
+    public void setParentEnterableState(final EnterableState parent) {
+        if (parent == null) {
+            throw new IllegalArgumentException("Parent parameter cannot be null");
+        }
+        this.parent = parent;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void execute(final ActionExecutionContext exctx) throws ModelException {
+        EnterableState parentState = getParentEnterableState();
+        Context ctx = exctx.getContext(parentState);
+        InvokerManager invokerManager = (InvokerManager)ctx.getVars().get(getInvokerManagerKey());
+        if (invokerManager == null) {
+            throw new ModelException("Missing InvokerManager instance in context under key: "+getInvokerManagerKey());
+        }
+        try {
+            ctx.setLocal(getNamespacesKey(), getNamespaces());
+            Evaluator eval = exctx.getEvaluator();
+
+            String typeValue = type;
+            if (typeValue == null && typeexpr != null) {
+                typeValue = (String) getTextContentIfNodeResult(eval.eval(ctx, typeexpr));
+                if (typeValue == null) {
+                    throw new SCXMLExpressionException("<invoke> for state "+parentState.getId() +
+                            ": type expression \"" + typeexpr + "\" evaluated to null or empty String");
+                }
+            }
+            if (typeValue == null) {
+                typeValue = TYPE_SCXML;
+            }
+            Invoker invoker = invokerManager.newInvoker(typeValue);
+
+            String invokeId = getId();
+            if (invokeId == null) {
+                invokeId = parentState.getId() + "." + ctx.get(SCXMLSystemContext.SESSIONID_KEY);
+            }
+            if (getId() == null && getIdlocation() != null) {
+                eval.evalAssign(ctx, idlocation, invokeId, Evaluator.AssignType.REPLACE_CHILDREN, null);
+            }
+            invoker.setInvokeId(invokeId);
+
+            String src = getSrc();
+            if (src == null && getSrcexpr() != null) {
+                src = (String) getTextContentIfNodeResult(eval.eval(ctx, getSrcexpr()));
+            }
+            if (src != null) {
+                PathResolver pr = getPathResolver();
+                if (pr != null) {
+                    src = getPathResolver().resolvePath(src);
+                }
+            }
+            Node srcNode = null;
+            if (src == null && getContent() != null) {
+                Object contentValue;
+                if (content.getExpr() != null) {
+                    contentValue = eval.eval(ctx, content.getExpr());
+                } else {
+                    contentValue = content.getBody();
+                }
+                if (contentValue instanceof Node) {
+                    srcNode = ((Node)contentValue).cloneNode(true);
+                }
+                else if (contentValue != null) {
+                    src = String.valueOf(contentValue);
+                }
+            }
+            if (src == null && srcNode == null) {
+                throw new SCXMLExpressionException("<invoke> for state "+parentState.getId() +
+                        ": no src and no content defined");
+            }
+            Map<String, Object> payloadDataMap = new HashMap<String, Object>();
+            addNamelistDataToPayload(exctx, payloadDataMap);
+            addParamsToPayload(exctx, payloadDataMap);
+            SCXMLIOProcessor ioProcessor = ((Map<String,SCXMLIOProcessor>)ctx.get(SCXMLSystemContext.IOPROCESSORS_KEY)).
+                    get(SCXMLIOProcessor.SCXML_EVENT_PROCESSOR);
+            invoker.setParentIOProcessor(ioProcessor);
+            invoker.setEvaluator(exctx.getEvaluator());
+            if (src != null) {
+                invoker.invoke(src, payloadDataMap);
+            }
+            // TODO: } else { invoker.invoke(srcNode, payloadDataMap); }
+            invokerManager.registerInvoker(this, invoker);
+        }
+        catch (InvokerException e) {
+            exctx.getErrorReporter().onError(ErrorConstants.EXECUTION_ERROR, e.getMessage(), this);
+            exctx.getInternalIOProcessor().addEvent(new TriggerEvent(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT));
+        }
+        catch (SCXMLExpressionException e) {
+            exctx.getInternalIOProcessor().addEvent(new TriggerEvent(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT));
+            exctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR, e.getMessage(), this);
+        }
+        finally {
+            ctx.setLocal(getNamespacesKey(), null);
+        }
+    }
+}

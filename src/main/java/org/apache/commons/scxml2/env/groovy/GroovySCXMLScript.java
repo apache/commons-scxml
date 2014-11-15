@@ -19,20 +19,19 @@ package org.apache.commons.scxml2.env.groovy;
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.scxml2.Builtin;
-import org.apache.commons.scxml2.Context;
-import org.apache.commons.scxml2.SCXMLSystemContext;
-import org.apache.commons.scxml2.model.EnterableState;
+import org.apache.commons.scxml2.SCXMLExpressionException;
+import org.apache.commons.scxml2.XPathBuiltin;
 
 import groovy.lang.Binding;
 import groovy.lang.MissingPropertyException;
 import groovy.lang.Script;
 
 /**
- * Groovy {@link Script} base class for SCXML, providing the standard 'builtin' functions {@link #In(String)} and {@link #Data(Object, String)}
- * as well as JEXL like convenience functions {@link #empty(Object)} and {@link #var(String)}.
+ * Groovy {@link Script} base class for SCXML, providing the standard 'builtin' functions {@link #In(String)},
+ * {@link #Data(String)} and {@link #Location(String)}, as well as JEXL like convenience functions
+ * {@link #empty(Object)} and {@link #var(String)}.
  */
 public abstract class GroovySCXMLScript extends Script {
 
@@ -51,46 +50,30 @@ public abstract class GroovySCXMLScript extends Script {
     }
 
     /**
-     * Gets the ALL_NAMESPACES map from context.
-     * @return the ALL_NAMESPACES map
-     */
-    @SuppressWarnings("unchecked")
-    private Map<String, String> getNamespaces() {
-        return (Map<String, String>) context.get(Context.NAMESPACES_KEY);
-    }
-
-    /**
-     * Gets the ALL_STATES set from context.
-     * @return the ALL_STATES set
-     */
-    @SuppressWarnings("unchecked")
-    private Set<EnterableState> getAllStates() {
-        return (Set<EnterableState>) context.get(SCXMLSystemContext.ALL_STATES_KEY);
-    }
-
-    /**
-     * Implements the Data() predicate for SCXML documents ( see Builtin#data ).
-     * @param data the context node
-     * @param path the XPath expression
-     * @return the first node matching the path
-     */
-    public Object Data(final Object data, final String path) {
-        // first call maps delegates to dataNode(), subsequent ones to data()
-        if (context.isEvaluatingLocation()) {
-            context.setEvaluatingLocation(false);
-            return Builtin.dataNode(getNamespaces(), data, path);
-        } else {
-            return Builtin.data(getNamespaces(), data, path);
-        }
-    }
-
-    /**
      * Implements the In() predicate for SCXML documents ( see Builtin#isMember )
      * @param state The State ID to compare with
      * @return Whether this State belongs to this Set
      */
     public boolean In(final String state) {
-        return Builtin.isMember(getAllStates(), state);
+        return Builtin.isMember(context, state);
+    }
+
+    /**
+     * Implements the Data() predicate for SCXML documents.
+     * @param expression the XPath expression
+     * @return the data matching the expression
+     */
+    public Object Data(final String expression) throws SCXMLExpressionException {
+        return XPathBuiltin.eval(context, expression);
+    }
+
+    /**
+     * Implements the Location() predicate for SCXML documents.
+     * @param location the XPath expression
+     * @return the location list for the location expression
+     */
+    public Object Location(final String location) throws SCXMLExpressionException {
+        return XPathBuiltin.evalLocation(context, location);
     }
 
     /**

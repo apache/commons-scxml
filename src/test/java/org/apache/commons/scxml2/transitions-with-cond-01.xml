@@ -24,7 +24,7 @@
        initial="closed">
 
   <state id="closed">
-    <transition event="open" cond="_event.data['keyed']" target="opened" />
+    <transition event="open" cond="!empty(_event.data) and _event.data['keyed']" target="opened" />
     <transition event="lock" target="locked" />
   </state>
 

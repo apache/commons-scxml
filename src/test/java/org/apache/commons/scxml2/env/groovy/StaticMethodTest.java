@@ -35,23 +35,4 @@ public class StaticMethodTest {
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("static", currentStates.iterator().next().getId());
     }
-
-    @Test
-    public void mytest() throws Exception {
-        Object o1, o2 = new Object();
-        o1 = new Object();
-
-        o2 = null;
-        o1 = null;
-        if (val(o1,o2)) {
-            System.out.println("hello");
-        }
-        else {
-            System.out.println("boo");
-        }
-    }
-
-    public boolean val(Object o1, Object o2) {
-        return (o1 == o2);
-    }
 }

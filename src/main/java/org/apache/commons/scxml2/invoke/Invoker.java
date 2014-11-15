@@ -68,6 +68,11 @@ import org.apache.commons.scxml2.TriggerEvent;
 public interface Invoker {
 
     /**
+     * @return get the invoke ID provided by the parent state machine executor
+     */
+    String getInvokeId();
+
+    /**
      * Set the invoke ID provided by the parent state machine executor
      * Implementations must use this ID for constructing the event name for
      * the special "done" event (and optionally, for other event names

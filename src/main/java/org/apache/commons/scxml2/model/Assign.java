@@ -28,8 +28,6 @@ import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.PathResolver;
 import org.apache.commons.scxml2.SCXMLExpressionException;
-import org.apache.commons.scxml2.TriggerEvent;
-import org.apache.commons.scxml2.semantics.ErrorConstants;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
@@ -44,12 +42,6 @@ public class Assign extends Action implements PathResolverHolder {
      * Serial version UID.
      */
     private static final long serialVersionUID = 1L;
-
-    /**
-     * Left hand side expression evaluating to a previously
-     * defined variable.
-     */
-    private String name;
 
     /**
      * Left hand side expression evaluating to a location within
@@ -68,6 +60,16 @@ public class Assign extends Action implements PathResolverHolder {
     private String expr;
 
     /**
+     * Defines the nature of the insertion to be performed, default {@link Evaluator.AssignType#REPLACE_CHILDREN}
+     */
+    private Evaluator.AssignType type;
+
+    /**
+     * The attribute name to add at the specified location when using {@link Evaluator.AssignType#ADD_ATTRIBUTE}
+     */
+    private String attr;
+
+    /**
      * {@link PathResolver} for resolving the "src" result.
      */
     private PathResolver pathResolver;
@@ -77,24 +79,6 @@ public class Assign extends Action implements PathResolverHolder {
      */
     public Assign() {
         super();
-    }
-
-    /**
-     * Get the variable to be assigned a new value.
-     *
-     * @return Returns the name.
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Get the variable to be assigned a new value.
-     *
-     * @param name The name to set.
-     */
-    public void setName(final String name) {
-        this.name = name;
     }
 
     /**
@@ -169,6 +153,22 @@ public class Assign extends Action implements PathResolverHolder {
         this.pathResolver = pathResolver;
     }
 
+    public Evaluator.AssignType getType() {
+        return type;
+    }
+
+    public void setType(final Evaluator.AssignType type) {
+        this.type = type;
+    }
+
+    public String getAttr() {
+        return attr;
+    }
+
+    public void setAttr(final String attr) {
+        this.attr = attr;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -176,115 +176,29 @@ public class Assign extends Action implements PathResolverHolder {
     public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
         EnterableState parentState = getParentEnterableState();
         Context ctx = exctx.getContext(parentState);
-        Evaluator eval = exctx.getEvaluator();
+        Evaluator evaluator = exctx.getEvaluator();
         ctx.setLocal(getNamespacesKey(), getNamespaces());
-        // "location" gets preference over "name"
-        if (location != null) {
-            Node oldNode = eval.evalLocation(ctx, location);
-            if (oldNode != null) {
-                //// rvalue may be ...
-                // a Node, if so, import it at location
-                Node newNode;
-                try {
-                    if (src != null && src.trim().length() > 0) {
-                        newNode = getSrcNode();
-                    } else {
-                        newNode = eval.evalLocation(ctx, expr);
-                    }
-                    // Remove all children
-                    Node removeChild = oldNode.getFirstChild();
-                    while (removeChild != null) {
-                        Node nextChild = removeChild.getNextSibling();
-                        oldNode.removeChild(removeChild);
-                        removeChild = nextChild;
-                    }
-                    if (newNode != null) {
-                        // Adopt new children
-                        for (Node child = newNode.getFirstChild();
-                                child != null;
-                                child = child.getNextSibling()) {
-                            Node importedNode = oldNode.getOwnerDocument().
-                                importNode(child, true);
-                            oldNode.appendChild(importedNode);
-                        }
-                    }
-                } catch (SCXMLExpressionException see) {
-                    // or something else, stuff toString() into lvalue
-                    Object valueObject = eval.eval(ctx, expr);
-                    setNodeValue(oldNode, valueObject.toString());
-                }
-                if (exctx.getAppLog().isDebugEnabled()) {
-                    exctx.getAppLog().debug("<assign>: data node '" + oldNode.getNodeName()
-                        + "' updated");
-                }
-                /* TODO: send to notificationRegistry instead?
-                TriggerEvent ev = new TriggerEvent(name + ".change",
-                    TriggerEvent.CHANGE_EVENT);
-                exctx.addInternalEvent(ev);
-                */
-            } else {
-                exctx.getAppLog().error("<assign>: location does not point to"
-                    + " a <data> node");
-            }
+        Object data;
+        if (src != null && src.trim().length() > 0) {
+            data = getSrcNode();
         } else {
-            // lets try "name" (usage as in Sep '05 WD, useful with <var>)
-            if (!ctx.has(name)) {
-                exctx.getErrorReporter().onError(ErrorConstants.UNDEFINED_VARIABLE, name
-                    + " = null", parentState);
-            } else {
-                Object varObj;
-                if (src != null && src.trim().length() > 0) {
-                    varObj = getSrcNode();
-                } else {
-                    varObj = eval.eval(ctx, expr);
-                }
-                ctx.set(name, varObj);
-                if (exctx.getAppLog().isDebugEnabled()) {
-                    exctx.getAppLog().debug("<assign>: Set variable '" + name + "' to '"
-                        + String.valueOf(varObj) + "'");
-                }
-                TriggerEvent ev = new TriggerEvent(name + ".change", TriggerEvent.CHANGE_EVENT);
-                exctx.getInternalIOProcessor().addEvent(ev);
-            }
+            data = evaluator.eval(ctx, expr);
         }
-        ctx.setLocal(getNamespacesKey(), null);
-    }
 
-    /**
-     * Set node value, depending on its type, from a String.
-     *
-     * @param node A Node whose value is to be set
-     * @param value The new value
-     */
-    private void setNodeValue(final Node node, final String value) {
-        switch(node.getNodeType()) {
-            case Node.ATTRIBUTE_NODE:
-                node.setNodeValue(value);
-                break;
-            case Node.ELEMENT_NODE:
-                //remove all text children
-                if (node.hasChildNodes()) {
-                    Node child = node.getFirstChild();
-                    while (child != null) {
-                        if (child.getNodeType() == Node.TEXT_NODE) {
-                            node.removeChild(child);
-                        }
-                        child = child.getNextSibling();
-                    }
-                }
-                //create a new text node and append
-                Text txt = node.getOwnerDocument().createTextNode(value);
-                node.appendChild(txt);
-                break;
-            case Node.TEXT_NODE:
-            case Node.CDATA_SECTION_NODE:
-                ((CharacterData) node).setData(value);
-                break;
-            default:
-                String err = "Trying to set value of a strange Node type: "
-                        + node.getNodeType();
-                throw new IllegalArgumentException(err);
+        evaluator.evalAssign(ctx, location, data, type, attr);
+        if (exctx.getAppLog().isDebugEnabled()) {
+            exctx.getAppLog().debug("<assign>: '" + location + "' updated");
         }
+        // TODO: introduce a optional 'trace.change' setting or something alike to enable .change events,
+       //        but don't do this by default as it can interfere with transitions not expecting such events
+        /*
+        if ((Evaluator.XPATH_DATA_MODEL.equals(evaluator.getSupportedDatamodel()) && location.startsWith("$") && ctx.has(location.substring(1))
+                || ctx.has(location))) {
+            TriggerEvent ev = new TriggerEvent(location + ".change", TriggerEvent.CHANGE_EVENT);
+            exctx.getInternalIOProcessor().addEvent(ev);
+        }
+        */
+        ctx.setLocal(getNamespacesKey(), null);
     }
 
     /**
@@ -299,8 +213,7 @@ public class Assign extends Action implements PathResolverHolder {
         }
         Document doc = null;
         try {
-            doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().
-                parse(resolvedSrc);
+            doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(resolvedSrc);
         } catch (FactoryConfigurationError t) {
             logError(t);
         } catch (SAXException e) {
@@ -324,5 +237,4 @@ public class Assign extends Action implements PathResolverHolder {
             getLog(Assign.class);
         log.error(throwable.getMessage(), throwable);
     }
-
 }

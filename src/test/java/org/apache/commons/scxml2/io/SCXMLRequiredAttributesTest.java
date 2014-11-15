@@ -25,7 +25,6 @@ import org.apache.commons.scxml2.model.SCXML;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -91,17 +90,6 @@ public class SCXMLRequiredAttributesTest {
                     "  <state id=\"s1\">\n" +
                     "    <transition target=\"fine\">\n" +
                     "      <assign expr=\"1\"/>\n" +
-                    "    </transition>\n" +
-                    "  </state>\n" +
-                    "  <final id=\"fine\"/>\n" +
-                    "</scxml>";
-
-    private static final String SCXML_WITH_ASSIGN_WITHOUT_LOCATION =
-            "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" datamodel=\"jexl\" version=\"1.0\">\n" +
-                    "  <datamodel><data id=\"x\"></data></datamodel>\n" +
-                    "  <state id=\"s1\">\n" +
-                    "    <transition target=\"fine\">\n" +
-                    "      <assign name=\"x\" expr=\"1\"/>\n" +
                     "    </transition>\n" +
                     "  </state>\n" +
                     "  <final id=\"fine\"/>\n" +
@@ -229,14 +217,6 @@ public class SCXMLRequiredAttributesTest {
         catch (ModelException e) {
             assertTrue(e.getMessage().startsWith("<assign> is missing required attribute \"location\" value"));
         }
-    }
-
-    @Test
-    public void testSCXMLWithAssignWithoutLocation() throws Exception {
-        SCXML scxml = SCXMLTestHelper.parse(new StringReader(SCXML_WITH_ASSIGN_WITHOUT_LOCATION), null);
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
-        exec.go();
-        assertTrue(exec.getCurrentStatus().isFinal());
     }
 
     @Test

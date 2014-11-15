@@ -36,7 +36,7 @@
         </datamodel>
 
         <transition xmlns:ns1="http://namespace.test.domain/1"
-                    event="done.state.ten" cond="Data(data10,'root/ns1:foo/bar') eq 10"
+                    event="done.state.ten" cond="Data('string($data10/root/ns1:foo/bar)') eq 10"
                     target="twenty" />
 
     </state>
@@ -56,7 +56,7 @@
             </data>
         </datamodel>
 
-        <transition event="done.state.twenty" cond="Data(data20,'ns3:root/ns4:foo') eq 20"
+        <transition event="done.state.twenty" cond="Data('string($data20/ns3:root/ns4:foo)') eq 20"
                     target="thirty" />
 
     </state>
@@ -79,7 +79,7 @@
          xmlns:ns1="http://namespace.test.domain/1"
          xmlns:ns2="http://namespace.test.domain/2"
          xmlns:ns3="http://namespace.test.domain/3"
-         cond="Data(data30,'ns1:root/ns2:foo/@ns3:content') eq 30"
+         cond="Data('string($data30/ns1:root/ns2:foo/@ns3:content)') eq 30"
          target="forty" />
 
     </state>

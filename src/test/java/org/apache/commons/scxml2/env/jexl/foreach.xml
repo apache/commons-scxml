@@ -24,7 +24,7 @@
   <state id="test">
     <onentry>
       <foreach item="var3" array="var1">
-        <assign name="var2" expr="var2 + var3"/>
+        <assign location="var2" expr="var2 + var3"/>
       </foreach>
     </onentry>
     <transition cond="var2==6" target="finished"/>

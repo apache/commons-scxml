@@ -22,6 +22,7 @@ import java.util.Map;
 import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.SCXMLExpressionException;
+import org.w3c.dom.Node;
 
 /**
  * An abstract base class for executable elements in SCXML,
@@ -96,7 +97,7 @@ public abstract class Action implements NamespacePrefixesHolder,
      *
      * @since 0.9
      */
-    public final EnterableState getParentEnterableState()
+    public EnterableState getParentEnterableState()
     throws ModelException {
         if (parent == null && this instanceof Script && ((Script)this).isGlobalScript()) {
             // global script doesn't have a EnterableState
@@ -113,7 +114,7 @@ public abstract class Action implements NamespacePrefixesHolder,
             return ((History)tt).getParent();
         } else {
             throw new ModelException("Unknown TransitionTarget subclass:"
-                    + tt.getClass().getName());
+                    + (tt != null ? tt.getClass().getName() : "(null)"));
         }
     }
 
@@ -139,5 +140,17 @@ public abstract class Action implements NamespacePrefixesHolder,
         return Context.NAMESPACES_KEY;
     }
 
+    /**
+     * Convenient method to convert a possible {@link Node} result from an expression evaluation to a String
+     * using its {@link Node#getTextContent()} method.
+     * @param result the result to convert
+     * @return its text content if the result is a {@link Node} otherwise the unmodified result itself
+     */
+    protected Object getTextContentIfNodeResult(final Object result) {
+        if (result instanceof Node) {
+            return ((Node)result).getTextContent();
+        }
+        return result;
+    }
 }
 

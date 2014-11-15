@@ -94,4 +94,11 @@ public interface Context {
      */
     Context getParent();
 
+    /**
+     * Get the SCXMLSystemContext for this Context, should not be null unless this is the root Context
+     *
+     * @return The SCXMLSystemContext in a chained Context environment
+     */
+    SCXMLSystemContext getSystemContext();
+
 }

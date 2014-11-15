@@ -27,6 +27,7 @@
              xmlns:v3="http://foo.bar.com/vxml3"
              xmlns:test="http://my.test.namespace">
                 <v3:form id="Confirm">
+                  <param name="foo" expr="2"/>
                     <v3:grammar type="application/srgs+xml"
                                 src="/grammars/boolean.grxml"/>
                     <v3:block>

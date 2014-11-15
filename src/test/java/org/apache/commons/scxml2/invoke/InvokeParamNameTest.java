@@ -69,7 +69,7 @@ public class InvokeParamNameTest {
         Assert.assertEquals("foo", e.getValue());
     }
 
-    // Tests "param" element with only a "name" attribute     
+    // Tests "param" element with a "name" attribute and "expr" attribute locating a node
     @Test
     public void testSoleNameLocation() throws Exception {
         trigger(); trigger();
@@ -80,18 +80,9 @@ public class InvokeParamNameTest {
         Assert.assertEquals("foo", e.getFirstChild().getNodeValue());
     }
 
-    // Tests "param" element with a single, wrong "name" attribute    
-    @Test
-    public void testWrongNameLocation() throws Exception {
-        trigger(); trigger(); trigger();
-        /* TODO: restore or drop test
-        Assert.assertEquals(1, exec.getCurrentStatus().getEvents().size());
-        final TriggerEvent evt = exec.getCurrentStatus().getEvents().iterator().next(); 
-        Assert.assertTrue(evt.getName().endsWith("error.illegalalloc"));
-        */
-    }
-
     public static class DummyInvoker implements Invoker {
+
+        private String invokeId;
 
         public void invoke(String source, Map<String, Object> params)
         throws InvokerException {
@@ -115,8 +106,12 @@ public class InvokeParamNameTest {
             // Not needed
         }
 
+        public String getInvokeId() {
+            return invokeId;
+        }
+
         public void setInvokeId(String invokeId) {
-            // Not needed    
+            this.invokeId = invokeId;
         }
 
         public void setEvaluator(Evaluator evaluator) {

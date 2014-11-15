@@ -57,7 +57,7 @@ public class SimpleContextTest {
         Map<String, Object> parentVars = new HashMap<String, Object>();
         parentVars.put("key", "value");
         
-        SimpleContext parentContext = new SimpleContext(parentVars);
+        SimpleContext parentContext = new SimpleContext(null, parentVars);
         
         Map<String, Object> vars = new HashMap<String, Object>();
         vars.put("key", "value");
@@ -73,7 +73,7 @@ public class SimpleContextTest {
         Map<String, Object> parentVars = new HashMap<String, Object>();
         parentVars.put("differentKey", "value");
         
-        SimpleContext parentContext = new SimpleContext(parentVars);
+        SimpleContext parentContext = new SimpleContext(null, parentVars);
         
         Map<String, Object> vars = new HashMap<String, Object>();
         vars.put("key", "value");
@@ -106,7 +106,7 @@ public class SimpleContextTest {
         Map<String, Object> parentVars = new HashMap<String, Object>();
         parentVars.put("differentKey", "differentValue");
         
-        SimpleContext parentContext = new SimpleContext(parentVars);
+        SimpleContext parentContext = new SimpleContext(null, parentVars);
         
         Map<String, Object> vars = new HashMap<String, Object>();
         vars.put("key", "value");
@@ -132,7 +132,7 @@ public class SimpleContextTest {
         Map<String, Object> parentVars = new HashMap<String, Object>();
         parentVars.put("differentKey", "differentValue");
         
-        SimpleContext parentContext = new SimpleContext(parentVars);
+        SimpleContext parentContext = new SimpleContext(null, parentVars);
         
         Map<String, Object> vars = new HashMap<String, Object>();
         vars.put("key", "value");
@@ -170,7 +170,7 @@ public class SimpleContextTest {
         Map<String, Object> parentVars = new HashMap<String, Object>();
         parentVars.put("differentKey", "differentValue");
         
-        SimpleContext parentContext = new SimpleContext(parentVars);
+        SimpleContext parentContext = new SimpleContext(null, parentVars);
         
         Map<String, Object> vars = new HashMap<String, Object>();
         vars.put("key", "value");

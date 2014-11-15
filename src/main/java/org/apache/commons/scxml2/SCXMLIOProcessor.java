@@ -23,6 +23,21 @@ package org.apache.commons.scxml2;
 public interface SCXMLIOProcessor {
 
     /**
+     * The name of the default SCXML I/O Event Processor
+     */
+    String DEFAULT_EVENT_PROCESSOR = "http://www.w3.org/TR/scxml/#SCXMLEventProcessor";
+
+    /**
+     * Default SCXML I/O Event Processor alias
+     */
+    String SCXML_EVENT_PROCESSOR = "scxml";
+
+    /**
+     * The name of the internal Event Processor
+     */
+    String INTERNAL_EVENT_PROCESSOR = "#_internal";
+
+    /**
      * Send an event into the SCXML processor queue
      * <p>
      * @param event the event to send

@@ -60,38 +60,37 @@
 
         <state id="ten">
             <onentry>
-                <!-- Assign Usage 1: name is previously defined
+                <!-- Assign Usage 1: location is previously defined
                       <var> or degenerate <data> (as in this case) -->
-                <assign name="mainvar" expr="10" />
+                <assign location="mainvar" expr="10" />
             </onentry>
             <!-- Commons SCXML defines a Data() function to use in conjunction
                  with the Commons JEXL expression language. The
-                 first argument is the named XML data tree and the second is
-                 the XPath expression to a node whose value is to be
+                 argument is the XPath expression to a node whose value is to be
                  examined  -->
             <transition event="done.state.ten"
-             cond="mainvar eq 10 and Data(maindata,'root/a/b/c') eq 'beta'"
+             cond="mainvar eq 10 and Data('string($maindata/root/a/b/c)') eq 'beta'"
              target="twenty" />
             <onexit>
                 <!-- Assign Usage 2: location must point to an existing
                       node  -->
-                <assign location="Data(maindata,'root/a/b/c')" expr="'gamma'" />
+                <assign location="Location('$maindata/root/a/b/c')" expr="'gamma'" />
             </onexit>
         </state>
 
         <state id="twenty">
             <onentry>
-                <assign name="mainvar" expr="20" />
+                <assign location="mainvar" expr="20" />
             </onentry>
             <transition event="done.state.twenty"
-             cond="Data(maindata,'root/a/b/c') eq 'gamma' and mainvar eq 20"
+             cond="Data('string(maindata/root/a/b/c)') eq 'gamma' and mainvar eq 20"
              target="thirty" />
             <onexit>
                 <!-- Assign Usage 3: location points to an existing
                       node, and expr points to an existing node.
                       In this case, location adopts expr's child nodes.  -->
-                <assign location="Data(docdata,'root/foo')"
-                        expr="Data(maindata,'root')" />
+                <assign location="Location('$docdata/root/foo')"
+                        expr="Data('$maindata/root/*')" />
             </onexit>
         </state>
 
@@ -101,7 +100,7 @@
                  did not have a node at 'root/foo/a/b/d' to begin with,
                  the XML tree was manipulated by the <assign> above -->
             <transition event="done.state.thirty"
-             cond="Data(docdata,'root/foo/a/b/d') + Data(docdata,'root/foo/a/b/e') eq 579.789"
+             cond="Data('number($docdata/root/foo/a/b/d)') + Data('number($docdata/root/foo/a/b/e)') eq 579.789"
              target="forty" />
         </state>
 

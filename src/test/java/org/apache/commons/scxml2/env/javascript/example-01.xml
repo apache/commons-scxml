@@ -88,11 +88,11 @@
 
     <state id='javascript.datamodel'>
       <onentry>
-        <log expr='"Lion : " + Data(jungle,"animals/lion/name")  + "," + Data(jungle,"animals/lion/age")'  />
-        <log expr='"Tiger: " + Data(jungle,"animals/tiger/name") + "," + Data(jungle,"animals/tiger/age")' />
-        <assign location='Data(jungle,"animals/lion/age")'  expr='Data(jungle,"animals/tiger/age")'        />
-        <log expr='"Lion : " + Data(jungle,"animals/lion/name")  + "," + Data(jungle,"animals/lion/age")'  />
-        <log expr='"Tiger: " + Data(jungle,"animals/tiger/name") + "," + Data(jungle,"animals/tiger/age")' />
+        <log expr='"Lion : " + Data("string(jungle/animals/lion/name)")  + "," + Data("string(jungle/animals/lion/age)")'  />
+        <log expr='"Tiger: " + Data("string(jungle/animals/tiger/name)") + "," + Data("string(jungle/animals/tiger/age)")' />
+        <assign location='Location("jungle/animals/lion/age")' expr='Data("jungle/animals/tiger/age")' type="replace"/>
+        <log expr='"Lion : " + Data("string(jungle/animals/lion/name)")  + "," + Data("string(jungle/animals/lion/age)")'  />
+        <log expr='"Tiger: " + Data("string(jungle/animals/tiger/name)") + "," + Data("string(jungle/animals/tiger/age)")' />
       </onentry>
       <transition target='javascript.functions.inline' />
     </state>
