@@ -164,6 +164,6 @@ public class StateTest {
     public void testInitialAttribute() throws Exception {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/state-01.xml");
         exec.go();
-        Assert.assertEquals("s11", exec.getCurrentStatus().getStates().iterator().next().getId());
+        Assert.assertEquals("s11", exec.getStatus().getStates().iterator().next().getId());
     }
 }

@@ -38,7 +38,7 @@ public class WizardsTest {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/wizard-01.xml");
         exec.go();
         Assert.assertNotNull(exec);
-        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state1", currentStates.iterator().next().getId());
         exec = SCXMLTestHelper.testInstanceSerializability(exec);
@@ -64,7 +64,7 @@ public class WizardsTest {
         exec.go();
         // If you change this, you must also change
         // the TestEventDispatcher
-        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state2", currentStates.iterator().next().getId());
         exec = SCXMLTestHelper.testInstanceSerializability(exec);

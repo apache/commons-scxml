@@ -59,7 +59,7 @@ public class HistoryTest {
     public void testHistoryDefaults01() throws Exception {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/history-default-01.xml");
         exec.go();
-        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state11", currentStates.iterator().next().getId());
         currentStates = SCXMLTestHelper.fireEvent(exec, "state.next");
@@ -74,7 +74,7 @@ public class HistoryTest {
     public void testHistoryParallel01() throws Exception {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/history-parallel-01.xml");
         exec.go();
-        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         SCXMLTestHelper.assertState(exec, "off_call");
         SCXMLTestHelper.assertPostTriggerStates(exec, "dial", new String[] { "talking", "on_call" });
@@ -89,7 +89,7 @@ public class HistoryTest {
     }
 
     private void runHistoryFlow(SCXMLExecutor exec) throws Exception {
-        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("phase1", currentStates.iterator().next().getId());
         Assert.assertEquals("phase1", pauseAndResume(exec));
@@ -100,7 +100,7 @@ public class HistoryTest {
         Assert.assertEquals("phase3", nextPhase(exec));
         Assert.assertEquals("phase3", pauseAndResume(exec));
         exec.reset();
-        currentStates = exec.getCurrentStatus().getStates();
+        currentStates = exec.getStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("phase1", currentStates.iterator().next().getId());
     }

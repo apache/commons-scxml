@@ -136,7 +136,7 @@ public class SCXMLTestHelper {
     }
 
     public static void assertState(SCXMLExecutor exec, String expectedStateId) throws Exception {
-        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assert.assertEquals("Expected 1 simple (leaf) state with id '"
             + expectedStateId + "' but found " + currentStates.size() + " states instead.",
             1, currentStates.size());
@@ -151,17 +151,17 @@ public class SCXMLTestHelper {
     public static Set<EnterableState> fireEvent(SCXMLExecutor exec, String name, Object payload) throws Exception {
         TriggerEvent[] evts = {new TriggerEvent(name, TriggerEvent.SIGNAL_EVENT, payload)};
         exec.triggerEvents(evts);
-        return exec.getCurrentStatus().getStates();
+        return exec.getStatus().getStates();
     }
 
     public static Set<EnterableState> fireEvent(SCXMLExecutor exec, TriggerEvent te) throws Exception {
         exec.triggerEvent(te);
-        return exec.getCurrentStatus().getStates();
+        return exec.getStatus().getStates();
     }
 
     public static Set<EnterableState> fireEvents(SCXMLExecutor exec, TriggerEvent[] evts) throws Exception {
         exec.triggerEvents(evts);
-        return exec.getCurrentStatus().getStates();
+        return exec.getStatus().getStates();
     }
 
     public static void assertPostTriggerState(SCXMLExecutor exec,

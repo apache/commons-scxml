@@ -31,20 +31,20 @@ public class AssignTest {
     public void testAssignSrc() throws Exception {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/assign-test-01.xml");
         exec.go();
-        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("assign3", currentStates.iterator().next().getId());
-        Assert.assertTrue(exec.getCurrentStatus().isFinal());
+        Assert.assertTrue(exec.getStatus().isFinal());
     }
     
     @Test
     public void testAssignDeep() throws Exception {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/assign-test-02.xml");
         exec.go();
-        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("assign3", currentStates.iterator().next().getId());
-        Assert.assertTrue(exec.getCurrentStatus().isFinal());
+        Assert.assertTrue(exec.getStatus().isFinal());
     }
 }
 

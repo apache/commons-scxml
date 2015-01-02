@@ -16,7 +16,9 @@
  */
 package org.apache.commons.scxml2;
 
+import java.util.HashSet;
 import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.commons.logging.Log;
@@ -26,6 +28,7 @@ import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.Observable;
 import org.apache.commons.scxml2.model.SCXML;
+import org.apache.commons.scxml2.model.TransitionTarget;
 import org.apache.commons.scxml2.semantics.SCXMLSemanticsImpl;
 
 /**
@@ -102,8 +105,46 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
      *
      * @return The current Status
      */
-    public synchronized Status getCurrentStatus() {
+    public synchronized Status getStatus() {
         return exctx.getScInstance().getCurrentStatus();
+    }
+
+    /**
+     * Initializes the state machine with a specific active configuration
+     * <p>
+     * This will first (re)initialize the current state machine: clearing all variable contexts, histories and current
+     * status, and clones the SCXML root datamodel into the root context.
+     * </p>
+     * @param atomicStateIds The set of atomic state ids for the state machine
+     * @throws ModelException when the state machine hasn't been properly configured yet, when an unknown or illegal
+     * stateId is specified, or when the specified active configuration does not represent a legal configuration.
+     * @see {@link SCInstance#initialize()}
+     * @see {@link SCXMLSemantics#isLegalConfiguration(java.util.Set, ErrorReporter)}
+     */
+    public synchronized void setConfiguration(Set<String> atomicStateIds) throws ModelException {
+        exctx.initialize();
+        Set<EnterableState> states = new HashSet<EnterableState>();
+        for (String stateId : atomicStateIds) {
+            TransitionTarget tt = getStateMachine().getTargets().get(stateId);
+            if (tt instanceof EnterableState && ((EnterableState)tt).isAtomicState()) {
+                EnterableState es = (EnterableState)tt;
+                while (es != null && !states.add(es)) {
+                    es = es.getParent();
+                }
+            }
+            else {
+                throw new ModelException("Illegal atomic stateId "+stateId+": state unknown or not an atomic state");
+            }
+        }
+        if (semantics.isLegalConfiguration(states, getErrorReporter())) {
+            for (EnterableState es : states) {
+                exctx.getScInstance().getStateConfiguration().enterState(es);
+            }
+            logState();
+        }
+        else {
+            throw new ModelException("Illegal state machine configuration!");
+        }
     }
 
     /**
@@ -217,6 +258,21 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
      */
     public void setEventdispatcher(final EventDispatcher eventdispatcher) {
         exctx.setEventdispatcher(eventdispatcher);
+    }
+
+    /**
+     * Set if the SCXML configuration should be checked before execution (default = true)
+     * @param checkLegalConfiguration flag to set
+     */
+    public void setCheckLegalConfiguration(boolean checkLegalConfiguration) {
+        this.exctx.setCheckLegalConfiguration(checkLegalConfiguration);
+    }
+
+    /**
+     * @return if the SCXML configuration will be checked before execution
+     */
+    public boolean isCheckLegalConfiguration() {
+        return exctx.isCheckLegalConfiguration();
     }
 
     /**
@@ -420,7 +476,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     protected void logState() {
         if (log.isDebugEnabled()) {
             StringBuilder sb = new StringBuilder("Current States: [ ");
-            for (EnterableState es : getCurrentStatus().getStates()) {
+            for (EnterableState es : getStatus().getStates()) {
                 sb.append(es.getId()).append(", ");
             }
             int length = sb.length();

@@ -31,7 +31,6 @@ import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.SCXML;
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -61,7 +60,7 @@ public class Issue112Test {
         SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/issues/queue-01.xml", customActions);
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
         exec.go();
-        Assert.assertEquals("init", exec.getCurrentStatus().getStates().
+        Assert.assertEquals("init", exec.getStatus().getStates().
                 iterator().next().getId());
 
         // Add an event, other external events could be added to the queue at any time (this test only adds one).
@@ -77,8 +76,8 @@ public class Issue112Test {
             }
         }
 
-        Assert.assertTrue(exec.getCurrentStatus().isFinal());
-        Assert.assertEquals("end", exec.getCurrentStatus().getStates().
+        Assert.assertTrue(exec.getStatus().isFinal());
+        Assert.assertEquals("end", exec.getStatus().getStates().
                 iterator().next().getId());
 
     }

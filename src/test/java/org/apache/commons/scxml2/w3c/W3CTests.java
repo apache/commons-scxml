@@ -734,7 +734,7 @@ public class W3CTests {
             exec.registerInvokerClass("http://www.w3.org/TR/scxml/", SimpleSCXMLInvoker.class);
             exec.go();
             Final end;
-            while ((end = exec.getCurrentStatus().getFinalState()) == null) {
+            while ((end = exec.getStatus().getFinalState()) == null) {
                 Thread.sleep(100);
                 exec.triggerEvents();
             }

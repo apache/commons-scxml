@@ -35,7 +35,7 @@ public class Issue62Test {
     public void test01issue62() throws Exception {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/issues/issue62-01.xml");
         exec.go();
-        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("s1.1", currentStates.iterator().next().getId());
         SCXMLTestHelper.assertPostTriggerState(exec, "foo", "s1.1");
@@ -56,13 +56,13 @@ public class Issue62Test {
     }
 
     private void fragmenttest(SCXMLExecutor exec) throws Exception {
-        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("s1", currentStates.iterator().next().getId());
         SCXMLTestHelper.assertPostTriggerState(exec, "foo", "e1.1.1");
         SCXMLTestHelper.assertPostTriggerState(exec, "bar", "e1.1.2");
         SCXMLTestHelper.assertPostTriggerState(exec, "baz", "s3");
-        Assert.assertTrue(exec.getCurrentStatus().isFinal());
+        Assert.assertTrue(exec.getStatus().isFinal());
     }
 }
 

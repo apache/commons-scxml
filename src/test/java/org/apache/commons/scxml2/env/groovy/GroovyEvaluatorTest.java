@@ -16,35 +16,31 @@
  */
 package org.apache.commons.scxml2.env.groovy;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.SCXMLSystemContext;
+import org.apache.commons.scxml2.StateConfiguration;
+import org.apache.commons.scxml2.Status;
 import org.apache.commons.scxml2.model.State;
-import org.apache.commons.scxml2.model.TransitionTarget;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 public class GroovyEvaluatorTest {
 
-    private String BAD_EXPRESSION = ">";
+    private static final String BAD_EXPRESSION = ">";
     private Context ctx;
-    private Context rootCtx;
 
     @Before
     public void before() {
-        rootCtx = new GroovyContext();
-        ctx = new GroovyContext(new SCXMLSystemContext(rootCtx), null);
+        ctx = new GroovyContext(new SCXMLSystemContext(new GroovyContext()), null);
     }
 
     @Test
     public void testEval() throws SCXMLExpressionException {
         Evaluator eval = new GroovyEvaluator();
-        Assert.assertEquals(new Integer(2), eval.eval(ctx, "1 + 1"));
+        Assert.assertEquals(2, eval.eval(ctx, "1 + 1"));
     }
 
     @Test
@@ -56,14 +52,13 @@ public class GroovyEvaluatorTest {
     @Test
     public void testBuiltInFunctions() throws SCXMLExpressionException {
         Evaluator eval = new GroovyEvaluator();
+        StateConfiguration stateConfiguration = new StateConfiguration();
+        Status status = new Status(stateConfiguration);
+        ctx.getSystemContext().getPlatformVariables().put(SCXMLSystemContext.STATUS_KEY, status);
 
-        Set<TransitionTarget> allStates = new HashSet<TransitionTarget>();
         State state1 = new State();
         state1.setId("state1");
-        allStates.add(state1);
-
-        rootCtx.set(SCXMLSystemContext.ALL_STATES_KEY, allStates);
-
+        stateConfiguration.enterState(state1);
         Assert.assertTrue(eval.evalCond(ctx, "In('state1')"));
     }
 

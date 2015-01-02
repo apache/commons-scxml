@@ -105,6 +105,11 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor, InvokerManager {
     private final Map<String, SCXMLIOProcessor> ioProcessors = new HashMap<String, SCXMLIOProcessor>();
 
     /**
+     * Flag indicating if the SCXML configuration should be checked before execution (default = true)
+     */
+    private boolean checkLegalConfiguration = true;
+
+    /**
      * Constructor
      *
      * @param externalIOProcessor The external IO Processor
@@ -156,6 +161,21 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor, InvokerManager {
      */
     public void stopRunning() {
         scInstance.setRunning(false);
+    }
+
+    /**
+     * Set if the SCXML configuration should be checked before execution (default = true)
+     * @param checkLegalConfiguration flag to set
+     */
+    public void setCheckLegalConfiguration(boolean checkLegalConfiguration) {
+        this.checkLegalConfiguration = checkLegalConfiguration;
+    }
+
+    /**
+     * @return if the SCXML configuration will be checked before execution
+     */
+    public boolean isCheckLegalConfiguration() {
+        return checkLegalConfiguration;
     }
 
     /**

@@ -33,13 +33,13 @@ public class StateSrcTest {
     public void testRecursiveSrcInclude() throws Exception {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/io/src-test-1.xml");
         exec.go();
-        Set<EnterableState> states = exec.getCurrentStatus().getStates();
+        Set<EnterableState> states = exec.getStatus().getStates();
         Assert.assertEquals(1, states.size());
         Assert.assertEquals("srctest3", states.iterator().next().getId());
         states = SCXMLTestHelper.fireEvent(exec, "src.test");
         Assert.assertEquals(1, states.size());
         Assert.assertEquals("srctest1end", states.iterator().next().getId());
-        Assert.assertTrue(exec.getCurrentStatus().isFinal());
+        Assert.assertTrue(exec.getStatus().isFinal());
     }
     
     @Test

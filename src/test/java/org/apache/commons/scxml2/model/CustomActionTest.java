@@ -101,9 +101,9 @@ public class CustomActionTest {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/hello-world.xml");
         exec.go();
         // (2) Single, final state
-        Assert.assertEquals("hello", (exec.getCurrentStatus().getStates().
+        Assert.assertEquals("hello", (exec.getStatus().getStates().
                 iterator().next()).getId());
-        Assert.assertTrue(exec.getCurrentStatus().isFinal());
+        Assert.assertTrue(exec.getStatus().isFinal());
     }
 
     // Hello World example using a custom <hello> action
@@ -128,9 +128,9 @@ public class CustomActionTest {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
         exec.go();
         // (4) Single, final state
-        Assert.assertEquals("custom", (exec.getCurrentStatus().getStates().
+        Assert.assertEquals("custom", (exec.getStatus().getStates().
                 iterator().next()).getId());
-        Assert.assertTrue(exec.getCurrentStatus().isFinal());
+        Assert.assertTrue(exec.getStatus().isFinal());
 
         // The custom action defined by Hello.class should be called
         // to execute() exactly twice at this point (one by <my:hello/> and the other by <foo:bar/>).
@@ -154,7 +154,7 @@ public class CustomActionTest {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
         exec.go();
         // (4) Single, final state
-        Assert.assertEquals("custom", (exec.getCurrentStatus().getStates().
+        Assert.assertEquals("custom", (exec.getStatus().getStates().
             iterator().next()).getId());
 
         // The custom action defined by Hello.class should be called
@@ -178,7 +178,7 @@ public class CustomActionTest {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
         exec.go();
         // (4) Single, final state
-        Assert.assertEquals("custom", (exec.getCurrentStatus().getStates().
+        Assert.assertEquals("custom", (exec.getStatus().getStates().
             iterator().next()).getId());
 
         // The custom action defined by Hello.class should be called
@@ -204,7 +204,7 @@ public class CustomActionTest {
         exec.go();
         // (4) Single, final state
         Assert.assertEquals("Invalid intermediate state",
-                     "custom1", (exec.getCurrentStatus().getStates().
+                     "custom1", (exec.getStatus().getStates().
                                 iterator().next()).getId());
         // (5) Verify datamodel variable is correct
         Assert.assertEquals("Missing helloName1 in root context", "custom04a",
@@ -220,9 +220,9 @@ public class CustomActionTest {
         Assert.assertEquals("Missing helloName1 in root context", "custom04b",
                 exec.getRootContext().get("helloName1"));
         Assert.assertEquals("Invalid final state",
-                "end", (exec.getCurrentStatus().getStates().
+                "end", (exec.getStatus().getStates().
                 iterator().next()).getId());
-        Assert.assertTrue(exec.getCurrentStatus().isFinal());
+        Assert.assertTrue(exec.getStatus().isFinal());
 
         // The custom action defined by Hello.class should be called
         // to execute() exactly two times at this point (by onentry in custom2 state).

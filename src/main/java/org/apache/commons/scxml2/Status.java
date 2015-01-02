@@ -17,14 +17,13 @@
 package org.apache.commons.scxml2;
 
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.Final;
 
 /**
- * The encapsulation of the current state of a state machine.
+ * The immutable encapsulation of the current state of a state machine.
  *
  */
 public class Status implements Serializable {
@@ -34,10 +33,12 @@ public class Status implements Serializable {
      */
     private static final long serialVersionUID = 1L;
 
-    /**
-     * The states that are currently active.
-     */
-    private final Set<EnterableState> states = new HashSet<EnterableState>();
+    private final StateConfiguration configuration;
+
+
+    public Status(StateConfiguration configuration) {
+        this.configuration = configuration;
+    }
 
     /**
      * @return Whether the state machine terminated AND we reached a top level Final state.
@@ -50,8 +51,8 @@ public class Status implements Serializable {
      * @return Returns the single top level final state in which the state machine terminated, or null otherwise
      */
     public Final getFinalState() {
-        if (states.size() == 1) {
-            EnterableState es = states.iterator().next();
+        if (configuration.getStates().size() == 1) {
+            EnterableState es = configuration.getStates().iterator().next();
             if (es instanceof Final && es.getParent() == null) {
                 return (Final)es;
             }
@@ -60,36 +61,31 @@ public class Status implements Serializable {
     }
 
     /**
-     * Get the states configuration (leaf only).
+     * Get the atomic states configuration (leaf only).
      *
-     * @return Returns the states configuration - simple (leaf) states only.
+     * @return Returns the atomic states configuration - simple (leaf) states only.
      */
     public Set<EnterableState> getStates() {
-        return states;
+        return configuration.getStates();
     }
 
     /**
-     * Get the complete states configuration.
+     * Get the active states configuration.
      *
-     * @return complete states configuration including simple states and their
+     * @return active states configuration including simple states and their
      *         complex ancestors up to the root.
      */
-    public Set<EnterableState> getAllStates() {
-        Set<EnterableState> allStates = new HashSet<EnterableState>(states.size() * 2);
-        for (EnterableState es : states) {
-            EnterableState state = es;
-            while (state != null && allStates.add(state)) {
-                state = state.getParent();
-            }
-        }
-        return allStates;
+    public Set<EnterableState> getActiveStates() {
+        return configuration.getActiveStates();
     }
 
-    /**
-     * Clears the status
-     */
-    public void clear() {
-        states.clear();
+    public boolean isInState(final String state) {
+        for (EnterableState es : configuration.getActiveStates()) {
+            if (state.equals(es.getId())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 

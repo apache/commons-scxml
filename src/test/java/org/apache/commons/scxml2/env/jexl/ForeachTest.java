@@ -30,6 +30,6 @@ public class ForeachTest {
     public void testForeach() throws Exception {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/foreach.xml");
         exec.go();
-        Assert.assertTrue(exec.getCurrentStatus().isFinal());
+        Assert.assertTrue(exec.getStatus().isFinal());
     }
 }

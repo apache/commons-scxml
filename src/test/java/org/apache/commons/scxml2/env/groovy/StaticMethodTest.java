@@ -31,7 +31,7 @@ public class StaticMethodTest {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/groovy/static-method.xml");
         exec.getRootContext().set("System", System.class);
         exec.go();
-        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("static", currentStates.iterator().next().getId());
     }

@@ -17,7 +17,6 @@
 
 package org.apache.commons.scxml2.env.javascript;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -52,7 +51,7 @@ public class JSExampleTest {
         SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/env/javascript/example-01.xml", actions);
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
         exec.go();
-        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("end", currentStates.iterator().next().getId());
     }

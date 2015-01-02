@@ -114,7 +114,7 @@ public final class StandaloneUtils {
                     TriggerEvent[] evts = {new TriggerEvent(null,
                         TriggerEvent.SIGNAL_EVENT, null)};
                     exec.triggerEvents(evts);
-                    if (exec.getCurrentStatus().isFinal()) {
+                    if (exec.getStatus().isFinal()) {
                         System.out.println("A final configuration reached.");
                     }
                 } else {
@@ -126,7 +126,7 @@ public final class StandaloneUtils {
                                 TriggerEvent.SIGNAL_EVENT, null);
                     }
                     exec.triggerEvents(evts);
-                    if (exec.getCurrentStatus().isFinal()) {
+                    if (exec.getStatus().isFinal()) {
                         System.out.println("A final configuration reached.");
                     }
                 }

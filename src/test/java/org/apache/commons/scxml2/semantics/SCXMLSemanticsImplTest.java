@@ -33,7 +33,7 @@ public class SCXMLSemanticsImplTest {
     public void testIsLegalConfigNoStates() {
         Set<EnterableState> states = new HashSet<EnterableState>();
 
-        Assert.assertTrue(new SCXMLSemanticsImpl().isLegalConfig(states, new SimpleErrorReporter()));
+        Assert.assertTrue(new SCXMLSemanticsImpl().isLegalConfiguration(states, new SimpleErrorReporter()));
     }
 
     @Test
@@ -58,7 +58,7 @@ public class SCXMLSemanticsImplTest {
 
         MockErrorReporter errorReporter = new MockErrorReporter();
 
-        Assert.assertFalse(new SCXMLSemanticsImpl().isLegalConfig(states, errorReporter));
+        Assert.assertFalse(new SCXMLSemanticsImpl().isLegalConfiguration(states, errorReporter));
         Assert.assertEquals(ErrorConstants.ILLEGAL_CONFIG, errorReporter.getErrCode());
         Assert.assertEquals("Not all AND states active for parallel 4", errorReporter.getErrDetail());
     }
@@ -77,7 +77,7 @@ public class SCXMLSemanticsImplTest {
 
         MockErrorReporter errorReporter = new MockErrorReporter();
 
-        Assert.assertTrue(new SCXMLSemanticsImpl().isLegalConfig(states, errorReporter));
+        Assert.assertFalse(new SCXMLSemanticsImpl().isLegalConfiguration(states, errorReporter));
         Assert.assertEquals(ErrorConstants.ILLEGAL_CONFIG, errorReporter.getErrCode());
         Assert.assertEquals("Multiple top-level OR states active!", errorReporter.getErrDetail());
     }
@@ -103,7 +103,7 @@ public class SCXMLSemanticsImplTest {
 
         MockErrorReporter errorReporter = new MockErrorReporter();
 
-        Assert.assertFalse(new SCXMLSemanticsImpl().isLegalConfig(states, errorReporter));
+        Assert.assertFalse(new SCXMLSemanticsImpl().isLegalConfiguration(states, errorReporter));
         Assert.assertEquals(ErrorConstants.ILLEGAL_CONFIG, errorReporter.getErrCode());
         Assert.assertEquals("Multiple OR states active for state parentid", errorReporter.getErrDetail());
     }

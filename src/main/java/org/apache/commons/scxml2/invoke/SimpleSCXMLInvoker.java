@@ -118,7 +118,7 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
         } catch (ModelException me) {
             throw new InvokerException(me.getMessage(), me.getCause());
         }
-        if (executor.getCurrentStatus().isFinal()) {
+        if (executor.getStatus().isFinal()) {
             TriggerEvent te = new TriggerEvent("done.invoke."+parentStateId, TriggerEvent.SIGNAL_EVENT);
             new AsyncTrigger(parentIOProcessor, te).start();
         }
@@ -132,9 +132,9 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
         if (cancelled) {
             return; // no further processing should take place
         }
-        boolean doneBefore = executor.getCurrentStatus().isFinal();
+        boolean doneBefore = executor.getStatus().isFinal();
         executor.addEvent(evt);
-        if (!doneBefore && executor.getCurrentStatus().isFinal()) {
+        if (!doneBefore && executor.getStatus().isFinal()) {
             TriggerEvent te = new TriggerEvent("done.invoke."+parentStateId,TriggerEvent.SIGNAL_EVENT);
             new AsyncTrigger(parentIOProcessor, te).start();
         }

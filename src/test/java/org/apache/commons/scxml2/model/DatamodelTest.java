@@ -57,7 +57,7 @@ public class DatamodelTest {
     public void testDatamodel04Jexl() throws Exception {
         SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/datamodel-04.xml");
         exec01.go();
-        Set<EnterableState> currentStates = exec01.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec01.getStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("ten", currentStates.iterator().next().getId());
         Map<String, Object> payload = new HashMap<String, Object>();
@@ -65,11 +65,11 @@ public class DatamodelTest {
         payload.put("two", "2");
         TriggerEvent te = new TriggerEvent("done.state.ten", TriggerEvent.SIGNAL_EVENT, payload);
         SCXMLTestHelper.fireEvent(exec01, te);
-        currentStates = exec01.getCurrentStatus().getStates();
+        currentStates = exec01.getStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("twenty", currentStates.iterator().next().getId());
         SCXMLTestHelper.fireEvent(exec01, "done.state.twenty");
-        currentStates = exec01.getCurrentStatus().getStates();
+        currentStates = exec01.getStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("thirty", currentStates.iterator().next().getId());
     }
@@ -84,7 +84,7 @@ public class DatamodelTest {
     private void runtest(SCXMLExecutor exec01, SCXMLExecutor exec02) throws Exception {
         //// Interleaved
         // exec01
-        Set<EnterableState> currentStates = exec01.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec01.getStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("ten", currentStates.iterator().next().getId());
         exec01 = SCXMLTestHelper.testInstanceSerializability(exec01);
@@ -92,7 +92,7 @@ public class DatamodelTest {
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("twenty", currentStates.iterator().next().getId());
         // exec02
-        currentStates = exec02.getCurrentStatus().getStates();
+        currentStates = exec02.getStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("ten", currentStates.iterator().next().getId());
         // exec01
@@ -121,7 +121,7 @@ public class DatamodelTest {
         TriggerEvent[] evts = {new TriggerEvent(name,
                 TriggerEvent.SIGNAL_EVENT, null)};
         exec.triggerEvents(evts);
-        return exec.getCurrentStatus().getStates();
+        return exec.getStatus().getStates();
     }
 }
 

@@ -16,6 +16,9 @@
  */
 package org.apache.commons.scxml2;
 
+import java.util.Set;
+
+import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.SCXML;
 
@@ -150,4 +153,23 @@ public interface SCXMLSemantics {
      * @throws ModelException if a SCXML model error occurred during the execution.
      */
     void finalStep(final SCXMLExecutionContext exctx) throws ModelException;
+
+    /**
+     * Checks whether a given set of states is a legal Harel State Table
+     * configuration (with the respect to the definition of the OR and AND
+     * states).
+     * <p>
+     * When {@link SCXMLExecutionContext#isCheckLegalConfiguration()} is true (default) the SCXMLSemantics implementation
+     * <em>should</em> invoke this method before executing a step, and throw a ModelException if a non-legal
+     * configuration is encountered.
+     * </p>
+     * <p>
+     * This method is also first invoked when manually initializing the status of a state machine through
+     * {@link SCXMLExecutor#setConfiguration(java.util.Set}.
+     * </p>
+     * @param states a set of states
+     * @param errRep ErrorReporter to report detailed error info if needed
+     * @return true if a given state configuration is legal, false otherwise
+     */
+    public boolean isLegalConfiguration(final Set<EnterableState> states, final ErrorReporter errRep);
 }

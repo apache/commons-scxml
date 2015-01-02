@@ -201,7 +201,7 @@ public abstract class AbstractStateMachine {
         } catch (ModelException me) {
             logError(me);
         }
-        return engine.getCurrentStatus().isFinal();
+        return engine.getStatus().isFinal();
     }
 
     /**

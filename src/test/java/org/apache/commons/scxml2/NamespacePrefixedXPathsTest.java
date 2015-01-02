@@ -41,7 +41,7 @@ public class NamespacePrefixedXPathsTest {
     // Same test, since same documents (different expression languages)
     private void runtest(SCXMLExecutor exec) throws Exception {
         // must be in state "ten" at the onset
-        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("ten", currentStates.iterator().next().getId());
 
@@ -83,7 +83,7 @@ public class NamespacePrefixedXPathsTest {
         Assert.assertEquals("seventy", currentStates.iterator().next().getId());
 
         // done
-        Assert.assertTrue(exec.getCurrentStatus().isFinal());
+        Assert.assertTrue(exec.getStatus().isFinal());
     }
 }
 

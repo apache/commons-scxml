@@ -150,7 +150,7 @@ public class SCXMLRequiredAttributesTest {
         SCXML scxml = SCXMLTestHelper.parse(new StringReader(VALID_SCXML), null);
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
         exec.go();
-        assertTrue(exec.getCurrentStatus().isFinal());
+        assertTrue(exec.getStatus().isFinal());
     }
 
     @Test
@@ -263,6 +263,6 @@ public class SCXMLRequiredAttributesTest {
         SCXML scxml = SCXMLTestHelper.parse(new StringReader(SCXML_WITH_FOREACH), null);
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
         exec.go();
-        assertTrue(exec.getCurrentStatus().isFinal());
+        assertTrue(exec.getStatus().isFinal());
     }
 }

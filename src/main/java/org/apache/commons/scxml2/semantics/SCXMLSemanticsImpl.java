@@ -33,7 +33,7 @@ import org.apache.commons.scxml2.SCXMLExecutionContext;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.SCXMLSemantics;
 import org.apache.commons.scxml2.SCXMLSystemContext;
-import org.apache.commons.scxml2.Status;
+import org.apache.commons.scxml2.StateConfiguration;
 import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.invoke.Invoker;
 import org.apache.commons.scxml2.invoke.InvokerException;
@@ -118,8 +118,6 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
         Step step = new Step(null);
         step.getTransitList().add(exctx.getStateMachine().getInitialTransition());
         microStep(exctx, step, statesToInvoke);
-        // AssignCurrentStatus
-        setSystemAllStatesVariable(exctx.getScInstance());
         // Execute Immediate Transitions
 
         if (exctx.isRunning()) {
@@ -172,7 +170,6 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
             if (!step.getTransitList().isEmpty()) {
                 HashSet<TransitionalState> statesToInvoke = new HashSet<TransitionalState>();
                 microStep(exctx, step, statesToInvoke);
-                setSystemAllStatesVariable(exctx.getScInstance());
                 if (exctx.isRunning()) {
                     macroStep(exctx, statesToInvoke);
                 }
@@ -206,8 +203,8 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
         if (exctx.isRunning()) {
             return;
         }
-        ArrayList<EnterableState> configuration = new ArrayList<EnterableState>(exctx.getScInstance().getCurrentStatus().getAllStates());
-        Collections.sort(configuration,DocumentOrder.reverseDocumentOrderComparator);
+        ArrayList<EnterableState> configuration = new ArrayList<EnterableState>(exctx.getScInstance().getStateConfiguration().getActiveStates());
+        Collections.sort(configuration, DocumentOrder.reverseDocumentOrderComparator);
         for (EnterableState es : configuration) {
             for (OnExit onexit : es.getOnExits()) {
                 executeContent(exctx, onexit);
@@ -221,7 +218,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
             exctx.getNotificationRegistry().fireOnExit(es, es);
             exctx.getNotificationRegistry().fireOnExit(exctx.getStateMachine(), es);
             if (!(es instanceof Final && es.getParent() == null)) {
-                exctx.getScInstance().getCurrentStatus().getStates().remove(es);
+                exctx.getScInstance().getStateConfiguration().exitState(es);
             }
             // else: keep final Final
             // TODO: returnDoneEvent(s.donedata)?
@@ -260,8 +257,8 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
         step.clearIntermediateState();
 
         // compute exitSet, if there is something to exit and record their History configurations if applicable
-        if (!exctx.getScInstance().getCurrentStatus().getStates().isEmpty()) {
-            computeExitSet(step, exctx.getScInstance().getCurrentStatus());
+        if (!exctx.getScInstance().getStateConfiguration().getActiveStates().isEmpty()) {
+            computeExitSet(step, exctx.getScInstance().getStateConfiguration());
         }
         // compute entrySet
         computeEntrySet(exctx, step);
@@ -270,12 +267,12 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
         Set<EnterableState> states = step.getEntrySet();
         if (!step.getExitSet().isEmpty()) {
             // calculate result states by taking current states, subtracting exitSet and adding entrySet
-            states = new HashSet<EnterableState>(exctx.getScInstance().getCurrentStatus().getStates());
+            states = new HashSet<EnterableState>(exctx.getScInstance().getStateConfiguration().getStates());
             states.removeAll(step.getExitSet());
             states.addAll(step.getEntrySet());
         }
         // validate the result states represent a legal configuration
-        if (!isLegalConfig(states, exctx.getErrorReporter())) {
+        if (exctx.isCheckLegalConfiguration() && !isLegalConfiguration(states, exctx.getErrorReporter())) {
             throw new ModelException("Illegal state machine configuration!");
         }
     }
@@ -317,7 +314,6 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                 }
                 else {
                     microStep(exctx, step, statesToInvoke);
-                    setSystemAllStatesVariable(exctx.getScInstance());
                 }
 
             } while (exctx.isRunning() && !macroStepDone);
@@ -335,15 +331,14 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * This method corresponds to the Algorithm for SCXML processing computeExitSet() procedure.
      * <p>
      * @param step The step containing the list of transitions to be taken
-     * @param currentStatus The current status of the state machine ({@link SCInstance#getCurrentStatus()}).
+     * @param stateConfiguration The current configuration of the state machine ({@link SCInstance#getStateConfiguration()}).
      */
-    public void computeExitSet(final Step step, final Status currentStatus) {
-        if (!currentStatus.getStates().isEmpty()) {
-            Set<EnterableState> configuration = currentStatus.getAllStates();
+    public void computeExitSet(final Step step, final StateConfiguration stateConfiguration) {
+        if (!stateConfiguration.getActiveStates().isEmpty()) {
             for (SimpleTransition st : step.getTransitList()) {
-                computeExitSet(st, step.getExitSet(), configuration);
+                computeExitSet(st, step.getExitSet(), stateConfiguration.getActiveStates());
             }
-            recordHistory(step, currentStatus.getStates(), configuration);
+            recordHistory(step, stateConfiguration.getStates(), stateConfiguration.getActiveStates());
         }
     }
 
@@ -354,17 +349,17 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * <p>
      * @param transition The transition to compute the states to exit from
      * @param exitSet The set for adding the states to exit to
-     * @param configuration The current configuration of the state machine ({@link Status#getAllStates()}).
+     * @param activeStates The current active states of the state machine ({@link StateConfiguration#getActiveStates()}).
      */
-    public void computeExitSet(SimpleTransition transition, Set<EnterableState> exitSet, Set<EnterableState> configuration) {
+    public void computeExitSet(SimpleTransition transition, Set<EnterableState> exitSet, Set<EnterableState> activeStates) {
         if (!transition.getTargets().isEmpty()) {
             TransitionalState transitionDomain = transition.getTransitionDomain();
             if (transitionDomain == null) {
                 // root transition: every active state will be exited
-                exitSet.addAll(configuration);
+                exitSet.addAll(activeStates);
             }
             else {
-                for (EnterableState state : configuration) {
+                for (EnterableState state : activeStates) {
                     if (state.isDescendantOf(transitionDomain)) {
                         exitSet.add(state);
                     }
@@ -380,15 +375,15 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * {@link #computeEntrySet(SCXMLExecutionContext, Step)}.
      * </p>
      * <p>
-     * Only after the new configuration has been validated (see: {@link #isLegalConfig(Set, ErrorReporter)}), the
+     * Only after the new configuration has been validated (see: {@link #isLegalConfiguration(Set, ErrorReporter)}), the
      * history configurations will be persisted during the actual {@link #exitStates(SCXMLExecutionContext, Step, Set)}
      * processing.
      * </p>
      * @param step The step containing the list of states to exit, and the map to record the new history configurations
-     * @param states The current set of active atomic states in the state machine
-     * @param allStates The current set of all active states in the state machine
+     * @param atomicStates The current set of active atomic states in the state machine
+     * @param activeStates The current set of all active states in the state machine
      */
-    public void recordHistory(final Step step, final Set<EnterableState> states, final Set<EnterableState> allStates) {
+    public void recordHistory(final Step step, final Set<EnterableState> atomicStates, final Set<EnterableState> activeStates) {
         for (EnterableState es : step.getExitSet()) {
             if (es instanceof TransitionalState && ((TransitionalState)es).hasHistory()) {
                 TransitionalState ts = (TransitionalState)es;
@@ -399,7 +394,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                         if (deep == null) {
                             //calculate deep history for a given state once
                             deep = new HashSet<EnterableState>();
-                            for (EnterableState ott : states) {
+                            for (EnterableState ott : atomicStates) {
                                 if (ott.isDescendantOf(es)) {
                                     deep.add(ott);
                                 }
@@ -410,7 +405,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                         if (shallow == null) {
                             //calculate shallow history for a given state once
                             shallow = new HashSet<EnterableState>(ts.getChildren());
-                            shallow.retainAll(allStates);
+                            shallow.retainAll(activeStates);
                         }
                         step.getNewHistoryConfigurations().put(h, shallow);
                     }
@@ -562,7 +557,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
         step.getTransitList().clear();
         ArrayList<Transition> enabledTransitions = new ArrayList<Transition>();
 
-        ArrayList<EnterableState> configuration = new ArrayList<EnterableState>(exctx.getScInstance().getCurrentStatus().getAllStates());
+        ArrayList<EnterableState> configuration = new ArrayList<EnterableState>(exctx.getScInstance().getStateConfiguration().getActiveStates());
         Collections.sort(configuration,DocumentOrder.documentOrderComparator);
 
         HashSet<EnterableState> visited = new HashSet<EnterableState>();
@@ -612,7 +607,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
         LinkedHashSet<Transition> preemptedTransitions = new LinkedHashSet<Transition>();
         Map<Transition, Set<EnterableState>> exitSets = new HashMap<Transition, Set<EnterableState>>();
 
-        Set<EnterableState> configuration = exctx.getScInstance().getCurrentStatus().getAllStates();
+        Set<EnterableState> configuration = exctx.getScInstance().getStateConfiguration().getActiveStates();
         Collections.sort(enabledTransitions, DocumentOrder.documentOrderComparator);
 
         for (Transition t1 : enabledTransitions) {
@@ -777,7 +772,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * @param errRep ErrorReporter to report detailed error info if needed
      * @return true if a given state configuration is legal, false otherwise
      */
-    public boolean isLegalConfig(final Set<EnterableState> states, final ErrorReporter errRep) {
+    public boolean isLegalConfiguration(final Set<EnterableState> states, final ErrorReporter errRep) {
         /*
          * For every active state we add 1 to the count of its parent. Each
          * Parallel should reach count equal to the number of its children and
@@ -805,38 +800,32 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
         }
         if (scxmlCount.size() > 1) {
             errRep.onError(ErrorConstants.ILLEGAL_CONFIG, "Multiple top-level OR states active!", scxmlCount);
+            legalConfig = false;
         }
-        //Validate child counts:
-        for (Map.Entry<EnterableState, Set<EnterableState>> entry : counts.entrySet()) {
-            EnterableState es = entry.getKey();
-            Set<EnterableState> count = entry.getValue();
-            if (es instanceof Parallel) {
-                Parallel p = (Parallel) es;
-                if (count.size() < p.getChildren().size()) {
-                    errRep.onError(ErrorConstants.ILLEGAL_CONFIG, "Not all AND states active for parallel " + p.getId(), entry);
-                    legalConfig = false;
+        else {
+            //Validate child counts:
+            for (Map.Entry<EnterableState, Set<EnterableState>> entry : counts.entrySet()) {
+                EnterableState es = entry.getKey();
+                Set<EnterableState> count = entry.getValue();
+                if (es instanceof Parallel) {
+                    Parallel p = (Parallel) es;
+                    if (count.size() < p.getChildren().size()) {
+                        errRep.onError(ErrorConstants.ILLEGAL_CONFIG, "Not all AND states active for parallel " + p.getId(), entry);
+                        legalConfig = false;
+                    }
+                } else {
+                    if (count.size() > 1) {
+                        errRep.onError(ErrorConstants.ILLEGAL_CONFIG, "Multiple OR states active for state " + es.getId(), entry);
+                        legalConfig = false;
+                    }
                 }
-            } else {
-                if (count.size() > 1) {
-                    errRep.onError(ErrorConstants.ILLEGAL_CONFIG, "Multiple OR states active for state " + es.getId(), entry);
-                    legalConfig = false;
-                }
+                count.clear(); //cleanup
             }
-            count.clear(); //cleanup
         }
         //cleanup
         scxmlCount.clear();
         counts.clear();
         return legalConfig;
-    }
-
-    /**
-     * Stores the current state machine configuration ({@link Status#getAllStates()}) in the system context.
-     * @param scInstance the state machine instance holding the current configuration
-     */
-    public void setSystemAllStatesVariable(final SCInstance scInstance) {
-        Status currentStatus = scInstance.getCurrentStatus();
-        scInstance.getSystemContext().setLocal(SCXMLSystemContext.ALL_STATES_KEY, currentStatus.getAllStates());
     }
 
     /**
@@ -929,9 +918,8 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                     exctx.cancelInvoker(inv);
                 }
             }
-
+            exctx.getScInstance().getStateConfiguration().exitState(es);
         }
-        exctx.getScInstance().getCurrentStatus().getStates().removeAll(exitList);
     }
 
     /**
@@ -1007,14 +995,10 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
         if (step.getEntrySet().isEmpty()) {
             return;
         }
-        Set<EnterableState> configuration = null;
         ArrayList<EnterableState> entryList = new ArrayList<EnterableState>(step.getEntrySet());
         Collections.sort(entryList, DocumentOrder.documentOrderComparator);
         for (EnterableState es : entryList) {
-            if (es.isAtomicState()) {
-                // only track atomic active states in Status
-                exctx.getScInstance().getCurrentStatus().getStates().add(es);
-            }
+            exctx.getScInstance().getStateConfiguration().enterState(es);
             if (es instanceof TransitionalState && !((TransitionalState)es).getInvokes().isEmpty()) {
                 statesToInvoke.add((TransitionalState) es);
             }
@@ -1048,14 +1032,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                 else {
                     exctx.getInternalIOProcessor().addEvent(new TriggerEvent("done.state."+parent.getId(),TriggerEvent.CHANGE_EVENT));
                     if (parent.isRegion()) {
-                        if (configuration == null) {
-                            // Note: configuration may 'grow' during enterStates, but activation works downwards
-                            //       so it doesn't matter for determining if the parallel children are already
-                            //       all in final state, or may become so further down (which at that time will
-                            //       trigger the parallel parent done event)
-                            configuration = exctx.getScInstance().getCurrentStatus().getAllStates();
-                        }
-                        if (isInFinalState(parent.getParent(), configuration)) {
+                        if (isInFinalState(parent.getParent(), exctx.getScInstance().getStateConfiguration().getActiveStates())) {
                             exctx.getInternalIOProcessor().addEvent(new TriggerEvent("done.state."+parent.getParent().getId()
                                     , TriggerEvent.CHANGE_EVENT));
                         }

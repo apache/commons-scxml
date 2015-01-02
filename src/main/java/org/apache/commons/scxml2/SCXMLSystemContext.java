@@ -19,6 +19,7 @@ package org.apache.commons.scxml2;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -46,17 +47,15 @@ public class SCXMLSystemContext implements Context, Serializable {
     public static final String IOPROCESSORS_KEY = "_ioprocessors";
     public static final String X_KEY = "_x";
 
-    /**
-     * Commons SCXML internal system variable holding the current SCXML configuration of all (including ancestors)
-     * active states.
-     */
-    public static final String ALL_STATES_KEY = "_ALL_STATES";
+    /** The Commons SCXML internal {@link #getPlatformVariables() platform variable key} holding the current SCXML
+     * status instance **/
+    public static final String STATUS_KEY = "status";
 
     /**
      * The set of protected system variables names
      */
     private static final Set<String> PROTECTED_NAMES = new HashSet<String>(Arrays.asList(
-            new String[] {EVENT_KEY, SESSIONID_KEY, SCXML_NAME_KEY, IOPROCESSORS_KEY, X_KEY, ALL_STATES_KEY}
+            new String[] {EVENT_KEY, SESSIONID_KEY, SCXML_NAME_KEY, IOPROCESSORS_KEY, X_KEY}
     ));
 
     /**
@@ -74,11 +73,16 @@ public class SCXMLSystemContext implements Context, Serializable {
     /**
      * Initialize or replace systemContext
      * @param systemContext the system context to set
+     * @throws java.lang.NullPointerException if systemContext == null
      */
     void setSystemContext(Context systemContext) {
         if (this.systemContext != null) {
             // replace systemContext
             systemContext.getVars().putAll(this.systemContext.getVars());
+        }
+        else {
+            // create Platform variables map
+            systemContext.setLocal(X_KEY, new HashMap<String, Object>());
         }
         this.systemContext = systemContext;
         this.protectedVars = Collections.unmodifiableMap(systemContext.getVars());
@@ -144,6 +148,14 @@ public class SCXMLSystemContext implements Context, Serializable {
     @Override
     public SCXMLSystemContext getSystemContext() {
         return this;
+    }
+
+    /**
+     * @return The Platform specific system variables map stored under the {@link #X_KEY _x} root system variable
+     */
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> getPlatformVariables() {
+        return (Map<String, Object>)get(X_KEY);
     }
 
     /**

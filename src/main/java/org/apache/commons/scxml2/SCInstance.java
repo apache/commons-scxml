@@ -74,6 +74,11 @@ public class SCInstance implements Serializable {
     private SCXML stateMachine;
 
     /**
+     * The current state configuration of the state machine
+     */
+    private final StateConfiguration stateConfiguration;
+
+    /**
      * The current status of the stateMachine.
      */
     private final Status currentStatus;
@@ -134,7 +139,8 @@ public class SCInstance implements Serializable {
         this.internalIOProcessor = internalIOProcessor;
         this.evaluator = evaluator;
         this.errorReporter = errorReporter;
-        this.currentStatus = new Status();
+        this.stateConfiguration = new StateConfiguration();
+        this.currentStatus = new Status(stateConfiguration);
     }
 
     /**
@@ -161,7 +167,7 @@ public class SCInstance implements Serializable {
         globalContext = null;
         contexts.clear();
         histories.clear();
-        currentStatus.clear();
+        stateConfiguration.clear();
 
         // Clone root datamodel
         Datamodel rootdm = stateMachine.getDatamodel();
@@ -328,12 +334,18 @@ public class SCInstance implements Serializable {
     }
 
     /**
-     * @return Returns the current status (active atomic states) for this instance
+     * @return Returns the state configuration for this instance
+     */
+    public StateConfiguration getStateConfiguration() {
+        return stateConfiguration;
+    }
+
+    /**
+     * @return Returns the current status for this instance
      */
     public Status getCurrentStatus() {
         return currentStatus;
     }
-
 
     /**
      * @return Returns if the state machine is running
@@ -397,6 +409,7 @@ public class SCInstance implements Serializable {
                 systemContext.getContext().set(SCXMLSystemContext.SESSIONID_KEY, UUID.randomUUID().toString());
                 String _name = stateMachine != null && stateMachine.getName() != null ? stateMachine.getName() : "";
                 systemContext.getContext().set(SCXMLSystemContext.SCXML_NAME_KEY, _name);
+                systemContext.getPlatformVariables().put(SCXMLSystemContext.STATUS_KEY, currentStatus);
             }
         }
         return systemContext != null ? systemContext.getContext() : null;

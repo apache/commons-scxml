@@ -17,9 +17,6 @@
 package org.apache.commons.scxml2;
 
 import java.io.Serializable;
-import java.util.Set;
-
-import org.apache.commons.scxml2.model.TransitionTarget;
 
 /**
  * Implementation of the SCXML specification required In() builtin predicate.
@@ -44,30 +41,7 @@ public class Builtin implements Serializable {
      */
     @SuppressWarnings("unchecked")
     public static boolean isMember(final Context ctx, final String state) {
-        return isMember((Set<? extends TransitionTarget>)ctx.getSystemContext().get(SCXMLSystemContext.ALL_STATES_KEY), state);
-    }
-
-    /**
-     * Implements the In() predicate for SCXML documents. The method
-     * name chosen is different since &quot;in&quot; is a reserved token
-     * in some expression languages.
-     *
-     * Does this state belong to the given Set of States.
-     * Simple ID based comparator, assumes IDs are unique.
-     *
-     * @param allStates The Set of State objects to look in
-     * @param state The State ID to compare with
-     * @return Whether this State belongs to this Set
-     */
-    public static boolean isMember(final Set<? extends TransitionTarget> allStates, final String state) {
-        if (allStates != null) {
-            for (TransitionTarget tt : allStates) {
-                if (state.equals(tt.getId())) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return ((Status)ctx.getSystemContext().getPlatformVariables().get(SCXMLSystemContext.STATUS_KEY)).isInState(state);
     }
 }
 

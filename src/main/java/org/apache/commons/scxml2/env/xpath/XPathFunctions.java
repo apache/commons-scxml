@@ -16,13 +16,12 @@
  */
 package org.apache.commons.scxml2.env.xpath;
 
-import java.util.Set;
+import java.util.Map;
 
 import org.apache.commons.jxpath.ExpressionContext;
 import org.apache.commons.jxpath.Variables;
-import org.apache.commons.scxml2.Builtin;
 import org.apache.commons.scxml2.SCXMLSystemContext;
-import org.apache.commons.scxml2.model.EnterableState;
+import org.apache.commons.scxml2.Status;
 
 /**
  * Commons JXPath custom extension function providing the SCXML In() predicate
@@ -38,6 +37,7 @@ public class XPathFunctions {
     @SuppressWarnings("unchecked")
     public static boolean In(ExpressionContext expressionContext, String state) {
         Variables variables = expressionContext.getJXPathContext().getVariables();
-        return Builtin.isMember((Set<EnterableState>) variables.getVariable(SCXMLSystemContext.ALL_STATES_KEY), state);
+        Map<String,Object> platformVariables = (Map<String, Object>)variables.getVariable(SCXMLSystemContext.X_KEY);
+        return ((Status)platformVariables.get(SCXMLSystemContext.STATUS_KEY)).isInState(state);
     }
 }

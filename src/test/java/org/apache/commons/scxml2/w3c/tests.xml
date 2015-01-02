@@ -22,13 +22,13 @@
   <test id="405" mandatory="true"  manual="false" enabled="true"                  ecma="pass"     xpath="pass"/>
   <test id="406" mandatory="true"  manual="false" enabled="true"                  ecma="pass"     xpath="pass"/>
   <test id="407" mandatory="true"  manual="false" enabled="true"                  ecma="pass"     xpath="pass"/>
-  <test id="409" mandatory="true"  manual="false" enabled="false"                 ecma="fail"     xpath="fail"/>
-  <test id="411" mandatory="true"  manual="false" enabled="false"                 ecma="fail"     xpath="fail"/>
+  <test id="409" mandatory="true"  manual="false" enabled="true"                  ecma="pass"     xpath="pass"/>
+  <test id="411" mandatory="true"  manual="false" enabled="true"                  ecma="pass"     xpath="pass"/>
   <test id="412" mandatory="true"  manual="false" enabled="true"                  ecma="pass"     xpath="pass"/>
   <test id="413" mandatory="true"  manual="false" enabled="true"                  ecma="pass"     xpath="pass"/>
   <test id="415" mandatory="true"  manual="true"  enabled="true"  finalId="final" ecma="final"    xpath="final"/>
   <test id="416" mandatory="true"  manual="false" enabled="true"                  ecma="pass"     xpath="pass"/>
-  <test id="417" mandatory="true"  manual="false" enabled="false"                 ecma="fail"     xpath="fail"/>
+  <test id="417" mandatory="true"  manual="false" enabled="true"                  ecma="pass"     xpath="pass"/>
   <test id="419" mandatory="true"  manual="false" enabled="true"                  ecma="pass"     xpath="pass"/>
   <test id="421" mandatory="true"  manual="false" enabled="true"                  ecma="pass"     xpath="pass"/>
   <test id="422" mandatory="true"  manual="false" enabled="false"                 ecma="fail"     xpath="fail">fails with error: null</test>

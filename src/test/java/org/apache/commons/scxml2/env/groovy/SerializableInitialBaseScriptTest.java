@@ -39,7 +39,7 @@ public class SerializableInitialBaseScriptTest {
         URL scxml = SCXMLTestHelper.getResource("org/apache/commons/scxml2/env/groovy/serializable-initial-base-script.xml");
     	SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml, new GroovyEvaluator(true));
         exec.go();
-        Set<EnterableState> currentStates = exec.getCurrentStatus().getStates();
+        Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state1", currentStates.iterator().next().getId());
         exec = SCXMLTestHelper.testInstanceSerializability(exec);

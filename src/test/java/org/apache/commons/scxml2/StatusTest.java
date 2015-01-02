@@ -27,18 +27,20 @@ import org.junit.Test;
 
 public class StatusTest {
 
+    private StateConfiguration stateConfiguration;
     private Status status;
     
     @Before
     public void setUp() {
-        status = new Status();
+        stateConfiguration = new StateConfiguration();
+        status = new Status(stateConfiguration);
     }
     
     @Test
     public void testIsFinalStateFalse() {
         State state = new State();
 
-        status.getStates().add(state);
+        stateConfiguration.enterState(state);
         
         Assert.assertFalse(status.isFinal());
     }
@@ -48,7 +50,7 @@ public class StatusTest {
         Final state = new Final();
         state.setParent(new State());
         
-        status.getStates().add(state);
+        stateConfiguration.enterState(state);
 
         Assert.assertFalse(status.isFinal());
     }
@@ -56,16 +58,16 @@ public class StatusTest {
     @Test
     public void testIsFinalState() {
         Final state = new Final();
-        
-        status.getStates().add(state);
-        
+
+        stateConfiguration.enterState(state);
+
         Assert.assertTrue(status.isFinal());
     }
 
     @Test
     public void testGetAllStatesEmptyStatus() {
 
-        Set<EnterableState> returnValue = status.getAllStates();
+        Set<EnterableState> returnValue = status.getActiveStates();
 
         Assert.assertEquals(0, returnValue.size());
     }
@@ -74,13 +76,28 @@ public class StatusTest {
     public void testGetAllStatesContainsParent() {
         State parent = new State();
         parent.setId("0");
+        stateConfiguration.enterState(parent);
         State state = new State();
         state.setId("1");
         state.setParent(parent);
-        status.getStates().add(state);
+        stateConfiguration.enterState(state);
 
-        Set<EnterableState> returnValue = status.getAllStates();
+        Set<EnterableState> returnValue = status.getActiveStates();
 
         Assert.assertEquals(2, returnValue.size());
+    }
+
+    @Test
+    public void testIsInState() {
+        State parent = new State();
+        parent.setId("0");
+        stateConfiguration.enterState(parent);
+        State state = new State();
+        state.setId("1");
+        state.setParent(parent);
+        stateConfiguration.enterState(state);
+        Assert.assertTrue(status.isInState("0"));
+        Assert.assertTrue(status.isInState("1"));
+        Assert.assertFalse(status.isInState("2"));
     }
 }

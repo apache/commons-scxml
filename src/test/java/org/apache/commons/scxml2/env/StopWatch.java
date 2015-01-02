@@ -94,7 +94,7 @@ public class StopWatch extends AbstractStateMachine {
 
     // used by the demonstration (see StopWatchDisplay usecase)
     public String getCurrentState() {
-        return getEngine().getCurrentStatus().getStates().iterator().next().getId();
+        return getEngine().getStatus().getStates().iterator().next().getId();
     }
 
     private void increment() {

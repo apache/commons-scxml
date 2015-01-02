@@ -60,7 +60,7 @@ public class ScxmlInitialAttributeTest {
         assertEquals("The initial state resolution was wrong.", "s1", tt.getId());
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
         exec.go();
-        assertEquals(scxml.getTargets().get("s1"), exec.getCurrentStatus().getStates().iterator().next());
+        assertEquals(scxml.getTargets().get("s1"), exec.getStatus().getStates().iterator().next());
     }
 
     @Test
@@ -71,7 +71,7 @@ public class ScxmlInitialAttributeTest {
         assertEquals("The initial state resolution was wrong.", "s1", tt.getId());
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
         exec.go();
-        assertEquals(scxml.getTargets().get("s1"), exec.getCurrentStatus().getStates().iterator().next());
+        assertEquals(scxml.getTargets().get("s1"), exec.getStatus().getStates().iterator().next());
     }
 
     @Test
