@@ -18,8 +18,7 @@ package org.apache.commons.scxml2.invoke;
 
 import java.util.Map;
 
-import org.apache.commons.scxml2.Evaluator;
-import org.apache.commons.scxml2.SCXMLIOProcessor;
+import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.TriggerEvent;
 
 /**
@@ -51,7 +50,7 @@ import org.apache.commons.scxml2.TriggerEvent;
  *   <li>Instantiation via {@link Class#newInstance()}
  *       (Invoker implementation requires accessible constructor).</li>
  *   <li>Configuration (setters for invoke ID and
- *       {@link org.apache.commons.scxml2.SCXMLIOProcessor}).</li>
+ *       {@link org.apache.commons.scxml2.SCXMLExecutor}).</li>
  *   <li>Initiation of invoked activity via invoke() method, passing
  *       the source URI and the map of params.</li>
  *   <li>Zero or more bi-directional event triggering.</li>
@@ -83,18 +82,10 @@ public interface Invoker {
     void setInvokeId(String invokeId);
 
     /**
-     * Set I/O Processor of the parent state machine, which provides the
-     * channel.
-     *
-     * @param parentIOProcessor The I/O Processor of the parent state machine.
+     * Sets the parent SCXMLExecutor through which this Invoker is initiated
+     * @param scxmlExecutor the parent SCXMLExecutor
      */
-    void setParentIOProcessor(SCXMLIOProcessor parentIOProcessor);
-
-    /**
-     * Set the Evaluator to be used by the child state machine (to ensure/enforce a compatible data model)
-     * @param evaluator the Evaluator to be used
-     */
-    void setEvaluator(Evaluator evaluator);
+    void setParentSCXMLExecutor(SCXMLExecutor scxmlExecutor);
 
     /**
      * Begin this invocation.

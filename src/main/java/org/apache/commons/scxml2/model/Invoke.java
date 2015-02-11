@@ -22,10 +22,9 @@ import java.util.Map;
 import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
-import org.apache.commons.scxml2.InvokerManager;
 import org.apache.commons.scxml2.PathResolver;
+import org.apache.commons.scxml2.SCXMLExecutionContext;
 import org.apache.commons.scxml2.SCXMLExpressionException;
-import org.apache.commons.scxml2.SCXMLIOProcessor;
 import org.apache.commons.scxml2.SCXMLSystemContext;
 import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.invoke.Invoker;
@@ -46,14 +45,9 @@ public class Invoke extends NamelistHolder implements PathResolverHolder, Conten
     private static final long serialVersionUID = 1L;
 
     /**
-     * The default context variable key under which the InvokerManager is provided
+     * The default context variable key under which the current SCXMLExecutionContext is provided
      */
-    private static final String INVOKER_MANAGER_KEY = "_INVOKER_MANAGER";
-
-    /**
-     * The default target type.
-     */
-    private static final String TYPE_SCXML = "scxml";
+    private static final String CURRENT_EXECUTION_CONTEXT_KEY = "_CURRENT_EXECUTION_CONTEXT";
 
     /**
      * Identifier for this Invoke.
@@ -300,10 +294,10 @@ public class Invoke extends NamelistHolder implements PathResolverHolder, Conten
     }
 
     /**
-     * @return The local context variable name under which the InvokerManager is provided to the Invoke
+     * @return The local context variable name under which the current SCXMLExecutionContext is provided to the Invoke
      */
-    public String getInvokerManagerKey() {
-        return INVOKER_MANAGER_KEY;
+    public String getCurrentSCXMLExecutionContextKey() {
+        return CURRENT_EXECUTION_CONTEXT_KEY;
     }
 
     /**
@@ -337,16 +331,16 @@ public class Invoke extends NamelistHolder implements PathResolverHolder, Conten
 
     @SuppressWarnings("unchecked")
     @Override
-    public void execute(final ActionExecutionContext exctx) throws ModelException {
+    public void execute(final ActionExecutionContext axctx) throws ModelException {
         EnterableState parentState = getParentEnterableState();
-        Context ctx = exctx.getContext(parentState);
-        InvokerManager invokerManager = (InvokerManager)ctx.getVars().get(getInvokerManagerKey());
-        if (invokerManager == null) {
-            throw new ModelException("Missing InvokerManager instance in context under key: "+getInvokerManagerKey());
+        Context ctx = axctx.getContext(parentState);
+        SCXMLExecutionContext exctx = (SCXMLExecutionContext)ctx.getVars().get(getCurrentSCXMLExecutionContextKey());
+        if (exctx == null) {
+            throw new ModelException("Missing current SCXMLExecutionContext instance in context under key: "+ getCurrentSCXMLExecutionContextKey());
         }
         try {
             ctx.setLocal(getNamespacesKey(), getNamespaces());
-            Evaluator eval = exctx.getEvaluator();
+            Evaluator eval = axctx.getEvaluator();
 
             String typeValue = type;
             if (typeValue == null && typeexpr != null) {
@@ -357,9 +351,9 @@ public class Invoke extends NamelistHolder implements PathResolverHolder, Conten
                 }
             }
             if (typeValue == null) {
-                typeValue = TYPE_SCXML;
+                typeValue = SCXMLExecutionContext.SCXML_INVOKER_TYPE;
             }
-            Invoker invoker = invokerManager.newInvoker(typeValue);
+            Invoker invoker = exctx.newInvoker(typeValue);
 
             String invokeId = getId();
             if (invokeId == null) {
@@ -400,25 +394,22 @@ public class Invoke extends NamelistHolder implements PathResolverHolder, Conten
                         ": no src and no content defined");
             }
             Map<String, Object> payloadDataMap = new HashMap<String, Object>();
-            addNamelistDataToPayload(exctx, payloadDataMap);
-            addParamsToPayload(exctx, payloadDataMap);
-            SCXMLIOProcessor ioProcessor = ((Map<String,SCXMLIOProcessor>)ctx.get(SCXMLSystemContext.IOPROCESSORS_KEY)).
-                    get(SCXMLIOProcessor.SCXML_EVENT_PROCESSOR);
-            invoker.setParentIOProcessor(ioProcessor);
-            invoker.setEvaluator(exctx.getEvaluator());
+            addNamelistDataToPayload(axctx, payloadDataMap);
+            addParamsToPayload(axctx, payloadDataMap);
+            invoker.setParentSCXMLExecutor(exctx.getSCXMLExecutor());
             if (src != null) {
                 invoker.invoke(src, payloadDataMap);
             }
             // TODO: } else { invoker.invoke(srcNode, payloadDataMap); }
-            invokerManager.registerInvoker(this, invoker);
+            exctx.registerInvoker(this, invoker);
         }
         catch (InvokerException e) {
-            exctx.getErrorReporter().onError(ErrorConstants.EXECUTION_ERROR, e.getMessage(), this);
-            exctx.getInternalIOProcessor().addEvent(new TriggerEvent(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT));
+            axctx.getErrorReporter().onError(ErrorConstants.EXECUTION_ERROR, e.getMessage(), this);
+            axctx.getInternalIOProcessor().addEvent(new TriggerEvent(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT));
         }
         catch (SCXMLExpressionException e) {
-            exctx.getInternalIOProcessor().addEvent(new TriggerEvent(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT));
-            exctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR, e.getMessage(), this);
+            axctx.getInternalIOProcessor().addEvent(new TriggerEvent(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT));
+            axctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR, e.getMessage(), this);
         }
         finally {
             ctx.setLocal(getNamespacesKey(), null);

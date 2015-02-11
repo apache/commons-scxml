@@ -24,12 +24,8 @@ import java.util.Map;
 import javax.xml.stream.XMLStreamException;
 
 import org.apache.commons.scxml2.Context;
-import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.SCXMLExecutor;
-import org.apache.commons.scxml2.SCXMLIOProcessor;
 import org.apache.commons.scxml2.TriggerEvent;
-import org.apache.commons.scxml2.env.SimpleDispatcher;
-import org.apache.commons.scxml2.env.SimpleErrorReporter;
 import org.apache.commons.scxml2.env.SimpleSCXMLListener;
 import org.apache.commons.scxml2.io.SCXMLReader;
 import org.apache.commons.scxml2.model.ModelException;
@@ -45,10 +41,8 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
     private static final long serialVersionUID = 1L;
     /** Parent state ID. */
     private String parentStateId;
-    /** Invoking document's external I/O Processor */
-    private SCXMLIOProcessor parentIOProcessor;
-    /** The Evaluator provided by the parent executor */
-    private Evaluator evaluator;
+    /** Invoking parent SCXMLExecutor */
+    private SCXMLExecutor parentSCXMLExecutor;
     /** The invoked state machine executor. */
     private SCXMLExecutor executor;
     /** Cancellation status. */
@@ -73,15 +67,8 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
     /**
      * {@inheritDoc}.
      */
-    public void setParentIOProcessor(SCXMLIOProcessor parentIOProcessor) {
-        this.parentIOProcessor = parentIOProcessor;
-    }
-
-    /**
-     * {@inheritDoc}.
-     */
-    public void setEvaluator(final Evaluator evaluator) {
-        this.evaluator = evaluator;
+    public void setParentSCXMLExecutor(SCXMLExecutor parentSCXMLExecutor) {
+        this.parentSCXMLExecutor = parentSCXMLExecutor;
     }
 
     /**
@@ -99,20 +86,18 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
         } catch (XMLStreamException xse) {
             throw new InvokerException(xse.getMessage(), xse.getCause());
         }
-        executor = new SCXMLExecutor(evaluator, new SimpleDispatcher(), new SimpleErrorReporter());
-        Context rootCtx = evaluator.newContext(null);
-        for (Map.Entry<String, Object> entry : params.entrySet()) {
-            rootCtx.setLocal(entry.getKey(), entry.getValue());
-        }
-        executor.setRootContext(rootCtx);
+        executor = new SCXMLExecutor(parentSCXMLExecutor);
         try {
             executor.setStateMachine(scxml);
         }
         catch (ModelException me) {
             throw new InvokerException(me);
         }
+        Context rootCtx = executor.getRootContext();
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+            rootCtx.setLocal(entry.getKey(), entry.getValue());
+        }
         executor.addListener(scxml, new SimpleSCXMLListener());
-        executor.registerInvokerClass("scxml", this.getClass());
         try {
             executor.go();
         } catch (ModelException me) {
@@ -120,7 +105,7 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
         }
         if (executor.getStatus().isFinal()) {
             TriggerEvent te = new TriggerEvent("done.invoke."+parentStateId, TriggerEvent.SIGNAL_EVENT);
-            new AsyncTrigger(parentIOProcessor, te).start();
+            new AsyncTrigger(parentSCXMLExecutor, te).start();
         }
     }
 
@@ -136,7 +121,7 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
         executor.addEvent(evt);
         if (!doneBefore && executor.getStatus().isFinal()) {
             TriggerEvent te = new TriggerEvent("done.invoke."+parentStateId,TriggerEvent.SIGNAL_EVENT);
-            new AsyncTrigger(parentIOProcessor, te).start();
+            new AsyncTrigger(parentSCXMLExecutor, te).start();
         }
     }
 

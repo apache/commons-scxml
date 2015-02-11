@@ -189,6 +189,10 @@ public class SimpleDispatcher implements EventDispatcher, Serializable {
             if (target == null) {
                 ioProcessor = ioProcessors.get(SCXMLIOProcessor.SCXML_EVENT_PROCESSOR);
             }
+            else if (ioProcessors.containsKey(target)) {
+                ioProcessor = ioProcessors.get(target);
+                internal = SCXMLIOProcessor.INTERNAL_EVENT_PROCESSOR.equals(target);
+            }
             else if (SCXMLIOProcessor.INTERNAL_EVENT_PROCESSOR.equals(target)) {
                 ioProcessor = ioProcessors.get(SCXMLIOProcessor.INTERNAL_EVENT_PROCESSOR);
                 internal = true;

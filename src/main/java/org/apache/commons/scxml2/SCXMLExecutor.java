@@ -52,6 +52,11 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     private Log log = LogFactory.getLog(SCXMLExecutor.class);
 
     /**
+     * Parent SCXMLExecutor
+     */
+    private SCXMLExecutor parentSCXMLExecutor;
+
+    /**
      *  Interpretation semantics.
      */
     private SCXMLSemantics semantics;
@@ -98,6 +103,25 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
                          final SCXMLSemantics semantics) {
         this.semantics = semantics != null ? semantics : new SCXMLSemanticsImpl();
         this.exctx = new SCXMLExecutionContext(this, expEvaluator, evtDisp, errRep);
+    }
+
+    /**
+     * Constructor using a parent SCXMLExecutor
+     *
+     * @param parentSCXMLExecutor the parent SCXMLExecutor
+     */
+    public SCXMLExecutor(final SCXMLExecutor parentSCXMLExecutor) {
+        this.parentSCXMLExecutor = parentSCXMLExecutor;
+        this.semantics = parentSCXMLExecutor.semantics;
+        this.exctx = new SCXMLExecutionContext(this, parentSCXMLExecutor.getEvaluator(),
+                parentSCXMLExecutor.getEventdispatcher(), parentSCXMLExecutor.getErrorReporter());
+    }
+
+    /**
+     * @return the parent SCXMLExecutor (if any)
+     */
+    protected SCXMLExecutor getParentSCXMLExecutor() {
+        return parentSCXMLExecutor;
     }
 
     /**

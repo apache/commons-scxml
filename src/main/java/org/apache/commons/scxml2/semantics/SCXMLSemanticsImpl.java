@@ -1054,10 +1054,10 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
         for (TransitionalState ts : statesToInvoke) {
             for (Invoke invoke : ts.getInvokes()) {
                 Context ctx = aexctx.getContext(invoke.getParentEnterableState());
-                String invokerManagerKey = invoke.getInvokerManagerKey();
-                ctx.setLocal(invokerManagerKey, exctx);
+                String exctxKey = invoke.getCurrentSCXMLExecutionContextKey();
+                ctx.setLocal(exctxKey, exctx);
                 invoke.execute(aexctx);
-                ctx.setLocal(invokerManagerKey, null);
+                ctx.setLocal(exctxKey, null);
             }
         }
     }

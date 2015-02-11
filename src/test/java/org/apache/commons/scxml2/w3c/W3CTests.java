@@ -40,8 +40,10 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.scxml2.PathResolver;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.env.Tracer;
+import org.apache.commons.scxml2.env.URLResolver;
 import org.apache.commons.scxml2.invoke.SimpleSCXMLInvoker;
 import org.apache.commons.scxml2.io.SCXMLReader;
 import org.apache.commons.scxml2.model.Final;
@@ -721,7 +723,9 @@ public class W3CTests {
         try {
             System.out.println("Executing test: "+scxmlFile.getParentFile().getName()+"/"+scxmlFile.getName());
             final Tracer trc = new Tracer();
-            final SCXML doc = SCXMLReader.read(new FileReader(scxmlFile));
+            final PathResolver pathResolver = new URLResolver(scxmlFile.getParentFile().toURI().toURL());
+            final SCXMLReader.Configuration configuration = new SCXMLReader.Configuration(null, pathResolver);
+            final SCXML doc = SCXMLReader.read(new FileReader(scxmlFile), configuration);
             if (doc == null) {
                 System.out.println("                FAIL: the SCXML file " +
                         scxmlFile.getCanonicalPath() + " can not be parsed!");

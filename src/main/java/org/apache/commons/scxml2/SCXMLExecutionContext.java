@@ -29,6 +29,7 @@ import org.apache.commons.scxml2.env.SimpleDispatcher;
 import org.apache.commons.scxml2.env.SimpleErrorReporter;
 import org.apache.commons.scxml2.invoke.Invoker;
 import org.apache.commons.scxml2.invoke.InvokerException;
+import org.apache.commons.scxml2.invoke.SimpleSCXMLInvoker;
 import org.apache.commons.scxml2.model.Invoke;
 import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.SCXML;
@@ -37,7 +38,16 @@ import org.apache.commons.scxml2.model.SCXML;
  * SCXMLExecutionContext provides all the services and internal data used during the interpretation of an SCXML
  * statemachine across micro and macro steps
  */
-public class SCXMLExecutionContext implements SCXMLIOProcessor, InvokerManager {
+public class SCXMLExecutionContext implements SCXMLIOProcessor {
+
+    /**
+     * Default and required supported SCXML Processor Invoker service URI
+     */
+    public static final String SCXML_INVOKER_TYPE_URI = "http://www.w3.org/TR/scxml/";
+    /**
+     * Alias for {@link #SCXML_INVOKER_TYPE_URI}
+     */
+    public static final String SCXML_INVOKER_TYPE = "scxml";
 
     /**
      * SCXML Execution Logger for the application.
@@ -48,6 +58,11 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor, InvokerManager {
      * The action execution context instance, providing restricted access to this execution context
      */
     private final ActionExecutionContext actionExecutionContext;
+
+    /**
+     * The SCXMLExecutor of this SCXMLExecutionContext
+     */
+    private final SCXMLExecutor scxmlExecutor;
 
     /**
      * The SCInstance.
@@ -112,14 +127,15 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor, InvokerManager {
     /**
      * Constructor
      *
-     * @param externalIOProcessor The external IO Processor
+     * @param scxmlExecutor The SCXMLExecutor of this SCXMLExecutionContext
      * @param evaluator The evaluator
      * @param eventDispatcher The event dispatcher, if null a SimpleDispatcher instance will be used
      * @param errorReporter The error reporter, if null a SimpleErrorReporter instance will be used
      */
-    protected SCXMLExecutionContext(SCXMLIOProcessor externalIOProcessor, Evaluator evaluator,
+    protected SCXMLExecutionContext(SCXMLExecutor scxmlExecutor, Evaluator evaluator,
                                     EventDispatcher eventDispatcher, ErrorReporter errorReporter) {
-        this.externalIOProcessor = externalIOProcessor;
+        this.scxmlExecutor = scxmlExecutor;
+        this.externalIOProcessor = scxmlExecutor;
         this.evaluator = evaluator;
         this.eventdispatcher = eventDispatcher != null ? eventDispatcher : new SimpleDispatcher();
         this.errorReporter = errorReporter != null ? errorReporter : new SimpleErrorReporter();
@@ -131,7 +147,16 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor, InvokerManager {
         ioProcessors.put(SCXMLIOProcessor.DEFAULT_EVENT_PROCESSOR, getExternalIOProcessor());
         ioProcessors.put(SCXMLIOProcessor.SCXML_EVENT_PROCESSOR, getExternalIOProcessor());
         ioProcessors.put(SCXMLIOProcessor.INTERNAL_EVENT_PROCESSOR, getInternalIOProcessor());
+        if (scxmlExecutor.getParentSCXMLExecutor() != null) {
+            ioProcessors.put(SCXMLIOProcessor.PARENT_EVENT_PROCESSOR, scxmlExecutor.getParentSCXMLExecutor());
+        }
         initializeIOProcessors();
+        registerInvokerClass(SCXML_INVOKER_TYPE_URI, SimpleSCXMLInvoker.class);
+        registerInvokerClass(SCXML_INVOKER_TYPE, SimpleSCXMLInvoker.class);
+    }
+
+    public SCXMLExecutor getSCXMLExecutor() {
+        return scxmlExecutor;
     }
 
     public SCXMLIOProcessor getExternalIOProcessor() {

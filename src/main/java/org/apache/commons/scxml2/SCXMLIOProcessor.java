@@ -38,6 +38,11 @@ public interface SCXMLIOProcessor {
     String INTERNAL_EVENT_PROCESSOR = "#_internal";
 
     /**
+     * The name of the parent Event Processor
+     */
+    String PARENT_EVENT_PROCESSOR = "#_parent";
+
+    /**
      * Send an event into the SCXML processor queue
      * <p>
      * @param event the event to send

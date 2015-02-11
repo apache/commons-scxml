@@ -18,9 +18,7 @@ package org.apache.commons.scxml2.invoke;
 
 import java.util.Map;
 
-import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.SCXMLExecutor;
-import org.apache.commons.scxml2.SCXMLIOProcessor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.model.ModelException;
@@ -114,12 +112,8 @@ public class InvokeParamNameTest {
             this.invokeId = invokeId;
         }
 
-        public void setEvaluator(Evaluator evaluator) {
+        public void setParentSCXMLExecutor(SCXMLExecutor parentSCXMLExecutor) {
             // Not needed
-        }
-
-        public void setParentIOProcessor(SCXMLIOProcessor parentIOProcessor) {
-            // Not needed    
         }
     }
 

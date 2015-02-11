@@ -40,11 +40,6 @@ public class Send extends NamelistHolder implements ContentContainer {
     private static final long serialVersionUID = 1L;
 
     /**
-     * The default target type.
-     */
-    private static final String TYPE_SCXML = "scxml";
-
-    /**
      * The suffix in the delay string for milliseconds.
      */
     private static final String MILLIS = "ms";
@@ -386,9 +381,9 @@ public class Send extends NamelistHolder implements ContentContainer {
         }
         if (typeValue == null) {
             // must default to 'scxml' when unspecified
-            typeValue = TYPE_SCXML;
-        } else if (!TYPE_SCXML.equals(typeValue) && typeValue.trim().equalsIgnoreCase(TYPE_SCXML)) {
-            typeValue = TYPE_SCXML;
+            typeValue = SCXMLIOProcessor.DEFAULT_EVENT_PROCESSOR;
+        } else if (!SCXMLIOProcessor.DEFAULT_EVENT_PROCESSOR.equals(typeValue) && typeValue.trim().equalsIgnoreCase(SCXMLIOProcessor.SCXML_EVENT_PROCESSOR)) {
+            typeValue = SCXMLIOProcessor.DEFAULT_EVENT_PROCESSOR;
         }
         Object payload = null;
         Map<String, Object> payloadDataMap = new HashMap<String, Object>();
@@ -418,9 +413,9 @@ public class Send extends NamelistHolder implements ContentContainer {
         String eventValue = event;
         if (eventValue == null && eventexpr != null) {
             eventValue = (String) getTextContentIfNodeResult(eval.eval(ctx, eventexpr));
-            if ((eventValue == null || eventValue.trim().length() == 0) && exctx.getAppLog().isWarnEnabled()) {
+            if ((eventValue == null)) {
                 throw new SCXMLExpressionException("<send>: event expression \"" + eventexpr
-                        + "\" evaluated to null or empty String");
+                        + "\" evaluated to null");
             }
         }
         Map<String, SCXMLIOProcessor> ioProcessors = (Map<String, SCXMLIOProcessor>) ctx.get(SCXMLSystemContext.IOPROCESSORS_KEY);

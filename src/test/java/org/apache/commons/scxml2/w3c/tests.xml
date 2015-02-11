@@ -51,7 +51,7 @@
   <test id="525" mandatory="true"  manual="false" enabled="false"                 ecma="fail"     xpath="pass"/>
   <test id="158" mandatory="true"  manual="false" enabled="true"                  ecma="pass"     xpath="pass"/>
   <test id="159" mandatory="true"  manual="false" enabled="false"                 ecma="fail"     xpath="fail"/>
-  <test id="276" mandatory="true"  manual="false" enabled="false"                 ecma=""         xpath="">Fails to complete</test>
+  <test id="276" mandatory="true"  manual="false" enabled="true"                  ecma="pass"     xpath="fail"/>
   <test id="277" mandatory="true"  manual="false" enabled="false"                 ecma="fail"     xpath="fail"/>
   <test id="279" mandatory="true"  manual="false" enabled="false"                 ecma="fail"     xpath="fail"/>
   <test id="280" mandatory="true"  manual="false" enabled="false"                 ecma="pass"     xpath="fail"/>
