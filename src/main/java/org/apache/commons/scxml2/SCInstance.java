@@ -129,6 +129,11 @@ public class SCInstance implements Serializable {
     private Context globalContext;
 
     /**
+     * Flag indicating if the globalContext is shared between all states (a single flat context, default false)
+     */
+    private boolean singleContext;
+
+    /**
      * Constructor
      * @param internalIOProcessor The I/O Processor for the internal event queue
      * @param evaluator The evaluator
@@ -257,6 +262,17 @@ public class SCInstance implements Serializable {
         }
         this.stateMachine = stateMachine;
         initialize();
+    }
+
+    public void setSingleContext(boolean singleContext) throws ModelException {
+        if (initialized) {
+            throw new ModelException("SCInstance: already initialized");
+        }
+        this.singleContext = singleContext;
+    }
+
+    public boolean isSingleContext() {
+        return singleContext;
     }
 
     /**
@@ -438,12 +454,17 @@ public class SCInstance implements Serializable {
     public Context getContext(final EnterableState state) {
         Context context = contexts.get(state);
         if (context == null) {
-            EnterableState parent = state.getParent();
-            if (parent == null) {
-                // docroot
-                context = evaluator.newContext(getGlobalContext());
-            } else {
-                context = evaluator.newContext(getContext(parent));
+            if (singleContext) {
+                context = getGlobalContext();
+            }
+            else {
+                EnterableState parent = state.getParent();
+                if (parent == null) {
+                    // docroot
+                    context = evaluator.newContext(getGlobalContext());
+                } else {
+                    context = evaluator.newContext(getContext(parent));
+                }
             }
             if (state instanceof TransitionalState) {
                 Datamodel datamodel = ((TransitionalState)state).getDatamodel();

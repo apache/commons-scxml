@@ -728,6 +728,7 @@ public class W3CTests {
                 return false;
             }
             final SCXMLExecutor exec = new SCXMLExecutor(null, null, trc);
+            exec.setSingleContext(true);
             exec.setStateMachine(doc);
             exec.addListener(doc, trc);
             exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);

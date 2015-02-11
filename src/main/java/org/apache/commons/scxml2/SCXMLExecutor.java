@@ -191,6 +191,14 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
         exctx.getScInstance().setRootContext(rootContext);
     }
 
+    public void setSingleContext(boolean singleContext) throws ModelException {
+        getSCInstance().setSingleContext(singleContext);
+    }
+
+    public boolean isSingleContext() {
+        return getSCInstance().isSingleContext();
+    }
+
     /**
      * Get the state machine that is being executed.
      * <b>NOTE:</b> This is the state machine definition or model used by this
