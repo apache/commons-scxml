@@ -38,6 +38,11 @@ public interface SCXMLIOProcessor {
     String SCXML_EVENT_PROCESSOR = "scxml";
 
     /**
+     * Prefix for SCXML I/O (own) Session external Event processor
+     */
+    String SCXML_SESSION_EVENT_PROCESSOR_PREFIX = EVENT_PROCESSOR_ALIAS_PREFIX + "scxml_";
+
+    /**
      * The name of the internal Event Processor
      */
     String INTERNAL_EVENT_PROCESSOR = EVENT_PROCESSOR_ALIAS_PREFIX + "internal";

@@ -125,6 +125,11 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     private boolean checkLegalConfiguration = true;
 
     /**
+     * Local cache of the SCInstance sessionId, to be able to check against clear/reinitialization
+     */
+    private String sessionId;
+
+    /**
      * Constructor
      *
      * @param scxmlExecutor The SCXMLExecutor of this SCXMLExecutionContext
@@ -340,6 +345,16 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
      */
     protected void initializeIOProcessors() {
         if (scInstance.getEvaluator() != null) {
+            // lazy register/reset #_scxml_sessionId event target
+            String currentSessionId = (String)getScInstance().getSystemContext().get(SCXMLSystemContext.SESSIONID_KEY);
+            if (sessionId != null && !sessionId.equals(currentSessionId)) {
+                // remove possible old/stale #_scxml_sessionId target
+                ioProcessors.remove(SCXMLIOProcessor.SCXML_SESSION_EVENT_PROCESSOR_PREFIX+sessionId);
+            }
+            sessionId = currentSessionId;
+            if (!ioProcessors.containsKey(SCXMLIOProcessor.SCXML_SESSION_EVENT_PROCESSOR_PREFIX+sessionId)) {
+                ioProcessors.put(SCXMLIOProcessor.SCXML_SESSION_EVENT_PROCESSOR_PREFIX+sessionId, getExternalIOProcessor());
+            }
             getScInstance().getSystemContext().setLocal(SCXMLSystemContext.IOPROCESSORS_KEY, Collections.unmodifiableMap(ioProcessors));
         }
     }
