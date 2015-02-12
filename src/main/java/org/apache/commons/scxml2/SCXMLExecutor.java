@@ -198,11 +198,26 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
 
     /**
      * Get the root context for the state machine execution.
+     * <p>
+     * The root context can be used for providing external data to the state machine
+     * </p>
      *
      * @return Context The root context.
      */
     public Context getRootContext() {
         return exctx.getScInstance().getRootContext();
+    }
+
+    /**
+     * Get the global context for the state machine execution.
+     * <p>
+     * The global context is the top level context within the state machine itself and should be regarded and treated
+     * "read-only" from external usage.
+     * </p>
+     * @return Context The global context.
+     */
+    public Context getGlobalContext() {
+        return exctx.getScInstance().getGlobalContext();
     }
 
     /**

@@ -208,7 +208,7 @@ public class CustomActionTest {
                                 iterator().next()).getId());
         // (5) Verify datamodel variable is correct
         Assert.assertEquals("Missing helloName1 in root context", "custom04a",
-                     exec.getRootContext().get("helloName1"));
+                     exec.getGlobalContext().get("helloName1"));
 
         // The custom action defined by Hello.class should be called
         // to execute() exactly once at this point (by onentry in init state).
@@ -218,7 +218,7 @@ public class CustomActionTest {
         SCXMLTestHelper.fireEvent(exec, "custom.next");
         // (7) Verify correct end state
         Assert.assertEquals("Missing helloName1 in root context", "custom04b",
-                exec.getRootContext().get("helloName1"));
+                exec.getGlobalContext().get("helloName1"));
         Assert.assertEquals("Invalid final state",
                 "end", (exec.getStatus().getStates().
                 iterator().next()).getId());

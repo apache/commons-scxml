@@ -51,7 +51,7 @@ public class NamespacePrefixedXPathsTest {
         Assert.assertEquals("twenty", currentStates.iterator().next().getId());
 
         // This is set while exiting "ten"
-        Double retval = (Double) exec.getRootContext().get("retval");
+        Double retval = (Double) exec.getGlobalContext().get("retval");
         Assert.assertEquals(Double.valueOf("11"), retval);
 
         // On to "thirty"
@@ -61,7 +61,7 @@ public class NamespacePrefixedXPathsTest {
         exec = SCXMLTestHelper.testInstanceSerializability(exec);
 
         // Tests XPath on SCXML actions, set while exiting "twenty"
-        String retvalstr = (String) exec.getRootContext().get("retval");
+        String retvalstr = (String) exec.getGlobalContext().get("retval");
         Assert.assertEquals("Equal to 20", retvalstr);
 
         // and so on ...

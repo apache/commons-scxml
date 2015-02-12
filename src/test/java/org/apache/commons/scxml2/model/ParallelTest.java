@@ -43,13 +43,13 @@ public class ParallelTest {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/parallel-03.xml");
         exec.go();
         SCXMLTestHelper.assertPostTriggerStates(exec, "dummy.event", new String[] { "para11", "para21" });
-        Object count = exec.getEvaluator().eval(exec.getRootContext(),"Data('string(root/root/count)')");
+        Object count = exec.getEvaluator().eval(exec.getGlobalContext(),"Data('string(root/root/count)')");
         Assert.assertEquals("5.0", count.toString());
         SCXMLTestHelper.assertPostTriggerStates(exec, "foo", new String[] { "para12", "para21" });
-        count = exec.getEvaluator().eval(exec.getRootContext(),"Data('string(root/root/count)')");
+        count = exec.getEvaluator().eval(exec.getGlobalContext(),"Data('string(root/root/count)')");
         Assert.assertEquals("7.0", count.toString());
         SCXMLTestHelper.assertPostTriggerState(exec, "bar", "end");
-        count = exec.getEvaluator().eval(exec.getRootContext(),"Data('string(root/root/count)')");
+        count = exec.getEvaluator().eval(exec.getGlobalContext(),"Data('string(root/root/count)')");
         Assert.assertEquals("14.0", count.toString());
     }
 }
