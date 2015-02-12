@@ -19,6 +19,7 @@ package org.apache.commons.scxml2.invoke;
 import java.util.Map;
 
 import org.apache.commons.scxml2.SCXMLExecutor;
+import org.apache.commons.scxml2.SCXMLIOProcessor;
 import org.apache.commons.scxml2.TriggerEvent;
 
 /**
@@ -88,6 +89,14 @@ public interface Invoker {
     void setParentSCXMLExecutor(SCXMLExecutor scxmlExecutor);
 
     /**
+     * Get the child IO Processor to register for communication with
+     * the parent session.
+     *
+     * @return Child IO Processor
+     */
+    SCXMLIOProcessor getChildIOProcessor();
+
+    /**
      * Begin this invocation.
      *
      * @param source The source URI of the activity being invoked.
@@ -121,6 +130,5 @@ public interface Invoker {
      */
     void cancel()
     throws InvokerException;
-
 }
 

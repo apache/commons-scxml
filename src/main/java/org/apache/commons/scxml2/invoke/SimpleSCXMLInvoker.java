@@ -25,6 +25,7 @@ import javax.xml.stream.XMLStreamException;
 
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.SCXMLExecutor;
+import org.apache.commons.scxml2.SCXMLIOProcessor;
 import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.env.SimpleSCXMLListener;
 import org.apache.commons.scxml2.io.SCXMLReader;
@@ -52,6 +53,7 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
     /**
      * {@inheritDoc}.
      */
+    @Override
     public String getInvokeId() {
         return parentStateId;
     }
@@ -59,6 +61,7 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
     /**
      * {@inheritDoc}.
      */
+    @Override
     public void setInvokeId(final String invokeId) {
         this.parentStateId = invokeId;
         this.cancelled = false;
@@ -67,6 +70,7 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
     /**
      * {@inheritDoc}.
      */
+    @Override
     public void setParentSCXMLExecutor(SCXMLExecutor parentSCXMLExecutor) {
         this.parentSCXMLExecutor = parentSCXMLExecutor;
     }
@@ -74,6 +78,16 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
     /**
      * {@inheritDoc}.
      */
+    @Override
+    public SCXMLIOProcessor getChildIOProcessor() {
+        // not used
+        return executor;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
     public void invoke(final String source, final Map<String, Object> params)
     throws InvokerException {
         SCXML scxml;
@@ -112,6 +126,7 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
     /**
      * {@inheritDoc}.
      */
+    @Override
     public void parentEvent(final TriggerEvent evt)
     throws InvokerException {
         if (cancelled) {
@@ -128,11 +143,11 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
     /**
      * {@inheritDoc}.
      */
+    @Override
     public void cancel()
     throws InvokerException {
         cancelled = true;
         executor.addEvent(new TriggerEvent("cancel.invoke."+parentStateId, TriggerEvent.CANCEL_EVENT));
     }
-
 }
 

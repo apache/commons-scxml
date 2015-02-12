@@ -28,6 +28,11 @@ public interface SCXMLIOProcessor {
     String DEFAULT_EVENT_PROCESSOR = "http://www.w3.org/TR/scxml/#SCXMLEventProcessor";
 
     /**
+     * Prefix for SCXML I/O Event Processor aliases
+     */
+    String EVENT_PROCESSOR_ALIAS_PREFIX = "#_";
+
+    /**
      * Default SCXML I/O Event Processor alias
      */
     String SCXML_EVENT_PROCESSOR = "scxml";
@@ -35,12 +40,12 @@ public interface SCXMLIOProcessor {
     /**
      * The name of the internal Event Processor
      */
-    String INTERNAL_EVENT_PROCESSOR = "#_internal";
+    String INTERNAL_EVENT_PROCESSOR = EVENT_PROCESSOR_ALIAS_PREFIX + "internal";
 
     /**
      * The name of the parent Event Processor
      */
-    String PARENT_EVENT_PROCESSOR = "#_parent";
+    String PARENT_EVENT_PROCESSOR = EVENT_PROCESSOR_ALIAS_PREFIX + "parent";
 
     /**
      * Send an event into the SCXML processor queue

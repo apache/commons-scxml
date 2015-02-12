@@ -456,6 +456,8 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
         }
         invokeIds.put(invoke, invokeId);
         invokers.put(invokeId, invoker);
+        ioProcessors.put(SCXMLIOProcessor.EVENT_PROCESSOR_ALIAS_PREFIX+invoke.getId(), invoker.getChildIOProcessor());
+        initializeIOProcessors();
     }
 
     /**
@@ -464,6 +466,8 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
      */
     public void removeInvoker(final Invoke invoke) {
         invokers.remove(invokeIds.remove(invoke));
+        ioProcessors.remove(SCXMLIOProcessor.EVENT_PROCESSOR_ALIAS_PREFIX+invoke.getId());
+        initializeIOProcessors();
     }
 
     /**
