@@ -204,14 +204,14 @@
   <test id="555" mandatory="false" manual="false" enabled="true"                  xpath="pass"/>
   <test id="568" mandatory="false" manual="false" enabled="false"                 xpath="fail"/>
   <test id="189" mandatory="true"  manual="false" enabled="true"                  ecma="pass"     xpath="pass"/>
-  <test id="190" mandatory="true"  manual="false" enabled="false"                 ecma="fail"     xpath="fail"/>
+  <test id="190" mandatory="true"  manual="false" enabled="true"                  ecma="pass"     xpath="pass"/>
   <test id="191" mandatory="true"  manual="false" enabled="false"                 ecma=""         xpath="">Fails to complete</test>
   <test id="192" mandatory="true"  manual="false" enabled="false"                 ecma=""         xpath="">Fails to complete</test>
   <test id="193" mandatory="true"  manual="false" enabled="true"                  ecma="pass"     xpath="pass"/>
   <test id="347" mandatory="true"  manual="false" enabled="false"                 ecma=""         xpath="">Fails to complete</test>
   <test id="348" mandatory="true"  manual="false" enabled="true"                  ecma="pass"     xpath="pass"/>
   <test id="349" mandatory="true"  manual="false" enabled="false"                 ecma="pass"     xpath="">xpath fails with error: null</test>
-  <test id="350" mandatory="true"  manual="false" enabled="false"                 ecma="fail"     xpath="">xpath fails with error: null</test>
+  <test id="350" mandatory="true"  manual="false" enabled="true"                  ecma="pass"     xpath="pass"/>
   <test id="351" mandatory="true"  manual="false" enabled="false"                 ecma="fail"     xpath="">xpath fails with error: null</test>
   <test id="352" mandatory="true"  manual="false" enabled="false"                 ecma="fail"     xpath="">xpath fails with error: null</test>
   <test id="354" mandatory="true"  manual="false" enabled="false"                 ecma="fail"     xpath="pass"/>
