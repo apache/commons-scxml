@@ -19,6 +19,7 @@ package org.apache.commons.scxml2.invoke;
 import java.util.Map;
 
 import org.apache.commons.scxml2.SCXMLExecutor;
+import org.apache.commons.scxml2.SCXMLIOProcessor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.model.ModelException;
@@ -82,6 +83,7 @@ public class InvokeParamNameTest {
 
         private String invokeId;
 
+        @Override
         public void invoke(String source, Map<String, Object> params)
         throws InvokerException {
             lastSource = source;
@@ -96,24 +98,35 @@ public class InvokeParamNameTest {
             return lastParams;
         }
 
+        @Override
         public void cancel() throws InvokerException {
             // Not needed
         }
 
+        @Override
         public void parentEvent(TriggerEvent evt) throws InvokerException {
             // Not needed
         }
 
+        @Override
         public String getInvokeId() {
             return invokeId;
         }
 
+        @Override
         public void setInvokeId(String invokeId) {
             this.invokeId = invokeId;
         }
 
+        @Override
         public void setParentSCXMLExecutor(SCXMLExecutor parentSCXMLExecutor) {
             // Not needed
+        }
+
+        @Override
+        public SCXMLIOProcessor getChildIOProcessor() {
+            // not used
+            return null;
         }
     }
 
