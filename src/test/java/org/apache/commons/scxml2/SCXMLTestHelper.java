@@ -103,11 +103,11 @@ public class SCXMLTestHelper {
         return getExecutor(parse(url), null);
     }
 
-    public static SCXMLExecutor getExecutor(String scxmlResource) throws Exception {
+    public static SCXMLExecutor getExecutor(final String scxmlResource) throws Exception {
         return getExecutor(parse(scxmlResource), null);
     }
 
-    public static SCXMLExecutor getExecutor(SCXML scxml) throws Exception {
+    public static SCXMLExecutor getExecutor(final SCXML scxml) throws Exception {
         return getExecutor(scxml, null);
     }
 
@@ -115,9 +115,13 @@ public class SCXMLTestHelper {
         return getExecutor(parse(url), evaluator);
     }
 
-    public static SCXMLExecutor getExecutor(SCXML scxml, Evaluator evaluator) throws Exception {
+    public static SCXMLExecutor getExecutor(final SCXML scxml, final Evaluator evaluator) throws Exception {
+        return getExecutor(scxml, evaluator, new SimpleDispatcher());
+    }
+
+    public static SCXMLExecutor getExecutor(final SCXML scxml, final Evaluator evaluator, final EventDispatcher eventDispatcher) throws Exception {
         Tracer trc = new Tracer();
-        SCXMLExecutor exec = new SCXMLExecutor(evaluator, new SimpleDispatcher(), trc);
+        SCXMLExecutor exec = new SCXMLExecutor(evaluator, eventDispatcher, trc);
         exec.setStateMachine(scxml);
         exec.addListener(scxml, trc);
         return exec;

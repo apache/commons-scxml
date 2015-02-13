@@ -16,7 +16,7 @@
  */
 package org.apache.commons.scxml2.model;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -386,7 +386,7 @@ public class Send extends NamelistHolder implements ContentContainer {
             typeValue = SCXMLIOProcessor.DEFAULT_EVENT_PROCESSOR;
         }
         Object payload = null;
-        Map<String, Object> payloadDataMap = new HashMap<String, Object>();
+        Map<String, Object> payloadDataMap = new LinkedHashMap<String, Object>();
         addNamelistDataToPayload(exctx, payloadDataMap);
         addParamsToPayload(exctx, payloadDataMap);
         if (!payloadDataMap.isEmpty()) {
