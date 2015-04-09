@@ -63,9 +63,6 @@ import org.apache.commons.scxml2.model.Datamodel;
 import org.apache.commons.scxml2.model.Else;
 import org.apache.commons.scxml2.model.ElseIf;
 import org.apache.commons.scxml2.model.EnterableState;
-import org.apache.commons.scxml2.model.ParamsContainer;
-import org.apache.commons.scxml2.model.TransitionalState;
-import org.apache.commons.scxml2.model.Raise;
 import org.apache.commons.scxml2.model.Executable;
 import org.apache.commons.scxml2.model.ExternalContent;
 import org.apache.commons.scxml2.model.Final;
@@ -82,6 +79,8 @@ import org.apache.commons.scxml2.model.OnEntry;
 import org.apache.commons.scxml2.model.OnExit;
 import org.apache.commons.scxml2.model.Parallel;
 import org.apache.commons.scxml2.model.Param;
+import org.apache.commons.scxml2.model.ParamsContainer;
+import org.apache.commons.scxml2.model.Raise;
 import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.Script;
 import org.apache.commons.scxml2.model.Send;
@@ -89,6 +88,7 @@ import org.apache.commons.scxml2.model.SimpleTransition;
 import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.Transition;
 import org.apache.commons.scxml2.model.TransitionType;
+import org.apache.commons.scxml2.model.TransitionalState;
 import org.apache.commons.scxml2.model.Var;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -294,6 +294,7 @@ public final class SCXMLReader {
     private static final String ATTR_NAMELIST = "namelist";
     private static final String ATTR_PROFILE = "profile";
     private static final String ATTR_SENDID = "sendid";
+    private static final String ATTR_SENDIDEXPR = "sendidexpr";
     private static final String ATTR_SRC = "src";
     private static final String ATTR_SRCEXPR = "srcexpr";
     private static final String ATTR_TARGET = "target";
@@ -1882,9 +1883,19 @@ public final class SCXMLReader {
      */
     private static void readCancel(final XMLStreamReader reader, final Configuration configuration,
                                    final Executable executable, final ActionsContainer parent)
-            throws XMLStreamException {
+            throws XMLStreamException, ModelException {
 
         Cancel cancel = new Cancel();
+        cancel.setSendid(readAV(reader, ATTR_SENDID));
+        String attrValue = readAV(reader, ATTR_SENDIDEXPR);
+        if (attrValue != null) {
+            if (cancel.getSendid() != null) {
+                reportConflictingAttribute(reader, configuration, ELEM_CANCEL, ATTR_SENDID, ATTR_SENDIDEXPR);
+            }
+            else {
+                cancel.setSendidexpr(attrValue);
+            }
+        }
         readNamespaces(configuration, cancel);
         cancel.setParent(executable);
         if (parent != null) {
