@@ -192,7 +192,7 @@
         [11-08-2013] Cast to State in TransitionTargetComparator.
       </action>
 
-      <action dev="woonsan" type="add" issue="SCXML-225">
+      <action dev="woonsan" type="add" issue="SCXML-225" due-to="Franck Foutou">
         [02-13-2015] Preserve order in &lt;send&gt; namelist attribute values.
       </action>
 
