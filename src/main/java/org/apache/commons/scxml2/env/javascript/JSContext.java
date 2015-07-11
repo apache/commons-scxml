@@ -17,6 +17,8 @@
 
 package org.apache.commons.scxml2.env.javascript;
 
+import java.util.Map;
+
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.env.SimpleContext;
 
@@ -44,13 +46,22 @@ public class JSContext extends SimpleContext {
     }
 
     /**
+     * Constructor with initial vars.
+     * @param parent The parent context
+     * @param initialVars The initial set of variables.
+     */
+    public JSContext(final Context parent, final Map<String, Object> initialVars) {
+        super(parent, initialVars);
+    }
+
+    /**
      * Child constructor. Just invokes the identical SimpleContext
      * constructor.
      *
      * @param parent Parent context for this context.
      *
      */
-    public JSContext(Context parent) {
+    public JSContext(final Context parent) {
         super(parent);
     }
 

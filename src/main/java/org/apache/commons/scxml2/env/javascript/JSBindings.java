@@ -326,7 +326,7 @@ public class JSBindings implements Bindings {
      * </p>
      * @return true if a global bindings (i.e. nashorn Global instance) was ever set by the script engine
      */
-    private boolean hasGlobalBindings() {
+    boolean hasGlobalBindings() {
         if (bindings.containsKey(NASHORN_GLOBAL)) {
             return true;
         }
@@ -338,7 +338,7 @@ public class JSBindings implements Bindings {
      * Return the global bindings (i.e. nashorn Global instance) set by the script engine if existing.
      * @return the global bindings (i.e. nashorn Global instance) set by the script engine, or null if not existing.
      */
-    private Bindings getGlobalBindings() {
+    Bindings getGlobalBindings() {
         if (bindings.containsKey(NASHORN_GLOBAL)) {
             return (Bindings) bindings.get(NASHORN_GLOBAL);
         }

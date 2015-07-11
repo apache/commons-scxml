@@ -19,6 +19,10 @@ package org.apache.commons.scxml2.env.javascript;
 
 import java.io.StringReader;
 
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
+
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.SCXMLExecutor;
@@ -30,10 +34,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathFactory;
 
 /** JUnit 3 test case for the JSEvaluator expression evaluator
  *  class. Includes basic tests for:
@@ -143,6 +143,21 @@ public class JSEvaluatorTest {
 
         Assert.assertNotNull(evaluator);
         Assert.assertTrue   (((Boolean) evaluator.eval(context, "1+1 == 2")).booleanValue());
+    }
+
+    @Test
+    public void testScript() throws SCXMLExpressionException {
+        Evaluator evaluator = new JSEvaluator();
+        context.set("x", 3);
+        context.set("y", 0);
+        String script = 
+            "if ((x * 2.0) == 5.0) {" +
+                "y = 1.0;\n" +
+            "} else {\n" +
+                "y = 2.0;\n" +
+            "}";
+        Assert.assertEquals(2.0, evaluator.evalScript(context, script));
+        Assert.assertEquals(2.0, context.get("y"));
     }
 
     /**
