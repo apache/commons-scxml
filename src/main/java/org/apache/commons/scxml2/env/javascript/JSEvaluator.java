@@ -142,8 +142,8 @@ public class JSEvaluator implements Evaluator {
             JSContext effectiveContext = getEffectiveContext((JSContext) context);
 
             // ... initialize
-            ScriptEngine engine   = factory.getEngineByName("JavaScript");
-            Bindings     bindings = engine.getBindings     (ScriptContext.ENGINE_SCOPE);
+            ScriptEngine engine = factory.getEngineByName("JavaScript");
+            Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
 
             // ... replace built-in functions
             String jsExpression = IN_FN.matcher(expression).replaceAll("_builtin.In(");

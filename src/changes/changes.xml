@@ -36,6 +36,10 @@
     <release version="2.0" date="In SVN trunk"
       description="Latest unreleased code">
 
+      <action dev="woonsan" type="fix" issue="SCXML-233">
+        [07-12-2015] SCInstance becomes not serialzable after triggering event. 
+      </action>
+
       <action dev="woonsan" type="fix" issue="SCXML-234">
         [07-12-2015] Unit test (ScriptTest) fails on Java 1.8 due to new JS Engine. 
       </action>

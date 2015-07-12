@@ -16,6 +16,8 @@
  */
 package org.apache.commons.scxml2.env.javascript;
 
+import java.io.Serializable;
+
 import org.apache.commons.scxml2.Builtin;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.SCXMLExpressionException;
@@ -25,7 +27,7 @@ import org.apache.commons.scxml2.XPathBuiltin;
  * Custom Javascript engine function providing the SCXML In() predicate and the Commons SCXML extensions
  * for Data() and Location() to support XPath datamodel access.
  */
-public class JSFunctions {
+public class JSFunctions implements Serializable {
 
     /**
      * The context currently in use for evaluation.
