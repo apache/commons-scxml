@@ -36,6 +36,10 @@
     <release version="2.0" date="In SVN trunk"
       description="Latest unreleased code">
 
+      <action dev="woonsan" type="fix" issue="SCXML-234">
+        [07-12-2015] Unit test (ScriptTest) fails on Java 1.8 due to new JS Engine. 
+      </action>
+
       <action dev="ate" type="fix" issue="SCXML-194">
         [03-01-2014] Drop outdated, incomplete, broken or no longer supported features for SCXML 2.0.
       </action>

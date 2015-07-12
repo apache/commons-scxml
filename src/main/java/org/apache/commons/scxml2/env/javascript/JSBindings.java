@@ -35,6 +35,8 @@ import org.apache.commons.scxml2.Context;
  */
 public class JSBindings implements Bindings {
 
+    private static final String NASHORN_GLOBAL = "nashorn.global";
+
     // INSTANCE VARIABLES
 
     private Bindings bindings;
@@ -52,7 +54,7 @@ public class JSBindings implements Bindings {
      *         or <code>bindings</code> is <code>null</code>.
      *
      */
-    public JSBindings(Context context,Bindings bindings) {
+    public JSBindings(Context context, Bindings bindings) {
         // ... validate
 
         if (context == null) {
@@ -63,10 +65,10 @@ public class JSBindings implements Bindings {
            throw new IllegalArgumentException("Invalid script Bindings");
         }
 
-         // ... initialise
+        // ... initialise
 
-         this.bindings = bindings;
-         this.context  = context;
+        this.bindings = bindings;
+        this.context = context;
     }
 
     // INSTANCE METHODS
@@ -79,8 +81,13 @@ public class JSBindings implements Bindings {
      */
     @Override
     public boolean containsKey(Object key) {
-        if (bindings.containsKey(key))
-           return true;
+        if (hasGlobalBindings() && getGlobalBindings().containsKey(key)) {
+            return true;
+        }
+
+        if (bindings.containsKey(key)) {
+            return true;
+        }
 
         return context.has(key.toString());
     }
@@ -98,6 +105,10 @@ public class JSBindings implements Bindings {
 
         keys.addAll(context.getVars().keySet());
         keys.addAll(bindings.keySet());
+
+        if (hasGlobalBindings()) {
+            keys.addAll(getGlobalBindings().keySet());
+        }
 
         return keys;
     }
@@ -117,6 +128,10 @@ public class JSBindings implements Bindings {
         keys.addAll(context.getVars().keySet());
         keys.addAll(bindings.keySet());
 
+        if (hasGlobalBindings()) {
+            keys.addAll(getGlobalBindings().keySet());
+        }
+
         return keys.size();
     }
 
@@ -129,8 +144,13 @@ public class JSBindings implements Bindings {
      */
     @Override
     public boolean containsValue(Object value) {
-        if (bindings.containsValue(value))
-           return true;
+        if (hasGlobalBindings() && getGlobalBindings().containsValue(value)) {
+            return true;
+        }
+
+        if (bindings.containsValue(value)) {
+            return true;
+        }
 
         return context.getVars().containsValue(value);
     }
@@ -168,8 +188,13 @@ public class JSBindings implements Bindings {
      */
     @Override
     public boolean isEmpty() {
-        if (!bindings.isEmpty())
-           return false;
+        if (hasGlobalBindings() && !getGlobalBindings().isEmpty()) {
+            return false;
+        }
+
+        if (!bindings.isEmpty()) {
+            return false;
+        }
 
         return context.getVars().isEmpty();
     }
@@ -181,8 +206,13 @@ public class JSBindings implements Bindings {
      */
     @Override
     public Object get(Object key) {
-        if (bindings.containsKey(key))
-           return bindings.get(key);
+        if (hasGlobalBindings() && getGlobalBindings().containsKey(key)) {
+            return getGlobalBindings().get(key);
+        }
+
+        if (bindings.containsKey(key)) {
+            return bindings.get(key);
+        }
 
         return context.get(key.toString());
     }
@@ -201,13 +231,17 @@ public class JSBindings implements Bindings {
     @Override
     public Object put(String name, Object value) {
         Object old = context.get(name);
+
         if (context.has(name)) {
             context.set(name, value);
         } else if (bindings.containsKey(name)) {
             return bindings.put(name,value);
+        } else if (hasGlobalBindings() && getGlobalBindings().containsKey(name)) {
+            return getGlobalBindings().put(name, value);
         } else {
             context.setLocal(name, value);
         }
+
         return old;
     }
 
@@ -220,7 +254,7 @@ public class JSBindings implements Bindings {
      */
     @Override
     public void putAll(Map<? extends String, ? extends Object> list) {
-            bindings.putAll(list);
+        bindings.putAll(list);
     }
 
     /**
@@ -234,11 +268,17 @@ public class JSBindings implements Bindings {
      */
     @Override
     public Object remove(Object key) {
-        if (bindings.containsKey(key))
-           return bindings.remove(key);
+        if (hasGlobalBindings() && getGlobalBindings().containsKey(key)) {
+            getGlobalBindings().remove(key);
+        }
 
-        if (context.has(key.toString()))
-           return context.getVars().remove(key);
+        if (bindings.containsKey(key)) {
+            return bindings.remove(key);
+        }
+
+        if (context.has(key.toString())) {
+            return context.getVars().remove(key);
+        }
 
         return Boolean.FALSE;
     }
@@ -252,7 +292,7 @@ public class JSBindings implements Bindings {
      */
     @Override
     public void clear() {
-            bindings.clear();
+        bindings.clear();
     }
 
     /**
@@ -265,11 +305,48 @@ public class JSBindings implements Bindings {
 
         set.putAll(context.getVars());
 
-        for (String key: bindings.keySet())
-            set.put(key,bindings.get(key));
+        for (String key : bindings.keySet()) {
+            set.put(key, bindings.get(key));
+        }
+
+        if (hasGlobalBindings()) {
+            for (String key : getGlobalBindings().keySet()) {
+                set.put(key, getGlobalBindings().get(key));
+            }
+        }
 
         return set;
     }
 
-}
+    /**
+     * Return true if a global bindings (i.e. nashorn Global instance) was ever set by the script engine.
+     * <p>
+     * Note: because the global binding can be set by the script engine when evaluating a script, we should
+     *       check or retrieve the global binding whenever needed instead of initialization time.
+     * </p>
+     * @return true if a global bindings (i.e. nashorn Global instance) was ever set by the script engine
+     */
+    boolean hasGlobalBindings() {
+        if (bindings.containsKey(NASHORN_GLOBAL)) {
+            return true;
+        }
 
+        return context.has(NASHORN_GLOBAL);
+    }
+
+    /**
+     * Return the global bindings (i.e. nashorn Global instance) set by the script engine if existing.
+     * @return the global bindings (i.e. nashorn Global instance) set by the script engine, or null if not existing.
+     */
+    Bindings getGlobalBindings() {
+        if (bindings.containsKey(NASHORN_GLOBAL)) {
+            return (Bindings) bindings.get(NASHORN_GLOBAL);
+        }
+
+        if (context.has(NASHORN_GLOBAL)) {
+            return (Bindings) context.get(NASHORN_GLOBAL);
+        }
+
+        return null;
+    }
+}

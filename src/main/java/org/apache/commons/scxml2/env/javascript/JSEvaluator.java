@@ -30,6 +30,7 @@ import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.EvaluatorProvider;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.XPathBuiltin;
+import org.apache.commons.scxml2.env.EffectiveContextMap;
 import org.apache.commons.scxml2.model.SCXML;
 
 /**
@@ -70,6 +71,10 @@ public class JSEvaluator implements Evaluator {
             return new JSEvaluator();
         }
     }
+
+    /** Error message if evaluation context is not a JexlContext. */
+    private static final String ERR_CTX_TYPE = "Error evaluating JavaScript "
+        + "expression, Context must be a org.apache.commons.scxml2.env.javascript.JSContext";
 
     /** Pattern for recognizing the SCXML In() special predicate. */
     private static final Pattern IN_FN = Pattern.compile("In\\(");
@@ -124,8 +129,17 @@ public class JSEvaluator implements Evaluator {
      * @throws SCXMLExpressionException Thrown if the expression was invalid.
      */
     @Override
-    public Object eval(Context context,String expression) throws SCXMLExpressionException {
+    public Object eval(Context context, String expression) throws SCXMLExpressionException {
+        if (expression == null) {
+            return null;
+        }
+
+        if (!(context instanceof JSContext)) {
+            throw new SCXMLExpressionException(ERR_CTX_TYPE);
+        }
+
         try {
+            JSContext effectiveContext = getEffectiveContext((JSContext) context);
 
             // ... initialize
             ScriptEngine engine   = factory.getEngineByName("JavaScript");
@@ -137,9 +151,15 @@ public class JSEvaluator implements Evaluator {
             jsExpression = LOCATION_FN.matcher(jsExpression).replaceAll("_builtin.Location(");
 
             // ... evaluate
-            JSBindings jsBindings = new JSBindings(context, bindings);
-            jsBindings.put("_builtin", new JSFunctions(context));
-            return engine.eval(jsExpression,jsBindings);
+            JSBindings jsBindings = new JSBindings(effectiveContext, bindings);
+            jsBindings.put("_builtin", new JSFunctions(effectiveContext));
+
+            Object ret = engine.eval(jsExpression, jsBindings);
+
+            // copy global bindings attributes to context, so callers may get access to the evaluated variables.
+            copyGlobalBindingsToContext(jsBindings, (JSContext) effectiveContext);
+
+            return ret;
 
         } catch (Exception x) {
             throw new SCXMLExpressionException("Error evaluating ['" + expression + "'] " + x);
@@ -159,15 +179,15 @@ public class JSEvaluator implements Evaluator {
      *                                  not return a boolean.
      */
     @Override
-    public Boolean evalCond(Context context,String expression) throws SCXMLExpressionException {
-        final Object result = eval(context,expression);
+    public Boolean evalCond(Context context, String expression) throws SCXMLExpressionException {
+        final Object result = eval(context, expression);
 
         if (result == null) {
-           return Boolean.FALSE;
+            return Boolean.FALSE;
         }
 
         if (result instanceof Boolean) {
-           return (Boolean)result;
+            return (Boolean)result;
         }
 
         throw new SCXMLExpressionException("Invalid boolean expression: " + expression);
@@ -186,13 +206,13 @@ public class JSEvaluator implements Evaluator {
      * @throws SCXMLExpressionException Thrown if the expression was invalid.
      */
     @Override
-    public Object evalLocation(Context context,String expression) throws SCXMLExpressionException {
+    public Object evalLocation(Context context, String expression) throws SCXMLExpressionException {
         if (expression == null) {
             return null;
-        }
-        else if (context.has(expression)) {
+        } else if (context.has(expression)) {
             return expression;
         }
+
         return eval(context, expression);
     }
 
@@ -203,23 +223,21 @@ public class JSEvaluator implements Evaluator {
                            final String attr) throws SCXMLExpressionException {
 
         Object loc = evalLocation(ctx, location);
-        if (loc != null) {
 
+        if (loc != null) {
             if (XPathBuiltin.isXPathLocation(ctx, loc)) {
                 XPathBuiltin.assign(ctx, loc, data, type, attr);
-            }
-            else {
+            } else {
                 StringBuilder sb = new StringBuilder(location).append("=").append(ASSIGN_VARIABLE_NAME);
+
                 try {
                     ctx.getVars().put(ASSIGN_VARIABLE_NAME, data);
                     eval(ctx, sb.toString());
-                }
-                finally {
+                } finally {
                     ctx.getVars().remove(ASSIGN_VARIABLE_NAME);
                 }
             }
-        }
-        else {
+        } else {
             throw new SCXMLExpressionException("evalAssign - cannot resolve location: '" + location + "'");
         }
     }
@@ -239,8 +257,37 @@ public class JSEvaluator implements Evaluator {
      * @throws SCXMLExpressionException Thrown if the script was invalid.
      */
     @Override
-    public Object evalScript(Context ctx, String script)
-    throws SCXMLExpressionException {
+    public Object evalScript(Context ctx, String script) throws SCXMLExpressionException {
         return eval(ctx, script);
+    }
+
+    /**
+     * Create a new context which is the summation of contexts from the
+     * current state to document root, child has priority over parent
+     * in scoping rules.
+     *
+     * @param nodeCtx The JexlContext for this state.
+     * @return The effective JexlContext for the path leading up to
+     *         document root.
+     */
+    protected JSContext getEffectiveContext(final JSContext nodeCtx) {
+        return new JSContext(nodeCtx, new EffectiveContextMap(nodeCtx));
+    }
+
+    /**
+     * Copy the global Bindings (i.e. nashorn Global instance) attributes to {@code jsContext}
+     * in order to make sure all the new global variables set by the JavaScript engine after evaluation
+     * available from {@link JSContext} instance as well.
+     * @param jsBindings
+     * @param jsContext
+     */
+    private void copyGlobalBindingsToContext(final JSBindings jsBindings, final JSContext jsContext) {
+        Bindings globalBindings = jsBindings.getGlobalBindings();
+
+        if (globalBindings != null) {
+            for (String key : globalBindings.keySet()) {
+                jsContext.set(key, globalBindings.get(key));
+            }
+        }
     }
 }
