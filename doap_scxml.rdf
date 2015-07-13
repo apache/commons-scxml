@@ -33,10 +33,10 @@
      agnostic state machine defined using a SCXML document.
     </description>
     <repository>
-      <SVNRepository>
-        <browse rdf:resource="http://svn.apache.org/viewvc/commons/proper/scxml/trunk/"/>
-        <location rdf:resource="http://svn.apache.org/repos/asf/commons/proper/scxml"/>
-      </SVNRepository>
+      <GitRepository>
+        <browse rdf:resource="https://git-wip-us.apache.org/repos/asf?p=commons-scxml.git"/>
+        <location rdf:resource="https://git-wip-us.apache.org/repos/asf/commons-scxml.git"/>
+      </GitRepository>
     </repository>
     <release>
       <Version>
