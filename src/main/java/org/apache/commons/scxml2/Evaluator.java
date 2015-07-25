@@ -36,7 +36,7 @@ public interface Evaluator {
     String DEFAULT_DATA_MODEL = "";
 
     /**
-     * The allowable types of <assign/> including and in particular when using XPath
+     * The allowable types of &lt;assign/&gt; including and in particular when using XPath
      */
     enum AssignType {
 

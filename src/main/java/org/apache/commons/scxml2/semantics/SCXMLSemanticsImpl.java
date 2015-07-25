@@ -44,17 +44,17 @@ import org.apache.commons.scxml2.model.Executable;
 import org.apache.commons.scxml2.model.Final;
 import org.apache.commons.scxml2.model.History;
 import org.apache.commons.scxml2.model.Invoke;
+import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.OnEntry;
 import org.apache.commons.scxml2.model.OnExit;
-import org.apache.commons.scxml2.model.Script;
-import org.apache.commons.scxml2.model.SimpleTransition;
-import org.apache.commons.scxml2.model.TransitionalState;
-import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.Parallel;
 import org.apache.commons.scxml2.model.SCXML;
+import org.apache.commons.scxml2.model.Script;
+import org.apache.commons.scxml2.model.SimpleTransition;
 import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.Transition;
 import org.apache.commons.scxml2.model.TransitionTarget;
+import org.apache.commons.scxml2.model.TransitionalState;
 import org.apache.commons.scxml2.system.EventVariable;
 
 /**
@@ -552,6 +552,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * <p>
      * @param exctx The execution context for this step
      * @param step The step
+     * @throws ModelException if there is a fatal SCXML state error
      */
     public void selectTransitions(final SCXMLExecutionContext exctx, final Step step) throws ModelException {
         step.getTransitList().clear();
@@ -1047,6 +1048,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      *
      * @param exctx provides the execution context
      * @param statesToInvoke the set of activated states which invokes need to be invoked
+     * @throws ModelException if there is a fatal SCXML state error
      */
     public void initiateInvokes(final SCXMLExecutionContext exctx,
                                 final Set<TransitionalState> statesToInvoke) throws ModelException {

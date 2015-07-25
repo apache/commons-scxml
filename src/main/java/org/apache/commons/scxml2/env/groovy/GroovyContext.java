@@ -16,6 +16,8 @@
  */
 package org.apache.commons.scxml2.env.groovy;
 
+import groovy.lang.Closure;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -29,8 +31,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.env.SimpleContext;
-
-import groovy.lang.Closure;
 
 /**
  * Groovy Context implementation for Commons SCXML.
@@ -63,7 +63,9 @@ public class GroovyContext extends SimpleContext {
     /**
      * Constructor with initial vars.
      *
+     * @param parent The parent context.
      * @param initialVars The initial set of variables.
+     * @param evaluator The groovy evaluator
      */
     public GroovyContext(final Context parent, final Map<String, Object> initialVars, GroovyEvaluator evaluator) {
         super(parent, initialVars);
@@ -74,6 +76,7 @@ public class GroovyContext extends SimpleContext {
      * Constructor with parent context.
      *
      * @param parent The parent context.
+     * @param evaluator The groovy evaluator
      */
     public GroovyContext(final Context parent, GroovyEvaluator evaluator) {
         super(parent);

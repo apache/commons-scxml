@@ -98,6 +98,7 @@ public abstract class AbstractStateMachine {
      * @param scxmlDocument The URL pointing to the SCXML document that
      *                      describes the &quot;lifecycle&quot; of the
      *                      instances of this class.
+     * @throws ModelException in case there is a fatal SCXML object model problem
      */
     public AbstractStateMachine(final URL scxmlDocument) throws ModelException {
         // default is JEXL
@@ -112,6 +113,7 @@ public abstract class AbstractStateMachine {
      *                      instances of this class.
      * @param rootCtx The root context for this instance.
      * @param evaluator The expression evaluator for this instance.
+     * @throws ModelException in case there is a fatal SCXML object model problem
      *
      * @see Context
      * @see Evaluator
@@ -137,7 +139,7 @@ public abstract class AbstractStateMachine {
      * @param stateMachine The parsed SCXML instance that
      *                     describes the &quot;lifecycle&quot; of the
      *                     instances of this class.
-     *
+     * @throws ModelException in case there is a fatal SCXML object model problem
      * @since 0.7
      */
     public AbstractStateMachine(final SCXML stateMachine) throws ModelException {
@@ -153,7 +155,7 @@ public abstract class AbstractStateMachine {
      *                     instances of this class.
      * @param rootCtx The root context for this instance.
      * @param evaluator The expression evaluator for this instance.
-     *
+     * @throws ModelException in case there is a fatal SCXML object model problem
      * @see Context
      * @see Evaluator
      *
@@ -171,6 +173,7 @@ public abstract class AbstractStateMachine {
      * @param stateMachine The state machine
      * @param rootCtx The root context
      * @param evaluator The expression evaluator
+     * @throws ModelException in case there is a fatal SCXML object model problem
      */
     private void initialize(final SCXML stateMachine,
             final Context rootCtx, final Evaluator evaluator) throws ModelException {

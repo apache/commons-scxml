@@ -147,7 +147,7 @@ public abstract class PayloadProvider extends Action {
      * @param evaluator the evaluator to test for which datamodel type this event payload is intended
      * @param payload the payload data map
      * @return payload for an event
-     * @throws ModelException
+     * @throws ModelException if it fails to create payload or data node
      */
     protected Object makeEventPayload(final Evaluator evaluator, final Map<String, Object> payload)
             throws ModelException {

@@ -130,6 +130,8 @@ public class GroovyEvaluator implements Evaluator, Serializable {
      * The default implementation configures the scriptCache to use the {@link #scriptPreProcessor GroovyEvaluator scriptPreProcessor}
      * and the {@link GroovySCXMLScript} as script base class.
      * </p>
+     *
+     * @return GroovyExtendableScriptCache for this GroovyEvaluator
      */
     protected GroovyExtendableScriptCache newScriptCache() {
         GroovyExtendableScriptCache scriptCache = new GroovyExtendableScriptCache();

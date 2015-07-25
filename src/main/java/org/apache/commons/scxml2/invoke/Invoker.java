@@ -46,19 +46,18 @@ import org.apache.commons.scxml2.TriggerEvent;
  * event. The name of the special "done" event must be "done.invoke.id" with
  * the ID of the parent state wherein the corresponding &lt;invoke&gt; resides,</p>
  *
- * <p>The Invoker "lifecycle" is outlined below:
- *  <ol>
- *   <li>Instantiation via {@link Class#newInstance()}
- *       (Invoker implementation requires accessible constructor).</li>
- *   <li>Configuration (setters for invoke ID and
- *       {@link org.apache.commons.scxml2.SCXMLExecutor}).</li>
- *   <li>Initiation of invoked activity via invoke() method, passing
- *       the source URI and the map of params.</li>
- *   <li>Zero or more bi-directional event triggering.</li>
- *   <li>Either completion or cancellation.</li>
- *  </ol>
- * </p>
- *
+ * <p>The Invoker "lifecycle" is outlined below:</p>
+ * <ol>
+ *  <li>Instantiation via {@link Class#newInstance()}
+ *      (Invoker implementation requires accessible constructor).</li>
+ *  <li>Configuration (setters for invoke ID and
+ *      {@link org.apache.commons.scxml2.SCXMLExecutor}).</li>
+ *  <li>Initiation of invoked activity via invoke() method, passing
+ *      the source URI and the map of params.</li>
+ *  <li>Zero or more bi-directional event triggering.</li>
+ *  <li>Either completion or cancellation.</li>
+ * </ol>
+ * 
  * <p><b>Note:</b> The semantics of &lt;invoke&gt; are necessarily
  * asynchronous, tending towards long(er) running interactions with external
  * processes. Implementations cannot communicate with the parent state

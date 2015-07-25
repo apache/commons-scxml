@@ -36,21 +36,21 @@ import static org.apache.commons.scxml2.Evaluator.DEFAULT_DATA_MODEL;
  * </p>
  * <p>
  *  The builtin supported providers are:
- *  <ul>
- *      <li>no or empty datamodel (default) or datamodel="jexl": {@link JexlEvaluator.JexlEvaluatorProvider}</li>
- *      <li>datamodel="ecmascript": {@link JSEvaluator.JSEvaluatorProvider}</li>
- *      <li>datamodel="groovy": {@link GroovyEvaluator.GroovyEvaluatorProvider}</li>
- *      <li>datamodel="xpath": {@link XPathEvaluator.XPathEvaluatorProvider}</li>
- *      <li>datamodel="null": {@link MinimalEvaluator.MinimalEvaluatorProvider}</li>
- *  </ul>
- *  </p>
- *  <p>
+ * </p>
+ * <ul>
+ *  <li>no or empty datamodel (default) or datamodel="jexl": {@link JexlEvaluator.JexlEvaluatorProvider}</li>
+ *  <li>datamodel="ecmascript": {@link JSEvaluator.JSEvaluatorProvider}</li>
+ *  <li>datamodel="groovy": {@link GroovyEvaluator.GroovyEvaluatorProvider}</li>
+ *  <li>datamodel="xpath": {@link XPathEvaluator.XPathEvaluatorProvider}</li>
+ *  <li>datamodel="null": {@link MinimalEvaluator.MinimalEvaluatorProvider}</li>
+ * </ul>
+ * <p>
  *  For adding additional or overriding the builtin Evaluator implementations use
  *  {@link #registerEvaluatorProvider(EvaluatorProvider)} or {@link #unregisterEvaluatorProvider(String)}.
- *  </p>
- *  <p>
+ * </p>
+ * <p>
  *  The default provider can be overridden using the {@link #setDefaultProvider(EvaluatorProvider)} which will
- *  register the provider under the {@link Evaluator#DEFAULT_DATA_MODEL} ("") value for the datamodel.<br/>
+ *  register the provider under the {@link Evaluator#DEFAULT_DATA_MODEL} ("") value for the datamodel.<br>
  *  Note: this is <em>not</em> the same as datamodel="null"!
  * </p>
  */

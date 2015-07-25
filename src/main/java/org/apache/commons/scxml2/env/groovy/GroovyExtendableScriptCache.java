@@ -16,6 +16,11 @@
  */
 package org.apache.commons.scxml2.env.groovy;
 
+import groovy.lang.GroovyClassLoader;
+import groovy.lang.GroovyCodeSource;
+import groovy.lang.GroovyRuntimeException;
+import groovy.lang.Script;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -24,11 +29,6 @@ import java.security.PrivilegedAction;
 import java.util.LinkedHashMap;
 
 import org.codehaus.groovy.control.CompilerConfiguration;
-
-import groovy.lang.GroovyClassLoader;
-import groovy.lang.GroovyCodeSource;
-import groovy.lang.GroovyRuntimeException;
-import groovy.lang.Script;
 
 /**
  * GroovyExtendableScriptCache is a general purpose and <em>{@link Serializable}</em> Groovy Script cache.
@@ -41,7 +41,7 @@ import groovy.lang.Script;
  * </p>
  * <p>
  * Internally it uses a non-serializable and thus transient {@link GroovyClassLoader}, {@link CompilerConfiguration} and
- * the parent classloader to use.<br/>
+ * the parent classloader to use.<br>
  * To be able to be serializable, the {@link GroovyClassLoader} is automatically (re)created if not defined yet, and for
  * the  {@link CompilerConfiguration} and parent classloader it uses serializable instances of
  * {@link CompilerConfigurationFactory} and {@link ParentClassLoaderFactory} interfaces which either can be configured
@@ -50,13 +50,13 @@ import groovy.lang.Script;
  * <p>
  * The underlying {@link GroovyClassLoader} can be accessed through {@link #getGroovyClassLoader()}, which might be needed
  * to de-serialize previously defined/created classes and objects through this class, from within a containing object
- * readObject(ObjectInputStream in) method.<br/>
+ * readObject(ObjectInputStream in) method.<br>
  * For more information how this works and should be done, see:
  * <a href="http://jira.codehaus.org/browse/GROOVY-1627">Groovy-1627: Deserialization fails to work</a>
  * </p>
  * <p>
  * One other optional feature is script pre-processing which can be configured through an instance of the
- * {@link ScriptPreProcessor} interface (also {@link Serializable} of course).<br/>
+ * {@link ScriptPreProcessor} interface (also {@link Serializable} of course).<br>
  * When configured, the script source will be passed through the {@link ScriptPreProcessor#preProcess(String)} method
  * before being compiled.
  * </p>
@@ -185,11 +185,11 @@ public class GroovyExtendableScriptCache implements Serializable {
     public GroovyExtendableScriptCache() {
     }
 
-    /**
+    /*
      * Hook into the de-serialization process, reloading the transient GroovyClassLoader, CompilerConfiguration and
      * re-generate Script classes through {@link #ensureInitializedOrReloaded()}
      */
-    private void readObject(ObjectInputStream in) throws IOException,ClassNotFoundException {
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         ensureInitializedOrReloaded();
     }
@@ -289,7 +289,7 @@ public class GroovyExtendableScriptCache implements Serializable {
     }
 
     /**
-     * @param scriptCodeBase The CodeSource code base to be used for the compilation of the Groovy scripts.<br/>
+     * @param scriptCodeBase The CodeSource code base to be used for the compilation of the Groovy scripts.<br>
      *                             When null, of zero length or not (at least) starting with a '/',
      *                             the {@link #DEFAULT_SCRIPT_CODE_BASE} will be set instead.
      */

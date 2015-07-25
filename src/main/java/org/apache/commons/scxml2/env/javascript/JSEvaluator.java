@@ -42,7 +42,7 @@ import org.apache.commons.scxml2.model.SCXML;
  * is implemented in the same way as the JEXL expression evaluator i.e. using
  * the Data() function, for example,
  * &lt;assign location="Data(hotelbooking,'hotel/rooms')" expr="2" /&gt;
- * <p>
+ * </p>
  */
 
 public class JSEvaluator implements Evaluator {

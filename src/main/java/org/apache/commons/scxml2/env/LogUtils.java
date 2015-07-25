@@ -31,6 +31,7 @@ public final class LogUtils {
      * @param from The source TransitionTarget
      * @param to The destination TransitionTarget
      * @param transition The Transition that is taken
+     * @param event The event name triggering the transition
      * @return String The human readable log entry
      */
     public static String transToString(final TransitionTarget from,

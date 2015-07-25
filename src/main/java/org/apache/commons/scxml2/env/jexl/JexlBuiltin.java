@@ -51,6 +51,7 @@ public final class JexlBuiltin {
      * Provides the Commons SCXML Data() predicate extension for SCXML documents.
      * @param expression the XPath expression
      * @return the data matching the expression
+     * @throws SCXMLExpressionException A malformed expression exception
      */
     public Object Data(final String expression) throws SCXMLExpressionException {
         return XPathBuiltin.eval(context, expression);
@@ -60,6 +61,7 @@ public final class JexlBuiltin {
      * Provides the Commons SCXML Location() predicate extension for SCXML documents.
      * @param expression the XPath expression
      * @return the location matching the expression
+     * @throws SCXMLExpressionException A malformed expression exception
      */
     public Object Location(final String expression) throws SCXMLExpressionException {
         return XPathBuiltin.evalLocation(context, expression);

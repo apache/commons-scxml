@@ -149,16 +149,17 @@ public class SimpleTransition extends Executable
      * Returns the effective Transition type.
      * <p>
      * A transition type is only effectively internal if:
+     * </p>
      * <ul>
      *   <li>its {@link #getType()} == {@link TransitionType#internal}</li>
      *   <li>its source state {@link #getParent()} {@link State#isComposite()}</li>
      *   <li>all its {@link #getTargets()} are proper descendants of its {@link #getParent()}</li>
      * </ul>
+     * <p>
      * Otherwise it is treated (for determining its exit states) as if it is of type {@link TransitionType#external}
      * </p>
      * @see <a href="http://www.w3.org/TR/2014/CR-scxml-20140313/#SelectingTransitions">
      *     http://www.w3.org/TR/2014/CR-scxml-20140313/#SelectingTransitions</a>
-     * </p>
      * @return true if the effective Transition type is {@link TransitionType#internal}
      */
     public final boolean isTypeInternal() {
@@ -189,10 +190,12 @@ public class SimpleTransition extends Executable
      * </p>
      * <p>
      * If the transition has targets then the transition domain is the compound State parent such that:
+     * </p>
      * <ul>
      *   <li>all states that are exited or entered as a result of taking this transition are descendants of it</li>
      *   <li>no descendant of it has this property</li>
      * </ul>
+     * <p>
      * If there is no such compound state parent, the transition domain effectively becomes the SCXML document itself,
      * which is not a (Transitional)State, and thus null will be returned instead.
      * </p>

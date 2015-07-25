@@ -2893,8 +2893,8 @@ public final class SCXMLReader {
 
         /**
          * Returns true if it is set to read models silently without any model error warning logs.
-         * @return
-         * @see {@link #silent}
+         * @return true if it is set to read models silently without any model error warning logs
+         * @see #silent
          */
         public boolean isSilent() {
             return silent;
@@ -2902,8 +2902,8 @@ public final class SCXMLReader {
 
         /**
          * Turn on/off silent mode (whether to read models silently without any model error warning logs)
-         * @param silent
-         * @see {@link #silent}
+         * @param silent silent mode (whether to read models silently without any model error warning logs)
+         * @see #silent
          */
         public void setSilent(boolean silent) {
             this.silent = silent;
@@ -2911,8 +2911,8 @@ public final class SCXMLReader {
 
         /**
          * Returns true if it is set to check model strictly with throwing exceptions on any model error.
-         * @return
-         * @see {@link #strict}
+         * @return true if it is set to check model strictly with throwing exceptions on any model error
+         * @see #strict
          */
         public boolean isStrict() {
             return strict;
@@ -2920,8 +2920,8 @@ public final class SCXMLReader {
 
         /**
          * Turn on/off strict model (whether to check model strictly with throwing exception on any model error)
-         * @param strict
-         * @see {@link #strict}
+         * @param strict strict model (whether to check model strictly with throwing exception on any model error)
+         * @see #strict
          */
         public void setStrict(boolean strict) {
             this.strict = strict;

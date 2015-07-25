@@ -34,7 +34,10 @@ public final class EffectiveContextMap extends AbstractMap<String, Object> imple
     /** The {@link org.apache.commons.scxml2.Context} for the current state. */
     private final Context leaf;
 
-    /** Constructor. */
+    /**
+     * Constructor.
+     * @param ctx context of the current leave state node
+     */
     public EffectiveContextMap(final Context ctx) {
         super();
         this.leaf = ctx;

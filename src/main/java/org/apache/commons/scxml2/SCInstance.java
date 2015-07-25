@@ -206,7 +206,9 @@ public class SCInstance implements Serializable {
      * If not re-attaching and this state machine instance has been initialized before,
      * it will be initialized again, destroying all existing state!
      * </p>
-     * @param evaluator The evaluator for this state machine instance.
+     * @param evaluator The evaluator for this state machine instance
+     * @param reAttach Flag whether or not re-attaching it
+     * @throws ModelException if {@code evaluator} is null
      */
     protected void setEvaluator(Evaluator evaluator, boolean reAttach) throws ModelException {
         this.evaluator = evaluator;

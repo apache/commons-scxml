@@ -142,8 +142,8 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
      * @param atomicStateIds The set of atomic state ids for the state machine
      * @throws ModelException when the state machine hasn't been properly configured yet, when an unknown or illegal
      * stateId is specified, or when the specified active configuration does not represent a legal configuration.
-     * @see {@link SCInstance#initialize()}
-     * @see {@link SCXMLSemantics#isLegalConfiguration(java.util.Set, ErrorReporter)}
+     * @see SCInstance#initialize()
+     * @see SCXMLSemantics#isLegalConfiguration(java.util.Set, ErrorReporter)
      */
     public synchronized void setConfiguration(Set<String> atomicStateIds) throws ModelException {
         exctx.initialize();

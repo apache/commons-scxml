@@ -55,6 +55,7 @@ public class JSFunctions implements Serializable {
      * Provides the Commons SCXML Data() predicate extension for SCXML documents.
      * @param expression the XPath expression
      * @return the data matching the expression
+     * @throws SCXMLExpressionException A malformed expression exception
      */
     public Object Data(String expression) throws SCXMLExpressionException {
         return XPathBuiltin.eval(ctx, expression);
@@ -64,6 +65,7 @@ public class JSFunctions implements Serializable {
      * Provides the Commons SCXML Location() predicate extension for SCXML documents.
      * @param expression the XPath expression
      * @return the location matching the expression
+     * @throws SCXMLExpressionException A malformed expression exception
      */
     public Object Location(String expression) throws SCXMLExpressionException {
         return XPathBuiltin.evalLocation(ctx, expression);

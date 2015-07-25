@@ -23,9 +23,10 @@ import java.util.List;
  */
 public interface ActionsContainer {
 
-    /** The <if> ActionsContainer element name */
+    /** The &lt;if&gt; ActionsContainer element name */
     String ELEM_IF = "if";
-    /** The <foreach> ActionsContainer element name */
+
+    /** The &lt;foreach&gt; ActionsContainer element name */
     String ELEM_FOREACH = "foreach";
 
     /**
@@ -34,6 +35,7 @@ public interface ActionsContainer {
      * @return Returns the element type
      */
     String getContainerElementName();
+
     /**
      * Get the executable actions contained in this &lt;container&gt;.
      *

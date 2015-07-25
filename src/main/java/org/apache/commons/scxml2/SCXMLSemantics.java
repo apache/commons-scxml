@@ -29,20 +29,20 @@ import org.apache.commons.scxml2.model.SCXML;
  * from the <code>SCXMLExecutor</code> and therefore make it pluggable.</p>
  * <p>
  * From an SCXML execution POV, there are only three entry points needed into the Algorithm, namely:
- * <ul>
- *     <li>Performing the initialization of the state machine and completing a first macro step,
- *     see: {@link #firstStep(SCXMLExecutionContext)}. The state machine thereafter should be ready
- *     for processing external events (or be terminated already)</li>
- *     <li>Processing a single external event and completing the macro step for it, after which the
- *     state machine should be ready for processing another external event (if any), or be terminated already.
- *     See: {@link #nextStep(SCXMLExecutionContext, TriggerEvent)}.
- *     </li>
- *     <li>Finally, if the state machine terminated ({@link SCXMLExecutionContext#isRunning()} == false), after either
- *     of the above steps, finalize the state machine by performing the final step.
- *     See: {@link #finalStep(SCXMLExecutionContext)}.
- *     </li>
- * </ul>
  * </p>
+ * <ul>
+ *  <li>Performing the initialization of the state machine and completing a first macro step,
+ *   see: {@link #firstStep(SCXMLExecutionContext)}. The state machine thereafter should be ready
+ *   for processing external events (or be terminated already)</li>
+ *  <li>Processing a single external event and completing the macro step for it, after which the
+ *   state machine should be ready for processing another external event (if any), or be terminated already.
+ *   See: {@link #nextStep(SCXMLExecutionContext, TriggerEvent)}.
+ *  </li>
+ *  <li>Finally, if the state machine terminated ({@link SCXMLExecutionContext#isRunning()} == false), after either
+ *   of the above steps, finalize the state machine by performing the final step.
+ *   See: {@link #finalStep(SCXMLExecutionContext)}.
+ *   </li>
+ * </ul>
  * <p>After a state machine has been terminated you can re-initialize the execution context, and start again.</p>
  * <p>
  * Except for the loading of the SCXML document and (re)initializing the {@link SCXMLExecutionContext}, the above steps
@@ -165,7 +165,7 @@ public interface SCXMLSemantics {
      * </p>
      * <p>
      * This method is also first invoked when manually initializing the status of a state machine through
-     * {@link SCXMLExecutor#setConfiguration(java.util.Set}.
+     * {@link SCXMLExecutor#setConfiguration(java.util.Set)}.
      * </p>
      * @param states a set of states
      * @param errRep ErrorReporter to report detailed error info if needed

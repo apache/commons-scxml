@@ -121,6 +121,16 @@ public class SimpleErrorReporter implements ErrorReporter, Serializable {
     /**
      * Final handling of the resulting errorMessage build by {@link #onError(String, String, Object)} onError}.
      * <p>The default implementation write the errorMessage as a warning to the log.</p>
+     *
+     * @param errorCode
+     *            one of the ErrorReporter's constants
+     * @param errDetail
+     *            human readable description
+     * @param errCtx
+     *            typically an SCXML element which caused an error,
+     *            may be accompanied by additional information
+     * @param errorMessage
+     *            human readable detail of the error including the state, transition and data
      */
     protected void handleErrorMessage(final String errorCode, final String errDetail,
                                final Object errCtx, final CharSequence errorMessage) {
