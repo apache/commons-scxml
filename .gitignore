@@ -1,2 +1,6 @@
 target
 site-content
+.idea
+*.iml
+*.ipr
+*.iws
