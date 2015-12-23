@@ -199,8 +199,6 @@
     <commons.scmPubCheckoutDirectory>site-content</commons.scmPubCheckoutDirectory>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <!-- Overriding signatures version because org.codehaus.mojo.signature:java16:1.0 cannot detect javax.xml.stream.XMLInputFactory. -->
-    <commons.animal-sniffer.signature.version>1.1</commons.animal-sniffer.signature.version>
     <!-- Allow override of the logging level -->
     <simplelog.defaultlog>fatal</simplelog.defaultlog>
   </properties>
