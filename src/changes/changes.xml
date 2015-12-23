@@ -20,21 +20,24 @@
 
   <properties>
     <title>Commons SCXML Changes</title>
-    <author email="rahul@apache.org">Rahul Akolkar</author>
   </properties>
 
   <body>
 
     <section name="About this document">
       <ul>
-        <li>The latest release of Commons SCXML is version 0.8.</li>
+        <li>The latest release of Commons SCXML is version 0.9.</li>
         <li>If you are interested in helping the project, join us on the
             <a href="mail-lists.html">commons-dev mailing list</a></li>
       </ul>
     </section>
 
-    <release version="2.0" date="In SVN trunk"
+    <release version="2.0" date="In Git master"
       description="Latest unreleased code">
+
+      <action dev="ate" type="update" issue="SCXML-241">
+        [12-23-2015] Move to Java 8 as minimum.
+      </action>
 
       <action dev="woonsan" type="fix" issue="SCXML-233">
         [07-12-2015] SCInstance becomes not serialzable after triggering event. 
