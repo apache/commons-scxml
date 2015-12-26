@@ -17,19 +17,13 @@
 package org.apache.commons.scxml2.model;
 
 import java.io.IOException;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.FactoryConfigurationError;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.PathResolver;
 import org.apache.commons.scxml2.SCXMLExpressionException;
-import org.w3c.dom.*;
-import org.xml.sax.SAXException;
+import org.apache.commons.scxml2.io.ContentParser;
 
 /**
  * The class in this SCXML object model that corresponds to the
@@ -180,7 +174,7 @@ public class Assign extends Action implements PathResolverHolder {
         ctx.setLocal(getNamespacesKey(), getNamespaces());
         Object data;
         if (src != null && src.trim().length() > 0) {
-            data = getSrcNode();
+            data = getSrcData();
         } else {
             data = evaluator.eval(ctx, expr);
         }
@@ -192,41 +186,28 @@ public class Assign extends Action implements PathResolverHolder {
         // TODO: introduce a optional 'trace.change' setting or something alike to enable .change events,
        //        but don't do this by default as it can interfere with transitions not expecting such events
         /*
-        if ((Evaluator.XPATH_DATA_MODEL.equals(evaluator.getSupportedDatamodel()) && location.startsWith("$") && ctx.has(location.substring(1))
-                || ctx.has(location))) {
             TriggerEvent ev = new TriggerEvent(location + ".change", TriggerEvent.CHANGE_EVENT);
             exctx.getInternalIOProcessor().addEvent(ev);
-        }
         */
         ctx.setLocal(getNamespacesKey(), null);
     }
 
     /**
-     * Get the {@link Node} the "src" attribute points to.
+     * Get the data the "src" attribute points to.
      *
-     * @return The node the "src" attribute points to.
+     * @return The data the "src" attribute points to.
      */
-    private Node getSrcNode() {
+    private Object getSrcData() {
         String resolvedSrc = src;
         if (pathResolver != null) {
             resolvedSrc = pathResolver.resolvePath(src);
         }
-        Document doc = null;
         try {
-            doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(resolvedSrc);
-        } catch (FactoryConfigurationError t) {
-            logError(t);
-        } catch (SAXException e) {
-            logError(e);
+            return ContentParser.DEFAULT_PARSER.parseResource(resolvedSrc);
         } catch (IOException e) {
             logError(e);
-        } catch (ParserConfigurationException e) {
-            logError(e);
-        }
-        if (doc == null) {
             return null;
         }
-        return doc.getDocumentElement();
     }
 
     /**

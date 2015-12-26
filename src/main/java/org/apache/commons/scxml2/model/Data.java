@@ -40,7 +40,7 @@ public class Data implements NamespacePrefixesHolder, Serializable {
     private String id;
 
     /**
-     * The URL to get the XML data tree from.
+     * The URL to get the data from.
      */
     private String src;
 
@@ -50,10 +50,15 @@ public class Data implements NamespacePrefixesHolder, Serializable {
     private String expr;
 
     /**
-     * The child XML data tree, parsed as a Node, cloned per execution
+     * The child XML data tree, parsed as a Node
      * instance.
      */
     private Node node;
+
+    /**
+     * The parsed value for the child XML data tree or the external src (with early-binding), to be cloned before usage
+     */
+    private Object value;
 
     /**
      * The current XML namespaces in the SCXML document for this action node,
@@ -61,16 +66,6 @@ public class Data implements NamespacePrefixesHolder, Serializable {
      * above, given the Builtin API.
      */
     private Map<String, String> namespaces;
-
-    /**
-     * Constructor.
-     */
-    public Data() {
-        this.id = null;
-        this.src = null;
-        this.expr = null;
-        this.node = null;
-    }
 
     /**
      * Get the id.
@@ -91,7 +86,7 @@ public class Data implements NamespacePrefixesHolder, Serializable {
     }
 
     /**
-     * Get the URL where the XML data tree resides.
+     * Get the URL for external data.
      *
      * @return String The URL.
      */
@@ -100,7 +95,7 @@ public class Data implements NamespacePrefixesHolder, Serializable {
     }
 
     /**
-     * Set the URL where the XML data tree resides.
+     * Set the URL for external data.
      *
      * @param src The source URL.
      */
@@ -127,21 +122,43 @@ public class Data implements NamespacePrefixesHolder, Serializable {
     }
 
     /**
-     * Get the XML data tree.
+     * Get the child XML data tree.
      *
-     * @return Node The XML data tree, parsed as a <code>Node</code>.
+     * @return Node The child XML data tree, parsed as a standalone DocumentFragment <code>Node</code>.
      */
     public final Node getNode() {
         return node;
     }
 
     /**
-     * Set the XML data tree.
+     * Set the child XML data tree.
      *
-     * @param node The XML data tree, parsed as a <code>Node</code>.
+     * @param node The child XML data tree, parsed as a standalone DocumentFragment <code>Node</code>.
      */
     public final void setNode(final Node node) {
         this.node = node;
+    }
+
+    /**
+     * Get the parsed value for the child XML data tree or the external src (with early-binding), to be cloned before usage.
+     * @see #setValue(Object)
+     * @return The parsed Data value
+     */
+    public final Object getValue() {
+        return value;
+    }
+
+    /**
+     * Sets the parsed value for the child XML data tree or the external src (with early-binding), to be cloned before usage.
+     * @param value a serializable object:
+     * <ul>
+     *   <li>"Raw" JSON mapped object tree (array->ArrayList, object->LinkedHashMap based)</li>
+     *   <li>XML Node (equals {@link #getNode()})</li>
+     *   <li>space-normalized String</li>
+     * </ul>
+     */
+    public final void setValue(final Object value) {
+        this.value = value;
     }
 
     /**

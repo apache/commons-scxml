@@ -18,7 +18,6 @@ package org.apache.commons.scxml2.env.groovy;
 
 import groovy.lang.Script;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +30,7 @@ import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.EvaluatorProvider;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.SCXMLSystemContext;
-import org.apache.commons.scxml2.XPathBuiltin;
+import org.apache.commons.scxml2.env.AbstractBaseEvaluator;
 import org.apache.commons.scxml2.env.EffectiveContextMap;
 import org.apache.commons.scxml2.model.SCXML;
 
@@ -41,7 +40,7 @@ import org.apache.commons.scxml2.model.SCXML;
  * This implementation itself is thread-safe, so you can keep singleton for efficiency.
  * </P>
  */
-public class GroovyEvaluator implements Evaluator, Serializable {
+public class GroovyEvaluator extends AbstractBaseEvaluator {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
@@ -256,26 +255,13 @@ public class GroovyEvaluator implements Evaluator, Serializable {
      */
     public void evalAssign(final Context ctx, final String location, final Object data, final AssignType type,
                            final String attr) throws SCXMLExpressionException {
-
-        final Object loc = evalLocation(ctx, location);
-        if (loc != null) {
-
-            if (XPathBuiltin.isXPathLocation(ctx, loc)) {
-                XPathBuiltin.assign(ctx, loc, data, type, attr);
-            }
-            else {
-                final StringBuilder sb = new StringBuilder(location).append("=").append(ASSIGN_VARIABLE_NAME);
-                try {
-                    ctx.getVars().put(ASSIGN_VARIABLE_NAME, data);
-                    eval(ctx, sb.toString());
-                }
-                finally {
-                    ctx.getVars().remove(ASSIGN_VARIABLE_NAME);
-                }
-            }
+        final StringBuilder sb = new StringBuilder(location).append("=").append(ASSIGN_VARIABLE_NAME);
+        try {
+            ctx.getVars().put(ASSIGN_VARIABLE_NAME, data);
+            eval(ctx, sb.toString());
         }
-        else {
-            throw new SCXMLExpressionException("evalAssign - cannot resolve location: '" + location + "'");
+        finally {
+            ctx.getVars().remove(ASSIGN_VARIABLE_NAME);
         }
     }
 

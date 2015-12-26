@@ -29,23 +29,17 @@ import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.EvaluatorProvider;
 import org.apache.commons.scxml2.SCXMLExpressionException;
-import org.apache.commons.scxml2.XPathBuiltin;
+import org.apache.commons.scxml2.env.AbstractBaseEvaluator;
 import org.apache.commons.scxml2.env.EffectiveContextMap;
 import org.apache.commons.scxml2.model.SCXML;
 
 /**
  * Embedded JavaScript expression evaluator for SCXML expressions. This
  * implementation is a just a 'thin' wrapper around the Javascript engine in
- * JDK 6 (based on on Mozilla Rhino 1.6.2).
- * <p>
- * Mozilla Rhino 1.6.2 does not support E4X so accessing the SCXML data model
- * is implemented in the same way as the JEXL expression evaluator i.e. using
- * the Data() function, for example,
- * &lt;assign location="Data(hotelbooking,'hotel/rooms')" expr="2" /&gt;
- * </p>
+ * JDK 8.
  */
 
-public class JSEvaluator implements Evaluator {
+public class JSEvaluator extends AbstractBaseEvaluator {
 
     /**
      * Unique context variable name used for temporary reference to assign data (thus must be a valid variable name)
@@ -78,14 +72,10 @@ public class JSEvaluator implements Evaluator {
 
     /** Pattern for recognizing the SCXML In() special predicate. */
     private static final Pattern IN_FN = Pattern.compile("In\\(");
-    /** Pattern for recognizing the Commons SCXML Data() builtin function. */
-    private static final Pattern DATA_FN = Pattern.compile("Data\\(");
-    /** Pattern for recognizing the Commons SCXML Location() builtin function. */
-    private static final Pattern LOCATION_FN = Pattern.compile("Location\\(");
 
     // INSTANCE VARIABLES
 
-    private ScriptEngineManager factory;
+    private transient ScriptEngineManager factory;
 
     // CONSTRUCTORS
 
@@ -98,9 +88,29 @@ public class JSEvaluator implements Evaluator {
 
     // INSTANCE METHODS
 
+    protected ScriptEngineManager getFactory() {
+        if (factory == null) {
+            factory = new ScriptEngineManager();
+        }
+        return factory;
+    }
+
     @Override
     public String getSupportedDatamodel() {
         return SUPPORTED_DATA_MODEL;
+    }
+
+    /**
+     * @return Returns JavaScript "undefined" for null, otherwise inherited behavior
+     */
+    @Override
+    public Object cloneData(final Object data) {
+        if (data == null) {
+            ScriptEngine engine = getFactory().getEngineByName("JavaScript");
+            Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
+            return bindings.get("undefined");
+        }
+        return super.cloneData(data);
     }
 
     /**
@@ -117,8 +127,8 @@ public class JSEvaluator implements Evaluator {
     /**
      * Evaluates the expression using a new Javascript engine obtained from
      * factory instantiated in the constructor. The engine is supplied with
-     * a new JSBindings that includes the SCXML Context and
-     * <code>Data()</code> functions are replaced with an equivalent internal
+     * a new JSBindings that includes the SCXML Context and SCXML builtin
+     * <code>In()</code> function is replaced with an equivalent internal
      * Javascript function.
      *
      * @param context    SCXML context.
@@ -142,13 +152,11 @@ public class JSEvaluator implements Evaluator {
             JSContext effectiveContext = getEffectiveContext((JSContext) context);
 
             // ... initialize
-            ScriptEngine engine = factory.getEngineByName("JavaScript");
+            ScriptEngine engine = getFactory().getEngineByName("JavaScript");
             Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
 
             // ... replace built-in functions
             String jsExpression = IN_FN.matcher(expression).replaceAll("_builtin.In(");
-            jsExpression = DATA_FN.matcher(jsExpression).replaceAll("_builtin.Data(");
-            jsExpression = LOCATION_FN.matcher(jsExpression).replaceAll("_builtin.Location(");
 
             // ... evaluate
             JSBindings jsBindings = new JSBindings(effectiveContext, bindings);
@@ -196,8 +204,8 @@ public class JSEvaluator implements Evaluator {
     /**
      * Evaluates a location expression using a new Javascript engine obtained from
      * factory instantiated in the constructor. The engine is supplied with
-     * a new JSBindings that includes the SCXML Context and
-     * <code>Data()</code> functions are replaced with an equivalent internal
+     * a new JSBindings that includes the SCXML Context and SCXML builtin
+     * <code>In()</code> function is replaced with an equivalent internal
      * Javascript function.
      *
      * @param context    FSM context.
@@ -221,32 +229,20 @@ public class JSEvaluator implements Evaluator {
      */
     public void evalAssign(final Context ctx, final String location, final Object data, final AssignType type,
                            final String attr) throws SCXMLExpressionException {
-
-        Object loc = evalLocation(ctx, location);
-
-        if (loc != null) {
-            if (XPathBuiltin.isXPathLocation(ctx, loc)) {
-                XPathBuiltin.assign(ctx, loc, data, type, attr);
-            } else {
-                StringBuilder sb = new StringBuilder(location).append("=").append(ASSIGN_VARIABLE_NAME);
-
-                try {
-                    ctx.getVars().put(ASSIGN_VARIABLE_NAME, data);
-                    eval(ctx, sb.toString());
-                } finally {
-                    ctx.getVars().remove(ASSIGN_VARIABLE_NAME);
-                }
-            }
-        } else {
-            throw new SCXMLExpressionException("evalAssign - cannot resolve location: '" + location + "'");
+        StringBuilder sb = new StringBuilder(location).append("=").append(ASSIGN_VARIABLE_NAME);
+        try {
+            ctx.getVars().put(ASSIGN_VARIABLE_NAME, data);
+            eval(ctx, sb.toString());
+        } finally {
+            ctx.getVars().remove(ASSIGN_VARIABLE_NAME);
         }
     }
 
     /**
      * Executes the script using a new Javascript engine obtained from
      * factory instantiated in the constructor. The engine is supplied with
-     * a new JSBindings that includes the SCXML Context and
-     * <code>Data()</code> functions are replaced with an equivalent internal
+     * a new JSBindings that includes the SCXML Context and SCXML builtin
+     * <code>In()</code> function is replaced with an equivalent internal
      * Javascript function.
      *
      * @param ctx    SCXML context.

@@ -17,12 +17,9 @@
 package org.apache.commons.scxml2.env.jexl;
 
 import org.apache.commons.scxml2.Builtin;
-import org.apache.commons.scxml2.SCXMLExpressionException;
-import org.apache.commons.scxml2.XPathBuiltin;
 
 /**
- * Global JEXL namespace functor, providing the standard SCXML In() operator and the Commons SCXML extensions
- * for Data() and Location() to support XPath datamodel access.
+ * Global JEXL namespace functor, providing the standard SCXML In() predicate.
  */
 public final class JexlBuiltin {
     /**
@@ -45,25 +42,5 @@ public final class JexlBuiltin {
      */
     public boolean In(final String state) {
         return Builtin.isMember(context, state);
-    }
-
-    /**
-     * Provides the Commons SCXML Data() predicate extension for SCXML documents.
-     * @param expression the XPath expression
-     * @return the data matching the expression
-     * @throws SCXMLExpressionException A malformed expression exception
-     */
-    public Object Data(final String expression) throws SCXMLExpressionException {
-        return XPathBuiltin.eval(context, expression);
-    }
-
-    /**
-     * Provides the Commons SCXML Location() predicate extension for SCXML documents.
-     * @param expression the XPath expression
-     * @return the location matching the expression
-     * @throws SCXMLExpressionException A malformed expression exception
-     */
-    public Object Location(final String expression) throws SCXMLExpressionException {
-        return XPathBuiltin.evalLocation(context, expression);
     }
 }

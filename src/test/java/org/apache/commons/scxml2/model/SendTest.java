@@ -52,8 +52,8 @@ public class SendTest {
         Map<String, Object> firstPayload = (Map<String, Object>) payloads.get(0);
         Assert.assertEquals("Only two in the namelist data expected.", 2, firstPayload.size());
 
-        Assert.assertEquals("Unexpected value for 'one'.", 1.0, firstPayload.get("one"));
-        Assert.assertEquals("Unexpected value for 'two'.", 2.0, firstPayload.get("two"));
+        Assert.assertEquals("Unexpected value for 'one'.", 1, firstPayload.get("one"));
+        Assert.assertEquals("Unexpected value for 'two'.", 2, firstPayload.get("two"));
 
         // Note: the standard allows specifying the value of the namelist attribute of the <send> element
         // as space-separated list of values, which implies an ordered sequence of items.

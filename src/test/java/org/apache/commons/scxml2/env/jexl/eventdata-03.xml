@@ -22,12 +22,7 @@
        initial="ten">
 
     <datamodel>
-        <data id="rootdata">
-            <root xmlns="">
-                <one>1</one>
-                <two>2</two>
-            </root>
-        </data>
+        <data id="rootdata">{ "root" : { "one" : 1, "two" : 2 } }</data>
     </datamodel>
 
     <state id="ten">
@@ -36,8 +31,8 @@
 
     <state id="twenty">
         <onentry>
-            <cs:var name="one" expr="Data('number($rootdata/root/one)')"/>
-            <cs:var name="two" expr="Data('number($rootdata/root/two)')"/>
+            <cs:var name="one" expr="rootdata.root.one"/>
+            <cs:var name="two" expr="rootdata.root.two"/>
             <send event="event.bar" namelist="one two"/>
         </onentry>
         <transition event="event.bar"

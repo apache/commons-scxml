@@ -18,7 +18,7 @@
 <!-- A fictitious state machine used by test cases. -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
        version="1.0"
-       datamodel="jexl"
+       datamodel="ecmascript"
        initial="start">
 
     <datamodel>
@@ -71,7 +71,7 @@
             <assign location="hotel.hotel.stay" expr="airline.flight.dates[1]"/>
             <log label="subtree copy - delete (should be null)" expr="hotel.hotel.stay['delete']"/>
         </onentry>
-        <transition cond="hotel.hotel.stay.startdate eq '01/26/2009'" target="end" />
+        <transition cond="hotel.hotel.stay.startdate == '01/26/2009'" target="end" />
     </state>
 
     <final id="end"/>

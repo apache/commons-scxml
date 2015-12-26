@@ -17,7 +17,6 @@
 -->
 <!-- Test "src" attribute of assign element -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
-       xmlns:rad="http://foo/bar"
        version="1.0"
        datamodel="jexl"
        initial="assign1">
@@ -25,23 +24,15 @@
   <state id="assign1">
 
     <datamodel>
-        <data id="foo">
-            <root xmlns="">
-                <foo/>
-            </root>
-        </data>
-        <data id="bar">
-            <root xmlns="">
-                <bar>5</bar>
-            </root>
-        </data>
+        <data id="foo">{ "root" : { "foo" : null } }</data>
+        <data id="bar">{ "root" : { "bar" : 5 } }</data>
     </datamodel>
 
     <onentry>
-        <assign location="Location('foo/root/foo')" src="assign-src.xml"/>
+        <assign location="foo.root.foo" src="assign-src.json"/>
     </onentry>
 
-    <transition cond="Data('number(foo/root/foo/root/a)') + Data('number(bar/root/bar)') eq 15"
+    <transition cond="foo.root.foo.root.a + bar.root.bar eq 15"
                 target="assign2" />
 
   </state>
@@ -49,19 +40,15 @@
   <state id="assign2">
 
     <datamodel>
-      <data id="jira51data1">
-          <rad:timeout>10</rad:timeout>
-      </data> 
-      <data id="jira51data2">
-          <rad:short xmlns="">20</rad:short>
-      </data>
+      <data id="jira51data1">{ "timeout" : 10 }</data>
+      <data id="jira51data2">{ "short" : 20 }</data>
     </datamodel>
 
     <onentry>
-        <assign location="Location('jira51data1/rad:timeout')" expr="Data('jira51data2/rad:short/text()')"/>
+        <assign location="jira51data1.timeout" expr="jira51data2.short"/>
     </onentry>
 
-    <transition cond="Data('number(jira51data1/rad:timeout)') eq 20"
+    <transition cond="jira51data1.timeout eq 20"
                 target="assign3" />
 
   </state>

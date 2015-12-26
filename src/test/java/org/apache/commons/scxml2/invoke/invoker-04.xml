@@ -25,9 +25,7 @@
        initial="wait">
 
     <datamodel>
-        <data id="foo">
-            <bar>foo</bar>
-        </data>
+        <data id="foo">{ "bar" : "foo"}</data>
     </datamodel>
 
     <state id="wait">
@@ -36,14 +34,14 @@
     
     <state id="first">
         <invoke src="FirstTestSrc" type="x-test">
-            <param name="ding" expr="Data('string($foo)')"/>
+            <param name="ding" expr="foo.bar"/>
         </invoke>
         <transition event="test.trigger" target="second"/>
     </state>
 
     <state id="second">
         <invoke src="SecondTestSrc" type="x-test">
-            <param name="dang" expr="Data('$foo/node()')"/>
+            <param name="dang" expr="foo"/>
         </invoke>
     </state>
 </scxml>

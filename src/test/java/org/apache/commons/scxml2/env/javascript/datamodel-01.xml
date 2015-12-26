@@ -19,7 +19,7 @@
      Meant to illustrate the usage of SCXML <datamodel> element -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
        version="1.0"
-       datamodel="jexl"
+       datamodel="ecmascript"
        initial="main">
 
     <!-- Root or document datamodel -->
@@ -46,7 +46,7 @@
                 <assign location="mainvar" expr="10" />
             </onentry>
             <transition event="done.state.ten"
-             cond="mainvar eq 10 and maindata.root.a.b.c eq 'beta'"
+             cond="mainvar == 10 &amp;&amp; maindata.root.a.b.c == 'beta'"
              target="twenty" />
             <onexit>
                 <assign location="maindata.root.a.b.c" expr="'gamma'" />
@@ -58,7 +58,7 @@
                 <assign location="mainvar" expr="20" />
             </onentry>
             <transition event="done.state.twenty"
-             cond="maindata.root.a.b.c eq 'gamma' and mainvar eq 20"
+             cond="maindata.root.a.b.c == 'gamma' &amp;&amp; mainvar == 20"
              target="thirty" />
             <onexit>
                 <assign location="docdata.root.foo"
@@ -72,7 +72,7 @@
                  did not have data at 'root.foo.a.b.d' to begin with,
                  the data model was manipulated by the <assign> above -->
             <transition event="done.state.thirty"
-             cond="docdata.root.foo.a.b.d + docdata.root.foo.a.b.e eq 579.789"
+             cond="docdata.root.foo.a.b.d + docdata.root.foo.a.b.e == 579.789"
              target="forty" />
         </state>
 

@@ -27,8 +27,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 // Tests for 4.3.1 in WD-scxml-20080516
 public class InvokeParamNameTest {
@@ -68,15 +66,14 @@ public class InvokeParamNameTest {
         Assert.assertEquals("foo", e.getValue());
     }
 
-    // Tests "param" element with a "name" attribute and "expr" attribute locating a node
+    // Tests "param" element with a "name" attribute and "expr" attribute locating a data id
     @Test
     public void testSoleNameLocation() throws Exception {
         trigger(); trigger();
-        final Element e = (Element)lastParams.values().iterator().next();
-        Assert.assertNotNull(e);
-        Assert.assertEquals("bar", e.getNodeName());
-        Assert.assertEquals(Node.TEXT_NODE, e.getFirstChild().getNodeType());
-        Assert.assertEquals("foo", e.getFirstChild().getNodeValue());
+        final Map m = (Map)lastParams.values().iterator().next();
+        Assert.assertNotNull(m);
+        Assert.assertEquals("bar", m.keySet().iterator().next());
+        Assert.assertEquals("foo", m.get("bar"));
     }
 
     public static class DummyInvoker implements Invoker {

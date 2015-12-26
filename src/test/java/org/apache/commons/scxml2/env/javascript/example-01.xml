@@ -27,16 +27,21 @@
 
   <datamodel>
     <data id='jungle'>
-      <animals xmlns=''>
-        <lion>
-          <name>Simba</name>
-          <age>12</age>
-        </lion>
-        <tiger>
-          <name>Sher Khan</name>
-          <age>13</age>
-        </tiger>
-      </animals>
+      {
+        "animals" :
+        {
+          "lion" :
+          {
+            "name" : "Simba",
+            "age" : 12
+          },
+          "tiger" :
+          {
+            "name" : "Sher Khan",
+            "age" : 13
+          }
+        }
+      }
     </data>
   </datamodel>
 
@@ -88,11 +93,11 @@
 
     <state id='javascript.datamodel'>
       <onentry>
-        <log expr='"Lion : " + Data("string(jungle/animals/lion/name)")  + "," + Data("string(jungle/animals/lion/age)")'  />
-        <log expr='"Tiger: " + Data("string(jungle/animals/tiger/name)") + "," + Data("string(jungle/animals/tiger/age)")' />
-        <assign location='Location("jungle/animals/lion/age")' expr='Data("jungle/animals/tiger/age")' type="replace"/>
-        <log expr='"Lion : " + Data("string(jungle/animals/lion/name)")  + "," + Data("string(jungle/animals/lion/age)")'  />
-        <log expr='"Tiger: " + Data("string(jungle/animals/tiger/name)") + "," + Data("string(jungle/animals/tiger/age)")' />
+        <log expr='"Lion : " + jungle.animals.lion.name  + "," + jungle.animals.lion.age'  />
+        <log expr='"Tiger: " + jungle.animals.tiger.name  + "," + jungle.animals.tiger.age'  />
+        <assign location='jungle.animals.lion.age' expr='jungle.animals.tiger.age'/>
+        <log expr='"Lion : " + jungle.animals.lion.name  + "," + jungle.animals.lion.age'  />
+        <log expr='"Tiger: " + jungle.animals.tiger.name  + "," + jungle.animals.tiger.age'  />
       </onentry>
       <transition target='javascript.functions.inline' />
     </state>
@@ -128,11 +133,11 @@
     <state id='javascript.functions.print'>
       <onentry>
         <log expr='function debug(msg)
-                        { println("** " + msg + " **");
+                        { print("** " + msg + " **");
                           return "ok"
                         }
 
-               debug("This is the Javascript println() function")' />
+               debug("This is the Javascript print() function")' />
       </onentry>
       <transition target='javascript.eventdatamap.example' />
     </state>

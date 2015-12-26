@@ -18,6 +18,7 @@
 package org.apache.commons.scxml2.env.javascript;
 
 import java.io.StringReader;
+import java.util.Map;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -52,25 +53,25 @@ public class JSEvaluatorTest {
 
     private static final String BAD_EXPRESSION = ">";
     private static final String SCRIPT         = "<?xml version='1.0'?>" +
-                                                 "<scxml xmlns        = 'http://www.w3.org/2005/07/scxml' " +
-                                                        "xmlns:scxml  = 'http://commons.apache.org/scxml' " +
-                                                        "datamodel = 'ecmascript' " +
-                                                        "initial = 'start' "  +
-                                                        "version      = '1.0'>" +
-                                                  "<datamodel>"           +
-                                                  "<data id='forest'>"  +
-                                                   "<tree xmlns=''>"      +
-                                                   "<branch>"             +
-                                                   "<twig>leaf</twig>"    +
-                                                   "</branch>"            +
-                                                   "</tree>"              +
-                                                  "</data>"               +
-                                                  "</datamodel>"          +
-                                                  "<state id='start'>"              +
-                                                  "<transition target='end' />"     +
-                                                  "</state>"                        +
-                                                  "<state id='end' final='true' />" +
-                                                  "</scxml>";
+                                                 "<scxml xmlns = 'http://www.w3.org/2005/07/scxml'" +
+                                                 "       xmlns:scxml = 'http://commons.apache.org/scxml'" +
+                                                 "       datamodel = 'ecmascript'" +
+                                                 "       initial = 'start'"  +
+                                                 "       version = '1.0'>" +
+                                                 "  <datamodel>" +
+                                                 "    <data id='forest'>" +
+                                                 "      { \"tree\" :" +
+                                                 "        { \"branch\" :" +
+                                                 "          { \"twig\" : \"leaf\" }" +
+                                                 "        }" +
+                                                 "      }" +
+                                                 "    </data>" +
+                                                 "  </datamodel>" +
+                                                 "  <state id='start'>" +
+                                                 "    <transition target='end'/>" +
+                                                 "  </state>" +
+                                                 "  <state id='end' final='true'/>" +
+                                                 "</scxml>";
 
     private static final TestItem[] SIMPLE_EXPRESSIONS = {
             new TestItem("'FIB: ' + (1 + 1 + 2 + 3 + 5)",new String("FIB: 12")),
@@ -241,9 +242,9 @@ public class JSEvaluatorTest {
      */    
     @Test
     public void testDataModelExpressions() throws Exception {
-        Assert.assertEquals("Invalid result: " + "Data('string($forest/tree/branch/twig)')",
+        Assert.assertEquals("Invalid result: " + "forest.tree.branch.twig",
                      "leaf",
-                     evaluator.eval(context,"Data('string($forest/tree/branch/twig)')"));
+                     evaluator.eval(context,"forest.tree.branch.twig"));
     }
 
     /**
@@ -255,8 +256,8 @@ public class JSEvaluatorTest {
         Assert.assertNull(context.get("forestx"));
 
         try {
-            evaluator.eval(context,"Data(forestx,'string($forestx/tree/branch/twig)')");
-            Assert.fail          ("Evaluated invalid Data() expression: " + "Data('string($forestx/tree/branch/twig)')");
+            evaluator.eval(context,"forestx.tree.branch.twig");
+            Assert.fail          ("Evaluated invalid DataModel expression: " + "forestx.tree.branch.twig");
 
         } catch (SCXMLExpressionException x) {
             // expected, ignore
@@ -269,17 +270,11 @@ public class JSEvaluatorTest {
      */    
     @Test
     public void testDataModelLocations() throws Exception {
-            Assert.assertNotNull(context.get("forest"));
-            XPath  xpath = XPathFactory.newInstance().newXPath();
-            Node   node  = (Node)   context.get("forest");
-            Node   twig  = (Node)   xpath.evaluate("tree/branch/twig", node, XPathConstants.NODE);
+        Assert.assertTrue("Invalid result: forest instanceof Map",
+                evaluator.eval(context, "forest") instanceof Map);
 
-            Assert.assertTrue  ("Invalid result: " + "Data(forest,'$forest/tree/branch/twig')",
-                          evaluator.eval(context,"Data('$forest/tree/branch/twig')") instanceof Element);
-
-            Assert.assertSame ("Incorrect node returned: " + "Data('$forest/tree/branch/twig')",
-                         twig,
-                         evaluator.eval(context,"Data('$forest/tree/branch/twig')"));
+        Assert.assertTrue("Invalid result: forest.tree.branch.twig instanceof String",
+                evaluator.eval(context, "forest.tree.branch.twig") instanceof String);
     }
 
     /**
@@ -289,8 +284,8 @@ public class JSEvaluatorTest {
     @Test
     public void testInvalidDataModelLocations() throws Exception {
             Assert.assertNotNull(context.get("forest"));
-            Assert.assertNull("Invalid result: " + "Data('$forest/tree/branch/twigx')",
-                       evaluator.eval(context,"Data('$forest/tree/branch/twigx')"));
+            Assert.assertNull("Invalid result: " + "forest.tree.branch.twigx",
+                       evaluator.eval(context,"forest.tree.branch.twigx"));
     }
 
     /**

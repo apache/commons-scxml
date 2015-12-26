@@ -62,6 +62,11 @@ public class MinimalEvaluator implements Evaluator, Serializable {
     }
 
     @Override
+    public Object cloneData(final Object data) {
+        return data;
+    }
+
+    @Override
     public Object eval(final Context ctx, final String expr) throws SCXMLExpressionException {
         return expr;
     }

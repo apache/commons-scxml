@@ -76,6 +76,12 @@ public interface Evaluator {
     String getSupportedDatamodel();
 
     /**
+     * @param data data to be cloned
+     * @return A deep clone of the data
+     */
+    Object cloneData(Object data);
+
+    /**
      * Evaluate an expression returning a data value
      *
      * @param ctx variable context

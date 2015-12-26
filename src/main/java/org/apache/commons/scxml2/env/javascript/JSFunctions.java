@@ -20,12 +20,9 @@ import java.io.Serializable;
 
 import org.apache.commons.scxml2.Builtin;
 import org.apache.commons.scxml2.Context;
-import org.apache.commons.scxml2.SCXMLExpressionException;
-import org.apache.commons.scxml2.XPathBuiltin;
 
 /**
- * Custom Javascript engine function providing the SCXML In() predicate and the Commons SCXML extensions
- * for Data() and Location() to support XPath datamodel access.
+ * Custom Javascript engine function providing the SCXML In() predicate .
  */
 public class JSFunctions implements Serializable {
 
@@ -49,25 +46,5 @@ public class JSFunctions implements Serializable {
      */
     public boolean In(final String state) {
         return Builtin.isMember(ctx, state);
-    }
-
-    /**
-     * Provides the Commons SCXML Data() predicate extension for SCXML documents.
-     * @param expression the XPath expression
-     * @return the data matching the expression
-     * @throws SCXMLExpressionException A malformed expression exception
-     */
-    public Object Data(String expression) throws SCXMLExpressionException {
-        return XPathBuiltin.eval(ctx, expression);
-    }
-
-    /**
-     * Provides the Commons SCXML Location() predicate extension for SCXML documents.
-     * @param expression the XPath expression
-     * @return the location matching the expression
-     * @throws SCXMLExpressionException A malformed expression exception
-     */
-    public Object Location(String expression) throws SCXMLExpressionException {
-        return XPathBuiltin.evalLocation(ctx, expression);
     }
 }

@@ -19,7 +19,7 @@
      Meant to illustrate the usage of SCXML <datamodel> element -->
 <scxml xmlns="http://www.w3.org/2005/07/scxml"
        version="1.0"
-       datamodel="jexl"
+       datamodel="groovy"
        initial="main">
 
     <!-- Root or document datamodel -->

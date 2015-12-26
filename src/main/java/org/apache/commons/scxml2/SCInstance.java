@@ -299,15 +299,14 @@ public class SCInstance implements Serializable {
                 // earlier or externally defined 'initial' value found: do not overwrite
                 continue;
             }
-            Node datumNode = datum.getNode();
-            Node valueNode = null;
-            if (datumNode != null) {
-                valueNode = datumNode.cloneNode(true);
-            }
+            /*
+            TODO: external data.src support (not yet implemented), including late-binding thereof
             // prefer "src" over "expr" over "inline"
             if (datum.getSrc() != null) {
                 ctx.setLocal(datum.getId(), valueNode);
-            } else if (datum.getExpr() != null) {
+            } else
+            */
+            if (datum.getExpr() != null) {
                 Object value;
                 try {
                     ctx.setLocal(Context.NAMESPACES_KEY, datum.getNamespaces());
@@ -345,8 +344,9 @@ public class SCInstance implements Serializable {
                 else {
                     ctx.setLocal(datum.getId(), value);
                 }
-            } else {
-                ctx.setLocal(datum.getId(), valueNode);
+            }
+            else {
+                ctx.setLocal(datum.getId(), evaluator.cloneData(datum.getValue()));
             }
         }
     }

@@ -1,5 +1,5 @@
-<?xml version="1.0"?>
-<!--
+{
+  /*
    * Licensed to the Apache Software Foundation (ASF) under one or more
    * contributor license agreements.  See the NOTICE file distributed with
    * this work for additional information regarding copyright ownership.
@@ -14,22 +14,12 @@
    * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    * See the License for the specific language governing permissions and
    * limitations under the License.
--->
-<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0"  datamodel="jexl" initial="assign1">
-   <datamodel>
-       <data id="source">{ "foo" : { "a" : 1, "b" : 2 } }</data>
-       <data id="destination">{ "bar" : { "a" : 3, "b" : 4 } }</data>
-   </datamodel>
-   <!-- verify the destination contents -->
-   <state id="assign1">
-       <transition cond="destination.bar.a eq 3 and destination.bar.b eq 4" target="assign2" />
-   </state>
-   <!-- copy the new contents and verify -->
-   <state id="assign2">
-       <onentry>
-           <assign location="destination.bar" expr="source.foo" />
-       </onentry>
-       <transition cond="destination.bar.a eq 1 and destination.bar.b eq 2" target="assign3" />
-   </state>
-   <final id="assign3"/>
-</scxml>
+   */
+
+  // Used in test of "src" attribute of assign element
+
+  "root" :
+  {
+    "a" : 10
+  }
+}

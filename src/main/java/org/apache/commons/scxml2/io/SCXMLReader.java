@@ -1096,7 +1096,27 @@ public final class SCXMLReader {
         datum.setId(readRequiredAV(reader, ELEM_DATA, ATTR_ID));
         datum.setExpr(readAV(reader, ATTR_EXPR));
         readNamespaces(configuration, datum);
-        datum.setNode(readNode(reader, configuration, XMLNS_SCXML, ELEM_DATA, new String[]{"id"}));
+        Node node = readNode(reader, configuration, XMLNS_SCXML, ELEM_DATA, new String[]{"id"});
+        datum.setNode(node);
+        if (node.hasChildNodes()) {
+            NodeList children = node.getChildNodes();
+            if (children.getLength() == 1 && children.item(0).getNodeType() == Node.TEXT_NODE) {
+                String text = configuration.contentParser.trimContent(children.item(0).getNodeValue());
+                if (configuration.contentParser.hasJsonSignature(text)) {
+                    try {
+                        datum.setValue(configuration.contentParser.parseJson(text));
+                    } catch (IOException e) {
+                        throw new ModelException(e);
+                    }
+                }
+                else {
+                    datum.setValue(configuration.contentParser.spaceNormalizeContent(text));
+                }
+            }
+        }
+        if (datum.getValue() == null) {
+            datum.setValue(node);
+        }
         dm.addData(datum);
     }
 
@@ -2700,6 +2720,8 @@ public final class SCXMLReader {
          */
         boolean strict;
 
+        ContentParser contentParser;
+
         /*
          * Public constructors
          */
@@ -2872,6 +2894,7 @@ public final class SCXMLReader {
             this.namespaces = new HashMap<String, Stack<String>>();
             this.silent = silent;
             this.strict = strict;
+            this.contentParser = new ContentParser();
         }
 
         /*

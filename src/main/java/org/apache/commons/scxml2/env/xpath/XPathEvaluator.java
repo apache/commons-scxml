@@ -16,7 +16,6 @@
  */
 package org.apache.commons.scxml2.env.xpath;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -34,6 +33,7 @@ import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.EvaluatorProvider;
 import org.apache.commons.scxml2.SCXMLExpressionException;
+import org.apache.commons.scxml2.env.AbstractBaseEvaluator;
 import org.apache.commons.scxml2.env.EffectiveContextMap;
 import org.apache.commons.scxml2.model.SCXML;
 import org.w3c.dom.Attr;
@@ -48,7 +48,7 @@ import org.w3c.dom.NodeList;
  * <p>Does not support the &lt;script&gt; module, throws
  * {@link UnsupportedOperationException} if attempted.</p>
  */
-public class XPathEvaluator implements Evaluator, Serializable {
+public class XPathEvaluator extends AbstractBaseEvaluator {
 
     /** Serial version UID. */
     private static final long serialVersionUID = -3578920670869493294L;

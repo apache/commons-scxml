@@ -25,13 +25,10 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.apache.commons.scxml2.Builtin;
-import org.apache.commons.scxml2.SCXMLExpressionException;
-import org.apache.commons.scxml2.XPathBuiltin;
 
 /**
- * Groovy {@link Script} base class for SCXML, providing the standard 'builtin' functions {@link #In(String)},
- * {@link #Data(String)} and {@link #Location(String)}, as well as JEXL like convenience functions
- * {@link #empty(Object)} and {@link #var(String)}.
+ * Groovy {@link Script} base class for SCXML, providing the standard 'builtin' function {@link #In(String)},
+ * as well as JEXL like convenience functions {@link #empty(Object)} and {@link #var(String)}.
  */
 public abstract class GroovySCXMLScript extends Script {
 
@@ -56,26 +53,6 @@ public abstract class GroovySCXMLScript extends Script {
      */
     public boolean In(final String state) {
         return Builtin.isMember(context, state);
-    }
-
-    /**
-     * Implements the Data() predicate for SCXML documents.
-     * @param expression the XPath expression
-     * @return the data matching the expression
-     * @throws SCXMLExpressionException A malformed expression exception
-     */
-    public Object Data(final String expression) throws SCXMLExpressionException {
-        return XPathBuiltin.eval(context, expression);
-    }
-
-    /**
-     * Implements the Location() predicate for SCXML documents.
-     * @param location the XPath expression
-     * @return the location list for the location expression
-     * @throws SCXMLExpressionException A malformed expression exception
-     */
-    public Object Location(final String location) throws SCXMLExpressionException {
-        return XPathBuiltin.evalLocation(context, location);
     }
 
     /**
