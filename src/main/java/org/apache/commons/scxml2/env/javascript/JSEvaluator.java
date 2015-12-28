@@ -188,17 +188,7 @@ public class JSEvaluator extends AbstractBaseEvaluator {
      */
     @Override
     public Boolean evalCond(Context context, String expression) throws SCXMLExpressionException {
-        final Object result = eval(context, expression);
-
-        if (result == null) {
-            return Boolean.FALSE;
-        }
-
-        if (result instanceof Boolean) {
-            return (Boolean)result;
-        }
-
-        throw new SCXMLExpressionException("Invalid boolean expression: " + expression);
+        return (Boolean)eval(context, "Boolean("+expression+")");
     }
 
     /**
