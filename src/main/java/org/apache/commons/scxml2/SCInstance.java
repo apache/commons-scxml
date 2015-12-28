@@ -25,9 +25,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.apache.commons.scxml2.env.SimpleContext;
 import org.apache.commons.scxml2.model.Data;
 import org.apache.commons.scxml2.model.Datamodel;
@@ -37,9 +34,6 @@ import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.TransitionalState;
 import org.apache.commons.scxml2.semantics.ErrorConstants;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 /**
  * The <code>SCInstance</code> performs book-keeping functions for
@@ -106,12 +100,12 @@ public class SCInstance implements Serializable {
     /**
      * The map of contexts per EnterableState.
      */
-    private final Map<EnterableState, Context> contexts = new HashMap<EnterableState, Context>();
+    private final Map<EnterableState, Context> contexts = new HashMap<>();
 
     /**
      * The map of last known configurations per History.
      */
-    private final Map<History, Set<EnterableState>> histories = new HashMap<History, Set<EnterableState>>();
+    private final Map<History, Set<EnterableState>> histories = new HashMap<>();
 
     /**
      * The root context.
@@ -319,31 +313,7 @@ public class SCInstance implements Serializable {
                     errorReporter.onError(ErrorConstants.EXPRESSION_ERROR, see.getMessage(), datum);
                     continue;
                 }
-                if (Evaluator.XPATH_DATA_MODEL.equals(evaluator.getSupportedDatamodel())) {
-                    try {
-                        Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-                        // TODO: should use SCXML namespace here?
-                        Element dataNode = document.createElement("data");
-                        dataNode.setAttribute("id", datum.getId());
-                        ctx.setLocal(datum.getId(), dataNode);
-                        evaluator.evalAssign(ctx, "$" + datum.getId(), value, Evaluator.AssignType.REPLACE_CHILDREN, null);
-                    }
-                    catch (ParserConfigurationException pce) {
-                        if (internalIOProcessor != null) {
-                            internalIOProcessor.addEvent(new TriggerEvent(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT));
-                        }
-                        errorReporter.onError(ErrorConstants.EXECUTION_ERROR, pce.getMessage(), datum);
-                    }
-                    catch (SCXMLExpressionException see) {
-                        if (internalIOProcessor != null) {
-                            internalIOProcessor.addEvent(new TriggerEvent(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT));
-                        }
-                        errorReporter.onError(ErrorConstants.EXPRESSION_ERROR, see.getMessage(), datum);
-                    }
-                }
-                else {
-                    ctx.setLocal(datum.getId(), value);
-                }
+                ctx.setLocal(datum.getId(), value);
             }
             else {
                 ctx.setLocal(datum.getId(), evaluator.cloneData(datum.getValue()));
@@ -422,7 +392,7 @@ public class SCInstance implements Serializable {
             getRootContext();
             if (rootContext != null) {
                 Context internalContext = Evaluator.NULL_DATA_MODEL.equals(evaluator.getSupportedDatamodel()) ?
-                        new SimpleContext(systemContext) : evaluator.newContext(rootContext);
+                        new SimpleContext() : evaluator.newContext(rootContext);
                 systemContext = new SCXMLSystemContext(internalContext);
                 systemContext.getContext().set(SCXMLSystemContext.SESSIONID_KEY, UUID.randomUUID().toString());
                 String _name = stateMachine != null && stateMachine.getName() != null ? stateMachine.getName() : "";
@@ -524,7 +494,7 @@ public class SCInstance implements Serializable {
      */
     public void setLastConfiguration(final History history,
             final Set<EnterableState> lc) {
-        histories.put(history, new HashSet<EnterableState>(lc));
+        histories.put(history, new HashSet<>(lc));
     }
 
     /**

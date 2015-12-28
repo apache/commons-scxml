@@ -363,7 +363,7 @@ public class Send extends NamelistHolder implements ContentContainer {
         }
         String targetValue = target;
         if (targetValue == null && targetexpr != null) {
-            targetValue = (String) getTextContentIfNodeResult(eval.eval(ctx, targetexpr));
+            targetValue = (String)eval.eval(ctx, targetexpr);
             if ((targetValue == null || targetValue.trim().length() == 0)
                     && exctx.getAppLog().isWarnEnabled()) {
                 exctx.getAppLog().warn("<send>: target expression \"" + targetexpr
@@ -372,7 +372,7 @@ public class Send extends NamelistHolder implements ContentContainer {
         }
         String typeValue = type;
         if (typeValue == null && typeexpr != null) {
-            typeValue = (String) getTextContentIfNodeResult(eval.eval(ctx, typeexpr));
+            typeValue = (String)eval.eval(ctx, typeexpr);
             if ((typeValue == null || typeValue.trim().length() == 0)
                     && exctx.getAppLog().isWarnEnabled()) {
                 exctx.getAppLog().warn("<send>: type expression \"" + typeexpr
@@ -386,23 +386,23 @@ public class Send extends NamelistHolder implements ContentContainer {
             typeValue = SCXMLIOProcessor.DEFAULT_EVENT_PROCESSOR;
         }
         Object payload = null;
-        Map<String, Object> payloadDataMap = new LinkedHashMap<String, Object>();
+        Map<String, Object> payloadDataMap = new LinkedHashMap<>();
         addNamelistDataToPayload(exctx, payloadDataMap);
         addParamsToPayload(exctx, payloadDataMap);
         if (!payloadDataMap.isEmpty()) {
-            payload = makeEventPayload(eval, payloadDataMap);
+            payload = payloadDataMap;
         }
         else if (content != null) {
             if (content.getExpr() != null) {
-                payload = clonePayloadValue(eval.eval(ctx, content.getExpr()));
+                payload = eval.cloneData(eval.eval(ctx, content.getExpr()));
             } else {
-                payload = clonePayloadValue(content.getBody());
+                payload = eval.cloneData(content.getBody());
             }
         }
         long wait = 0L;
         String delayString = delay;
         if (delayString == null && delayexpr != null) {
-            Object delayValue = getTextContentIfNodeResult(eval.eval(ctx, delayexpr));
+            Object delayValue = eval.eval(ctx, delayexpr);
             if (delayValue != null) {
                 delayString = delayValue.toString();
             }
@@ -412,7 +412,7 @@ public class Send extends NamelistHolder implements ContentContainer {
         }
         String eventValue = event;
         if (eventValue == null && eventexpr != null) {
-            eventValue = (String) getTextContentIfNodeResult(eval.eval(ctx, eventexpr));
+            eventValue = (String)eval.eval(ctx, eventexpr);
             if ((eventValue == null)) {
                 throw new SCXMLExpressionException("<send>: event expression \"" + eventexpr
                         + "\" evaluated to null");

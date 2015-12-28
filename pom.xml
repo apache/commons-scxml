@@ -170,11 +170,6 @@
       <optional>true</optional>
     </dependency>
     <dependency>
-      <groupId>commons-jxpath</groupId>
-      <artifactId>commons-jxpath</artifactId>
-      <version>1.3</version>
-    </dependency>
-    <dependency>
       <groupId>org.codehaus.groovy</groupId>
       <artifactId>groovy</artifactId>
       <version>2.2.2</version>
@@ -397,7 +392,7 @@
       </build>
     </profile>
     <profile>
-      <!-- download the W3C IRP tests and ecma and xpath stylesheets to transform them, using:
+      <!-- download the W3C IRP tests and ecma stylesheet to transform them, using:
            $ mvn -P w3Tests.get
        -->
       <id>w3cTests.get</id>
@@ -501,7 +496,7 @@
     </profile>
     <profile>
       <!-- Run one or multiple W3C IRP tests using optional system parameters for datamodel and/or test id, using:
-           $ mvn -P w3cTests.run [-Ddatamodel=<ecma|xpath|minimal>] [-Dtest=<testId>]
+           $ mvn -P w3cTests.run [-Ddatamodel=<ecma|minimal>] [-Dtest=<testId>]
 
            Also see: src/test/java/org/apache/commons/scxml2/w3c/tests.xml
            which contains configurations per test (if it default is enabled/disabled, status, etc.)

@@ -344,7 +344,7 @@ public class Invoke extends NamelistHolder implements PathResolverHolder, Conten
 
             String typeValue = type;
             if (typeValue == null && typeexpr != null) {
-                typeValue = (String) getTextContentIfNodeResult(eval.eval(ctx, typeexpr));
+                typeValue = (String)eval.eval(ctx, typeexpr);
                 if (typeValue == null) {
                     throw new SCXMLExpressionException("<invoke> for state "+parentState.getId() +
                             ": type expression \"" + typeexpr + "\" evaluated to null or empty String");
@@ -366,7 +366,7 @@ public class Invoke extends NamelistHolder implements PathResolverHolder, Conten
 
             String src = getSrc();
             if (src == null && getSrcexpr() != null) {
-                src = (String) getTextContentIfNodeResult(eval.eval(ctx, getSrcexpr()));
+                src = (String)eval.eval(ctx, getSrcexpr());
             }
             if (src != null) {
                 PathResolver pr = getPathResolver();
@@ -393,7 +393,7 @@ public class Invoke extends NamelistHolder implements PathResolverHolder, Conten
                 throw new SCXMLExpressionException("<invoke> for state "+parentState.getId() +
                         ": no src and no content defined");
             }
-            Map<String, Object> payloadDataMap = new HashMap<String, Object>();
+            Map<String, Object> payloadDataMap = new HashMap<>();
             addNamelistDataToPayload(axctx, payloadDataMap);
             addParamsToPayload(axctx, payloadDataMap);
             invoker.setParentSCXMLExecutor(exctx.getSCXMLExecutor());

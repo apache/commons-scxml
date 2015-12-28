@@ -192,31 +192,6 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
     }
 
     /**
-     * @see Evaluator#evalLocation(Context, String)
-     */
-    public Object evalLocation(final Context ctx, final String expr)
-    throws SCXMLExpressionException {
-        if (expr == null) {
-            return null;
-        }
-        else if (ctx.has(expr)) {
-            return expr;
-        }
-
-        if (!(ctx instanceof JexlContext)) {
-            throw new SCXMLExpressionException(ERR_CTX_TYPE);
-        }
-        try {
-            final JexlContext effective = getEffectiveContext((JexlContext)ctx);
-            Expression exp = getJexlEngine().createExpression(expr);
-            return exp.evaluate(effective);
-        } catch (Exception e) {
-            String exMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getCanonicalName();
-            throw new SCXMLExpressionException("evalLocation('" + expr + "'): " + exMessage, e);
-        }
-    }
-
-    /**
      * @see Evaluator#evalAssign(Context, String, Object, AssignType, String)
      */
     public void evalAssign(final Context ctx, final String location, final Object data, final AssignType type,

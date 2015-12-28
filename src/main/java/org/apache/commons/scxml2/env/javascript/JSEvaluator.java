@@ -165,7 +165,7 @@ public class JSEvaluator extends AbstractBaseEvaluator {
             Object ret = engine.eval(jsExpression, jsBindings);
 
             // copy global bindings attributes to context, so callers may get access to the evaluated variables.
-            copyGlobalBindingsToContext(jsBindings, (JSContext) effectiveContext);
+            copyGlobalBindingsToContext(jsBindings, effectiveContext);
 
             return ret;
 
@@ -199,29 +199,6 @@ public class JSEvaluator extends AbstractBaseEvaluator {
         }
 
         throw new SCXMLExpressionException("Invalid boolean expression: " + expression);
-    }
-
-    /**
-     * Evaluates a location expression using a new Javascript engine obtained from
-     * factory instantiated in the constructor. The engine is supplied with
-     * a new JSBindings that includes the SCXML Context and SCXML builtin
-     * <code>In()</code> function is replaced with an equivalent internal
-     * Javascript function.
-     *
-     * @param context    FSM context.
-     * @param expression Expression to evaluate.
-     *
-     * @throws SCXMLExpressionException Thrown if the expression was invalid.
-     */
-    @Override
-    public Object evalLocation(Context context, String expression) throws SCXMLExpressionException {
-        if (expression == null) {
-            return null;
-        } else if (context.has(expression)) {
-            return expression;
-        }
-
-        return eval(context, expression);
     }
 
     /**

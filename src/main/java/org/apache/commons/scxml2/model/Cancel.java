@@ -98,7 +98,7 @@ public class Cancel extends Action {
 
         String sendidValue = sendid;
         if (sendidValue == null && sendidexpr != null) {
-            sendidValue = (String) getTextContentIfNodeResult(eval.eval(ctx, sendidexpr));
+            sendidValue = (String) eval.eval(ctx, sendidexpr);
             if ((sendidValue == null || sendidValue.trim().length() == 0)
                     && exctx.getAppLog().isWarnEnabled()) {
                 exctx.getAppLog().warn("<send>: sendid expression \"" + sendidexpr

@@ -59,7 +59,7 @@ import org.apache.commons.scxml2.model.SCXML;
  * To execute one or multiple IRP tests the commandline parameter <b>run</b> must be specified.
  * </p>
  * <p>
- * Optional environment parameter <b>-Ddatamodel=&lt;minimal|ecma|xpath&gt;</b> can be specified to limit the
+ * Optional environment parameter <b>-Ddatamodel=&lt;minimal|ecma&gt;</b> can be specified to limit the
  * execution of the tests for and using only the specified datamodel language.
  * </p>
  * <p>
@@ -80,13 +80,11 @@ public class W3CTests {
     private static final String SCXML_IRP_BASE_URL = "http://www.w3.org/Voice/2013/scxml-irp/";
     private static final String SCXML_IRP_MANIFEST_URI = "manifest.xml";
     private static final String SCXML_IRP_ECMA_XSL_URI = "confEcma.xsl";
-    private static final String SCXML_IRP_XPATH_XSL_URI = "confXpath.xsl";
 
     private static final String TESTS_SRC_DIR = "src/w3c/scxml-irp/";
     private static final String TXML_TESTS_DIR = TESTS_SRC_DIR + "txml/";
     private static final String MINIMAL_TESTS_DIR = TESTS_SRC_DIR + "minimal/";
     private static final String ECMA_TESTS_DIR = TESTS_SRC_DIR + "ecma/";
-    private static final String XPATH_TESTS_DIR = TESTS_SRC_DIR + "xpath/";
     private static final String PACKAGE_PATH = "/"+W3CTests.class.getPackage().getName().replace('.','/');
     private static final String TESTS_FILENAME = PACKAGE_PATH + "/tests.xml";
     private static final String SCXML_IRP_MINIMAL_XSL_FILENAME = PACKAGE_PATH + "/confMinimal.xsl";
@@ -117,10 +115,6 @@ public class W3CTests {
             String minimalStatus;
             @XmlAttribute(name="ecma")
             String ecmaStatus;
-            @XmlAttribute(name="xpath")
-            String xpathStatus;
-            @XmlAttribute
-            Boolean xpathEnabled;
             @XmlValue
             private String comment;
 
@@ -156,14 +150,6 @@ public class W3CTests {
                 return ecmaStatus;
             }
 
-            public String getXpathStatus() {
-                return xpathStatus;
-            }
-
-            public boolean isXPathEnabled() {
-                return xpathEnabled == null || xpathEnabled;
-            }
-
             public String getComment() {
                 return comment;
             }
@@ -180,7 +166,7 @@ public class W3CTests {
 
         public LinkedHashMap<String, Test> getTests() {
             if (testsMap == null) {
-                testsMap = new LinkedHashMap<String, Test>();
+                testsMap = new LinkedHashMap<>();
                 if (tests != null) {
                     for (Test t : tests) {
                         testsMap.put(t.getId(), t);
@@ -192,13 +178,12 @@ public class W3CTests {
     }
 
     /**
-     * Datamodel enum representing the minimal, ecma and xpath datamodel types used and tested by the W3C IRP tests.
+     * Datamodel enum representing the minimal and ecma datamodel types used and tested by the W3C IRP tests.
      */
     protected enum Datamodel {
 
         MINIMAL("minimal"),
-        ECMA("ecma"),
-        XPATH("xpath");
+        ECMA("ecma");
 
         private final String value;
 
@@ -262,9 +247,6 @@ public class W3CTests {
                 }
                 else if ("#ecma-profile".equals(specid)) {
                     return Datamodel.ECMA;
-                }
-                else if ("#xpath-profile".equals(specid)) {
-                    return Datamodel.XPATH;
                 }
                 return null;
             }
@@ -348,7 +330,7 @@ public class W3CTests {
 
         public LinkedHashMap<String, Assertion> getAssertions() {
             if (assertionsMap == null) {
-                assertionsMap = new LinkedHashMap<String, Assertion>();
+                assertionsMap = new LinkedHashMap<>();
                 if (assertions != null) {
                     for (Assertion a : assertions) {
                         assertionsMap.put(a.getId(), a);
@@ -370,9 +352,7 @@ public class W3CTests {
         int minimalFailed;
         int ecmaPassed;
         int ecmaFailed;
-        int xpathPassed;
-        int xpathFailed;
-        ArrayList<String> failedTests = new ArrayList<String>();
+        ArrayList<String> failedTests = new ArrayList<>();
     }
 
     /**
@@ -409,11 +389,11 @@ public class W3CTests {
                 "  make - make previously downloaded  W3C IRP tests by transforming the .txml templates\n" +
                 "  run  - runs test(s), optionally only for a specific datamodel (default: all)\n\n" +
                 "To run a single test, specify -Dtest=<testId>, otherwise all enabled tests will be run.\n" +
-                "To only run test(s) for a specific datamodel, specify -Ddatamodel=<minimal|ecma|xpath>.\n");
+                "To only run test(s) for a specific datamodel, specify -Ddatamodel=<minimal|ecma>.\n");
     }
 
     /**
-     * Downloads the W3C IRP manifest.xml, the IRP ecma and xpath stylesheets to transform the tests, and the
+     * Downloads the W3C IRP manifest.xml, the IRP ecma stylesheet to transform the tests, and the
      * actual test templates (.txml) as defined in the manifest.xml
      * @throws Exception
      */
@@ -425,13 +405,10 @@ public class W3CTests {
         new File(TXML_TESTS_DIR).mkdirs();
         new File(MINIMAL_TESTS_DIR).mkdirs();
         new File(ECMA_TESTS_DIR).mkdirs();
-        new File(XPATH_TESTS_DIR).mkdirs();
         System.out.println("Downloading IRP manifest: " + SCXML_IRP_BASE_URL + SCXML_IRP_MANIFEST_URI);
         FileUtils.copyURLToFile(new URL(SCXML_IRP_BASE_URL + SCXML_IRP_MANIFEST_URI), new File(testsSrcDir, SCXML_IRP_MANIFEST_URI));
         System.out.println("Downloading ecma stylesheet: " + SCXML_IRP_BASE_URL + SCXML_IRP_ECMA_XSL_URI);
         FileUtils.copyURLToFile(new URL(SCXML_IRP_BASE_URL + SCXML_IRP_ECMA_XSL_URI), new File(testsSrcDir, SCXML_IRP_ECMA_XSL_URI));
-        System.out.println("Downloading xpath stylesheet: " + SCXML_IRP_BASE_URL + SCXML_IRP_XPATH_XSL_URI);
-        FileUtils.copyURLToFile(new URL(SCXML_IRP_BASE_URL + SCXML_IRP_XPATH_XSL_URI), new File(testsSrcDir, SCXML_IRP_XPATH_XSL_URI));
         Assertions assertions = loadAssertions();
         for (Assertions.Assertion entry : assertions.getAssertions().values()) {
             for (Assertions.TestCase test : entry.getTestCases()) {
@@ -456,13 +433,12 @@ public class W3CTests {
         TransformerFactory factory = TransformerFactory.newInstance("net.sf.saxon.TransformerFactoryImpl",null);
         factory.setFeature("http://saxon.sf.net/feature/suppressXsltNamespaceCheck", true);
         Transformer ecmaTransformer = factory.newTransformer(new StreamSource(new FileInputStream(new File(testsSrcDir, SCXML_IRP_ECMA_XSL_URI))));
-        Transformer xpathTransformer = factory.newTransformer(new StreamSource(new FileInputStream(new File(testsSrcDir, SCXML_IRP_XPATH_XSL_URI))));
         Transformer minimalTransformer = factory.newTransformer(new StreamSource(getClass().getResourceAsStream(SCXML_IRP_MINIMAL_XSL_FILENAME)));
         Assertions assertions = loadAssertions();
         for (Assertions.Assertion entry : assertions.getAssertions().values()) {
             for (Assertions.TestCase test : entry.getTestCases()) {
                 for (Assertions.Resource resource : test.getResources()) {
-                    processResource(entry.getSpecId(), resource, minimalTransformer, ecmaTransformer, xpathTransformer);
+                    processResource(entry.getSpecId(), resource, minimalTransformer, ecmaTransformer);
                 }
             }
         }
@@ -486,12 +462,10 @@ public class W3CTests {
      * @param resource The test resource definition
      * @param minimalTransformer transformer to produce an minimal datamodel SCXML document from the txml resource
      * @param ecmaTransformer transformer to produce an ecmascript datamodel SCXML document from the txml resource
-     * @param xpathTransformer transformer to produce a xpath datamodel based SCXML document from the txml resource
      * @throws Exception
      */
     protected void processResource(final String specid, final Assertions.Resource resource,
-                                   final Transformer minimalTransformer, final Transformer ecmaTransformer,
-                                   final Transformer xpathTransformer)
+                                   final Transformer minimalTransformer, final Transformer ecmaTransformer)
             throws Exception {
         System.out.println("processing IRP test file " + resource.getFilename());
         FileUtils.copyURLToFile(new URL(SCXML_IRP_BASE_URL + resource.getUri()), new File(TXML_TESTS_DIR + resource.getFilename()));
@@ -501,12 +475,8 @@ public class W3CTests {
         else if (specid.equals("#ecma-profile")) {
             transformResource(resource, ecmaTransformer, ECMA_TESTS_DIR);
         }
-        else if (specid.equals("#xpath-profile")) {
-            transformResource(resource, xpathTransformer, XPATH_TESTS_DIR);
-        }
         else {
             transformResource(resource, ecmaTransformer, ECMA_TESTS_DIR);
-            transformResource(resource, xpathTransformer, XPATH_TESTS_DIR);
         }
     }
 
@@ -575,10 +545,6 @@ public class W3CTests {
             System.out.println(
                     "    ecma    datamodel: "+results.ecmaPassed+" passed,  "+results.ecmaFailed+" failed");
         }
-        if (results.xpathPassed+results.xpathFailed > 0) {
-            System.out.println(
-                    "    xpath   datamodel: "+results.xpathPassed+" passed,  "+results.xpathFailed+" failed");
-        }
         System.out.print("\n");
         if (!results.failedTests.isEmpty()) {
             System.out.println("  failed tests: ");
@@ -643,18 +609,6 @@ public class W3CTests {
                                         results.ecmaFailed++;
                                     }
                                     break;
-                                case XPATH:
-                                    if (test.isXPathEnabled()) {
-                                        skipped = false;
-                                        if (runTests(assertion, testCase, test, XPATH_TESTS_DIR, results.failedTests)) {
-                                            results.xpathPassed++;
-                                        }
-                                        else {
-                                            passed = false;
-                                            results.xpathFailed++;
-                                        }
-                                    }
-                                    break;
                             }
                         }
                         else {
@@ -665,15 +619,6 @@ public class W3CTests {
                             else {
                                 passed = false;
                                 results.ecmaFailed++;
-                            }
-                            if (test.isXPathEnabled()) {
-                                if (runTests(assertion, testCase, test, XPATH_TESTS_DIR, results.failedTests)) {
-                                    results.xpathPassed++;
-                                }
-                                else {
-                                    passed = false;
-                                    results.xpathFailed++;
-                                }
                             }
                         }
                     }

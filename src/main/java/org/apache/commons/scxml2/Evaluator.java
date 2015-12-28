@@ -29,9 +29,6 @@ public interface Evaluator {
     /** SCXML 1.0 ECMAScript Data Model name **/
     String ECMASCRIPT_DATA_MODEL = "ecmascript";
 
-    /** SCXML 1.0 XPath Data Model name **/
-    String XPATH_DATA_MODEL = "xpath";
-
     /** Default Data Model name **/
     String DEFAULT_DATA_MODEL = "";
 
@@ -103,18 +100,6 @@ public interface Evaluator {
      * @throws SCXMLExpressionException A malformed expression exception
      */
     Boolean evalCond(Context ctx, String expr)
-    throws SCXMLExpressionException;
-
-    /**
-     * Evaluate a location that returns a data assignable reference or list of references.
-     * Manifests as "location" attributes of &lt;assign&gt; element.
-     *
-     * @param ctx variable context
-     * @param expr expression
-     * @return The location result.
-     * @throws SCXMLExpressionException A malformed expression exception
-     */
-    Object evalLocation(Context ctx, String expr)
     throws SCXMLExpressionException;
 
     /**

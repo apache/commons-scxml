@@ -222,35 +222,6 @@ public class GroovyEvaluator extends AbstractBaseEvaluator {
     }
 
     /**
-     * @see Evaluator#evalLocation(Context, String)
-     */
-    @Override
-    public Object evalLocation(final Context ctx, final String expr) throws SCXMLExpressionException {
-        if (expr == null) {
-            return null;
-        }
-        else if (ctx.has(expr)) {
-            return expr;
-        }
-
-        if (!(ctx instanceof GroovyContext)) {
-            throw new SCXMLExpressionException(ERR_CTX_TYPE);
-        }
-
-        GroovyContext groovyCtx = (GroovyContext) ctx;
-        if (groovyCtx.getGroovyEvaluator() == null) {
-            groovyCtx.setGroovyEvaluator(this);
-        }
-        try {
-            final GroovyContext effective = getEffectiveContext(groovyCtx);
-            return getScript(effective, groovyCtx.getScriptBaseClass(), expr).run();
-        } catch (Exception e) {
-            String exMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getCanonicalName();
-            throw new SCXMLExpressionException("evalLocation('" + expr + "'): " + exMessage, e);
-        }
-    }
-
-    /**
      * @see Evaluator#evalAssign(Context, String, Object, AssignType, String)
      */
     public void evalAssign(final Context ctx, final String location, final Object data, final AssignType type,

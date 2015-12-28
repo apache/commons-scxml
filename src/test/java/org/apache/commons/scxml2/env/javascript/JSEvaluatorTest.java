@@ -20,10 +20,6 @@ package org.apache.commons.scxml2.env.javascript;
 import java.io.StringReader;
 import java.util.Map;
 
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathFactory;
-
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.SCXMLExecutor;
@@ -33,8 +29,6 @@ import org.apache.commons.scxml2.io.SCXMLReader;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 /** JUnit 3 test case for the JSEvaluator expression evaluator
  *  class. Includes basic tests for:

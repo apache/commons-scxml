@@ -23,7 +23,6 @@ import org.apache.commons.scxml2.env.groovy.GroovyEvaluator;
 import org.apache.commons.scxml2.env.javascript.JSEvaluator;
 import org.apache.commons.scxml2.env.jexl.JexlEvaluator;
 import org.apache.commons.scxml2.env.minimal.MinimalEvaluator;
-import org.apache.commons.scxml2.env.xpath.XPathEvaluator;
 import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.SCXML;
 import static org.apache.commons.scxml2.Evaluator.DEFAULT_DATA_MODEL;
@@ -41,7 +40,6 @@ import static org.apache.commons.scxml2.Evaluator.DEFAULT_DATA_MODEL;
  *  <li>no or empty datamodel (default) or datamodel="jexl": {@link JexlEvaluator.JexlEvaluatorProvider}</li>
  *  <li>datamodel="ecmascript": {@link JSEvaluator.JSEvaluatorProvider}</li>
  *  <li>datamodel="groovy": {@link GroovyEvaluator.GroovyEvaluatorProvider}</li>
- *  <li>datamodel="xpath": {@link XPathEvaluator.XPathEvaluatorProvider}</li>
  *  <li>datamodel="null": {@link MinimalEvaluator.MinimalEvaluatorProvider}</li>
  * </ul>
  * <p>
@@ -58,10 +56,9 @@ public class EvaluatorFactory {
 
     private static EvaluatorFactory INSTANCE = new EvaluatorFactory();
 
-    private final Map<String, EvaluatorProvider> providers = new ConcurrentHashMap<String, EvaluatorProvider>();
+    private final Map<String, EvaluatorProvider> providers = new ConcurrentHashMap<>();
 
     private EvaluatorFactory() {
-        providers.put(XPathEvaluator.SUPPORTED_DATA_MODEL, new XPathEvaluator.XPathEvaluatorProvider());
         providers.put(JSEvaluator.SUPPORTED_DATA_MODEL, new JSEvaluator.JSEvaluatorProvider());
         providers.put(GroovyEvaluator.SUPPORTED_DATA_MODEL, new GroovyEvaluator.GroovyEvaluatorProvider());
         providers.put(JexlEvaluator.SUPPORTED_DATA_MODEL, new JexlEvaluator.JexlEvaluatorProvider());

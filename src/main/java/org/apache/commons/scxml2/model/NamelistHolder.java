@@ -74,7 +74,6 @@ public abstract class NamelistHolder extends ParamsContainer {
                 ctx.setLocal(getNamespacesKey(), getNamespaces());
                 Evaluator evaluator = exctx.getEvaluator();
                 StringTokenizer tkn = new StringTokenizer(namelist);
-                boolean xpathEvaluator = Evaluator.XPATH_DATA_MODEL.equals(evaluator.getSupportedDatamodel());
                 while (tkn.hasMoreTokens()) {
                     String varName = tkn.nextToken();
                     Object varObj = evaluator.eval(ctx, varName);
@@ -83,10 +82,7 @@ public abstract class NamelistHolder extends ParamsContainer {
                         exctx.getErrorReporter().onError(ErrorConstants.UNDEFINED_VARIABLE,
                                 varName + " = null", parentState);
                     }
-                    if (xpathEvaluator && varName.startsWith("$")) {
-                        varName = varName.substring(1);
-                    }
-                    addToPayload(varName, varObj, payload);
+                    addToPayload(varName, evaluator.cloneData(varObj), payload);
                 }
             }
             finally {

@@ -110,13 +110,6 @@
         relevant root context and evaluator tuple to use.</p>
     </subsection>
 
-    <subsection name="XPath">
-      <p>See
-        <a href="../apidocs/org/apache/commons/scxml2/env/xpath/package-summary.html">
-          org.apache.commons.scxml2.env.xpath package summary</a> for the
-        relevant root context and evaluator tuple to use.</p>
-    </subsection>
-
     <subsection name="Groovy">
     <p>See
     <a href="../apidocs/org/apache/commons/scxml2/env/groovy/package-summary.html">

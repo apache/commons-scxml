@@ -74,7 +74,7 @@ public abstract class ParamsContainer extends PayloadProvider {
                         // ignore invalid param definition
                         continue;
                     }
-                    addToPayload(p.getName(), paramValue, payload);
+                    addToPayload(p.getName(), evaluator.cloneData(paramValue), payload);
                 }
             }
             finally {
