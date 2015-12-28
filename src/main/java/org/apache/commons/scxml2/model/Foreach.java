@@ -19,6 +19,7 @@ package org.apache.commons.scxml2.model;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.Context;
@@ -49,7 +50,7 @@ public class Foreach extends Action implements ActionsContainer {
 
     public Foreach() {
         super();
-        this.actions = new ArrayList<Action>();
+        this.actions = new ArrayList<>();
     }
 
     @Override
@@ -103,7 +104,7 @@ public class Foreach extends Action implements ActionsContainer {
         ctx.setLocal(getNamespacesKey(), getNamespaces());
         try {
             Object arrayObject = eval.eval(ctx,array);
-            if (arrayObject != null && (arrayObject instanceof Iterable || arrayObject.getClass().isArray())) {
+            if (arrayObject != null && (arrayObject.getClass().isArray() || arrayObject instanceof Iterable || arrayObject instanceof Map)) {
                 if (arrayObject.getClass().isArray()) {
                     for (int currentIndex = 0, size = Array.getLength(arrayObject); currentIndex < size; currentIndex++) {
                         ctx.setLocal(item, Array.get(arrayObject, currentIndex));
@@ -117,12 +118,16 @@ public class Foreach extends Action implements ActionsContainer {
                     }
                 }
                 else {
+                    // In case of Javascript based arrays, the (Nashorn) engine returns a ScriptObjectMirror
+                    // which (also) implements Map<String, Object), so then we can/must use the map values as Iterable
+                    Iterable iterable = arrayObject instanceof Iterable ? (Iterable)arrayObject : ((Map)arrayObject).values();
+
                     // Spec requires to iterate over a shallow copy of underlying array in a way that modifications to
                     // the collection during the execution of <foreach> must not affect the iteration behavior.
                     // For array objects (see above) this isn't needed, but for Iterables we don't have that guarantee
                     // so we make a copy first
-                    ArrayList<Object> arrayList = new ArrayList<Object>();
-                    for (Object value: (Iterable)arrayObject) {
+                    ArrayList<Object> arrayList = new ArrayList<>();
+                    for (Object value: iterable) {
                         arrayList.add(value);
                     }
                     int currentIndex = 0;
