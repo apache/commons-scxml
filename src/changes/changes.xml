@@ -35,6 +35,10 @@
     <release version="2.0" date="In Git master"
       description="Latest unreleased code">
 
+      <action dev="ate" type="add" issue="SCXML-242">
+        [12-26-2015] Provide JSON based datamodel as replacement for XML/XPath.
+      </action>
+
       <action dev="ate" type="update" issue="SCXML-241">
         [12-23-2015] Move to Java 8 as minimum.
       </action>
