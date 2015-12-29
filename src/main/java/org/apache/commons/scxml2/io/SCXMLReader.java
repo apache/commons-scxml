@@ -1113,9 +1113,9 @@ public final class SCXMLReader {
                     datum.setValue(configuration.contentParser.spaceNormalizeContent(text));
                 }
             }
-        }
-        if (datum.getValue() == null) {
-            datum.setValue(node);
+            if (datum.getValue() == null) {
+                datum.setValue(node);
+            }
         }
         dm.addData(datum);
     }

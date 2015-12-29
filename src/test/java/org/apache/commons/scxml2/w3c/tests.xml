@@ -57,7 +57,7 @@
   <test id="280" mandatory="true"  manual="false" enabled="true"                  ecma="pass"/>
   <test id="550" mandatory="true"  manual="false" enabled="false"                 ecma="fail"/>
   <test id="551" mandatory="true"  manual="false" enabled="false"                 ecma="fail"/>
-  <test id="552" mandatory="true"  manual="false" enabled="true"                  ecma="pass"/>
+  <test id="552" mandatory="true"  manual="false" enabled="false"                 ecma="fail"/>
   <test id="286" mandatory="true"  manual="false" enabled="true"                  ecma="pass"/>
   <test id="287" mandatory="true"  manual="false" enabled="true"                  ecma="pass"/>
   <test id="487" mandatory="true"  manual="false" enabled="true"                  ecma="pass"/>
@@ -154,7 +154,7 @@
   <test id="436" mandatory="true"  manual="false" enabled="true"  minimal="pass"/>
   <test id="278" mandatory="false" manual="false" enabled="false"                 ecma="fail"/>
   <test id="444" mandatory="false" manual="false" enabled="true"                  ecma="pass"/>
-  <test id="445" mandatory="false" manual="false" enabled="false"                 ecma="fail"/>
+  <test id="445" mandatory="false" manual="false" enabled="true"                  ecma="pass"/>
   <test id="448" mandatory="false" manual="false" enabled="false"                 ecma="fail"/>
   <test id="449" mandatory="false" manual="false" enabled="true"                  ecma="pass"/>
   <test id="451" mandatory="false" manual="false" enabled="true"                  ecma="pass"/>
