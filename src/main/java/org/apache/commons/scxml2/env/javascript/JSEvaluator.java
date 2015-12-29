@@ -101,19 +101,6 @@ public class JSEvaluator extends AbstractBaseEvaluator {
     }
 
     /**
-     * @return Returns JavaScript "undefined" for null, otherwise inherited behavior
-     */
-    @Override
-    public Object cloneData(final Object data) {
-        if (data == null) {
-            ScriptEngine engine = getFactory().getEngineByName("JavaScript");
-            Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
-            return bindings.get("undefined");
-        }
-        return super.cloneData(data);
-    }
-
-    /**
      * Creates a child context.
      *
      * @return Returns a new child JSContext.
