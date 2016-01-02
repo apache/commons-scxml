@@ -1000,6 +1000,8 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
         Collections.sort(entryList, DocumentOrder.documentOrderComparator);
         for (EnterableState es : entryList) {
             exctx.getScInstance().getStateConfiguration().enterState(es);
+            // ensure state context creation and datamodel cloned
+            exctx.getScInstance().getContext(es);
             if (es instanceof TransitionalState && !((TransitionalState)es).getInvokes().isEmpty()) {
                 statesToInvoke.add((TransitionalState) es);
             }
