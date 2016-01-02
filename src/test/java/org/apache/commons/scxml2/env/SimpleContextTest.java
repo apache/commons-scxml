@@ -34,7 +34,7 @@ public class SimpleContextTest {
     
     @Test
     public void testHasTrue() {
-        Map<String, Object> vars = new HashMap<String, Object>();
+        Map<String, Object> vars = new HashMap<>();
         vars.put("key", "value");
         
         context.setVars(vars);
@@ -44,7 +44,7 @@ public class SimpleContextTest {
 
     @Test
     public void testHasNullParent() {
-        Map<String, Object> vars = new HashMap<String, Object>();
+        Map<String, Object> vars = new HashMap<>();
         vars.put("key", "value");
         
         context.setVars(vars);
@@ -54,12 +54,12 @@ public class SimpleContextTest {
     
     @Test
     public void testHasParentWrongKey() {
-        Map<String, Object> parentVars = new HashMap<String, Object>();
+        Map<String, Object> parentVars = new HashMap<>();
         parentVars.put("key", "value");
         
         SimpleContext parentContext = new SimpleContext(null, parentVars);
         
-        Map<String, Object> vars = new HashMap<String, Object>();
+        Map<String, Object> vars = new HashMap<>();
         vars.put("key", "value");
         
         context.setVars(vars);
@@ -70,12 +70,12 @@ public class SimpleContextTest {
 
     @Test
     public void testHasParentCorrectKey() {
-        Map<String, Object> parentVars = new HashMap<String, Object>();
+        Map<String, Object> parentVars = new HashMap<>();
         parentVars.put("differentKey", "value");
         
         SimpleContext parentContext = new SimpleContext(null, parentVars);
         
-        Map<String, Object> vars = new HashMap<String, Object>();
+        Map<String, Object> vars = new HashMap<>();
         vars.put("key", "value");
         
         context.setVars(vars);
@@ -93,7 +93,7 @@ public class SimpleContextTest {
     
     @Test
     public void testGetValue() {
-        Map<String, Object> vars = new HashMap<String, Object>();
+        Map<String, Object> vars = new HashMap<>();
         vars.put("key", "value");
         
         context.setVars(vars);
@@ -103,12 +103,12 @@ public class SimpleContextTest {
     
     @Test
     public void testGetParentValue() {
-        Map<String, Object> parentVars = new HashMap<String, Object>();
+        Map<String, Object> parentVars = new HashMap<>();
         parentVars.put("differentKey", "differentValue");
         
         SimpleContext parentContext = new SimpleContext(null, parentVars);
         
-        Map<String, Object> vars = new HashMap<String, Object>();
+        Map<String, Object> vars = new HashMap<>();
         vars.put("key", "value");
         
         context.setVars(vars);
@@ -119,7 +119,7 @@ public class SimpleContextTest {
     
     @Test
     public void testGetParentNull() {
-        Map<String, Object> vars = new HashMap<String, Object>();
+        Map<String, Object> vars = new HashMap<>();
         vars.put("key", "value");
         
         context.setVars(vars);
@@ -129,12 +129,12 @@ public class SimpleContextTest {
     
     @Test
     public void testGetParentWrongValue() {
-        Map<String, Object> parentVars = new HashMap<String, Object>();
+        Map<String, Object> parentVars = new HashMap<>();
         parentVars.put("differentKey", "differentValue");
         
         SimpleContext parentContext = new SimpleContext(null, parentVars);
         
-        Map<String, Object> vars = new HashMap<String, Object>();
+        Map<String, Object> vars = new HashMap<>();
         vars.put("key", "value");
         
         context.setVars(vars);
@@ -145,7 +145,7 @@ public class SimpleContextTest {
 
     @Test
     public void testSetVarsChangeValue() {
-        Map<String, Object> vars = new HashMap<String, Object>();
+        Map<String, Object> vars = new HashMap<>();
         vars.put("key", "value");
         
         context.setVars(vars);
@@ -157,7 +157,7 @@ public class SimpleContextTest {
 
     @Test
     public void testSetVarsEmpty() {
-        Map<String, Object> vars = new HashMap<String, Object>();
+        Map<String, Object> vars = new HashMap<>();
         context.setVars(vars);
         
         context.set("key", "newValue");
@@ -167,12 +167,12 @@ public class SimpleContextTest {
     
     @Test
     public void testSetVarsParent() {
-        Map<String, Object> parentVars = new HashMap<String, Object>();
+        Map<String, Object> parentVars = new HashMap<>();
         parentVars.put("differentKey", "differentValue");
         
         SimpleContext parentContext = new SimpleContext(null, parentVars);
         
-        Map<String, Object> vars = new HashMap<String, Object>();
+        Map<String, Object> vars = new HashMap<>();
         vars.put("key", "value");
         
         context.setVars(vars);
@@ -181,5 +181,36 @@ public class SimpleContextTest {
         context.set("differentKey", "newValue");
         
         Assert.assertEquals("newValue", context.get("differentKey"));
+    }
+
+    @Test
+    public void testNestedEffectiveContextMapWrappingFails() {
+        SimpleContext rootContext = new SimpleContext();
+        rootContext.set("key", "root");
+        SimpleContext rootEffectiveContext = new SimpleContext(rootContext, new EffectiveContextMap(rootContext));
+        SimpleContext parentContext = new SimpleContext(rootEffectiveContext);
+        try {
+            new EffectiveContextMap(parentContext);
+            Assert.fail("Nested EffectiveContextMap wrapping should fail");
+        }
+        catch (IllegalArgumentException e) {
+            // good
+        }
+    }
+
+    @Test
+    public void testEffectiveContextMapMergeStragegy() {
+        SimpleContext rootContext = new SimpleContext();
+        rootContext.set("key", "root");
+        SimpleContext parentContext = new SimpleContext(rootContext);
+        parentContext.setLocal("key", "parent");
+        SimpleContext effectiveContext = new SimpleContext(parentContext, new EffectiveContextMap(parentContext));
+        Assert.assertEquals("parent", effectiveContext.get("key"));
+        // ensure EffectiveContextMap provides complete local variable shadowing
+        for (Map.Entry<String,Object> entry : effectiveContext.getVars().entrySet()) {
+            if (entry.getKey().equals("key")) {
+                Assert.assertEquals("parent", entry.getValue());
+            }
+        }
     }
 }

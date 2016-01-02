@@ -18,7 +18,9 @@ package org.apache.commons.scxml2.env;
 
 import java.io.Serializable;
 import java.util.AbstractMap;
-import java.util.HashSet;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.scxml2.Context;
@@ -40,6 +42,13 @@ public final class EffectiveContextMap extends AbstractMap<String, Object> imple
      */
     public EffectiveContextMap(final Context ctx) {
         super();
+        Context current = ctx;
+        while (current != null) {
+            if (current.getVars() instanceof EffectiveContextMap) {
+                throw new IllegalArgumentException("Context or parent Context already wrapped by EffectiveContextMap");
+            }
+            current = current.getParent();
+        }
         this.leaf = ctx;
     }
 
@@ -48,13 +57,21 @@ public final class EffectiveContextMap extends AbstractMap<String, Object> imple
      */
     @Override
     public Set<Entry<String, Object>> entrySet() {
-        Set<Entry<String, Object>> entrySet = new HashSet<Entry<String, Object>>();
-        Context current = leaf;
-        while (current != null) {
-            entrySet.addAll(current.getVars().entrySet());
-            current = current.getParent();
+        Map<String, Object> map = new HashMap<>();
+        mergeVars(leaf, map);
+        return Collections.unmodifiableMap(map).entrySet();
+    }
+
+    /**
+     * Parent Context first merging of all Context vars, to ensure same named 'local' vars shadows parent var
+     * @param leaf current leaf Context
+     * @param map Map to merge vars into
+     */
+    protected void mergeVars(Context leaf, Map<String, Object> map) {
+        if (leaf != null) {
+            mergeVars(leaf.getParent(), map);
+            map.putAll(leaf.getVars());
         }
-        return entrySet;
     }
 
     /**
