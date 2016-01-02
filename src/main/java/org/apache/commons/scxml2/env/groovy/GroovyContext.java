@@ -18,18 +18,16 @@ package org.apache.commons.scxml2.env.groovy;
 
 import groovy.lang.Closure;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.ObjectStreamClass;
 import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml2.Context;
+import org.apache.commons.scxml2.SCInstanceObjectInputStream;
 import org.apache.commons.scxml2.env.SimpleContext;
 
 /**
@@ -133,9 +131,7 @@ public class GroovyContext extends SimpleContext {
         out.writeObject(this.scriptBaseClass);
         out.writeObject(this.evaluator);
         out.writeObject(this.binding);
-        ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        new ObjectOutputStream(bout).writeObject(this.vars);
-        out.writeObject(bout.toByteArray());
+        out.writeObject(this.vars);
     }
 
     @SuppressWarnings("unchecked")
@@ -143,17 +139,17 @@ public class GroovyContext extends SimpleContext {
         this.scriptBaseClass = (String)in.readObject();
         this.evaluator = (GroovyEvaluator)in.readObject();
         this.binding = (GroovyContextBinding)in.readObject();
-        byte[] bytes  = (byte[])in.readObject();
-        if (evaluator != null) {
-            this.vars = (Map<String, Object>)
-                    new ObjectInputStream(new ByteArrayInputStream(bytes)) {
-                        protected Class resolveClass(ObjectStreamClass osc) throws IOException, ClassNotFoundException {
-                            return Class.forName(osc.getName(), true, evaluator.getGroovyClassLoader());
-                        }
-                    }.readObject();
+        SCInstanceObjectInputStream.ClassResolver currentResolver = null;
+        try {
+            if (evaluator != null && in instanceof SCInstanceObjectInputStream) {
+                currentResolver = ((SCInstanceObjectInputStream)in).setClassResolver(osc -> Class.forName(osc.getName(), true, evaluator.getGroovyClassLoader()));
+            }
+            this.vars = (Map<String, Object>)in.readObject();
         }
-        else {
-            this.vars = (Map<String, Object>)new ObjectInputStream(new ByteArrayInputStream(bytes)).readObject();
+        finally {
+            if (in instanceof SCInstanceObjectInputStream) {
+                ((SCInstanceObjectInputStream)in).setClassResolver(currentResolver);
+            }
         }
     }
 }

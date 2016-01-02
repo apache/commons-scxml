@@ -254,7 +254,7 @@ public class SCXMLTestHelper {
         out.writeObject(exec.detachInstance());
         out.close();
         ObjectInputStream in =
-            new ObjectInputStream(new FileInputStream(filename));
+            new SCInstanceObjectInputStream(new FileInputStream(filename));
         exec.attachInstance((SCInstance) in.readObject());
         in.close();
         return exec;
