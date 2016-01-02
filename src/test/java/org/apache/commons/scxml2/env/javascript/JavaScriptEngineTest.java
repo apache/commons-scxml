@@ -16,79 +16,89 @@
  */
 package org.apache.commons.scxml2.env.javascript;
 
+import java.util.UUID;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import javax.script.Bindings;
-import javax.script.ScriptContext;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-
-import org.apache.commons.scxml2.Context;
+import org.apache.commons.scxml2.SCXMLSystemContext;
+import org.apache.commons.scxml2.StateConfiguration;
+import org.apache.commons.scxml2.Status;
+import org.apache.commons.scxml2.model.Final;
+import org.apache.commons.scxml2.system.EventVariable;
 import org.junit.Before;
 import org.junit.Test;
 
 public class JavaScriptEngineTest {
 
-    private ScriptEngine engine;
-
-    private Context context;
+    private JSEvaluator evaluator;
+    private StateConfiguration stateConfiguration;
+    private JSContext _systemContext;
+    private JSContext context;
 
     @Before
     public void before() throws Exception {
-        ScriptEngineManager factory = new ScriptEngineManager();
-        engine = factory.getEngineByName("JavaScript");
-        context = new JSContext();
+        evaluator = new JSEvaluator();
+        _systemContext = new JSContext();
+        SCXMLSystemContext systemContext = new SCXMLSystemContext(_systemContext);
+        _systemContext.set(SCXMLSystemContext.SESSIONID_KEY, UUID.randomUUID().toString());
+        _systemContext.set(SCXMLSystemContext.SCXML_NAME_KEY, "test");
+        stateConfiguration = new StateConfiguration();
+        systemContext.getPlatformVariables().put(SCXMLSystemContext.STATUS_KEY, new Status(stateConfiguration));
+        context = new JSContext(systemContext);
     }
 
     @Test
-    public void testSimpleEvaluation() throws Exception {
-        Object ret = engine.eval("1.0 + 2.0");
-        assertEquals(3.0, ret);
+    public void testInitScxmlSystemContext() throws Exception {
+        assertEquals("test", evaluator.eval(context, "_name"));
     }
 
     @Test
-    public void testBindingsInput() throws Exception {
-        Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
-        bindings.put("x", 1.0);
-        bindings.put("y", 2.0);
-
-        Object ret = engine.eval("x + y;", bindings);
-        assertEquals(3.0, ret);
+    public void testScxmlEvent() throws Exception {
+        assertTrue(evaluator.evalCond(context, "_event === undefined"));
+        EventVariable event = new EventVariable("myEvent", EventVariable.TYPE_INTERNAL, null, null, null, null,"myData");
+        _systemContext.setLocal(SCXMLSystemContext.EVENT_KEY, event);
+        assertFalse(evaluator.evalCond(context, "_event === undefined"));
+        assertTrue(evaluator.evalCond(context, "_event.name == 'myEvent'"));
+        assertTrue(evaluator.evalCond(context, "_event.type == 'internal'"));
+        assertTrue(evaluator.evalCond(context, "_event.data == 'myData'"));
+        assertTrue(evaluator.evalCond(context, "_event.origin === undefined"));
     }
 
     @Test
-    public void testBindingsInput_WithJSBindings() throws Exception {
-        Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
-        JSBindings jsBindings = new JSBindings(context, bindings);
-        jsBindings.put("x", 1.0);
-        jsBindings.put("y", 2.0);
-
-        Object ret = engine.eval("x + y;", jsBindings);
-        assertEquals(3.0, ret);
+    public void testScxmlInPredicate() throws Exception {
+        assertFalse(evaluator.evalCond(context, "In('foo')"));
+        Final foo = new Final();
+        foo.setId("foo");
+        stateConfiguration.enterState(foo);
+        assertTrue(evaluator.evalCond(context, "In('foo')"));
     }
 
     @Test
-    public void testBindingsGlobal() throws Exception {
-        Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
-        bindings.put("x", 1.0);
-        bindings.put("y", 2.0);
-        bindings.put("z", 0.0);
-
-        engine.eval("z = x + y;", bindings);
-        assertEquals("z variable is expected to set to 3.0 in global, but it was " + bindings.get("z") + ".",
-                     3.0, bindings.get("z"));
+    public void testCopyJavscriptGlobalsToScxmlContext() throws Exception {
+        assertFalse(context.has("x"));
+        evaluator.eval(context, ("x=3"));
+        assertEquals(3, context.get("x"));
     }
 
     @Test
-    public void testBindingsGlobal_WithJSBindings() throws Exception {
-        Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
-        JSBindings jsBindings = new JSBindings(context, bindings);
-        jsBindings.put("x", 1.0);
-        jsBindings.put("y", 2.0);
-        jsBindings.put("z", 0.0);
+    public void testSharedJavscriptGlobalsRetainedAcrossInvocation() throws Exception {
+        assertFalse(context.has("x"));
+        evaluator.eval(context, ("x=3"));
+        context.getVars().remove("x");
+        assertFalse(context.has("x"));
+        assertTrue(evaluator.evalCond(context, "x===3"));
+    }
 
-        engine.eval("z = x + y;", jsBindings);
-        assertEquals("z variable is expected to set to 3.0 in global, but it was " + jsBindings.get("z") + ".",
-                     3.0, jsBindings.get("z"));
+    @Test
+    public void testJavscriptGlobalsNotRetainedAcrossEvaluatorInstances() throws Exception {
+        assertFalse(context.has("x"));
+        evaluator.eval(context, ("x=3"));
+        assertEquals(3, context.get("x"));
+        context.getVars().remove("x");
+        assertFalse(context.has("x"));
+        evaluator = new JSEvaluator();
+        assertTrue(evaluator.evalCond(context, "typeof x=='undefined'"));
     }
 }

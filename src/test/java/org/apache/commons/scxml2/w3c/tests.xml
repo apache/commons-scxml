@@ -89,15 +89,15 @@
   <test id="325" mandatory="true"  manual="false" enabled="false"                 ecma="fail"/>
   <test id="326" mandatory="true"  manual="false" enabled="false"                 ecma="fail"/>
   <test id="329" mandatory="true"  manual="false" enabled="true"                  ecma="pass"/>
-  <test id="330" mandatory="true"  manual="false" enabled="false"                 ecma="fail"/>
+  <test id="330" mandatory="true"  manual="false" enabled="true"                  ecma="pass"/>
   <test id="331" mandatory="true"  manual="false" enabled="true"                  ecma="pass"/>
   <test id="332" mandatory="true"  manual="false" enabled="false"                 ecma="fail"/>
-  <test id="333" mandatory="true"  manual="false" enabled="false"                 ecma="fail"/>
-  <test id="335" mandatory="true"  manual="false" enabled="false"                 ecma="fail"/>
+  <test id="333" mandatory="true"  manual="false" enabled="true"                  ecma="pass"/>
+  <test id="335" mandatory="true"  manual="false" enabled="true"                  ecma="pass"/>
   <test id="336" mandatory="true"  manual="false" enabled="true"                  ecma="pass"/>
-  <test id="337" mandatory="true"  manual="false" enabled="false"                 ecma="fail"/>
+  <test id="337" mandatory="true"  manual="false" enabled="true"                  ecma="pass"/>
   <test id="338" mandatory="true"  manual="false" enabled="false"                 ecma=""    >Fails to complete</test>
-  <test id="339" mandatory="true"  manual="false" enabled="false"                 ecma="fail"/>
+  <test id="339" mandatory="true"  manual="false" enabled="true"                  ecma="pass"/>
   <test id="342" mandatory="true"  manual="false" enabled="true"                  ecma="pass"/>
   <test id="346" mandatory="true"  manual="false" enabled="true"                  ecma="pass"/>
   <test id="172" mandatory="true"  manual="false" enabled="true"                  ecma="pass"/>
@@ -118,7 +118,7 @@
   <test id="201" mandatory="false" manual="false" enabled="false"                 ecma="fail"/>
   <test id="205" mandatory="true"  manual="false" enabled="true"                  ecma="pass"/>
   <test id="521" mandatory="true"  manual="false" enabled="false"                 ecma="fail"/>
-  <test id="553" mandatory="true"  manual="false" enabled="false"                 ecma="pass"/>
+  <test id="553" mandatory="true"  manual="false" enabled="true"                  ecma="pass"/>
   <test id="207" mandatory="true"  manual="false" enabled="false"                 ecma=""    >Fails to complete</test>
   <test id="208" mandatory="true"  manual="false" enabled="false"                 ecma="fail"/>
   <test id="210" mandatory="true"  manual="false" enabled="false"                 ecma="fail"/>
@@ -155,7 +155,7 @@
   <test id="278" mandatory="false" manual="false" enabled="false"                 ecma="fail"/>
   <test id="444" mandatory="false" manual="false" enabled="true"                  ecma="pass"/>
   <test id="445" mandatory="false" manual="false" enabled="true"                  ecma="pass"/>
-  <test id="448" mandatory="false" manual="false" enabled="false"                 ecma="fail"/>
+  <test id="448" mandatory="false" manual="false" enabled="true"                  ecma="pass"/>
   <test id="449" mandatory="false" manual="false" enabled="true"                  ecma="pass"/>
   <test id="451" mandatory="false" manual="false" enabled="true"                  ecma="pass"/>
   <test id="452" mandatory="false" manual="false" enabled="true"                  ecma="pass"/>

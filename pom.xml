@@ -204,6 +204,15 @@
 
   <build>
     <sourceDirectory>src/main/java</sourceDirectory>
+    <resources>
+      <resource>
+        <filtering>false</filtering>
+        <directory>src/main/java</directory>
+        <includes>
+          <include>**/*.js</include>
+        </includes>
+      </resource>
+    </resources>
     <testSourceDirectory>src/test/java</testSourceDirectory>
     <testResources>
       <testResource>
