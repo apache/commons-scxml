@@ -163,6 +163,11 @@ public class GroovyEvaluator extends AbstractBaseEvaluator {
         return SUPPORTED_DATA_MODEL;
     }
 
+    @Override
+    public boolean requiresGlobalContext() {
+        return false;
+    }
+
     /**
      * Evaluate an expression.
      *

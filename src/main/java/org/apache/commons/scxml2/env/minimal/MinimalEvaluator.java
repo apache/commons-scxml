@@ -62,6 +62,11 @@ public class MinimalEvaluator implements Evaluator, Serializable {
     }
 
     @Override
+    public boolean requiresGlobalContext() {
+        return true;
+    }
+
+    @Override
     public Object cloneData(final Object data) {
         return data;
     }

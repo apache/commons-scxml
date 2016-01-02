@@ -68,7 +68,7 @@ public class JSEvaluator extends AbstractBaseEvaluator {
 
     /** Error message if evaluation context is not a JexlContext. */
     private static final String ERR_CTX_TYPE = "Error evaluating JavaScript "
-        + "expression, Context must be a org.apache.commons.scxml2.env.javascript.JSContext";
+            + "expression, Context must be a org.apache.commons.scxml2.env.javascript.JSContext";
 
     /** Pattern for recognizing the SCXML In() special predicate. */
     private static final Pattern IN_FN = Pattern.compile("In\\(");
@@ -98,6 +98,15 @@ public class JSEvaluator extends AbstractBaseEvaluator {
     @Override
     public String getSupportedDatamodel() {
         return SUPPORTED_DATA_MODEL;
+    }
+
+    /**
+     * Javascript engine semantics, using a retained global state, requires global SCXML context execution
+     * @return true
+     */
+    @Override
+    public boolean requiresGlobalContext() {
+        return true;
     }
 
     /**

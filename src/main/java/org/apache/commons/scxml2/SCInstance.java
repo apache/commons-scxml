@@ -155,6 +155,9 @@ public class SCInstance implements Serializable {
         if (evaluator == null) {
             evaluator = EvaluatorFactory.getEvaluator(stateMachine);
         }
+        if (evaluator.requiresGlobalContext()) {
+            singleContext = true;
+        }
         if (stateMachine.getDatamodelName() != null && !stateMachine.getDatamodelName().equals(evaluator.getSupportedDatamodel())) {
             throw new ModelException("Incompatible SCXML document datamodel \""+stateMachine.getDatamodelName()+"\""
                     + " for evaluator "+evaluator.getClass().getName()+" supported datamodel \""+evaluator.getSupportedDatamodel()+"\"");

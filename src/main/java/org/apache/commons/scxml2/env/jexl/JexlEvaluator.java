@@ -142,6 +142,11 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
         return SUPPORTED_DATA_MODEL;
     }
 
+    @Override
+    public boolean requiresGlobalContext() {
+        return false;
+    }
+
     /**
      * Evaluate an expression.
      *

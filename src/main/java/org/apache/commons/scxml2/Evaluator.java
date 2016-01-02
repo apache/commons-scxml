@@ -73,6 +73,12 @@ public interface Evaluator {
     String getSupportedDatamodel();
 
     /**
+     * If this Evaluator only supports a global context.
+     * @return true if this Evaluator only support a global context
+     */
+    boolean requiresGlobalContext();
+
+    /**
      * @param data data to be cloned
      * @return A deep clone of the data
      */
