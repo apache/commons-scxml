@@ -41,26 +41,12 @@ public class SCInstanceTest {
     }
     
     @Test
-    public void testGetRootContextNull() {
-        Assert.assertNull(instance.getRootContext());
-    }
-    
-    @Test
     public void testGetRootContext() {
         Context context = new SimpleContext();
         context.set("name", "value");
         
         instance.setRootContext(context);
         Assert.assertEquals("value", instance.getRootContext().get("name"));
-    }
-    
-    @Test
-    public void testGetRootContextEvaluator() throws Exception {
-        Evaluator evaluator = new JexlEvaluator();
-
-        executor.setEvaluator(evaluator);
-
-        Assert.assertTrue(instance.getRootContext() instanceof JexlContext);
     }
     
     @Test

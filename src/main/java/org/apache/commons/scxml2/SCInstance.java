@@ -363,9 +363,8 @@ public class SCInstance implements Serializable {
      * @return The root context.
      */
     public Context getRootContext() {
-        if (rootContext == null && evaluator != null) {
-            rootContext = Evaluator.NULL_DATA_MODEL.equals(evaluator.getSupportedDatamodel())
-                    ? new SimpleContext() : evaluator.newContext(null);
+        if (rootContext == null) {
+            rootContext = new SimpleContext();
         }
         return rootContext;
     }
@@ -380,7 +379,7 @@ public class SCInstance implements Serializable {
         getRootContext();
         if (systemContext != null) {
             // re-parent the system context
-            systemContext.setSystemContext(evaluator.newContext(rootContext));
+            systemContext.setSystemContext(new SimpleContext(rootContext));
         }
     }
 
@@ -394,8 +393,7 @@ public class SCInstance implements Serializable {
             // force initialization of rootContext
             getRootContext();
             if (rootContext != null) {
-                Context internalContext = Evaluator.NULL_DATA_MODEL.equals(evaluator.getSupportedDatamodel()) ?
-                        new SimpleContext() : evaluator.newContext(rootContext);
+                Context internalContext = new SimpleContext(rootContext);
                 systemContext = new SCXMLSystemContext(internalContext);
                 systemContext.getContext().set(SCXMLSystemContext.SESSIONID_KEY, UUID.randomUUID().toString());
                 String _name = stateMachine != null && stateMachine.getName() != null ? stateMachine.getName() : "";
