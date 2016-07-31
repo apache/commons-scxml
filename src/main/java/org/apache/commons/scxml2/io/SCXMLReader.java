@@ -1094,7 +1094,21 @@ public final class SCXMLReader {
 
         Data datum = new Data();
         datum.setId(readRequiredAV(reader, ELEM_DATA, ATTR_ID));
-        datum.setExpr(readAV(reader, ATTR_EXPR));
+        final String expr = readAV(reader, ATTR_EXPR);
+        final String src = readAV(reader, ATTR_SRC);
+
+        if (expr != null && src != null) {
+          LogFactory.getLog(SCXMLReader.class).error(
+              "Found src and expr attributes for data node '" + datum.getId() + "', which is not valid SCXML.");
+          throw new ModelException();
+        }
+        if (expr != null) {
+            datum.setExpr(expr);
+        }
+        if (src != null) {
+          datum.setSrc(src);
+        }
+
         readNamespaces(configuration, datum);
         Node node = readNode(reader, configuration, XMLNS_SCXML, ELEM_DATA, new String[]{"id"});
         datum.setNode(node);

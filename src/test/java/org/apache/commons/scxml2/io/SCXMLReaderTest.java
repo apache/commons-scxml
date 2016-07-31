@@ -278,6 +278,23 @@ public class SCXMLReaderTest {
         Assert.assertNotNull(scxml.getGlobalScript());
     }
 
+    @Test(expected=org.apache.commons.scxml2.model.ModelException.class)
+    public void dataWithSrcAndExprIsRejected() throws Exception {
+      SCXMLTestHelper.parse("org/apache/commons/scxml2/io/data-with-src-and-expr.xml");
+    }
+
+    @Test
+    public void srcAttributeOfDataIsParsed() throws Exception {
+      SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/io/data-with-src.xml");
+      Assert.assertNotNull(scxml);
+      Assert.assertNotNull(scxml.getDatamodel());
+      Assert.assertNotNull(scxml.getDatamodel().getData());
+      Assert.assertEquals("Exactly one data element parsed.", 1, scxml.getDatamodel().getData().size());
+      Data data = scxml.getDatamodel().getData().get(0);
+      Assert.assertNotNull(data);
+      Assert.assertEquals("http://www.w3.org/TR/sxcml", data.getSrc());
+    }
+
     private String serialize(final SCXML scxml) throws IOException, XMLStreamException {
         String scxmlAsString = SCXMLWriter.write(scxml);
         Assert.assertNotNull(scxmlAsString);
