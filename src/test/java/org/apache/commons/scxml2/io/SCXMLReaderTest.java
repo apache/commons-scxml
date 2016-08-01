@@ -315,14 +315,14 @@ public class SCXMLReaderTest {
 
     @Test
     public void exprAttributeOfDataIsParsed() throws Exception {
-      SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/io/data-with-expr.xml");
-      Assert.assertNotNull(scxml);
-      Assert.assertNotNull(scxml.getDatamodel());
-      Assert.assertNotNull(scxml.getDatamodel().getData());
-      Assert.assertEquals("Exactly one data element parsed.", 1, scxml.getDatamodel().getData().size());
-      Data data = scxml.getDatamodel().getData().get(0);
-      Assert.assertNotNull(data);
-      Assert.assertEquals("'an expression'", data.getExpr());
+        SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/io/data-with-expr.xml");
+        Assert.assertNotNull(scxml);
+        Assert.assertNotNull(scxml.getDatamodel());
+        Assert.assertNotNull(scxml.getDatamodel().getData());
+        Assert.assertEquals("Exactly one data element parsed.", 1, scxml.getDatamodel().getData().size());
+        Data data = scxml.getDatamodel().getData().get(0);
+        Assert.assertNotNull(data);
+        Assert.assertEquals("'an expression'", data.getExpr());
     }
 
     private String serialize(final SCXML scxml) throws IOException, XMLStreamException {
