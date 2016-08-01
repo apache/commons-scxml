@@ -279,20 +279,50 @@ public class SCXMLReaderTest {
     }
 
     @Test(expected=org.apache.commons.scxml2.model.ModelException.class)
-    public void dataWithSrcAndExprIsRejected() throws Exception {
-      SCXMLTestHelper.parse("org/apache/commons/scxml2/io/data-with-src-and-expr.xml");
+    public void dataWithSrcAndExprIsRejectedInStrictConfiguration() throws Exception {
+        Configuration configuration = new Configuration();
+        configuration.setStrict(true);
+        configuration.setSilent(true);
+        SCXMLReader.read(getClass().getResourceAsStream("data-with-src-and-expr.xml"), configuration);
+    }
+
+    @Test
+    public void dataWithSrcAndExprUsesExprInNonStrictConfiguration() throws Exception {
+        Configuration configuration = new Configuration();
+        configuration.setStrict(false);
+        configuration.setSilent(true);
+        SCXML scxml = SCXMLReader.read(getClass().getResourceAsStream("data-with-src-and-expr.xml"), configuration);
+        Assert.assertNotNull(scxml);
+        Assert.assertNotNull(scxml.getDatamodel());
+        Assert.assertNotNull(scxml.getDatamodel().getData());
+        Assert.assertEquals("Exactly one data element parsed.", 1, scxml.getDatamodel().getData().size());
+        Data data = scxml.getDatamodel().getData().get(0);
+        Assert.assertNotNull(data);
+        Assert.assertEquals("'an expression'", data.getExpr());
     }
 
     @Test
     public void srcAttributeOfDataIsParsed() throws Exception {
-      SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/io/data-with-src.xml");
+        SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/io/data-with-src.xml");
+        Assert.assertNotNull(scxml);
+        Assert.assertNotNull(scxml.getDatamodel());
+        Assert.assertNotNull(scxml.getDatamodel().getData());
+        Assert.assertEquals("Exactly one data element parsed.", 1, scxml.getDatamodel().getData().size());
+        Data data = scxml.getDatamodel().getData().get(0);
+        Assert.assertNotNull(data);
+        Assert.assertEquals("http://www.w3.org/TR/sxcml", data.getSrc());
+    }
+
+    @Test
+    public void exprAttributeOfDataIsParsed() throws Exception {
+      SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/io/data-with-expr.xml");
       Assert.assertNotNull(scxml);
       Assert.assertNotNull(scxml.getDatamodel());
       Assert.assertNotNull(scxml.getDatamodel().getData());
       Assert.assertEquals("Exactly one data element parsed.", 1, scxml.getDatamodel().getData().size());
       Data data = scxml.getDatamodel().getData().get(0);
       Assert.assertNotNull(data);
-      Assert.assertEquals("http://www.w3.org/TR/sxcml", data.getSrc());
+      Assert.assertEquals("'an expression'", data.getExpr());
     }
 
     private String serialize(final SCXML scxml) throws IOException, XMLStreamException {

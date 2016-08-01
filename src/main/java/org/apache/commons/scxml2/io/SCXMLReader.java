@@ -1097,16 +1097,15 @@ public final class SCXMLReader {
         final String expr = readAV(reader, ATTR_EXPR);
         final String src = readAV(reader, ATTR_SRC);
 
-        if (expr != null && src != null) {
-          LogFactory.getLog(SCXMLReader.class).error(
-              "Found src and expr attributes for data node '" + datum.getId() + "', which is not valid SCXML.");
-          throw new ModelException();
-        }
         if (expr != null) {
+            if (src != null) {
+                reportConflictingAttribute(reader, configuration, ELEM_DATA, ATTR_EXPR, ATTR_SRC);
+            }
             datum.setExpr(expr);
-        }
-        if (src != null) {
-          datum.setSrc(src);
+        } else {
+            if (src != null) {
+                datum.setSrc(src);
+            }
         }
 
         readNamespaces(configuration, datum);

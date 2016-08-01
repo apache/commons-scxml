@@ -21,7 +21,7 @@
        initial="foo">
 
     <datamodel>
-        <data id="theData" src="http://www.w3.org/TR/sxcml" expr="'an expression'" />
+        <data id="theData" expr="'an expression'" />
     </datamodel>
 
     <final id="foo"/>
