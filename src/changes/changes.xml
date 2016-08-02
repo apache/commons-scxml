@@ -35,6 +35,10 @@
     <release version="2.0" date="In Git master"
       description="Latest unreleased code">
 
+      <action dev="woonsan" type="fix" issue="SCXML-251" due-to="Tobias Lippert">
+        [08-02-2016] src attribute is not available for data elements.
+      </action>
+
       <action dev="ate" type="update" issue="SCXML-246">
         [01-02-2016] Javascript engine requires global context execution.
       </action>
