@@ -23,8 +23,10 @@ import java.io.FileReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
@@ -59,7 +61,7 @@ import org.apache.commons.scxml2.model.SCXML;
  * To execute one or multiple IRP tests the commandline parameter <b>run</b> must be specified.
  * </p>
  * <p>
- * Optional environment parameter <b>-Ddatamodel=&lt;minimal|ecma&gt;</b> can be specified to limit the
+ * Optional environment parameter <b>-Ddatamodel=&lt;minimal|ecma|jexl&gt;</b> can be specified to limit the
  * execution of the tests for and using only the specified datamodel language.
  * </p>
  * <p>
@@ -83,11 +85,51 @@ public class W3CTests {
 
     private static final String TESTS_SRC_DIR = "src/w3c/scxml-irp/";
     private static final String TXML_TESTS_DIR = TESTS_SRC_DIR + "txml/";
-    private static final String MINIMAL_TESTS_DIR = TESTS_SRC_DIR + "minimal/";
-    private static final String ECMA_TESTS_DIR = TESTS_SRC_DIR + "ecma/";
     private static final String PACKAGE_PATH = "/"+W3CTests.class.getPackage().getName().replace('.','/');
     private static final String TESTS_FILENAME = PACKAGE_PATH + "/tests.xml";
     private static final String SCXML_IRP_MINIMAL_XSL_FILENAME = PACKAGE_PATH + "/confMinimal.xsl";
+    private static final String SCXML_IRP_JEXL_XSL_FILENAME = PACKAGE_PATH + "/confJexl.xsl";
+
+    /**
+     * Datamodel enum representing the datamodel types used and tested with the W3C IRP tests.
+     */
+    protected enum Datamodel {
+
+        MINIMAL("minimal", "minimal"),
+        ECMA("ecma",       "ecma   "),
+        JEXL("jexl",       "jexl   ");
+
+        private final String value;
+        private final String label;
+        private final String testDir;
+
+        Datamodel(final String value, final String label) {
+            this.value = value;
+            this.label = label;
+            this.testDir = TESTS_SRC_DIR + value + "/";
+        }
+
+        public String value() {
+            return value;
+        }
+
+        public String label() {
+            return label;
+        }
+
+        public String testDir() {
+            return testDir;
+        }
+
+        public static Datamodel fromValue(final String value) {
+            for (Datamodel datamodel : Datamodel.values()) {
+                if (datamodel.value().equals(value)) {
+                    return datamodel;
+                }
+            }
+            return null;
+        }
+    }
 
     /**
      * Tests model class used for loading the <b>tests.xml</b> configuration file
@@ -105,16 +147,16 @@ public class W3CTests {
             private Boolean mandatory;
             @XmlAttribute(required=true)
             private Boolean manual;
-            @XmlAttribute(required=true)
-            private boolean enabled;
             @XmlAttribute
-            private String finalId;
+            private String finalState;
             @XmlAttribute
             private Boolean implemented;
             @XmlAttribute(name="minimal")
-            String minimalStatus;
+            private Boolean minimalStatus;
             @XmlAttribute(name="ecma")
-            String ecmaStatus;
+            private Boolean ecmaStatus;
+            @XmlAttribute(name="jexl")
+            private boolean jexlStatus;
             @XmlValue
             private String comment;
 
@@ -130,26 +172,24 @@ public class W3CTests {
                 return manual == null || manual;
             }
 
-            public boolean isEnabled() {
-                return enabled;
-            }
-
             public String getFinalState() {
-                return finalId;
+                return finalState;
             }
 
             public boolean isImplemented() {
                 return implemented == null || implemented;
             }
 
-            public String getMinimalStatus() {
-                return minimalStatus;
+            public Boolean getStatus(final Datamodel dm) {
+                switch (dm) {
+                    case ECMA:
+                        return ecmaStatus;
+                    case JEXL:
+                        return jexlStatus;
+                    default:
+                        return minimalStatus;
+                }
             }
-
-            public String getEcmaStatus() {
-                return ecmaStatus;
-            }
-
             public String getComment() {
                 return comment;
             }
@@ -178,31 +218,14 @@ public class W3CTests {
     }
 
     /**
-     * Datamodel enum representing the minimal and ecma datamodel types used and tested by the W3C IRP tests.
+     * Loads the tests.xml configuration file into a Tests class configuration model instance.
+     * @return a Tests instance for the tests.xml configuration file.
+     * @throws Exception
      */
-    protected enum Datamodel {
-
-        MINIMAL("minimal"),
-        ECMA("ecma");
-
-        private final String value;
-
-        private Datamodel(final String value) {
-            this.value = value;
-        }
-
-        public String value() {
-            return value;
-        }
-
-        public static Datamodel fromValue(final String value) {
-            for (Datamodel datamodel : Datamodel.values()) {
-                if (datamodel.value().equals(value)) {
-                    return datamodel;
-                }
-            }
-            return null;
-        }
+    protected Tests loadTests() throws Exception {
+        final JAXBContext jaxbContext = JAXBContext.newInstance(Tests.class);
+        final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+        return (Tests)jaxbUnmarshaller.unmarshal(getClass().getResource(TESTS_FILENAME));
     }
 
     /**
@@ -342,17 +365,36 @@ public class W3CTests {
     }
 
     /**
+     * Unmarshall and return the W3C IRP tests manifest.xml
+     * @return an Assertions instance reprenting the W3C IRP tests manifest.xml
+     * @throws Exception
+     */
+    protected Assertions loadAssertions() throws Exception {
+        final JAXBContext jaxbContext = JAXBContext.newInstance(Assertions.class);
+        final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+        return (Assertions)jaxbUnmarshaller.unmarshal(new File(TESTS_SRC_DIR, SCXML_IRP_MANIFEST_URI));
+    }
+
+    /**
      * Simple TestResult data struct for tracking test results
      */
     protected static class TestResults {
-        int testsSkipped;
-        int testsPassed;
-        int testsFailed;
-        int minimalPassed;
-        int minimalFailed;
-        int ecmaPassed;
-        int ecmaFailed;
-        ArrayList<String> failedTests = new ArrayList<>();
+        Map<Datamodel, Integer> passed = new HashMap<>();
+        Map<Datamodel, Integer> failed = new HashMap<>();
+        Map<Datamodel, Integer> skipped = new HashMap<>();
+        ArrayList<String> changedStatusTests = new ArrayList<>();
+
+        public int passed(final Datamodel dm) {
+            return passed.get(dm) != null ? passed.get(dm) : 0;
+        }
+
+        public int failed(final Datamodel dm) {
+            return failed.get(dm) != null ? failed.get(dm) : 0;
+        }
+
+        public int skipped(final Datamodel dm) {
+            return skipped.get(dm) != null ? skipped.get(dm) : 0;
+        }
     }
 
     /**
@@ -387,9 +429,11 @@ public class W3CTests {
         System.out.println("Usage: W3CTests <get|run>\n" +
                 "  get  - downloads the W3C IRP tests\n" +
                 "  make - make previously downloaded  W3C IRP tests by transforming the .txml templates\n" +
-                "  run  - runs test(s), optionally only for a specific datamodel (default: all)\n\n" +
-                "To run a single test, specify -Dtest=<testId>, otherwise all enabled tests will be run.\n" +
-                "To only run test(s) for a specific datamodel, specify -Ddatamodel=<minimal|ecma>.\n");
+                "  run  - runs test(s), optionally only for a specific datamodel (default: all)\n" +
+                "         To run a single test, specify -Dtest=<testId>, otherwise all tests will be run.\n" +
+                "         To only run test(s) for a specific datamodel, specify -Ddatamodel=<minimal|ecma|jexl>.\n" +
+                "         By default only enabled tests (for the specified datamodel, or all) are run,\n" +
+                "         specify -Denabled=false to only run disabled tests.\n");
     }
 
     /**
@@ -403,8 +447,9 @@ public class W3CTests {
             FileUtils.cleanDirectory(testsSrcDir);
         }
         new File(TXML_TESTS_DIR).mkdirs();
-        new File(MINIMAL_TESTS_DIR).mkdirs();
-        new File(ECMA_TESTS_DIR).mkdirs();
+        for (final Datamodel dm : Datamodel.values()) {
+            new File(dm.testDir()).mkdirs();
+        }
         System.out.println("Downloading IRP manifest: " + SCXML_IRP_BASE_URL + SCXML_IRP_MANIFEST_URI);
         FileUtils.copyURLToFile(new URL(SCXML_IRP_BASE_URL + SCXML_IRP_MANIFEST_URI), new File(testsSrcDir, SCXML_IRP_MANIFEST_URI));
         System.out.println("Downloading ecma stylesheet: " + SCXML_IRP_BASE_URL + SCXML_IRP_ECMA_XSL_URI);
@@ -432,27 +477,18 @@ public class W3CTests {
 
         TransformerFactory factory = TransformerFactory.newInstance("net.sf.saxon.TransformerFactoryImpl",null);
         factory.setFeature("http://saxon.sf.net/feature/suppressXsltNamespaceCheck", true);
-        Transformer ecmaTransformer = factory.newTransformer(new StreamSource(new FileInputStream(new File(testsSrcDir, SCXML_IRP_ECMA_XSL_URI))));
-        Transformer minimalTransformer = factory.newTransformer(new StreamSource(getClass().getResourceAsStream(SCXML_IRP_MINIMAL_XSL_FILENAME)));
+        final Map<Datamodel, Transformer> transformers = new HashMap<>();
+        transformers.put(Datamodel.ECMA, factory.newTransformer(new StreamSource(new FileInputStream(new File(testsSrcDir, SCXML_IRP_ECMA_XSL_URI)))));
+        transformers.put(Datamodel.MINIMAL, factory.newTransformer(new StreamSource(getClass().getResourceAsStream(SCXML_IRP_MINIMAL_XSL_FILENAME))));
+        transformers.put(Datamodel.JEXL, factory.newTransformer(new StreamSource(getClass().getResourceAsStream(SCXML_IRP_JEXL_XSL_FILENAME))));
         Assertions assertions = loadAssertions();
         for (Assertions.Assertion entry : assertions.getAssertions().values()) {
             for (Assertions.TestCase test : entry.getTestCases()) {
                 for (Assertions.Resource resource : test.getResources()) {
-                    processResource(entry.getSpecId(), resource, minimalTransformer, ecmaTransformer);
+                    processResource(entry.getSpecId(), resource, transformers);
                 }
             }
         }
-    }
-
-    /**
-     * Unmarshall and return the W3C IRP tests manifest.xml
-     * @return an Assertions instance reprenting the W3C IRP tests manifest.xml
-     * @throws Exception
-     */
-    protected Assertions loadAssertions() throws Exception {
-        final JAXBContext jaxbContext = JAXBContext.newInstance(Assertions.class);
-        final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        return (Assertions)jaxbUnmarshaller.unmarshal(new File(TESTS_SRC_DIR, SCXML_IRP_MANIFEST_URI));
     }
 
     /**
@@ -460,23 +496,25 @@ public class W3CTests {
      * @param specid the SCXML 1.0 spec id (anchor) for the current assertion,
      *               which is used to determine if, how and where the resource should be transformed.
      * @param resource The test resource definition
-     * @param minimalTransformer transformer to produce an minimal datamodel SCXML document from the txml resource
-     * @param ecmaTransformer transformer to produce an ecmascript datamodel SCXML document from the txml resource
+     * @param transformers map of datamodel transformers to produce a datamodel specific SCXML document from the txml resource
      * @throws Exception
      */
-    protected void processResource(final String specid, final Assertions.Resource resource,
-                                   final Transformer minimalTransformer, final Transformer ecmaTransformer)
+    protected void processResource(final String specid, final Assertions.Resource resource, final Map<Datamodel, Transformer> transformers)
             throws Exception {
         System.out.println("processing IRP test file " + resource.getFilename());
         FileUtils.copyURLToFile(new URL(SCXML_IRP_BASE_URL + resource.getUri()), new File(TXML_TESTS_DIR + resource.getFilename()));
         if (specid.equals("#minimal-profile")) {
-            transformResource(resource, minimalTransformer, MINIMAL_TESTS_DIR);
+            transformResource(resource, transformers.get(Datamodel.MINIMAL), Datamodel.MINIMAL.testDir());
         }
         else if (specid.equals("#ecma-profile")) {
-            transformResource(resource, ecmaTransformer, ECMA_TESTS_DIR);
+            transformResource(resource, transformers.get(Datamodel.ECMA), Datamodel.ECMA.testDir());
         }
         else {
-            transformResource(resource, ecmaTransformer, ECMA_TESTS_DIR);
+            for (Datamodel dm : transformers.keySet()) {
+                if (dm != Datamodel.MINIMAL) {
+                    transformResource(resource, transformers.get(dm), dm.testDir());
+                }
+            }
         }
     }
 
@@ -516,10 +554,11 @@ public class W3CTests {
         final Assertions assertions = loadAssertions();
         final Tests tests = loadTests();
         final TestResults results = new TestResults();
+        final boolean enabled = Boolean.parseBoolean(System.getProperty("enabled", "true"));
         if (testId != null) {
             final Assertions.Assertion assertion = assertions.getAssertions().get(testId);
             if (assertion != null) {
-                runTest(assertion, tests, datamodel, true, results);
+                runAssert(assertion, tests, datamodel, enabled, true, results);
             }
             else {
                 throw new IllegalArgumentException("Unknown test with id: "+testId);
@@ -527,28 +566,26 @@ public class W3CTests {
         }
         else {
             for (Assertions.Assertion entry : assertions.getAssertions().values()) {
-                runTest(entry, tests, datamodel, false, results);
+                runAssert(entry, tests, datamodel, enabled, false, results);
             }
         }
         System.out.println(
                 "\nTest results running " +
-                (testId == null ? "all enabled tests" : "test "+testId) +
-                (datamodel != null ? " for the "+datamodel.value+" datamodel" : "") +
-                ":\n" +
-                "  number of tests    : "+(results.testsSkipped+results.testsPassed+results.testsFailed) +
-                   " ("+results.testsPassed+" passed,  "+results.testsFailed +" failed,  "+results.testsSkipped+" skipped)");
-        if (results.minimalPassed+results.minimalFailed > 0) {
-            System.out.println(
-                    "    mimimal datamodel: "+results.minimalPassed+" passed,  "+results.minimalFailed+" failed");
-        }
-        if (results.ecmaPassed+results.ecmaFailed > 0) {
-            System.out.println(
-                    "    ecma    datamodel: "+results.ecmaPassed+" passed,  "+results.ecmaFailed+" failed");
+                (testId == null ? "all tests" : "test "+testId) +
+                (datamodel != null ? " for the "+datamodel.value+" datamodel" : "") + (enabled ? " enabled" : " disabled"));
+        for (final Datamodel dm : Datamodel.values()) {
+            if (datamodel == null || datamodel == dm) {
+                System.out.println(
+                        "    "+dm.label()+" datamodel: "+results.passed(dm)+" passed,  " +
+                                results.failed(dm)+" failed, " +
+                                results.skipped(dm)+" skipped ("+
+                                (results.passed(dm)+results.failed(dm)+results.skipped(dm))+" total)");
+            }
         }
         System.out.print("\n");
-        if (!results.failedTests.isEmpty()) {
-            System.out.println("  failed tests: ");
-            for (String filename : results.failedTests) {
+        if (testId == null && !results.changedStatusTests.isEmpty()) {
+            System.out.println("  "+(enabled? "failed" : "passed")+" tests: ");
+            for (String filename : results.changedStatusTests) {
                 System.out.println("    "+filename);
             }
             System.out.print("\n");
@@ -556,106 +593,49 @@ public class W3CTests {
     }
 
     /**
-     * Loads the tests.xml configuration file into a Tests class configuration model instance.
-     * @return a Tests instance for the tests.xml configuration file.
-     * @throws Exception
-     */
-    protected Tests loadTests() throws Exception {
-        final JAXBContext jaxbContext = JAXBContext.newInstance(Tests.class);
-        final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        return (Tests)jaxbUnmarshaller.unmarshal(getClass().getResource(TESTS_FILENAME));
-    }
-
-    /**
-     * Run a single W3C IRP test (assert)
+     * Run a single W3C IRP assert test
      * @param assertion The W3C IRP assert, defining one or more {@link Assertions.TestCase}s
      * @param tests the tests configurations
      * @param datamodel the datamodel to limit and restrict the execution of the test
+     * @param status true to run the test with status true for the (or any) datamodel, false to do so for status false
      * @param singleTest if true a single test id was specified which will be executed even if disabled in the configuration.
      * @throws Exception
      */
-    protected void runTest(final Assertions.Assertion assertion, final Tests tests, final Datamodel datamodel,
-                           final boolean singleTest, TestResults results) throws Exception {
+    protected void runAssert(final Assertions.Assertion assertion, final Tests tests, final Datamodel datamodel,
+                             final boolean status, final boolean singleTest, TestResults results) throws Exception {
         final Tests.Test test = tests.getTests().get(assertion.getId());
         if (test == null) {
             throw new IllegalStateException("No test configuration found for W3C IRP test with id: "+assertion.getId());
         }
-        boolean skipped = true;
-        boolean passed = true;
-        if (singleTest || test.isEnabled()) {
-            if (datamodel != Datamodel.MINIMAL || datamodel.equals(assertion.getDatamodel())) {
-                if (datamodel == null || assertion.getDatamodel() == null || datamodel.equals(assertion.getDatamodel())) {
-                    final Datamodel effectiveDM = datamodel != null ? datamodel : assertion.getDatamodel();
-                    for (Assertions.TestCase testCase : assertion.getTestCases()) {
-                        if (effectiveDM != null) {
-                            switch (effectiveDM) {
-                                case MINIMAL:
+        if (test.isImplemented()) {
+            for (Assertions.TestCase testCase : assertion.getTestCases()) {
+                for (final Datamodel dm : Datamodel.values()) {
+                    if (assertion.getDatamodel() == null && dm != Datamodel.MINIMAL || dm == assertion.getDatamodel()) {
+                        boolean skipped = true;
+                        if (datamodel == null || datamodel == dm) {
+                            if (singleTest || test.getStatus(dm) == null || status == test.getStatus(dm)) {
+                                for (Assertions.Resource scxmlResource : testCase.getScxmlResources()) {
+                                    File scxmlFile = new File(dm.testDir(), scxmlResource.getName()+".scxml");
                                     skipped = false;
-                                    if (runTests(assertion, testCase, test, MINIMAL_TESTS_DIR, results.failedTests)) {
-                                        results.minimalPassed++;
+                                    boolean success = runTest(testCase, test, scxmlFile);
+                                    if (!success) {
+                                        results.failed.put(dm, results.failed(dm)+1);
+                                    } else {
+                                        results.passed.put(dm, results.passed(dm)+1);
                                     }
-                                    else {
-                                        passed = false;
-                                        results.minimalFailed++;
+                                    if (success != status) {
+                                        results.changedStatusTests.add(scxmlFile.getParentFile().getName()+"/"+scxmlFile.getName());
                                     }
-                                    break;
-                                case ECMA:
-                                    skipped = false;
-                                    if (runTests(assertion, testCase, test, ECMA_TESTS_DIR, results.failedTests)) {
-                                        results.ecmaPassed++;
-                                    }
-                                    else {
-                                        passed = false;
-                                        results.ecmaFailed++;
-                                    }
-                                    break;
+                                }
                             }
                         }
-                        else {
-                            skipped = false;
-                            if (runTests(assertion, testCase, test, ECMA_TESTS_DIR, results.failedTests)) {
-                                results.ecmaPassed++;
-                            }
-                            else {
-                                passed = false;
-                                results.ecmaFailed++;
-                            }
+                        if (skipped) {
+                            results.skipped.put(dm, results.skipped(dm)+1);
                         }
                     }
                 }
             }
         }
-        if (skipped) {
-            results.testsSkipped++;
-        }
-        else if (passed) {
-            results.testsPassed++;
-        }
-        else {
-            results.testsFailed++;
-        }
-    }
-
-    /**
-     * Execute all W3C IRP SCXML tests for a specific {@link Assertions.TestCase}
-     * @param assertion the W3C IRP test assert definition
-     * @param testCase the W3C IRP test definition
-     * @param test the test configuration
-     * @param scxmlDir the datamodel specific directory path containing the SCXML document(s)
-     * @throws Exception
-     */
-    protected boolean runTests(final Assertions.Assertion assertion, final Assertions.TestCase testCase,
-                               final Tests.Test test, final String scxmlDir, ArrayList<String> failedTests)
-            throws Exception {
-        boolean passed = true;
-        for (Assertions.Resource scxmlResource : testCase.getScxmlResources()) {
-            File scxmlFile = new File(scxmlDir, scxmlResource.getName()+".scxml");
-            if (!runTest(testCase, test, scxmlFile)) {
-                passed = false;
-                failedTests.add(scxmlFile.getParentFile().getName()+"/"+scxmlFile.getName());
-            }
-        }
-        return passed;
     }
 
     /**
@@ -701,6 +681,10 @@ public class W3CTests {
             }
         }
         catch (Exception e) {
+            if (test.isManual() && e.getMessage() != null && e.getMessage().equals(test.getFinalState())) {
+                System.out.println("                PASS: "+e.getMessage());
+                return true;
+            }
             System.out.println("                FAIL: "+e.getMessage());
             return false;
         }

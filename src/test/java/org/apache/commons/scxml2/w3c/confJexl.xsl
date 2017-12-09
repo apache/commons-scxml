@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <!-- Copyright 1998-2003 W3C (MIT, ERCIM, Keio), All Rights Reserved. See http://www.w3.org/Consortium/Legal/. -->
+<!-- Adapted from http://www.w3.org/Voice/2013/scxml-irp/confEcma.xsl -->
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:conf="http://www.w3.org/2005/scxml-conformance"
@@ -45,7 +46,7 @@
 
 <!-- datamodel -->
 <xsl:template match="//@conf:datamodel">
-	<xsl:attribute name="datamodel">ecmascript</xsl:attribute>
+	<xsl:attribute name="datamodel">jexl</xsl:attribute>
 </xsl:template>
 
 
@@ -68,7 +69,7 @@
 
 <!-- names an invalid location for <assign>, etc. -->
 <xsl:template match="//@conf:invalidLocation">
-	<xsl:attribute name="location">foo.bar.baz </xsl:attribute>
+	<xsl:attribute name="location">foo.bar.baz[0]</xsl:attribute>
 </xsl:template>
 
 <!-- uses system var as location for <assign>, etc. -->
@@ -325,7 +326,7 @@ events which cause the test to fail.  The default value provided here is pretty 
 					<xsl:matching-substring>Var<xsl:value-of select="regex-group(1)"/>
 						<xsl:variable name="op"><xsl:value-of select="regex-group(2)"/></xsl:variable>
 						<xsl:choose>
-							<xsl:when test="$op='='">===</xsl:when>
+							<xsl:when test="$op='='">==</xsl:when>
 							<xsl:otherwise><xsl:value-of select="$op"/></xsl:otherwise>
 					 </xsl:choose>
 							<xsl:value-of select="regex-group(3)"/>
@@ -340,7 +341,7 @@ events which cause the test to fail.  The default value provided here is pretty 
 		<xsl:attribute name="cond">
 		<xsl:analyze-string select="."
 			regex="([0-9]+)(\W+)([0-9]+)">
-					<xsl:matching-substring>Var<xsl:value-of select="regex-group(1)"/>===Var<xsl:value-of select="regex-group(3)"/>
+					<xsl:matching-substring>Var<xsl:value-of select="regex-group(1)"/>==Var<xsl:value-of select="regex-group(3)"/>
 					</xsl:matching-substring>
 		</xsl:analyze-string>
 	</xsl:attribute>
@@ -444,12 +445,12 @@ is the second argument -->
 </xsl:template>
 
 <xsl:template match="//@conf:emptyEventData">
-	<xsl:attribute name="cond">typeof _event.data === 'undefined'</xsl:attribute>
+	<xsl:attribute name="cond">empty(_event.data</xsl:attribute>
 </xsl:template>
 
 <!-- return true if the _name system var has the specified quoted value -->
 <xsl:template match="//@conf:nameVarVal">
-	<xsl:attribute name="cond">_name  === '<xsl:value-of select="."/>'</xsl:attribute>
+	<xsl:attribute name="cond">_name  == '<xsl:value-of select="."/>'</xsl:attribute>
 </xsl:template>
 
 <!-- return true if first var's value is a prefix of the second var's value.  Input has form "n m" where n and m are ints.-->
@@ -458,14 +459,8 @@ is the second argument -->
 		<xsl:analyze-string select="."
 			regex="(\w+)(\W)(\w+)">
 					<xsl:matching-substring>
-					<!-- the underscore.string.startswith function compressed into one line below: 
-							<xsl:text>(function(str, starts){
-							      if (starts === '') return true;
-							      if (str == null || starts == null) return false;
-							      str = String(str); starts = String(starts);
-							      return str.length >= starts.length &amp;&amp; str.slice(0, starts.length) === starts;
-							    })(</xsl:text>Var<xsl:value-of select="regex-group(3)"/>, Var<xsl:value-of select="regex-group(1)"/><xsl:text>)</xsl:text> -->
-<xsl:text>(function(str, starts){if (starts === '') return true;if (str == null || starts == null) return false;str = String(str); starts = String(starts);return str.length >= starts.length &amp;&amp; str.slice(0, starts.length) === starts;})(</xsl:text>Var<xsl:value-of select="regex-group(3)"/>, Var<xsl:value-of select="regex-group(1)"/><xsl:text>)</xsl:text>
+						<!-- input "2 1" generates: "!empty(Var1) and !empty(Var2) and Var1 =^ Var2" -->
+						<xsl:text>!empty(Var</xsl:text><xsl:value-of select="regex-group(3)"/><xsl:text>) and !empty(Var</xsl:text><xsl:value-of select="regex-group(1)"/><xsl:text>) and Var</xsl:text><xsl:value-of select="regex-group(3)"/><xsl:text> =^ Var</xsl:text><xsl:value-of select="regex-group(1)"/>
 					</xsl:matching-substring>
 		</xsl:analyze-string>
 	</xsl:attribute>
@@ -482,22 +477,22 @@ is the second argument -->
 
 <!-- true if id has a value -->
 <xsl:template match="//@conf:isBound">
-	<xsl:attribute name="cond">Var<xsl:value-of select="." /></xsl:attribute>
+	<xsl:attribute name="cond">!empty(Var<xsl:value-of select="." />)</xsl:attribute>
 </xsl:template>
 
 <!-- return true if specified var has been created but is not bound -->
 <xsl:template match="//@conf:unboundVar">
-	<xsl:attribute name="cond">typeof Var<xsl:value-of select="." /> === 'undefined' </xsl:attribute>
+	<xsl:attribute name="cond">empty(Var<xsl:value-of select="." />)</xsl:attribute>
 </xsl:template>
 
 <!-- true if system var has a value -->
 <xsl:template match="//@conf:systemVarIsBound">
-	<xsl:attribute name="cond"><xsl:value-of select="." /></xsl:attribute>
+	<xsl:attribute name="cond">!empty(<xsl:value-of select="." />)</xsl:attribute>
 </xsl:template>
 
 <!-- true if id does not have a value -->
 <xsl:template match="//@conf:noValue">
-	<xsl:attribute name="cond">!Var<xsl:value-of select="." /></xsl:attribute>
+	<xsl:attribute name="cond">empty(Var<xsl:value-of select="." />)</xsl:attribute>
 </xsl:template>
 
 <!-- always returns true -->
@@ -512,22 +507,22 @@ is the second argument -->
 
 <!-- returns true if all the required fields of _event are bound -->
   <xsl:template match="//@conf:eventFieldsAreBound">
-    <xsl:attribute name="cond">'name' in _event &amp;&amp; 'type' in _event &amp;&amp; 'sendid' in _event &amp;&amp; 'origin' in _event &amp;&amp; 'origintype' in _event &amp;&amp; 'invokeid' in _event &amp;&amp; 'data' in _event</xsl:attribute>
+    <xsl:attribute name="cond">empty(_event.getName())?:true and empty(_event.getType())?:true and empty(_event.getSendid())?:true and empty(_event.getOrigin())?:true and empty(_event.getOrigintype())?:true and empty(_event.getInvokeid())?:true and empty(_event.getData())</xsl:attribute>
   </xsl:template> 
 
 <!-- returns true if  _event.data contains the specified item -->
 <xsl:template match="//@conf:eventDataHasField">
-	<xsl:attribute name="cond"><xsl:value-of select="."/> in _event.data</xsl:attribute>
+	<xsl:attribute name="cond">!empty(<xsl:value-of select="."/>_event.data)</xsl:attribute>
 </xsl:template>
 
 <!-- returns true if specified field of _event has no value -->
 <xsl:template match="//@conf:eventFieldHasNoValue">
-	<xsl:attribute name="cond">typeof _event.<xsl:value-of select="." /> === 'undefined' </xsl:attribute>
+	<xsl:attribute name="cond">empty(_event.<xsl:value-of select="." />)</xsl:attribute>
 </xsl:template>
 
 <!-- true if the language of _event matches the processor's datamodel -->
 <xsl:template match="//@conf:eventLanguageMatchesDatamodel">
-	<xsl:attribute name="cond"> _event.language == 'ecmascript'</xsl:attribute>
+	<xsl:attribute name="cond"> _event.language == 'jexl'</xsl:attribute>
 </xsl:template>
 
 <!-- true if _event was delivered on the specified i/o processor -->
@@ -541,7 +536,7 @@ is the second argument -->
 <!-- scripting -->
 
 <xsl:template match="conf:script">
- <script xmlns="http://www.w3.org/2005/07/scxml">var Var1 = 1</script>
+	<script xmlns="http://www.w3.org/2005/07/scxml">Var1 = 1</script>
 </xsl:template>
 
 
@@ -605,7 +600,7 @@ is of the same type as array123 -->
 <xsl:template match="conf:extendArray">
 	<assign xmlns="http://www.w3.org/2005/07/scxml">
 	  <xsl:attribute name="location">Var<xsl:value-of select="@id"/></xsl:attribute>
-	  <xsl:attribute name="expr">[].concat(Var<xsl:value-of select="@id"/>, [4])</xsl:attribute>
+	  <xsl:attribute name="expr">Var<xsl:value-of select="@id"/>.add(4)</xsl:attribute>
 	  </assign>
 	</xsl:template>
 
@@ -685,7 +680,7 @@ the basic http tests.  In the case of python, we have to import the regexp modul
 
 <!-- generate a cond that evaluates to true if the event is external -->
 <xsl:template match="//@conf:eventIsExternal">
- <xsl:attribute name="cond">_event.type === 'external'</xsl:attribute>
+ <xsl:attribute name="cond">_event.type == 'external'</xsl:attribute>
 </xsl:template>
 
 <!-- returns true if _event/raw contains the var with the specified value -->
