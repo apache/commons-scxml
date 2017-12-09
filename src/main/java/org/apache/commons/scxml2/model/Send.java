@@ -408,7 +408,7 @@ public class Send extends NamelistHolder implements ContentContainer {
             }
         }
         if (delayString != null) {
-            wait = parseDelay(delayString, exctx.getAppLog());
+            wait = parseDelay(delayString, delayexpr != null, delayexpr != null ? delayexpr : delay);
         }
         String eventValue = event;
         if (eventValue == null && eventexpr != null) {
@@ -434,11 +434,12 @@ public class Send extends NamelistHolder implements ContentContainer {
      * Parse delay.
      *
      * @param delayString The String value of the delay, in CSS2 format
-     * @param appLog      The application log
+     * @param expression indicates if this is for a delayexpr or delay attribute
+     * @param delayStringSource the original delayString source (delayString might be different in case of a delayexpr)
      * @return The parsed delay in milliseconds
      * @throws SCXMLExpressionException If the delay cannot be parsed
      */
-    private long parseDelay(final String delayString, final Log appLog)
+    static long parseDelay(final String delayString, final boolean expression, final String delayStringSource)
             throws SCXMLExpressionException {
 
         long wait = 0L;
@@ -446,26 +447,33 @@ public class Send extends NamelistHolder implements ContentContainer {
 
         if (delayString != null && delayString.trim().length() > 0) {
 
-            String trimDelay = delayString.trim();
-            String numericDelay = trimDelay;
-            if (trimDelay.endsWith(MILLIS)) {
-                numericDelay = trimDelay.substring(0, trimDelay.length() - 2);
-            } else if (trimDelay.endsWith(SECONDS)) {
-                multiplier = MILLIS_IN_A_SECOND;
-                numericDelay = trimDelay.substring(0, trimDelay.length() - 1);
-            } else if (trimDelay.endsWith(MINUTES)) { // Not CSS2
-                multiplier = MILLIS_IN_A_MINUTE;
-                numericDelay = trimDelay.substring(0, trimDelay.length() - 1);
-            }
-
             try {
-                wait = Long.parseLong(numericDelay);
+                String trimDelay = delayString.trim();
+                String numericDelay = trimDelay;
+                if (trimDelay.endsWith(MILLIS)) {
+                    numericDelay = trimDelay.substring(0, trimDelay.length() - 2);
+                } else if (trimDelay.endsWith(SECONDS)) {
+                    multiplier = multiplier*MILLIS_IN_A_SECOND;
+                    numericDelay = trimDelay.substring(0, trimDelay.length() - 1);
+                } else if (trimDelay.endsWith(MINUTES)) { // Not CSS2
+                    multiplier = multiplier*MILLIS_IN_A_MINUTE;
+                    numericDelay = trimDelay.substring(0, trimDelay.length() - 1);
+                }
+                int fractionIndex = numericDelay.indexOf('.');
+                if (fractionIndex > -1) {
+                    if (fractionIndex > 0) {
+                        wait = Long.parseLong(numericDelay.substring(0, fractionIndex));
+                        wait *= multiplier;
+                    }
+                    numericDelay = numericDelay.substring(fractionIndex+1);
+                    multiplier /= Math.pow(10, numericDelay.length());
+                }
+                if (numericDelay.length() > 0) {
+                    wait += Long.parseLong(numericDelay) * multiplier;
+                }
             } catch (NumberFormatException nfe) {
-                appLog.error(nfe.getMessage(), nfe);
-                throw new SCXMLExpressionException(nfe.getMessage(), nfe);
+                throw new SCXMLExpressionException("<send>: invalid " + (expression ? "delayexpr=\"" : "delay=\"") + delayStringSource +"\"");
             }
-            wait *= multiplier;
-
         }
         return wait;
     }

@@ -103,7 +103,7 @@
   <test id="172" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="173" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="174" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
-  <test id="175" mandatory="true"                    manual="false" jexl="false" ecma="false"/>
+  <test id="175" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="176" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="178" mandatory="true"                    manual="true"  jexl="true"  ecma="true"  finalState="final"/>
   <test id="179" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
@@ -119,8 +119,8 @@
   <test id="521" mandatory="true"                    manual="false" jexl="false" ecma="false"/>
   <test id="553" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="207" mandatory="true"                    manual="false" jexl="false" ecma="false" implemented="false"/>
-  <test id="208" mandatory="true"                    manual="false" jexl="false" ecma="false"/>
-  <test id="210" mandatory="true"                    manual="false" jexl="false" ecma="false"/>
+  <test id="208" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
+  <test id="210" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="215" mandatory="true"                    manual="false" jexl="false" ecma="false"/>
   <test id="216" mandatory="true"                    manual="false" jexl="false" ecma="false"/>
   <test id="220" mandatory="true"                    manual="false" jexl="false" ecma="false"/>

@@ -35,6 +35,10 @@
     <release version="2.0" date="In Git master"
       description="Latest unreleased code">
 
+      <action dev="ate" type="update" issue="SCXML-257">
+        [12-10-2017] &lt;send&gt; delay must support decimal values
+      </action>
+
       <action dev="ate" type="update" issue="SCXML-256">
         [12-10-2017] Add SCXMLExecutor.run() ans SCXMLSemantics.initialize(...) methods and SCXML early/late binding
       </action>

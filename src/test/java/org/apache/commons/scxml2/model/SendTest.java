@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.scxml2.SCXMLExecutor;
+import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.SCXMLIOProcessor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.TriggerEvent;
@@ -60,5 +61,31 @@ public class SendTest {
         final Iterator<String> it = firstPayload.keySet().iterator();
         Assert.assertEquals("The first one in the namelist must be 'one'.", "one", it.next());
         Assert.assertEquals("The first one in the namelist must be 'two'.", "two", it.next());
+    }
+
+    private long parseDelay(String delayString) throws SCXMLExpressionException {
+        return Send.parseDelay(delayString, true, delayString);
+    }
+
+    @Test
+    public void testDelayExpression() throws Exception {
+        Assert.assertEquals(0L, parseDelay(".s"));
+        Assert.assertEquals(0L, parseDelay(".0s"));
+        Assert.assertEquals(1000L, parseDelay("1.s"));
+        Assert.assertEquals(1000L, parseDelay("1.0s"));
+        Assert.assertEquals(1500L, parseDelay("1.5s"));
+        Assert.assertEquals(500L, parseDelay(".5s"));
+        Assert.assertEquals(500L, parseDelay("0.5s"));
+        Assert.assertEquals(50L, parseDelay("0.05s"));
+        Assert.assertEquals(5L, parseDelay("0.005s"));
+        Assert.assertEquals(0L, parseDelay("0.0005s"));
+        Assert.assertEquals(0L, parseDelay(".9ms"));
+        Assert.assertEquals(1L, parseDelay("1.9ms"));
+        Assert.assertEquals(60000L, parseDelay("1m"));
+        Assert.assertEquals(60000L, parseDelay("1.0m"));
+        Assert.assertEquals(30000L, parseDelay(".5m"));
+        Assert.assertEquals(6000L, parseDelay(".1m"));
+        Assert.assertEquals(6000L, parseDelay(".10m"));
+        Assert.assertEquals(15000L, parseDelay(".25m"));
     }
 }
