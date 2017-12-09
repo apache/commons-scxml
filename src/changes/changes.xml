@@ -35,6 +35,10 @@
     <release version="2.0" date="In Git master"
       description="Latest unreleased code">
 
+      <action dev="ate" type="update" issue="SCXML-254">
+        [12-09-2017] Update to current dependencies for groovy, commons-jexl, commons-io, jackson
+      </action>
+
       <action dev="woonsan" type="fix" issue="SCXML-251" due-to="Tobias Lippert">
         [08-02-2016] src attribute is not available for data elements.
       </action>

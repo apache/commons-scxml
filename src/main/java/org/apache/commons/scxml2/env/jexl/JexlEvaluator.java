@@ -20,9 +20,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.apache.commons.jexl2.Expression;
-import org.apache.commons.jexl2.JexlEngine;
-import org.apache.commons.jexl2.Script;
+import org.apache.commons.jexl3.JexlBuilder;
+import org.apache.commons.jexl3.JexlExpression;
+import org.apache.commons.jexl3.JexlEngine;
+import org.apache.commons.jexl3.JexlScript;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.EvaluatorProvider;
@@ -87,7 +88,7 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
     public JexlEvaluator() {
         super();
         // create the internal JexlEngine initially
-        jexlEngine = createJexlEngine();
+        jexlEngine = getJexlEngine();
         jexlEngineSilent = jexlEngine.isSilent();
         jexlEngineStrict = jexlEngine.isStrict();
     }
@@ -101,40 +102,11 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
     }
 
     /**
-     * Delegate method for {@link JexlEngine#setSilent(boolean)} to set whether the engine throws JexlException during
-     * evaluation when an error is triggered.
-     * <p>This method should be called as an optional step of the JexlEngine
-     * initialization code before expression creation &amp; evaluation.</p>
-     * @param silent true means no JexlException will occur, false allows them
-     */
-    public void setJexlEngineSilent(boolean silent) {
-        synchronized (this) {
-            JexlEngine engine = getJexlEngine();
-            engine.setSilent(silent);
-            this.jexlEngineSilent = silent;
-        }
-    }
-
-    /**
      * Checks whether the internal Jexl engine behaves in strict or lenient mode.
      * @return true for strict, false for lenient
      */
     public boolean isJexlEngineStrict() {
         return jexlEngineStrict;
-    }
-
-    /**
-     * Delegate method for {@link JexlEngine#setStrict(boolean)} to set whether it behaves in strict or lenient mode.
-     * <p>This method is should be called as an optional step of the JexlEngine
-     * initialization code before expression creation &amp; evaluation.</p>
-     * @param strict true for strict, false for lenient
-     */
-    public void setJexlEngineStrict(boolean strict) {
-        synchronized (this) {
-            JexlEngine engine = getJexlEngine();
-            engine.setStrict(strict);
-            this.jexlEngineStrict = strict;
-        }
     }
 
     @Override
@@ -166,7 +138,7 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
         }
         try {
             final JexlContext effective = getEffectiveContext((JexlContext)ctx);
-            Expression exp = getJexlEngine().createExpression(expr);
+            JexlExpression exp = getJexlEngine().createExpression(expr);
             return exp.evaluate(effective);
         } catch (Exception e) {
             String exMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getCanonicalName();
@@ -187,7 +159,7 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
         }
         try {
             final JexlContext effective = getEffectiveContext((JexlContext)ctx);
-            Expression exp = getJexlEngine().createExpression(expr);
+            JexlExpression exp = getJexlEngine().createExpression(expr);
             final Object result = exp.evaluate(effective);
             return result == null ? Boolean.FALSE : (Boolean)result;
         } catch (Exception e) {
@@ -224,7 +196,7 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
         }
         try {
             final JexlContext effective = getEffectiveContext((JexlContext) ctx);
-            final Script jexlScript = getJexlEngine().createScript(script);
+            final JexlScript jexlScript = getJexlEngine().createScript(script);
             return jexlScript.execute(effective);
         } catch (Exception e) {
             String exMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getCanonicalName();
@@ -250,14 +222,11 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
      * @return new JexlEngine instance
      */
     protected JexlEngine createJexlEngine() {
-        JexlEngine engine = new JexlEngine();
         // With null prefix, define top-level user defined functions.
         // See javadoc of org.apache.commons.jexl2.JexlEngine#setFunctions(Map<String,Object> funcs) for detail.
-        Map<String, Object> funcs = new HashMap<String, Object>();
+        Map<String, Object> funcs = new HashMap<>();
         funcs.put(null, JexlBuiltin.class);
-        engine.setFunctions(funcs);
-        engine.setCache(256);
-        return engine;
+        return new JexlBuilder().namespaces(funcs).strict(jexlEngineStrict).silent(jexlEngineSilent).cache(256).create();
     }
 
     /**
@@ -275,8 +244,6 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
                 engine = jexlEngine;
                 if (engine == null) {
                     jexlEngine = engine = createJexlEngine();
-                    jexlEngine.setSilent(jexlEngineSilent);
-                    jexlEngine.setStrict(jexlEngineStrict);
                 }
             }
         }
