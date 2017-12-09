@@ -445,7 +445,7 @@ is the second argument -->
 </xsl:template>
 
 <xsl:template match="//@conf:emptyEventData">
-	<xsl:attribute name="cond">empty(_event.data</xsl:attribute>
+	<xsl:attribute name="cond">empty(_event.data)</xsl:attribute>
 </xsl:template>
 
 <!-- return true if the _name system var has the specified quoted value -->
