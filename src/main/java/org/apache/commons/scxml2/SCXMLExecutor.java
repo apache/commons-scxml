@@ -16,7 +16,9 @@
  */
 package org.apache.commons.scxml2;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -134,7 +136,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     }
 
     /**
-     * Initializes the state machine with a specific active configuration
+     * starts the state machine with a specific active configuration, as the result of a (first) step
      * <p>
      * This will first (re)initialize the current state machine: clearing all variable contexts, histories and current
      * status, and clones the SCXML root datamodel into the root context.
@@ -146,8 +148,8 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
      * @see SCXMLSemantics#isLegalConfiguration(java.util.Set, ErrorReporter)
      */
     public synchronized void setConfiguration(Set<String> atomicStateIds) throws ModelException {
-        exctx.initialize();
-        Set<EnterableState> states = new HashSet<EnterableState>();
+        semantics.initialize(exctx, Collections.EMPTY_MAP);
+        Set<EnterableState> states = new HashSet<>();
         for (String stateId : atomicStateIds) {
             TransitionTarget tt = getStateMachine().getTargets().get(stateId);
             if (tt instanceof EnterableState && ((EnterableState)tt).isAtomicState()) {
@@ -169,6 +171,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
         else {
             throw new ModelException("Illegal state machine configuration!");
         }
+        exctx.start();
     }
 
     /**
@@ -405,29 +408,53 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
         return exctx.isRunning();
     }
 
-    /**
-     * Initiate state machine execution.
-     *
-     * @throws ModelException in case there is a fatal SCXML object
-     *  model problem.
-     */
     public void go() throws ModelException {
-        // same as reset
-        this.reset();
+        go(Collections.EMPTY_MAP);
     }
 
     /**
-     * Clear all state and begin executing the state machine
-     *
+     * Clear all state, optionally initialize/override global context data, and begin executing the state machine
+     * @data optional data to initialize/override data defined (only) in the global context of the state machine
      * @throws ModelException if the state machine instance failed to initialize
      */
-    public void reset() throws ModelException {
+    public void go(final Map<String, Object> data) throws ModelException {
+        // first stop the state machine (flag only, otherwise start may fail hereafter)
+        exctx.stop();
         // clear any pending external events
         externalEventQueue.clear();
 
-        // go
+        // (re)initialize
+        semantics.initialize(exctx, data);
+
+        // begin
         semantics.firstStep(exctx);
         logState();
+    }
+
+    /**
+     * Same as {@link #go}
+     * @throws ModelException if the state machine instance failed to initialize
+     */
+    public void reset() throws ModelException {
+        go();
+    }
+
+    public Thread run() throws ModelException {
+        return run(Collections.EMPTY_MAP);
+    }
+
+    public Thread run(final Map<String, Object> data) throws ModelException {
+        go(data);
+        Thread t = new Thread(() -> {
+            try {
+                while (exctx.isRunning()) {
+                    triggerEvents();
+                }
+            } catch (ModelException e) {
+            }
+        });
+        t.start();
+        return t;
     }
 
     /**

@@ -662,12 +662,8 @@ public class W3CTests {
             exec.addListener(doc, trc);
             exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
             exec.registerInvokerClass("http://www.w3.org/TR/scxml/", SimpleSCXMLInvoker.class);
-            exec.go();
-            Final end;
-            while ((end = exec.getStatus().getFinalState()) == null) {
-                Thread.sleep(100);
-                exec.triggerEvents();
-            }
+            exec.run().join();
+            Final end = exec.getStatus().getFinalState();
             System.out.println("                final state: "+end.getId());
             if (!testCase.isManual()) {
                 return end.getId().equals("pass");

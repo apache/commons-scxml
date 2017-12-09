@@ -180,20 +180,6 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     }
 
     /**
-     * @return Returns true if this state machine is running
-     */
-    public boolean isRunning() {
-        return scInstance.isRunning();
-    }
-
-    /**
-     * Stop a running state machine
-     */
-    public void stopRunning() {
-        scInstance.setRunning(false);
-    }
-
-    /**
      * Set if the SCXML configuration should be checked before execution (default = true)
      * @param checkLegalConfiguration flag to set
      */
@@ -209,21 +195,46 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     }
 
     /**
-     * Initialize method which will cancel all current active Invokers, clear the internal event queue and mark the
-     * state machine process as running (again).
-     *
-     * @throws ModelException if the state machine instance failed to initialize.
+     * Initialize will cancel all current active Invokers, clear the internal event queue and (re)initialize the state machine
+     * @throws ModelException
      */
-    public void initialize() throws ModelException {
+    public void initialize(final Map<String, Object> data) throws ModelException {
         if (!invokeIds.isEmpty()) {
-            for (Invoke invoke : new ArrayList<Invoke>(invokeIds.keySet())) {
+            for (Invoke invoke : new ArrayList<>(invokeIds.keySet())) {
                 cancelInvoker(invoke);
             }
         }
         internalEventQueue.clear();
         scInstance.initialize();
         initializeIOProcessors();
-        scInstance.setRunning(true);
+        scInstance.initializeDatamodel(data);
+    }
+    /**
+     * (re)start the state machine.
+     *
+     * @throws ModelException if the state machine instance failed to initialize.
+     */
+    public void start() throws ModelException {
+        if (scInstance.isRunning()) {
+            throw new IllegalStateException("The state machine has already started.");
+        } else if (scInstance.getGlobalContext() == null) {
+            throw new IllegalStateException("The state machine has not been initialized yet.");
+        }
+        scInstance.start();
+    }
+
+    /**
+     * @return Returns true if this state machine is running
+     */
+    public boolean isRunning() {
+        return scInstance.isRunning();
+    }
+
+    /**
+     * Stop the state machine
+     */
+    public void stop() {
+        scInstance.stop();
     }
 
     /**

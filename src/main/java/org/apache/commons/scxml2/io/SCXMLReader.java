@@ -274,6 +274,7 @@ public final class SCXMLReader {
     private static final String ATTR_ARRAY = "array";
     private static final String ATTR_ATTR = "attr";
     private static final String ATTR_AUTOFORWARD = "autoforward";
+    static final String ATTR_BINDING = "binding";
     private static final String ATTR_COND = "cond";
     private static final String ATTR_DATAMODEL = "datamodel";
     private static final String ATTR_DELAY = "delay";
@@ -302,6 +303,9 @@ public final class SCXMLReader {
     private static final String ATTR_TYPE = "type";
     private static final String ATTR_TYPEEXPR = "typeexpr";
     private static final String ATTR_VERSION = "version";
+
+    static final String BINDING_LATE = "late";
+    static final String BINDING_EARLY = "early";
 
     //------------------------- PUBLIC API METHODS -------------------------//
     /*
@@ -633,6 +637,16 @@ public final class SCXMLReader {
         scxml.setName(readAV(reader, ATTR_NAME));
         scxml.setProfile(readAV(reader, ATTR_PROFILE));
         scxml.setVersion(readRequiredAV(reader, ELEM_SCXML, ATTR_VERSION));
+        String binding = readAV(reader, ATTR_BINDING);
+        if (binding != null) {
+            if (BINDING_LATE.equals(binding)) {
+                scxml.setLateBinding(true);
+            } else if (BINDING_EARLY.equals(binding)) {
+                scxml.setLateBinding(false);
+            } else {
+                reportIgnoredAttribute(reader, configuration, ELEM_SCXML, ATTR_BINDING, binding);
+            }
+        }
         if (!SCXML_REQUIRED_VERSION.equals(scxml.getVersion())) {
             throw new ModelException(new MessageFormat(ERR_INVALID_VERSION).format(new Object[] {scxml.getVersion()}));
         }

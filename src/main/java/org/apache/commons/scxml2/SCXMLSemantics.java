@@ -16,6 +16,7 @@
  */
 package org.apache.commons.scxml2;
 
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.scxml2.model.EnterableState;
@@ -28,33 +29,31 @@ import org.apache.commons.scxml2.model.SCXML;
  *     W3C SCXML Algorithm for SCXML Interpretation</a>
  * from the <code>SCXMLExecutor</code> and therefore make it pluggable.</p>
  * <p>
- * From an SCXML execution POV, there are only three entry points needed into the Algorithm, namely:
+ * From an SCXML execution POV, there are only four entry points needed into the Algorithm, namely:
  * </p>
  * <ul>
- *  <li>Performing the initialization of the state machine and completing a first macro step,
- *   see: {@link #firstStep(SCXMLExecutionContext)}. The state machine thereafter should be ready
- *   for processing external events (or be terminated already)</li>
- *  <li>Processing a single external event and completing the macro step for it, after which the
- *   state machine should be ready for processing another external event (if any), or be terminated already.
- *   See: {@link #nextStep(SCXMLExecutionContext, TriggerEvent)}.
+ *  <li>1: {@link #initialize(SCXMLExecutionContext, Map)} - Initialization of the state machine, optionally with external
+ *  (initial) data for the root (global) data elements in the root &lt;datamodel&gt;
  *  </li>
- *  <li>Finally, if the state machine terminated ({@link SCXMLExecutionContext#isRunning()} == false), after either
- *   of the above steps, finalize the state machine by performing the final step.
- *   See: {@link #finalStep(SCXMLExecutionContext)}.
- *   </li>
+ *  <li>2: {@link #firstStep(SCXMLExecutionContext)} - Performing and completing a first macro step, The state machine
+ *  thereafter should be ready for processing external events (or be terminated already)</li>
+ *  <li>3: {@link #nextStep(SCXMLExecutionContext, TriggerEvent)} - Processing a single external event and completing the
+ *  macro step for it, after which the state machine should be ready for processing another external event (if any),
+ *  or be terminated already.</li>
+ *  <li>4: {@link #finalStep(SCXMLExecutionContext)} - If the state machine terminated
+ *  ({@link SCXMLExecutionContext#isRunning()} == false), after either of the above steps, finalize the state machine
+ *  by performing the final step.</li>
  * </ul>
  * <p>After a state machine has been terminated you can re-initialize the execution context, and start again.</p>
  * <p>
- * Except for the loading of the SCXML document and (re)initializing the {@link SCXMLExecutionContext}, the above steps
- * represent the <b>interpret</b>,<b>mainEventLoop</b> and <b>exitInterpreter</b> entry points specified in Algorithm
- * for SCXML Interpretation, but more practically and logically broken into separate steps so that the blocking wait
- * for external events can be handled externally.
- * </p>
+ * The first two methods represent the <b>interpret</b> entry point specified in the Algorithm for SCXML Interpretation.
+ * The third and fourth method represent the <b>mainEventLoop</b> and <b>exitInterpreter</b> entry points.
+ * These have been more practically and logically broken into four different methods so that the blocking wait for
+ * external events can be handled externally.</p>
  * <p>
- *  These three entry points are the only interface methods used by the SCXMLExecutor. It is up to the
- *  specific SCXMLSemantics implementation to provide the concrete handling for these according to the Algorithm in
- *  the SCXML specification (or possibly something else/different).
- * </p>
+ *  It is up to the specific SCXMLSemantics implementation to provide the concrete handling for these methods according
+ *  to the <a href="https://www.w3.org/TR/2015/REC-scxml-20150901/#AlgorithmforSCXMLInterpretation">Algorithm for SCXML
+ *  Interpretation</a> in the SCXML specification (or possibly something else/non-conforming implementation).</p>
  * <p>
  * The default {@link org.apache.commons.scxml2.semantics.SCXMLSemanticsImpl} provides an implementation of the
  * specification, and can easily be overridden/customized as a whole or only on specific parts of the Algorithm
@@ -72,14 +71,24 @@ import org.apache.commons.scxml2.model.SCXML;
 public interface SCXMLSemantics {
 
     /**
-     * Optional post processing immediately following SCXMLReader. May be used
-     * for removing pseudo-states etc.
+     * Optional post processing after loading an {@link SCXML} document, invoked by {@link SCXMLExecutor}
+     * when setting the {@link SCXMLExecutor#setStateMachine(SCXML)}. May be used for removing pseudo-states etc.
      *
      * @param input  SCXML state machine
      * @param errRep ErrorReporter callback
      * @return normalized SCXML state machine, pseudo states are removed, etc.
      */
     SCXML normalizeStateMachine(final SCXML input, final ErrorReporter errRep);
+
+    /**
+     * Initialize the SCXML state machine, optionally initializing (overriding) root &lt;datamodel&gt;&lt;data&gt; elements
+     * with external values provided through a data map.
+     * @param data A data map to initialize/override &lt;data&gt; elements in the root (global) &lt;datamodel&gt; with
+     *             ids matching the keys in the map (other data map entries will be ignored)
+     * @param exctx The execution context to initialize
+     * @throws ModelException
+     */
+    void initialize(final SCXMLExecutionContext exctx, final Map<String, Object> data) throws ModelException;
 
     /**
      * First step in the execution of an SCXML state machine.

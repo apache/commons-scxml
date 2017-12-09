@@ -87,6 +87,11 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
         return input;
     }
 
+    public void initialize(final SCXMLExecutionContext exctx, final Map<String, Object> data) throws ModelException {
+        // (re)initialize the execution context and state machine instance
+        exctx.initialize(data);
+    }
+
     /**
      * First step in the execution of an SCXML state machine.
      * <p>
@@ -109,8 +114,8 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * the execution.
      */
     public void firstStep(final SCXMLExecutionContext exctx) throws ModelException {
-        // (re)initialize the execution context and state machine instance
-        exctx.initialize();
+        // starts the state machine instance
+        exctx.start();
         // execute global script if defined
         executeGlobalScript(exctx);
         // enter initial states
@@ -160,7 +165,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
             return;
         }
         if (isCancelEvent(event)) {
-            exctx.stopRunning();
+            exctx.stop();
         }
         else {
             setSystemEventVariable(exctx.getScInstance(), event, false);
@@ -300,7 +305,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                     TriggerEvent event = exctx.nextInternalEvent();
                     if (event != null) {
                         if (isCancelEvent(event)) {
-                            exctx.stopRunning();
+                            exctx.stop();
                         }
                         else {
                             setSystemEventVariable(exctx.getScInstance(), event, true);
@@ -1030,7 +1035,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
             if (es instanceof Final) {
                 State parent = (State)es.getParent();
                 if (parent == null) {
-                    exctx.stopRunning();
+                    exctx.stop();
                 }
                 else {
                     exctx.getInternalIOProcessor().addEvent(new TriggerEvent("done.state."+parent.getId(),TriggerEvent.CHANGE_EVENT));

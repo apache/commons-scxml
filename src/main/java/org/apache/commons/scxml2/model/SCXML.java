@@ -28,8 +28,7 @@ import java.util.Map;
  * root&quot;.
  *
  */
-public class SCXML implements Serializable, Observable,
-                              NamespacePrefixesHolder {
+public class SCXML implements Serializable, Observable, NamespacePrefixesHolder {
 
     /**
      * Serial version UID.
@@ -88,6 +87,10 @@ public class SCXML implements Serializable, Observable,
      */
     private String exmode;
 
+    /**
+     * optional flag indicating if this document uses late or early (default) binding
+     */
+    private Boolean lateBinding;
 
     /**
      * The datamodel name as specified as "datamodel" attribute on this document
@@ -199,6 +202,14 @@ public class SCXML implements Serializable, Observable,
      */
     public final void setDatamodel(final Datamodel datamodel) {
         this.datamodel = datamodel;
+    }
+
+    public final void setLateBinding(final Boolean lateBinding) {
+        this.lateBinding = lateBinding;
+    }
+
+    public final Boolean isLateBinding() {
+        return lateBinding;
     }
 
     /**

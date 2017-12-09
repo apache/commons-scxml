@@ -108,6 +108,7 @@ public class JSEvaluatorTest {
     @Before
     public void setUp() throws Exception {
             fsm = SCXMLTestHelper.getExecutor(SCXMLReader.read(new StringReader(SCRIPT)));
+            fsm.go();
             evaluator = fsm.getEvaluator();
             context = fsm.getGlobalContext();
             context.set(Context.NAMESPACES_KEY,null);

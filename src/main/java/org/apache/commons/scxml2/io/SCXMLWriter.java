@@ -494,6 +494,9 @@ public class SCXMLWriter {
         writeAV(writer, ATTR_VERSION, scxml.getVersion());
         writeAV(writer, ATTR_INITIAL, scxml.getInitial());
         writeAV(writer, ATTR_DATAMODEL, scxml.getDatamodelName());
+        if (scxml.isLateBinding() != null) {
+            writeAV(writer, SCXMLReader.ATTR_BINDING, scxml.isLateBinding() ? SCXMLReader.BINDING_LATE : SCXMLReader.BINDING_EARLY);
+        }
         writeAV(writer, ATTR_NAME, scxml.getName());
         writeAV(writer, ATTR_PROFILE, scxml.getProfile());
         writeAV(writer, ATTR_EXMODE, scxml.getExmode());

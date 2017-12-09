@@ -171,10 +171,30 @@ public class SCInstance implements Serializable {
         histories.clear();
         stateConfiguration.clear();
 
-        // Clone root datamodel
-        Datamodel rootdm = stateMachine.getDatamodel();
-        cloneDatamodel(rootdm, getGlobalContext(), evaluator, errorReporter);
         initialized = true;
+    }
+
+    protected void initializeDatamodel(final Map<String, Object> data) {
+        if (globalContext == null) {
+            // Clone root datamodel
+            Datamodel rootdm = stateMachine.getDatamodel();
+            cloneDatamodel(rootdm, getGlobalContext(), evaluator, errorReporter);
+
+            // initialize/override global context data
+            if (data != null) {
+                for (String key : data.keySet()) {
+                    if (globalContext.has(key)) {
+                        globalContext.set(key, data.get(key));
+                    }
+                }
+            }
+            if (stateMachine.isLateBinding() == null || Boolean.FALSE.equals(stateMachine.isLateBinding())) {
+                // early binding
+                for (EnterableState es : stateMachine.getChildren()) {
+                    getContext(es);
+                }
+            }
+        }
     }
 
     /**
@@ -292,10 +312,12 @@ public class SCInstance implements Serializable {
             return;
         }
         for (Data datum : data) {
-            if (ctx.has(datum.getId())) {
-                // earlier or externally defined 'initial' value found: do not overwrite
+            if (getGlobalContext() == ctx && ctx.has(datum.getId())) {
+                // earlier/externally defined 'initial' value found: do not overwrite
                 continue;
             }
+            Object value = null;
+            boolean setValue = false;
             /*
             TODO: external data.src support (not yet implemented), including late-binding thereof
             // prefer "src" over "expr" over "inline"
@@ -304,22 +326,25 @@ public class SCInstance implements Serializable {
             } else
             */
             if (datum.getExpr() != null) {
-                Object value;
                 try {
                     ctx.setLocal(Context.NAMESPACES_KEY, datum.getNamespaces());
                     value = evaluator.eval(ctx, datum.getExpr());
-                    ctx.setLocal(Context.NAMESPACES_KEY, null);
+                    setValue = true;
                 } catch (SCXMLExpressionException see) {
                     if (internalIOProcessor != null) {
                         internalIOProcessor.addEvent(new TriggerEvent(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT));
                     }
                     errorReporter.onError(ErrorConstants.EXPRESSION_ERROR, see.getMessage(), datum);
-                    continue;
+                } finally {
+                    ctx.setLocal(Context.NAMESPACES_KEY, null);
                 }
-                ctx.setLocal(datum.getId(), value);
             }
             else {
-                ctx.setLocal(datum.getId(), evaluator.cloneData(datum.getValue()));
+                value = evaluator.cloneData(datum.getValue());
+                setValue = true;
+            }
+            if (setValue) {
+                ctx.setLocal(datum.getId(), value);
             }
         }
     }
@@ -346,15 +371,21 @@ public class SCInstance implements Serializable {
     }
 
     /**
-     * Sets the running status of the state machine
-     * @param running flag indicating the running status of the state machine
-     * @throws IllegalStateException Exception thrown if trying to set the state machine running when in a Final state
+     * Starts the state machine, {@link #isRunning()} hereafter will return true
+     * @throws IllegalStateException Exception thrown if trying to start the state machine when in a Final state
      */
-    protected void setRunning(final boolean running) throws IllegalStateException {
+    public void start() throws IllegalStateException {
         if (!this.running && running && currentStatus.isFinal()) {
             throw new IllegalStateException("The state machine is in a Final state and cannot be set running again");
         }
-        this.running = running;
+        this.running = true;
+    }
+
+    /**
+     * Stops the state machine, {@link #isRunning()} hereafter will return false
+     */
+    public void stop() {
+        this.running = false;
     }
 
     /**
