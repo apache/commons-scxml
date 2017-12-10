@@ -204,14 +204,9 @@ public class ContentParser {
      * @throws IOException In case of loading or parsing exceptions
      */
     public Object parseResource(final String resourceURL) throws IOException {
-        InputStream in = null;
-        try {
-            in = new URL(resourceURL).openStream();
+        try (InputStream in = new URL(resourceURL).openStream()) {
             String content = IOUtils.toString(in, "UTF-8");
             return parseContent(content);
-        }
-        finally {
-            IOUtils.closeQuietly(in);
         }
     }
 }
