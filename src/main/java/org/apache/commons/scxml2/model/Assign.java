@@ -54,16 +54,6 @@ public class Assign extends Action implements PathResolverHolder {
     private String expr;
 
     /**
-     * Defines the nature of the insertion to be performed, default {@link Evaluator.AssignType#REPLACE_CHILDREN}
-     */
-    private Evaluator.AssignType type;
-
-    /**
-     * The attribute name to add at the specified location when using {@link Evaluator.AssignType#ADD_ATTRIBUTE}
-     */
-    private String attr;
-
-    /**
      * {@link PathResolver} for resolving the "src" result.
      */
     private PathResolver pathResolver;
@@ -147,22 +137,6 @@ public class Assign extends Action implements PathResolverHolder {
         this.pathResolver = pathResolver;
     }
 
-    public Evaluator.AssignType getType() {
-        return type;
-    }
-
-    public void setType(final Evaluator.AssignType type) {
-        this.type = type;
-    }
-
-    public String getAttr() {
-        return attr;
-    }
-
-    public void setAttr(final String attr) {
-        this.attr = attr;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -179,7 +153,7 @@ public class Assign extends Action implements PathResolverHolder {
             data = evaluator.eval(ctx, expr);
         }
 
-        evaluator.evalAssign(ctx, location, data, type, attr);
+        evaluator.evalAssign(ctx, location, data);
         if (exctx.getAppLog().isDebugEnabled()) {
             exctx.getAppLog().debug("<assign>: '" + location + "' updated");
         }

@@ -100,8 +100,8 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
         } catch (XMLStreamException xse) {
             throw new InvokerException(xse.getMessage(), xse.getCause());
         }
-        executor = new SCXMLExecutor(parentSCXMLExecutor);
         try {
+            executor = new SCXMLExecutor(parentSCXMLExecutor);
             executor.setStateMachine(scxml);
         }
         catch (ModelException me) {

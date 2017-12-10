@@ -360,7 +360,7 @@ public class Invoke extends NamelistHolder implements PathResolverHolder, Conten
                 invokeId = parentState.getId() + "." + ctx.get(SCXMLSystemContext.SESSIONID_KEY);
             }
             if (getId() == null && getIdlocation() != null) {
-                eval.evalAssign(ctx, idlocation, invokeId, Evaluator.AssignType.REPLACE_CHILDREN, null);
+                eval.evalAssign(ctx, idlocation, invokeId);
             }
             invoker.setInvokeId(invokeId);
 

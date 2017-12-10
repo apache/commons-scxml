@@ -157,7 +157,6 @@ public class SCXMLWriter {
 
     //---- ATTRIBUTE NAMES ----//
     private static final String ATTR_ARRAY = "array";
-    private static final String ATTR_ATTR = "attr";
     private static final String ATTR_AUTOFORWARD = "autoforward";
     private static final String ATTR_COND = "cond";
     private static final String ATTR_DATAMODEL = "datamodel";
@@ -868,10 +867,6 @@ public class SCXMLWriter {
                 Assign asn = (Assign) a;
                 writer.writeStartElement(XMLNS_SCXML, ELEM_ASSIGN);
                 writeAV(writer, ATTR_LOCATION, asn.getLocation());
-                if (asn.getType() != null) {
-                    writeAV(writer, ATTR_TYPE, asn.getType().value());
-                }
-                writeAV(writer, ATTR_ATTR, asn.getAttr());
                 writeAV(writer, ATTR_SRC, asn.getSrc());
                 writeAV(writer, ATTR_EXPR, escapeXML(asn.getExpr()));
                 writer.writeEndElement();

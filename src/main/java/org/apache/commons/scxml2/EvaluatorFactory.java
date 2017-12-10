@@ -93,16 +93,17 @@ public class EvaluatorFactory {
     /**
      * Returns a dedicated Evaluator instance for a specific SCXML document its documentmodel.
      * <p>If no SCXML document is provided a default Evaluator will be returned.</p>
+     * @param strict flag if an evaluator with strict / specification compliant behavior should be provided
      * @param document The document to return a dedicated Evaluator for. May be null to retrieve the default Evaluator.
      * @return a new and not sharable Evaluator instance for the provided document, or a default Evaluator otherwise
      * @throws ModelException If the SCXML document datamodel is not supported.
      */
-    public static Evaluator getEvaluator(SCXML document) throws ModelException {
+    public static Evaluator getEvaluator(final boolean strict, final SCXML document) throws ModelException {
         String datamodelName = document != null ? document.getDatamodelName() : null;
         EvaluatorProvider provider = INSTANCE.providers.get(datamodelName == null ? DEFAULT_DATA_MODEL : datamodelName);
         if (provider == null) {
             throw new ModelException("Unsupported SCXML document datamodel \""+(datamodelName)+"\"");
         }
-        return document != null ? provider.getEvaluator(document) : provider.getEvaluator();
+        return document != null ? provider.getEvaluator(strict, document) : provider.getEvaluator(strict);
     }
 }

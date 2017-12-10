@@ -112,11 +112,13 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
      *
      * @param parentSCXMLExecutor the parent SCXMLExecutor
      */
-    public SCXMLExecutor(final SCXMLExecutor parentSCXMLExecutor) {
+    public SCXMLExecutor(final SCXMLExecutor parentSCXMLExecutor) throws ModelException {
         this.parentSCXMLExecutor = parentSCXMLExecutor;
         this.semantics = parentSCXMLExecutor.semantics;
         this.exctx = new SCXMLExecutionContext(this, parentSCXMLExecutor.getEvaluator(),
                 parentSCXMLExecutor.getEventdispatcher(), parentSCXMLExecutor.getErrorReporter());
+        getSCInstance().setSingleContext(parentSCXMLExecutor.isSingleContext());
+        getSCInstance().setStrict(parentSCXMLExecutor.isStrict());
     }
 
     /**
@@ -148,7 +150,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
      * @see SCXMLSemantics#isLegalConfiguration(java.util.Set, ErrorReporter)
      */
     public synchronized void setConfiguration(Set<String> atomicStateIds) throws ModelException {
-        semantics.initialize(exctx, Collections.EMPTY_MAP);
+        semantics.initialize(exctx, Collections.emptyMap());
         Set<EnterableState> states = new HashSet<>();
         for (String stateId : atomicStateIds) {
             TransitionTarget tt = getStateMachine().getTargets().get(stateId);
@@ -239,6 +241,14 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
 
     public boolean isSingleContext() {
         return getSCInstance().isSingleContext();
+    }
+
+    public void setStrict(final boolean strict) throws ModelException {
+        getSCInstance().setStrict(strict);
+    }
+
+    public boolean isStrict() {
+        return getSCInstance().isStrict();
     }
 
     /**
@@ -409,7 +419,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     }
 
     public void go() throws ModelException {
-        go(Collections.EMPTY_MAP);
+        go(Collections.emptyMap());
     }
 
     /**
@@ -440,7 +450,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     }
 
     public Thread run() throws ModelException {
-        return run(Collections.EMPTY_MAP);
+        return run(Collections.emptyMap());
     }
 
     public Thread run(final Map<String, Object> data) throws ModelException {

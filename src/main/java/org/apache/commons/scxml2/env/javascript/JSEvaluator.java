@@ -74,7 +74,16 @@ public class JSEvaluator extends AbstractBaseEvaluator {
         }
 
         @Override
+        public Evaluator getEvaluator(final boolean strict) {
+            return new JSEvaluator();
+        }
+
+        @Override
         public Evaluator getEvaluator(final SCXML document) {
+            return new JSEvaluator();
+        }
+        @Override
+        public Evaluator getEvaluator(final boolean strict, final SCXML document) {
             return new JSEvaluator();
         }
     }
@@ -174,6 +183,11 @@ public class JSEvaluator extends AbstractBaseEvaluator {
     }
 
     @Override
+    public boolean isStrict() {
+        return false;
+    }
+
+    @Override
     public String getSupportedDatamodel() {
         return SUPPORTED_DATA_MODEL;
     }
@@ -247,10 +261,9 @@ public class JSEvaluator extends AbstractBaseEvaluator {
     }
 
     /**
-     * @see Evaluator#evalAssign(Context, String, Object, AssignType, String)
+     * @see Evaluator#evalAssign(Context, String, Object)
      */
-    public void evalAssign(final Context ctx, final String location, final Object data, final AssignType type,
-                           final String attr) throws SCXMLExpressionException {
+    public void evalAssign(final Context ctx, final String location, final Object data) throws SCXMLExpressionException {
         StringBuilder sb = new StringBuilder(location).append("=").append(ASSIGN_VARIABLE_NAME);
         try {
             ctx.getVars().put(ASSIGN_VARIABLE_NAME, data);

@@ -19,7 +19,6 @@ package org.apache.commons.scxml2.model;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
 import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
@@ -358,7 +357,7 @@ public class Send extends NamelistHolder implements ContentContainer {
         if (id == null) {
             id = ctx.getSystemContext().generateSessionId();
             if (idlocation != null) {
-                eval.evalAssign(ctx, idlocation, id, Evaluator.AssignType.REPLACE_CHILDREN, null);
+                eval.evalAssign(ctx, idlocation, id);
             }
         }
         String targetValue = target;

@@ -47,7 +47,6 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.PathResolver;
 import org.apache.commons.scxml2.env.SimpleErrorHandler;
 import org.apache.commons.scxml2.env.URLResolver;
@@ -272,7 +271,6 @@ public final class SCXMLReader {
 
     //---- ATTRIBUTE NAMES ----//
     private static final String ATTR_ARRAY = "array";
-    private static final String ATTR_ATTR = "attr";
     private static final String ATTR_AUTOFORWARD = "autoforward";
     static final String ATTR_BINDING = "binding";
     private static final String ATTR_COND = "cond";
@@ -1767,22 +1765,6 @@ public final class SCXMLReader {
         Assign assign = new Assign();
         assign.setExpr(readAV(reader, ATTR_EXPR));
         assign.setLocation(readRequiredAV(reader, ELEM_ASSIGN, ATTR_LOCATION));
-        String attrValue = readAV(reader, ATTR_TYPE);
-        if (attrValue != null) {
-            assign.setType(Evaluator.AssignType.fromValue(attrValue));
-            if (assign.getType() == null) {
-                reportIgnoredAttribute(reader, configuration, ELEM_ASSIGN, ATTR_TYPE, attrValue);
-            }
-        }
-        attrValue = readAV(reader, ATTR_ATTR);
-        if (attrValue != null) {
-            if (Evaluator.AssignType.ADD_ATTRIBUTE.equals(assign.getType())) {
-                assign.setAttr(attrValue);
-            }
-            else {
-                reportIgnoredAttribute(reader, configuration, ELEM_ASSIGN, ATTR_ATTR, attrValue);
-            }
-        }
         assign.setSrc(readAV(reader, ATTR_SRC));
         assign.setPathResolver(configuration.pathResolver);
         readNamespaces(configuration, assign);

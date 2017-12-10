@@ -51,9 +51,24 @@ public class MinimalEvaluator implements Evaluator, Serializable {
         }
 
         @Override
+        public Evaluator getEvaluator(final boolean strict) {
+            return new MinimalEvaluator();
+        }
+
+        @Override
         public Evaluator getEvaluator(final SCXML document) {
             return new MinimalEvaluator();
         }
+
+        @Override
+        public Evaluator getEvaluator(final boolean strict, final SCXML document) {
+            return new MinimalEvaluator();
+        }
+    }
+
+    @Override
+    public boolean isStrict() {
+        return true;
     }
 
     @Override
@@ -88,7 +103,7 @@ public class MinimalEvaluator implements Evaluator, Serializable {
     }
 
     @Override
-    public void evalAssign(final Context ctx, final String location, final Object data, final AssignType type, final String attr) throws SCXMLExpressionException {
+    public void evalAssign(final Context ctx, final String location, final Object data) throws SCXMLExpressionException {
         throw new UnsupportedOperationException("Assign expressions are not supported by the \"null\" datamodel");
     }
 

@@ -65,8 +65,18 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
         }
 
         @Override
+        public Evaluator getEvaluator(final boolean strict) {
+            return new JexlEvaluator(strict);
+        }
+
+        @Override
         public Evaluator getEvaluator(final SCXML document) {
             return new JexlEvaluator();
+        }
+
+        @Override
+        public Evaluator getEvaluator(final boolean strict, final SCXML document) {
+            return new JexlEvaluator(strict);
         }
     }
 
@@ -86,7 +96,12 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
 
     /** Constructor. */
     public JexlEvaluator() {
+        this(false);
+    }
+
+    public JexlEvaluator(final boolean strict) {
         super();
+        jexlEngineStrict = strict;
         // create the internal JexlEngine initially
         jexlEngine = getJexlEngine();
         jexlEngineSilent = jexlEngine.isSilent();
@@ -101,11 +116,8 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
         return jexlEngineSilent;
     }
 
-    /**
-     * Checks whether the internal Jexl engine behaves in strict or lenient mode.
-     * @return true for strict, false for lenient
-     */
-    public boolean isJexlEngineStrict() {
+    @Override
+    public boolean isStrict() {
         return jexlEngineStrict;
     }
 
@@ -169,10 +181,9 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
     }
 
     /**
-     * @see Evaluator#evalAssign(Context, String, Object, AssignType, String)
+     * @see Evaluator#evalAssign(Context, String, Object)
      */
-    public void evalAssign(final Context ctx, final String location, final Object data, final AssignType type,
-                           final String attr) throws SCXMLExpressionException {
+    public void evalAssign(final Context ctx, final String location, final Object data) throws SCXMLExpressionException {
         StringBuilder sb = new StringBuilder(location).append("=").append(ASSIGN_VARIABLE_NAME);
         try {
             ctx.getVars().put(ASSIGN_VARIABLE_NAME, data);

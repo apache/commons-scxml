@@ -65,7 +65,16 @@ public class GroovyEvaluator extends AbstractBaseEvaluator {
         }
 
         @Override
+        public Evaluator getEvaluator(final boolean strict) {
+            return new GroovyEvaluator();
+        }
+
+        @Override
         public Evaluator getEvaluator(final SCXML document) {
+            return new GroovyEvaluator();
+        }
+        @Override
+        public Evaluator getEvaluator(final boolean strict, final SCXML document) {
             return new GroovyEvaluator();
         }
     }
@@ -121,6 +130,11 @@ public class GroovyEvaluator extends AbstractBaseEvaluator {
     public GroovyEvaluator(boolean useInitialScriptAsBaseScript) {
         this.useInitialScriptAsBaseScript = useInitialScriptAsBaseScript;
         this.scriptCache = newScriptCache();
+    }
+
+    @Override
+    public boolean isStrict() {
+        return false;
     }
 
     /**
@@ -227,14 +241,18 @@ public class GroovyEvaluator extends AbstractBaseEvaluator {
     }
 
     /**
-     * @see Evaluator#evalAssign(Context, String, Object, AssignType, String)
+     * @see Evaluator#evalAssign(Context, String, Object)
      */
-    public void evalAssign(final Context ctx, final String location, final Object data, final AssignType type,
-                           final String attr) throws SCXMLExpressionException {
+    public void evalAssign(final Context ctx, final String location, final Object data) throws SCXMLExpressionException {
         final StringBuilder sb = new StringBuilder(location).append("=").append(ASSIGN_VARIABLE_NAME);
         try {
             ctx.getVars().put(ASSIGN_VARIABLE_NAME, data);
             eval(ctx, sb.toString());
+        } catch (SCXMLExpressionException e) {
+            if (e.getCause() != null && e.getCause() != null && e.getCause().getMessage() != null) {
+                throw new SCXMLExpressionException("Error evaluating assign to location=\"" + location + "\": " + e.getCause().getMessage());
+            }
+            throw e;
         }
         finally {
             ctx.getVars().remove(ASSIGN_VARIABLE_NAME);

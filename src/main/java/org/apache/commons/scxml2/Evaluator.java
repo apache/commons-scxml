@@ -33,38 +33,9 @@ public interface Evaluator {
     String DEFAULT_DATA_MODEL = "";
 
     /**
-     * The allowable types of &lt;assign/&gt; including and in particular when using XPath
+     * @return indicates if using strict / specification compliant behavior
      */
-    enum AssignType {
-
-        REPLACE_CHILDREN("replacechildren"),
-        FIRST_CHILD("firstchild"),
-        LAST_CHILD("lastchild"),
-        PREVIOUS_SIBLING("previoussibling"),
-        NEXT_SIBLING("nextsibling"),
-        REPLACE("replace"),
-        DELETE("delete"),
-        ADD_ATTRIBUTE("addattribute");
-
-        private final String value;
-
-        private AssignType(String value) {
-            this.value = value;
-        }
-
-        public String value() {
-            return value;
-        }
-
-        public static AssignType fromValue(String value) {
-            for (AssignType type : AssignType.values()) {
-                if (type.value().equals(value)) {
-                    return type;
-                }
-            }
-            return null;
-        }
-    }
+    boolean isStrict();
 
     /**
      * Get the datamodel type supported by this Evaluator
@@ -114,11 +85,9 @@ public interface Evaluator {
      * @param ctx variable context
      * @param location location expression
      * @param data the data to assign.
-     * @param type the type of assignment to perform, null assumes {@link AssignType#REPLACE_CHILDREN}
-     * @param attr the name of the attribute to add when using type {@link AssignType#ADD_ATTRIBUTE}
      * @throws SCXMLExpressionException A malformed expression exception
      */
-    void evalAssign(Context ctx, String location, Object data, AssignType type, String attr)
+    void evalAssign(Context ctx, String location, Object data)
             throws SCXMLExpressionException;
 
     /**
