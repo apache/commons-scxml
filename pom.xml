@@ -282,8 +282,9 @@
           <excludes combine.children="append">
             <!--exclude stylesheet adapted from http://www.w3.org/Voice/2013/scxml-irp/confXPath.xsl -->
             <exclude>src/test/java/org/apache/commons/scxml2/w3c/confMinimal.xsl</exclude>
-            <!--exclude stylesheet adapted from http://www.w3.org/Voice/2013/scxml-irp/confEcma.xsl -->
+            <!--exclude stylesheets adapted from http://www.w3.org/Voice/2013/scxml-irp/confEcma.xsl -->
             <exclude>src/test/java/org/apache/commons/scxml2/w3c/confJexl.xsl</exclude>
+            <exclude>src/test/java/org/apache/commons/scxml2/w3c/confGroovy.xsl</exclude>
           </excludes>
         </configuration>
       </plugin>
