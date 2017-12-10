@@ -31,7 +31,7 @@
   <test id="417" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="419" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="421" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
-  <test id="422" mandatory="true"                    manual="false" jexl="false" ecma="false"/>
+  <test id="422" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="423" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="503" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="504" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>

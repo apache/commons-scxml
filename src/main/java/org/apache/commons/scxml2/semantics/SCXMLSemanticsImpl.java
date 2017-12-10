@@ -690,9 +690,10 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                 boolean eventMatch = false;
                 for (String event : transition.getEvents()) {
                     if (eventName.startsWith(event)) {
-                        if (eventName.length() == event.length() || eventName.charAt(event.length())=='.')
+                        if (eventName.length() == event.length() || eventName.charAt(event.length())=='.') {
                             eventMatch = true;
-                        break;
+                            break;
+                        }
                     }
                 }
                 if (!eventMatch) {
