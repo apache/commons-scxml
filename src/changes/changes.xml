@@ -35,6 +35,10 @@
     <release version="2.0" date="In Git master"
       description="Latest unreleased code">
 
+      <action dev="ate" type="update" issue="SCXML-263">
+        [12-10-2017] Javascript engine (Nashorn) cannot be shared between multiple SCXML instance executions
+      </action>
+
       <action dev="ate" type="update" issue="SCXML-262">
         [12-10-2017] Support &lt;script&gt; loaded from external src
       </action>

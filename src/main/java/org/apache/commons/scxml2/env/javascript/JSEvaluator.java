@@ -94,8 +94,8 @@ public class JSEvaluator extends AbstractBaseEvaluator {
     private static final String ERR_CTX_TYPE = "Error evaluating JavaScript "
             + "expression, Context must be a org.apache.commons.scxml2.env.javascript.JSContext";
 
-    /** shared singleton Nashorn ScriptEngine **/
-    private static ScriptEngine engine;
+    /** Nashorn ScriptEngine **/
+    private transient ScriptEngine engine;
 
     /** Nashorn Global initialization script, loaded from <code>init_global.js</code> classpath resource */
     private static String initGlobalsScript;
@@ -112,14 +112,16 @@ public class JSEvaluator extends AbstractBaseEvaluator {
      * initialization of a new Javascript (Nashorn) Global.
      * </p>
      */
-    protected synchronized static void initEngine() {
+    protected synchronized void initEngine() {
         if (engine == null) {
             engine = new ScriptEngineManager().getEngineByName("JavaScript");
-            try {
-                initGlobalsScript = IOUtils.toString(JSEvaluator.class.getResourceAsStream("init_global.js"), "UTF-8");
-            }
-            catch (IOException ioe) {
-                throw new RuntimeException("Failed to load init_global.js from classpath", ioe);
+            if (initGlobalsScript == null) {
+                try {
+                    initGlobalsScript = IOUtils.toString(JSEvaluator.class.getResourceAsStream("init_global.js"), "UTF-8");
+                }
+                catch (IOException ioe) {
+                    throw new RuntimeException("Failed to load init_global.js from classpath", ioe);
+                }
             }
         }
     }
