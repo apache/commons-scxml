@@ -18,6 +18,8 @@ package org.apache.commons.scxml2;
 
 import java.util.Map;
 
+import org.apache.commons.scxml2.invoke.Invoker;
+
 /**
  * The event controller interface used to send messages containing
  * events or other information directly to another SCXML Interpreter,
@@ -26,6 +28,16 @@ import java.util.Map;
  *
  */
 public interface EventDispatcher {
+
+    /**
+     * A EventDispatcher keeps track of outstanding (pending) events to be send on behalf of the statemachine
+     * it is 'attached' to.
+     * To support easy setup and configuration of an invoked child statemachine (see {@link Invoker})
+     * the EventDispatcher provides this newInstnace method to allow creating a new instance without sharing its
+     * internal state..
+     * @return a new EventDispatcher instance for usage in an invoked child statemachine.
+     */
+    EventDispatcher newInstance();
 
     /**
      * Cancel the specified send message.

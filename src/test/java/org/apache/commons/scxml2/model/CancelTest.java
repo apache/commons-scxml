@@ -19,6 +19,7 @@ package org.apache.commons.scxml2.model;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.TriggerEvent;
+import org.apache.commons.scxml2.EventBuilder;
 import org.apache.commons.scxml2.env.SimpleDispatcher;
 import org.junit.Test;
 
@@ -29,7 +30,7 @@ public class CancelTest {
         final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/model/cancel-test-01.xml");
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml, null, new SimpleDispatcher());
         exec.go();
-        TriggerEvent te = new TriggerEvent("event.foo", TriggerEvent.SIGNAL_EVENT);
+        TriggerEvent te = new EventBuilder("event.foo", TriggerEvent.SIGNAL_EVENT).build();
         SCXMLTestHelper.fireEvent(exec, te);
         Thread.sleep(3000);
         exec.triggerEvents();
@@ -41,7 +42,7 @@ public class CancelTest {
         final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/model/cancel-test-02.xml");
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml, null, new SimpleDispatcher());
         exec.go();
-        TriggerEvent te = new TriggerEvent("event.foo", TriggerEvent.SIGNAL_EVENT);
+        TriggerEvent te = new EventBuilder("event.foo", TriggerEvent.SIGNAL_EVENT).build();
         SCXMLTestHelper.fireEvent(exec, te);
         Thread.sleep(3000);
         exec.triggerEvents();

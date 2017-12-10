@@ -79,13 +79,13 @@ Object.defineProperties(this, {
                 _scxmlProtected("_event.sendid")
             },
             get orgin() {
-                return _scxmlSystemContext._event.orgin||undefined
+                return _scxmlSystemContext._event.origin||undefined
             },
             set origin(val) {
                 _scxmlProtected("_event.origin")
             },
             get origintype() {
-                return _scxmlSystemContext._event.orgintype||undefined
+                return _scxmlSystemContext._event.origintype||undefined
             },
             set origintype(val) {
                 _scxmlProtected("_event.origintype")

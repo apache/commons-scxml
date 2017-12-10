@@ -25,6 +25,7 @@ import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.TriggerEvent;
+import org.apache.commons.scxml2.EventBuilder;
 import org.apache.commons.scxml2.model.Action;
 import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.model.CustomAction;
@@ -63,7 +64,8 @@ public class JSExampleTest {
 
         @Override
         public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
-            exctx.getInternalIOProcessor().addEvent(new TriggerEvent("ok",TriggerEvent.SIGNAL_EVENT,"and its ok with me to"));
+            exctx.getInternalIOProcessor()
+                    .addEvent(new EventBuilder("ok",TriggerEvent.SIGNAL_EVENT).data("and its ok with me to").build());
         }
     }
 

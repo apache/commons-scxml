@@ -144,7 +144,9 @@ public class Foreach extends Action implements ActionsContainer {
                     }
                 }
             }
-            // else {} TODO: place the error 'error.execution' in the internal event queue. (section "3.12.2 Errors")
+            else {
+                throw new ActionExecutionError("<foreach> in state " + getParentEnterableState().getId()+": invalid array value '"+array+"'");
+            }
         }
         finally {
             ctx.setLocal(getNamespacesKey(), null);

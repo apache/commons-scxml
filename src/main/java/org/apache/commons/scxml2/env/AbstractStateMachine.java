@@ -27,6 +27,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
+import org.apache.commons.scxml2.EventBuilder;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLListener;
 import org.apache.commons.scxml2.TriggerEvent;
@@ -197,8 +198,7 @@ public abstract class AbstractStateMachine {
      *         configuration.
      */
     public boolean fireEvent(final String event) {
-        TriggerEvent[] evts = {new TriggerEvent(event,
-                TriggerEvent.SIGNAL_EVENT)};
+        TriggerEvent[] evts = {new EventBuilder(event, TriggerEvent.SIGNAL_EVENT).build()};
         try {
             engine.triggerEvents(evts);
         } catch (ModelException me) {

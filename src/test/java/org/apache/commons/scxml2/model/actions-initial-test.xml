@@ -36,7 +36,7 @@
         </if>
         <cs:var name="drink" expr="'water'" />
         <cs:var name="eat" expr="'flies'" />
-        <send id="send12345" target="freddy" type="frog"
+        <send id="send12345"
          event="croak" namelist="drink eat" hints="'h2o bzz'"
          delayexpr="1000+500" />
         <cancel sendId="send12345"/>

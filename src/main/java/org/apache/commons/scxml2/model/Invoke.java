@@ -27,6 +27,7 @@ import org.apache.commons.scxml2.SCXMLExecutionContext;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.SCXMLSystemContext;
 import org.apache.commons.scxml2.TriggerEvent;
+import org.apache.commons.scxml2.EventBuilder;
 import org.apache.commons.scxml2.invoke.Invoker;
 import org.apache.commons.scxml2.invoke.InvokerException;
 import org.apache.commons.scxml2.semantics.ErrorConstants;
@@ -101,6 +102,11 @@ public class Invoke extends NamelistHolder implements PathResolverHolder, Conten
     private Content content;
 
     private EnterableState parent;
+
+    /**
+     * This invoke index in the parent (TransitionalState) defined invokers
+     */
+    private int invokeIndex;
 
     /**
      * Get the identifier for this invoke (may be null).
@@ -322,14 +328,14 @@ public class Invoke extends NamelistHolder implements PathResolverHolder, Conten
      * Set the parent EnterableState.
      * @param parent The parent state to set
      */
-    public void setParentEnterableState(final EnterableState parent) {
+    public void setParentEnterableState(final EnterableState parent, final int invokeIndex) {
         if (parent == null) {
             throw new IllegalArgumentException("Parent parameter cannot be null");
         }
         this.parent = parent;
+        this.invokeIndex = invokeIndex;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void execute(final ActionExecutionContext axctx) throws ModelException {
         EnterableState parentState = getParentEnterableState();
@@ -357,7 +363,7 @@ public class Invoke extends NamelistHolder implements PathResolverHolder, Conten
 
             String invokeId = getId();
             if (invokeId == null) {
-                invokeId = parentState.getId() + "." + ctx.get(SCXMLSystemContext.SESSIONID_KEY);
+                invokeId = parentState.getId() + "." + ctx.get(SCXMLSystemContext.SESSIONID_KEY) + "." + invokeIndex;
             }
             if (getId() == null && getIdlocation() != null) {
                 eval.evalAssign(ctx, idlocation, invokeId);
@@ -390,7 +396,7 @@ public class Invoke extends NamelistHolder implements PathResolverHolder, Conten
                 }
             }
             if (src == null && srcNode == null) {
-                throw new SCXMLExpressionException("<invoke> for state "+parentState.getId() +
+                throw new ActionExecutionError("<invoke> for state "+parentState.getId() +
                         ": no src and no content defined");
             }
             Map<String, Object> payloadDataMap = new HashMap<>();
@@ -403,13 +409,12 @@ public class Invoke extends NamelistHolder implements PathResolverHolder, Conten
             // TODO: } else { invoker.invoke(srcNode, payloadDataMap); }
             exctx.registerInvoker(this, invoker);
         }
-        catch (InvokerException e) {
-            axctx.getErrorReporter().onError(ErrorConstants.EXECUTION_ERROR, e.getMessage(), this);
-            axctx.getInternalIOProcessor().addEvent(new TriggerEvent(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT));
-        }
-        catch (SCXMLExpressionException e) {
-            axctx.getInternalIOProcessor().addEvent(new TriggerEvent(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT));
-            axctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR, e.getMessage(), this);
+        catch (InvokerException|ActionExecutionError|SCXMLExpressionException e) {
+            axctx.getInternalIOProcessor().addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT).build());
+            if (e.getMessage() != null) {
+                axctx.getErrorReporter().onError(e instanceof SCXMLExpressionException
+                        ? ErrorConstants.EXPRESSION_ERROR : ErrorConstants.EXECUTION_ERROR, e.getMessage(), this);
+            }
         }
         finally {
             ctx.setLocal(getNamespacesKey(), null);

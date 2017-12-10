@@ -26,6 +26,7 @@ import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.SCXMLIOProcessor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.TriggerEvent;
+import org.apache.commons.scxml2.EventBuilder;
 import org.apache.commons.scxml2.env.SimpleDispatcher;
 import org.junit.Assert;
 import org.junit.Test;
@@ -33,7 +34,6 @@ import org.junit.Test;
 public class SendTest {
 
     @Test
-    @SuppressWarnings("unchecked")
     public void testNamelistOrderPreserved() throws Exception {
         final List<Object> payloads = new ArrayList<Object>();
         final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/model/send-test-01.xml");
@@ -46,7 +46,7 @@ public class SendTest {
             }
         });
         exec.go();
-        TriggerEvent te = new TriggerEvent("event.foo", TriggerEvent.SIGNAL_EVENT, new Integer(3));
+        TriggerEvent te = new EventBuilder("event.foo", TriggerEvent.SIGNAL_EVENT).data(new Integer(3)).build();
         SCXMLTestHelper.fireEvent(exec, te);
 
         Assert.assertFalse("Payloads empty.", payloads.isEmpty());

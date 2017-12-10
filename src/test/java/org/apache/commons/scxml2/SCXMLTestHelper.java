@@ -148,8 +148,8 @@ public class SCXMLTestHelper {
         return fireEvent(exec, name, null);
     }
 
-    public static Set<EnterableState> fireEvent(SCXMLExecutor exec, String name, Object payload) throws Exception {
-        TriggerEvent[] evts = {new TriggerEvent(name, TriggerEvent.SIGNAL_EVENT, payload)};
+    public static Set<EnterableState> fireEvent(SCXMLExecutor exec, String name, Object data) throws Exception {
+        TriggerEvent[] evts = {new EventBuilder(name, TriggerEvent.SIGNAL_EVENT).data(data).build()};
         exec.triggerEvents(evts);
         return exec.getStatus().getStates();
     }
@@ -170,9 +170,9 @@ public class SCXMLTestHelper {
     }
 
     public static void assertPostTriggerState(SCXMLExecutor exec,
-            String triggerEventName, Object payload, String expectedStateId) throws Exception {
-        assertPostTriggerState(exec, new TriggerEvent(triggerEventName,
-                TriggerEvent.SIGNAL_EVENT, payload), expectedStateId);
+            String triggerEventName, Object data, String expectedStateId) throws Exception {
+        assertPostTriggerState(exec, new EventBuilder(triggerEventName, TriggerEvent.SIGNAL_EVENT)
+                .data(data).build(), expectedStateId);
     }
 
     public static void assertPostTriggerStates(SCXMLExecutor exec,
@@ -181,9 +181,9 @@ public class SCXMLTestHelper {
     }
 
     public static void assertPostTriggerStates(SCXMLExecutor exec,
-            String triggerEventName, Object payload, String[] expectedStateIds) throws Exception {
-        assertPostTriggerStates(exec, new TriggerEvent(triggerEventName,
-                TriggerEvent.SIGNAL_EVENT, payload), expectedStateIds);
+            String triggerEventName, Object data, String[] expectedStateIds) throws Exception {
+        assertPostTriggerStates(exec, new EventBuilder(triggerEventName, TriggerEvent.SIGNAL_EVENT)
+                .data(data).build(), expectedStateIds);
     }
 
     public static void assertPostTriggerState(SCXMLExecutor exec,

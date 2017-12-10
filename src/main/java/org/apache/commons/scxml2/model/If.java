@@ -24,6 +24,7 @@ import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.TriggerEvent;
+import org.apache.commons.scxml2.EventBuilder;
 import org.apache.commons.scxml2.semantics.ErrorConstants;
 
 /**
@@ -132,7 +133,7 @@ public class If extends Action implements ActionsContainer {
             }
         } catch (SCXMLExpressionException e) {
             rslt = Boolean.FALSE;
-            exctx.getInternalIOProcessor().addEvent(new TriggerEvent(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT));
+            exctx.getInternalIOProcessor().addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT).build());
             exctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR, "Treating as false due to error: "
                     + e.getMessage(), this);
         }

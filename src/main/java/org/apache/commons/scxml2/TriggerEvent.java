@@ -23,7 +23,7 @@ import java.io.Serializable;
  * defined in reference to SCXML.
  *
  * <b>NOTE:</b> Instances are {@link Serializable} as long as the associated
- * payload, if any, is {@link Serializable}.
+ * data, if any, is {@link Serializable}.
  *
  */
 public class TriggerEvent implements Serializable {
@@ -36,24 +36,21 @@ public class TriggerEvent implements Serializable {
      *
      * @param name The event name
      * @param type The event type
-     * @param payload The event payload, must be {@link Serializable}
-     */
-    public TriggerEvent(final String name, final int type,
-            final Object payload) {
-        super();
-        this.name = name != null ? name.trim() : "";
-        this.type = type;
-        this.payload = payload;
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param name The event name
-     * @param type The event type
+     * @deprecated use {@link EventBuilder instead}
      */
     public TriggerEvent(final String name, final int type) {
-        this(name, type, null);
+        this(name, type, null, null, null, null, null);
+    }
+
+    TriggerEvent(final String name, final int type, final String sendId, final String origin,
+                        final String originType, final String invokeId, final Object data) {
+        this.name = name != null ? name.trim() : "";
+        this.type = type;
+        this.sendId = sendId;
+        this.origin = origin;
+        this.originType = originType;
+        this.invokeId = invokeId;
+        this.data = data;
     }
 
     /**
@@ -122,43 +119,44 @@ public class TriggerEvent implements Serializable {
      */
     public static final String ERROR_PLATFORM = "error.platform";
 
-    /**
-     * The event name.
-     *
-     */
-    private String name;
+    private final String name;
+    private final int type;
+    private final String sendId;
+    private final String origin;
+    private final String originType;
+    private final String invokeId;
+    private final Object data;
 
-    /**
-     * The event type.
-     *
-     */
-    private int type;
-
-    /**
-     * The event payload.
-     *
-     */
-    private Object payload;
-
-    /**
-     * @return Returns the name.
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * @return Returns the payload.
-     */
-    public Object getPayload() {
-        return payload;
-    }
-
-    /**
-     * @return Returns the type.
-     */
     public int getType() {
         return type;
+    }
+
+    public String getSendId() {
+        return sendId;
+    }
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    public String getOriginType() {
+        return originType;
+    }
+
+    public String getInvokeId() {
+        return invokeId;
+    }
+
+    public Object getData() {
+        return data;
+    }
+
+    private static boolean equals(final Object a, final Object b) {
+        return (a == null && b == null) || (a != null && a.equals(b));
     }
 
     /**
@@ -170,9 +168,12 @@ public class TriggerEvent implements Serializable {
     public boolean equals(final Object obj) {
         if (obj instanceof TriggerEvent) {
             TriggerEvent te2 = (TriggerEvent) obj;
-            if (type == te2.type && name.equals(te2.name)
-                && ((payload == null && te2.payload == null)
-                     || (payload != null && payload.equals(te2.payload)))) {
+            if (type == te2.type && name.equals(te2.name) &&
+                    equals(sendId, te2.sendId) &&
+                    equals(origin, te2.origin) &&
+                    equals(originType, te2.originType) &&
+                    equals(invokeId, te2.invokeId) &&
+                    equals(data, te2.data)) {
                 return true;
             }
         }
@@ -186,10 +187,22 @@ public class TriggerEvent implements Serializable {
      */
     @Override
     public String toString() {
-        StringBuffer buf = new StringBuffer("TriggerEvent{name=");
-        buf.append(name).append(",type=").append(type);
-        if (payload != null) {
-            buf.append(",payload=").append(payload.toString());
+        StringBuilder buf = new StringBuilder("TriggerEvent{name=");
+        buf.append(name).append(", type=").append(type);
+        if (sendId != null) {
+            buf.append(", sendid=").append(invokeId);
+        }
+        if (origin != null) {
+            buf.append(", origin=").append(invokeId);
+        }
+        if (originType != null) {
+            buf.append(", origintype=").append(invokeId);
+        }
+        if (invokeId != null) {
+            buf.append(", invokeid=").append(invokeId);
+        }
+        if (data != null) {
+            buf.append(", data=").append(data.toString());
         }
         buf.append("}");
         return String.valueOf(buf);

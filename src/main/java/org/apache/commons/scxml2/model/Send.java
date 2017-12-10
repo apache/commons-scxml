@@ -346,87 +346,91 @@ public class Send extends NamelistHolder implements ContentContainer {
         // Send attributes evaluation
         EnterableState parentState = getParentEnterableState();
         Context ctx = exctx.getContext(parentState);
-        ctx.setLocal(getNamespacesKey(), getNamespaces());
-        Evaluator eval = exctx.getEvaluator();
-        // Most attributes of <send> are expressions so need to be
-        // evaluated before the EventDispatcher callback
-        Object hintsValue = null;
-        if (hints != null) {
-            hintsValue = eval.eval(ctx, hints);
-        }
-        if (id == null) {
-            id = ctx.getSystemContext().generateSessionId();
+        try {
+            ctx.setLocal(getNamespacesKey(), getNamespaces());
+            Evaluator eval = exctx.getEvaluator();
+            // Most attributes of <send> are expressions so need to be
+            // evaluated before the EventDispatcher callback
+            Object hintsValue = null;
+            if (hints != null) {
+                hintsValue = eval.eval(ctx, hints);
+            }
             if (idlocation != null) {
+                if (id == null) {
+                    id = ctx.getSystemContext().generateSessionId();
+                }
                 eval.evalAssign(ctx, idlocation, id);
             }
-        }
-        String targetValue = target;
-        if (targetValue == null && targetexpr != null) {
-            targetValue = (String)eval.eval(ctx, targetexpr);
-            if ((targetValue == null || targetValue.trim().length() == 0)
-                    && exctx.getAppLog().isWarnEnabled()) {
-                exctx.getAppLog().warn("<send>: target expression \"" + targetexpr
-                        + "\" evaluated to null or empty String");
+            String targetValue = target;
+            if (targetValue == null && targetexpr != null) {
+                targetValue = (String)eval.eval(ctx, targetexpr);
+                if ((targetValue == null || targetValue.trim().length() == 0)
+                        && exctx.getAppLog().isWarnEnabled()) {
+                    exctx.getAppLog().warn("<send>: target expression \"" + targetexpr
+                            + "\" evaluated to null or empty String");
+                }
             }
-        }
-        String typeValue = type;
-        if (typeValue == null && typeexpr != null) {
-            typeValue = (String)eval.eval(ctx, typeexpr);
-            if ((typeValue == null || typeValue.trim().length() == 0)
-                    && exctx.getAppLog().isWarnEnabled()) {
-                exctx.getAppLog().warn("<send>: type expression \"" + typeexpr
-                        + "\" evaluated to null or empty String");
+            String typeValue = type;
+            if (typeValue == null && typeexpr != null) {
+                typeValue = (String)eval.eval(ctx, typeexpr);
+                if ((typeValue == null || typeValue.trim().length() == 0)
+                        && exctx.getAppLog().isWarnEnabled()) {
+                    exctx.getAppLog().warn("<send>: type expression \"" + typeexpr
+                            + "\" evaluated to null or empty String");
+                }
             }
-        }
-        if (typeValue == null) {
-            // must default to 'scxml' when unspecified
-            typeValue = SCXMLIOProcessor.DEFAULT_EVENT_PROCESSOR;
-        } else if (!SCXMLIOProcessor.DEFAULT_EVENT_PROCESSOR.equals(typeValue) && typeValue.trim().equalsIgnoreCase(SCXMLIOProcessor.SCXML_EVENT_PROCESSOR)) {
-            typeValue = SCXMLIOProcessor.DEFAULT_EVENT_PROCESSOR;
-        }
-        Object payload = null;
-        Map<String, Object> payloadDataMap = new LinkedHashMap<>();
-        addNamelistDataToPayload(exctx, payloadDataMap);
-        addParamsToPayload(exctx, payloadDataMap);
-        if (!payloadDataMap.isEmpty()) {
-            payload = payloadDataMap;
-        }
-        else if (content != null) {
-            if (content.getExpr() != null) {
-                payload = eval.cloneData(eval.eval(ctx, content.getExpr()));
-            } else {
-                payload = eval.cloneData(content.getBody());
+            if (typeValue == null) {
+                // must default to 'scxml' when unspecified
+                typeValue = SCXMLIOProcessor.DEFAULT_EVENT_PROCESSOR;
+            } else if (!SCXMLIOProcessor.DEFAULT_EVENT_PROCESSOR.equals(typeValue) && typeValue.trim().equalsIgnoreCase(SCXMLIOProcessor.SCXML_EVENT_PROCESSOR)) {
+                typeValue = SCXMLIOProcessor.DEFAULT_EVENT_PROCESSOR;
             }
-        }
-        long wait = 0L;
-        String delayString = delay;
-        if (delayString == null && delayexpr != null) {
-            Object delayValue = eval.eval(ctx, delayexpr);
-            if (delayValue != null) {
-                delayString = delayValue.toString();
+            Object payload = null;
+            Map<String, Object> payloadDataMap = new LinkedHashMap<>();
+            addNamelistDataToPayload(exctx, payloadDataMap);
+            addParamsToPayload(exctx, payloadDataMap);
+            if (!payloadDataMap.isEmpty()) {
+                payload = payloadDataMap;
             }
-        }
-        if (delayString != null) {
-            wait = parseDelay(delayString, delayexpr != null, delayexpr != null ? delayexpr : delay);
-        }
-        String eventValue = event;
-        if (eventValue == null && eventexpr != null) {
-            eventValue = (String)eval.eval(ctx, eventexpr);
-            if ((eventValue == null)) {
-                throw new SCXMLExpressionException("<send>: event expression \"" + eventexpr
-                        + "\" evaluated to null");
+            else if (content != null) {
+                if (content.getExpr() != null) {
+                    payload = eval.cloneData(eval.eval(ctx, content.getExpr()));
+                } else {
+                    payload = eval.cloneData(content.getBody());
+                }
             }
+            long wait = 0L;
+            String delayString = delay;
+            if (delayString == null && delayexpr != null) {
+                Object delayValue = eval.eval(ctx, delayexpr);
+                if (delayValue != null) {
+                    delayString = delayValue.toString();
+                }
+            }
+            if (delayString != null) {
+                wait = parseDelay(delayString, delayexpr != null, delayexpr != null ? delayexpr : delay);
+            }
+            String eventValue = event;
+            if (eventValue == null && eventexpr != null) {
+                eventValue = (String)eval.eval(ctx, eventexpr);
+                if ((eventValue == null)) {
+                    throw new SCXMLExpressionException("<send>: event expression \"" + eventexpr
+                            + "\" evaluated to null");
+                }
+            }
+            Map<String, SCXMLIOProcessor> ioProcessors = (Map<String, SCXMLIOProcessor>) ctx.get(SCXMLSystemContext.IOPROCESSORS_KEY);
+            if (exctx.getAppLog().isDebugEnabled()) {
+                exctx.getAppLog().debug("<send>: Dispatching event '" + eventValue
+                        + "' to target '" + targetValue + "' of target type '"
+                        + typeValue + "' with suggested delay of " + wait
+                        + "ms");
+            }
+            exctx.getEventDispatcher().send(ioProcessors, id, targetValue, typeValue, eventValue,
+                    payload, hintsValue, wait);
         }
-        Map<String, SCXMLIOProcessor> ioProcessors = (Map<String, SCXMLIOProcessor>) ctx.get(SCXMLSystemContext.IOPROCESSORS_KEY);
-        ctx.setLocal(getNamespacesKey(), null);
-        if (exctx.getAppLog().isDebugEnabled()) {
-            exctx.getAppLog().debug("<send>: Dispatching event '" + eventValue
-                    + "' to target '" + targetValue + "' of target type '"
-                    + typeValue + "' with suggested delay of " + wait
-                    + "ms");
+        finally {
+            ctx.setLocal(getNamespacesKey(), null);
         }
-        exctx.getEventDispatcher().send(ioProcessors, id, targetValue, typeValue, eventValue,
-                payload, hintsValue, wait);
     }
 
     /**

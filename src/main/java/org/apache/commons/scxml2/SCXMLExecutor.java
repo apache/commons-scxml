@@ -54,9 +54,9 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     private Log log = LogFactory.getLog(SCXMLExecutor.class);
 
     /**
-     * Parent SCXMLExecutor
+     * Parent SCXMLIOProcessor
      */
-    private SCXMLExecutor parentSCXMLExecutor;
+    private ParentSCXMLIOProcessor parentSCXMLIOProcessor;
 
     /**
      *  Interpretation semantics.
@@ -112,20 +112,21 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
      *
      * @param parentSCXMLExecutor the parent SCXMLExecutor
      */
-    public SCXMLExecutor(final SCXMLExecutor parentSCXMLExecutor) throws ModelException {
-        this.parentSCXMLExecutor = parentSCXMLExecutor;
+    public SCXMLExecutor(final SCXMLExecutor parentSCXMLExecutor, final String invokeId, final SCXML scxml) throws ModelException {
+        this.parentSCXMLIOProcessor = new ParentSCXMLIOProcessor(parentSCXMLExecutor, invokeId);
         this.semantics = parentSCXMLExecutor.semantics;
         this.exctx = new SCXMLExecutionContext(this, parentSCXMLExecutor.getEvaluator(),
-                parentSCXMLExecutor.getEventdispatcher(), parentSCXMLExecutor.getErrorReporter());
+                parentSCXMLExecutor.getEventdispatcher().newInstance(), parentSCXMLExecutor.getErrorReporter());
         getSCInstance().setSingleContext(parentSCXMLExecutor.isSingleContext());
         getSCInstance().setStrict(parentSCXMLExecutor.isStrict());
+        getSCInstance().setStateMachine(scxml);
     }
 
     /**
-     * @return the parent SCXMLExecutor (if any)
+     * @return the parent SCXMLIOProcessor (if any)
      */
-    protected SCXMLExecutor getParentSCXMLExecutor() {
-        return parentSCXMLExecutor;
+    public ParentSCXMLIOProcessor getParentSCXMLIOProcessor() {
+        return parentSCXMLIOProcessor;
     }
 
     /**

@@ -39,19 +39,16 @@ public class EventDataTest {
         Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state1", currentStates.iterator().next().getId());
-        TriggerEvent te = new TriggerEvent("event.foo",
-            TriggerEvent.SIGNAL_EVENT, new Integer(3));
+        TriggerEvent te = new EventBuilder("event.foo", TriggerEvent.SIGNAL_EVENT).data(new Integer(3)).build();
         currentStates = SCXMLTestHelper.fireEvent(exec, te);
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state3", currentStates.iterator().next().getId());
         TriggerEvent[] evts = new TriggerEvent[] { te,
-            new TriggerEvent("event.bar", TriggerEvent.SIGNAL_EVENT,
-            new Integer(6))};
+            new EventBuilder("event.bar", TriggerEvent.SIGNAL_EVENT).data(new Integer(6)).build()};
         currentStates = SCXMLTestHelper.fireEvents(exec, evts);
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state6", currentStates.iterator().next().getId());
-        te = new TriggerEvent("event.baz",
-            TriggerEvent.SIGNAL_EVENT, new Integer(7));
+        te = new EventBuilder("event.baz", TriggerEvent.SIGNAL_EVENT).data(new Integer(7)).build();
         currentStates = SCXMLTestHelper.fireEvent(exec, te);
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state7", currentStates.iterator().next().getId());
@@ -64,14 +61,12 @@ public class EventDataTest {
         Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state0", currentStates.iterator().next().getId());
-        TriggerEvent te1 = new TriggerEvent("connection.alerting",
-            TriggerEvent.SIGNAL_EVENT, "line2");
+        TriggerEvent te1 = new EventBuilder("connection.alerting", TriggerEvent.SIGNAL_EVENT).data("line2").build();
         currentStates = SCXMLTestHelper.fireEvent(exec, te1);
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state2", currentStates.iterator().next().getId());
-        TriggerEvent te2 = new TriggerEvent("connection.alerting",
-            TriggerEvent.SIGNAL_EVENT,
-            new ConnectionAlertingPayload(4));
+        TriggerEvent te2 = new EventBuilder("connection.alerting", TriggerEvent.SIGNAL_EVENT)
+                .data(new ConnectionAlertingPayload(4)).build();
         currentStates = SCXMLTestHelper.fireEvent(exec, te2);
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state4", currentStates.iterator().next().getId());
@@ -84,8 +79,7 @@ public class EventDataTest {
         Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("ten", currentStates.iterator().next().getId());
-        TriggerEvent te = new TriggerEvent("event.foo",
-            TriggerEvent.SIGNAL_EVENT);
+        TriggerEvent te = new EventBuilder("event.foo", TriggerEvent.SIGNAL_EVENT).build();
         currentStates = SCXMLTestHelper.fireEvent(exec, te);
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("thirty", currentStates.iterator().next().getId());

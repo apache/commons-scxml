@@ -348,7 +348,7 @@ public class SCInstance implements Serializable {
                     setValue = true;
                 } catch (SCXMLExpressionException see) {
                     if (internalIOProcessor != null) {
-                        internalIOProcessor.addEvent(new TriggerEvent(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT));
+                        internalIOProcessor.addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT).build());
                     }
                     errorReporter.onError(ErrorConstants.EXPRESSION_ERROR, see.getMessage(), datum);
                 } finally {

@@ -21,6 +21,7 @@ import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.TriggerEvent;
+import org.apache.commons.scxml2.EventBuilder;
 
 /**
  * The class in this SCXML object model that corresponds to the
@@ -104,7 +105,7 @@ public class Var extends Action {
             exctx.getAppLog().debug("<var>: Defined variable '" + name
                 + "' with initial value '" + String.valueOf(varObj) + "'");
         }
-        TriggerEvent ev = new TriggerEvent(name + ".change", TriggerEvent.CHANGE_EVENT);
+        TriggerEvent ev = new EventBuilder(name + ".change", TriggerEvent.CHANGE_EVENT).build();
         exctx.getInternalIOProcessor().addEvent(ev);
     }
 }

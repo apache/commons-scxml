@@ -39,17 +39,17 @@ public class TriggerEventTest {
      */
     @Before
     public void setUp() {
-        payloadData = new HashMap<String, String>();
+        payloadData = new HashMap<>();
         payloadData.put("property1", "value1");
         payload1 = payloadData;
         payload2 = new Object();
-        te1 = new TriggerEvent("name1", TriggerEvent.CHANGE_EVENT, payload1);
-        te2 = new TriggerEvent("name1", TriggerEvent.CHANGE_EVENT, payload1);
-        te3 = new TriggerEvent("name2", TriggerEvent.CALL_EVENT, payload2);
-        te4 = new TriggerEvent("name2", TriggerEvent.CALL_EVENT, payload2);
-        te5 = new TriggerEvent("name3", TriggerEvent.SIGNAL_EVENT);
-        te6 = new TriggerEvent("name3", TriggerEvent.SIGNAL_EVENT);
-        te7 = new TriggerEvent("name3", TriggerEvent.TIME_EVENT);
+        te1 = new EventBuilder("name1", TriggerEvent.CHANGE_EVENT).data(payload1).build();
+        te2 = new EventBuilder("name1", TriggerEvent.CHANGE_EVENT).data(payload1).build();
+        te3 = new EventBuilder("name2", TriggerEvent.CALL_EVENT).data(payload2).build();
+        te4 = new EventBuilder("name2", TriggerEvent.CALL_EVENT).data(payload2).build();
+        te5 = new EventBuilder("name3", TriggerEvent.SIGNAL_EVENT).build();
+        te6 = new EventBuilder("name3", TriggerEvent.SIGNAL_EVENT).build();
+        te7 = new EventBuilder("name3", TriggerEvent.TIME_EVENT).build();
     }
 
     /**
@@ -70,7 +70,7 @@ public class TriggerEventTest {
     public void testTriggerEventGetters() {
         Assert.assertEquals("name1", te1.getName());
         Assert.assertEquals(2, te2.getType());
-        Assert.assertNull(te7.getPayload());
+        Assert.assertNull(te7.getData());
     }
 
     @Test
@@ -84,16 +84,16 @@ public class TriggerEventTest {
 
     @Test
     public void testTriggerEventToString() {
-        Assert.assertEquals("TriggerEvent{name=name3,type=4}", te7.toString());
-        Assert.assertEquals("TriggerEvent{name=name1,type=2,payload="
+        Assert.assertEquals("TriggerEvent{name=name3, type=4}", te7.toString());
+        Assert.assertEquals("TriggerEvent{name=name1, type=2, data="
             + "{property1=value1}}", te2.toString());
     }
 
     @Test
     public void testTriggerEventHashCode() {
-        Assert.assertEquals("TriggerEvent{name=name3,type=4}".hashCode(),
+        Assert.assertEquals("TriggerEvent{name=name3, type=4}".hashCode(),
             te7.hashCode());
-        Assert.assertEquals("TriggerEvent{name=name3,type=3}".hashCode(),
+        Assert.assertEquals("TriggerEvent{name=name3, type=3}".hashCode(),
             te5.hashCode());
     }
 }

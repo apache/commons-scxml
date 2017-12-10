@@ -33,7 +33,7 @@ public interface SCXMLIOProcessor {
     String EVENT_PROCESSOR_ALIAS_PREFIX = "#_";
 
     /**
-     * Default SCXML I/O Event Processor alias
+     * Default external SCXML I/O Event Processor alias
      */
     String SCXML_EVENT_PROCESSOR = "scxml";
 

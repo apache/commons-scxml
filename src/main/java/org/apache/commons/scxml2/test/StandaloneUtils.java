@@ -29,6 +29,7 @@ import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.TriggerEvent;
+import org.apache.commons.scxml2.EventBuilder;
 import org.apache.commons.scxml2.env.Tracer;
 import org.apache.commons.scxml2.invoke.SimpleSCXMLInvoker;
 import org.apache.commons.scxml2.io.SCXMLReader;
@@ -111,8 +112,7 @@ public final class StandaloneUtils {
                         + value);
                 } else if (event.trim().length() == 0
                            || event.equalsIgnoreCase("null")) {
-                    TriggerEvent[] evts = {new TriggerEvent(null,
-                        TriggerEvent.SIGNAL_EVENT, null)};
+                    TriggerEvent[] evts = {new EventBuilder(null,TriggerEvent.SIGNAL_EVENT).build()};
                     exec.triggerEvents(evts);
                     if (exec.getStatus().isFinal()) {
                         System.out.println("A final configuration reached.");
@@ -122,8 +122,7 @@ public final class StandaloneUtils {
                     int tkns = st.countTokens();
                     TriggerEvent[] evts = new TriggerEvent[tkns];
                     for (int i = 0; i < tkns; i++) {
-                        evts[i] = new TriggerEvent(st.nextToken(),
-                                TriggerEvent.SIGNAL_EVENT, null);
+                        evts[i] = new EventBuilder(st.nextToken(), TriggerEvent.SIGNAL_EVENT).build();
                     }
                     exec.triggerEvents(evts);
                     if (exec.getStatus().isFinal()) {

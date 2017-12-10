@@ -104,5 +104,25 @@ public class EventVariable implements Serializable {
     public Object getData() {
         return data;
     }
+
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("_event(");
+        sb.append("name: ").append(name);
+        sb.append(", type: ").append(type);
+        if (sendid != null) {
+            sb.append(", sendid: ").append(sendid);
+        }
+        if (origin != null) {
+            sb.append(", origin: ").append(origin);
+        }
+        if (origintype != null) {
+            sb.append(", origintype: ").append(origintype);
+        }
+        if (invokeid != null) {
+            sb.append(", invokeid: ").append(invokeid);
+        }
+        sb.append(")");
+        return sb.toString();
+    }
 }
 

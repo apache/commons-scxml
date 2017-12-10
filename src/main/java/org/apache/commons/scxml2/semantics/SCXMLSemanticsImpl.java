@@ -28,6 +28,7 @@ import java.util.Set;
 import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.ErrorReporter;
+import org.apache.commons.scxml2.ParentSCXMLIOProcessor;
 import org.apache.commons.scxml2.SCInstance;
 import org.apache.commons.scxml2.SCXMLExecutionContext;
 import org.apache.commons.scxml2.SCXMLExpressionException;
@@ -35,9 +36,10 @@ import org.apache.commons.scxml2.SCXMLSemantics;
 import org.apache.commons.scxml2.SCXMLSystemContext;
 import org.apache.commons.scxml2.StateConfiguration;
 import org.apache.commons.scxml2.TriggerEvent;
-import org.apache.commons.scxml2.invoke.Invoker;
+import org.apache.commons.scxml2.EventBuilder;
 import org.apache.commons.scxml2.invoke.InvokerException;
 import org.apache.commons.scxml2.model.Action;
+import org.apache.commons.scxml2.model.ActionExecutionError;
 import org.apache.commons.scxml2.model.DocumentOrder;
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.Executable;
@@ -222,7 +224,18 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
             }
             exctx.getNotificationRegistry().fireOnExit(es, es);
             exctx.getNotificationRegistry().fireOnExit(exctx.getStateMachine(), es);
-            if (!(es instanceof Final && es.getParent() == null)) {
+            if (es instanceof Final && es.getParent() == null) {
+                if (exctx.getSCXMLExecutor().getParentSCXMLIOProcessor() != null) {
+                    ParentSCXMLIOProcessor ioProcessor = exctx.getSCXMLExecutor().getParentSCXMLIOProcessor();
+                    if (!ioProcessor.isClosed()) {
+                        ioProcessor.addEvent(
+                                new EventBuilder("done.invoke."+ioProcessor.getInvokeId(), TriggerEvent.SIGNAL_EVENT)
+                                        .invokeId(ioProcessor.getInvokeId()).build());
+                        ioProcessor.close();
+                    }
+                }
+            }
+            else {
                 exctx.getScInstance().getStateConfiguration().exitState(es);
             }
             // else: keep final Final
@@ -707,7 +720,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                 }
             }
             catch (SCXMLExpressionException e) {
-                exctx.getInternalIOProcessor().addEvent(new TriggerEvent(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT));
+                exctx.getInternalIOProcessor().addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT).build());
                 exctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR, "Treating as false due to error: "
                         + e.getMessage(), transition);
             }
@@ -744,19 +757,6 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
             return true;
         }
         return false;
-    }
-
-    /**
-     * Checks if an external event was send (back) by an specific Invoker
-     *
-     * @param invokerId the invokerId
-     *
-     * @param event received external event
-     * @return true if this event was send by the specific Invoker
-     */
-    public boolean isInvokerEvent(final String invokerId, final TriggerEvent event) {
-        return event.getName().equals("done.invoke."+invokerId) ||
-                event.getName().startsWith("done.invoke."+invokerId+".");
     }
 
     /**
@@ -854,9 +854,8 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
             if (triggerEventType == TriggerEvent.ERROR_EVENT || triggerEventType == TriggerEvent.CHANGE_EVENT) {
                 eventType = EventVariable.TYPE_PLATFORM;
             }
-
-            // TODO: determine sendid, origin, originType and invokeid based on context later.
-            eventVar = new EventVariable(event.getName(), eventType, null, null, null, null, event.getPayload());
+            eventVar = new EventVariable(event.getName(), eventType, event.getSendId(), event.getOrigin(),
+                    event.getOriginType(), event.getInvokeId(), event.getData());
         }
         systemContext.setLocal(SCXMLSystemContext.EVENT_KEY, eventVar);
     }
@@ -873,7 +872,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
             try {
                 globalScript.execute(exctx.getActionExecutionContext());
             } catch (SCXMLExpressionException e) {
-                exctx.getInternalIOProcessor().addEvent(new TriggerEvent(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT));
+                exctx.getInternalIOProcessor().addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT).build());
                 exctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR, e.getMessage(), exctx.getStateMachine());
             }
         }
@@ -912,7 +911,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                 executeContent(exctx, onexit);
                 if (!onexitEventRaised && onexit.isRaiseEvent()) {
                     onexitEventRaised = true;
-                    exctx.getInternalIOProcessor().addEvent(new TriggerEvent("exit.state."+es.getId(), TriggerEvent.CHANGE_EVENT));
+                    exctx.getInternalIOProcessor().addEvent(new EventBuilder("exit.state."+es.getId(), TriggerEvent.CHANGE_EVENT).build());
                 }
             }
             exctx.getNotificationRegistry().fireOnExit(es, es);
@@ -954,8 +953,15 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                 action.execute(exctx.getActionExecutionContext());
             }
         } catch (SCXMLExpressionException e) {
-            exctx.getInternalIOProcessor().addEvent(new TriggerEvent(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT));
+            exctx.getInternalIOProcessor().addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT).build());
             exctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR, e.getMessage(), exec);
+        } catch (ActionExecutionError e) {
+            if (!e.isEventRaised()) {
+                exctx.getInternalIOProcessor().addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT).build());
+            }
+            if (e.getMessage() != null) {
+                exctx.getErrorReporter().onError(ErrorConstants.EXECUTION_ERROR, e.getMessage(), exec);
+            }
         }
         if (exec instanceof Transition) {
             Transition t = (Transition)exec;
@@ -1016,7 +1022,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                 executeContent(exctx, onentry);
                 if (!onentryEventRaised && onentry.isRaiseEvent()) {
                     onentryEventRaised = true;
-                    exctx.getInternalIOProcessor().addEvent(new TriggerEvent("entry.state."+es.getId(), TriggerEvent.CHANGE_EVENT));
+                    exctx.getInternalIOProcessor().addEvent(new EventBuilder("entry.state."+es.getId(), TriggerEvent.CHANGE_EVENT).build());
                 }
             }
             exctx.getNotificationRegistry().fireOnEntry(es, es);
@@ -1038,11 +1044,11 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                     exctx.stop();
                 }
                 else {
-                    exctx.getInternalIOProcessor().addEvent(new TriggerEvent("done.state."+parent.getId(),TriggerEvent.CHANGE_EVENT));
+                    exctx.getInternalIOProcessor().addEvent(new EventBuilder("done.state."+parent.getId(),TriggerEvent.CHANGE_EVENT).build());
                     if (parent.isRegion()) {
                         if (isInFinalState(parent.getParent(), exctx.getScInstance().getStateConfiguration().getActiveStates())) {
-                            exctx.getInternalIOProcessor().addEvent(new TriggerEvent("done.state."+parent.getParent().getId()
-                                    , TriggerEvent.CHANGE_EVENT));
+                            exctx.getInternalIOProcessor().addEvent(new EventBuilder("done.state."+parent.getParent().getId()
+                                    , TriggerEvent.CHANGE_EVENT).build());
                         }
                     }
                 }
@@ -1081,11 +1087,13 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      */
     public void processInvokes(final SCXMLExecutionContext exctx, final TriggerEvent event) throws ModelException {
         for (Map.Entry<Invoke, String> entry : exctx.getInvokeIds().entrySet()) {
-            if (!isInvokerEvent(entry.getValue(), event)) {
-                if (entry.getKey().isAutoForward()) {
-                    Invoker inv = exctx.getInvoker(entry.getKey());
+            if (entry.getValue().equals(event.getInvokeId())) {
+                Invoke invoke = entry.getKey();
+                if (entry.getKey().isAutoForward() &&
+                        !(event.getName().equals("done.invoke."+entry.getValue()) ||
+                                event.getName().startsWith("done.invoke."+entry.getValue()+"."))) {
                     try {
-                        inv.parentEvent(event);
+                        exctx.getInvoker(entry.getKey()).parentEvent(event);
                     } catch (InvokerException ie) {
                         exctx.getAppLog().error(ie.getMessage(), ie);
                         throw new ModelException(ie.getMessage(), ie.getCause());

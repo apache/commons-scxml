@@ -16,13 +16,12 @@
  */
 package org.apache.commons.scxml2.model;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.TriggerEvent;
+import org.apache.commons.scxml2.EventBuilder;
 import org.junit.Assert;
 import org.junit.Test;
 /**
@@ -127,8 +126,7 @@ public class DatamodelTest {
     }
 
     private Set<EnterableState> fireEvent(String name, SCXMLExecutor exec) throws Exception {
-        TriggerEvent[] evts = {new TriggerEvent(name,
-                TriggerEvent.SIGNAL_EVENT, null)};
+        TriggerEvent[] evts = {new EventBuilder(name, TriggerEvent.SIGNAL_EVENT).build()};
         exec.triggerEvents(evts);
         return exec.getStatus().getStates();
     }

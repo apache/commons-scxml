@@ -19,6 +19,7 @@ package org.apache.commons.scxml2.model;
 import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.TriggerEvent;
+import org.apache.commons.scxml2.EventBuilder;
 
 /**
  * Our custom &quot;hello world&quot; action.
@@ -61,8 +62,7 @@ public class Hello extends Action {
             exctx.getAppLog().info("Hello " + name);
         }
         // For derived events payload testing
-        TriggerEvent event =
-            new TriggerEvent("helloevent", TriggerEvent.SIGNAL_EVENT, name);
+        TriggerEvent event = new EventBuilder("helloevent", TriggerEvent.SIGNAL_EVENT).data(name).build();
         exctx.getInternalIOProcessor().addEvent(event);
         callbacks++;
     }

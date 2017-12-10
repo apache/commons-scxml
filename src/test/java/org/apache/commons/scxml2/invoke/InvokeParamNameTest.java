@@ -22,6 +22,7 @@ import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLIOProcessor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.TriggerEvent;
+import org.apache.commons.scxml2.EventBuilder;
 import org.apache.commons.scxml2.model.ModelException;
 import org.junit.After;
 import org.junit.Assert;
@@ -51,8 +52,7 @@ public class InvokeParamNameTest {
     private void trigger() throws ModelException {
         lastParams = null;
         lastSource = null;
-        exec.triggerEvent(new TriggerEvent("test.trigger",
-            TriggerEvent.SIGNAL_EVENT)); 
+        exec.triggerEvent(new EventBuilder("test.trigger", TriggerEvent.SIGNAL_EVENT).build());
     }
     
     // Tests "param" element with "name" and "expr" attribute    

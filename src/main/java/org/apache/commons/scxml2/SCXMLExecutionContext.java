@@ -149,11 +149,11 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
         this.scInstance = new SCInstance(this, this.evaluator, this.errorReporter);
         this.actionExecutionContext = new ActionExecutionContext(this);
 
-        ioProcessors.put(SCXMLIOProcessor.DEFAULT_EVENT_PROCESSOR, getExternalIOProcessor());
-        ioProcessors.put(SCXMLIOProcessor.SCXML_EVENT_PROCESSOR, getExternalIOProcessor());
+        ioProcessors.put(SCXMLIOProcessor.SCXML_EVENT_PROCESSOR, new ExternalSCXMLIOProcessor(getExternalIOProcessor()));
+        ioProcessors.put(SCXMLIOProcessor.DEFAULT_EVENT_PROCESSOR, ioProcessors.get(SCXMLIOProcessor.SCXML_EVENT_PROCESSOR));
         ioProcessors.put(SCXMLIOProcessor.INTERNAL_EVENT_PROCESSOR, getInternalIOProcessor());
-        if (scxmlExecutor.getParentSCXMLExecutor() != null) {
-            ioProcessors.put(SCXMLIOProcessor.PARENT_EVENT_PROCESSOR, scxmlExecutor.getParentSCXMLExecutor());
+        if (scxmlExecutor.getParentSCXMLIOProcessor() != null) {
+            ioProcessors.put(SCXMLIOProcessor.PARENT_EVENT_PROCESSOR, scxmlExecutor.getParentSCXMLIOProcessor());
         }
         initializeIOProcessors();
         registerInvokerClass(SCXML_INVOKER_TYPE_URI, SimpleSCXMLInvoker.class);
@@ -414,13 +414,23 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     }
 
     /**
+     * Trivial utility method needed for SCXML IRP test 216 which (IMO incorrectly uses http://www.w3.org/TR/scxml
+     * (no trailing /) while the SCXML spec explicitly states http://www.w3.org/TR/scxml/ should be used (supported)
+     * @param uri
+     * @return
+     */
+    private final String stripTrailingSlash(final String uri) {
+        return uri.endsWith("/") ? uri.substring(0, uri.length()-1) : uri;
+    }
+
+    /**
      * Register an Invoker for this target type.
      *
      * @param type The target type (specified by "type" attribute of the invoke element).
      * @param invokerClass The Invoker class.
      */
     protected void registerInvokerClass(final String type, final Class<? extends Invoker> invokerClass) {
-        invokerClasses.put(type, invokerClass);
+        invokerClasses.put(stripTrailingSlash(type), invokerClass);
     }
 
     /**
@@ -429,7 +439,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
      * @param type The target type (specified by "type" attribute of the invoke element).
      */
     protected void unregisterInvokerClass(final String type) {
-        invokerClasses.remove(type);
+        invokerClasses.remove(stripTrailingSlash(type));
     }
 
     /**
@@ -442,9 +452,9 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
      * @throws InvokerException When a suitable {@link Invoker} cannot be instantiated.
      */
     public Invoker newInvoker(final String type) throws InvokerException {
-        Class<? extends Invoker> invokerClass = invokerClasses.get(type);
+        Class<? extends Invoker> invokerClass = invokerClasses.get(stripTrailingSlash(type));
         if (invokerClass == null) {
-            throw new InvokerException("No Invoker registered for type \"" + type + "\"");
+            throw new InvokerException("No Invoker registered for type \"" + stripTrailingSlash(type) + "\"");
         }
         try {
             return invokerClass.newInstance();
@@ -515,7 +525,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
             try {
                 invokers.get(invokeId).cancel();
             } catch (InvokerException ie) {
-                TriggerEvent te = new TriggerEvent("failed.invoke.cancel."+invokeId, TriggerEvent.ERROR_EVENT);
+                TriggerEvent te = new EventBuilder("failed.invoke.cancel."+invokeId, TriggerEvent.ERROR_EVENT).build();
                 addEvent(te);
             }
             removeInvoker(invoke);

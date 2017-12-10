@@ -126,8 +126,10 @@ public abstract class Action implements NamespacePrefixesHolder,
      *                        a non-deterministic state.
      * @throws SCXMLExpressionException If the execution involves trying
      *                        to evaluate an expression which is malformed.
+     * @throws ActionExecutionError to be thrown if the execution caused an error (event) to be raised,
+     * which then shall stop execution of (possible) following actions within the same executable content block
      */
-    public abstract void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException;
+    public abstract void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException, ActionExecutionError;
 
     /**
      * Return the key under which the current document namespaces are saved

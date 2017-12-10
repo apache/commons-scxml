@@ -19,6 +19,7 @@ package org.apache.commons.scxml2.model;
 import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.TriggerEvent;
+import org.apache.commons.scxml2.EventBuilder;
 
 /**
  * The class in this SCXML object model that corresponds to the
@@ -72,7 +73,7 @@ public class Raise extends Action {
         if (exctx.getAppLog().isDebugEnabled()) {
             exctx.getAppLog().debug("<raise>: Adding event '" + event + "' to list of derived events.");
         }
-        TriggerEvent ev = new TriggerEvent(event, TriggerEvent.SIGNAL_EVENT);
+        TriggerEvent ev = new EventBuilder(event, TriggerEvent.SIGNAL_EVENT).build();
         exctx.getInternalIOProcessor().addEvent(ev);
 
     }
