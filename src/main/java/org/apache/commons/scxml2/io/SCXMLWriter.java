@@ -815,6 +815,7 @@ public class SCXMLWriter {
 
         writer.writeStartElement(ELEM_INVOKE);
         writeAV(writer, ATTR_ID, invoke.getId());
+        writeAV(writer, ATTR_IDLOCATION, invoke.getIdlocation());
         writeAV(writer, ATTR_SRC, invoke.getSrc());
         writeAV(writer, ATTR_SRCEXPR, invoke.getSrcexpr());
         writeAV(writer, ATTR_TYPE, invoke.getType());

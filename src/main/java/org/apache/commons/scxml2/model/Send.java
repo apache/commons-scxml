@@ -395,7 +395,10 @@ public class Send extends NamelistHolder implements ContentContainer {
             else if (content != null) {
                 if (content.getExpr() != null) {
                     payload = eval.cloneData(eval.eval(ctx, content.getExpr()));
-                } else {
+                } else if (content.getValue() != null) {
+                    payload = content.getValue();
+                }
+                else if (content.getBody() != null){
                     payload = eval.cloneData(content.getBody());
                 }
             }

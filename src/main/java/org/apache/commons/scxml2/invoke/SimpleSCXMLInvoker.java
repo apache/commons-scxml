@@ -18,12 +18,12 @@ package org.apache.commons.scxml2.invoke;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.io.StringReader;
 import java.net.URL;
 import java.util.Map;
 
 import javax.xml.stream.XMLStreamException;
 
-import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.EventBuilder;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLIOProcessor;
@@ -89,11 +89,11 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
      * {@inheritDoc}.
      */
     @Override
-    public void invoke(final String source, final Map<String, Object> params)
+    public void invoke(final String url, final Map<String, Object> params)
     throws InvokerException {
         SCXML scxml;
         try {
-            scxml = SCXMLReader.read(new URL(source));
+            scxml = SCXMLReader.read(new URL(url));
         } catch (ModelException me) {
             throw new InvokerException(me.getMessage(), me.getCause());
         } catch (IOException ioe) {
@@ -101,6 +101,29 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
         } catch (XMLStreamException xse) {
             throw new InvokerException(xse.getMessage(), xse.getCause());
         }
+        execute(scxml, params);
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public void invokeContent(final String content, final Map<String, Object> params)
+            throws InvokerException {
+        SCXML scxml;
+        try {
+            scxml = SCXMLReader.read(new StringReader(content));
+        } catch (ModelException me) {
+            throw new InvokerException(me.getMessage(), me.getCause());
+        } catch (IOException ioe) {
+            throw new InvokerException(ioe.getMessage(), ioe.getCause());
+        } catch (XMLStreamException xse) {
+            throw new InvokerException(xse.getMessage(), xse.getCause());
+        }
+        execute(scxml, params);
+    }
+
+    protected void execute(SCXML scxml, final Map<String, Object> params) throws InvokerException {
         try {
             executor = new SCXMLExecutor(parentSCXMLExecutor, invokeId, scxml);
         }

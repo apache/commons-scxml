@@ -34,7 +34,7 @@ public class InvokeParamNameTest {
 
     private SCXMLExecutor exec;
 
-    static String lastSource;
+    static String lastURL;
     static Map<String, Object> lastParams;
     
     @Before
@@ -51,7 +51,7 @@ public class InvokeParamNameTest {
     
     private void trigger() throws ModelException {
         lastParams = null;
-        lastSource = null;
+        lastURL = null;
         exec.triggerEvent(new EventBuilder("test.trigger", TriggerEvent.SIGNAL_EVENT).build());
     }
     
@@ -59,7 +59,7 @@ public class InvokeParamNameTest {
     @Test
     public void testNameAndExpr() throws Exception {
         trigger();
-        Assert.assertTrue(lastSource.endsWith("TestSrc"));
+        Assert.assertTrue(lastURL.endsWith("TestSrc"));
         final Map.Entry<String, Object> e =
             lastParams.entrySet().iterator().next();
         Assert.assertEquals("ding", e.getKey());
@@ -81,14 +81,21 @@ public class InvokeParamNameTest {
         private String invokeId;
 
         @Override
-        public void invoke(String source, Map<String, Object> params)
+        public void invoke(String url, Map<String, Object> params)
         throws InvokerException {
-            lastSource = source;
+            lastURL = url;
             lastParams = params;
         }
 
-        public String lastSource() {
-            return lastSource;
+        @Override
+        public void invokeContent(String content, Map<String, Object> params)
+                throws InvokerException {
+            lastURL = null;
+            lastParams = params;
+        }
+
+        public String lastURL() {
+            return lastURL;
         }
 
         public Map<String, Object> lastParams() {

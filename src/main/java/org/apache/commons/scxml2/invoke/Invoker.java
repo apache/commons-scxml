@@ -96,15 +96,26 @@ public interface Invoker {
     SCXMLIOProcessor getChildIOProcessor();
 
     /**
-     * Begin this invocation.
+     * Invoke the SCXML document located at an external URL.
      *
-     * @param source The source URI of the activity being invoked.
+     * @param url The source URL of the SCXML document to invoke.
      * @param params The &lt;param&gt; values
      * @throws InvokerException In case there is a fatal problem with
      *                          invoking the source.
      */
-    void invoke(String source, Map<String, Object> params)
+    void invoke(String url, Map<String, Object> params)
     throws InvokerException;
+
+    /**
+     * Invoke the SCXML document provided as inline XML content
+     *
+     * @param content The SCXML document as inline XML content
+     * @param params The &lt;param&gt; values
+     * @throws InvokerException In case there is a fatal problem with
+     *                          invoking the source.
+     */
+    void invokeContent(String content, Map<String, Object> params)
+            throws InvokerException;
 
     /**
      * Forwards the event triggered on the parent state machine

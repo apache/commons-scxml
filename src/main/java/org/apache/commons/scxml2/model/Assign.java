@@ -30,7 +30,7 @@ import org.apache.commons.scxml2.io.ContentParser;
  * &lt;assign&gt; SCXML element.
  *
  */
-public class Assign extends Action implements PathResolverHolder {
+public class Assign extends Action {
 
     /**
      * Serial version UID.
@@ -52,11 +52,6 @@ public class Assign extends Action implements PathResolverHolder {
      * Expression evaluating to the new value of the variable.
      */
     private String expr;
-
-    /**
-     * {@link PathResolver} for resolving the "src" result.
-     */
-    private PathResolver pathResolver;
 
     /**
      * Constructor.
@@ -120,24 +115,6 @@ public class Assign extends Action implements PathResolverHolder {
     }
 
     /**
-     * Get the {@link PathResolver}.
-     *
-     * @return Returns the pathResolver.
-     */
-    public PathResolver getPathResolver() {
-        return pathResolver;
-    }
-
-    /**
-     * Set the {@link PathResolver}.
-     *
-     * @param pathResolver The pathResolver to set.
-     */
-    public void setPathResolver(final PathResolver pathResolver) {
-        this.pathResolver = pathResolver;
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -148,7 +125,7 @@ public class Assign extends Action implements PathResolverHolder {
         ctx.setLocal(getNamespacesKey(), getNamespaces());
         Object data;
         if (src != null && src.trim().length() > 0) {
-            data = getSrcData();
+            data = getSrcData(exctx.getStateMachine().getPathResolver());
         } else {
             data = evaluator.eval(ctx, expr);
         }
@@ -171,7 +148,7 @@ public class Assign extends Action implements PathResolverHolder {
      *
      * @return The data the "src" attribute points to.
      */
-    private Object getSrcData() {
+    private Object getSrcData(final PathResolver pathResolver) {
         String resolvedSrc = src;
         if (pathResolver != null) {
             resolvedSrc = pathResolver.resolvePath(src);

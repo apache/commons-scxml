@@ -19,6 +19,8 @@ package org.apache.commons.scxml2.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.transform.TransformerException;
+
 import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
@@ -30,15 +32,16 @@ import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.EventBuilder;
 import org.apache.commons.scxml2.invoke.Invoker;
 import org.apache.commons.scxml2.invoke.InvokerException;
+import org.apache.commons.scxml2.io.ContentParser;
 import org.apache.commons.scxml2.semantics.ErrorConstants;
-import org.w3c.dom.Node;
+import org.w3c.dom.Element;
 
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;invoke&gt; SCXML element.
  *
  */
-public class Invoke extends NamelistHolder implements PathResolverHolder, ContentContainer {
+public class Invoke extends NamelistHolder implements ContentContainer {
 
     /**
      * Serial version UID.
@@ -90,11 +93,6 @@ public class Invoke extends NamelistHolder implements PathResolverHolder, Conten
      * The &lt;finalize&gt; child, may be null.
      */
     private Finalize finalize;
-
-    /**
-     * {@link PathResolver} for resolving the "src" or "srcexpr" result.
-     */
-    private PathResolver pathResolver;
 
     /**
      * The &lt;content/&gt; of this invoke
@@ -254,24 +252,6 @@ public class Invoke extends NamelistHolder implements PathResolverHolder, Conten
     }
 
     /**
-     * Get the {@link PathResolver}.
-     *
-     * @return Returns the pathResolver.
-     */
-    public PathResolver getPathResolver() {
-        return pathResolver;
-    }
-
-    /**
-     * Set the {@link PathResolver}.
-     *
-     * @param pathResolver The pathResolver to set.
-     */
-    public void setPathResolver(final PathResolver pathResolver) {
-        this.pathResolver = pathResolver;
-    }
-
-    /**
      * Enforce identity equality only
      * @param other other object to compare with
      * @return this == other
@@ -375,27 +355,42 @@ public class Invoke extends NamelistHolder implements PathResolverHolder, Conten
                 src = (String)eval.eval(ctx, getSrcexpr());
             }
             if (src != null) {
-                PathResolver pr = getPathResolver();
+                PathResolver pr = exctx.getStateMachine().getPathResolver();
                 if (pr != null) {
-                    src = getPathResolver().resolvePath(src);
+                    src = pr.resolvePath(src);
                 }
             }
-            Node srcNode = null;
-            if (src == null && getContent() != null) {
-                Object contentValue;
+            Object contentValue = null;
+            if (src == null && content != null) {
                 if (content.getExpr() != null) {
                     contentValue = eval.eval(ctx, content.getExpr());
+                } else if (content.getValue() != null) {
+                    contentValue = content.getValue();
+                }
+                if (contentValue instanceof String) {
+                    // inline content
+                } else if (contentValue instanceof Element) {
+                    // xml based content (must be assigned through data)
+                    Element contentElement = (Element)contentValue;
+                    if (contentElement.getLocalName().equals("scxml")) {
+                        // statemachine definition: transform to string as we cannot (yet) pass XML directly to invoker
+                        try {
+                            contentValue = ContentParser.DEFAULT_PARSER.transformXml(contentElement);
+                        }
+                        catch (TransformerException e) {
+                            throw new ActionExecutionError("<invoke> for state "+parentState.getId() +
+                                    ": invalid <content> definition");
+                        }
+                    } else {
+                        throw new ActionExecutionError("<invoke> for state "+parentState.getId() +
+                                ": invalid <content> definition");
+                    }
                 } else {
-                    contentValue = content.getBody();
-                }
-                if (contentValue instanceof Node) {
-                    srcNode = ((Node)contentValue).cloneNode(true);
-                }
-                else if (contentValue != null) {
-                    src = String.valueOf(contentValue);
+                    throw new ActionExecutionError("<invoke> for state "+parentState.getId() +
+                            ": invalid <content> definition");
                 }
             }
-            if (src == null && srcNode == null) {
+            if (src == null && contentValue == null) {
                 throw new ActionExecutionError("<invoke> for state "+parentState.getId() +
                         ": no src and no content defined");
             }
@@ -406,7 +401,9 @@ public class Invoke extends NamelistHolder implements PathResolverHolder, Conten
             if (src != null) {
                 invoker.invoke(src, payloadDataMap);
             }
-            // TODO: } else { invoker.invoke(srcNode, payloadDataMap); }
+            else {
+                invoker.invokeContent((String)contentValue, payloadDataMap);
+            }
             exctx.registerInvoker(this, invoker);
         }
         catch (InvokerException|ActionExecutionError|SCXMLExpressionException e) {

@@ -35,7 +35,11 @@
     <release version="2.0" date="In Git master"
       description="Latest unreleased code">
 
-      <action dev="ate" type="update" issue="SCXML-263">
+      <action dev="ate" type="fix" issue="SCXML-264">
+        [12-10-2017] Support &lt;invoke&gt; with inline (<content> body) SCXML statemachine definition
+      </action>
+
+      <action dev="ate" type="fix" issue="SCXML-263">
         [12-10-2017] Javascript engine (Nashorn) cannot be shared between multiple SCXML instance executions
       </action>
 

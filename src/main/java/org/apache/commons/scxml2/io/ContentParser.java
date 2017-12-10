@@ -18,10 +18,18 @@ package org.apache.commons.scxml2.io;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.net.URL;
+import java.util.Properties;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -170,6 +178,18 @@ public class ContentParser {
             throw new IOException(e);
         }
         return doc != null ? doc.getDocumentElement() : null;
+    }
+
+    public String transformXml(final Node node) throws TransformerException {
+        StringWriter writer = new StringWriter();
+        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+        Properties outputProps = new Properties();
+        outputProps.put(OutputKeys.OMIT_XML_DECLARATION, "no");
+        outputProps.put(OutputKeys.STANDALONE, "no");
+        outputProps.put(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperties(outputProps);
+        transformer.transform(new DOMSource(node), new StreamResult(writer));
+        return writer.toString();
     }
 
     /**

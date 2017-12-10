@@ -18,6 +18,8 @@ package org.apache.commons.scxml2.model;
 
 import java.io.Serializable;
 
+import org.w3c.dom.Node;
+
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;content&gt; SCXML element.
@@ -36,9 +38,14 @@ public class Content implements Serializable {
     private String expr;
 
     /**
-     * The body of this content, may be null.
+     * The body of this content parsed as Node, may be null.
      */
-    private Object body;
+    private Node body;
+
+    /**
+     * The parsed content of the body of this content, may be null.
+     */
+    private Object value;
 
     /**
      * Get the expression for this content.
@@ -59,15 +66,35 @@ public class Content implements Serializable {
     }
 
     /**
-     * Returns the content body as DocumentFragment
+     * Returns the content body as Node
      *
-     * @return the content body as DocumentFragment
+     * @return the content body as Node
      */
-    public Object getBody() {
+    public Node getBody() {
         return body;
     }
 
-    public void setBody(final Object body) {
+    /**
+     * Sets the content body as Node
+     * @param body the content body as Node
+     */
+    public void setBody(final Node body) {
         this.body = body;
+    }
+
+    /**
+     * Returns the parsed content of the body
+     * @return the parsed content of the body
+     */
+    public Object getValue() {
+        return value;
+    }
+
+    /**
+     * Sets the parsed content of the body
+     * @param value the parsed content of the body
+     */
+    public void setValue(final Object value) {
+        this.value = value;
     }
 }

@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.scxml2.PathResolver;
+
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;scxml&gt; root element, and serves as the &quot;document
@@ -110,6 +112,11 @@ public class SCXML implements Serializable, Observable, NamespacePrefixesHolder 
     private Script globalScript;
 
     /**
+     * used to resolve SCXML context sensitive paths
+     */
+    private PathResolver pathResolver;
+
+    /**
      * The immediate child targets of this SCXML document root.
      */
     private List<EnterableState> children;
@@ -161,6 +168,24 @@ public class SCXML implements Serializable, Observable, NamespacePrefixesHolder 
 
     public final void setGlobalScript(Script script) {
         this.globalScript = script;
+    }
+
+    /**
+     * Get the {@link PathResolver}.
+     *
+     * @return Returns the pathResolver.
+     */
+    public PathResolver getPathResolver() {
+        return pathResolver;
+    }
+
+    /**
+     * Set the {@link PathResolver}.
+     *
+     * @param pathResolver The pathResolver to set.
+     */
+    public void setPathResolver(final PathResolver pathResolver) {
+        this.pathResolver = pathResolver;
     }
 
     /**

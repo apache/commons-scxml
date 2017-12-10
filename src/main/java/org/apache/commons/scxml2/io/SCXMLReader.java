@@ -41,6 +41,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.util.XMLEventAllocator;
 import javax.xml.transform.Source;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
@@ -589,6 +590,7 @@ public final class SCXMLReader {
             throws IOException, ModelException, XMLStreamException {
 
         SCXML scxml = new SCXML();
+        scxml.setPathResolver(configuration.pathResolver);
         while (reader.hasNext()) {
             String name, nsURI;
             switch (reader.next()) {
@@ -1163,11 +1165,11 @@ public final class SCXMLReader {
 
         Invoke invoke = new Invoke();
         invoke.setId(readAV(reader, ATTR_ID));
+        invoke.setIdlocation(readAV(reader, ATTR_IDLOCATION));
         invoke.setSrc(readAV(reader, ATTR_SRC));
         invoke.setSrcexpr(readAV(reader, ATTR_SRCEXPR));
         invoke.setType(readAV(reader, ATTR_TYPE));
         invoke.setAutoForward(readBooleanAV(reader, ELEM_INVOKE, ATTR_AUTOFORWARD));
-        invoke.setPathResolver(configuration.pathResolver);
         readNamespaces(configuration, invoke);
 
         loop : while (reader.hasNext()) {
@@ -1281,12 +1283,35 @@ public final class SCXMLReader {
         else {
             Node body = readNode(reader, configuration, XMLNS_SCXML, ELEM_CONTENT, new String[]{});
             if (body.hasChildNodes()) {
+                content.setBody(body);
                 NodeList children = body.getChildNodes();
                 if (children.getLength() == 1 && children.item(0).getNodeType() == Node.TEXT_NODE) {
-                    content.setBody(children.item(0).getNodeValue());
+                    try {
+                        content.setValue(ContentParser.DEFAULT_PARSER.parseContent(children.item(0).getNodeValue()));
+                    }
+                    catch (IOException ioe) {
+                        throw new XMLStreamException(ioe);
+                    }
                 }
                 else {
-                    content.setBody(body);
+                    // find only use first child element
+                    for (int i = 0, size = children.getLength(); i < size; i++) {
+                        Node child = children.item(i);
+                        if (child.getNodeType() == Node.ELEMENT_NODE) {
+                            if (contentContainer instanceof Invoke) {
+                                // transform invoke <content/> to string upfront as we currently only can handle string input
+                                try {
+                                    content.setValue(ContentParser.DEFAULT_PARSER.transformXml(child));
+                                } catch (TransformerException e) {
+                                    throw new XMLStreamException(e);
+                                }
+                            }
+                            else {
+                                content.setValue(child);
+                            }
+                            break;
+                        }
+                    }
                 }
             }
         }
@@ -1767,7 +1792,6 @@ public final class SCXMLReader {
         assign.setExpr(readAV(reader, ATTR_EXPR));
         assign.setLocation(readRequiredAV(reader, ELEM_ASSIGN, ATTR_LOCATION));
         assign.setSrc(readAV(reader, ATTR_SRC));
-        assign.setPathResolver(configuration.pathResolver);
         readNamespaces(configuration, assign);
         assign.setParent(executable);
         if (parent != null) {
@@ -2254,8 +2278,9 @@ public final class SCXMLReader {
                 case XMLStreamConstants.CHARACTERS:
                 case XMLStreamConstants.ENTITY_REFERENCE:
                 case XMLStreamConstants.CDATA:
-                case XMLStreamConstants.COMMENT:
                     body.append(reader.getText());
+                    break;
+                case XMLStreamConstants.COMMENT:
                     break;
                 case XMLStreamConstants.END_ELEMENT:
                     break loop;
