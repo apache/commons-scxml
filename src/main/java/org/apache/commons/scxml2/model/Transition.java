@@ -128,9 +128,9 @@ public class Transition extends SimpleTransition implements DocumentOrder {
             StringTokenizer st = new StringTokenizer(this.event);
             while (st.hasMoreTokens()) {
                 String token = st.nextToken();
-                if (token.equals("*")) {
+                if (token.equals("*") || token.equals(".*")) {
                     events.clear();
-                    events.add(token);
+                    events.add("*");
                     break;
                 }
                 else {

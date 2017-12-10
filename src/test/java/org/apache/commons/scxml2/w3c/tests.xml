@@ -75,10 +75,10 @@
   <test id="307" mandatory="true"                    manual="true"  jexl="true"  ecma="false" finalState="final"/>
   <test id="309" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="310" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
-  <test id="311" mandatory="true"                    manual="false" jexl="false" ecma="false"/>
-  <test id="312" mandatory="true"                    manual="false" jexl="false" ecma="false"/>
-  <test id="313" mandatory="true"                    manual="true"  jexl="false" ecma="false" finalState="pass"/>
-  <test id="314" mandatory="true"                    manual="true"  jexl="false" ecma="false" finalState="pass"/>
+  <test id="311" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
+  <test id="312" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
+  <test id="313" mandatory="true"                    manual="true"  jexl="true"  ecma="true" finalState="pass"/>
+  <test id="314" mandatory="true"                    manual="true"  jexl="true"  ecma="true" finalState="pass"/>
   <test id="344" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="318" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="319" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
