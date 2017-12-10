@@ -138,18 +138,18 @@
   <test id="236" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="237" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="239" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
-  <test id="240" mandatory="true"                    manual="false" jexl="false" ecma="false"/>
-  <test id="241" mandatory="true"                    manual="false" jexl="false" ecma="false"/>
+  <test id="240" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
+  <test id="241" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="242" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="243" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
-  <test id="244" mandatory="true"                    manual="false" jexl="false" ecma="false"/>
+  <test id="244" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="245" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="247" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="250" mandatory="true"                    manual="true"  jexl="true"  ecma="true" finalState="final"/>
   <test id="252" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="253" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="530" mandatory="true"                    manual="false" jexl="false" ecma="false"/>
-  <test id="554" mandatory="true"                    manual="false" jexl="false" ecma="false"/>
+  <test id="554" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="436" mandatory="true"  profile="minimal" manual="false"                           minimal="true"/>
   <test id="278" mandatory="false" profile="ecma"    manual="false"              ecma="true"/>
   <test id="444" mandatory="false" profile="ecma"    manual="false"              ecma="true"/>

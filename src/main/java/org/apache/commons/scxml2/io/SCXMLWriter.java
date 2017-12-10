@@ -820,6 +820,7 @@ public class SCXMLWriter {
         writeAV(writer, ATTR_SRCEXPR, invoke.getSrcexpr());
         writeAV(writer, ATTR_TYPE, invoke.getType());
         writeAV(writer, ATTR_AUTOFORWARD, invoke.getAutoForward());
+        writeAV(writer, ATTR_NAMELIST, invoke.getNamelist());
 
         for (Param p : invoke.getParams()) {
             writer.writeStartElement(ELEM_PARAM);

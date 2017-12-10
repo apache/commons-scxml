@@ -35,7 +35,12 @@
     <release version="2.0" date="In Git master"
       description="Latest unreleased code">
 
-      <action dev="ate" type="fix" issue="SCXML-264">
+      <action dev="ate" type="add" issue="SCXML-265">
+        [12-10-2017] Support &lt;invoke&gt; namelist attribute
+      </action>
+
+
+      <action dev="ate" type="add" issue="SCXML-264">
         [12-10-2017] Support &lt;invoke&gt; with inline (<content> body) SCXML statemachine definition
       </action>
 
@@ -55,11 +60,11 @@
         [12-10-2017] &lt;foreach&gt; must fail on using illegal item definition
       </action>
 
-      <action dev="ate" type="update" issue="SCXML-259">
+      <action dev="ate" type="add" issue="SCXML-259">
         [12-10-2017] Complete implementation and handling of system variables _event and _ioprocessors
       </action>
 
-      <action dev="ate" type="update" issue="SCXML-258">
+      <action dev="ate" type="add" issue="SCXML-258">
         [12-10-2017] Add Evaluator strict mode (boolean) needed for Jexl to properly fail on incorrect expressions
       </action>
 
@@ -67,7 +72,7 @@
         [12-10-2017] &lt;send&gt; delay must support decimal values
       </action>
 
-      <action dev="ate" type="update" issue="SCXML-256">
+      <action dev="ate" type="add" issue="SCXML-256">
         [12-10-2017] Add SCXMLExecutor.run() ans SCXMLSemantics.initialize(...) methods and SCXML early/late binding
       </action>
 

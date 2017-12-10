@@ -16,7 +16,9 @@
  */
 package org.apache.commons.scxml2.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.transform.TransformerException;
@@ -41,7 +43,7 @@ import org.w3c.dom.Element;
  * &lt;invoke&gt; SCXML element.
  *
  */
-public class Invoke extends NamelistHolder implements ContentContainer {
+public class Invoke extends Action implements ContentContainer, ParamsContainer {
 
     /**
      * Serial version UID.
@@ -105,6 +107,16 @@ public class Invoke extends NamelistHolder implements ContentContainer {
      * This invoke index in the parent (TransitionalState) defined invokers
      */
     private int invokeIndex;
+
+    /**
+     * The List of the params to be sent
+     */
+    private final List<Param> paramsList = new ArrayList<>();
+
+    /**
+     * The namelist.
+     */
+    private String namelist;
 
     /**
      * Get the identifier for this invoke (may be null).
@@ -252,6 +264,33 @@ public class Invoke extends NamelistHolder implements ContentContainer {
     }
 
     /**
+     * Get the list of {@link Param}s.
+     *
+     * @return List The params list.
+     */
+    public List<Param> getParams() {
+        return paramsList;
+    }
+
+    /**
+     * Get the namelist.
+     *
+     * @return String Returns the namelist.
+     */
+    public final String getNamelist() {
+        return namelist;
+    }
+
+    /**
+     * Set the namelist.
+     *
+     * @param namelist The namelist to set.
+     */
+    public final void setNamelist(final String namelist) {
+        this.namelist = namelist;
+    }
+
+    /**
      * Enforce identity equality only
      * @param other other object to compare with
      * @return this == other
@@ -395,8 +434,8 @@ public class Invoke extends NamelistHolder implements ContentContainer {
                         ": no src and no content defined");
             }
             Map<String, Object> payloadDataMap = new HashMap<>();
-            addNamelistDataToPayload(axctx, payloadDataMap);
-            addParamsToPayload(axctx, payloadDataMap);
+            PayloadBuilder.addNamelistDataToPayload(parentState, ctx, eval, exctx.getErrorReporter(), namelist, payloadDataMap);
+            PayloadBuilder.addParamsToPayload(ctx, eval, paramsList, payloadDataMap);
             invoker.setParentSCXMLExecutor(exctx.getSCXMLExecutor());
             if (src != null) {
                 invoker.invoke(src, payloadDataMap);

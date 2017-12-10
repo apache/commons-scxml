@@ -16,7 +16,9 @@
  */
 package org.apache.commons.scxml2.model;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.scxml2.ActionExecutionContext;
@@ -31,7 +33,7 @@ import org.apache.commons.scxml2.SCXMLSystemContext;
  * &lt;send&gt; SCXML element.
  *
  */
-public class Send extends NamelistHolder implements ContentContainer {
+public class Send extends Action implements ContentContainer, ParamsContainer {
 
     /**
      * Serial version UID.
@@ -123,6 +125,16 @@ public class Send extends NamelistHolder implements ContentContainer {
      * The &lt;content/&gt; of this send
      */
     private Content content;
+
+    /**
+     * The List of the params to be sent
+     */
+    private final List<Param> paramsList = new ArrayList<>();
+
+    /**
+     * The namelist.
+     */
+    private String namelist;
 
     /**
      * Constructor.
@@ -338,6 +350,33 @@ public class Send extends NamelistHolder implements ContentContainer {
     }
 
     /**
+     * Get the list of {@link Param}s.
+     *
+     * @return List The params list.
+     */
+    public List<Param> getParams() {
+        return paramsList;
+    }
+
+    /**
+     * Get the namelist.
+     *
+     * @return String Returns the namelist.
+     */
+    public final String getNamelist() {
+        return namelist;
+    }
+
+    /**
+     * Set the namelist.
+     *
+     * @param namelist The namelist to set.
+     */
+    public final void setNamelist(final String namelist) {
+        this.namelist = namelist;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
@@ -387,8 +426,8 @@ public class Send extends NamelistHolder implements ContentContainer {
             }
             Object payload = null;
             Map<String, Object> payloadDataMap = new LinkedHashMap<>();
-            addNamelistDataToPayload(exctx, payloadDataMap);
-            addParamsToPayload(exctx, payloadDataMap);
+            PayloadBuilder.addNamelistDataToPayload(parentState, ctx, eval, exctx.getErrorReporter(), namelist, payloadDataMap);
+            PayloadBuilder.addParamsToPayload(ctx, eval, paramsList, payloadDataMap);
             if (!payloadDataMap.isEmpty()) {
                 payload = payloadDataMap;
             }

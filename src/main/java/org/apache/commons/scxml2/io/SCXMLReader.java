@@ -1170,6 +1170,7 @@ public final class SCXMLReader {
         invoke.setSrcexpr(readAV(reader, ATTR_SRCEXPR));
         invoke.setType(readAV(reader, ATTR_TYPE));
         invoke.setAutoForward(readBooleanAV(reader, ELEM_INVOKE, ATTR_AUTOFORWARD));
+        invoke.setNamelist(readAV(reader, ATTR_NAMELIST));
         readNamespaces(configuration, invoke);
 
         loop : while (reader.hasNext()) {
