@@ -57,7 +57,7 @@
   <test id="280" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="550" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="551" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
-  <test id="552" mandatory="true"                    manual="false" jexl="false" ecma="false"/>
+  <test id="552" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="286" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="287" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="487" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
@@ -148,7 +148,7 @@
   <test id="250" mandatory="true"                    manual="true"  jexl="true"  ecma="true" finalState="final"/>
   <test id="252" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="253" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
-  <test id="530" mandatory="true"                    manual="false" jexl="false" ecma="false"/>
+  <test id="530" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="554" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="436" mandatory="true"  profile="minimal" manual="false"                           minimal="true"/>
   <test id="278" mandatory="false" profile="ecma"    manual="false"              ecma="true"/>
@@ -162,7 +162,7 @@
   <test id="456" mandatory="false" profile="ecma"    manual="false"              ecma="true"/>
   <test id="446" mandatory="false" profile="ecma"    manual="false"              ecma="false"/>
   <test id="557" mandatory="false" profile="ecma"    manual="false"              ecma="false"/>
-  <test id="558" mandatory="false" profile="ecma"    manual="false"              ecma="false"/>
+  <test id="558" mandatory="false" profile="ecma"    manual="false"              ecma="true"/>
   <test id="560" mandatory="false" profile="ecma"    manual="false"              ecma="true"/>
   <test id="578" mandatory="false" profile="ecma"    manual="false"              ecma="true"/>
   <test id="561" mandatory="false" profile="ecma"    manual="false"              ecma="false"/>

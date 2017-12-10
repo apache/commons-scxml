@@ -16,14 +16,11 @@
  */
 package org.apache.commons.scxml2.model;
 
-import java.io.IOException;
-import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
-import org.apache.commons.scxml2.PathResolver;
 import org.apache.commons.scxml2.SCXMLExpressionException;
-import org.apache.commons.scxml2.io.ContentParser;
+import org.w3c.dom.Node;
 
 /**
  * The class in this SCXML object model that corresponds to the
@@ -44,7 +41,7 @@ public class Assign extends Action {
     private String location;
 
     /**
-     * The source where the new XML instance for this location exists.
+     * The source location where the new source data for this location exists.
      */
     private String src;
 
@@ -52,6 +49,16 @@ public class Assign extends Action {
      * Expression evaluating to the new value of the variable.
      */
     private String expr;
+
+    /**
+     * The assign definition parsed as a standalone DocumentFragment Node (only used by the SCXMLWriter)
+     */
+    private Node node;
+
+    /**
+     * The parsed value for the child XML data tree or the content of the external src
+     */
+    private Object value;
 
     /**
      * Constructor.
@@ -115,6 +122,46 @@ public class Assign extends Action {
     }
 
     /**
+     * Get the assign definition parsed as standalone DocumentFragment Node.
+     *
+     * @return Node The assign definition parsed as a standalone DocumentFragment <code>Node</code>.
+     */
+    public final Node getNode() {
+        return node;
+    }
+
+    /**
+     * Set the assign definition parsed as standalone DocumentFragment Node.
+     *
+     * @param node The child XML data tree, parsed as a standalone DocumentFragment <code>Node</code>.
+     */
+    public final void setNode(final Node node) {
+        this.node = node;
+    }
+
+    /**
+     * Get the parsed value for the child XML data tree or the content of the external src
+     * @see #setValue(Object)
+     * @return The parsed value
+     */
+    public final Object getValue() {
+        return value;
+    }
+
+    /**
+     * Sets the parsed value for the child XML data tree or the content of the external src
+     * @param value a serializable object:
+     * <ul>
+     *   <li>"Raw" JSON mapped object tree (array->ArrayList, object->LinkedHashMap based)</li>
+     *   <li>XML Node (equals {@link #getNode()})</li>
+     *   <li>space-normalized String</li>
+     * </ul>
+     */
+    public final void setValue(final Object value) {
+        this.value = value;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -124,10 +171,11 @@ public class Assign extends Action {
         Evaluator evaluator = exctx.getEvaluator();
         ctx.setLocal(getNamespacesKey(), getNamespaces());
         Object data;
-        if (src != null && src.trim().length() > 0) {
-            data = getSrcData(exctx.getStateMachine().getPathResolver());
-        } else {
+        if (expr != null) {
             data = evaluator.eval(ctx, expr);
+        }
+        else {
+            data = evaluator.cloneData(value);
         }
 
         evaluator.evalAssign(ctx, location, data);
@@ -141,32 +189,5 @@ public class Assign extends Action {
             exctx.getInternalIOProcessor().addEvent(ev);
         */
         ctx.setLocal(getNamespacesKey(), null);
-    }
-
-    /**
-     * Get the data the "src" attribute points to.
-     *
-     * @return The data the "src" attribute points to.
-     */
-    private Object getSrcData(final PathResolver pathResolver) {
-        String resolvedSrc = src;
-        if (pathResolver != null) {
-            resolvedSrc = pathResolver.resolvePath(src);
-        }
-        try {
-            return ContentParser.DEFAULT_PARSER.parseResource(resolvedSrc);
-        } catch (IOException e) {
-            logError(e);
-            return null;
-        }
-    }
-
-    /**
-     * @param throwable The throwable to log about
-     */
-    private void logError(Throwable throwable) {
-        org.apache.commons.logging.Log log = LogFactory.
-            getLog(Assign.class);
-        log.error(throwable.getMessage(), throwable);
     }
 }

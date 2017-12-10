@@ -871,11 +871,15 @@ public class SCXMLWriter {
         for (Action a : actions) {
             if (a instanceof Assign) {
                 Assign asn = (Assign) a;
-                writer.writeStartElement(XMLNS_SCXML, ELEM_ASSIGN);
-                writeAV(writer, ATTR_LOCATION, asn.getLocation());
-                writeAV(writer, ATTR_SRC, asn.getSrc());
-                writeAV(writer, ATTR_EXPR, escapeXML(asn.getExpr()));
-                writer.writeEndElement();
+                if (asn.getNode() != null) {
+                    writeNode(writer, asn.getNode());
+                } else {
+                    writer.writeStartElement(XMLNS_SCXML, ELEM_ASSIGN);
+                    writeAV(writer, ATTR_LOCATION, asn.getLocation());
+                    writeAV(writer, ATTR_SRC, asn.getSrc());
+                    writeAV(writer, ATTR_EXPR, escapeXML(asn.getExpr()));
+                    writer.writeEndElement();
+                }
             } else if (a instanceof Send) {
                 writeSend(writer, (Send) a);
             } else if (a instanceof Cancel) {

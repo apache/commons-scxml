@@ -33,6 +33,7 @@ import java.util.Stack;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.Location;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLReporter;
 import javax.xml.stream.XMLResolver;
@@ -1794,13 +1795,58 @@ public final class SCXMLReader {
         assign.setLocation(readRequiredAV(reader, ELEM_ASSIGN, ATTR_LOCATION));
         assign.setSrc(readAV(reader, ATTR_SRC));
         readNamespaces(configuration, assign);
+        if (assign.getExpr() != null && assign.getSrc() != null) {
+            reportConflictingAttribute(reader, configuration, ELEM_ASSIGN, ATTR_EXPR, ATTR_SRC);
+        }
+        else if (assign.getExpr() != null) {
+            skipToEndElement(reader);
+        }
+        else if (assign.getSrc() != null) {
+            skipToEndElement(reader);
+            String resolvedSrc = assign.getSrc();
+            if (configuration.pathResolver != null) {
+                resolvedSrc = configuration.pathResolver.resolvePath(resolvedSrc);
+            }
+            try {
+                assign.setValue(ContentParser.DEFAULT_PARSER.parseResource(resolvedSrc));
+            } catch (IOException e) {
+                throw new ModelException(e);
+            }
+        }
+        else {
+            Location location = reader.getLocation();
+            Node node = readNode(reader, configuration, XMLNS_SCXML, ELEM_ASSIGN, new String[]{ATTR_LOCATION});
+            if (node.hasChildNodes()) {
+                assign.setNode(node);
+                NodeList children = node.getChildNodes();
+                if (children.getLength() == 1 && children.item(0).getNodeType() == Node.TEXT_NODE) {
+                    String text = configuration.contentParser.trimContent(children.item(0).getNodeValue());
+                    if (configuration.contentParser.hasJsonSignature(text)) {
+                        try {
+                            assign.setValue(configuration.contentParser.parseJson(text));
+                        } catch (IOException e) {
+                            throw new ModelException(e);
+                        }
+                    }
+                    else {
+                        assign.setValue(configuration.contentParser.spaceNormalizeContent(text));
+                    }
+                } else {
+                    // can only handle a single node: pick the first child
+                    assign.setValue(children.item(0));
+                }
+            } else {
+                // report missing expression (as most common use-case)
+                reportMissingAttribute(location, ELEM_ASSIGN, ATTR_EXPR);
+            }
+        }
+
         assign.setParent(executable);
         if (parent != null) {
             parent.addAction(assign);
         } else {
             executable.addAction(assign);
         }
-        skipToEndElement(reader);
     }
 
     /**
@@ -2348,9 +2394,7 @@ public final class SCXMLReader {
             throws ModelException {
         String value = nullIfEmpty(reader.getAttributeValue(XMLNS_DEFAULT, attrLocalName));
         if (value == null) {
-            MessageFormat msgFormat = new MessageFormat(ERR_REQUIRED_ATTRIBUTE_MISSING);
-            String errMsg = msgFormat.format(new Object[] {elementName, attrLocalName, reader.getLocation()});
-            throw new ModelException(errMsg);
+            reportMissingAttribute(reader.getLocation(), elementName, attrLocalName);
         }
         return value;
     }
@@ -2379,6 +2423,22 @@ public final class SCXMLReader {
     private static void readNamespaces(final Configuration configuration, final NamespacePrefixesHolder holder) {
 
         holder.setNamespaces(configuration.getCurrentNamespaces());
+    }
+
+    /**
+     * Report a missing required attribute value at the current reader location,
+     *
+     * @param location The (approximate) {@link Location} where the attribute is expected.
+     * @param elementName The name of the element for which the attribute value is needed.
+     * @param attrLocalName The attribute name whose value is needed.
+     *
+     * @throws ModelException The required attribute is missing or empty.
+     */
+    private static void reportMissingAttribute(final Location location, final String elementName, final String attrLocalName)
+            throws ModelException {
+        MessageFormat msgFormat = new MessageFormat(ERR_REQUIRED_ATTRIBUTE_MISSING);
+        String errMsg = msgFormat.format(new Object[] {elementName, attrLocalName, location});
+        throw new ModelException(errMsg);
     }
 
     /**

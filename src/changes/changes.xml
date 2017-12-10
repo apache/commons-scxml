@@ -35,6 +35,10 @@
     <release version="2.0" date="In Git master"
       description="Latest unreleased code">
 
+      <action dev="ate" type="add" issue="SCXML-267">
+        [12-10-2017] Support &lt;data&gt; src attribute and &lt;assign&gt; inline data
+      </action>
+
       <action dev="ate" type="fix" issue="SCXML-266">
         [12-10-2017] SCXMLSemantics#matchTransition - code flow bug
       </action>

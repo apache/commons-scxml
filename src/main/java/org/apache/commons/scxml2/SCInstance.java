@@ -16,6 +16,7 @@
  */
 package org.apache.commons.scxml2;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,6 +27,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.scxml2.env.SimpleContext;
+import org.apache.commons.scxml2.io.ContentParser;
 import org.apache.commons.scxml2.model.Data;
 import org.apache.commons.scxml2.model.Datamodel;
 import org.apache.commons.scxml2.model.EnterableState;
@@ -334,14 +336,24 @@ public class SCInstance implements Serializable {
             }
             Object value = null;
             boolean setValue = false;
-            /*
-            TODO: external data.src support (not yet implemented), including late-binding thereof
             // prefer "src" over "expr" over "inline"
             if (datum.getSrc() != null) {
-                ctx.setLocal(datum.getId(), valueNode);
-            } else
-            */
-            if (datum.getExpr() != null) {
+                String resolvedSrc = datum.getSrc();
+                final PathResolver pr = getStateMachine().getPathResolver();
+                if (pr != null) {
+                    resolvedSrc = pr.resolvePath(resolvedSrc);
+                }
+                try {
+                    value = ContentParser.DEFAULT_PARSER.parseResource(resolvedSrc);
+                    setValue = true;
+                } catch (IOException e) {
+                    if (internalIOProcessor != null) {
+                        internalIOProcessor.addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT).build());
+                    }
+                    errorReporter.onError(ErrorConstants.EXECUTION_ERROR, e.getMessage(), datum);
+                }
+            }
+            else if (datum.getExpr() != null) {
                 try {
                     ctx.setLocal(Context.NAMESPACES_KEY, datum.getNamespaces());
                     value = evaluator.eval(ctx, datum.getExpr());
