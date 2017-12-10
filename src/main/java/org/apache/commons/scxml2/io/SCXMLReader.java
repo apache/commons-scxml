@@ -46,6 +46,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml2.PathResolver;
 import org.apache.commons.scxml2.env.SimpleErrorHandler;
@@ -1947,11 +1948,9 @@ public final class SCXMLReader {
      */
     private static void readScript(final XMLStreamReader reader, final Configuration configuration,
                                    final Executable executable, final ActionsContainer parent)
-            throws XMLStreamException {
+            throws XMLStreamException, ModelException {
 
-        Script script = new Script();
-        readNamespaces(configuration, script);
-        script.setBody(readBody(reader));
+        Script script = readScript(reader, configuration);
         script.setParent(executable);
         if (parent != null) {
             parent.addAction(script);
@@ -1973,13 +1972,44 @@ public final class SCXMLReader {
      */
     private static void readGlobalScript(final XMLStreamReader reader, final Configuration configuration,
                                          final SCXML scxml)
-            throws XMLStreamException {
+            throws XMLStreamException, ModelException {
 
-        Script globalScript = new Script();
+        Script globalScript = readScript(reader, configuration);
         globalScript.setGlobalScript(true);
-        readNamespaces(configuration, globalScript);
-        globalScript.setBody(readBody(reader));
         scxml.setGlobalScript(globalScript);
+    }
+
+    /**
+     * Read the contents of this &lt;script&gt; element.
+     *
+     * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
+     * @param configuration The {@link Configuration} to use while parsing.
+     *
+     * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
+     */
+    private static Script readScript(final XMLStreamReader reader, final Configuration configuration)
+            throws XMLStreamException, ModelException {
+
+        Script script = new Script();
+        readNamespaces(configuration, script);
+        script.setSrc(readAV(reader, ATTR_SRC));
+        if (script.getSrc() != null) {
+            String resolvedSrc = script.getSrc();
+            if (configuration.pathResolver != null) {
+                resolvedSrc = configuration.pathResolver.resolvePath(resolvedSrc);
+            }
+            try (InputStream in = new URL(resolvedSrc).openStream()){
+                script.setScript(IOUtils.toString(in, "UTF-8"));
+            }
+            catch (IOException e) {
+                throw new ModelException(e);
+            }
+            skipToEndElement(reader);
+        }
+        else {
+            script.setScript(readBody(reader));
+        }
+        return script;
     }
 
     /**

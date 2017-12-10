@@ -507,7 +507,11 @@ public class SCXMLWriter {
         if (scxml.getGlobalScript() != null) {
             Script s = scxml.getGlobalScript();
             writer.writeStartElement(XMLNS_SCXML, ELEM_SCRIPT);
-            writer.writeCData(s.getScript());
+            if (s.getSrc() != null) {
+                writeAV(writer, ATTR_SRC, s.getSrc());
+            } else {
+                writer.writeCData(s.getScript());
+            }
             writer.writeEndElement();
         }
 
@@ -893,7 +897,11 @@ public class SCXMLWriter {
             } else if (a instanceof Script) {
                 Script s = (Script) a;
                 writer.writeStartElement(XMLNS_SCXML, ELEM_SCRIPT);
-                writer.writeCData(s.getScript());
+                if (s.getSrc() != null) {
+                    writeAV(writer, ATTR_SRC, s.getSrc());
+                } else {
+                    writer.writeCData(s.getScript());
+                }
                 writer.writeEndElement();
             } else if (a instanceof If) {
                 writeIf(writer, (If) a);

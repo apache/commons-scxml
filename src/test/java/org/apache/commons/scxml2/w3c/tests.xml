@@ -68,7 +68,7 @@
   <test id="298" mandatory="true"                    manual="false" jexl="false" ecma="false"/>
   <test id="343" mandatory="true"                    manual="false" jexl="false" ecma="false"/>
   <test id="488" mandatory="true"                    manual="false" jexl="false" ecma="false"/>
-  <test id="301" mandatory="true"                    manual="true"  jexl="false" ecma="false" finalState="java.net.MalformedURLException"/>
+  <test id="301" mandatory="true"                    manual="true"  jexl="true"  ecma="true" finalState="java.net.MalformedURLException"/>
   <test id="302" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="303" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="304" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>

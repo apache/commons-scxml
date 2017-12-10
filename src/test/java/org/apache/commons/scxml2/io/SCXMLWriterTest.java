@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.Parallel;
 import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.Script;
@@ -127,7 +128,7 @@ public class SCXMLWriterTest {
      }
 
     @Test
-    public void testSerializeGlobalScript() throws IOException, XMLStreamException {
+    public void testSerializeGlobalScript() throws IOException, ModelException, XMLStreamException {
         SCXML scxml = new SCXML();
         Map<String, String> namespaces = new LinkedHashMap<String, String>();
         scxml.setNamespaces(namespaces);
@@ -136,7 +137,7 @@ public class SCXMLWriterTest {
 
         Script script = new Script();
         script.setGlobalScript(true);
-        script.setBody("foo=\"abc\"");
+        script.setScript("foo=\"abc\"");
         scxml.setGlobalScript(script);
 
         State s1 = new State();

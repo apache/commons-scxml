@@ -27,7 +27,7 @@ import org.apache.commons.scxml2.SCXMLExpressionException;
  *
  * TODO src attribute support
  */
-public class Script extends Action implements BodyContainer {
+public class Script extends Action {
 
     /**
      * Serial version UID.
@@ -35,7 +35,10 @@ public class Script extends Action implements BodyContainer {
     private static final long serialVersionUID = 1L;
 
     private boolean globalScript;
-    private String body;
+
+    private String script;
+
+    private String src;
 
     /**
      * Constructor.
@@ -52,14 +55,12 @@ public class Script extends Action implements BodyContainer {
         this.globalScript = globalScript;
     }
 
-    @Override
-    public String getBody() {
-        return body;
+    public String getSrc() {
+        return src;
     }
 
-    @Override
-    public void setBody(String body) {
-        this.body = body;
+    public void setSrc(final String src) {
+        this.src = src;
     }
 
     /**
@@ -68,7 +69,11 @@ public class Script extends Action implements BodyContainer {
      * @return The script to execute.
      */
     public String getScript() {
-        return body;
+        return script;
+    }
+
+    public void setScript(final String script) {
+        this.script = script;
     }
 
     /**

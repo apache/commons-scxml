@@ -35,7 +35,11 @@
     <release version="2.0" date="In Git master"
       description="Latest unreleased code">
 
-      <action dev="ate" type="fix" issue="SCXML-261">
+      <action dev="ate" type="update" issue="SCXML-262">
+        [12-10-2017] Support &lt;script&gt; loaded from external src
+      </action>
+
+      <action dev="ate" type="update" issue="SCXML-261">
         [12-10-2017] Support ".*" besides "*" as 'any' wildcard event descriptor
       </action>
 

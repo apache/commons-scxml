@@ -34,6 +34,7 @@ import org.junit.Test;
 public class SendTest {
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testNamelistOrderPreserved() throws Exception {
         final List<Object> payloads = new ArrayList<Object>();
         final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/model/send-test-01.xml");
