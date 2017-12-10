@@ -188,6 +188,11 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
         try {
             ctx.getVars().put(ASSIGN_VARIABLE_NAME, data);
             eval(ctx, sb.toString());
+        } catch (SCXMLExpressionException e) {
+            if (e.getCause() != null && e.getCause() != null && e.getCause().getMessage() != null) {
+                throw new SCXMLExpressionException("Error evaluating assign to location=\"" + location + "\": " + e.getCause().getMessage());
+            }
+            throw e;
         }
         finally {
             ctx.getVars().remove(ASSIGN_VARIABLE_NAME);

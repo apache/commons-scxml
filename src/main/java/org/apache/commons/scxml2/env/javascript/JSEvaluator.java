@@ -239,8 +239,9 @@ public class JSEvaluator extends AbstractBaseEvaluator {
             // copy Javascript global variables to SCXML context.
             copyJavascriptGlobalsToScxmlContext(scriptContext.getBindings(ScriptContext.ENGINE_SCOPE), effectiveContext);
             return ret;
-        } catch (Exception x) {
-            throw new SCXMLExpressionException("Error evaluating ['" + expression + "'] " + x);
+        } catch (Exception e) {
+            String exMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getCanonicalName();
+            throw new SCXMLExpressionException("eval('" + expression + "'): " + exMessage, e);
         }
     }
 
@@ -268,6 +269,11 @@ public class JSEvaluator extends AbstractBaseEvaluator {
         try {
             ctx.getVars().put(ASSIGN_VARIABLE_NAME, data);
             eval(ctx, sb.toString());
+        } catch (SCXMLExpressionException e) {
+            if (e.getCause() != null && e.getCause() != null && e.getCause().getMessage() != null) {
+                throw new SCXMLExpressionException("Error evaluating assign to location=\"" + location + "\": " + e.getCause().getMessage());
+            }
+            throw e;
         } finally {
             ctx.getVars().remove(ASSIGN_VARIABLE_NAME);
         }

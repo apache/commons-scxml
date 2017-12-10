@@ -172,7 +172,7 @@ public class JSEvaluatorTest {
 
         } catch (SCXMLExpressionException x) {
             Assert.assertTrue("JSEvaluator: Incorrect error message",
-                       x.getMessage().startsWith("Error evaluating ['" + BAD_EXPRESSION + "']"));
+                       x.getMessage().startsWith("eval('" + BAD_EXPRESSION + "')"));
         }
     }
 
