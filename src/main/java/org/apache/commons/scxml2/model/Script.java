@@ -24,8 +24,6 @@ import org.apache.commons.scxml2.SCXMLExpressionException;
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;script&gt; SCXML element.
- *
- * TODO src attribute support
  */
 public class Script extends Action {
 
