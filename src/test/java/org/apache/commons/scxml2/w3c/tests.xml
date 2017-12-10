@@ -48,7 +48,7 @@
   <test id="153" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="155" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="156" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
-  <test id="525" mandatory="true"                    manual="false" jexl="true"  ecma="false"/>
+  <test id="525" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="158" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="159" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="276" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
@@ -160,7 +160,7 @@
   <test id="452" mandatory="false" profile="ecma"    manual="false"              ecma="true"/>
   <test id="453" mandatory="false" profile="ecma"    manual="false"              ecma="true"/>
   <test id="456" mandatory="false" profile="ecma"    manual="false"              ecma="true"/>
-  <test id="446" mandatory="false" profile="ecma"    manual="false"              ecma="false"/>
+  <test id="446" mandatory="false" profile="ecma"    manual="false"              ecma="true"/>
   <test id="557" mandatory="false" profile="ecma"    manual="false"              ecma="false"/>
   <test id="558" mandatory="false" profile="ecma"    manual="false"              ecma="true"/>
   <test id="560" mandatory="false" profile="ecma"    manual="false"              ecma="true"/>

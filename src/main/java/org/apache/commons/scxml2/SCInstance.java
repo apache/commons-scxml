@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.scxml2.env.SimpleContext;
+import org.apache.commons.scxml2.env.javascript.JSEvaluator;
 import org.apache.commons.scxml2.io.ContentParser;
 import org.apache.commons.scxml2.model.Data;
 import org.apache.commons.scxml2.model.Datamodel;
@@ -372,7 +373,20 @@ public class SCInstance implements Serializable {
                 setValue = true;
             }
             if (setValue) {
-                ctx.setLocal(datum.getId(), value);
+                if (evaluator instanceof JSEvaluator) {
+                    // the Javascript engine (Nashorn) may require special handling/wrapping of data objects which
+                    // directly injecting them in the context.
+                    try {
+                        ((JSEvaluator)evaluator).injectData(ctx, datum.getId(), value);
+                    } catch (SCXMLExpressionException e) {
+                        if (internalIOProcessor != null) {
+                            internalIOProcessor.addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT).build());
+                        }
+                        errorReporter.onError(ErrorConstants.EXPRESSION_ERROR, e.getMessage(), datum);
+                    }
+                } else {
+                    ctx.setLocal(datum.getId(), value);
+                }
             }
         }
     }

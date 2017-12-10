@@ -18,6 +18,7 @@
 package org.apache.commons.scxml2.env.javascript;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 import javax.script.Bindings;
@@ -324,6 +325,22 @@ public class JSEvaluator extends AbstractBaseEvaluator {
                     jsContext.set(key, global.get(key));
                 }
             }
+        }
+    }
+
+    /**
+     * When directly injecting data in the local context, wrap Java array and List objects with a native Javascript
+     * Array
+     * @param ctx SCXML context
+     * @param id context id of the data
+     * @param data data to inject
+     * @throws SCXMLExpressionException
+     */
+    public void injectData(final Context ctx, final String id, final Object data) throws SCXMLExpressionException {
+        ctx.setLocal(id, data);
+        if (data != null && (data.getClass().isArray() || data instanceof List)) {
+            // use Nashorn extension: Java.from function
+            ctx.setLocal(id, eval(ctx, "Java.from("+id+")"));
         }
     }
 }
