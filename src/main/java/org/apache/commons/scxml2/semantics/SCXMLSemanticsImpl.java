@@ -201,9 +201,6 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * <p>
      * This final step will exit all remaining active states and cancel any active invokers.
      * </p>
-     * <p>
-     *  <em>TODO: the current implementation does not yet provide final donedata handling.</em>
-     * </p>
      * @param exctx The execution context for this step
      * @throws ModelException if a SCXML model error occurred during the execution.
      */
