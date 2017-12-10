@@ -107,7 +107,7 @@ public class Foreach extends Action implements ActionsContainer {
             if (arrayObject != null && (arrayObject.getClass().isArray() || arrayObject instanceof Iterable || arrayObject instanceof Map)) {
                 if (arrayObject.getClass().isArray()) {
                     for (int currentIndex = 0, size = Array.getLength(arrayObject); currentIndex < size; currentIndex++) {
-                        ctx.setLocal(item, Array.get(arrayObject, currentIndex));
+                        eval.evalAssign(ctx, item, Array.get(arrayObject, currentIndex));
                         if (index != null) {
                             ctx.setLocal(index, currentIndex);
                         }
@@ -132,7 +132,7 @@ public class Foreach extends Action implements ActionsContainer {
                     }
                     int currentIndex = 0;
                     for (Object value : arrayList) {
-                        ctx.setLocal(item, value);
+                        eval.evalAssign(ctx, item, value);
                         if (index != null) {
                             ctx.setLocal(index, currentIndex);
                         }
