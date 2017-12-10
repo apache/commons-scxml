@@ -139,6 +139,13 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     }
 
     /**
+     * @return the (optionally) <final><donedata/></final> produced data after the current statemachine completed its execution.
+     */
+    public Object getFinalDoneData() {
+        return getGlobalContext().getSystemContext().getPlatformVariables().get(SCXMLSystemContext.FINAL_DONE_DATA_KEY);
+    }
+
+    /**
      * starts the state machine with a specific active configuration, as the result of a (first) step
      * <p>
      * This will first (re)initialize the current state machine: clearing all variable contexts, histories and current

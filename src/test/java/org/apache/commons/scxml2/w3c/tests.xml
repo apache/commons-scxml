@@ -61,13 +61,13 @@
   <test id="286" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="287" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="487" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
-  <test id="294" mandatory="true"                    manual="false" jexl="false" ecma="false"/>
-  <test id="527" mandatory="true"                    manual="false" jexl="false" ecma="false"/>
-  <test id="528" mandatory="true"                    manual="false" jexl="false" ecma="false"/>
-  <test id="529" mandatory="true"                    manual="false" jexl="false" ecma="false"/>
-  <test id="298" mandatory="true"                    manual="false" jexl="false" ecma="false"/>
-  <test id="343" mandatory="true"                    manual="false" jexl="false" ecma="false"/>
-  <test id="488" mandatory="true"                    manual="false" jexl="false" ecma="false"/>
+  <test id="294" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
+  <test id="527" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
+  <test id="528" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
+  <test id="529" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
+  <test id="298" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
+  <test id="343" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
+  <test id="488" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="301" mandatory="true"                    manual="true"  jexl="true"  ecma="true" finalState="java.net.MalformedURLException"/>
   <test id="302" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="303" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
@@ -132,8 +132,8 @@
   <test id="229" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="230" mandatory="true"                    manual="true"  jexl="true"  ecma="true" finalState="final"/>
   <test id="232" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
-  <test id="233" mandatory="true"                    manual="false" jexl="false" ecma="false"/>
-  <test id="234" mandatory="true"                    manual="false" jexl="false" ecma="false"/>
+  <test id="233" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
+  <test id="234" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="235" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="236" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>
   <test id="237" mandatory="true"                    manual="false" jexl="true"  ecma="true"/>

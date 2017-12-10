@@ -62,6 +62,7 @@ import org.apache.commons.scxml2.model.ContentContainer;
 import org.apache.commons.scxml2.model.CustomAction;
 import org.apache.commons.scxml2.model.Data;
 import org.apache.commons.scxml2.model.Datamodel;
+import org.apache.commons.scxml2.model.DoneData;
 import org.apache.commons.scxml2.model.Else;
 import org.apache.commons.scxml2.model.ElseIf;
 import org.apache.commons.scxml2.model.EnterableState;
@@ -271,6 +272,7 @@ public final class SCXMLReader {
     private static final String ELEM_STATE = "state";
     private static final String ELEM_TRANSITION = "transition";
     private static final String ELEM_VAR = "var";
+    private static final String ELEM_DONEDATA = "donedata";
 
     //---- ATTRIBUTE NAMES ----//
     private static final String ATTR_ARRAY = "array";
@@ -911,11 +913,68 @@ public final class SCXMLReader {
                             readOnEntry(reader, configuration, end);
                         } else if (ELEM_ONEXIT.equals(name)) {
                             readOnExit(reader, configuration, end);
+                        } else if (ELEM_DONEDATA.equals(name) && end.getDoneData() == null) {
+                            readDoneData(reader, configuration, end);
                         } else {
                             reportIgnoredElement(reader, configuration, ELEM_FINAL, nsURI, name);
                         }
                     } else {
                         reportIgnoredElement(reader, configuration, ELEM_FINAL, nsURI, name);
+                    }
+                    break;
+                case XMLStreamConstants.END_ELEMENT:
+                    popNamespaces(reader, configuration);
+                    break loop;
+                default:
+            }
+        }
+    }
+
+    /**
+     * Read the contents of this &lt;donedata&gt; element.
+     *
+     * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
+     * @param configuration The {@link Configuration} to use while parsing.
+     * @param parent The parent {@link State} for this final (null for top level state).
+     *
+     * @throws IOException An IO error during parsing.
+     * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
+     * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
+     *                        errors in the SCXML document that may not be identified by the schema).
+     */
+    private static void readDoneData(final XMLStreamReader reader, final Configuration configuration, final Final parent)
+            throws XMLStreamException, ModelException, IOException {
+
+        DoneData doneData = new DoneData();
+        parent.setDoneData(doneData);
+
+        loop : while (reader.hasNext()) {
+            String name, nsURI;
+            switch (reader.next()) {
+                case XMLStreamConstants.START_ELEMENT:
+                    pushNamespaces(reader, configuration);
+                    nsURI = reader.getNamespaceURI();
+                    name = reader.getLocalName();
+                    if (XMLNS_SCXML.equals(nsURI)) {
+                        if (ELEM_PARAM.equals(name)) {
+                            if (doneData.getContent() == null) {
+                                readParam(reader, configuration, doneData);
+                            }
+                            else {
+                                reportIgnoredElement(reader, configuration, ELEM_DONEDATA, nsURI, name);
+                            }
+                        } else if (ELEM_CONTENT.equals(name)) {
+                            if (doneData.getParams().isEmpty()) {
+                                readContent(reader, configuration, doneData);
+                            }
+                            else {
+                                reportIgnoredElement(reader, configuration, ELEM_DONEDATA, nsURI, name);
+                            }
+                        } else {
+                            reportIgnoredElement(reader, configuration, ELEM_DONEDATA, nsURI, name);
+                        }
+                    } else {
+                        reportIgnoredElement(reader, configuration, ELEM_DONEDATA, nsURI, name);
                     }
                     break;
                 case XMLStreamConstants.END_ELEMENT:
@@ -1560,7 +1619,11 @@ public final class SCXMLReader {
                     name = reader.getLocalName();
                     if (XMLNS_SCXML.equals(nsURI)) {
                         if (ELEM_RAISE.equals(name)) {
-                            readRaise(reader, configuration, executable, parent);
+                            if (executable instanceof Finalize) {
+                                reportIgnoredElement(reader, configuration, ELEM_FINALIZE, nsURI, name);
+                            } else {
+                                readRaise(reader, configuration, executable, parent);
+                            }
                         } else if (ELEM_FOREACH.equals(name)) {
                             readForeach(reader, configuration, executable, parent);
                         } else if (ELEM_IF.equals(name)) {
@@ -1570,7 +1633,11 @@ public final class SCXMLReader {
                         } else if (ELEM_ASSIGN.equals(name)) {
                             readAssign(reader, configuration, executable, parent);
                         } else if (ELEM_SEND.equals(name)) {
-                            readSend(reader, configuration, executable, parent);
+                            if (executable instanceof Finalize) {
+                                reportIgnoredElement(reader, configuration, ELEM_FINALIZE, nsURI, name);
+                            } else {
+                                readSend(reader, configuration, executable, parent);
+                            }
                         } else if (ELEM_CANCEL.equals(name)) {
                             readCancel(reader, configuration, executable, parent);
                         } else if (ELEM_SCRIPT.equals(name)) {

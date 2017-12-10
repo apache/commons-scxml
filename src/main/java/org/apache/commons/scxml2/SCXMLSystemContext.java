@@ -51,6 +51,11 @@ public class SCXMLSystemContext implements Context, Serializable {
      * status instance **/
     public static final String STATUS_KEY = "status";
 
+    /** The Commons SCXML internal {@link #getPlatformVariables() platform variable key} holding the (optionally)
+     * <final><donedata/></final> produced data after the current SCXML completed its execution.
+     * **/
+    public static final String FINAL_DONE_DATA_KEY = "finalDoneData";
+
     /**
      * The set of protected system variables names
      */

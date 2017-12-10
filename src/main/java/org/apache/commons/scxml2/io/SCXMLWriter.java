@@ -48,6 +48,7 @@ import org.apache.commons.scxml2.model.Cancel;
 import org.apache.commons.scxml2.model.Content;
 import org.apache.commons.scxml2.model.Data;
 import org.apache.commons.scxml2.model.Datamodel;
+import org.apache.commons.scxml2.model.DoneData;
 import org.apache.commons.scxml2.model.Else;
 import org.apache.commons.scxml2.model.ElseIf;
 import org.apache.commons.scxml2.model.EnterableState;
@@ -154,6 +155,7 @@ public class SCXMLWriter {
     private static final String ELEM_STATE = "state";
     private static final String ELEM_TRANSITION = "transition";
     private static final String ELEM_VAR = "var";
+    private static final String ELEM_DONEDATA = "donedata";
 
     //---- ATTRIBUTE NAMES ----//
     private static final String ATTR_ARRAY = "array";
@@ -686,6 +688,18 @@ public class SCXMLWriter {
         }
         for (OnExit onexit : end.getOnExits()) {
             writeOnExit(writer, onexit);
+        }
+        if (end.getDoneData() != null) {
+            writer.writeStartElement(ELEM_DONEDATA);
+            for (Param p : end.getDoneData().getParams()) {
+                writer.writeStartElement(ELEM_PARAM);
+                writeAV(writer, ATTR_NAME, p.getName());
+                writeAV(writer, ATTR_LOCATION, p.getLocation());
+                writeAV(writer, ATTR_EXPR, escapeXML(p.getExpr()));
+                writer.writeEndElement();
+            }
+            writeContent(writer, end.getDoneData().getContent());
+            writer.writeEndElement();
         }
         writer.writeEndElement();
     }

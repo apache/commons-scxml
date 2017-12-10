@@ -16,6 +16,17 @@
  */
 package org.apache.commons.scxml2.model;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.apache.commons.scxml2.Context;
+import org.apache.commons.scxml2.Evaluator;
+import org.apache.commons.scxml2.EventBuilder;
+import org.apache.commons.scxml2.SCXMLExecutionContext;
+import org.apache.commons.scxml2.SCXMLExpressionException;
+import org.apache.commons.scxml2.TriggerEvent;
+import org.apache.commons.scxml2.semantics.ErrorConstants;
+
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;final&gt; SCXML element.
@@ -28,6 +39,8 @@ public class Final extends EnterableState {
      * Serial version UID.
      */
     private static final long serialVersionUID = 1L;
+
+    private DoneData doneData;
 
     /**
      * Default no-args constructor.
@@ -58,6 +71,48 @@ public class Final extends EnterableState {
      */
     public final boolean isAtomicState() {
         return true;
+    }
+
+    public DoneData getDoneData() {
+        return doneData;
+    }
+
+    public void setDoneData(final DoneData doneData) {
+        this.doneData = doneData;
+    }
+
+    public Object processDoneData(SCXMLExecutionContext exctx) throws ModelException {
+        Object result = null;
+        if (doneData != null) {
+            try {
+                Content content = doneData.getContent();
+                Evaluator eval = exctx.getEvaluator();
+                Context ctx = exctx.getScInstance().getGlobalContext();
+                if (content != null) {
+                    if (content.getExpr() != null) {
+                        result = eval.cloneData(eval.eval(ctx, content.getExpr()));
+                    } else if (content.getValue() != null) {
+                        result = content.getValue();
+                    }
+                    else if (content.getBody() != null){
+                        result = eval.cloneData(content.getBody());
+                    }
+                } else {
+                    Map<String, Object> payloadDataMap = new LinkedHashMap<>();
+                    PayloadBuilder.addParamsToPayload(exctx.getScInstance().getGlobalContext(),
+                            exctx.getEvaluator(), doneData.getParams(), payloadDataMap);
+                    if (!payloadDataMap.isEmpty()) {
+                        result = payloadDataMap;
+                    }
+                }
+            } catch (SCXMLExpressionException e) {
+                result = null;
+                exctx.getInternalIOProcessor().addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT).build());
+                exctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR,
+                        "Failed to process final donedata due to error: "+ e.getMessage(), getParent());
+            }
+        }
+        return result;
     }
 }
 

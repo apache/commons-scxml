@@ -281,6 +281,14 @@ public class SCXMLExecutorTest {
         Assert.assertEquals("twenty_two", currentStates.iterator().next().getId());
     }
 
+    @Test
+    public void testSCXMLExecutorFinalDoneData() throws Exception {
+        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/final-donedata.xml");
+        Assert.assertNull(exec.getFinalDoneData());
+        exec.go();
+        Assert.assertEquals("done", exec.getFinalDoneData());
+    }
+
     private void checkMicrowave01Sample(SCXMLExecutor exec) throws Exception {
         Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "turn_on");
         Assert.assertEquals(1, currentStates.size());

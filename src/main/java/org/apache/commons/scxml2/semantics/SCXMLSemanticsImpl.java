@@ -44,6 +44,7 @@ import org.apache.commons.scxml2.model.DocumentOrder;
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.Executable;
 import org.apache.commons.scxml2.model.Final;
+import org.apache.commons.scxml2.model.Finalize;
 import org.apache.commons.scxml2.model.History;
 import org.apache.commons.scxml2.model.Invoke;
 import org.apache.commons.scxml2.model.ModelException;
@@ -210,7 +211,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
         if (exctx.isRunning()) {
             return;
         }
-        ArrayList<EnterableState> configuration = new ArrayList<EnterableState>(exctx.getScInstance().getStateConfiguration().getActiveStates());
+        ArrayList<EnterableState> configuration = new ArrayList<>(exctx.getScInstance().getStateConfiguration().getActiveStates());
         Collections.sort(configuration, DocumentOrder.reverseDocumentOrderComparator);
         for (EnterableState es : configuration) {
             for (OnExit onexit : es.getOnExits()) {
@@ -225,12 +226,14 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
             exctx.getNotificationRegistry().fireOnExit(es, es);
             exctx.getNotificationRegistry().fireOnExit(exctx.getStateMachine(), es);
             if (es instanceof Final && es.getParent() == null) {
+                Object donedata = ((Final)es).processDoneData(exctx);
+                exctx.getScInstance().getGlobalContext().getSystemContext().getPlatformVariables().put(SCXMLSystemContext.FINAL_DONE_DATA_KEY, donedata);
                 if (exctx.getSCXMLExecutor().getParentSCXMLIOProcessor() != null) {
                     ParentSCXMLIOProcessor ioProcessor = exctx.getSCXMLExecutor().getParentSCXMLIOProcessor();
                     if (!ioProcessor.isClosed()) {
                         ioProcessor.addEvent(
                                 new EventBuilder("done.invoke."+ioProcessor.getInvokeId(), TriggerEvent.SIGNAL_EVENT)
-                                        .invokeId(ioProcessor.getInvokeId()).build());
+                                        .invokeId(ioProcessor.getInvokeId()).data(donedata).build());
                         ioProcessor.close();
                     }
                 }
@@ -238,8 +241,6 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
             else {
                 exctx.getScInstance().getStateConfiguration().exitState(es);
             }
-            // else: keep final Final
-            // TODO: returnDoneEvent(s.donedata)?
         }
     }
 
@@ -1045,7 +1046,8 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                     exctx.stop();
                 }
                 else {
-                    exctx.getInternalIOProcessor().addEvent(new EventBuilder("done.state."+parent.getId(),TriggerEvent.CHANGE_EVENT).build());
+                    Object donedata = ((Final)es).processDoneData(exctx);
+                    exctx.getInternalIOProcessor().addEvent(new EventBuilder("done.state."+parent.getId(),TriggerEvent.CHANGE_EVENT).data(donedata).build());
                     if (parent.isRegion()) {
                         if (isInFinalState(parent.getParent(), exctx.getScInstance().getStateConfiguration().getActiveStates())) {
                             exctx.getInternalIOProcessor().addEvent(new EventBuilder("done.state."+parent.getParent().getId()
@@ -1079,7 +1081,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
     }
 
     /**
-     * Forward events to invoked activities, execute finalize handlers.
+     * execute finalize handlers, forward events to invoked activities.
      *
      * @param exctx provides the execution context
      * @param event The events to be forwarded
@@ -1090,6 +1092,24 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
         for (Map.Entry<Invoke, String> entry : exctx.getInvokeIds().entrySet()) {
             if (entry.getValue().equals(event.getInvokeId())) {
                 Invoke invoke = entry.getKey();
+                Finalize finalize = invoke.getFinalize();
+                if (finalize != null) {
+                    if (finalize.getActions().isEmpty()) {
+                        /*
+                           The current https://www.w3.org/TR/2015/REC-scxml-20150901/#finalize specification for
+                           using an empty <finalize/> (no actions) is rather complex when:
+                           - the invoke also has a namelist attribute and/or params with a location attribute
+                           - and the event payload has values reachable by those namelist and/or params 'location' attributes
+                           then the statemachine data at those locations should be updated with the payload values.
+
+                           As the same functionality can be achieved (even if less convenient) by using a <finalize>
+                           with <assign/> elements for each of these locations, *and* there are no SCXML IRP tests
+                           for using an empty <finalize/>, the above logic is NOT implemented.
+                        */
+                    } else {
+                        executeContent(exctx, finalize);
+                    }
+                }
                 if (entry.getKey().isAutoForward() &&
                         !(event.getName().equals("done.invoke."+entry.getValue()) ||
                                 event.getName().startsWith("done.invoke."+entry.getValue()+"."))) {
@@ -1101,11 +1121,6 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                     }
                 }
             }
-            /*
-            else {
-                // TODO: applyFinalize
-            }
-            */
         }
     }
 }
