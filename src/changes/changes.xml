@@ -35,6 +35,10 @@
     <release version="2.0" date="In Git master"
       description="Latest unreleased code">
 
+      <action dev="ate" type="update" issue="SCXML-259">
+        [12-10-2017] Complete implementation and handling of system variables _event and _ioprocessors
+      </action>
+
       <action dev="ate" type="update" issue="SCXML-258">
         [12-10-2017] Add Evaluator strict mode (boolean) needed for Jexl to properly fail on incorrect expressions
       </action>
