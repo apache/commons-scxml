@@ -61,7 +61,7 @@ import org.apache.commons.scxml2.model.SCXML;
  * To execute one or multiple IRP tests the commandline parameter <b>run</b> must be specified.
  * </p>
  * <p>
- * Optional environment parameter <b>-Ddatamodel=&lt;minimal|ecma|jexl&gt;</b> can be specified to limit the
+ * Optional environment parameter <b>-Ddatamodel=&lt;minimal|ecma|jexl|groovy&gt;</b> can be specified to limit the
  * execution of the tests for and using only the specified datamodel language.
  * </p>
  * <p>
@@ -89,6 +89,7 @@ public class W3CTests {
     private static final String TESTS_FILENAME = PACKAGE_PATH + "/tests.xml";
     private static final String SCXML_IRP_MINIMAL_XSL_FILENAME = PACKAGE_PATH + "/confMinimal.xsl";
     private static final String SCXML_IRP_JEXL_XSL_FILENAME = PACKAGE_PATH + "/confJexl.xsl";
+    private static final String SCXML_IRP_GROOVY_XSL_FILENAME = PACKAGE_PATH + "/confGroovy.xsl";
 
     /**
      * Datamodel enum representing the datamodel types used and tested with the W3C IRP tests.
@@ -97,7 +98,8 @@ public class W3CTests {
 
         MINIMAL("minimal", "minimal"),
         ECMA("ecma",       "ecma   "),
-        JEXL("jexl",       "jexl   ");
+        JEXL("jexl",       "jexl   "),
+        GROOVY("groovy",   "groovy ");
 
         private final String value;
         private final String label;
@@ -157,6 +159,8 @@ public class W3CTests {
             private Boolean ecmaStatus;
             @XmlAttribute(name="jexl")
             private boolean jexlStatus;
+            @XmlAttribute(name="groovy")
+            private boolean groovyStatus;
             @XmlValue
             private String comment;
 
@@ -186,6 +190,8 @@ public class W3CTests {
                         return ecmaStatus;
                     case JEXL:
                         return jexlStatus;
+                    case GROOVY:
+                        return groovyStatus;
                     default:
                         return minimalStatus;
                 }
@@ -431,7 +437,7 @@ public class W3CTests {
                 "  make - make previously downloaded  W3C IRP tests by transforming the .txml templates\n" +
                 "  run  - runs test(s), optionally only for a specific datamodel (default: all)\n" +
                 "         To run a single test, specify -Dtest=<testId>, otherwise all tests will be run.\n" +
-                "         To only run test(s) for a specific datamodel, specify -Ddatamodel=<minimal|ecma|jexl>.\n" +
+                "         To only run test(s) for a specific datamodel, specify -Ddatamodel=<minimal|ecma|jexl|groovy>.\n" +
                 "         By default only enabled tests (for the specified datamodel, or all) are run,\n" +
                 "         specify -Denabled=false to only run disabled tests.\n");
     }
@@ -481,6 +487,7 @@ public class W3CTests {
         transformers.put(Datamodel.ECMA, factory.newTransformer(new StreamSource(new FileInputStream(new File(testsSrcDir, SCXML_IRP_ECMA_XSL_URI)))));
         transformers.put(Datamodel.MINIMAL, factory.newTransformer(new StreamSource(getClass().getResourceAsStream(SCXML_IRP_MINIMAL_XSL_FILENAME))));
         transformers.put(Datamodel.JEXL, factory.newTransformer(new StreamSource(getClass().getResourceAsStream(SCXML_IRP_JEXL_XSL_FILENAME))));
+        transformers.put(Datamodel.GROOVY, factory.newTransformer(new StreamSource(getClass().getResourceAsStream(SCXML_IRP_GROOVY_XSL_FILENAME))));
         Assertions assertions = loadAssertions();
         for (Assertions.Assertion entry : assertions.getAssertions().values()) {
             for (Assertions.TestCase test : entry.getTestCases()) {

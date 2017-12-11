@@ -35,6 +35,10 @@
     <release version="2.0" date="In Git master"
       description="Latest unreleased code">
 
+      <action dev="ate" type="add" issue="SCXML-271">
+        [12-11-2017] Support Groovy for running the SCXML IRP tests
+      </action>
+
       <action dev="ate" type="update" issue="SCXML-269">
         [12-10-2017] Add custom handling for injecting data in the Javascript engine (Nashorn)
       </action>
