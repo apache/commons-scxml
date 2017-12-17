@@ -16,26 +16,29 @@
  */
 package org.apache.commons.scxml2.model;
 
-import java.util.List;
-
 import org.w3c.dom.Node;
 
 /**
- * An <code>ExternalContent</code> implementation represents an
- * element in the SCXML document that may contain &quot;body
- * content&quot;, which means an arbitrary number of child nodes
- * belonging to external namespaces.
- *
+ * Single XML DOM Node {@link ParsedValue} implementation
  */
-public interface ExternalContent {
+public class NodeValue implements ParsedValue {
 
     /**
-     * Return the list of external namespaced children as
-     * DOM node instances.
-     *
-     * @return The list of (external namespaced) child nodes.
+     * The Node object
      */
-    List<Node> getExternalNodes();
+    private final Node node;
 
+    public NodeValue(final Node node) {
+        this.node = node;
+    }
+
+    @Override
+    public final ValueType getType() {
+        return ValueType.NODE;
+    }
+
+    @Override
+    public final Node getValue() {
+        return node;
+    }
 }
-

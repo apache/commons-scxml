@@ -16,17 +16,12 @@
  */
 package org.apache.commons.scxml2.model;
 
-import java.io.Serializable;
-import java.util.Map;
-
-import org.w3c.dom.Node;
-
 /**
  * The class in this SCXML object model that corresponds to the SCXML
  * &lt;data&gt; child element of the &lt;datamodel&gt; element.
  *
  */
-public class Data implements Serializable {
+public class Data implements ParsedValueContainer {
 
     /**
      * Serial version UID.
@@ -50,15 +45,9 @@ public class Data implements Serializable {
     private String expr;
 
     /**
-     * The child XML data tree, parsed as a Node
-     * instance.
+     * The data element body value, or the value from external {@link #getSrc()}, may be null.
      */
-    private Node node;
-
-    /**
-     * The parsed value for the child XML data tree or the external src (with early-binding), to be cloned before usage
-     */
-    private Object value;
+    private ParsedValue dataValue;
 
     /**
      * Get the id.
@@ -115,43 +104,21 @@ public class Data implements Serializable {
     }
 
     /**
-     * Get the child XML data tree.
+     * Get the data value
      *
-     * @return Node The child XML data tree, parsed as a standalone DocumentFragment <code>Node</code>.
+     * @return The data value
      */
-    public final Node getNode() {
-        return node;
+    public final ParsedValue getParsedValue() {
+        return dataValue;
     }
 
     /**
-     * Set the child XML data tree.
+     * Set the data value
      *
-     * @param node The child XML data tree, parsed as a standalone DocumentFragment <code>Node</code>.
+     * @param dataValue The data value
      */
-    public final void setNode(final Node node) {
-        this.node = node;
-    }
-
-    /**
-     * Get the parsed value for the child XML data tree or the external src (with early-binding), to be cloned before usage.
-     * @see #setValue(Object)
-     * @return The parsed Data value
-     */
-    public final Object getValue() {
-        return value;
-    }
-
-    /**
-     * Sets the parsed value for the child XML data tree or the external src (with early-binding), to be cloned before usage.
-     * @param value a serializable object:
-     * <ul>
-     *   <li>"Raw" JSON mapped object tree (array->ArrayList, object->LinkedHashMap based)</li>
-     *   <li>XML Node (equals {@link #getNode()})</li>
-     *   <li>space-normalized String</li>
-     * </ul>
-     */
-    public final void setValue(final Object value) {
-        this.value = value;
+    public final void setParsedValue(final ParsedValue dataValue) {
+        this.dataValue = dataValue;
     }
 }
 

@@ -16,17 +16,17 @@
  */
 package org.apache.commons.scxml2.model;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.transform.TransformerException;
-
 import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.PathResolver;
+import org.apache.commons.scxml2.SCXMLConstants;
 import org.apache.commons.scxml2.SCXMLExecutionContext;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.SCXMLSystemContext;
@@ -411,22 +411,23 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
                                         + ", Using empty value instead.", getParent());
                         contentValue = "";
                     }
-                } else if (content.getValue() != null) {
-                    contentValue = content.getValue();
+                } else if (content.getParsedValue() != null) {
+                    contentValue = content.getParsedValue().getValue();
                 }
                 if (contentValue instanceof String) {
                     // inline content
                 } else if (contentValue instanceof Element) {
                     // xml based content (must be assigned through data)
                     Element contentElement = (Element)contentValue;
-                    if (contentElement.getLocalName().equals("scxml")) {
+                    if (SCXMLConstants.ELEM_SCXML.equals(contentElement.getLocalName()) &&
+                            SCXMLConstants.XMLNS_SCXML.equals(contentElement.getNamespaceURI())) {
                         // statemachine definition: transform to string as we cannot (yet) pass XML directly to invoker
                         try {
-                            contentValue = ContentParser.DEFAULT_PARSER.transformXml(contentElement);
+                            contentValue = ContentParser.DEFAULT_PARSER.toXml(contentElement);
                         }
-                        catch (TransformerException e) {
+                        catch (IOException e) {
                             throw new ActionExecutionError("<invoke> for state "+parentState.getId() +
-                                    ": invalid <content> definition");
+                                    ": invalid <content><scxml> definition");
                         }
                     } else {
                         throw new ActionExecutionError("<invoke> for state "+parentState.getId() +

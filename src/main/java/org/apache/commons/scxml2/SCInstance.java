@@ -345,7 +345,8 @@ public class SCInstance implements Serializable {
                     resolvedSrc = pr.resolvePath(resolvedSrc);
                 }
                 try {
-                    value = ContentParser.DEFAULT_PARSER.parseResource(resolvedSrc);
+                    datum.setParsedValue(ContentParser.DEFAULT_PARSER.parseResource(resolvedSrc));
+                    value = evaluator.cloneData(datum.getParsedValue().getValue());
                     setValue = true;
                 } catch (IOException e) {
                     if (internalIOProcessor != null) {
@@ -365,8 +366,12 @@ public class SCInstance implements Serializable {
                     errorReporter.onError(ErrorConstants.EXPRESSION_ERROR, see.getMessage(), datum);
                 }
             }
+            else if (datum.getParsedValue() != null) {
+                value = evaluator.cloneData(datum.getParsedValue().getValue());
+                setValue = true;
+            }
             else {
-                value = evaluator.cloneData(datum.getValue());
+                // initialize data value with null
                 setValue = true;
             }
             if (setValue) {

@@ -53,8 +53,13 @@ import org.apache.commons.scxml2.model.Datamodel;
 import org.apache.commons.scxml2.model.Else;
 import org.apache.commons.scxml2.model.ElseIf;
 import org.apache.commons.scxml2.model.EnterableState;
+import org.apache.commons.scxml2.model.JsonValue;
+import org.apache.commons.scxml2.model.NodeListValue;
+import org.apache.commons.scxml2.model.NodeTextValue;
+import org.apache.commons.scxml2.model.NodeValue;
+import org.apache.commons.scxml2.model.ParsedValue;
 import org.apache.commons.scxml2.model.Raise;
-import org.apache.commons.scxml2.model.ExternalContent;
+import org.apache.commons.scxml2.model.ParsedValueContainer;
 import org.apache.commons.scxml2.model.Final;
 import org.apache.commons.scxml2.model.Finalize;
 import org.apache.commons.scxml2.model.Foreach;
@@ -72,11 +77,11 @@ import org.apache.commons.scxml2.model.Script;
 import org.apache.commons.scxml2.model.Send;
 import org.apache.commons.scxml2.model.SimpleTransition;
 import org.apache.commons.scxml2.model.State;
+import org.apache.commons.scxml2.model.TextValue;
 import org.apache.commons.scxml2.model.Transition;
 import org.apache.commons.scxml2.model.TransitionTarget;
 import org.apache.commons.scxml2.model.Var;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * <p>Utility class for serializing the Commons SCXML Java object
@@ -481,21 +486,13 @@ public class SCXMLWriter {
         }
 
         writer.writeStartElement(SCXMLConstants.ELEM_DATAMODEL);
-        if (datamodel.getData().size() > 0 && XFORMER == null) {
-            writer.writeComment("Datamodel was not serialized");
-        } else {
-            for (Data d : datamodel.getData()) {
-                Node n = d.getNode();
-                if (n != null) {
-                    writeNode(writer, n);
-                } else {
-                    writer.writeStartElement(SCXMLConstants.ELEM_DATA);
-                    writeAV(writer, SCXMLConstants.ATTR_ID, d.getId());
-                    writeAV(writer, SCXMLConstants.ATTR_SRC, escapeXML(d.getSrc()));
-                    writeAV(writer, SCXMLConstants.ATTR_EXPR, escapeXML(d.getExpr()));
-                    writer.writeEndElement();
-                }
-            }
+        for (Data d : datamodel.getData()) {
+            writer.writeStartElement(SCXMLConstants.ELEM_DATA);
+            writeAV(writer, SCXMLConstants.ATTR_ID, d.getId());
+            writeAV(writer, SCXMLConstants.ATTR_SRC, escapeXML(d.getSrc()));
+            writeAV(writer, SCXMLConstants.ATTR_EXPR, escapeXML(d.getExpr()));
+            writeParsedValue(writer, d.getParsedValue());
+            writer.writeEndElement();
         }
         writer.writeEndElement();
     }
@@ -817,15 +814,12 @@ public class SCXMLWriter {
         for (Action a : actions) {
             if (a instanceof Assign) {
                 Assign asn = (Assign) a;
-                if (asn.getNode() != null) {
-                    writeNode(writer, asn.getNode());
-                } else {
-                    writer.writeStartElement(SCXMLConstants.XMLNS_SCXML, SCXMLConstants.ELEM_ASSIGN);
-                    writeAV(writer, SCXMLConstants.ATTR_LOCATION, asn.getLocation());
-                    writeAV(writer, SCXMLConstants.ATTR_SRC, asn.getSrc());
-                    writeAV(writer, SCXMLConstants.ATTR_EXPR, escapeXML(asn.getExpr()));
-                    writer.writeEndElement();
-                }
+                writer.writeStartElement(SCXMLConstants.XMLNS_SCXML, SCXMLConstants.ELEM_ASSIGN);
+                writeAV(writer, SCXMLConstants.ATTR_LOCATION, asn.getLocation());
+                writeAV(writer, SCXMLConstants.ATTR_SRC, asn.getSrc());
+                writeAV(writer, SCXMLConstants.ATTR_EXPR, escapeXML(asn.getExpr()));
+                writeParsedValue(writer, ((Assign) a).getParsedValue());
+                writer.writeEndElement();
             } else if (a instanceof Send) {
                 writeSend(writer, (Send) a);
             } else if (a instanceof Cancel) {
@@ -882,8 +876,8 @@ public class SCXMLWriter {
                 for (final String prefix : actionWrapper.getNamespaces().keySet()) {
                     writer.writeNamespace(prefix, actionWrapper.getNamespaces().get(prefix));
                 }
-                if (actionWrapper.getAction() instanceof ExternalContent) {
-                    writeExternalContent(writer, (ExternalContent) actionWrapper.getAction());
+                if (actionWrapper.getAction() instanceof ParsedValueContainer) {
+                    writeParsedValue(writer, ((ParsedValueContainer)actionWrapper.getAction()).getParsedValue());
                 }
                 writer.writeEndElement();
             } else {
@@ -979,46 +973,64 @@ public class SCXMLWriter {
         if (content != null) {
             writer.writeStartElement(SCXMLConstants.ELEM_CONTENT);
             writeAV(writer, SCXMLConstants.ATTR_EXPR, content.getExpr());
-            if (content.getBody() != null) {
-                if (content.getBody() instanceof Node) {
-                    NodeList nodeList = ((Node)content.getBody()).getChildNodes();
-                    if (nodeList.getLength() > 0 && XFORMER == null) {
-                        writer.writeComment("External content was not serialized");
-                    }
-                    else {
-                        for (int i = 0, size = nodeList.getLength(); i < size; i++) {
-                            writeNode(writer, nodeList.item(i));
-                        }
-                    }
-                }
-                else {
-                    writer.writeCharacters(content.getBody().toString());
-                }
-            }
+            writeParsedValue(writer, content.getParsedValue());
             writer.writeEndElement();
         }
     }
 
     /**
-     * Write the serialized body of this {@link ExternalContent} element.
+     * Write out this {@link ParsedValue} object as body of its containing {@link ParsedValueContainer} element.
      *
      * @param writer The {@link XMLStreamWriter} in use for the serialization.
-     * @param externalContent The model element containing the external body content.
+     * @param parsedValue The {@link ParsedValue} to serialize.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
      */
-    private static void writeExternalContent(final XMLStreamWriter writer,
-                                             final ExternalContent externalContent)
+    private static void writeParsedValue(final XMLStreamWriter writer, final ParsedValue parsedValue)
             throws XMLStreamException {
-
-        List<Node> externalNodes = externalContent.getExternalNodes();
-
-        if (externalNodes.size() > 0 && XFORMER == null) {
-            writer.writeComment("External content was not serialized");
-        } else {
-            for (Node n : externalNodes) {
-                writeNode(writer, n);
+        try {
+            if (parsedValue != null) {
+                switch (parsedValue.getType()) {
+                    case TEXT:
+                        final TextValue textValue = (TextValue)parsedValue;
+                        if (textValue.isCDATA()) {
+                            writer.writeCData(textValue.getValue());
+                        } else {
+                            writer.writeCharacters(textValue.getValue());
+                        }
+                        break;
+                    case JSON:
+                        final String value = ContentParser.DEFAULT_PARSER.toJson(parsedValue.getValue());
+                        if (((JsonValue) parsedValue).isCDATA()) {
+                            writer.writeCData(value);
+                        } else {
+                            writer.writeCharacters(value);
+                        }
+                        break;
+                    case NODE:
+                        if (XFORMER == null) {
+                            writer.writeComment("element body was not serialized");
+                        } else {
+                            writeNode(writer, ((NodeValue)parsedValue).getValue());
+                        }
+                        break;
+                    case NODE_LIST:
+                        List<Node> nodeList = ((NodeListValue)parsedValue).getValue();
+                        if (!nodeList.isEmpty() && XFORMER == null) {
+                            writer.writeComment("element body was not serialized");
+                        } else {
+                            for (final Node node : nodeList) {
+                                writeNode(writer, node);
+                            }
+                        }
+                        break;
+                    case NODE_TEXT:
+                        writeNode(writer, ContentParser.DEFAULT_PARSER.parseXml((String)parsedValue.getValue()));
+                        break;
+                }
             }
+        } catch (IOException e) {
+            throw new XMLStreamException(e);
         }
     }
 

@@ -41,7 +41,6 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.util.XMLEventAllocator;
 import javax.xml.transform.Source;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
@@ -68,7 +67,10 @@ import org.apache.commons.scxml2.model.Else;
 import org.apache.commons.scxml2.model.ElseIf;
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.Executable;
-import org.apache.commons.scxml2.model.ExternalContent;
+import org.apache.commons.scxml2.model.JsonValue;
+import org.apache.commons.scxml2.model.NodeListValue;
+import org.apache.commons.scxml2.model.NodeValue;
+import org.apache.commons.scxml2.model.ParsedValueContainer;
 import org.apache.commons.scxml2.model.Final;
 import org.apache.commons.scxml2.model.Finalize;
 import org.apache.commons.scxml2.model.Foreach;
@@ -89,10 +91,12 @@ import org.apache.commons.scxml2.model.Script;
 import org.apache.commons.scxml2.model.Send;
 import org.apache.commons.scxml2.model.SimpleTransition;
 import org.apache.commons.scxml2.model.State;
+import org.apache.commons.scxml2.model.TextValue;
 import org.apache.commons.scxml2.model.Transition;
 import org.apache.commons.scxml2.model.TransitionType;
 import org.apache.commons.scxml2.model.TransitionalState;
 import org.apache.commons.scxml2.model.Var;
+import org.apache.commons.scxml2.model.NodeTextValue;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -115,6 +119,12 @@ import org.xml.sax.SAXException;
 public final class SCXMLReader {
 
     private static final org.apache.commons.logging.Log logger = LogFactory.getLog(SCXMLReader.class);
+
+    /**
+     * By default Sun/Oracle XMLStreamReader implementation doesn't report CDATA events.
+     * This can be turned on (as needed by SCXMLReader) by setting this property TRUE
+     */
+    public final static String XMLInputFactory_JDK_PROP_REPORT_CDATA = "http://java.sun.com/xml/stream/properties/report-cdata-event";
 
     //---------------------- PRIVATE CONSTANTS ----------------------//
     /**
@@ -872,7 +882,7 @@ public final class SCXMLReader {
                             }
                         } else if (SCXMLConstants.ELEM_CONTENT.equals(name)) {
                             if (doneData.getParams().isEmpty()) {
-                                readContent(reader, doneData);
+                                readContent(reader, configuration, doneData);
                             }
                             else {
                                 reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_DONEDATA, nsURI, name);
@@ -1081,32 +1091,12 @@ public final class SCXMLReader {
                 reportConflictingAttribute(reader, configuration, SCXMLConstants.ELEM_DATA, SCXMLConstants.ATTR_EXPR, SCXMLConstants.ATTR_SRC);
             }
             datum.setExpr(expr);
+            skipToEndElement(reader);
+        } else if (src != null ) {
+            datum.setSrc(src);
+            skipToEndElement(reader);
         } else {
-            if (src != null) {
-                datum.setSrc(src);
-            }
-        }
-
-        Element node = readElement(reader);
-        datum.setNode(node);
-        if (node.hasChildNodes()) {
-            NodeList children = node.getChildNodes();
-            if (children.getLength() == 1 && children.item(0).getNodeType() == Node.TEXT_NODE) {
-                String text = configuration.contentParser.trimContent(children.item(0).getNodeValue());
-                if (configuration.contentParser.hasJsonSignature(text)) {
-                    try {
-                        datum.setValue(configuration.contentParser.parseJson(text));
-                    } catch (IOException e) {
-                        throw new ModelException(e);
-                    }
-                }
-                else {
-                    datum.setValue(configuration.contentParser.spaceNormalizeContent(text));
-                }
-            }
-            if (datum.getValue() == null) {
-                datum.setValue(node);
-            }
+            readParsedValue(reader, configuration, datum, false);
         }
         dm.addData(datum);
     }
@@ -1147,7 +1137,7 @@ public final class SCXMLReader {
                         } else if (SCXMLConstants.ELEM_FINALIZE.equals(name)) {
                             readFinalize(reader, configuration, parent, invoke);
                         } else if (SCXMLConstants.ELEM_CONTENT.equals(name)) {
-                            readContent(reader, invoke);
+                            readContent(reader, configuration, invoke);
                         } else {
                             reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_INVOKE, nsURI, name);
                         }
@@ -1226,12 +1216,14 @@ public final class SCXMLReader {
      * Read the contents of this &lt;content&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
+     * @param configuration The {@link Configuration} to use while parsing.
      * @param contentContainer The {@link ContentContainer} for this content.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
-    private static void readContent(final XMLStreamReader reader, final ContentContainer contentContainer)
-            throws XMLStreamException {
+    private static void readContent(final XMLStreamReader reader, final Configuration configuration,
+                                    final ContentContainer contentContainer)
+            throws XMLStreamException, ModelException {
 
         Content content = new Content();
         content.setExpr(readAV(reader, SCXMLConstants.ATTR_EXPR));
@@ -1239,39 +1231,7 @@ public final class SCXMLReader {
             skipToEndElement(reader);
         }
         else {
-            Element body = readElement(reader);
-            if (body.hasChildNodes()) {
-                content.setBody(body);
-                NodeList children = body.getChildNodes();
-                if (children.getLength() == 1 && children.item(0).getNodeType() == Node.TEXT_NODE) {
-                    try {
-                        content.setValue(ContentParser.DEFAULT_PARSER.parseContent(children.item(0).getNodeValue()));
-                    }
-                    catch (IOException ioe) {
-                        throw new XMLStreamException(ioe);
-                    }
-                }
-                else {
-                    // find only use first child element
-                    for (int i = 0, size = children.getLength(); i < size; i++) {
-                        Node child = children.item(i);
-                        if (child.getNodeType() == Node.ELEMENT_NODE) {
-                            if (contentContainer instanceof Invoke) {
-                                // transform invoke <content/> to string upfront as we currently only can handle string input
-                                try {
-                                    content.setValue(ContentParser.DEFAULT_PARSER.transformXml(child));
-                                } catch (TransformerException e) {
-                                    throw new XMLStreamException(e);
-                                }
-                            }
-                            else {
-                                content.setValue(child);
-                            }
-                            break;
-                        }
-                    }
-                }
-            }
+            readParsedValue(reader, configuration, content, contentContainer instanceof Invoke);
         }
         contentContainer.setContent(content);
     }
@@ -1751,34 +1711,15 @@ public final class SCXMLReader {
                 resolvedSrc = configuration.pathResolver.resolvePath(resolvedSrc);
             }
             try {
-                assign.setValue(ContentParser.DEFAULT_PARSER.parseResource(resolvedSrc));
+                assign.setParsedValue(ContentParser.DEFAULT_PARSER.parseResource(resolvedSrc));
             } catch (IOException e) {
                 throw new ModelException(e);
             }
         }
         else {
             Location location = reader.getLocation();
-            Element node = readElement(reader);
-            if (node.hasChildNodes()) {
-                assign.setNode(node);
-                NodeList children = node.getChildNodes();
-                if (children.getLength() == 1 && children.item(0).getNodeType() == Node.TEXT_NODE) {
-                    String text = configuration.contentParser.trimContent(children.item(0).getNodeValue());
-                    if (configuration.contentParser.hasJsonSignature(text)) {
-                        try {
-                            assign.setValue(configuration.contentParser.parseJson(text));
-                        } catch (IOException e) {
-                            throw new ModelException(e);
-                        }
-                    }
-                    else {
-                        assign.setValue(configuration.contentParser.spaceNormalizeContent(text));
-                    }
-                } else {
-                    // can only handle a single node: pick the first child
-                    assign.setValue(children.item(0));
-                }
-            } else {
+            readParsedValue(reader, configuration, assign, false);
+            if (assign.getParsedValue() == null) {
                 // report missing expression (as most common use-case)
                 reportMissingAttribute(location, SCXMLConstants.ELEM_ASSIGN, SCXMLConstants.ATTR_EXPR);
             }
@@ -1886,7 +1827,7 @@ public final class SCXMLReader {
                             }
                         } else if (SCXMLConstants.ELEM_CONTENT.equals(name)) {
                             if (send.getNamelist() == null && send.getParams().isEmpty()) {
-                                readContent(reader, send);
+                                readContent(reader, configuration, send);
                             }
                             else {
                                 reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_SEND, nsURI, name);
@@ -2035,7 +1976,7 @@ public final class SCXMLReader {
     private static void readCustomAction(final XMLStreamReader reader, final Configuration configuration,
                                          final CustomAction customAction, final Executable executable,
                                          final ActionsContainer parent)
-            throws XMLStreamException {
+            throws XMLStreamException, ModelException {
 
         // Instantiate custom action
         Object actionObject;
@@ -2098,13 +2039,8 @@ public final class SCXMLReader {
         }
 
         // Add any body content if necessary
-        if (action instanceof ExternalContent) {
-            Element body = readElement(reader);
-            NodeList childNodes = body.getChildNodes();
-            List<Node> externalNodes = ((ExternalContent) action).getExternalNodes();
-            for (int i = 0; i < childNodes.getLength(); i++) {
-                externalNodes.add(childNodes.item(i));
-            }
+        if (action instanceof ParsedValueContainer) {
+            readParsedValue(reader, configuration, (ParsedValueContainer)action, false);
         }
         else {
             skipToEndElement(reader);
@@ -2116,6 +2052,76 @@ public final class SCXMLReader {
             parent.addAction(actionWrapper);
         } else {
             executable.addAction(actionWrapper);
+        }
+    }
+
+    /**
+     * Read and parse the body of a {@link ParsedValueContainer} element.
+     *
+     * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
+     * @param configuration The {@link Configuration} to use while parsing.
+     * @param valueContainer The {@link ParsedValueContainer} element which body to read
+     * @param invokeContent flag indicating if the valueContainer is a <invoke><content> element, which get special
+     *                      treatment
+     *
+     * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
+     */
+    private static void readParsedValue(final XMLStreamReader reader, final Configuration configuration,
+                                        final ParsedValueContainer valueContainer, final boolean invokeContent)
+            throws XMLStreamException, ModelException {
+        Element element = readElement(reader);
+        if (element.hasChildNodes()) {
+            NodeList children = element.getChildNodes();
+            Node child = children.item(0);
+            boolean cdata = child.getNodeType() == Node.CDATA_SECTION_NODE;
+            if (invokeContent) {
+                // search or and only use first <scxml> element
+                if (child.getNodeType() != Node.ELEMENT_NODE) {
+                    for (int i = 1, size = children.getLength(); i < size; i++) {
+                        child = children.item(i);
+                        if (child.getNodeType() == Node.ELEMENT_NODE) {
+                            break;
+                        }
+                    }
+                }
+                if (child.getNodeType() == Node.ELEMENT_NODE) {
+                    if (SCXMLConstants.ELEM_SCXML.equals(child.getLocalName()) &&
+                            SCXMLConstants.XMLNS_SCXML.equals(child.getNamespaceURI())) {
+                        // transform <invoke><content><scxml> back to text
+                        try {
+                            valueContainer.setParsedValue(new NodeTextValue(ContentParser.DEFAULT_PARSER.toXml(child)));
+                        } catch (IOException e) {
+                            throw new XMLStreamException(e);
+                        }
+                    }
+                }
+                if (valueContainer.getParsedValue() == null) {
+                    reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_INVOKE, SCXMLConstants.XMLNS_SCXML,
+                            SCXMLConstants.ELEM_CONTENT);
+                }
+            }
+            else if (children.getLength() == 1 && (cdata || child.getNodeType() == Node.TEXT_NODE )) {
+                String text = configuration.contentParser.trimContent(child.getNodeValue());
+                if (configuration.contentParser.hasJsonSignature(text)) {
+                    try {
+                        valueContainer.setParsedValue(new JsonValue(configuration.contentParser.parseJson(text), cdata));
+                    } catch (IOException e) {
+                        throw new ModelException(e);
+                    }
+                }
+                else {
+                    valueContainer.setParsedValue(new TextValue(configuration.contentParser.spaceNormalizeContent(text),
+                            cdata));
+                }
+            } else if (children.getLength() == 1) {
+                valueContainer.setParsedValue(new NodeValue(child));
+            } else {
+                ArrayList<Node> nodeList = new ArrayList<>();
+                for (int i = 0, size = children.getLength(); i < size; i++) {
+                    nodeList.add(children.item(i));
+                }
+                valueContainer.setParsedValue(new NodeListValue(nodeList));
+            }
         }
     }
 
@@ -2143,7 +2149,7 @@ public final class SCXMLReader {
         Element root = document.createElementNS(reader.getNamespaceURI(), createQualifiedName(reader.getPrefix(), reader.getLocalName()));
         document.appendChild(root);
 
-        boolean children = false;
+        boolean children = false, cdata = false;
         Node parent = root;
 
         // Convert stream to DOM node(s) while maintaining parent child relationships
@@ -2175,12 +2181,10 @@ public final class SCXMLReader {
                     }
                     break;
                 case XMLStreamConstants.CDATA:
-                    children = true;
-                    child = document.createCDATASection(reader.getText());
-                    break;
-                case XMLStreamConstants.COMMENT:
-                    children = true;
-                    child = document.createComment(reader.getText());
+                    if (!children || parent != root) {
+                        cdata = true;
+                        child = document.createCDATASection(reader.getText());
+                    }
                     break;
                 case XMLStreamConstants.END_ELEMENT:
                     parent = parent.getParentNode();
@@ -2194,8 +2198,14 @@ public final class SCXMLReader {
                 parent.appendChild(child);
             }
         }
-        if (!children && root.hasChildNodes()) {
-            root.setTextContent(root.getTextContent().trim());
+        if (!children && root.hasChildNodes() && root.getChildNodes().getLength() > 1) {
+            String text = root.getTextContent().trim();
+            if (!cdata) {
+                root.setTextContent(text);
+            } else {
+                root.setTextContent(null);
+                root.appendChild(document.createCDATASection(text));
+            }
         }
         return root;
     }
@@ -2505,8 +2515,13 @@ public final class SCXMLReader {
             factory = XMLInputFactory.newFactory(configuration.factoryId, configuration.factoryClassLoader);
         }
         factory.setEventAllocator(configuration.allocator);
+        if (factory.isPropertySupported(XMLInputFactory_JDK_PROP_REPORT_CDATA)) {
+            factory.setProperty(XMLInputFactory_JDK_PROP_REPORT_CDATA, Boolean.TRUE);
+        }
         for (Map.Entry<String, Object> property : configuration.properties.entrySet()) {
-            factory.setProperty(property.getKey(), property.getValue());
+            if (factory.isPropertySupported(property.getKey())) {
+                factory.setProperty(property.getKey(), property.getValue());
+            }
         }
         factory.setXMLReporter(configuration.reporter);
         factory.setXMLResolver(configuration.resolver);

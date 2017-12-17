@@ -102,11 +102,8 @@ public class Final extends EnterableState {
                             evalResult = "";
                         }
                         result = eval.cloneData(evalResult);
-                    } else if (content.getValue() != null) {
-                        result = content.getValue();
-                    }
-                    else if (content.getBody() != null){
-                        result = eval.cloneData(content.getBody());
+                    } else if (content.getParsedValue() != null) {
+                        result = eval.cloneData(content.getParsedValue().getValue());
                     }
                 } else {
                     Map<String, Object> payloadDataMap = new LinkedHashMap<>();

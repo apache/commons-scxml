@@ -35,6 +35,10 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.scxml2.model.JsonValue;
+import org.apache.commons.scxml2.model.NodeValue;
+import org.apache.commons.scxml2.model.ParsedValue;
+import org.apache.commons.scxml2.model.TextValue;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
@@ -163,6 +167,16 @@ public class ContentParser {
     }
 
     /**
+     * Transforms a jsonObject to a json String
+     * @param jsonObject object to transform
+     * @return json string
+     * @throws IOException
+     */
+    public String toJson(final Object jsonObject) throws IOException {
+        return jsonObjectMapper.writeValueAsString(jsonObject);
+    }
+
+    /**
      * Parse an XML String and return the document element
      * @param xmlString XML String to parse
      * @return document element
@@ -180,20 +194,30 @@ public class ContentParser {
         return doc != null ? doc.getDocumentElement() : null;
     }
 
-    public String transformXml(final Node node) throws TransformerException {
-        StringWriter writer = new StringWriter();
-        Transformer transformer = TransformerFactory.newInstance().newTransformer();
-        Properties outputProps = new Properties();
-        outputProps.put(OutputKeys.OMIT_XML_DECLARATION, "no");
-        outputProps.put(OutputKeys.STANDALONE, "no");
-        outputProps.put(OutputKeys.INDENT, "yes");
-        transformer.setOutputProperties(outputProps);
-        transformer.transform(new DOMSource(node), new StreamResult(writer));
-        return writer.toString();
+    /**
+     * Transforms a XML Node to XML
+     * @param node node to transform
+     * @return XML string
+     * @throws IOException
+     */
+    public String toXml(final Node node) throws IOException {
+        try {
+            StringWriter writer = new StringWriter();
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            Properties outputProps = new Properties();
+            outputProps.put(OutputKeys.OMIT_XML_DECLARATION, "no");
+            outputProps.put(OutputKeys.STANDALONE, "no");
+            outputProps.put(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperties(outputProps);
+            transformer.transform(new DOMSource(node), new StreamResult(writer));
+            return writer.toString();
+        } catch (TransformerException e) {
+            throw new IOException(e);
+        }
     }
 
     /**
-     * Parse a string into a content object, following the SCXML rules as specified for the ECMAscript (section B.2.1) Data Model
+     * Parse a string into a ParsedValue content object, following the SCXML rules as specified for the ECMAscript (section B.2.1) Data Model
      * <ul>
      *   <li>if the content can be interpreted as JSON, it will be parsed as JSON into an 'raw' object model</li>
      *   <li>if the content can be interpreted as XML, it will be parsed into a XML DOM element</li>
@@ -203,27 +227,27 @@ public class ContentParser {
      * @return the parsed content object
      * @throws IOException In case of parsing exceptions
      */
-    public Object parseContent(final String content) throws IOException {
+    public ParsedValue parseContent(final String content) throws IOException {
         if (content != null) {
             String src = trimContent(content);
             if (hasJsonSignature(src)) {
-                return parseJson(src);
+                return new JsonValue(parseJson(src), false);
             }
             else if (hasXmlSignature(src)) {
-                return parseXml(src);
+                return new NodeValue(parseXml(src));
             }
-            return spaceNormalizeContent(src);
+            return new TextValue(spaceNormalizeContent(src), false);
         }
         return null;
     }
 
     /**
-     * Load a resource (URL) as an UTF-8 encoded content string to be parsed into a content object through {@link #parseContent(String)}
+     * Load a resource (URL) as an UTF-8 encoded content string to be parsed into a ParsedValue content object through {@link #parseContent(String)}
      * @param resourceURL Resource URL to load content from
      * @return the parsed content object
      * @throws IOException In case of loading or parsing exceptions
      */
-    public Object parseResource(final String resourceURL) throws IOException {
+    public ParsedValue parseResource(final String resourceURL) throws IOException {
         try (InputStream in = new URL(resourceURL).openStream()) {
             String content = IOUtils.toString(in, "UTF-8");
             return parseContent(content);

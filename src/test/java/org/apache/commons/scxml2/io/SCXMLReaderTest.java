@@ -39,20 +39,19 @@ import org.apache.commons.scxml2.model.CustomActionWrapper;
 import org.apache.commons.scxml2.model.Data;
 import org.apache.commons.scxml2.model.Datamodel;
 import org.apache.commons.scxml2.model.EnterableState;
-import org.apache.commons.scxml2.model.ExternalContent;
+import org.apache.commons.scxml2.model.ParsedValue;
+import org.apache.commons.scxml2.model.ParsedValueContainer;
 import org.apache.commons.scxml2.model.Final;
 import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.Send;
 import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.Transition;
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.w3c.dom.Node;
 
 /**
  * Unit tests {@link org.apache.commons.scxml2.io.SCXMLReader}.
@@ -181,7 +180,7 @@ public class SCXMLReaderTest {
         Assert.assertEquals(1, actions.size());
         MyAction my = (MyAction)((CustomActionWrapper)actions.get(0)).getAction();
         Assert.assertNotNull(my);
-        Assert.assertTrue(my.getExternalNodes().size() > 0);
+        Assert.assertTrue(my.getParsedValue() != null);
     }
 
     @Test
@@ -352,10 +351,10 @@ public class SCXMLReaderTest {
         }
     }
 
-    public static class MyAction extends Action implements ExternalContent {
+    public static class MyAction extends Action implements ParsedValueContainer {
         private static final long serialVersionUID = 1L;
 
-        private List<Node> nodes = new ArrayList<Node>();
+        private ParsedValue parsedValue;
 
         @Override
         public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
@@ -363,10 +362,14 @@ public class SCXMLReaderTest {
         }
 
         @Override
-        public List<Node> getExternalNodes() {
-            return nodes;
+        public ParsedValue getParsedValue() {
+            return parsedValue;
         }
 
+        @Override
+        public void setParsedValue(final ParsedValue parsedValue) {
+            this.parsedValue = parsedValue;
+        }
     }
 
     /**

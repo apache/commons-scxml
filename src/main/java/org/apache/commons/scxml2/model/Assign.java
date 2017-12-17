@@ -20,14 +20,13 @@ import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.SCXMLExpressionException;
-import org.w3c.dom.Node;
 
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;assign&gt; SCXML element.
  *
  */
-public class Assign extends Action {
+public class Assign extends Action implements ParsedValueContainer {
 
     /**
      * Serial version UID.
@@ -51,14 +50,9 @@ public class Assign extends Action {
     private String expr;
 
     /**
-     * The assign definition parsed as a standalone DocumentFragment Node (only used by the SCXMLWriter)
+     * The assign element body value, or the value from external {@link #getSrc()}, may be null.
      */
-    private Node node;
-
-    /**
-     * The parsed value for the child XML data tree or the content of the external src
-     */
-    private Object value;
+    private ParsedValue assignValue;
 
     /**
      * Constructor.
@@ -122,45 +116,22 @@ public class Assign extends Action {
     }
 
     /**
-     * Get the assign definition parsed as standalone DocumentFragment Node.
+     * Get the assign value
      *
-     * @return Node The assign definition parsed as a standalone DocumentFragment <code>Node</code>.
+     * @return The assign value
      */
-    public final Node getNode() {
-        return node;
+    public final ParsedValue getParsedValue() {
+        return assignValue;
     }
 
     /**
-     * Set the assign definition parsed as standalone DocumentFragment Node.
+     * Set the assign value
      *
-     * @param node The child XML data tree, parsed as a standalone DocumentFragment <code>Node</code>.
+     * @param assignValue The assign value
      */
-    public final void setNode(final Node node) {
-        this.node = node;
+    public final void setParsedValue(final ParsedValue assignValue) {
+        this.assignValue = assignValue;
     }
-
-    /**
-     * Get the parsed value for the child XML data tree or the content of the external src
-     * @see #setValue(Object)
-     * @return The parsed value
-     */
-    public final Object getValue() {
-        return value;
-    }
-
-    /**
-     * Sets the parsed value for the child XML data tree or the content of the external src
-     * @param value a serializable object:
-     * <ul>
-     *   <li>"Raw" JSON mapped object tree (array->ArrayList, object->LinkedHashMap based)</li>
-     *   <li>XML Node (equals {@link #getNode()})</li>
-     *   <li>space-normalized String</li>
-     * </ul>
-     */
-    public final void setValue(final Object value) {
-        this.value = value;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -169,12 +140,12 @@ public class Assign extends Action {
         EnterableState parentState = getParentEnterableState();
         Context ctx = exctx.getContext(parentState);
         Evaluator evaluator = exctx.getEvaluator();
-        Object data;
+        Object data = null;
         if (expr != null) {
             data = evaluator.eval(ctx, expr);
         }
-        else {
-            data = evaluator.cloneData(value);
+        else if (assignValue != null) {
+            data = evaluator.cloneData(assignValue.getValue());
         }
 
         evaluator.evalAssign(ctx, location, data);

@@ -446,11 +446,8 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
                     evalResult = "";
                 }
                 payload = eval.cloneData(evalResult);
-            } else if (content.getValue() != null) {
-                payload = content.getValue();
-            }
-            else if (content.getBody() != null){
-                payload = eval.cloneData(content.getBody());
+            } else if (content.getParsedValue() != null) {
+                payload = content.getParsedValue().getValue();
             }
         }
         long wait = 0L;
@@ -531,4 +528,3 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
         return wait;
     }
 }
-
