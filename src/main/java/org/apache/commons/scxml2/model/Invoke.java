@@ -364,7 +364,6 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
             throw new ModelException("Missing current SCXMLExecutionContext instance in context under key: "+ getCurrentSCXMLExecutionContextKey());
         }
         try {
-            ctx.setLocal(getNamespacesKey(), getNamespaces());
             Evaluator eval = axctx.getEvaluator();
 
             String typeValue = type;
@@ -451,9 +450,6 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
                 axctx.getErrorReporter().onError(e instanceof SCXMLExpressionException
                         ? ErrorConstants.EXPRESSION_ERROR : ErrorConstants.EXECUTION_ERROR, e.getMessage(), this);
             }
-        }
-        finally {
-            ctx.setLocal(getNamespacesKey(), null);
         }
     }
 }

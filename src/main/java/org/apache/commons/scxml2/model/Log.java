@@ -94,9 +94,7 @@ public class Log extends Action {
     public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
         Context ctx = exctx.getContext(getParentEnterableState());
         Evaluator eval = exctx.getEvaluator();
-        ctx.setLocal(getNamespacesKey(), getNamespaces());
         exctx.getAppLog().info(label + ": " + String.valueOf(eval.eval(ctx, expr)));
-        ctx.setLocal(getNamespacesKey(), null);
     }
 }
 

@@ -93,7 +93,6 @@ public class Cancel extends Action {
     public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
         EnterableState parentState = getParentEnterableState();
         Context ctx = exctx.getContext(parentState);
-        ctx.setLocal(getNamespacesKey(), getNamespaces());
         Evaluator eval = exctx.getEvaluator();
 
         String sendidValue = sendid;

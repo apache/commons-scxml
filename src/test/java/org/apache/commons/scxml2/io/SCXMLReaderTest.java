@@ -35,6 +35,7 @@ import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.io.SCXMLReader.Configuration;
 import org.apache.commons.scxml2.model.Action;
 import org.apache.commons.scxml2.model.CustomAction;
+import org.apache.commons.scxml2.model.CustomActionWrapper;
 import org.apache.commons.scxml2.model.Data;
 import org.apache.commons.scxml2.model.Datamodel;
 import org.apache.commons.scxml2.model.EnterableState;
@@ -178,7 +179,7 @@ public class SCXMLReaderTest {
         Assert.assertEquals("actions", state.getId());
         List<Action> actions = state.getOnEntries().get(0).getActions();
         Assert.assertEquals(1, actions.size());
-        MyAction my = (MyAction) actions.get(0);
+        MyAction my = (MyAction)((CustomActionWrapper)actions.get(0)).getAction();
         Assert.assertNotNull(my);
         Assert.assertTrue(my.getExternalNodes().size() > 0);
     }

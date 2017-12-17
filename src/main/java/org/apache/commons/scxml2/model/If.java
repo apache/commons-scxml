@@ -68,11 +68,6 @@ public class If extends Action implements ActionsContainer {
         this.execute = false;
     }
 
-    @Override
-    public final String getContainerElementName() {
-        return ELEM_IF;
-    }
-
     /**
      * Get the executable actions contained in this &lt;if&gt;.
      *
@@ -120,7 +115,6 @@ public class If extends Action implements ActionsContainer {
         EnterableState parentState = getParentEnterableState();
         Context ctx = exctx.getContext(parentState);
         Evaluator eval = exctx.getEvaluator();
-        ctx.setLocal(getNamespacesKey(), getNamespaces());
         Boolean rslt;
         try {
             rslt = eval.evalCond(ctx, cond);
@@ -138,7 +132,6 @@ public class If extends Action implements ActionsContainer {
                     + e.getMessage(), this);
         }
         execute = rslt;
-        ctx.setLocal(getNamespacesKey(), null);
         // The "if" statement is a "container"
         for (Action aa : actions) {
             if (execute && !(aa instanceof ElseIf)) {
@@ -148,9 +141,7 @@ public class If extends Action implements ActionsContainer {
             } else if (aa instanceof Else) {
                 execute = true;
             } else if (aa instanceof ElseIf) {
-                ctx.setLocal(getNamespacesKey(), getNamespaces());
                 execute = eval.evalCond(ctx, ((ElseIf) aa).getCond());
-                ctx.setLocal(getNamespacesKey(), null);
             }
         }
     }

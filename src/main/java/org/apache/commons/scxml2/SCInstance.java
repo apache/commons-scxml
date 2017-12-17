@@ -356,7 +356,6 @@ public class SCInstance implements Serializable {
             }
             else if (datum.getExpr() != null) {
                 try {
-                    ctx.setLocal(Context.NAMESPACES_KEY, datum.getNamespaces());
                     value = evaluator.eval(ctx, datum.getExpr());
                     setValue = true;
                 } catch (SCXMLExpressionException see) {
@@ -364,8 +363,6 @@ public class SCInstance implements Serializable {
                         internalIOProcessor.addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT).build());
                     }
                     errorReporter.onError(ErrorConstants.EXPRESSION_ERROR, see.getMessage(), datum);
-                } finally {
-                    ctx.setLocal(Context.NAMESPACES_KEY, null);
                 }
             }
             else {

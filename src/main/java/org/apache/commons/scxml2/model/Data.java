@@ -26,7 +26,7 @@ import org.w3c.dom.Node;
  * &lt;data&gt; child element of the &lt;datamodel&gt; element.
  *
  */
-public class Data implements NamespacePrefixesHolder, Serializable {
+public class Data implements Serializable {
 
     /**
      * Serial version UID.
@@ -59,13 +59,6 @@ public class Data implements NamespacePrefixesHolder, Serializable {
      * The parsed value for the child XML data tree or the external src (with early-binding), to be cloned before usage
      */
     private Object value;
-
-    /**
-     * The current XML namespaces in the SCXML document for this action node,
-     * preserved for deferred XPath evaluation. Easier than to scrape node
-     * above, given the Builtin API.
-     */
-    private Map<String, String> namespaces;
 
     /**
      * Get the id.
@@ -160,24 +153,5 @@ public class Data implements NamespacePrefixesHolder, Serializable {
     public final void setValue(final Object value) {
         this.value = value;
     }
-
-    /**
-     * Get the XML namespaces at this action node in the SCXML document.
-     *
-     * @return Returns the map of namespaces.
-     */
-    public final Map<String, String> getNamespaces() {
-        return namespaces;
-    }
-
-    /**
-     * Set the XML namespaces at this action node in the SCXML document.
-     *
-     * @param namespaces The document namespaces.
-     */
-    public final void setNamespaces(final Map<String, String> namespaces) {
-        this.namespaces = namespaces;
-    }
-
 }
 

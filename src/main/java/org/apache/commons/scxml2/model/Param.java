@@ -24,7 +24,7 @@ import java.util.Map;
  * &lt;param&gt; SCXML element.
  *
  */
-public class Param implements NamespacePrefixesHolder, Serializable {
+public class Param implements Serializable {
 
     /**
      * Serial version UID.
@@ -46,12 +46,6 @@ public class Param implements NamespacePrefixesHolder, Serializable {
      * The param expression, may be null.
      */
     private String expr;
-
-    /**
-     * The current XML namespaces in the SCXML document for this action node,
-     * preserved for deferred XPath evaluation.
-     */
-    private Map<String, String> namespaces;
 
     /**
      * Default no-args constructor
@@ -113,24 +107,5 @@ public class Param implements NamespacePrefixesHolder, Serializable {
     public final void setExpr(final String expr) {
         this.expr = expr;
     }
-
-    /**
-     * Get the XML namespaces at this action node in the SCXML document.
-     *
-     * @return Returns the map of namespaces.
-     */
-    public final Map<String, String> getNamespaces() {
-        return namespaces;
-    }
-
-    /**
-     * Set the XML namespaces at this action node in the SCXML document.
-     *
-     * @param namespaces The document namespaces.
-     */
-    public final void setNamespaces(final Map<String, String> namespaces) {
-        this.namespaces = namespaces;
-    }
-
 }
 

@@ -42,13 +42,14 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.scxml2.SCXMLConstants;
 import org.apache.commons.scxml2.model.Action;
 import org.apache.commons.scxml2.model.Assign;
 import org.apache.commons.scxml2.model.Cancel;
 import org.apache.commons.scxml2.model.Content;
+import org.apache.commons.scxml2.model.CustomActionWrapper;
 import org.apache.commons.scxml2.model.Data;
 import org.apache.commons.scxml2.model.Datamodel;
-import org.apache.commons.scxml2.model.DoneData;
 import org.apache.commons.scxml2.model.Else;
 import org.apache.commons.scxml2.model.ElseIf;
 import org.apache.commons.scxml2.model.EnterableState;
@@ -100,16 +101,6 @@ import org.w3c.dom.NodeList;
 public class SCXMLWriter {
 
     //---------------------- PRIVATE CONSTANTS ----------------------//
-    //---- NAMESPACES ----//
-    /**
-     * The SCXML namespace.
-     */
-    private static final String XMLNS_SCXML = "http://www.w3.org/2005/07/scxml";
-
-    /**
-     * The Commons SCXML namespace.
-     */
-    private static final String XMLNS_COMMONS_SCXML = "http://commons.apache.org/scxml";
 
     //---- ERROR MESSAGES ----//
     /**
@@ -126,67 +117,6 @@ public class SCXMLWriter {
      * Null Result passed as argument.
      */
     private static final String ERR_NULL_RES = "Cannot parse null Result";
-
-    //--------------------------- XML VOCABULARY ---------------------------//
-    //---- ELEMENT NAMES ----//
-    private static final String ELEM_ASSIGN = "assign";
-    private static final String ELEM_CANCEL = "cancel";
-    private static final String ELEM_CONTENT = "content";
-    private static final String ELEM_DATA = "data";
-    private static final String ELEM_DATAMODEL = "datamodel";
-    private static final String ELEM_ELSE = "else";
-    private static final String ELEM_ELSEIF = "elseif";
-    private static final String ELEM_RAISE = "raise";
-    private static final String ELEM_FINAL = "final";
-    private static final String ELEM_FINALIZE = "finalize";
-    private static final String ELEM_HISTORY = "history";
-    private static final String ELEM_IF = "if";
-    private static final String ELEM_INITIAL = "initial";
-    private static final String ELEM_INVOKE = "invoke";
-    private static final String ELEM_FOREACH = "foreach";
-    private static final String ELEM_LOG = "log";
-    private static final String ELEM_ONENTRY = "onentry";
-    private static final String ELEM_ONEXIT = "onexit";
-    private static final String ELEM_PARALLEL = "parallel";
-    private static final String ELEM_PARAM = "param";
-    private static final String ELEM_SCRIPT = "script";
-    private static final String ELEM_SCXML = "scxml";
-    private static final String ELEM_SEND = "send";
-    private static final String ELEM_STATE = "state";
-    private static final String ELEM_TRANSITION = "transition";
-    private static final String ELEM_VAR = "var";
-    private static final String ELEM_DONEDATA = "donedata";
-
-    //---- ATTRIBUTE NAMES ----//
-    private static final String ATTR_ARRAY = "array";
-    private static final String ATTR_AUTOFORWARD = "autoforward";
-    private static final String ATTR_COND = "cond";
-    private static final String ATTR_DATAMODEL = "datamodel";
-    private static final String ATTR_DELAY = "delay";
-    private static final String ATTR_DELAYEXPR = "delayexpr";
-    private static final String ATTR_EVENT = "event";
-    private static final String ATTR_EVENTEXPR = "eventexpr";
-    private static final String ATTR_EXMODE = "exmode";
-    private static final String ATTR_EXPR = "expr";
-    private static final String ATTR_HINTS = "hints";
-    private static final String ATTR_ID = "id";
-    private static final String ATTR_IDLOCATION = "idlocation";
-    private static final String ATTR_INDEX = "index";
-    private static final String ATTR_INITIAL = "initial";
-    private static final String ATTR_ITEM = "item";
-    private static final String ATTR_LABEL = "label";
-    private static final String ATTR_LOCATION = "location";
-    private static final String ATTR_NAME = "name";
-    private static final String ATTR_NAMELIST = "namelist";
-    private static final String ATTR_PROFILE = "profile";
-    private static final String ATTR_SENDID = "sendid";
-    private static final String ATTR_SRC = "src";
-    private static final String ATTR_SRCEXPR = "srcexpr";
-    private static final String ATTR_TARGET = "target";
-    private static final String ATTR_TARGETEXPR = "targetexpr";
-    private static final String ATTR_TYPE = "type";
-    private static final String ATTR_TYPEEXPR = "typeexpr";
-    private static final String ATTR_VERSION = "version";
 
     //------------------------- STATIC MEMBERS -------------------------//
     /**
@@ -479,38 +409,40 @@ public class SCXMLWriter {
             throws XMLStreamException {
 
         // Start
-        writer.writeStartElement(ELEM_SCXML);
+        writer.writeStartElement(SCXMLConstants.ELEM_SCXML);
 
         // Namespaces
-        writer.writeNamespace(null, XMLNS_SCXML);
-        writer.writeNamespace("cs", XMLNS_COMMONS_SCXML);
-        for (Map.Entry<String, String> entry : scxml.getNamespaces().entrySet()) {
-            String key = entry.getKey();
-            if (key != null && key.trim().length() > 0 && !key.equals("cs")) { // TODO Remove reserved prefixes
-                writer.writeNamespace(key, entry.getValue());
+        writer.writeNamespace(null, SCXMLConstants.XMLNS_SCXML);
+//        writer.writeNamespace("cs", XMLNS_COMMONS_SCXML);
+        if (scxml.getNamespaces() != null) {
+            for (Map.Entry<String, String> entry : scxml.getNamespaces().entrySet()) {
+                String key = entry.getKey();
+                if (key != null && key.trim().length() > 0) {
+                    writer.writeNamespace(key, entry.getValue());
+                }
             }
         }
 
         // Attributes
-        writeAV(writer, ATTR_VERSION, scxml.getVersion());
-        writeAV(writer, ATTR_INITIAL, scxml.getInitial());
-        writeAV(writer, ATTR_DATAMODEL, scxml.getDatamodelName());
+        writeAV(writer, SCXMLConstants.ATTR_VERSION, scxml.getVersion());
+        writeAV(writer, SCXMLConstants.ATTR_INITIAL, scxml.getInitial());
+        writeAV(writer, SCXMLConstants.ATTR_DATAMODEL, scxml.getDatamodelName());
         if (scxml.isLateBinding() != null) {
-            writeAV(writer, SCXMLReader.ATTR_BINDING, scxml.isLateBinding() ? SCXMLReader.BINDING_LATE : SCXMLReader.BINDING_EARLY);
+            writeAV(writer, SCXMLConstants.ATTR_BINDING, scxml.isLateBinding() ? SCXMLConstants.ATTR_BINDING_LATE : SCXMLConstants.ATTR_BINDING_EARLY);
         }
-        writeAV(writer, ATTR_NAME, scxml.getName());
-        writeAV(writer, ATTR_PROFILE, scxml.getProfile());
-        writeAV(writer, ATTR_EXMODE, scxml.getExmode());
+        writeAV(writer, SCXMLConstants.ATTR_NAME, scxml.getName());
+        writeAV(writer, SCXMLConstants.ATTR_PROFILE, scxml.getProfile());
+        writeAV(writer, SCXMLConstants.ATTR_EXMODE, scxml.getExmode());
 
         // Marker to indicate generated document
-        writer.writeComment(XMLNS_COMMONS_SCXML);
+        writer.writeComment(SCXMLConstants.XMLNS_COMMONS_SCXML);
 
         // Write global script if defined
         if (scxml.getGlobalScript() != null) {
             Script s = scxml.getGlobalScript();
-            writer.writeStartElement(XMLNS_SCXML, ELEM_SCRIPT);
+            writer.writeStartElement(SCXMLConstants.XMLNS_SCXML, SCXMLConstants.ELEM_SCRIPT);
             if (s.getSrc() != null) {
-                writeAV(writer, ATTR_SRC, s.getSrc());
+                writeAV(writer, SCXMLConstants.ATTR_SRC, s.getSrc());
             } else {
                 writer.writeCData(s.getScript());
             }
@@ -548,7 +480,7 @@ public class SCXMLWriter {
             return;
         }
 
-        writer.writeStartElement(ELEM_DATAMODEL);
+        writer.writeStartElement(SCXMLConstants.ELEM_DATAMODEL);
         if (datamodel.getData().size() > 0 && XFORMER == null) {
             writer.writeComment("Datamodel was not serialized");
         } else {
@@ -557,10 +489,10 @@ public class SCXMLWriter {
                 if (n != null) {
                     writeNode(writer, n);
                 } else {
-                    writer.writeStartElement(ELEM_DATA);
-                    writeAV(writer, ATTR_ID, d.getId());
-                    writeAV(writer, ATTR_SRC, escapeXML(d.getSrc()));
-                    writeAV(writer, ATTR_EXPR, escapeXML(d.getExpr()));
+                    writer.writeStartElement(SCXMLConstants.ELEM_DATA);
+                    writeAV(writer, SCXMLConstants.ATTR_ID, d.getId());
+                    writeAV(writer, SCXMLConstants.ATTR_SRC, escapeXML(d.getSrc()));
+                    writeAV(writer, SCXMLConstants.ATTR_EXPR, escapeXML(d.getExpr()));
                     writer.writeEndElement();
                 }
             }
@@ -577,7 +509,7 @@ public class SCXMLWriter {
     private static void writeTransitionTargetId(final XMLStreamWriter writer, final TransitionTarget tt)
             throws XMLStreamException {
         if (!tt.getId().startsWith(SCXML.GENERATED_TT_ID_PREFIX)) {
-            writeAV(writer, ATTR_ID, tt.getId());
+            writeAV(writer, SCXMLConstants.ATTR_ID, tt.getId());
         }
     }
 
@@ -592,9 +524,9 @@ public class SCXMLWriter {
     private static void writeState(final XMLStreamWriter writer, final State state)
             throws XMLStreamException {
 
-        writer.writeStartElement(ELEM_STATE);
+        writer.writeStartElement(SCXMLConstants.ELEM_STATE);
         writeTransitionTargetId(writer, state);
-        writeAV(writer, ATTR_INITIAL, state.getFirst());
+        writeAV(writer, SCXMLConstants.ATTR_INITIAL, state.getFirst());
         writeInitial(writer, state.getInitial());
         writeDatamodel(writer, state.getDatamodel());
         writeHistory(writer, state.getHistory());
@@ -637,7 +569,7 @@ public class SCXMLWriter {
     private static void writeParallel(final XMLStreamWriter writer, final Parallel parallel)
             throws XMLStreamException {
 
-        writer.writeStartElement(ELEM_PARALLEL);
+        writer.writeStartElement(SCXMLConstants.ELEM_PARALLEL);
         writeTransitionTargetId(writer, parallel);
 
         writeDatamodel(writer, parallel.getDatamodel());
@@ -681,7 +613,7 @@ public class SCXMLWriter {
     private static void writeFinal(final XMLStreamWriter writer, final Final end)
             throws XMLStreamException {
 
-        writer.writeStartElement(ELEM_FINAL);
+        writer.writeStartElement(SCXMLConstants.ELEM_FINAL);
         writeTransitionTargetId(writer, end);
         for (OnEntry onentry : end.getOnEntries()) {
             writeOnEntry(writer, onentry);
@@ -690,12 +622,12 @@ public class SCXMLWriter {
             writeOnExit(writer, onexit);
         }
         if (end.getDoneData() != null) {
-            writer.writeStartElement(ELEM_DONEDATA);
+            writer.writeStartElement(SCXMLConstants.ELEM_DONEDATA);
             for (Param p : end.getDoneData().getParams()) {
-                writer.writeStartElement(ELEM_PARAM);
-                writeAV(writer, ATTR_NAME, p.getName());
-                writeAV(writer, ATTR_LOCATION, p.getLocation());
-                writeAV(writer, ATTR_EXPR, escapeXML(p.getExpr()));
+                writer.writeStartElement(SCXMLConstants.ELEM_PARAM);
+                writeAV(writer, SCXMLConstants.ATTR_NAME, p.getName());
+                writeAV(writer, SCXMLConstants.ATTR_LOCATION, p.getLocation());
+                writeAV(writer, SCXMLConstants.ATTR_EXPR, escapeXML(p.getExpr()));
                 writer.writeEndElement();
             }
             writeContent(writer, end.getDoneData().getContent());
@@ -719,7 +651,7 @@ public class SCXMLWriter {
             return;
         }
 
-        writer.writeStartElement(ELEM_INITIAL);
+        writer.writeStartElement(SCXMLConstants.ELEM_INITIAL);
         writeTransition(writer, initial.getTransition());
         writer.writeEndElement();
     }
@@ -741,12 +673,12 @@ public class SCXMLWriter {
         }
 
         for (History h : history) {
-            writer.writeStartElement(ELEM_HISTORY);
+            writer.writeStartElement(SCXMLConstants.ELEM_HISTORY);
             writeTransitionTargetId(writer, h);
             if (h.isDeep()) {
-                writeAV(writer, ATTR_TYPE, "deep");
+                writeAV(writer, SCXMLConstants.ATTR_TYPE, "deep");
             } else {
-                writeAV(writer, ATTR_TYPE, "shallow");
+                writeAV(writer, SCXMLConstants.ATTR_TYPE, "shallow");
             }
             writeTransition(writer, h.getTransition());
             writer.writeEndElement();
@@ -765,8 +697,8 @@ public class SCXMLWriter {
             throws XMLStreamException {
 
         if (onentry != null && (onentry.isRaiseEvent() || onentry.getActions().size() > 0 )) {
-            writer.writeStartElement(ELEM_ONENTRY);
-            writeAV(writer, ATTR_EVENT, onentry.getRaiseEvent());
+            writer.writeStartElement(SCXMLConstants.ELEM_ONENTRY);
+            writeAV(writer, SCXMLConstants.ATTR_EVENT, onentry.getRaiseEvent());
             writeExecutableContent(writer, onentry.getActions());
             writer.writeEndElement();
         }
@@ -784,8 +716,8 @@ public class SCXMLWriter {
             throws XMLStreamException {
 
         if (onexit != null && (onexit.isRaiseEvent() || onexit.getActions().size() > 0)) {
-            writer.writeStartElement(ELEM_ONEXIT);
-            writeAV(writer, ATTR_EVENT, onexit.getRaiseEvent());
+            writer.writeStartElement(SCXMLConstants.ELEM_ONEXIT);
+            writeAV(writer, SCXMLConstants.ATTR_EVENT, onexit.getRaiseEvent());
             writeExecutableContent(writer, onexit.getActions());
             writer.writeEndElement();
         }
@@ -802,15 +734,15 @@ public class SCXMLWriter {
     private static void writeTransition(final XMLStreamWriter writer, final SimpleTransition transition)
             throws XMLStreamException {
 
-        writer.writeStartElement(ELEM_TRANSITION);
+        writer.writeStartElement(SCXMLConstants.ELEM_TRANSITION);
         if (transition instanceof Transition) {
-            writeAV(writer, ATTR_EVENT, ((Transition)transition).getEvent());
-            writeAV(writer, ATTR_COND, escapeXML(((Transition)transition).getCond()));
+            writeAV(writer, SCXMLConstants.ATTR_EVENT, ((Transition)transition).getEvent());
+            writeAV(writer, SCXMLConstants.ATTR_COND, escapeXML(((Transition)transition).getCond()));
         }
 
-        writeAV(writer, ATTR_TARGET, transition.getNext());
+        writeAV(writer, SCXMLConstants.ATTR_TARGET, transition.getNext());
         if (transition.getType() != null) {
-            writeAV(writer, ATTR_TYPE, transition.getType().name());
+            writeAV(writer, SCXMLConstants.ATTR_TYPE, transition.getType().name());
         }
         writeExecutableContent(writer, transition.getActions());
         writer.writeEndElement();
@@ -827,20 +759,20 @@ public class SCXMLWriter {
     private static void writeInvoke(final XMLStreamWriter writer, final Invoke invoke)
             throws XMLStreamException {
 
-        writer.writeStartElement(ELEM_INVOKE);
-        writeAV(writer, ATTR_ID, invoke.getId());
-        writeAV(writer, ATTR_IDLOCATION, invoke.getIdlocation());
-        writeAV(writer, ATTR_SRC, invoke.getSrc());
-        writeAV(writer, ATTR_SRCEXPR, invoke.getSrcexpr());
-        writeAV(writer, ATTR_TYPE, invoke.getType());
-        writeAV(writer, ATTR_AUTOFORWARD, invoke.getAutoForward());
-        writeAV(writer, ATTR_NAMELIST, invoke.getNamelist());
+        writer.writeStartElement(SCXMLConstants.ELEM_INVOKE);
+        writeAV(writer, SCXMLConstants.ATTR_ID, invoke.getId());
+        writeAV(writer, SCXMLConstants.ATTR_IDLOCATION, invoke.getIdlocation());
+        writeAV(writer, SCXMLConstants.ATTR_SRC, invoke.getSrc());
+        writeAV(writer, SCXMLConstants.ATTR_SRCEXPR, invoke.getSrcexpr());
+        writeAV(writer, SCXMLConstants.ATTR_TYPE, invoke.getType());
+        writeAV(writer, SCXMLConstants.ATTR_AUTOFORWARD, invoke.getAutoForward());
+        writeAV(writer, SCXMLConstants.ATTR_NAMELIST, invoke.getNamelist());
 
         for (Param p : invoke.getParams()) {
-            writer.writeStartElement(ELEM_PARAM);
-            writeAV(writer, ATTR_NAME, p.getName());
-            writeAV(writer, ATTR_LOCATION, p.getLocation());
-            writeAV(writer, ATTR_EXPR, escapeXML(p.getExpr()));
+            writer.writeStartElement(SCXMLConstants.ELEM_PARAM);
+            writeAV(writer, SCXMLConstants.ATTR_NAME, p.getName());
+            writeAV(writer, SCXMLConstants.ATTR_LOCATION, p.getLocation());
+            writeAV(writer, SCXMLConstants.ATTR_EXPR, escapeXML(p.getExpr()));
             writer.writeEndElement();
         }
         writeFinalize(writer, invoke.getFinalize());
@@ -861,7 +793,7 @@ public class SCXMLWriter {
             throws XMLStreamException {
 
         if (finalize != null && finalize.getActions().size() > 0) {
-            writer.writeStartElement(ELEM_FINALIZE);
+            writer.writeStartElement(SCXMLConstants.ELEM_FINALIZE);
             writeExecutableContent(writer, finalize.getActions());
             writer.writeEndElement();
         }
@@ -869,7 +801,7 @@ public class SCXMLWriter {
 
     /**
      * Write out this executable content (list of actions) into its serialization as the corresponding set of action
-     * elements. Custom actions aren't serialized.
+     * elements.
      *
      * @param writer The {@link XMLStreamWriter} in use for the serialization.
      * @param actions The list of actions to serialize.
@@ -888,37 +820,37 @@ public class SCXMLWriter {
                 if (asn.getNode() != null) {
                     writeNode(writer, asn.getNode());
                 } else {
-                    writer.writeStartElement(XMLNS_SCXML, ELEM_ASSIGN);
-                    writeAV(writer, ATTR_LOCATION, asn.getLocation());
-                    writeAV(writer, ATTR_SRC, asn.getSrc());
-                    writeAV(writer, ATTR_EXPR, escapeXML(asn.getExpr()));
+                    writer.writeStartElement(SCXMLConstants.XMLNS_SCXML, SCXMLConstants.ELEM_ASSIGN);
+                    writeAV(writer, SCXMLConstants.ATTR_LOCATION, asn.getLocation());
+                    writeAV(writer, SCXMLConstants.ATTR_SRC, asn.getSrc());
+                    writeAV(writer, SCXMLConstants.ATTR_EXPR, escapeXML(asn.getExpr()));
                     writer.writeEndElement();
                 }
             } else if (a instanceof Send) {
                 writeSend(writer, (Send) a);
             } else if (a instanceof Cancel) {
                 Cancel c = (Cancel) a;
-                writer.writeStartElement(XMLNS_SCXML, ELEM_CANCEL);
-                writeAV(writer, ATTR_SENDID, c.getSendid());
+                writer.writeStartElement(SCXMLConstants.XMLNS_SCXML, SCXMLConstants.ELEM_CANCEL);
+                writeAV(writer, SCXMLConstants.ATTR_SENDID, c.getSendid());
                 writer.writeEndElement();
             } else if (a instanceof Foreach) {
                 writeForeach(writer, (Foreach) a);
             } else if (a instanceof Log) {
                 Log lg = (Log) a;
-                writer.writeStartElement(XMLNS_SCXML, ELEM_LOG);
-                writeAV(writer, ATTR_LABEL, lg.getLabel());
-                writeAV(writer, ATTR_EXPR, escapeXML(lg.getExpr()));
+                writer.writeStartElement(SCXMLConstants.XMLNS_SCXML, SCXMLConstants.ELEM_LOG);
+                writeAV(writer, SCXMLConstants.ATTR_LABEL, lg.getLabel());
+                writeAV(writer, SCXMLConstants.ATTR_EXPR, escapeXML(lg.getExpr()));
                 writer.writeEndElement();
             } else if (a instanceof Raise) {
                 Raise e = (Raise) a;
-                writer.writeStartElement(XMLNS_SCXML, ELEM_RAISE);
-                writeAV(writer, ATTR_EVENT, e.getEvent());
+                writer.writeStartElement(SCXMLConstants.XMLNS_SCXML, SCXMLConstants.ELEM_RAISE);
+                writeAV(writer, SCXMLConstants.ATTR_EVENT, e.getEvent());
                 writer.writeEndElement();
             } else if (a instanceof Script) {
                 Script s = (Script) a;
-                writer.writeStartElement(XMLNS_SCXML, ELEM_SCRIPT);
+                writer.writeStartElement(SCXMLConstants.XMLNS_SCXML, SCXMLConstants.ELEM_SCRIPT);
                 if (s.getSrc() != null) {
-                    writeAV(writer, ATTR_SRC, s.getSrc());
+                    writeAV(writer, SCXMLConstants.ATTR_SRC, s.getSrc());
                 } else {
                     writer.writeCData(s.getScript());
                 }
@@ -926,20 +858,36 @@ public class SCXMLWriter {
             } else if (a instanceof If) {
                 writeIf(writer, (If) a);
             } else if (a instanceof Else) {
-                writer.writeEmptyElement(ELEM_ELSE);
+                writer.writeEmptyElement(SCXMLConstants.ELEM_ELSE);
             } else if (a instanceof ElseIf) {
                 ElseIf eif = (ElseIf) a;
-                writer.writeStartElement(XMLNS_SCXML, ELEM_ELSEIF);
-                writeAV(writer, ATTR_COND, escapeXML(eif.getCond()));
+                writer.writeStartElement(SCXMLConstants.XMLNS_SCXML, SCXMLConstants.ELEM_ELSEIF);
+                writeAV(writer, SCXMLConstants.ATTR_COND, escapeXML(eif.getCond()));
                 writer.writeEndElement();
             } else if (a instanceof Var) {
+                // 'naked' Var custom action, not wrapped in a CustomActionWrapper
                 Var v = (Var) a;
-                writer.writeStartElement(XMLNS_COMMONS_SCXML, ELEM_VAR);
-                writeAV(writer, ATTR_NAME, v.getName());
-                writeAV(writer, ATTR_EXPR, escapeXML(v.getExpr()));
+                writer.writeStartElement(SCXMLConstants.XMLNS_COMMONS_SCXML, SCXMLConstants.ELEM_VAR);
+                writeAV(writer, SCXMLConstants.ATTR_NAME, v.getName());
+                writeAV(writer, SCXMLConstants.ATTR_EXPR, escapeXML(v.getExpr()));
+                writer.writeEndElement();
+            } else if (a instanceof CustomActionWrapper) {
+                CustomActionWrapper actionWrapper = (CustomActionWrapper)a;
+                writer.writeStartElement(createQualifiedName(actionWrapper.getPrefix(), actionWrapper.getLocalName()));
+                if (actionWrapper.getAttributes() != null) {
+                    for (final String attr : actionWrapper.getAttributes().keySet()) {
+                        writer.writeAttribute(attr, escapeXML(actionWrapper.getAttributes().get(attr)));
+                    }
+                }
+                for (final String prefix : actionWrapper.getNamespaces().keySet()) {
+                    writer.writeNamespace(prefix, actionWrapper.getNamespaces().get(prefix));
+                }
+                if (actionWrapper.getAction() instanceof ExternalContent) {
+                    writeExternalContent(writer, (ExternalContent) actionWrapper.getAction());
+                }
                 writer.writeEndElement();
             } else {
-                writer.writeComment("Custom action with class name '" + a.getClass().getName() + "' not serialized");
+                writer.writeComment("Unknown action with class name '" + a.getClass().getName() + "' not serialized");
             }
         }
     }
@@ -955,25 +903,25 @@ public class SCXMLWriter {
     private static void writeSend(final XMLStreamWriter writer, final Send send)
             throws XMLStreamException {
 
-        writer.writeStartElement(XMLNS_SCXML, ELEM_SEND);
-        writeAV(writer, ATTR_ID, send.getId());
-        writeAV(writer, ATTR_IDLOCATION, send.getIdlocation());
-        writeAV(writer, ATTR_EVENT, send.getEvent());
-        writeAV(writer, ATTR_EVENTEXPR, send.getEventexpr());
-        writeAV(writer, ATTR_TARGET, send.getTarget());
-        writeAV(writer, ATTR_TARGETEXPR, send.getTargetexpr());
-        writeAV(writer, ATTR_TYPE, send.getType());
-        writeAV(writer, ATTR_TYPEEXPR, send.getTypeexpr());
-        writeAV(writer, ATTR_DELAY, send.getDelay());
-        writeAV(writer, ATTR_DELAYEXPR, send.getDelayexpr());
-        writeAV(writer, ATTR_NAMELIST, send.getNamelist());
-        writeAV(writer, ATTR_HINTS, send.getHints());
+        writer.writeStartElement(SCXMLConstants.XMLNS_SCXML, SCXMLConstants.ELEM_SEND);
+        writeAV(writer, SCXMLConstants.ATTR_ID, send.getId());
+        writeAV(writer, SCXMLConstants.ATTR_IDLOCATION, send.getIdlocation());
+        writeAV(writer, SCXMLConstants.ATTR_EVENT, send.getEvent());
+        writeAV(writer, SCXMLConstants.ATTR_EVENTEXPR, send.getEventexpr());
+        writeAV(writer, SCXMLConstants.ATTR_TARGET, send.getTarget());
+        writeAV(writer, SCXMLConstants.ATTR_TARGETEXPR, send.getTargetexpr());
+        writeAV(writer, SCXMLConstants.ATTR_TYPE, send.getType());
+        writeAV(writer, SCXMLConstants.ATTR_TYPEEXPR, send.getTypeexpr());
+        writeAV(writer, SCXMLConstants.ATTR_DELAY, send.getDelay());
+        writeAV(writer, SCXMLConstants.ATTR_DELAYEXPR, send.getDelayexpr());
+        writeAV(writer, SCXMLConstants.ATTR_NAMELIST, send.getNamelist());
+        writeAV(writer, SCXMLConstants.ATTR_HINTS, send.getHints());
 
         for (Param p : send.getParams()) {
-            writer.writeStartElement(ELEM_PARAM);
-            writeAV(writer, ATTR_NAME, p.getName());
-            writeAV(writer, ATTR_LOCATION, p.getLocation());
-            writeAV(writer, ATTR_EXPR, escapeXML(p.getExpr()));
+            writer.writeStartElement(SCXMLConstants.ELEM_PARAM);
+            writeAV(writer, SCXMLConstants.ATTR_NAME, p.getName());
+            writeAV(writer, SCXMLConstants.ATTR_LOCATION, p.getLocation());
+            writeAV(writer, SCXMLConstants.ATTR_EXPR, escapeXML(p.getExpr()));
             writer.writeEndElement();
         }
         writeContent(writer, send.getContent());
@@ -992,8 +940,8 @@ public class SCXMLWriter {
     private static void writeIf(final XMLStreamWriter writer, final If iff)
             throws XMLStreamException {
 
-        writer.writeStartElement(ELEM_IF);
-        writeAV(writer, ATTR_COND, escapeXML(iff.getCond()));
+        writer.writeStartElement(SCXMLConstants.ELEM_IF);
+        writeAV(writer, SCXMLConstants.ATTR_COND, escapeXML(iff.getCond()));
         writeExecutableContent(writer, iff.getActions());
         writer.writeEndElement();
     }
@@ -1009,10 +957,10 @@ public class SCXMLWriter {
     private static void writeForeach(final XMLStreamWriter writer, final Foreach foreach)
             throws XMLStreamException {
 
-        writer.writeStartElement(ELEM_FOREACH);
-        writeAV(writer, ATTR_ITEM, foreach.getItem());
-        writeAV(writer, ATTR_INDEX, foreach.getIndex());
-        writeAV(writer, ATTR_ARRAY, escapeXML(foreach.getArray()));
+        writer.writeStartElement(SCXMLConstants.ELEM_FOREACH);
+        writeAV(writer, SCXMLConstants.ATTR_ITEM, foreach.getItem());
+        writeAV(writer, SCXMLConstants.ATTR_INDEX, foreach.getIndex());
+        writeAV(writer, SCXMLConstants.ATTR_ARRAY, escapeXML(foreach.getArray()));
         writeExecutableContent(writer, foreach.getActions());
         writer.writeEndElement();
     }
@@ -1029,8 +977,8 @@ public class SCXMLWriter {
             throws XMLStreamException {
 
         if (content != null) {
-            writer.writeStartElement(ELEM_CONTENT);
-            writeAV(writer, ATTR_EXPR, content.getExpr());
+            writer.writeStartElement(SCXMLConstants.ELEM_CONTENT);
+            writeAV(writer, SCXMLConstants.ATTR_EXPR, content.getExpr());
             if (content.getBody() != null) {
                 if (content.getBody() instanceof Node) {
                     NodeList nodeList = ((Node)content.getBody()).getChildNodes();
@@ -1128,6 +1076,15 @@ public class SCXMLWriter {
         if (value != null) {
             writer.writeAttribute(localName, value.toString());
         }
+    }
+
+    /**
+     * @param prefix prefix
+     * @param localName localName
+     * @return a qualified name from a prefix and localName
+     */
+    private static String createQualifiedName(final String prefix, final String localName) {
+        return (prefix != null && prefix.length() > 0 ? prefix + ":" : "") +localName;
     }
 
     /**

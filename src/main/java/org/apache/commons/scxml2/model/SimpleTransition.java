@@ -26,8 +26,7 @@ import java.util.Set;
  * &quot;guard-conditions&quot;. Used for &lt;history&gt; or &lt;history&gt; elements.
  *
  */
-public class SimpleTransition extends Executable
-        implements NamespacePrefixesHolder, Observable {
+public class SimpleTransition extends Executable implements Observable {
 
     /**
      * Serial version UID.
@@ -74,12 +73,6 @@ public class SimpleTransition extends Executable
      * The transition target ID
      */
     private String next;
-
-    /**
-     * The current XML namespaces in the SCXML document for this action node,
-     * preserved for deferred XPath evaluation.
-     */
-    private Map<String, String> namespaces;
 
     /**
      * Constructor.
@@ -240,24 +233,6 @@ public class SimpleTransition extends Executable
             }
         }
         return ts;
-    }
-
-    /**
-     * Get the XML namespaces at this action node in the SCXML document.
-     *
-     * @return Returns the map of namespaces.
-     */
-    public final Map<String, String> getNamespaces() {
-        return namespaces;
-    }
-
-    /**
-     * Set the XML namespaces at this action node in the SCXML document.
-     *
-     * @param namespaces The document namespaces.
-     */
-    public final void setNamespaces(final Map<String, String> namespaces) {
-        this.namespaces = namespaces;
     }
 
     /**

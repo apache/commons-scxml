@@ -80,11 +80,8 @@ public class Script extends Action {
     @Override
     public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
         Context ctx = isGlobalScript() ? exctx.getGlobalContext() : exctx.getContext(getParentEnterableState());
-        ctx.setLocal(getNamespacesKey(), getNamespaces());
         Evaluator eval = exctx.getEvaluator();
         eval.evalScript(ctx, getScript());
-        ctx.setLocal(getNamespacesKey(), null);
     }
-
 }
 

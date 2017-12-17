@@ -169,7 +169,6 @@ public class Assign extends Action {
         EnterableState parentState = getParentEnterableState();
         Context ctx = exctx.getContext(parentState);
         Evaluator evaluator = exctx.getEvaluator();
-        ctx.setLocal(getNamespacesKey(), getNamespaces());
         Object data;
         if (expr != null) {
             data = evaluator.eval(ctx, expr);
@@ -188,6 +187,5 @@ public class Assign extends Action {
             TriggerEvent ev = new TriggerEvent(location + ".change", TriggerEvent.CHANGE_EVENT);
             exctx.getInternalIOProcessor().addEvent(ev);
         */
-        ctx.setLocal(getNamespacesKey(), null);
     }
 }

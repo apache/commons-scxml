@@ -16,29 +16,23 @@
  */
 package org.apache.commons.scxml2.model;
 
-import java.util.Map;
+import java.util.HashMap;
+
+import org.apache.commons.scxml2.SCXMLConstants;
+import org.apache.commons.scxml2.io.SCXMLWriter;
 
 /**
- * A <code>NamespacePrefixesHolder</code> is an entity that retains
- * namespace prefix information from the document for deferred XPath
- * evaluation.
- *
+ * A convenient SCXML instance with the {@link org.apache.commons.scxml2.SCXMLConstants#XMLNS_COMMONS_SCXML} namespace
+ * pre-configured.
+ * <p>
+ * This custom SCXML instance can be used when constructing SCXML instances through Java which uses Commons SCXML
+ * custom actions, like {@link Var}, which then can be written with {@link SCXMLWriter}
+ * without needing to wrap them in a {@link CustomActionWrapper},</p>
  */
-public interface NamespacePrefixesHolder {
+public class CommonsSCXML extends SCXML {
 
-    /**
-     * Get the map of namespaces, with keys as prefixes and values as URIs.
-     *
-     * @param namespaces The namespaces prefix map.
-     */
-    void setNamespaces(Map<String, String> namespaces);
-
-    /**
-     * Get the map of namespaces, with keys as prefixes and values as URIs.
-     *
-     * @return The namespaces prefix map.
-     */
-    Map<String, String> getNamespaces();
-
+    public CommonsSCXML() {
+        setNamespaces(new HashMap<>());
+        getNamespaces().put(SCXMLConstants.XMLNS_COMMONS_SCXML_PREFIX, SCXMLConstants.XMLNS_COMMONS_SCXML);
+    }
 }
-

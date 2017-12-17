@@ -18,13 +18,15 @@ package org.apache.commons.scxml2.io;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
+import org.apache.commons.scxml2.model.CommonsSCXML;
 import org.apache.commons.scxml2.model.ModelException;
+import org.apache.commons.scxml2.model.OnEntry;
 import org.apache.commons.scxml2.model.Parallel;
 import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.Script;
 import org.apache.commons.scxml2.model.State;
+import org.apache.commons.scxml2.model.Var;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -34,10 +36,9 @@ public class SCXMLWriterTest {
 
     @Test
     public void testSerializeSCXMLNoStates() throws IOException, XMLStreamException {
-        SCXML scxml = new SCXML();
-        Map<String, String> namespaces = new LinkedHashMap<String, String>();
-        namespaces.put("", "http://www.w3.org/2005/07/scxml");
-        namespaces.put("cs", "http://commons.apache.org/scxml");
+        SCXML scxml = new CommonsSCXML();
+        // ensure namespaces are stored in insertion order for write->read comparision below
+        LinkedHashMap namespaces = new LinkedHashMap(scxml.getNamespaces());
         namespaces.put("foo", "http://f.o.o");
         namespaces.put("bar", "http://b.a.r");
         scxml.setNamespaces(namespaces);
@@ -58,9 +59,7 @@ public class SCXMLWriterTest {
     
     @Test
     public void testSerializeSCXMLState() throws IOException, XMLStreamException {
-        SCXML scxml = new SCXML();
-        Map<String, String> namespaces = new LinkedHashMap<String, String>();
-        scxml.setNamespaces(namespaces);
+        SCXML scxml = new CommonsSCXML();
         scxml.setVersion("1.0");
         scxml.setInitial("S1");
 
@@ -80,9 +79,7 @@ public class SCXMLWriterTest {
     @Test
     public void testSerializeParallel() throws IOException, XMLStreamException {
 
-        SCXML scxml = new SCXML();
-        Map<String, String> namespaces = new LinkedHashMap<String, String>();
-        scxml.setNamespaces(namespaces);
+        SCXML scxml = new CommonsSCXML();
         scxml.setVersion("1.0");
         scxml.setInitial("par");
 
@@ -129,9 +126,7 @@ public class SCXMLWriterTest {
 
     @Test
     public void testSerializeGlobalScript() throws IOException, ModelException, XMLStreamException {
-        SCXML scxml = new SCXML();
-        Map<String, String> namespaces = new LinkedHashMap<String, String>();
-        scxml.setNamespaces(namespaces);
+        SCXML scxml = new CommonsSCXML();
         scxml.setVersion("1.0");
         scxml.setInitial("S1");
 

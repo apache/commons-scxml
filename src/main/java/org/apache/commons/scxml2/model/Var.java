@@ -19,14 +19,25 @@ package org.apache.commons.scxml2.model;
 import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
+import org.apache.commons.scxml2.SCXMLConstants;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.EventBuilder;
+import org.apache.commons.scxml2.io.SCXMLWriter;
 
 /**
- * The class in this SCXML object model that corresponds to the
- * &lt;var&gt; SCXML element.
- *
+ * The class in this SCXML object model that corresponds to the {@link CustomAction} &lt;var&gt; SCXML element.
+ * <p>
+ * When manually constructing or modifying a SCXML model using this custom action, either:
+ * <ul>
+ *     <li>derive from {@link CommonsSCXML}, or</li>
+ *     <li>make sure to add the {@link SCXMLConstants#XMLNS_COMMONS_SCXML} namespace with
+ *     the {@link SCXMLConstants#XMLNS_COMMONS_SCXML_PREFIX} prefix to the SCXML object, or</li>
+ *     <li>wrap the {@link Var} instance in a {@link CustomActionWrapper} (for which the {@link #CUSTOM_ACTION}
+ *     can be useful) before adding it to the object model</li>
+ * </ul>
+ * before write the SCXML model with {@link SCXMLWriter}. The writing will fail otherwise!
+ * </p>
  */
 public class Var extends Action {
 
@@ -34,6 +45,9 @@ public class Var extends Action {
      * Serial version UID.
      */
     private static final long serialVersionUID = 1L;
+
+    public static final CustomAction CUSTOM_ACTION =
+            new CustomAction(SCXMLConstants.XMLNS_COMMONS_SCXML, SCXMLConstants.ELEM_VAR, Var.class);
 
     /**
      * The name of the variable to be created.
@@ -97,9 +111,7 @@ public class Var extends Action {
     public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
         Context ctx = exctx.getContext(getParentEnterableState());
         Evaluator eval = exctx.getEvaluator();
-        ctx.setLocal(getNamespacesKey(), getNamespaces());
         Object varObj = eval.eval(ctx, expr);
-        ctx.setLocal(getNamespacesKey(), null);
         ctx.setLocal(name, varObj);
         if (exctx.getAppLog().isDebugEnabled()) {
             exctx.getAppLog().debug("<var>: Defined variable '" + name

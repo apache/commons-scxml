@@ -20,7 +20,6 @@ import java.io.Serializable;
 import java.util.Map;
 
 import org.apache.commons.scxml2.ActionExecutionContext;
-import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 
 /**
@@ -28,8 +27,7 @@ import org.apache.commons.scxml2.SCXMLExpressionException;
  * such as &lt;assign&gt;, &lt;log&gt; etc.
  *
  */
-public abstract class Action implements NamespacePrefixesHolder,
-        Serializable {
+public abstract class Action implements Serializable {
 
     /**
      * Link to its parent or container.
@@ -37,18 +35,11 @@ public abstract class Action implements NamespacePrefixesHolder,
     private Executable parent;
 
     /**
-     * The current XML namespaces in the SCXML document for this action node,
-     * preserved for deferred XPath evaluation.
-     */
-    private Map<String, String> namespaces;
-
-    /**
      * Constructor.
      */
     public Action() {
         super();
         this.parent = null;
-        this.namespaces = null;
     }
 
     /**
@@ -56,7 +47,7 @@ public abstract class Action implements NamespacePrefixesHolder,
      *
      * @return Returns the parent.
      */
-    public final Executable getParent() {
+    public Executable getParent() {
         return parent;
     }
 
@@ -65,26 +56,8 @@ public abstract class Action implements NamespacePrefixesHolder,
      *
      * @param parent The parent to set.
      */
-    public final void setParent(final Executable parent) {
+    public void setParent(final Executable parent) {
         this.parent = parent;
-    }
-
-    /**
-     * Get the XML namespaces at this action node in the SCXML document.
-     *
-     * @return Returns the map of namespaces.
-     */
-    public final Map<String, String> getNamespaces() {
-        return namespaces;
-    }
-
-    /**
-     * Set the XML namespaces at this action node in the SCXML document.
-     *
-     * @param namespaces The document namespaces.
-     */
-    public final void setNamespaces(final Map<String, String> namespaces) {
-        this.namespaces = namespaces;
     }
 
     /**
@@ -130,15 +103,5 @@ public abstract class Action implements NamespacePrefixesHolder,
      * which then shall stop execution of (possible) following actions within the same executable content block
      */
     public abstract void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException, ActionExecutionError;
-
-    /**
-     * Return the key under which the current document namespaces are saved
-     * in the parent state's context.
-     *
-     * @return The namespaces key
-     */
-    protected static String getNamespacesKey() {
-        return Context.NAMESPACES_KEY;
-    }
 }
 

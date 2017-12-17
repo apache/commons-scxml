@@ -708,7 +708,6 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
         if (transition.getCond() != null) {
             Boolean result = Boolean.FALSE;
             Context context = exctx.getScInstance().getContext(transition.getParent());
-            context.setLocal(Context.NAMESPACES_KEY, transition.getNamespaces());
             try {
                 if ((result = exctx.getEvaluator().evalCond(context, transition.getCond())) == null) {
                     result = Boolean.FALSE;
@@ -722,9 +721,6 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                 exctx.getInternalIOProcessor().addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT).build());
                 exctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR, "Treating as false due to error: "
                         + e.getMessage(), transition);
-            }
-            finally {
-                context.setLocal(Context.NAMESPACES_KEY, null);
             }
             return result;
         }

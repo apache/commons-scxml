@@ -30,18 +30,12 @@ import org.apache.commons.scxml2.PathResolver;
  * root&quot;.
  *
  */
-public class SCXML implements Serializable, Observable, NamespacePrefixesHolder {
+public class SCXML implements Serializable, Observable {
 
     /**
      * Serial version UID.
      */
     private static final long serialVersionUID = 2L;
-
-    /**
-     * The SCXML XMLNS.
-     */
-    @SuppressWarnings("unused")
-    public static final String XMLNS = "http://www.w3.org/2005/07/scxml";
 
     /**
      * Reserved prefix for auto generated TransitionTarget id values

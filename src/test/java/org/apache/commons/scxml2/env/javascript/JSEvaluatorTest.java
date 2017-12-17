@@ -111,7 +111,6 @@ public class JSEvaluatorTest {
             fsm.go();
             evaluator = fsm.getEvaluator();
             context = fsm.getGlobalContext();
-            context.set(Context.NAMESPACES_KEY,null);
     }
 
     // CLASS METHODS

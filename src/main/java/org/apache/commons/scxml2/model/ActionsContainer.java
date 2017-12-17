@@ -23,19 +23,6 @@ import java.util.List;
  */
 public interface ActionsContainer {
 
-    /** The &lt;if&gt; ActionsContainer element name */
-    String ELEM_IF = "if";
-
-    /** The &lt;foreach&gt; ActionsContainer element name */
-    String ELEM_FOREACH = "foreach";
-
-    /**
-     * Get the Document element type for this &lt;container&gt;.
-     *
-     * @return Returns the element type
-     */
-    String getContainerElementName();
-
     /**
      * Get the executable actions contained in this &lt;container&gt;.
      *

@@ -25,11 +25,6 @@ import java.util.Map;
 public interface Context {
 
     /**
-     * Current namespaces are saved under this key in the context.
-     */
-    String NAMESPACES_KEY = "_ALL_NAMESPACES";
-
-    /**
      * Assigns a new value to an existing variable or creates a new one.
      * The method searches the chain of parent Contexts for variable
      * existence.
