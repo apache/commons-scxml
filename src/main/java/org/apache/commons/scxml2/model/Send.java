@@ -24,9 +24,12 @@ import java.util.Map;
 import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
+import org.apache.commons.scxml2.EventBuilder;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.SCXMLIOProcessor;
 import org.apache.commons.scxml2.SCXMLSystemContext;
+import org.apache.commons.scxml2.TriggerEvent;
+import org.apache.commons.scxml2.semantics.ErrorConstants;
 
 /**
  * The class in this SCXML object model that corresponds to the
@@ -431,7 +434,18 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
         }
         else if (content != null) {
             if (content.getExpr() != null) {
-                payload = eval.cloneData(eval.eval(ctx, content.getExpr()));
+                Object evalResult = null;
+                try {
+                    evalResult = eval.eval(ctx, content.getExpr());
+                } catch (SCXMLExpressionException e) {
+                    exctx.getInternalIOProcessor().addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION,
+                            TriggerEvent.ERROR_EVENT).build());
+                    exctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR,
+                            "Failed to evaluate <send> <content> expression due to error: "+ e.getMessage()
+                                    + ", Using empty value instead.", getParent());
+                    evalResult = "";
+                }
+                payload = eval.cloneData(evalResult);
             } else if (content.getValue() != null) {
                 payload = content.getValue();
             }

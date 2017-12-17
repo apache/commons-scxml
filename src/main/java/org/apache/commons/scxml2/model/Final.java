@@ -90,7 +90,18 @@ public class Final extends EnterableState {
                 Context ctx = exctx.getScInstance().getGlobalContext();
                 if (content != null) {
                     if (content.getExpr() != null) {
-                        result = eval.cloneData(eval.eval(ctx, content.getExpr()));
+                        Object evalResult = null;
+                        try {
+                            evalResult = eval.eval(ctx, content.getExpr());
+                        } catch (SCXMLExpressionException e) {
+                            exctx.getInternalIOProcessor().addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION,
+                                    TriggerEvent.ERROR_EVENT).build());
+                            exctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR,
+                                    "Failed to evaluate <donedata> <content> expression due to error: "+ e.getMessage()
+                                            + ", Using empty value instead.", getParent());
+                            evalResult = "";
+                        }
+                        result = eval.cloneData(evalResult);
                     } else if (content.getValue() != null) {
                         result = content.getValue();
                     }

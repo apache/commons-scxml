@@ -401,7 +401,16 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
             Object contentValue = null;
             if (src == null && content != null) {
                 if (content.getExpr() != null) {
-                    contentValue = eval.eval(ctx, content.getExpr());
+                    try {
+                        contentValue = eval.eval(ctx, content.getExpr());
+                    } catch (SCXMLExpressionException e) {
+                        exctx.getInternalIOProcessor().addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION,
+                                TriggerEvent.ERROR_EVENT).build());
+                        exctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR,
+                                "Failed to evaluate <invoke> <content> expression due to error: "+ e.getMessage()
+                                        + ", Using empty value instead.", getParent());
+                        contentValue = "";
+                    }
                 } else if (content.getValue() != null) {
                     contentValue = content.getValue();
                 }
