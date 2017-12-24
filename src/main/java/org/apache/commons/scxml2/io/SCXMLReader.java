@@ -2100,8 +2100,8 @@ public final class SCXMLReader {
                 }
             }
             else if (children.getLength() == 1 && (cdata || child.getNodeType() == Node.TEXT_NODE )) {
-                String text = configuration.contentParser.trimContent(child.getNodeValue());
-                if (configuration.contentParser.hasJsonSignature(text)) {
+                String text = ContentParser.trimContent(child.getNodeValue());
+                if (ContentParser.hasJsonSignature(text)) {
                     try {
                         valueContainer.setParsedValue(new JsonValue(configuration.contentParser.parseJson(text), cdata));
                     } catch (IOException e) {
@@ -2109,7 +2109,7 @@ public final class SCXMLReader {
                     }
                 }
                 else {
-                    valueContainer.setParsedValue(new TextValue(configuration.contentParser.spaceNormalizeContent(text),
+                    valueContainer.setParsedValue(new TextValue(ContentParser.spaceNormalizeContent(text),
                             cdata));
                 }
             } else if (children.getLength() == 1) {
