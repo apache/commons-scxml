@@ -2016,12 +2016,10 @@ public final class SCXMLReader {
             actionWrapper.getNamespaces().putAll(namespaces);
         }
 
-        Map<String, String> attributes = new HashMap<>();
         for (int i = 0; i < reader.getAttributeCount(); i++) {
             String name = reader.getAttributeLocalName(i);
             String qname = createQualifiedName(reader.getAttributePrefix(i), name);
             String value = reader.getAttributeValue(i);
-            attributes.put(qname, value);
             String setter = "set" + name.substring(0, 1).toUpperCase() + name.substring(1);
             Method method;
             try {
