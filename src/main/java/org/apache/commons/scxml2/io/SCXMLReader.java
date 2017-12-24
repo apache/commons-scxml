@@ -1511,6 +1511,7 @@ public final class SCXMLReader {
                             for (CustomAction ca : configuration.customActions) {
                                 if (ca.getNamespaceURI().equals(nsURI) && ca.getLocalName().equals(name)) {
                                     customAction = ca;
+                                    break;
                                 }
                             }
                         }
