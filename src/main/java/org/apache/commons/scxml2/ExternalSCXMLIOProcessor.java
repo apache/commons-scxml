@@ -25,7 +25,7 @@ package org.apache.commons.scxml2;
  */
 public class ExternalSCXMLIOProcessor implements SCXMLIOProcessor {
 
-    private SCXMLIOProcessor processor;
+    private final SCXMLIOProcessor processor;
 
     public ExternalSCXMLIOProcessor(final SCXMLIOProcessor processor) {
         this.processor = processor;

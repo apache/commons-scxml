@@ -46,7 +46,7 @@ public class JSExampleTest {
     @Test
     public void testExample01Sample() throws Exception {
 
-        List<CustomAction> actions  = new ArrayList<CustomAction>();        
+        List<CustomAction> actions  = new ArrayList<>();
         actions.add(new CustomAction("http://my.custom-actions.domain", "eventdatamaptest", EventDataMapTest.class));
 
         SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/env/javascript/example-01.xml", actions);
@@ -60,8 +60,6 @@ public class JSExampleTest {
     // INNER CLASSES
     
     public static class EventDataMapTest extends Action {
-        private static final long serialVersionUID = 1L;
-
         @Override
         public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
             exctx.getInternalIOProcessor()

@@ -46,10 +46,9 @@ public class Foreach extends Action implements ActionsContainer {
      * The set of executable elements (those that inheriting from
      * Action) that are contained in this &lt;if&gt; element.
      */
-    private List<Action> actions;
+    private final List<Action> actions;
 
     public Foreach() {
-        super();
         this.actions = new ArrayList<>();
     }
 

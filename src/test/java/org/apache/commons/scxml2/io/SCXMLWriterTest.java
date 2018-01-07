@@ -21,12 +21,10 @@ import java.util.LinkedHashMap;
 
 import org.apache.commons.scxml2.model.CommonsSCXML;
 import org.apache.commons.scxml2.model.ModelException;
-import org.apache.commons.scxml2.model.OnEntry;
 import org.apache.commons.scxml2.model.Parallel;
 import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.Script;
 import org.apache.commons.scxml2.model.State;
-import org.apache.commons.scxml2.model.Var;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -38,7 +36,7 @@ public class SCXMLWriterTest {
     public void testSerializeSCXMLNoStates() throws IOException, XMLStreamException {
         SCXML scxml = new CommonsSCXML();
         // ensure namespaces are stored in insertion order for write->read comparision below
-        LinkedHashMap namespaces = new LinkedHashMap(scxml.getNamespaces());
+        LinkedHashMap<String, String> namespaces = new LinkedHashMap<>(scxml.getNamespaces());
         namespaces.put("foo", "http://f.o.o");
         namespaces.put("bar", "http://b.a.r");
         scxml.setNamespaces(namespaces);

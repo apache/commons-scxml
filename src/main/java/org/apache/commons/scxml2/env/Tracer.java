@@ -41,13 +41,13 @@ public class Tracer implements ErrorHandler, ErrorReporter,
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
     /** ErrorHandler delegate. */
-    private ErrorHandler errHandler;
+    private final ErrorHandler errHandler;
     /** ErrorReporter delegate. */
-    private ErrorReporter errReporter;
+    private final ErrorReporter errReporter;
     /** SCXMLListener delegate. */
-    private SCXMLListener scxmlListener;
+    private final SCXMLListener scxmlListener;
     /** XMLReporter delegate. */
-    private XMLReporter xmlReporter;
+    private final XMLReporter xmlReporter;
 
     /**
      * Constructor.

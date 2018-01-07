@@ -74,9 +74,8 @@ public class WizardsTest {
     }
 
     static class TestEventDispatcher extends SimpleDispatcher {
-        private static final long serialVersionUID = 1L;
-        // If you change this, you must also change testWizard02Sample()
 
+        // If you change this, you must also change testWizard02Sample()
         int callback = 0;
 
         @SuppressWarnings("unchecked")

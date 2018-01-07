@@ -112,7 +112,7 @@ public class SCInstanceTest {
         History history = new History();
         history.setId("1");
         
-        Set<EnterableState> configuration = new HashSet<EnterableState>();
+        Set<EnterableState> configuration = new HashSet<>();
         EnterableState tt1 = new State();
         EnterableState tt2 = new State();
         configuration.add(tt1);
@@ -137,7 +137,7 @@ public class SCInstanceTest {
         History history = new History();
         history.setId("1");
         
-        Set<EnterableState> configuration = new HashSet<EnterableState>();
+        Set<EnterableState> configuration = new HashSet<>();
         EnterableState tt1 = new State();
         configuration.add(tt1);
         
@@ -151,7 +151,7 @@ public class SCInstanceTest {
         History history = new History();
         history.setId("1");
 
-        Set<EnterableState> configuration = new HashSet<EnterableState>();
+        Set<EnterableState> configuration = new HashSet<>();
         EnterableState tt1 = new State();
         configuration.add(tt1);
         

@@ -58,17 +58,17 @@ public class SimpleDispatcher implements EventDispatcher, Serializable {
         /**
          * The ID of the &lt;send&gt; element.
          */
-        private String id;
+        private final String id;
 
         /**
          * The event
          */
-        private TriggerEvent event;
+        private final TriggerEvent event;
 
         /**
          * The target io processor
          */
-        private SCXMLIOProcessor target;
+        private final SCXMLIOProcessor target;
 
         /**
          * Constructor for events with payload.
@@ -99,13 +99,13 @@ public class SimpleDispatcher implements EventDispatcher, Serializable {
     }
 
     /** Implementation independent log category. */
-     private Log log = LogFactory.getLog(EventDispatcher.class);
+     private static final Log log = LogFactory.getLog(EventDispatcher.class);
 
     /**
      * The <code>Map</code> of active <code>Timer</code>s, keyed by
      * &lt;send&gt; element <code>id</code>s.
      */
-    private Map<String, Timer> timers = Collections.synchronizedMap(new HashMap<String, Timer>());
+    private final Map<String, Timer> timers = Collections.synchronizedMap(new HashMap<String, Timer>());
 
     /**
      * Get the log instance.
@@ -114,15 +114,6 @@ public class SimpleDispatcher implements EventDispatcher, Serializable {
      */
     protected Log getLog() {
         return log;
-    }
-
-    /**
-     * Sets the log instance
-     *
-     * @param log the new log instance
-     */
-    protected void setLog(Log log) {
-        this.log = log;
     }
 
     /**
@@ -167,16 +158,16 @@ public class SimpleDispatcher implements EventDispatcher, Serializable {
     public void send(final Map<String, SCXMLIOProcessor> ioProcessors, final String id, final String target,
             final String type, final String event, final Object data, final Object hints, final long delay) {
         if (log.isInfoEnabled()) {
-            StringBuilder buf = new StringBuilder();
-            buf.append("send ( id: ").append(id);
-            buf.append(", target: ").append(target);
-            buf.append(", type: ").append(type);
-            buf.append(", event: ").append(event);
-            buf.append(", data: ").append(String.valueOf(data));
-            buf.append(", hints: ").append(String.valueOf(hints));
-            buf.append(", delay: ").append(delay);
-            buf.append(')');
-            log.info(buf.toString());
+            final String buf =
+                    "send ( id: " + id +
+                    ", target: " + target +
+                    ", type: " + type +
+                    ", event: " + event +
+                    ", data: " + String.valueOf(data) +
+                    ", hints: " + String.valueOf(hints) +
+                    ", delay: " + delay +
+                    ')';
+            log.info(buf);
         }
 
         // We only handle the "scxml" type (which is the default too) and optionally the #_internal target

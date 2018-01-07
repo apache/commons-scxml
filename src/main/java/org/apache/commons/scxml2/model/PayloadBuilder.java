@@ -93,13 +93,12 @@ public class PayloadBuilder {
      * @param evaluator the evaluator to evaluate/lookup the data
      * @param paramsList the list of params
      * @param payload the payload data map to be updated
-     * @throws ModelException if this action has not an EnterableState as parent
      * @throws SCXMLExpressionException if a malformed or invalid expression is evaluated
-     * @see PayloadProvider#addToPayload(String, Object, java.util.Map)
+     * @see PayloadBuilder#addToPayload(String, Object, java.util.Map)
      */
     public static void addParamsToPayload(final Context ctx, final Evaluator evaluator, final List<Param> paramsList,
                                           Map<String, Object> payload)
-            throws ModelException, SCXMLExpressionException {
+            throws SCXMLExpressionException {
         if (!paramsList.isEmpty()) {
             Object paramValue;
             for (Param p : paramsList) {
@@ -128,14 +127,13 @@ public class PayloadBuilder {
      * @param errorReporter to report errors
      * @param namelist the namelist
      * @param payload the payload data map to be updated
-     * @throws ModelException if this action has not an EnterableState as parent
      * @throws SCXMLExpressionException if a malformed or invalid expression is evaluated
-     * @see PayloadProvider#addToPayload(String, Object, java.util.Map)
+     * @see PayloadBuilder#addToPayload(String, Object, java.util.Map)
      */
     public static void addNamelistDataToPayload(final EnterableState parentState, final Context ctx,
                                                 final Evaluator evaluator, final ErrorReporter errorReporter,
                                                 final String namelist, Map<String, Object> payload)
-            throws ModelException, SCXMLExpressionException {
+            throws SCXMLExpressionException {
         if (namelist != null) {
             StringTokenizer tkn = new StringTokenizer(namelist);
             while (tkn.hasMoreTokens()) {

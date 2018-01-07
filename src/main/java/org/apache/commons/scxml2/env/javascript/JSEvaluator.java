@@ -19,7 +19,6 @@ package org.apache.commons.scxml2.env.javascript;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 import javax.script.Bindings;
 import javax.script.ScriptContext;
@@ -54,11 +53,6 @@ import org.apache.commons.scxml2.model.SCXML;
  * </p>
  */
 public class JSEvaluator extends AbstractBaseEvaluator {
-
-    /**
-     * Unique context variable name used for temporary reference to assign data (thus must be a valid variable name)
-     */
-    private static final String ASSIGN_VARIABLE_NAME = "a"+UUID.randomUUID().toString().replace('-','x');
 
     public static final String SUPPORTED_DATA_MODEL = Evaluator.ECMASCRIPT_DATA_MODEL;
 
@@ -262,24 +256,6 @@ public class JSEvaluator extends AbstractBaseEvaluator {
     @Override
     public Boolean evalCond(Context context, String expression) throws SCXMLExpressionException {
         return (Boolean)eval(context, "Boolean("+expression+")");
-    }
-
-    /**
-     * @see Evaluator#evalAssign(Context, String, Object)
-     */
-    public void evalAssign(final Context ctx, final String location, final Object data) throws SCXMLExpressionException {
-        StringBuilder sb = new StringBuilder(location).append("=").append(ASSIGN_VARIABLE_NAME);
-        try {
-            ctx.getVars().put(ASSIGN_VARIABLE_NAME, data);
-            eval(ctx, sb.toString());
-        } catch (SCXMLExpressionException e) {
-            if (e.getCause() != null && e.getCause() != null && e.getCause().getMessage() != null) {
-                throw new SCXMLExpressionException("Error evaluating assign to location=\"" + location + "\": " + e.getCause().getMessage());
-            }
-            throw e;
-        } finally {
-            ctx.getVars().remove(ASSIGN_VARIABLE_NAME);
-        }
     }
 
     /**

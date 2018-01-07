@@ -17,7 +17,6 @@
 package org.apache.commons.scxml2.model;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -67,7 +66,7 @@ public class SimpleTransition extends Executable implements Observable {
      * If multiple state(s) are specified, they must belong to the regions
      * of the same parallel.
      */
-    private Set<TransitionTarget> targets;
+    private final Set<TransitionTarget> targets;
 
     /**
      * The transition target ID
@@ -79,7 +78,7 @@ public class SimpleTransition extends Executable implements Observable {
      */
     public SimpleTransition() {
         super();
-        this.targets = new HashSet<TransitionTarget>();
+        this.targets = new HashSet<>();
     }
 
     private boolean isCompoundStateParent(TransitionalState ts) {
@@ -151,8 +150,8 @@ public class SimpleTransition extends Executable implements Observable {
      * <p>
      * Otherwise it is treated (for determining its exit states) as if it is of type {@link TransitionType#external}
      * </p>
-     * @see <a href="http://www.w3.org/TR/2014/CR-scxml-20140313/#SelectingTransitions">
-     *     http://www.w3.org/TR/2014/CR-scxml-20140313/#SelectingTransitions</a>
+     * @see <a href="https://www.w3.org/TR/2015/REC-scxml-20150901/#SelectingTransitions">
+     *     https://www.w3.org/TR/2015/REC-scxml-20150901/#SelectingTransitions</a>
      * @return true if the effective Transition type is {@link TransitionType#internal}
      */
     public final boolean isTypeInternal() {

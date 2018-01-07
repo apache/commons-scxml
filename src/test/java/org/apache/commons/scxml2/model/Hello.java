@@ -26,8 +26,6 @@ import org.apache.commons.scxml2.EventBuilder;
  */
 public class Hello extends Action {
 
-    /** Serial version UID. */
-    private static final long serialVersionUID = 1L;
     /** This is who we say hello to. */
     private String name;
     /** We count callbacks to execute() as part of the test suite. */

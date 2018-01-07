@@ -130,12 +130,8 @@ public final class StandaloneUtils {
                     }
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | ModelException | XMLStreamException e) {
             e.printStackTrace();
-        } catch (ModelException e) {
-            e.printStackTrace();
-        } catch (XMLStreamException e) {
-        	e.printStackTrace();
         }
     }
 

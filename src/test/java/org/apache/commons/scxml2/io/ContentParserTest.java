@@ -65,7 +65,7 @@ public class ContentParserTest {
         String jsonObjectString = "{ /*comment*/ 'string' : 'foobar', 'int' : 1, 'boolean' : false, 'null' : null }";
         LinkedHashMap<String, Object> jsonObject = new LinkedHashMap<>();
         jsonObject.put("string", "foobar");
-        jsonObject.put("int",new Integer(1));
+        jsonObject.put("int", 1);
         jsonObject.put("boolean", Boolean.FALSE);
         jsonObject.put("null", null);
         Assert.assertEquals(jsonObject, contentParser.parseJson(jsonObjectString));

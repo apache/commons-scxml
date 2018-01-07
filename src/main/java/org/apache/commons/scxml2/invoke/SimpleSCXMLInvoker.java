@@ -94,12 +94,8 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
         SCXML scxml;
         try {
             scxml = SCXMLReader.read(new URL(url));
-        } catch (ModelException me) {
+        } catch (ModelException | IOException | XMLStreamException me) {
             throw new InvokerException(me.getMessage(), me.getCause());
-        } catch (IOException ioe) {
-            throw new InvokerException(ioe.getMessage(), ioe.getCause());
-        } catch (XMLStreamException xse) {
-            throw new InvokerException(xse.getMessage(), xse.getCause());
         }
         execute(scxml, params);
     }
@@ -113,12 +109,8 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
         SCXML scxml;
         try {
             scxml = SCXMLReader.read(new StringReader(content));
-        } catch (ModelException me) {
+        } catch (ModelException | IOException | XMLStreamException me) {
             throw new InvokerException(me.getMessage(), me.getCause());
-        } catch (IOException ioe) {
-            throw new InvokerException(ioe.getMessage(), ioe.getCause());
-        } catch (XMLStreamException xse) {
-            throw new InvokerException(xse.getMessage(), xse.getCause());
         }
         execute(scxml, params);
     }

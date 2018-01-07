@@ -68,7 +68,7 @@ public class GroovyContextBinding extends Binding implements Serializable {
 
     @Override
     public Map<String, Object> getVariables() {
-        return new LinkedHashMap<String, Object>(context.getVars());
+        return new LinkedHashMap<>(context.getVars());
     }
 
     @Override

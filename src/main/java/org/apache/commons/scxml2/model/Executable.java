@@ -31,7 +31,7 @@ public abstract class Executable implements Serializable {
      * The set of executable elements (those that inheriting from
      * Action) that are contained in this Executable.
      */
-    private List<Action> actions;
+    private final List<Action> actions;
 
     /**
      * The parent container, for traceability.
@@ -42,8 +42,7 @@ public abstract class Executable implements Serializable {
      * Constructor.
      */
     public Executable() {
-        super();
-        this.actions = new ArrayList<Action>();
+        this.actions = new ArrayList<>();
     }
 
     /**

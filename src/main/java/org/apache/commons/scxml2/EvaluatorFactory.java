@@ -54,7 +54,7 @@ import static org.apache.commons.scxml2.Evaluator.DEFAULT_DATA_MODEL;
  */
 public class EvaluatorFactory {
 
-    private static EvaluatorFactory INSTANCE = new EvaluatorFactory();
+    private static final EvaluatorFactory INSTANCE = new EvaluatorFactory();
 
     private final Map<String, EvaluatorProvider> providers = new ConcurrentHashMap<>();
 

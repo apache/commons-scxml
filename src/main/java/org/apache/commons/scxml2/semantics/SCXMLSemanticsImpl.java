@@ -17,7 +17,6 @@
 package org.apache.commons.scxml2.semantics;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -62,7 +61,7 @@ import org.apache.commons.scxml2.system.EventVariable;
 
 /**
  * This class encapsulate and implements the
- * <a href="http://www.w3.org/TR/2014/CR-scxml-20140313/#AlgorithmforSCXMLInterpretation">
+ * <a href="https://www.w3.org/TR/2015/REC-scxml-20150901/#AlgorithmforSCXMLInterpretation">
  *     W3C SCXML Algorithm for SCXML Interpretation</a>
  *
  * <p>Custom semantics can be created by sub-classing this implementation.</p>
@@ -70,12 +69,6 @@ import org.apache.commons.scxml2.system.EventVariable;
  * it easier to extend, reuse and test its behavior.</p>
  */
 public class SCXMLSemanticsImpl implements SCXMLSemantics {
-
-    /**
-     * Suffix for error event that are triggered in reaction to invalid data
-     * model locations.
-     */
-    public static final String ERR_ILLEGAL_ALLOC = ".error.illegalalloc";
 
     /**
      * Optional post processing immediately following SCXMLReader. May be used
@@ -122,7 +115,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
         // execute global script if defined
         executeGlobalScript(exctx);
         // enter initial states
-        HashSet<TransitionalState> statesToInvoke = new HashSet<TransitionalState>();
+        HashSet<TransitionalState> statesToInvoke = new HashSet<>();
         Step step = new Step(null);
         step.getTransitList().add(exctx.getStateMachine().getInitialTransition());
         microStep(exctx, step, statesToInvoke);
@@ -176,7 +169,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
             Step step = new Step(event);
             selectTransitions(exctx, step);
             if (!step.getTransitList().isEmpty()) {
-                HashSet<TransitionalState> statesToInvoke = new HashSet<TransitionalState>();
+                HashSet<TransitionalState> statesToInvoke = new HashSet<>();
                 microStep(exctx, step, statesToInvoke);
                 if (exctx.isRunning()) {
                     macroStep(exctx, statesToInvoke);
@@ -209,7 +202,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
             return;
         }
         ArrayList<EnterableState> configuration = new ArrayList<>(exctx.getScInstance().getStateConfiguration().getActiveStates());
-        Collections.sort(configuration, DocumentOrder.reverseDocumentOrderComparator);
+        configuration.sort(DocumentOrder.reverseDocumentOrderComparator);
         for (EnterableState es : configuration) {
             for (OnExit onexit : es.getOnExits()) {
                 executeContent(exctx, onexit);
@@ -283,7 +276,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
         Set<EnterableState> states = step.getEntrySet();
         if (!step.getExitSet().isEmpty()) {
             // calculate result states by taking current states, subtracting exitSet and adding entrySet
-            states = new HashSet<EnterableState>(exctx.getScInstance().getStateConfiguration().getStates());
+            states = new HashSet<>(exctx.getScInstance().getStateConfiguration().getStates());
             states.removeAll(step.getExitSet());
             states.addAll(step.getEntrySet());
         }
@@ -409,7 +402,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                     if (h.isDeep()) {
                         if (deep == null) {
                             //calculate deep history for a given state once
-                            deep = new HashSet<EnterableState>();
+                            deep = new HashSet<>();
                             for (EnterableState ott : atomicStates) {
                                 if (ott.isDescendantOf(es)) {
                                     deep.add(ott);
@@ -420,7 +413,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                     } else {
                         if (shallow == null) {
                             //calculate shallow history for a given state once
-                            shallow = new HashSet<EnterableState>(ts.getChildren());
+                            shallow = new HashSet<>(ts.getChildren());
                             shallow.retainAll(activeStates);
                         }
                         step.getNewHistoryConfigurations().put(h, shallow);
@@ -439,8 +432,8 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * @param step The step containing the list of transitions to be taken
      */
     public void computeEntrySet(final SCXMLExecutionContext exctx, final Step step) {
-        Set<History> historyTargets = new HashSet<History>();
-        Set<EnterableState> entrySet = new HashSet<EnterableState>();
+        Set<History> historyTargets = new HashSet<>();
+        Set<EnterableState> entrySet = new HashSet<>();
         for (SimpleTransition st : step.getTransitList()) {
             for (TransitionTarget tt : st.getTargets()) {
                 if (tt instanceof EnterableState) {
@@ -503,7 +496,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
             step.getEntrySet().add(es);
             if (es instanceof Parallel) {
                 for (EnterableState child : ((Parallel)es).getChildren()) {
-                    if (!containsDescendant(step.getEntrySet(), child)) {
+                    if (containsNoDescendant(step.getEntrySet(), child)) {
                         addDescendantStatesToEnter(exctx, step, child);
                     }
                 }
@@ -539,7 +532,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
             step.getEntrySet().add(anc);
             if (anc instanceof Parallel) {
                 for (EnterableState child : ((Parallel)anc).getChildren()) {
-                    if (!containsDescendant(step.getEntrySet(), child)) {
+                    if (containsNoDescendant(step.getEntrySet(), child)) {
                         addDescendantStatesToEnter(exctx, step, child);
                     }
                 }
@@ -549,17 +542,17 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
     }
 
     /**
-     * @return Returns true if a member of the provided states set is a descendant of the provided state.
+     * @return Returns true if no member of the provided states set is a descendant of the provided state.
      * @param states the set of states to check for descendants
      * @param state the state to check with
      */
-    public boolean containsDescendant(Set<EnterableState> states, EnterableState state) {
+    public boolean containsNoDescendant(Set<EnterableState> states, EnterableState state) {
         for (EnterableState es : states) {
             if (es.isDescendantOf(state)) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     /**
@@ -572,12 +565,12 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      */
     public void selectTransitions(final SCXMLExecutionContext exctx, final Step step) throws ModelException {
         step.getTransitList().clear();
-        ArrayList<Transition> enabledTransitions = new ArrayList<Transition>();
+        ArrayList<Transition> enabledTransitions = new ArrayList<>();
 
-        ArrayList<EnterableState> configuration = new ArrayList<EnterableState>(exctx.getScInstance().getStateConfiguration().getActiveStates());
-        Collections.sort(configuration,DocumentOrder.documentOrderComparator);
+        ArrayList<EnterableState> configuration = new ArrayList<>(exctx.getScInstance().getStateConfiguration().getActiveStates());
+        configuration.sort(DocumentOrder.documentOrderComparator);
 
-        HashSet<EnterableState> visited = new HashSet<EnterableState>();
+        HashSet<EnterableState> visited = new HashSet<>();
 
         String eventName = step.getEvent() != null ? step.getEvent().getName() : null;
         for (EnterableState es : configuration) {
@@ -620,25 +613,25 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      */
     public void removeConflictingTransitions(final SCXMLExecutionContext exctx, final Step step,
                                              final List<Transition> enabledTransitions) {
-        LinkedHashSet<Transition> filteredTransitions = new LinkedHashSet<Transition>();
-        LinkedHashSet<Transition> preemptedTransitions = new LinkedHashSet<Transition>();
-        Map<Transition, Set<EnterableState>> exitSets = new HashMap<Transition, Set<EnterableState>>();
+        LinkedHashSet<Transition> filteredTransitions = new LinkedHashSet<>();
+        LinkedHashSet<Transition> preemptedTransitions = new LinkedHashSet<>();
+        Map<Transition, Set<EnterableState>> exitSets = new HashMap<>();
 
         Set<EnterableState> configuration = exctx.getScInstance().getStateConfiguration().getActiveStates();
-        Collections.sort(enabledTransitions, DocumentOrder.documentOrderComparator);
+        enabledTransitions.sort(DocumentOrder.documentOrderComparator);
 
         for (Transition t1 : enabledTransitions) {
             boolean t1Preempted = false;
             Set<EnterableState> t1ExitSet = exitSets.get(t1);
             for (Transition t2 : filteredTransitions) {
                 if (t1ExitSet == null) {
-                    t1ExitSet = new HashSet<EnterableState>();
+                    t1ExitSet = new HashSet<>();
                     computeExitSet(t1, t1ExitSet, configuration);
                     exitSets.put(t1, t1ExitSet);
                 }
                 Set<EnterableState> t2ExitSet = exitSets.get(t2);
                 if (t2ExitSet == null) {
-                    t2ExitSet = new HashSet<EnterableState>();
+                    t2ExitSet = new HashSet<>();
                     computeExitSet(t2, t2ExitSet, configuration);
                     exitSets.put(t2, t2ExitSet);
                 }
@@ -783,16 +776,12 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
          * states = active configuration.
          */
         boolean legalConfig = true; // let's be optimists
-        Map<EnterableState, Set<EnterableState>> counts = new HashMap<EnterableState, Set<EnterableState>>();
-        Set<EnterableState> scxmlCount = new HashSet<EnterableState>();
+        Map<EnterableState, Set<EnterableState>> counts = new HashMap<>();
+        Set<EnterableState> scxmlCount = new HashSet<>();
         for (EnterableState es : states) {
             EnterableState parent;
             while ((parent = es.getParent()) != null) {
-                Set<EnterableState> cnt = counts.get(parent);
-                if (cnt == null) {
-                    cnt = new HashSet<EnterableState>();
-                    counts.put(parent, cnt);
-                }
+                Set<EnterableState> cnt = counts.computeIfAbsent(parent, k -> new HashSet<>());
                 cnt.add(es);
                 es = parent;
             }
@@ -889,8 +878,8 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
         if (step.getExitSet().isEmpty()) {
             return;
         }
-        ArrayList<EnterableState> exitList = new ArrayList<EnterableState>(step.getExitSet());
-        Collections.sort(exitList, DocumentOrder.reverseDocumentOrderComparator);
+        ArrayList<EnterableState> exitList = new ArrayList<>(step.getExitSet());
+        exitList.sort(DocumentOrder.reverseDocumentOrderComparator);
 
         for (EnterableState es : exitList) {
 
@@ -1002,8 +991,8 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
         if (step.getEntrySet().isEmpty()) {
             return;
         }
-        ArrayList<EnterableState> entryList = new ArrayList<EnterableState>(step.getEntrySet());
-        Collections.sort(entryList, DocumentOrder.documentOrderComparator);
+        ArrayList<EnterableState> entryList = new ArrayList<>(step.getEntrySet());
+        entryList.sort(DocumentOrder.documentOrderComparator);
         for (EnterableState es : entryList) {
             exctx.getScInstance().getStateConfiguration().enterState(es);
             // ensure state context creation and datamodel cloned

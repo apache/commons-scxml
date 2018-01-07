@@ -419,7 +419,7 @@ public class SCInstance implements Serializable {
      * @throws IllegalStateException Exception thrown if trying to start the state machine when in a Final state
      */
     public void start() throws IllegalStateException {
-        if (!this.running && running && currentStatus.isFinal()) {
+        if (!this.running &&  currentStatus.isFinal()) {
             throw new IllegalStateException("The state machine is in a Final state and cannot be set running again");
         }
         this.running = true;

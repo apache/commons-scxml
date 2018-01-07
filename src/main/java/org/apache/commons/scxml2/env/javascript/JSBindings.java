@@ -147,8 +147,8 @@ public class JSBindings implements Bindings {
      * @param toMerge the map of variables to merge
      */
     @Override
-    public void putAll(Map<? extends String, ? extends Object> toMerge) {
-        for (Map.Entry<? extends String, ? extends Object> entry : toMerge.entrySet()) {
+    public void putAll(Map<? extends String, ?> toMerge) {
+        for (Map.Entry<? extends String, ?> entry : toMerge.entrySet()) {
             put(entry.getKey(), entry.getValue());
         }
     }

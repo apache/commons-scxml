@@ -29,13 +29,6 @@ public class InvokerException extends Exception {
     private static final long serialVersionUID = 1L;
 
     /**
-     * @see java.lang.Exception#Exception()
-     */
-    public InvokerException() {
-        super();
-    }
-
-    /**
      * @see java.lang.Exception#Exception(java.lang.String)
      * @param message The error message
      */

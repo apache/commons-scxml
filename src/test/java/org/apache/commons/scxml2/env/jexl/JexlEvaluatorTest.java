@@ -24,13 +24,13 @@ import org.junit.Test;
 
 public class JexlEvaluatorTest {
 
-    private String BAD_EXPRESSION = ">";
-    private Context ctx = new JexlContext();
+    private static final String BAD_EXPRESSION = ">";
+    private final Context ctx = new JexlContext();
 
     @Test
     public void testPristine() throws SCXMLExpressionException {
         Evaluator eval = new JexlEvaluator();
-        Assert.assertTrue(((Boolean) eval.eval(ctx, "1+1 eq 2")).booleanValue());
+        Assert.assertTrue((Boolean) eval.eval(ctx, "1+1 eq 2"));
     }
 
     @Test

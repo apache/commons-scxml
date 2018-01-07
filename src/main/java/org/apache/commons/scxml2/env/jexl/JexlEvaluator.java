@@ -18,7 +18,6 @@ package org.apache.commons.scxml2.env.jexl;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import org.apache.commons.jexl3.JexlBuilder;
 import org.apache.commons.jexl3.JexlExpression;
@@ -44,11 +43,6 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
-
-    /**
-     * Unique context variable name used for temporary reference to assign data (thus must be a valid variable name)
-     */
-    private static final String ASSIGN_VARIABLE_NAME = "a"+UUID.randomUUID().toString().replace('-','x');
 
     public static final String SUPPORTED_DATA_MODEL = "jexl";
 
@@ -90,7 +84,7 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
     private transient volatile JexlEngine jexlEngine;
 
     /** The current JexlEngine silent mode, stored locally to be reapplied after deserialization of the engine */
-    private boolean jexlEngineSilent;
+    private final boolean jexlEngineSilent;
     /** The current JexlEngine strict mode, stored locally to be reapplied after deserialization of the engine */
     private boolean jexlEngineStrict;
 
@@ -100,7 +94,6 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
     }
 
     public JexlEvaluator(final boolean strict) {
-        super();
         jexlEngineStrict = strict;
         // create the internal JexlEngine initially
         jexlEngine = getJexlEngine();
@@ -177,25 +170,6 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
         } catch (Exception e) {
             String exMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getCanonicalName();
             throw new SCXMLExpressionException("evalCond('" + expr + "'): " + exMessage, e);
-        }
-    }
-
-    /**
-     * @see Evaluator#evalAssign(Context, String, Object)
-     */
-    public void evalAssign(final Context ctx, final String location, final Object data) throws SCXMLExpressionException {
-        StringBuilder sb = new StringBuilder(location).append("=").append(ASSIGN_VARIABLE_NAME);
-        try {
-            ctx.getVars().put(ASSIGN_VARIABLE_NAME, data);
-            eval(ctx, sb.toString());
-        } catch (SCXMLExpressionException e) {
-            if (e.getCause() != null && e.getCause() != null && e.getCause().getMessage() != null) {
-                throw new SCXMLExpressionException("Error evaluating assign to location=\"" + location + "\": " + e.getCause().getMessage());
-            }
-            throw e;
-        }
-        finally {
-            ctx.getVars().remove(ASSIGN_VARIABLE_NAME);
         }
     }
 

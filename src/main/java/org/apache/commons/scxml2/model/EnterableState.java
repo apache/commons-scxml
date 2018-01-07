@@ -33,18 +33,17 @@ public abstract class EnterableState extends TransitionTarget implements Documen
      * List of optional OnEntry elements holding executable content to be run upon
      * entering this transition target.
      */
-    private List<OnEntry> onEntries;
+    private final List<OnEntry> onEntries;
 
     /**
      * List of optional OnExit elements holding executable content to be run upon
      * exiting this transition target.
      */
-    private List<OnExit> onExits;
+    private final List<OnExit> onExits;
 
     public EnterableState() {
-        super();
-        onEntries = new ArrayList<OnEntry>();
-        onExits = new ArrayList<OnExit>();
+        onEntries = new ArrayList<>();
+        onExits = new ArrayList<>();
     }
 
     /**

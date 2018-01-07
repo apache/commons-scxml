@@ -105,7 +105,7 @@ Object.defineProperties(this, {
         },
         writable : false,
         configurable : false,
-        enumeratable : false,
+        enumeratable : false
     },
     "_event":
     {

@@ -22,8 +22,11 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
+import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -31,6 +34,29 @@ import org.w3c.dom.NodeList;
  * Base Evaluator providing common functionality for most Evaluator implementations
  */
 public abstract class AbstractBaseEvaluator implements Evaluator, Serializable {
+
+    /**
+     * Unique context variable name used for temporary reference to assign data (thus must be a valid variable name)
+     */
+    private static final String ASSIGN_VARIABLE_NAME = "a"+ UUID.randomUUID().toString().replace('-','x');
+
+    /**
+     * @see Evaluator#evalAssign(Context, String, Object)
+     */
+    public void evalAssign(final Context ctx, final String location, final Object data) throws SCXMLExpressionException {
+        StringBuilder sb = new StringBuilder(location).append("=").append(ASSIGN_VARIABLE_NAME);
+        try {
+            ctx.getVars().put(ASSIGN_VARIABLE_NAME, data);
+            eval(ctx, sb.toString());
+        } catch (SCXMLExpressionException e) {
+            if (e.getCause() != null && e.getCause() != null && e.getCause().getMessage() != null) {
+                throw new SCXMLExpressionException("Error evaluating assign to location=\"" + location + "\": " + e.getCause().getMessage());
+            }
+            throw e;
+        } finally {
+            ctx.getVars().remove(ASSIGN_VARIABLE_NAME);
+        }
+    }
 
     @Override
     public Object cloneData(final Object data) {
@@ -68,7 +94,7 @@ public abstract class AbstractBaseEvaluator implements Evaluator, Serializable {
                 return cloneUnknownDataType(data);
             }
         }
-        return data;
+        return null;
     }
 
     /**

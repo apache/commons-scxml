@@ -31,14 +31,14 @@ public class SCXMLSemanticsImplTest {
 
     @Test
     public void testIsLegalConfigNoStates() {
-        Set<EnterableState> states = new HashSet<EnterableState>();
+        Set<EnterableState> states = new HashSet<>();
 
         Assert.assertTrue(new SCXMLSemanticsImpl().isLegalConfiguration(states, new SimpleErrorReporter()));
     }
 
     @Test
     public void testIsLegalConfigInvalidParallel() {
-        Set<EnterableState> states = new HashSet<EnterableState>();
+        Set<EnterableState> states = new HashSet<>();
         Parallel parallel = new Parallel();
 
         Parallel parent = new Parallel();
@@ -65,7 +65,7 @@ public class SCXMLSemanticsImplTest {
 
     @Test
     public void testIsLegalConfigMultipleTopLevel() {
-        Set<EnterableState> states = new HashSet<EnterableState>();
+        Set<EnterableState> states = new HashSet<>();
 
         State state1 = new State();
         state1.setId("1");
@@ -84,7 +84,7 @@ public class SCXMLSemanticsImplTest {
 
     @Test
     public void testIsLegalConfigMultipleStatesActive() {
-        Set<EnterableState> states = new HashSet<EnterableState>();
+        Set<EnterableState> states = new HashSet<>();
 
         State state1 = new State();
         state1.setId("1");

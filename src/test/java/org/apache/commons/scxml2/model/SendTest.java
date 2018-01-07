@@ -36,7 +36,7 @@ public class SendTest {
     @Test
     @SuppressWarnings("unchecked")
     public void testNamelistOrderPreserved() throws Exception {
-        final List<Object> payloads = new ArrayList<Object>();
+        final List<Object> payloads = new ArrayList<>();
         final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/model/send-test-01.xml");
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml, null, new SimpleDispatcher() {
             @Override
@@ -47,7 +47,7 @@ public class SendTest {
             }
         });
         exec.go();
-        TriggerEvent te = new EventBuilder("event.foo", TriggerEvent.SIGNAL_EVENT).data(new Integer(3)).build();
+        TriggerEvent te = new EventBuilder("event.foo", TriggerEvent.SIGNAL_EVENT).data(3).build();
         SCXMLTestHelper.fireEvent(exec, te);
 
         Assert.assertFalse("Payloads empty.", payloads.isEmpty());

@@ -34,10 +34,9 @@ public class SimpleContext implements Context, Serializable {
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
     /** Implementation independent log category. */
-    private static final Log DEFAULT_LOG = LogFactory.getLog(Context.class);
-    private Log log = DEFAULT_LOG;
+    private static final Log log = LogFactory.getLog(Context.class);
     /** The parent Context to this Context. */
-    private Context parent;
+    private final Context parent;
     /** The Map of variables and their values in this Context. */
     private Map<String, Object> vars;
 
@@ -71,7 +70,7 @@ public class SimpleContext implements Context, Serializable {
         this.systemContext = parent instanceof SCXMLSystemContext ?
                 (SCXMLSystemContext) parent : parent != null ? parent.getSystemContext() : null;
         if (initialVars == null) {
-            setVars(new HashMap<String, Object>());
+            setVars(new HashMap<>());
         } else {
             setVars(this.vars = initialVars);
         }
@@ -199,15 +198,6 @@ public class SimpleContext implements Context, Serializable {
     }
 
     /**
-     * Set the log used by this <code>Context</code> instance.
-     *
-     * @param log The new log.
-     */
-    protected void setLog(final Log log) {
-        this.log = log;
-    }
-
-    /**
      * Get the log used by this <code>Context</code> instance.
      *
      * @return Log The log being used.
@@ -215,6 +205,5 @@ public class SimpleContext implements Context, Serializable {
     protected Log getLog() {
         return log;
     }
-
 }
 

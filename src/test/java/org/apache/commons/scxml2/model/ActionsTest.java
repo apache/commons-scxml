@@ -54,7 +54,7 @@ public class ActionsTest {
         runTest(exec);
     }
 
-    private void runTest(SCXMLExecutor exec) throws Exception {
+    private void runTest(SCXMLExecutor exec) {
         Context ctx = SCXMLTestHelper.lookupContext(exec, "actionsTest");
         Assert.assertEquals(ctx.get("foo"), "foobar");
         Assert.assertEquals("Missed event transition",

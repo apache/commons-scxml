@@ -87,9 +87,7 @@ public class StopWatch extends AbstractStateMachine {
         String padhr = dhr > 9 ? EMPTY : ZERO;
         String padmin = dmin > 9 ? EMPTY : ZERO;
         String padsec = dsec > 9 ? EMPTY : ZERO;
-        return new StringBuffer().append(padhr).append(dhr).append(DELIM).
-            append(padmin).append(dmin).append(DELIM).append(padsec).
-            append(dsec).append(DOT).append(dfract).toString();
+        return padhr + dhr + DELIM + padmin + dmin + DELIM + padsec + dsec + DOT + dfract;
     }
 
     // used by the demonstration (see StopWatchDisplay usecase)

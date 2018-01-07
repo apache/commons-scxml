@@ -32,7 +32,6 @@ public class SCXMLExpressionException extends Exception {
      * @see java.lang.Exception#Exception()
      */
     public SCXMLExpressionException() {
-        super();
     }
 
     /**

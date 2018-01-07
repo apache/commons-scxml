@@ -37,7 +37,7 @@ public class SimpleErrorHandler implements ErrorHandler, Serializable {
     private static final String MSG_POSTFIX = " Correct the SCXML document.";
 
     /** Log. */
-    private Log log = LogFactory.getLog(getClass());
+    private static final Log log = LogFactory.getLog(SimpleErrorHandler.class);
 
     /**
      * Constructor.

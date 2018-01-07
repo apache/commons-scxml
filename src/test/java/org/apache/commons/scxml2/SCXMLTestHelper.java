@@ -82,8 +82,7 @@ public class SCXMLTestHelper {
         Configuration configuration = new Configuration(null, null, customActions);
         SCXML scxml = SCXMLReader.read(url, configuration);
         Assert.assertNotNull(scxml);
-        SCXML roundtrip = testModelSerializability(scxml);
-        return roundtrip;
+        return testModelSerializability(scxml);
     }
 
     public static SCXML parse(final Reader scxmlReader, final List<CustomAction> customActions) throws Exception {
@@ -91,8 +90,7 @@ public class SCXMLTestHelper {
         Configuration configuration = new Configuration(null, null, customActions);
         SCXML scxml = SCXMLReader.read(scxmlReader, configuration);
         Assert.assertNotNull(scxml);
-        SCXML roundtrip = testModelSerializability(scxml);
-        return roundtrip;
+        return testModelSerializability(scxml);
     }
 
     public static SCXMLExecutor getExecutor(final URL url) throws Exception {
@@ -135,7 +133,7 @@ public class SCXMLTestHelper {
         return exec.getSCInstance().lookupContext((EnterableState)tt);
     }
 
-    public static void assertState(SCXMLExecutor exec, String expectedStateId) throws Exception {
+    public static void assertState(SCXMLExecutor exec, String expectedStateId) {
         Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assert.assertEquals("Expected 1 simple (leaf) state with id '"
             + expectedStateId + "' but found " + currentStates.size() + " states instead.",
@@ -209,7 +207,7 @@ public class SCXMLTestHelper {
             + " on firing event " + triggerEvent + " but found "
             + currentStates.size() + " states instead.",
             n, currentStates.size());
-        List<String> expectedStateIdList = new ArrayList<String>(Arrays.asList(expectedStateIds));
+        List<String> expectedStateIdList = new ArrayList<>(Arrays.asList(expectedStateIds));
         for (TransitionTarget tt : currentStates) {
             String stateId = tt.getId();
             if(!expectedStateIdList.remove(stateId)) {
@@ -219,7 +217,7 @@ public class SCXMLTestHelper {
             }
         }
         Assert.assertEquals("More states in current configuration than those"
-            + "specified in the expected state ids '" + expectedStateIds
+            + "specified in the expected state ids '" + Arrays.toString(expectedStateIds)
             + "'", 0, expectedStateIdList.size());
     }
 
@@ -230,7 +228,7 @@ public class SCXMLTestHelper {
         }
         String filename = SERIALIZATION_FILE_PREFIX
             + getSequenceNumber() + SERIALIZATION_FILE_SUFFIX;
-        SCXML roundtrip = null;
+        SCXML roundtrip;
         ObjectOutputStream out =
             new ObjectOutputStream(new FileOutputStream(filename));
         out.writeObject(scxml);

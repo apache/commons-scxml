@@ -267,7 +267,7 @@ public class W3CTests {
             }
 
             public List<TestCase> getTestCases() {
-                return testCases != null ? testCases : Collections.<TestCase>emptyList();
+                return testCases != null ? testCases : Collections.emptyList();
             }
 
             public Datamodel getDatamodel() {
@@ -314,12 +314,12 @@ public class W3CTests {
             }
 
             public List<Resource> getScxmlResources() {
-                return scxmlResources != null ? scxmlResources : Collections.<Resource>emptyList();
+                return scxmlResources != null ? scxmlResources : Collections.emptyList();
             }
 
             public List<Resource> getResources() {
                 if (resources == null) {
-                    resources = new ArrayList<Resource>();
+                    resources = new ArrayList<>();
                     if (scxmlResources != null) {
                         resources.addAll(scxmlResources);
                     }
@@ -385,10 +385,10 @@ public class W3CTests {
      * Simple TestResult data struct for tracking test results
      */
     protected static class TestResults {
-        Map<Datamodel, Integer> passed = new HashMap<>();
-        Map<Datamodel, Integer> failed = new HashMap<>();
-        Map<Datamodel, Integer> skipped = new HashMap<>();
-        ArrayList<String> changedStatusTests = new ArrayList<>();
+        final Map<Datamodel, Integer> passed = new HashMap<>();
+        final Map<Datamodel, Integer> failed = new HashMap<>();
+        final Map<Datamodel, Integer> skipped = new HashMap<>();
+        final ArrayList<String> changedStatusTests = new ArrayList<>();
 
         public int passed(final Datamodel dm) {
             return passed.get(dm) != null ? passed.get(dm) : 0;
@@ -510,18 +510,20 @@ public class W3CTests {
             throws Exception {
         System.out.println("processing IRP test file " + resource.getFilename());
         FileUtils.copyURLToFile(new URL(SCXML_IRP_BASE_URL + resource.getUri()), new File(TXML_TESTS_DIR + resource.getFilename()));
-        if (specid.equals("#minimal-profile")) {
-            transformResource(resource, transformers.get(Datamodel.MINIMAL), Datamodel.MINIMAL.testDir());
-        }
-        else if (specid.equals("#ecma-profile")) {
-            transformResource(resource, transformers.get(Datamodel.ECMA), Datamodel.ECMA.testDir());
-        }
-        else {
-            for (Datamodel dm : transformers.keySet()) {
-                if (dm != Datamodel.MINIMAL) {
-                    transformResource(resource, transformers.get(dm), dm.testDir());
+        switch (specid) {
+            case "#minimal-profile":
+                transformResource(resource, transformers.get(Datamodel.MINIMAL), Datamodel.MINIMAL.testDir());
+                break;
+            case "#ecma-profile":
+                transformResource(resource, transformers.get(Datamodel.ECMA), Datamodel.ECMA.testDir());
+                break;
+            default:
+                for (Datamodel dm : transformers.keySet()) {
+                    if (dm != Datamodel.MINIMAL) {
+                        transformResource(resource, transformers.get(dm), dm.testDir());
+                    }
                 }
-            }
+                break;
         }
     }
 

@@ -34,8 +34,8 @@ public class InvokeParamNameTest {
 
     private SCXMLExecutor exec;
 
-    static String lastURL;
-    static Map<String, Object> lastParams;
+    private static String lastURL;
+    private static Map<String, Object> lastParams;
     
     @Before
     public void setUp() throws Exception {

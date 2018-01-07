@@ -96,18 +96,12 @@ public class GroovyExtendableScriptCache implements Serializable {
     public static final String DEFAULT_SCRIPT_CODE_BASE = "/groovy/scxml/script";
 
     /** Default factory for the Groovy parent ClassLoader, returning this class its ClassLoader */
-    public static final ParentClassLoaderFactory DEFAULT_PARENT_CLASS_LOADER_FACTORY = new ParentClassLoaderFactory() {
-        public ClassLoader getClassLoader() {
-            return GroovyExtendableScriptCache.class.getClassLoader();
-        }
-    };
+    public static final ParentClassLoaderFactory DEFAULT_PARENT_CLASS_LOADER_FACTORY =
+            (ParentClassLoaderFactory) GroovyExtendableScriptCache.class::getClassLoader;
 
     /** Default factory for the Groovy CompilerConfiguration, returning a new and unmodified CompilerConfiguration instance */
-    public static final CompilerConfigurationFactory DEFAULT_COMPILER_CONFIGURATION_FACTORY = new CompilerConfigurationFactory() {
-        public CompilerConfiguration getCompilerConfiguration() {
-            return new CompilerConfiguration();
-        }
-    };
+    public static final CompilerConfigurationFactory DEFAULT_COMPILER_CONFIGURATION_FACTORY =
+            (CompilerConfigurationFactory) CompilerConfiguration::new;
 
     protected static class ScriptCacheElement implements Serializable {
         private static final long serialVersionUID = 1L;
@@ -170,7 +164,7 @@ public class GroovyExtendableScriptCache implements Serializable {
         }
     }
 
-    private final LinkedHashMap<ScriptCacheElement, ScriptCacheElement> scriptCache = new LinkedHashMap<ScriptCacheElement, ScriptCacheElement>();
+    private final LinkedHashMap<ScriptCacheElement, ScriptCacheElement> scriptCache = new LinkedHashMap<>();
 
     private String scriptCodeBase = DEFAULT_SCRIPT_CODE_BASE;
     private String scriptBaseClass;
@@ -239,11 +233,8 @@ public class GroovyExtendableScriptCache implements Serializable {
                 compilerConfiguration.setScriptBaseClass(getScriptBaseClass());
             }
 
-            groovyClassLoader = AccessController.doPrivileged(new PrivilegedAction<GroovyClassLoader>() {
-                public GroovyClassLoader run() {
-                    return new GroovyClassLoader(getParentClassLoaderFactory().getClassLoader(), compilerConfiguration);
-                }
-            });
+            groovyClassLoader = AccessController.doPrivileged((PrivilegedAction<GroovyClassLoader>)
+                    () -> new GroovyClassLoader(getParentClassLoaderFactory().getClassLoader(), compilerConfiguration));
             if (!scriptCache.isEmpty()) {
                 // de-serialized: need to re-generate all previously compiled scripts (this can cause a hick-up...):
                 for (ScriptCacheElement element : scriptCache.keySet()) {
@@ -257,11 +248,8 @@ public class GroovyExtendableScriptCache implements Serializable {
     protected Class<Script> compileScript(final String scriptBaseClass, String scriptSource, final String scriptName) {
         final String script = preProcessScript(scriptSource);
 
-        GroovyCodeSource codeSource = AccessController.doPrivileged(new PrivilegedAction<GroovyCodeSource>() {
-            public GroovyCodeSource run() {
-                return new GroovyCodeSource(script, scriptName, getScriptCodeBase());
-            }
-        });
+        GroovyCodeSource codeSource = AccessController.doPrivileged((PrivilegedAction<GroovyCodeSource>)
+                () -> new GroovyCodeSource(script, scriptName, getScriptCodeBase()));
 
         String currentScriptBaseClass = compilerConfiguration.getScriptBaseClass();
         try {

@@ -151,7 +151,7 @@ public class SCXMLExecutorTest {
         exec.go();
         Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "done.state.ten");
         Assert.assertEquals(3, currentStates.size());
-        Set<String> expected = new HashSet<String>();
+        Set<String> expected = new HashSet<>();
         expected.add("twenty_one_2");
         expected.add("twenty_two_2");
         expected.add("twenty_three_2");
@@ -169,7 +169,7 @@ public class SCXMLExecutorTest {
         exec.go();
         Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "done.state.ten");
         Assert.assertEquals(3, currentStates.size());
-        Set<String> expected = new HashSet<String>();
+        Set<String> expected = new HashSet<>();
         expected.add("twenty_one_1");
         expected.add("twenty_two_1");
         expected.add("twenty_three_1");
@@ -228,7 +228,7 @@ public class SCXMLExecutorTest {
     public void testSCXMLExecutorTransitionsWithCond01Sample() throws Exception {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/transitions-with-cond-01.xml");
         exec.go();
-        Map<String, Object> payload = new HashMap<String, Object>();
+        Map<String, Object> payload = new HashMap<>();
 
         // with _event.data set to true, transition should happen as expected.
         payload.put("keyed", Boolean.TRUE);
@@ -257,7 +257,7 @@ public class SCXMLExecutorTest {
     public void testSCXMLExecutorSystemEventVariable() throws Exception {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/transitions-event-variable.xml");
         exec.go();
-        Map<String, Object> payload = new HashMap<String, Object>();
+        Map<String, Object> payload = new HashMap<>();
         payload.put("keyed", Boolean.TRUE);
         SCXMLTestHelper.assertPostTriggerState(exec, "open", payload, "opened");
     }
@@ -272,7 +272,7 @@ public class SCXMLExecutorTest {
         currentStates = SCXMLTestHelper.fireEvent(exec, "done.state.twenty_one");
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("twenty_two", currentStates.iterator().next().getId());
-        Set<String> stateIds = new HashSet<String>();
+        Set<String> stateIds = new HashSet<>();
         stateIds.add("twenty_one");
         exec.setConfiguration(stateIds);
         Assert.assertEquals(1, exec.getStatus().getStates().size());

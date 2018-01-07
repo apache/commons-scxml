@@ -124,7 +124,7 @@ public class Transition extends SimpleTransition implements DocumentOrder {
         this.event = event == null ? null : event.trim();
         if (this.event != null) {
             // 'event' is a space separated list of event descriptors
-            events = new ArrayList<String>();
+            events = new ArrayList<>();
             StringTokenizer st = new StringTokenizer(this.event);
             while (st.hasMoreTokens()) {
                 String token = st.nextToken();

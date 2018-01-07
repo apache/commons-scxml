@@ -169,7 +169,7 @@ public class SCXMLReaderTest {
 
     @Test
     public void testSCXMLReaderCustomActionWithBodyTextSample() throws Exception {
-        List<CustomAction> cas = new ArrayList<CustomAction>();
+        List<CustomAction> cas = new ArrayList<>();
         CustomAction ca = new CustomAction("http://my.custom-actions.domain",
             "action", MyAction.class);
         cas.add(ca);
@@ -207,11 +207,10 @@ public class SCXMLReaderTest {
         // In the lenient/silent mode (strict == false && silent == true),
         // no model exception is logged.
         clearRecordedLogMessages();
-        scxml = null;
         configuration = new Configuration();
         configuration.setStrict(false);
         configuration.setSilent(true);
-        scxml = SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/scxml-with-invalid-elems.xml"),
+        SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/scxml-with-invalid-elems.xml"),
                 configuration);
         Assert.assertNotNull(scxml);
         Assert.assertNotNull(serialize(scxml));
@@ -230,21 +229,21 @@ public class SCXMLReaderTest {
         // In strict/verbose mode (strict == true && silent == false), it should fail to read the model and catch a model exception
         // with warning logs because of the invalid <baddata> element.
         clearRecordedLogMessages();
-        scxml = null;
         configuration = new Configuration();
         configuration.setStrict(true);
         configuration.setSilent(false);
         try {
-            scxml = SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/scxml-with-invalid-elems.xml"),
+            SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/scxml-with-invalid-elems.xml"),
                     configuration);
             Assert.fail("In strict mode, it should have thrown a model exception.");
         } catch (ModelException e) {
             Assert.assertTrue(e.getMessage().contains("Ignoring unknown or invalid element <baddata>"));
         }
+
         assertContainsRecordedLogMessage("Ignoring unknown or invalid element <baddata> in namespace \"http://www.w3.org/2005/07/scxml\" as child of <datamodel>");
-        assertContainsRecordedLogMessage("Ignoring unknown or invalid element <baddata> in namespace \"http://www.example.com/scxml\" as child of <datamodel>");
-        assertContainsRecordedLogMessage("Ignoring unknown or invalid element <trace> in namespace \"http://www.w3.org/2005/07/scxml\" as child of <onentry>");
-        assertContainsRecordedLogMessage("Ignoring unknown or invalid element <onbeforeexit> in namespace \"http://www.w3.org/2005/07/scxml\" as child of <final>");
+        assertNotContainsRecordedLogMessage("Ignoring unknown or invalid element <baddata> in namespace \"http://www.example.com/scxml\" as child of <datamodel>");
+        assertNotContainsRecordedLogMessage("Ignoring unknown or invalid element <trace> in namespace \"http://www.w3.org/2005/07/scxml\" as child of <onentry>");
+        assertNotContainsRecordedLogMessage("Ignoring unknown or invalid element <onbeforeexit> in namespace \"http://www.w3.org/2005/07/scxml\" as child of <final>");
 
         // In strict/silent mode (strict == true && silent == true), it should fail to read the model and catch a model exception
         // without warning logs because of the invalid <baddata> element.
@@ -333,15 +332,13 @@ public class SCXMLReaderTest {
 
     private void assertContainsRecordedLogMessage(final String message) {
         if (scxmlReaderLog instanceof RecordingSimpleLog) {
-            Assert.assertTrue(((RecordingSimpleLog) scxmlReaderLog).containsMessage(
-                    "Ignoring unknown or invalid element <baddata> in namespace \"http://www.w3.org/2005/07/scxml\" as child of <datamodel>"));
+            Assert.assertTrue(((RecordingSimpleLog) scxmlReaderLog).containsMessage(message));
         }
     }
 
     private void assertNotContainsRecordedLogMessage(final String message) {
         if (scxmlReaderLog instanceof RecordingSimpleLog) {
-            Assert.assertFalse(((RecordingSimpleLog) scxmlReaderLog).containsMessage(
-                    "Ignoring unknown or invalid element <baddata> in namespace \"http://www.w3.org/2005/07/scxml\" as child of <datamodel>"));
+            Assert.assertFalse(((RecordingSimpleLog) scxmlReaderLog).containsMessage(message));
         }
     }
 
@@ -352,7 +349,6 @@ public class SCXMLReaderTest {
     }
 
     public static class MyAction extends Action implements ParsedValueContainer {
-        private static final long serialVersionUID = 1L;
 
         private ParsedValue parsedValue;
 
@@ -387,18 +383,16 @@ public class SCXMLReaderTest {
      */
     public static class RecordingSimpleLog extends SimpleLog {
 
-        private static final long serialVersionUID = 1L;
+        private final List<String> messages = new LinkedList<>();
 
-        private List<String> messages = new LinkedList<String>();
-
-        public RecordingSimpleLog(String name) {
+        RecordingSimpleLog(String name) {
             super(name);
         }
 
         /**
          * Clear all the recorded log messages.
          */
-        public void clearMessages() {
+        void clearMessages() {
             messages.clear();
         }
 
@@ -407,7 +401,7 @@ public class SCXMLReaderTest {
          * @param msg
          * @return
          */
-        public boolean containsMessage(final String msg) {
+        boolean containsMessage(final String msg) {
             for (String message : messages) {
                 if (message.contains(msg)) {
                     return true;
@@ -423,7 +417,6 @@ public class SCXMLReaderTest {
 
         @Override
         protected void log(int type, Object message, Throwable t) {
-            super.log(type, message, t);
             messages.add(message.toString());
         }
     }

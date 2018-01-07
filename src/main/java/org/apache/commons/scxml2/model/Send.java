@@ -434,7 +434,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
         }
         else if (content != null) {
             if (content.getExpr() != null) {
-                Object evalResult = null;
+                Object evalResult;
                 try {
                     evalResult = eval.eval(ctx, content.getExpr());
                 } catch (SCXMLExpressionException e) {

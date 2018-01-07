@@ -51,7 +51,7 @@ public class If extends Action implements ActionsContainer {
      * The set of executable elements (those that inheriting from
      * Action) that are contained in this &lt;if&gt; element.
      */
-    private List<Action> actions;
+    private final List<Action> actions;
 
     /**
      * The boolean value that dictates whether the particular child action
@@ -64,7 +64,7 @@ public class If extends Action implements ActionsContainer {
      */
     public If() {
         super();
-        this.actions = new ArrayList<Action>();
+        this.actions = new ArrayList<>();
         this.execute = false;
     }
 

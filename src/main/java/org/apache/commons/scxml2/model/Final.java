@@ -90,7 +90,7 @@ public class Final extends EnterableState {
                 Context ctx = exctx.getScInstance().getGlobalContext();
                 if (content != null) {
                     if (content.getExpr() != null) {
-                        Object evalResult = null;
+                        Object evalResult;
                         try {
                             evalResult = eval.eval(ctx, content.getExpr());
                         } catch (SCXMLExpressionException e) {

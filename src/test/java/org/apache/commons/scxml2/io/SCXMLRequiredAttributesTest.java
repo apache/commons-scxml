@@ -29,7 +29,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
- * Test enforcement of required SCXML element attributes, spec http://www.w3.org/TR/2013/WD-scxml-20130801
+ * Test enforcement of required SCXML element attributes, spec https://www.w3.org/TR/2015/REC-scxml-20150901
  * <p>
  * TODO required attributes for elements:
  * <ul>

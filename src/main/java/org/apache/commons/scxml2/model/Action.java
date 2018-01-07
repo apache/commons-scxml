@@ -17,7 +17,6 @@
 package org.apache.commons.scxml2.model;
 
 import java.io.Serializable;
-import java.util.Map;
 
 import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.SCXMLExpressionException;
@@ -79,15 +78,7 @@ public abstract class Action implements Serializable {
             throw new ModelException("Action "
                     + this.getClass().getName() + " instance missing required parent TransitionTarget");
         }
-        TransitionTarget tt = parent.getParent();
-        if (tt instanceof EnterableState) {
-            return (EnterableState)tt;
-        } else if (tt instanceof History) {
-            return ((History)tt).getParent();
-        } else {
-            throw new ModelException("Unknown TransitionTarget subclass:"
-                    + (tt != null ? tt.getClass().getName() : "(null)"));
-        }
+        return parent.getParent();
     }
 
     /**

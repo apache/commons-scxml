@@ -40,7 +40,7 @@ public class SimpleErrorReporter implements ErrorReporter, Serializable {
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
     /** Log. */
-    private Log log = LogFactory.getLog(getClass());
+    private static final Log log = LogFactory.getLog(SimpleErrorReporter.class);
 
     /**
      * Constructor.
@@ -68,11 +68,11 @@ public class SimpleErrorReporter implements ErrorReporter, Serializable {
             } else if (errCtx instanceof State) {
                 //determineInitialStates
                 //determineTargetStates
-                msg.append("State " + LogUtils.getTTPath((State) errCtx));
+                msg.append("State ").append(LogUtils.getTTPath((State) errCtx));
             }
         } else if (errCode == ErrorConstants.UNKNOWN_ACTION) {
             //executeActionList
-            msg.append("Action: " + errCtx.getClass().getName());
+            msg.append("Action: ").append(errCtx.getClass().getName());
         } else if (errCode == ErrorConstants.ILLEGAL_CONFIG) {
             //isLegalConfig
             if (errCtx instanceof Map.Entry) { //unchecked cast below
@@ -80,7 +80,7 @@ public class SimpleErrorReporter implements ErrorReporter, Serializable {
                     (Map.Entry<EnterableState, Set<EnterableState>>) errCtx;
                 EnterableState es = badConfigMap.getKey();
                 Set<EnterableState> vals = badConfigMap.getValue();
-                msg.append(LogUtils.getTTPath(es) + " : [");
+                msg.append(LogUtils.getTTPath(es)).append(" : [");
                 for (Iterator<EnterableState> i = vals.iterator(); i.hasNext();) {
                     EnterableState ex = i.next();
                     msg.append(LogUtils.getTTPath(ex));
@@ -104,11 +104,11 @@ public class SimpleErrorReporter implements ErrorReporter, Serializable {
         } else if (errCode == ErrorConstants.EXPRESSION_ERROR) {
             if (errCtx instanceof Executable) {
                 TransitionTarget parent = ((Executable) errCtx).getParent();
-                msg.append("Expression error inside " + LogUtils.getTTPath(parent));
+                msg.append("Expression error inside ").append(LogUtils.getTTPath(parent));
             }
             else if (errCtx instanceof Data) {
                 // Data expression error
-                msg.append("Expression error for data element with id "+((Data)errCtx).getId());
+                msg.append("Expression error for data element with id ").append(((Data) errCtx).getId());
             }
             else if (errCtx instanceof SCXML) {
                 // Global Script

@@ -32,8 +32,7 @@ import org.apache.commons.scxml2.Builtin;
  */
 public abstract class GroovySCXMLScript extends Script {
 
-    GroovyContext context;
-    GroovyContextBinding binding;
+    private GroovyContext context;
 
     protected GroovySCXMLScript() {
         super(null);
@@ -42,8 +41,7 @@ public abstract class GroovySCXMLScript extends Script {
     @Override
     public void setBinding(final Binding binding) {
         super.setBinding(binding);
-        this.binding = (GroovyContextBinding)binding;
-        this.context = this.binding.getContext();
+        this.context = ((GroovyContextBinding) binding).getContext();
     }
 
     /**

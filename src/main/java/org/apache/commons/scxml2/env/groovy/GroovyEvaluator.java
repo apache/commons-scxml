@@ -21,7 +21,6 @@ import groovy.lang.Script;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,11 +43,6 @@ public class GroovyEvaluator extends AbstractBaseEvaluator {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
-
-    /**
-     * Unique context variable name used for temporary reference to assign data (thus must be a valid variable name)
-     */
-    private static final String ASSIGN_VARIABLE_NAME = "a"+UUID.randomUUID().toString().replace('-','x');
 
     public static final String SUPPORTED_DATA_MODEL = "groovy";
 
@@ -237,25 +231,6 @@ public class GroovyEvaluator extends AbstractBaseEvaluator {
         } catch (Exception e) {
             String exMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getCanonicalName();
             throw new SCXMLExpressionException("evalCond('" + expr + "'): " + exMessage, e);
-        }
-    }
-
-    /**
-     * @see Evaluator#evalAssign(Context, String, Object)
-     */
-    public void evalAssign(final Context ctx, final String location, final Object data) throws SCXMLExpressionException {
-        final StringBuilder sb = new StringBuilder(location).append("=").append(ASSIGN_VARIABLE_NAME);
-        try {
-            ctx.getVars().put(ASSIGN_VARIABLE_NAME, data);
-            eval(ctx, sb.toString());
-        } catch (SCXMLExpressionException e) {
-            if (e.getCause() != null && e.getCause() != null && e.getCause().getMessage() != null) {
-                throw new SCXMLExpressionException("Error evaluating assign to location=\"" + location + "\": " + e.getCause().getMessage());
-            }
-            throw e;
-        }
-        finally {
-            ctx.getVars().remove(ASSIGN_VARIABLE_NAME);
         }
     }
 

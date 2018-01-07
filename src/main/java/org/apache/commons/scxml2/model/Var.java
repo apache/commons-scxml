@@ -60,13 +60,6 @@ public class Var extends Action {
     private String expr;
 
     /**
-     * Constructor.
-     */
-    public Var() {
-        super();
-    }
-
-    /**
      * Get the expression that evaluates to the initial value
      * of the variable.
      *

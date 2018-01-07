@@ -158,13 +158,7 @@ final class ModelUpdater {
 
         scxml.setInitialTransition(initialTransition);
         Map<String, TransitionTarget> targets = scxml.getTargets();
-        for (EnterableState es : scxml.getChildren()) {
-            if (es instanceof State) {
-                updateState((State) es, targets);
-            } else if (es instanceof Parallel) {
-                updateParallel((Parallel) es, targets);
-            }
-        }
+        updateEnterableStates(scxml.getChildren(), targets);
 
         scxml.getInitialTransition().setObservableId(1);
         initObservables(scxml.getChildren(), 2);
@@ -281,13 +275,7 @@ final class ModelUpdater {
             }
         }
 
-        for (EnterableState es : children) {
-            if (es instanceof State) {
-                updateState((State) es, targets);
-            } else if (es instanceof Parallel) {
-                updateParallel((Parallel) es, targets);
-            }
-        }
+        updateEnterableStates(children, targets);
     }
 
     /**
@@ -299,13 +287,7 @@ final class ModelUpdater {
      */
     private static void updateParallel(final Parallel parallel, final Map<String, TransitionTarget> targets)
             throws ModelException {
-        for (EnterableState es : parallel.getChildren()) {
-            if (es instanceof State) {
-                updateState((State) es, targets);
-            } else if (es instanceof Parallel) {
-                updateParallel((Parallel) es, targets);
-            }
-        }
+        updateEnterableStates(parallel.getChildren(), targets);
         for (Transition transition : parallel.getTransitionsList()) {
             updateTransition(transition, targets);
         }
@@ -314,6 +296,25 @@ final class ModelUpdater {
             updateHistory(history, targets, parallel);
         }
         // TODO: parallel must may have invokes too
+    }
+
+    /**
+     * Update the EnterableState objects (part of post-read processing).
+     *
+     * @param states The EnterableState objects
+     * @param targets The global Map of all transition targets
+     * @throws ModelException If the object model is flawed
+     */
+    private static void updateEnterableStates(final List<EnterableState> states,
+                                              final Map<String, TransitionTarget> targets)
+        throws ModelException {
+        for (EnterableState es : states) {
+            if (es instanceof State) {
+                updateState((State) es, targets);
+            } else if (es instanceof Parallel) {
+                updateParallel((Parallel) es, targets);
+            }
+        }
     }
 
     /**

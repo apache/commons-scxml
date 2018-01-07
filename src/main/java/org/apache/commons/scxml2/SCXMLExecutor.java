@@ -51,7 +51,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     /**
      * The Logger for the SCXMLExecutor.
      */
-    private Log log = LogFactory.getLog(SCXMLExecutor.class);
+    private static final Log log = LogFactory.getLog(SCXMLExecutor.class);
 
     /**
      * Parent SCXMLIOProcessor
@@ -61,17 +61,17 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     /**
      *  Interpretation semantics.
      */
-    private SCXMLSemantics semantics;
+    private final SCXMLSemantics semantics;
 
     /**
      * The state machine execution context
      */
-    private SCXMLExecutionContext exctx;
+    private final SCXMLExecutionContext exctx;
 
     /**
      * The external event queue
      */
-    private final Queue<TriggerEvent> externalEventQueue = new ConcurrentLinkedQueue<TriggerEvent>();
+    private final Queue<TriggerEvent> externalEventQueue = new ConcurrentLinkedQueue<>();
 
     /**
      * Convenience constructor.
@@ -468,7 +468,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
                 while (exctx.isRunning()) {
                     triggerEvents();
                 }
-            } catch (ModelException e) {
+            } catch (ModelException ignored) {
             }
         });
         t.start();

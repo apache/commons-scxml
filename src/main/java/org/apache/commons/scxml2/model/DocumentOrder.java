@@ -29,19 +29,9 @@ import java.util.Comparator;
  */
 public interface DocumentOrder {
 
-    Comparator<DocumentOrder> documentOrderComparator = new Comparator<DocumentOrder>() {
-        @Override
-        public int compare(final DocumentOrder o1, final DocumentOrder o2) {
-            return o1.getOrder() - o2.getOrder();
-        }
-    };
+    Comparator<DocumentOrder> documentOrderComparator = Comparator.comparingInt(DocumentOrder::getOrder);
 
-    Comparator<DocumentOrder> reverseDocumentOrderComparator = new Comparator<DocumentOrder>() {
-        @Override
-        public int compare(final DocumentOrder o1, final DocumentOrder o2) {
-            return o2.getOrder() - o1.getOrder();
-        }
-    };
+    Comparator<DocumentOrder> reverseDocumentOrderComparator = (o1, o2) -> o2.getOrder() - o1.getOrder();
 
     /**
      * @return the relative document order within the SCXML document of this element

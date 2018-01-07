@@ -54,7 +54,7 @@ public class Issue112Test {
 
         CustomAction ca1 =
             new CustomAction("http://my.custom-actions.domain/CUSTOM", "enqueue", Enqueue.class);
-        List<CustomAction> customActions = new ArrayList<CustomAction>();
+        List<CustomAction> customActions = new ArrayList<>();
         customActions.add(ca1);
 
         SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/issues/queue-01.xml", customActions);
@@ -87,12 +87,7 @@ public class Issue112Test {
      */
     public static class Enqueue extends Action {
 
-        private static final long serialVersionUID = 1L;
         private String event;
-
-        public Enqueue() {
-            super();
-        }
 
         public String getEvent() {
             return event;
@@ -113,7 +108,7 @@ public class Issue112Test {
 
     // Test external event queue
     private static final class Application {
-        private static final Queue<String> QUEUE = new LinkedList<String>();
+        private static final Queue<String> QUEUE = new LinkedList<>();
     }
 
 }

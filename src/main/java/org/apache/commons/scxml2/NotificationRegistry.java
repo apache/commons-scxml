@@ -46,7 +46,7 @@ public final class NotificationRegistry {
      * Constructor.
      */
     public NotificationRegistry() {
-        this.regs = new HashMap<Integer, Set<SCXMLListener>>();
+        this.regs = new HashMap<>();
     }
 
     /**
@@ -57,11 +57,7 @@ public final class NotificationRegistry {
      */
     synchronized void addListener(final Observable source, final SCXMLListener lst) {
         if (source != null && source.getObservableId() != null) {
-            Set<SCXMLListener> entries = regs.get(source.getObservableId());
-            if (entries == null) {
-                entries = new LinkedHashSet<SCXMLListener>();
-                regs.put(source.getObservableId(), entries);
-            }
+            Set<SCXMLListener> entries = regs.computeIfAbsent(source.getObservableId(), k -> new LinkedHashSet<>());
             entries.add(lst);
         }
     }

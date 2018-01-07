@@ -53,7 +53,7 @@ public class ContentParser {
     /**
      * Jackson JSON ObjectMapper
      */
-    private ObjectMapper jsonObjectMapper;
+    private final ObjectMapper jsonObjectMapper;
 
     /**
      * Default constructor initializing a Jackson ObjectMapper allowing embedded comments, including YAML style
@@ -183,12 +183,10 @@ public class ContentParser {
      * @throws IOException
      */
     public Node parseXml(final String xmlString) throws IOException {
-        Document doc = null;
+        Document doc;
         try {
             doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(xmlString);
-        } catch (SAXException e) {
-            throw new IOException(e);
-        } catch (ParserConfigurationException e) {
+        } catch (SAXException | ParserConfigurationException e) {
             throw new IOException(e);
         }
         return doc != null ? doc.getDocumentElement() : null;

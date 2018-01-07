@@ -36,13 +36,11 @@ public final class LogUtils {
      */
     public static String transToString(final TransitionTarget from,
             final TransitionTarget to, final Transition transition, String event) {
-        StringBuffer buf = new StringBuffer("(");
-        buf.append("event = ").append(event);
-        buf.append(", cond = ").append(transition.getCond());
-        buf.append(", from = ").append(getTTPath(from));
-        buf.append(", to = ").append(getTTPath(to));
-        buf.append(')');
-        return buf.toString();
+        return "(" + "event = " + event +
+                ", cond = " + transition.getCond() +
+                ", from = " + getTTPath(from) +
+                ", to = " + getTTPath(to) +
+                ')';
     }
 
     /**

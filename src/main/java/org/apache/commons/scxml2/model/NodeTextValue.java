@@ -24,7 +24,7 @@ public class NodeTextValue implements ParsedValue {
     /**
      * the XML node as text
      */
-    private String nodeText;
+    private final String nodeText;
 
     public NodeTextValue(final String nodeText) {
         this.nodeText = nodeText;

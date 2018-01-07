@@ -55,7 +55,6 @@ import org.apache.commons.scxml2.model.ElseIf;
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.JsonValue;
 import org.apache.commons.scxml2.model.NodeListValue;
-import org.apache.commons.scxml2.model.NodeTextValue;
 import org.apache.commons.scxml2.model.NodeValue;
 import org.apache.commons.scxml2.model.ParsedValue;
 import org.apache.commons.scxml2.model.Raise;
@@ -456,15 +455,7 @@ public class SCXMLWriter {
 
         // Children
         writeDatamodel(writer, scxml.getDatamodel());
-        for (EnterableState es : scxml.getChildren()) {
-            if (es instanceof Final) {
-                writeFinal(writer, (Final) es);
-            } else if (es instanceof State) {
-                writeState(writer, (State) es);
-            } else if (es instanceof Parallel) {
-                writeParallel(writer, (Parallel) es);
-            }
-        }
+        writeEnterableStates(writer, scxml.getChildren());
 
         // End
         writer.writeEndElement();
@@ -539,15 +530,7 @@ public class SCXMLWriter {
             writeInvoke(writer, inv);
         }
 
-        for (EnterableState es : state.getChildren()) {
-            if (es instanceof Final) {
-                writeFinal(writer, (Final) es);
-            } else if (es instanceof State) {
-                writeState(writer, (State) es);
-            } else if (es instanceof Parallel) {
-                writeParallel(writer, (Parallel) es);
-            }
-        }
+        writeEnterableStates(writer, state.getChildren());
 
         for (OnExit onexit : state.getOnExits()) {
             writeOnExit(writer, onexit);
@@ -583,15 +566,7 @@ public class SCXMLWriter {
             writeInvoke(writer, inv);
         }
 
-        for (EnterableState es : parallel.getChildren()) {
-            if (es instanceof Final) {
-                writeFinal(writer, (Final) es);
-            } else if (es instanceof State) {
-                writeState(writer, (State) es);
-            } else if (es instanceof Parallel) {
-                writeParallel(writer, (Parallel) es);
-            }
-        }
+        writeEnterableStates(writer, parallel.getChildren());
 
         for (OnExit onexit : parallel.getOnExits()) {
             writeOnExit(writer, onexit);
@@ -620,17 +595,32 @@ public class SCXMLWriter {
         }
         if (end.getDoneData() != null) {
             writer.writeStartElement(SCXMLConstants.ELEM_DONEDATA);
-            for (Param p : end.getDoneData().getParams()) {
-                writer.writeStartElement(SCXMLConstants.ELEM_PARAM);
-                writeAV(writer, SCXMLConstants.ATTR_NAME, p.getName());
-                writeAV(writer, SCXMLConstants.ATTR_LOCATION, p.getLocation());
-                writeAV(writer, SCXMLConstants.ATTR_EXPR, escapeXML(p.getExpr()));
-                writer.writeEndElement();
-            }
+            writeParams(writer, end.getDoneData().getParams());
             writeContent(writer, end.getDoneData().getContent());
             writer.writeEndElement();
         }
         writer.writeEndElement();
+    }
+
+    /**
+     * Write out the {@link EnterableState} objects into its serialization.
+     *
+     * @param writer The {@link XMLStreamWriter} in use for the serialization.
+     * @param states The {@link EnterableState}s to serialize.
+     *
+     * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
+     */
+    private static void writeEnterableStates(final XMLStreamWriter writer, final List<EnterableState> states)
+            throws XMLStreamException {
+        for (EnterableState es : states) {
+            if (es instanceof Final) {
+                writeFinal(writer, (Final) es);
+            } else if (es instanceof State) {
+                writeState(writer, (State) es);
+            } else if (es instanceof Parallel) {
+                writeParallel(writer, (Parallel) es);
+            }
+        }
     }
 
     /**
@@ -765,13 +755,7 @@ public class SCXMLWriter {
         writeAV(writer, SCXMLConstants.ATTR_AUTOFORWARD, invoke.getAutoForward());
         writeAV(writer, SCXMLConstants.ATTR_NAMELIST, invoke.getNamelist());
 
-        for (Param p : invoke.getParams()) {
-            writer.writeStartElement(SCXMLConstants.ELEM_PARAM);
-            writeAV(writer, SCXMLConstants.ATTR_NAME, p.getName());
-            writeAV(writer, SCXMLConstants.ATTR_LOCATION, p.getLocation());
-            writeAV(writer, SCXMLConstants.ATTR_EXPR, escapeXML(p.getExpr()));
-            writer.writeEndElement();
-        }
+        writeParams(writer, invoke.getParams());
         writeFinalize(writer, invoke.getFinalize());
         writeContent(writer, invoke.getContent());
 
@@ -911,16 +895,29 @@ public class SCXMLWriter {
         writeAV(writer, SCXMLConstants.ATTR_NAMELIST, send.getNamelist());
         writeAV(writer, SCXMLConstants.ATTR_HINTS, send.getHints());
 
-        for (Param p : send.getParams()) {
+        writeParams(writer, send.getParams());
+        writeContent(writer, send.getContent());
+
+        writer.writeEndElement();
+    }
+
+    /**
+     * Write out the {@link Param} objects into its serialization.
+     *
+     * @param writer The {@link XMLStreamWriter} in use for the serialization.
+     * @param params The {@link Param}s to serialize.
+     *
+     * @throws XMLStreamException An exception processing the underlying {@link XMLStreamWriter}.
+     */
+    private static void writeParams(final XMLStreamWriter writer, final List<Param> params)
+            throws XMLStreamException {
+        for (Param p : params) {
             writer.writeStartElement(SCXMLConstants.ELEM_PARAM);
             writeAV(writer, SCXMLConstants.ATTR_NAME, p.getName());
             writeAV(writer, SCXMLConstants.ATTR_LOCATION, p.getLocation());
             writeAV(writer, SCXMLConstants.ATTR_EXPR, escapeXML(p.getExpr()));
             writer.writeEndElement();
         }
-        writeContent(writer, send.getContent());
-
-        writer.writeEndElement();
     }
 
     /**
@@ -1202,13 +1199,9 @@ public class SCXMLWriter {
             TransformerFactory tfFactory = TransformerFactory.newInstance();
             transformer = tfFactory.newTransformer();
             transformer.setOutputProperties(outputProps);
-        } catch (TransformerFactoryConfigurationError t) {
+        } catch (TransformerFactoryConfigurationError | TransformerConfigurationException t) {
             org.apache.commons.logging.Log log = LogFactory.getLog(SCXMLWriter.class);
             log.error(t.getMessage(), t);
-            return null;
-        } catch (TransformerConfigurationException e) {
-            org.apache.commons.logging.Log log = LogFactory.getLog(SCXMLWriter.class);
-            log.error(e.getMessage(), e);
             return null;
         }
         return transformer;
@@ -1359,7 +1352,7 @@ public class SCXMLWriter {
 
             this.factoryId = factoryId;
             this.factoryClassLoader = factoryClassLoader;
-            this.properties = (properties == null ? new HashMap<String, Object>() : properties);
+            this.properties = (properties == null ? new HashMap<>() : properties);
             this.encoding = encoding;
             this.usePrettyPrint = usePrettyPrint;
             this.closeUnderlyingWhenDone = closeUnderlyingWhenDone;

@@ -17,7 +17,6 @@
 package org.apache.commons.scxml2.model;
 
 import java.io.Serializable;
-import java.util.Map;
 
 /**
  * The class in this SCXML object model that corresponds to the

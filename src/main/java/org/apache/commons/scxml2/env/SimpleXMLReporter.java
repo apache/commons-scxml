@@ -37,7 +37,7 @@ public class SimpleXMLReporter implements XMLReporter, Serializable {
     private static final long serialVersionUID = 1L;
 
     /** Log. */
-    private Log log = LogFactory.getLog(getClass());
+    private static final Log log = LogFactory.getLog(SimpleXMLReporter.class);
 
     /**
      * Constructor.

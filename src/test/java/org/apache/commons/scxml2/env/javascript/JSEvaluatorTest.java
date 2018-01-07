@@ -68,16 +68,16 @@ public class JSEvaluatorTest {
                                                  "</scxml>";
 
     private static final TestItem[] SIMPLE_EXPRESSIONS = {
-            new TestItem("'FIB: ' + (1 + 1 + 2 + 3 + 5)",new String("FIB: 12")),
-            new TestItem("1 + 1 + 2 + 3 + 5",            new Integer(12)), // Force comparison using intValue
-            new TestItem("1.1 + 1.1 + 2.1 + 3.1 + 5.1",  new Double(12.5)),
-            new TestItem("(1 + 1 + 2 + 3 + 5) == 12",    new Boolean(true)),
-            new TestItem("(1 + 1 + 2 + 3 + 5) == 13",    new Boolean(false)),
+            new TestItem("'FIB: ' + (1 + 1 + 2 + 3 + 5)", "FIB: 12"),
+            new TestItem("1 + 1 + 2 + 3 + 5",            12), // Force comparison using intValue
+            new TestItem("1.1 + 1.1 + 2.1 + 3.1 + 5.1",  12.5),
+            new TestItem("(1 + 1 + 2 + 3 + 5) == 12",    true),
+            new TestItem("(1 + 1 + 2 + 3 + 5) == 13",    false),
     };
 
     private static final TestItem[] VAR_EXPRESSIONS = {
-            new TestItem("'FIB: ' + fibonacci",new String("FIB: 12")),
-            new TestItem("fibonacci * 2",      new Double(24)),
+            new TestItem("'FIB: ' + fibonacci", "FIB: 12"),
+            new TestItem("fibonacci * 2",      24.0),
     };
 
     private static final String FUNCTION = "function factorial(N) {\r\n" +
@@ -97,7 +97,6 @@ public class JSEvaluatorTest {
 
     private Context       context;
     private Evaluator     evaluator;
-    private SCXMLExecutor fsm;
 
     // TEST SETUP
 
@@ -107,10 +106,10 @@ public class JSEvaluatorTest {
      */
     @Before
     public void setUp() throws Exception {
-            fsm = SCXMLTestHelper.getExecutor(SCXMLReader.read(new StringReader(SCRIPT)));
-            fsm.go();
-            evaluator = fsm.getEvaluator();
-            context = fsm.getGlobalContext();
+        SCXMLExecutor fsm = SCXMLTestHelper.getExecutor(SCXMLReader.read(new StringReader(SCRIPT)));
+        fsm.go();
+        evaluator = fsm.getEvaluator();
+        context = fsm.getGlobalContext();
     }
 
     // CLASS METHODS
@@ -137,7 +136,7 @@ public class JSEvaluatorTest {
         Evaluator evaluator = new JSEvaluator();
 
         Assert.assertNotNull(evaluator);
-        Assert.assertTrue   (((Boolean) evaluator.eval(context, "1+1 == 2")).booleanValue());
+        Assert.assertTrue   ((Boolean) evaluator.eval(context, "1+1 == 2"));
     }
 
     @Test
@@ -201,11 +200,11 @@ public class JSEvaluatorTest {
      */    
     @Test
     public void testVarExpressions() throws Exception {
-        context.set("fibonacci",Integer.valueOf(12));
+        context.set("fibonacci", 12.0);
 
         for (TestItem item: VAR_EXPRESSIONS) {
             Assert.assertNotNull(context.get("fibonacci"));
-            Assert.assertEquals (Integer.valueOf(12),context.get("fibonacci"));
+            Assert.assertEquals (12.0,context.get("fibonacci"));
             Assert.assertEquals ("Invalid result: " + item.expression,
                           item.result,
                           evaluator.eval(context,item.expression));
@@ -288,17 +287,17 @@ public class JSEvaluatorTest {
      */    
     @Test
     public void testScriptFunctions() throws Exception {
-        context.set("FIVE",Integer.valueOf(5));
-        Assert.assertEquals(Integer.valueOf(5),context.get("FIVE"));
-        Assert.assertEquals("Invalid function result",Double.valueOf(120.0),evaluator.eval(context,FUNCTION));
+        context.set("FIVE", 5);
+        Assert.assertEquals(5,context.get("FIVE"));
+        Assert.assertEquals("Invalid function result", 120.0,evaluator.eval(context,FUNCTION));
     }
 
 
     // INNER CLASSES
 
     private static class TestItem {
-        private String expression;
-        private Object result;
+        private final String expression;
+        private final Object result;
 
         private TestItem(String expression,Object result) {
             this.expression = expression;

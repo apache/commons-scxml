@@ -35,6 +35,10 @@
     <release version="2.0" date="In Git master"
       description="Latest unreleased code">
 
+      <action dev="ate" type="add" issue="SCXML-278">
+        [07-01-2018] Code cleanup and Java8 alignment
+      </action>
+
       <action dev="ate" type="add" issue="SCXML-271">
         [12-11-2017] Support Groovy for running the SCXML IRP tests
       </action>
@@ -60,7 +64,7 @@
       </action>
 
       <action dev="ate" type="add" issue="SCXML-264">
-        [12-10-2017] Support &lt;invoke&gt; with inline (<content> body) SCXML statemachine definition
+        [12-10-2017] Support &lt;invoke&gt; with inline (&lt;content&gt; body) SCXML statemachine definition
       </action>
 
       <action dev="ate" type="fix" issue="SCXML-263">

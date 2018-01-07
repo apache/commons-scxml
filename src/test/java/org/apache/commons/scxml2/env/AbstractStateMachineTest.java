@@ -43,7 +43,7 @@ public class AbstractStateMachineTest {
 
         private boolean fooCalled;
 
-        public Foo(final URL scxmlDocument) throws ModelException {
+        Foo(final URL scxmlDocument) throws ModelException {
             super(scxmlDocument);
         }
 
@@ -51,7 +51,7 @@ public class AbstractStateMachineTest {
             fooCalled = true;
         }
 
-        public boolean fooCalled() {
+        boolean fooCalled() {
             return fooCalled;
         }
     }
@@ -60,7 +60,7 @@ public class AbstractStateMachineTest {
 
         private boolean barCalled;
 
-        public Bar(final URL scxmlDocument) throws ModelException {
+        Bar(final URL scxmlDocument) throws ModelException {
             super(scxmlDocument);
         }
 
@@ -68,7 +68,7 @@ public class AbstractStateMachineTest {
             barCalled = true;
         }
 
-        public boolean barCalled() {
+        boolean barCalled() {
             return barCalled;
         }
     }

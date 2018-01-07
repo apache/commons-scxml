@@ -48,12 +48,6 @@ public class SCXML implements Serializable, Observable {
     private static final Integer SCXML_OBSERVABLE_ID = 0;
 
     /**
-     * The xmlns attribute on the root &lt;smxml&gt; element.
-     * This must match XMLNS above.
-     */
-    private String xmlns;
-
-    /**
      * The SCXML version of this document.
      */
     private String version;
@@ -113,13 +107,13 @@ public class SCXML implements Serializable, Observable {
     /**
      * The immediate child targets of this SCXML document root.
      */
-    private List<EnterableState> children;
+    private final List<EnterableState> children;
 
     /**
      * A global map of all States and Parallels associated with this
      * state machine, keyed by their id.
      */
-    private Map<String, TransitionTarget> targets;
+    private final Map<String, TransitionTarget> targets;
 
     /**
      * The XML namespaces defined on the SCXML document root node,
@@ -137,8 +131,8 @@ public class SCXML implements Serializable, Observable {
      * Constructor.
      */
     public SCXML() {
-        this.children = new ArrayList<EnterableState>();
-        this.targets = new HashMap<String, TransitionTarget>();
+        this.children = new ArrayList<>();
+        this.targets = new HashMap<>();
     }
 
     /**
@@ -302,24 +296,6 @@ public class SCXML implements Serializable, Observable {
      */
     public final void setVersion(final String version) {
         this.version = version;
-    }
-
-    /**
-     * Get the xmlns of this SCXML document.
-     *
-     * @return Returns the xmlns.
-     */
-    public final String getXmlns() {
-        return xmlns;
-    }
-
-    /**
-     * Set the xmlns of this SCXML document.
-     *
-     * @param xmlns The xmlns to set.
-     */
-    public final void setXmlns(final String xmlns) {
-        this.xmlns = xmlns;
     }
 
     /**

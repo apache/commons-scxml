@@ -48,9 +48,8 @@ import org.apache.commons.scxml2.model.ModelException;
 public class StopWatchDisplay extends JFrame
         implements ActionListener {
 
-    private static final long serialVersionUID = 1L;
     private StopWatch stopWatch;
-    private Image watchImage, watchIcon;
+    private Image watchImage;
 
     public StopWatchDisplay() throws ModelException {
         super("SCXML stopwatch");
@@ -92,7 +91,7 @@ public class StopWatchDisplay extends JFrame
             getResource("org/apache/commons/scxml2/env/stopwatchicon.gif");
         Toolkit kit = Toolkit.getDefaultToolkit();
         watchImage = kit.createImage(imageURL);
-        watchIcon = kit.createImage(iconURL);
+        Image watchIcon = kit.createImage(iconURL);
         WatchPanel panel = new WatchPanel();
         panel.setLayout(new BorderLayout());
         setContentPane(panel);
@@ -135,8 +134,6 @@ public class StopWatchDisplay extends JFrame
     }
 
     class WatchPanel extends JPanel {
-        private static final long serialVersionUID = 1L;
-
         @Override
         public void paintComponent(Graphics g) {
             if(watchImage != null) {

@@ -124,12 +124,8 @@ public abstract class AbstractStateMachine {
         log = LogFactory.getLog(this.getClass());
         try {
             stateMachine = SCXMLReader.read(scxmlDocument);
-        } catch (IOException ioe) {
+        } catch (IOException | XMLStreamException | ModelException ioe) {
             logError(ioe);
-        } catch (XMLStreamException xse) {
-            logError(xse);
-        } catch (ModelException me) {
-            logError(me);
         }
         initialize(stateMachine, rootCtx, evaluator);
     }
@@ -246,20 +242,9 @@ public abstract class AbstractStateMachine {
         try {
             Method method = clas.getDeclaredMethod(methodName, SIGNATURE);
             method.invoke(this, PARAMETERS);
-        } catch (SecurityException se) {
+        } catch (SecurityException | NoSuchMethodException | IllegalAccessException | IllegalArgumentException |
+                InvocationTargetException se) {
             logError(se);
-            return false;
-        } catch (NoSuchMethodException nsme) {
-            logError(nsme);
-            return false;
-        } catch (IllegalArgumentException iae) {
-            logError(iae);
-            return false;
-        } catch (IllegalAccessException iae) {
-            logError(iae);
-            return false;
-        } catch (InvocationTargetException ite) {
-            logError(ite);
             return false;
         }
         return true;

@@ -25,7 +25,7 @@ import org.apache.commons.scxml2.model.SCXML;
 
 /**
  * <p>The purpose of this interface is to separate the the
- * <a href="http://www.w3.org/TR/2014/CR-scxml-20140313/#AlgorithmforSCXMLInterpretation">
+ * <a href="https://www.w3.org/TR/2015/REC-scxml-20150901/#AlgorithmforSCXMLInterpretation">
  *     W3C SCXML Algorithm for SCXML Interpretation</a>
  * from the <code>SCXMLExecutor</code> and therefore make it pluggable.</p>
  * <p>
@@ -180,5 +180,5 @@ public interface SCXMLSemantics {
      * @param errRep ErrorReporter to report detailed error info if needed
      * @return true if a given state configuration is legal, false otherwise
      */
-    public boolean isLegalConfiguration(final Set<EnterableState> states, final ErrorReporter errRep);
+    boolean isLegalConfiguration(final Set<EnterableState> states, final ErrorReporter errRep);
 }

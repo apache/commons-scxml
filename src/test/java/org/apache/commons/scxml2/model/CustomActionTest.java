@@ -119,7 +119,7 @@ public class CustomActionTest {
         CustomAction ca2 =
             new CustomAction("http://my.custom-actions.domain/CUSTOM2",
                              "bar", Hello.class);
-        List<CustomAction> customActions = new ArrayList<CustomAction>();
+        List<CustomAction> customActions = new ArrayList<>();
         customActions.add(ca1);
         customActions.add(ca2);
         // (2) Parse the document
@@ -146,7 +146,7 @@ public class CustomActionTest {
         CustomAction ca =
             new CustomAction("http://my.custom-actions.domain/CUSTOM",
                              "hello", Hello.class);
-        List<CustomAction> customActions = new ArrayList<CustomAction>();
+        List<CustomAction> customActions = new ArrayList<>();
         customActions.add(ca);
         // (2) Parse the document
         SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/external-hello-world.xml", customActions);
@@ -170,7 +170,7 @@ public class CustomActionTest {
         CustomAction ca =
             new CustomAction("http://my.custom-actions.domain/CUSTOM",
                              "send", Hello.class);
-        List<CustomAction> customActions = new ArrayList<CustomAction>();
+        List<CustomAction> customActions = new ArrayList<>();
         customActions.add(ca);
         // (2) Parse the document
         SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/custom-hello-world-03.xml", customActions);
@@ -195,7 +195,7 @@ public class CustomActionTest {
         CustomAction ca =
             new CustomAction("http://my.custom-actions.domain/CUSTOM",
                              "hello", Hello.class);
-        List<CustomAction> customActions = new ArrayList<CustomAction>();
+        List<CustomAction> customActions = new ArrayList<>();
         customActions.add(ca);
         // (2) Parse the document
         SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/custom-hello-world-04-jexl.xml", customActions);

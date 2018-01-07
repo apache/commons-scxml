@@ -27,7 +27,7 @@ public abstract class TransitionalState extends EnterableState {
     /**
      * A list of outgoing Transitions from this state, by document order.
      */
-    private List<Transition> transitions;
+    private final List<Transition> transitions;
 
     /**
      * Optional property holding the data model for this state.
@@ -38,7 +38,7 @@ public abstract class TransitionalState extends EnterableState {
      * List of history states owned by a given state (applies to non-leaf
      * states).
      */
-    private List<History> history;
+    private final List<History> history;
 
     /**
      * The Invoke children, each which defines an external process that should
@@ -47,19 +47,18 @@ public abstract class TransitionalState extends EnterableState {
      * process has completed its execution.
      * May occur 0 or more times.
      */
-    private List<Invoke> invokes;
+    private final List<Invoke> invokes;
 
     /**
      * The set of EnterableState children contained in this TransitionalState
      */
-    private List<EnterableState> children;
+    private final List<EnterableState> children;
 
     public TransitionalState() {
-        super();
-        transitions = new ArrayList<Transition>();
-        history = new ArrayList<History>();
-        children = new ArrayList<EnterableState>();
-        invokes = new ArrayList<Invoke>();
+        transitions = new ArrayList<>();
+        history = new ArrayList<>();
+        children = new ArrayList<>();
+        invokes = new ArrayList<>();
     }
 
     /**
@@ -118,7 +117,7 @@ public abstract class TransitionalState extends EnterableState {
             if ((event == null && t.getEvent() == null)
                     || (event != null && event.equals(t.getEvent()))) {
                 if (matchingTransitions == null) {
-                    matchingTransitions = new ArrayList<Transition>();
+                    matchingTransitions = new ArrayList<>();
                 }
                 matchingTransitions.add(t);
             }

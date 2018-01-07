@@ -52,7 +52,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     /**
      * SCXML Execution Logger for the application.
      */
-    private Log appLog = LogFactory.getLog(SCXMLExecutionContext.class);
+    private static final Log appLog = LogFactory.getLog(SCXMLExecutionContext.class);
 
     /**
      * The action execution context instance, providing restricted access to this execution context
@@ -77,7 +77,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     /**
      * The external IOProcessor for Invokers to communicate back on
      */
-    private SCXMLIOProcessor externalIOProcessor;
+    private final SCXMLIOProcessor externalIOProcessor;
 
     /**
      * The event dispatcher to interface with external documents etc.
@@ -92,32 +92,32 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     /**
      * The notification registry.
      */
-    private NotificationRegistry notificationRegistry;
+    private final NotificationRegistry notificationRegistry;
 
     /**
      * The internal event queue
      */
-    private final Queue<TriggerEvent> internalEventQueue = new LinkedList<TriggerEvent>();
+    private final Queue<TriggerEvent> internalEventQueue = new LinkedList<>();
 
     /**
      * The Invoker classes map, keyed by invoke target types (specified using "type" attribute).
      */
-    private final Map<String, Class<? extends Invoker>> invokerClasses = new HashMap<String, Class<? extends Invoker>>();
+    private final Map<String, Class<? extends Invoker>> invokerClasses = new HashMap<>();
 
     /**
      * The map storing the unique invokeId for an Invoke with an active Invoker
      */
-    private final Map<Invoke, String> invokeIds = new HashMap<Invoke, String>();
+    private final Map<Invoke, String> invokeIds = new HashMap<>();
 
     /**
      * The Map of active Invoker, keyed by their unique invokeId.
      */
-    private final Map<String, Invoker> invokers = new HashMap<String, Invoker>();
+    private final Map<String, Invoker> invokers = new HashMap<>();
 
     /**
      * The Map of the current ioProcessors
      */
-    private final Map<String, SCXMLIOProcessor> ioProcessors = new HashMap<String, SCXMLIOProcessor>();
+    private final Map<String, SCXMLIOProcessor> ioProcessors = new HashMap<>();
 
     /**
      * Flag indicating if the SCXML configuration should be checked before execution (default = true)
@@ -211,10 +211,8 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     }
     /**
      * (re)start the state machine.
-     *
-     * @throws ModelException if the state machine instance failed to initialize.
      */
-    public void start() throws ModelException {
+    public void start() {
         if (scInstance.isRunning()) {
             throw new IllegalStateException("The state machine has already started.");
         } else if (scInstance.getGlobalContext() == null) {
@@ -265,15 +263,6 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
         // synchronize possible derived evaluator
         this.evaluator = scInstance.getEvaluator();
         initializeIOProcessors();
-    }
-
-    /**
-     * The SCXML specification section "C.1.1 _ioprocessors Value" states that the SCXMLEventProcessor <em>must</em>
-     * maintain a 'location' field inside its entry in the _ioprocessors environment variable.
-     * @return the 'location' of the SCXMLEventProcessor
-     */
-    public String getLocation() {
-        return null;
     }
 
     /**
@@ -419,7 +408,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
      * @param uri
      * @return
      */
-    private final String stripTrailingSlash(final String uri) {
+    private String stripTrailingSlash(final String uri) {
         return uri.endsWith("/") ? uri.substring(0, uri.length()-1) : uri;
     }
 
@@ -458,10 +447,8 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
         }
         try {
             return invokerClass.newInstance();
-        } catch (InstantiationException ie) {
+        } catch (InstantiationException | IllegalAccessException ie) {
             throw new InvokerException(ie.getMessage(), ie.getCause());
-        } catch (IllegalAccessException iae) {
-            throw new InvokerException(iae.getMessage(), iae.getCause());
         }
     }
 

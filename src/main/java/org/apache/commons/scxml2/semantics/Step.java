@@ -38,49 +38,49 @@ public class Step {
     /**
      * The event in this step.
      */
-    private TriggerEvent event;
+    private final TriggerEvent event;
 
     /**
      * The set of states that were exited during this step.
      */
-    private Set<EnterableState> exitSet;
+    private final Set<EnterableState> exitSet;
 
     /**
      * The set of states that were entered during this step.
      */
-    private Set<EnterableState> entrySet;
+    private final Set<EnterableState> entrySet;
 
     /**
      * The set of states that were entered during this step by default
      */
-    private Set<EnterableState> defaultEntrySet;
+    private final Set<EnterableState> defaultEntrySet;
 
     /**
      * The map of default History transitions to be executed as result of entering states in this step.
      */
-    private Map<TransitionalState, SimpleTransition> defaultHistoryTransitions;
+    private final Map<TransitionalState, SimpleTransition> defaultHistoryTransitions;
 
     /**
      * The map of new History configurations created as result of exiting states in this step
      */
-    private Map<History, Set<EnterableState>> newHistoryConfigurations;
+    private final Map<History, Set<EnterableState>> newHistoryConfigurations;
 
     /**
      * The list of Transitions taken during this step.
      */
-    private List<SimpleTransition> transitList;
+    private final List<SimpleTransition> transitList;
 
     /**
      * @param event The event received in this unit of progression
      */
     public Step(TriggerEvent event) {
         this.event = event;
-        this.exitSet = new HashSet<EnterableState>();
-        this.entrySet = new HashSet<EnterableState>();
-        this.defaultEntrySet = new HashSet<EnterableState>();
-        this.defaultHistoryTransitions = new HashMap<TransitionalState, SimpleTransition>();
-        this.newHistoryConfigurations = new HashMap<History, Set<EnterableState>>();
-        this.transitList = new ArrayList<SimpleTransition>();
+        this.exitSet = new HashSet<>();
+        this.entrySet = new HashSet<>();
+        this.defaultEntrySet = new HashSet<>();
+        this.defaultHistoryTransitions = new HashMap<>();
+        this.newHistoryConfigurations = new HashMap<>();
+        this.transitList = new ArrayList<>();
     }
 
     /**

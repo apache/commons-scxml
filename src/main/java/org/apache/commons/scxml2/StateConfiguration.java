@@ -35,13 +35,13 @@ public class StateConfiguration implements Serializable {
     /**
      * The states that are currently active.
      */
-    private final Set<EnterableState> activeStates = new HashSet<EnterableState>();
+    private final Set<EnterableState> activeStates = new HashSet<>();
     private final Set<EnterableState> activeStatesSet = Collections.unmodifiableSet(activeStates);
 
     /**
      * The atomic states that are currently active.
      */
-    private final Set<EnterableState> atomicStates = new HashSet<EnterableState>();
+    private final Set<EnterableState> atomicStates = new HashSet<>();
     private final Set<EnterableState> atomicStatesSet = Collections.unmodifiableSet(atomicStates);
 
     /**

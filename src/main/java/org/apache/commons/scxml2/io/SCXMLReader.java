@@ -855,13 +855,12 @@ public final class SCXMLReader {
      * @param configuration The {@link Configuration} to use while parsing.
      * @param parent The parent {@link State} for this final (null for top level state).
      *
-     * @throws IOException An IO error during parsing.
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
      *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void readDoneData(final XMLStreamReader reader, final Configuration configuration, final Final parent)
-            throws XMLStreamException, ModelException, IOException {
+            throws XMLStreamException, ModelException {
 
         DoneData doneData = new DoneData();
         parent.setDoneData(doneData);
@@ -911,14 +910,11 @@ public final class SCXMLReader {
      * @param src The "src" attribute value.
      * @param ts The parent {@link TransitionalState} that specifies this "src" attribute.
      *
-     * @throws IOException An IO error during parsing.
-     * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
-     *                        errors in the SCXML document that may not be identified by the schema).
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
     private static void readTransitionalStateSrc(final Configuration configuration, final String src,
                                                  final TransitionalState ts)
-            throws IOException, ModelException, XMLStreamException {
+            throws ModelException {
 
         // Check for URI fragment
         String[] fragments = src.split("#", 2);
@@ -1546,7 +1542,7 @@ public final class SCXMLReader {
             throws XMLStreamException, ModelException {
 
         if (executable instanceof Finalize) {
-            // http://www.w3.org/TR/2013/WD-scxml-20130801/#finalize
+            // https://www.w3.org/TR/2015/REC-scxml-20150901/#finalize
             // [...] the executable content inside <finalize> MUST NOT raise events or invoke external actions.
             // In particular, the <send> and <raise> elements MUST NOT occur.
             reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_FINALIZE, SCXMLConstants.XMLNS_SCXML, SCXMLConstants.ELEM_RAISE);
@@ -1751,7 +1747,7 @@ public final class SCXMLReader {
             throws XMLStreamException, ModelException {
 
         if (executable instanceof Finalize) {
-            // http://www.w3.org/TR/2013/WD-scxml-20130801/#finalize
+            // https://www.w3.org/TR/2015/REC-scxml-20150901/#finalize
             // [...] the executable content inside <finalize> MUST NOT raise events or invoke external actions.
             // In particular, the <send> and <raise> elements MUST NOT occur.
             reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_FINALIZE, SCXMLConstants.XMLNS_SCXML, SCXMLConstants.ELEM_SEND);
@@ -1913,8 +1909,8 @@ public final class SCXMLReader {
 
     /**
      * Read the contents of the initial &lt;script&gt; element.
-     * @see <a href="http://www.w3.org/TR/2013/WD-scxml-20130801/#scxml">
-     *     http://www.w3.org/TR/2013/WD-scxml-20130801/#scxml<a> section 3.2.2
+     * @see <a href="https://www.w3.org/TR/2015/REC-scxml-20150901/#scxml">
+     *     https://www.w3.org/TR/2015/REC-scxml-20150901/#scxml<a> section 3.2.2
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
@@ -2016,10 +2012,12 @@ public final class SCXMLReader {
             actionWrapper.getNamespaces().putAll(namespaces);
         }
 
+        Map<String, String> attributes = new HashMap<>();
         for (int i = 0; i < reader.getAttributeCount(); i++) {
             String name = reader.getAttributeLocalName(i);
             String qname = createQualifiedName(reader.getAttributePrefix(i), name);
             String value = reader.getAttributeValue(i);
+            attributes.put(qname, value);
             String setter = "set" + name.substring(0, 1).toUpperCase() + name.substring(1);
             Method method;
             try {
@@ -2035,6 +2033,9 @@ public final class SCXMLReader {
                 throw new XMLStreamException("Cannot access method: " + setter +"(String) in custom action class: "
                         + className, iae);
             }
+        }
+        if (!attributes.isEmpty()) {
+            actionWrapper.setAttributes(attributes);
         }
 
         // Add any body content if necessary
@@ -2721,7 +2722,7 @@ public final class SCXMLReader {
          */
         boolean strict;
 
-        ContentParser contentParser;
+        final ContentParser contentParser;
 
         /*
          * Public constructors
@@ -2881,7 +2882,7 @@ public final class SCXMLReader {
             this.factoryId = factoryId;
             this.factoryClassLoader = factoryClassLoader;
             this.allocator = allocator;
-            this.properties = (properties == null ? new HashMap<String, Object>() : properties);
+            this.properties = (properties == null ? new HashMap<>() : properties);
             this.resolver = resolver;
             this.reporter = reporter;
             this.encoding = encoding;
@@ -2889,7 +2890,7 @@ public final class SCXMLReader {
             this.validate = validate;
             this.pathResolver = pathResolver;
             this.parent = parent;
-            this.customActions = (customActions == null ? new ArrayList<CustomAction>() : customActions);
+            this.customActions = (customActions == null ? new ArrayList<>() : customActions);
             this.customActionClassLoader = customActionClassLoader;
             this.useContextClassLoaderForCustomActions = useContextClassLoaderForCustomActions;
             this.silent = silent;

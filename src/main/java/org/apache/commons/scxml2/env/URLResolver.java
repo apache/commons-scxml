@@ -35,7 +35,7 @@ public class URLResolver implements PathResolver, Serializable {
     private static final long serialVersionUID = 1L;
 
     /** Implementation independent log category. */
-    private Log log = LogFactory.getLog(PathResolver.class);
+    private static final Log log = LogFactory.getLog(PathResolver.class);
 
     /** The base URL to resolve against. */
     private URL baseURL = null;

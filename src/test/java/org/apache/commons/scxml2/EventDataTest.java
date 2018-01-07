@@ -39,16 +39,16 @@ public class EventDataTest {
         Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state1", currentStates.iterator().next().getId());
-        TriggerEvent te = new EventBuilder("event.foo", TriggerEvent.SIGNAL_EVENT).data(new Integer(3)).build();
+        TriggerEvent te = new EventBuilder("event.foo", TriggerEvent.SIGNAL_EVENT).data(3).build();
         currentStates = SCXMLTestHelper.fireEvent(exec, te);
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state3", currentStates.iterator().next().getId());
         TriggerEvent[] evts = new TriggerEvent[] { te,
-            new EventBuilder("event.bar", TriggerEvent.SIGNAL_EVENT).data(new Integer(6)).build()};
+            new EventBuilder("event.bar", TriggerEvent.SIGNAL_EVENT).data(6).build()};
         currentStates = SCXMLTestHelper.fireEvents(exec, evts);
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state6", currentStates.iterator().next().getId());
-        te = new EventBuilder("event.baz", TriggerEvent.SIGNAL_EVENT).data(new Integer(7)).build();
+        te = new EventBuilder("event.baz", TriggerEvent.SIGNAL_EVENT).data(7).build();
         currentStates = SCXMLTestHelper.fireEvent(exec, te);
         Assert.assertEquals(1, currentStates.size());
         Assert.assertEquals("state7", currentStates.iterator().next().getId());
@@ -98,12 +98,14 @@ public class EventDataTest {
 
     public static class ConnectionAlertingPayload {
         private int line;
-        public ConnectionAlertingPayload(int line) {
+        ConnectionAlertingPayload(int line) {
             this.line = line;
         }
+        @SuppressWarnings("unsed")
         public void setLine(int line) {
             this.line = line;
         }
+        @SuppressWarnings("unsed")
         public int getLine() {
             return line;
         }
