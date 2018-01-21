@@ -118,7 +118,6 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
         this.exctx = new SCXMLExecutionContext(this, parentSCXMLExecutor.getEvaluator(),
                 parentSCXMLExecutor.getEventdispatcher().newInstance(), parentSCXMLExecutor.getErrorReporter());
         getSCInstance().setSingleContext(parentSCXMLExecutor.isSingleContext());
-        getSCInstance().setStrict(parentSCXMLExecutor.isStrict());
         getSCInstance().setStateMachine(scxml);
     }
 
@@ -249,14 +248,6 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
 
     public boolean isSingleContext() {
         return getSCInstance().isSingleContext();
-    }
-
-    public void setStrict(final boolean strict) throws ModelException {
-        getSCInstance().setStrict(strict);
-    }
-
-    public boolean isStrict() {
-        return getSCInstance().isStrict();
     }
 
     /**

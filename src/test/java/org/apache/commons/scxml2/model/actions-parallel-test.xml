@@ -39,7 +39,7 @@
        event="croak" namelist="drink eat" hints="'h2o bzz'"
        delayexpr="1000+500" />
       <cancel sendId="send12345"/>
-      <log expr="leaving" label="entry001" />
+      <log expr="'leaving'" label="entry001" />
       <raise event="event.test"/>
     </onentry>
 

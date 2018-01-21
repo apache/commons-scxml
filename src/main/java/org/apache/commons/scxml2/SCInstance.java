@@ -131,11 +131,6 @@ public class SCInstance implements Serializable {
     private boolean singleContext;
 
     /**
-     * Flag indicating if strict / specification compliant behavior is required
-     */
-    private boolean strict;
-
-    /**
      * Constructor
      * @param internalIOProcessor The I/O Processor for the internal event queue
      * @param evaluator The evaluator
@@ -161,7 +156,7 @@ public class SCInstance implements Serializable {
             throw new ModelException(ERR_NO_STATE_MACHINE);
         }
         if (evaluator == null) {
-            evaluator = EvaluatorFactory.getEvaluator(isStrict(), stateMachine);
+            evaluator = EvaluatorFactory.getEvaluator(stateMachine);
         }
         if (evaluator.requiresGlobalContext()) {
             singleContext = true;
@@ -196,7 +191,7 @@ public class SCInstance implements Serializable {
                     }
                 }
             }
-            if ((stateMachine.isLateBinding() == null && isStrict()) || Boolean.FALSE.equals(stateMachine.isLateBinding())) {
+            if (stateMachine.isLateBinding() == null || Boolean.FALSE.equals(stateMachine.isLateBinding())) {
                 // early binding
                 for (EnterableState es : stateMachine.getChildren()) {
                     getContext(es);
@@ -300,17 +295,6 @@ public class SCInstance implements Serializable {
 
     public boolean isSingleContext() {
         return singleContext;
-    }
-
-    public void setStrict(final boolean strict) throws ModelException {
-        if (initialized) {
-            throw new ModelException("SCInstance: already initialized");
-        }
-        this.strict = strict;
-    }
-
-    public boolean isStrict() {
-        return strict;
     }
 
     /**

@@ -59,18 +59,8 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
         }
 
         @Override
-        public Evaluator getEvaluator(final boolean strict) {
-            return new JexlEvaluator(strict);
-        }
-
-        @Override
         public Evaluator getEvaluator(final SCXML document) {
             return new JexlEvaluator();
-        }
-
-        @Override
-        public Evaluator getEvaluator(final boolean strict, final SCXML document) {
-            return new JexlEvaluator(strict);
         }
     }
 
@@ -83,35 +73,9 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
     /** The internal JexlEngine instance to use. */
     private transient volatile JexlEngine jexlEngine;
 
-    /** The current JexlEngine silent mode, stored locally to be reapplied after deserialization of the engine */
-    private final boolean jexlEngineSilent;
-    /** The current JexlEngine strict mode, stored locally to be reapplied after deserialization of the engine */
-    private boolean jexlEngineStrict;
-
     /** Constructor. */
     public JexlEvaluator() {
-        this(false);
-    }
-
-    public JexlEvaluator(final boolean strict) {
-        jexlEngineStrict = strict;
-        // create the internal JexlEngine initially
         jexlEngine = getJexlEngine();
-        jexlEngineSilent = jexlEngine.isSilent();
-        jexlEngineStrict = jexlEngine.isStrict();
-    }
-
-    /**
-     * Checks whether the internal Jexl engine throws JexlException during evaluation.
-     * @return true if silent, false (default) otherwise
-     */
-    public boolean isJexlEngineSilent() {
-        return jexlEngineSilent;
-    }
-
-    @Override
-    public boolean isStrict() {
-        return jexlEngineStrict;
     }
 
     @Override
@@ -216,7 +180,7 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
         // See javadoc of org.apache.commons.jexl2.JexlEngine#setFunctions(Map<String,Object> funcs) for detail.
         Map<String, Object> funcs = new HashMap<>();
         funcs.put(null, JexlBuiltin.class);
-        return new JexlBuilder().namespaces(funcs).strict(jexlEngineStrict).silent(jexlEngineSilent).cache(256).create();
+        return new JexlBuilder().namespaces(funcs).cache(256).create();
     }
 
     /**

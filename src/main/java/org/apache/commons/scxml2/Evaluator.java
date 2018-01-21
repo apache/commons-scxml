@@ -33,11 +33,6 @@ public interface Evaluator {
     String DEFAULT_DATA_MODEL = "";
 
     /**
-     * @return indicates if using strict / specification compliant behavior
-     */
-    boolean isStrict();
-
-    /**
      * Get the datamodel type supported by this Evaluator
      * @return The supported datamodel type
      */

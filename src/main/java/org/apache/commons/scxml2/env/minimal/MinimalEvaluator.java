@@ -51,24 +51,9 @@ public class MinimalEvaluator implements Evaluator, Serializable {
         }
 
         @Override
-        public Evaluator getEvaluator(final boolean strict) {
-            return new MinimalEvaluator();
-        }
-
-        @Override
         public Evaluator getEvaluator(final SCXML document) {
             return new MinimalEvaluator();
         }
-
-        @Override
-        public Evaluator getEvaluator(final boolean strict, final SCXML document) {
-            return new MinimalEvaluator();
-        }
-    }
-
-    @Override
-    public boolean isStrict() {
-        return true;
     }
 
     @Override

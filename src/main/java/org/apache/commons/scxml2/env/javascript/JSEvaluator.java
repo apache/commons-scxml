@@ -69,16 +69,7 @@ public class JSEvaluator extends AbstractBaseEvaluator {
         }
 
         @Override
-        public Evaluator getEvaluator(final boolean strict) {
-            return new JSEvaluator();
-        }
-
-        @Override
         public Evaluator getEvaluator(final SCXML document) {
-            return new JSEvaluator();
-        }
-        @Override
-        public Evaluator getEvaluator(final boolean strict, final SCXML document) {
             return new JSEvaluator();
         }
     }
@@ -177,11 +168,6 @@ public class JSEvaluator extends AbstractBaseEvaluator {
             ((JSBindings)scriptContext.getBindings(ScriptContext.GLOBAL_SCOPE)).setContext(jsContext);
         }
         return scriptContext;
-    }
-
-    @Override
-    public boolean isStrict() {
-        return false;
     }
 
     @Override

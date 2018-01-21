@@ -59,16 +59,7 @@ public class GroovyEvaluator extends AbstractBaseEvaluator {
         }
 
         @Override
-        public Evaluator getEvaluator(final boolean strict) {
-            return new GroovyEvaluator();
-        }
-
-        @Override
         public Evaluator getEvaluator(final SCXML document) {
-            return new GroovyEvaluator();
-        }
-        @Override
-        public Evaluator getEvaluator(final boolean strict, final SCXML document) {
             return new GroovyEvaluator();
         }
     }
@@ -124,11 +115,6 @@ public class GroovyEvaluator extends AbstractBaseEvaluator {
     public GroovyEvaluator(boolean useInitialScriptAsBaseScript) {
         this.useInitialScriptAsBaseScript = useInitialScriptAsBaseScript;
         this.scriptCache = newScriptCache();
-    }
-
-    @Override
-    public boolean isStrict() {
-        return false;
     }
 
     /**
