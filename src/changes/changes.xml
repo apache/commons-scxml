@@ -35,6 +35,10 @@
     <release version="2.0" date="In Git master"
       description="Latest unreleased code">
 
+      <action dev="ate" type="add" issue="SCXML-279">
+        [21-01-2018] Only use default Jexl3 setting for silent and strict, cleanup APIs accordingly
+      </action>
+
       <action dev="ate" type="add" issue="SCXML-278">
         [07-01-2018] Code cleanup and Java8 alignment
       </action>
