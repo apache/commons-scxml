@@ -27,26 +27,6 @@ import org.junit.Test;
  *
  */
 public class JSContextTest {
-        // TEST CONSTANTS
-
-        // TEST VARIABLES
-
-        // TEST SETUP
-
-        // CLASS METHODS
-
-        /**
-         * Standalone test runtime.
-         *
-         */
-        public static void main(String args[]) {
-            String[] testCaseName = {JSContextTest.class.getName()};
-
-            junit.textui.TestRunner.main(testCaseName);
-        }
-
-        // INSTANCE METHOD TESTS
-
         /**
          * Tests implementation of JSContext default constructor.
          *
@@ -64,6 +44,5 @@ public class JSContextTest {
         public void testChildConstructor() {
                 Assert.assertNotNull("Error in JSContext child constructor",new JSContext(new SimpleContext()));
         }
-
 }
 

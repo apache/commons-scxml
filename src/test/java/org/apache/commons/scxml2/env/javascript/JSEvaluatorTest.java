@@ -112,18 +112,6 @@ public class JSEvaluatorTest {
         context = fsm.getGlobalContext();
     }
 
-    // CLASS METHODS
-
-    /**
-     * Standalone test runtime.
-     *
-     */
-    public static void main(String args[]) {
-        String[] testCaseName = {JSEvaluatorTest.class.getName()};
-
-        junit.textui.TestRunner.main(testCaseName);
-    }
-
     // INSTANCE METHOD TESTS
 
     /**
