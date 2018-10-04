@@ -22,7 +22,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * JUnit 3 test case for the JSContext SCXML Context implementation for
+ * Test case for the JSContext SCXML Context implementation for
  * the Javascript expression evaluator.
  *
  */

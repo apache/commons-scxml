@@ -30,8 +30,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-/** JUnit 3 test case for the JSEvaluator expression evaluator
- *  class. Includes basic tests for:
+/** Test case for the JSEvaluator expression evaluator class.
+ *  Includes basic tests for:
  *  <ul>
  *  <li> constructor
  *  <li> simple standard Javascript expressions
