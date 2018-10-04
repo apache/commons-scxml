@@ -28,8 +28,8 @@ import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.EventBuilder;
 import org.apache.commons.scxml2.env.SimpleDispatcher;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class SendTest {
 
@@ -50,19 +50,19 @@ public class SendTest {
         TriggerEvent te = new EventBuilder("event.foo", TriggerEvent.SIGNAL_EVENT).data(3).build();
         SCXMLTestHelper.fireEvent(exec, te);
 
-        Assert.assertFalse("Payloads empty.", payloads.isEmpty());
-        Assert.assertTrue("Payload is not a map.", payloads.get(0) instanceof Map);
+        Assertions.assertFalse(payloads.isEmpty(), "Payloads empty.");
+        Assertions.assertTrue(payloads.get(0) instanceof Map, "Payload is not a map.");
         Map<String, Object> firstPayload = (Map<String, Object>) payloads.get(0);
-        Assert.assertEquals("Only two in the namelist data expected.", 2, firstPayload.size());
+        Assertions.assertEquals(2, firstPayload.size(), "Only two in the namelist data expected.");
 
-        Assert.assertEquals("Unexpected value for 'one'.", 1, firstPayload.get("one"));
-        Assert.assertEquals("Unexpected value for 'two'.", 2, firstPayload.get("two"));
+        Assertions.assertEquals(1, firstPayload.get("one"), "Unexpected value for 'one'.");
+        Assertions.assertEquals(2, firstPayload.get("two"), "Unexpected value for 'two'.");
 
         // Note: the standard allows specifying the value of the namelist attribute of the <send> element
         // as space-separated list of values, which implies an ordered sequence of items.
         final Iterator<String> it = firstPayload.keySet().iterator();
-        Assert.assertEquals("The first one in the namelist must be 'one'.", "one", it.next());
-        Assert.assertEquals("The first one in the namelist must be 'two'.", "two", it.next());
+        Assertions.assertEquals("one", it.next(), "The first one in the namelist must be 'one'.");
+        Assertions.assertEquals("two", it.next(), "The first one in the namelist must be 'two'.");
     }
 
     private long parseDelay(String delayString) throws SCXMLExpressionException {
@@ -71,23 +71,23 @@ public class SendTest {
 
     @Test
     public void testDelayExpression() throws Exception {
-        Assert.assertEquals(0L, parseDelay(".s"));
-        Assert.assertEquals(0L, parseDelay(".0s"));
-        Assert.assertEquals(1000L, parseDelay("1.s"));
-        Assert.assertEquals(1000L, parseDelay("1.0s"));
-        Assert.assertEquals(1500L, parseDelay("1.5s"));
-        Assert.assertEquals(500L, parseDelay(".5s"));
-        Assert.assertEquals(500L, parseDelay("0.5s"));
-        Assert.assertEquals(50L, parseDelay("0.05s"));
-        Assert.assertEquals(5L, parseDelay("0.005s"));
-        Assert.assertEquals(0L, parseDelay("0.0005s"));
-        Assert.assertEquals(0L, parseDelay(".9ms"));
-        Assert.assertEquals(1L, parseDelay("1.9ms"));
-        Assert.assertEquals(60000L, parseDelay("1m"));
-        Assert.assertEquals(60000L, parseDelay("1.0m"));
-        Assert.assertEquals(30000L, parseDelay(".5m"));
-        Assert.assertEquals(6000L, parseDelay(".1m"));
-        Assert.assertEquals(6000L, parseDelay(".10m"));
-        Assert.assertEquals(15000L, parseDelay(".25m"));
+        Assertions.assertEquals(0L, parseDelay(".s"));
+        Assertions.assertEquals(0L, parseDelay(".0s"));
+        Assertions.assertEquals(1000L, parseDelay("1.s"));
+        Assertions.assertEquals(1000L, parseDelay("1.0s"));
+        Assertions.assertEquals(1500L, parseDelay("1.5s"));
+        Assertions.assertEquals(500L, parseDelay(".5s"));
+        Assertions.assertEquals(500L, parseDelay("0.5s"));
+        Assertions.assertEquals(50L, parseDelay("0.05s"));
+        Assertions.assertEquals(5L, parseDelay("0.005s"));
+        Assertions.assertEquals(0L, parseDelay("0.0005s"));
+        Assertions.assertEquals(0L, parseDelay(".9ms"));
+        Assertions.assertEquals(1L, parseDelay("1.9ms"));
+        Assertions.assertEquals(60000L, parseDelay("1m"));
+        Assertions.assertEquals(60000L, parseDelay("1.0m"));
+        Assertions.assertEquals(30000L, parseDelay(".5m"));
+        Assertions.assertEquals(6000L, parseDelay(".1m"));
+        Assertions.assertEquals(6000L, parseDelay(".10m"));
+        Assertions.assertEquals(15000L, parseDelay(".25m"));
     }
 }

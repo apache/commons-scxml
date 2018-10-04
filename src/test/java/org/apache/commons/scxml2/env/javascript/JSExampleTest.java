@@ -33,8 +33,8 @@ import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.SCXML;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * SCXML application for the example JavaScript scripts.
@@ -53,8 +53,8 @@ public class JSExampleTest {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
         exec.go();
         Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assert.assertEquals(1, currentStates.size());
-        Assert.assertEquals("end", currentStates.iterator().next().getId());
+        Assertions.assertEquals(1, currentStates.size());
+        Assertions.assertEquals("end", currentStates.iterator().next().getId());
     }
 
     // INNER CLASSES

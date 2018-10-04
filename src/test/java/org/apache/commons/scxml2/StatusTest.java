@@ -21,16 +21,16 @@ import java.util.Set;
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.Final;
 import org.apache.commons.scxml2.model.State;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class StatusTest {
 
     private StateConfiguration stateConfiguration;
     private Status status;
     
-    @Before
+    @BeforeEach
     public void setUp() {
         stateConfiguration = new StateConfiguration();
         status = new Status(stateConfiguration);
@@ -42,7 +42,7 @@ public class StatusTest {
 
         stateConfiguration.enterState(state);
         
-        Assert.assertFalse(status.isFinal());
+        Assertions.assertFalse(status.isFinal());
     }
     
     @Test
@@ -52,7 +52,7 @@ public class StatusTest {
         
         stateConfiguration.enterState(state);
 
-        Assert.assertFalse(status.isFinal());
+        Assertions.assertFalse(status.isFinal());
     }
     
     @Test
@@ -61,7 +61,7 @@ public class StatusTest {
 
         stateConfiguration.enterState(state);
 
-        Assert.assertTrue(status.isFinal());
+        Assertions.assertTrue(status.isFinal());
     }
 
     @Test
@@ -69,7 +69,7 @@ public class StatusTest {
 
         Set<EnterableState> returnValue = status.getActiveStates();
 
-        Assert.assertEquals(0, returnValue.size());
+        Assertions.assertEquals(0, returnValue.size());
     }
 
     @Test
@@ -84,7 +84,7 @@ public class StatusTest {
 
         Set<EnterableState> returnValue = status.getActiveStates();
 
-        Assert.assertEquals(2, returnValue.size());
+        Assertions.assertEquals(2, returnValue.size());
     }
 
     @Test
@@ -96,8 +96,8 @@ public class StatusTest {
         state.setId("1");
         state.setParent(parent);
         stateConfiguration.enterState(state);
-        Assert.assertTrue(status.isInState("0"));
-        Assert.assertTrue(status.isInState("1"));
-        Assert.assertFalse(status.isInState("2"));
+        Assertions.assertTrue(status.isInState("0"));
+        Assertions.assertTrue(status.isInState("1"));
+        Assertions.assertFalse(status.isInState("2"));
     }
 }

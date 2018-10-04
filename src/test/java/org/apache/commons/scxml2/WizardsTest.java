@@ -22,8 +22,8 @@ import java.util.Set;
 import org.apache.commons.scxml2.env.SimpleDispatcher;
 import org.apache.commons.scxml2.model.EnterableState;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests
@@ -37,24 +37,24 @@ public class WizardsTest {
     public void testWizard01Sample() throws Exception {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/wizard-01.xml");
         exec.go();
-        Assert.assertNotNull(exec);
+        Assertions.assertNotNull(exec);
         Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assert.assertEquals(1, currentStates.size());
-        Assert.assertEquals("state1", currentStates.iterator().next().getId());
+        Assertions.assertEquals(1, currentStates.size());
+        Assertions.assertEquals("state1", currentStates.iterator().next().getId());
         exec = SCXMLTestHelper.testInstanceSerializability(exec);
         currentStates = SCXMLTestHelper.fireEvent(exec, "event2");
-        Assert.assertEquals(1, currentStates.size());
-        Assert.assertEquals("state2", currentStates.iterator().next().getId());
+        Assertions.assertEquals(1, currentStates.size());
+        Assertions.assertEquals("state2", currentStates.iterator().next().getId());
         currentStates = SCXMLTestHelper.fireEvent(exec, "event4");
-        Assert.assertEquals(1, currentStates.size());
-        Assert.assertEquals("state4", currentStates.iterator().next().getId());
+        Assertions.assertEquals(1, currentStates.size());
+        Assertions.assertEquals("state4", currentStates.iterator().next().getId());
         currentStates = SCXMLTestHelper.fireEvent(exec, "event3");
-        Assert.assertEquals(1, currentStates.size());
-        Assert.assertEquals("state3", currentStates.iterator().next().getId());
+        Assertions.assertEquals(1, currentStates.size());
+        Assertions.assertEquals("state3", currentStates.iterator().next().getId());
         exec = SCXMLTestHelper.testInstanceSerializability(exec);
         currentStates = SCXMLTestHelper.fireEvent(exec, "event3"); // ensure we stay put
-        Assert.assertEquals(1, currentStates.size());
-        Assert.assertEquals("state3", currentStates.iterator().next().getId());
+        Assertions.assertEquals(1, currentStates.size());
+        Assertions.assertEquals("state3", currentStates.iterator().next().getId());
     }
 
     @Test
@@ -65,12 +65,12 @@ public class WizardsTest {
         // If you change this, you must also change
         // the TestEventDispatcher
         Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assert.assertEquals(1, currentStates.size());
-        Assert.assertEquals("state2", currentStates.iterator().next().getId());
+        Assertions.assertEquals(1, currentStates.size());
+        Assertions.assertEquals("state2", currentStates.iterator().next().getId());
         exec = SCXMLTestHelper.testInstanceSerializability(exec);
         currentStates = SCXMLTestHelper.fireEvent(exec, "event4");
-        Assert.assertEquals(1, currentStates.size());
-        Assert.assertEquals("state4", currentStates.iterator().next().getId());
+        Assertions.assertEquals(1, currentStates.size());
+        Assertions.assertEquals("state4", currentStates.iterator().next().getId());
     }
 
     static class TestEventDispatcher extends SimpleDispatcher {
@@ -86,15 +86,15 @@ public class WizardsTest {
                 int i = ((Integer) params.get("aValue"));
                 switch (callback) {
                     case 0:
-                        Assert.assertTrue(i == 2); // state2
+                        Assertions.assertTrue(i == 2); // state2
                         callback++;
                         break;
                     case 1:
-                        Assert.assertTrue(i == 4); // state4
+                        Assertions.assertTrue(i == 4); // state4
                         callback++;
                         break;
                     default:
-                        Assert.fail("More than 2 TestEventDispatcher <send> callbacks for type \"foo\"");
+                        Assertions.fail("More than 2 TestEventDispatcher <send> callbacks for type \"foo\"");
                 }
             }
             else {
@@ -103,7 +103,7 @@ public class WizardsTest {
         }
         public void cancel(String sendId) {
             // should never be called
-            Assert.fail("<cancel> TestEventDispatcher callback unexpected");
+            Assertions.fail("<cancel> TestEventDispatcher callback unexpected");
         }
     }
 }

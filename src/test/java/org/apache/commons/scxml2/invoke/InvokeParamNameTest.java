@@ -24,10 +24,10 @@ import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.EventBuilder;
 import org.apache.commons.scxml2.model.ModelException;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 // Tests for 4.3.1 in WD-scxml-20080516
 public class InvokeParamNameTest {
@@ -37,14 +37,14 @@ public class InvokeParamNameTest {
     private static String lastURL;
     private static Map<String, Object> lastParams;
     
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/invoke/invoker-04.xml");
         exec.registerInvokerClass("x-test", DummyInvoker.class);
         exec.go();
     }
     
-    @After
+    @AfterEach
     public void tearDown() {
         exec.unregisterInvokerClass("x-test");    
     }
@@ -59,11 +59,11 @@ public class InvokeParamNameTest {
     @Test
     public void testNameAndExpr() throws Exception {
         trigger();
-        Assert.assertTrue(lastURL.endsWith("TestSrc"));
+        Assertions.assertTrue(lastURL.endsWith("TestSrc"));
         final Map.Entry<String, Object> e =
             lastParams.entrySet().iterator().next();
-        Assert.assertEquals("ding", e.getKey());
-        Assert.assertEquals("foo", e.getValue());
+        Assertions.assertEquals("ding", e.getKey());
+        Assertions.assertEquals("foo", e.getValue());
     }
 
     // Tests "param" element with a "name" attribute and "expr" attribute locating a data id
@@ -71,9 +71,9 @@ public class InvokeParamNameTest {
     public void testSoleNameLocation() throws Exception {
         trigger(); trigger();
         final Map m = (Map)lastParams.values().iterator().next();
-        Assert.assertNotNull(m);
-        Assert.assertEquals("bar", m.keySet().iterator().next());
-        Assert.assertEquals("foo", m.get("bar"));
+        Assertions.assertNotNull(m);
+        Assertions.assertEquals("bar", m.keySet().iterator().next());
+        Assertions.assertEquals("foo", m.get("bar"));
     }
 
     public static class DummyInvoker implements Invoker {

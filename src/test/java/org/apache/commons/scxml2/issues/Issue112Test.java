@@ -29,9 +29,9 @@ import org.apache.commons.scxml2.model.Action;
 import org.apache.commons.scxml2.model.CustomAction;
 import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.SCXML;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test cases for issue 112.
@@ -42,7 +42,7 @@ public class Issue112Test {
     /**
      * Tear down instance variables required by this test case.
      */
-    @After
+    @AfterEach
     public void tearDown() {
         Application.QUEUE.clear();
     }
@@ -60,7 +60,7 @@ public class Issue112Test {
         SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/issues/queue-01.xml", customActions);
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
         exec.go();
-        Assert.assertEquals("init", exec.getStatus().getStates().
+        Assertions.assertEquals("init", exec.getStatus().getStates().
                 iterator().next().getId());
 
         // Add an event, other external events could be added to the queue at any time (this test only adds one).
@@ -76,8 +76,8 @@ public class Issue112Test {
             }
         }
 
-        Assert.assertTrue(exec.getStatus().isFinal());
-        Assert.assertEquals("end", exec.getStatus().getStates().
+        Assertions.assertTrue(exec.getStatus().isFinal());
+        Assertions.assertEquals("end", exec.getStatus().getStates().
                 iterator().next().getId());
 
     }

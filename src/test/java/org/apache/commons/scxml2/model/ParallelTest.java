@@ -18,8 +18,8 @@ package org.apache.commons.scxml2.model;
 
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class ParallelTest {
 
@@ -44,12 +44,12 @@ public class ParallelTest {
         exec.go();
         SCXMLTestHelper.assertPostTriggerStates(exec, "dummy.event", new String[] { "para11", "para21" });
         Object count = exec.getEvaluator().eval(exec.getGlobalContext(),"root.root.count");
-        Assert.assertEquals(5, count);
+        Assertions.assertEquals(5, count);
         SCXMLTestHelper.assertPostTriggerStates(exec, "foo", new String[]{"para12", "para21"});
         count = exec.getEvaluator().eval(exec.getGlobalContext(),"root.root.count");
-        Assert.assertEquals(7, count);
+        Assertions.assertEquals(7, count);
         SCXMLTestHelper.assertPostTriggerState(exec, "bar", "end");
         count = exec.getEvaluator().eval(exec.getGlobalContext(),"root.root.count");
-        Assert.assertEquals(14, count);
+        Assertions.assertEquals(14, count);
     }
 }

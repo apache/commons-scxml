@@ -18,8 +18,8 @@
 package org.apache.commons.scxml2.env.javascript;
 
 import org.apache.commons.scxml2.env.SimpleContext;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test case for the JSContext SCXML Context implementation for
@@ -33,7 +33,7 @@ public class JSContextTest {
          */
         @Test
         public void testDefaultConstructor() {
-            Assert.assertNotNull("Error in JSContext default constructor",new JSContext());
+            Assertions.assertNotNull(new JSContext(), "Error in JSContext default constructor");
         }
 
         /**
@@ -42,7 +42,7 @@ public class JSContextTest {
          */
         @Test
         public void testChildConstructor() {
-                Assert.assertNotNull("Error in JSContext child constructor",new JSContext(new SimpleContext()));
+                Assertions.assertNotNull(new JSContext(new SimpleContext()), "Error in JSContext child constructor");
         }
 }
 

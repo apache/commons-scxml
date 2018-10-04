@@ -19,8 +19,8 @@ package org.apache.commons.scxml2.env;
 import java.net.URL;
 
 import org.apache.commons.scxml2.model.ModelException;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests {@link org.apache.commons.scxml2.env.AbstractStateMachine}.
@@ -35,8 +35,8 @@ public class AbstractStateMachineTest {
         Foo f = new Foo(fooScxmlDocument);
         Bar b = new Bar(barScxmlDocument);
 
-        Assert.assertTrue(f.fooCalled());
-        Assert.assertTrue(b.barCalled());
+        Assertions.assertTrue(f.fooCalled());
+        Assertions.assertTrue(b.barCalled());
     }
 
     private class Foo extends AbstractStateMachine {

@@ -23,16 +23,16 @@ import org.apache.commons.scxml2.SCXMLSystemContext;
 import org.apache.commons.scxml2.StateConfiguration;
 import org.apache.commons.scxml2.Status;
 import org.apache.commons.scxml2.model.State;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class GroovyEvaluatorTest {
 
     private static final String BAD_EXPRESSION = ">";
     private Context ctx;
 
-    @Before
+    @BeforeEach
     public void before() {
         ctx = new GroovyContext(new SCXMLSystemContext(new GroovyContext()), null);
     }
@@ -40,13 +40,13 @@ public class GroovyEvaluatorTest {
     @Test
     public void testEval() throws SCXMLExpressionException {
         Evaluator eval = new GroovyEvaluator();
-        Assert.assertEquals(2, eval.eval(ctx, "1 + 1"));
+        Assertions.assertEquals(2, eval.eval(ctx, "1 + 1"));
     }
 
     @Test
     public void testPristine() throws SCXMLExpressionException {
         Evaluator eval = new GroovyEvaluator();
-        Assert.assertTrue(eval.evalCond(ctx, "1 + 1 == 2"));
+        Assertions.assertTrue(eval.evalCond(ctx, "1 + 1 == 2"));
     }
 
     @Test
@@ -59,7 +59,7 @@ public class GroovyEvaluatorTest {
         State state1 = new State();
         state1.setId("state1");
         stateConfiguration.enterState(state1);
-        Assert.assertTrue(eval.evalCond(ctx, "In('state1')"));
+        Assertions.assertTrue(eval.evalCond(ctx, "In('state1')"));
     }
 
     @Test
@@ -73,29 +73,29 @@ public class GroovyEvaluatorTest {
             "} else {\n" +
                 "y = 2;\n" +
             "}";
-        Assert.assertEquals(2, eval.evalScript(ctx, script));
-        Assert.assertEquals(2, ctx.get("y"));
+        Assertions.assertEquals(2, eval.evalScript(ctx, script));
+        Assertions.assertEquals(2, ctx.get("y"));
     }
 
     @Test
     public void testErrorMessage() {
         Evaluator eval = new GroovyEvaluator();
-        Assert.assertNotNull(eval);
+        Assertions.assertNotNull(eval);
         try {
             eval.eval(ctx, BAD_EXPRESSION);
-            Assert.fail("GroovyEvaluator should throw SCXMLExpressionException");
+            Assertions.fail("GroovyEvaluator should throw SCXMLExpressionException");
         } catch (SCXMLExpressionException e) {
-            Assert.assertTrue("GroovyEvaluator: Incorrect error message",
-                e.getMessage().startsWith("eval('" + BAD_EXPRESSION + "'):"));
+            Assertions.assertTrue(e.getMessage().startsWith("eval('" + BAD_EXPRESSION + "'):"),
+                    "GroovyEvaluator: Incorrect error message");
         }
     }
 
     @Test
     public void testPreprocessScript() {
         GroovyEvaluator evaluator = new GroovyEvaluator();
-        Assert.assertEquals("x &&  x || x  !  x == x <  x <= x != x >  x >= x", evaluator.getScriptPreProcessor().
+        Assertions.assertEquals("x &&  x || x  !  x == x <  x <= x != x >  x >= x", evaluator.getScriptPreProcessor().
                 preProcess("x and x or x not x eq x lt x le x ne x gt x ge x"));
-        Assert.assertEquals("and x OR x\n ! \nx\n== x < \nx(le)x ne. xgt x ge", evaluator.getScriptPreProcessor().
+        Assertions.assertEquals("and x OR x\n ! \nx\n== x < \nx(le)x ne. xgt x ge", evaluator.getScriptPreProcessor().
                  preProcess("and x OR x\nnot\nx\neq x lt\nx(le)x ne. xgt x ge"));
     }
 }

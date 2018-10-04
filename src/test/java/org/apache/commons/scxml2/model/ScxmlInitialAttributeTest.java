@@ -16,15 +16,15 @@
  */
 package org.apache.commons.scxml2.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.StringReader;
 
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ScxmlInitialAttributeTest {
 
@@ -55,9 +55,9 @@ public class ScxmlInitialAttributeTest {
     @Test
     public void testInitial() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse(new StringReader(SCXML_WITH_LEGAL_INITIAL), null);
-        assertEquals("The initial state ID reading was wrong.", "s1", scxml.getInitial());
+        assertEquals("s1", scxml.getInitial(), "The initial state ID reading was wrong.");
         TransitionTarget tt = scxml.getInitialTransition().getTargets().iterator().next();
-        assertEquals("The initial state resolution was wrong.", "s1", tt.getId());
+        assertEquals("s1", tt.getId(), "The initial state resolution was wrong.");
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
         exec.go();
         assertEquals(scxml.getTargets().get("s1"), exec.getStatus().getStates().iterator().next());
@@ -68,7 +68,7 @@ public class ScxmlInitialAttributeTest {
         SCXML scxml = SCXMLTestHelper.parse(new StringReader(SCXML_WITH_NO_INITIAL), null);
         assertNull(scxml.getInitial());
         TransitionTarget tt = scxml.getInitialTransition().getTargets().iterator().next();
-        assertEquals("The initial state resolution was wrong.", "s1", tt.getId());
+        assertEquals("s1", tt.getId(), "The initial state resolution was wrong.");
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
         exec.go();
         assertEquals(scxml.getTargets().get("s1"), exec.getStatus().getStates().iterator().next());

@@ -22,8 +22,8 @@ import java.util.Set;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.model.EnterableState;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests {@link org.apache.commons.scxml2.SCXMLExecutor}.
@@ -40,11 +40,11 @@ public class SerializableInitialBaseScriptTest {
     	SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml, new GroovyEvaluator(true));
         exec.go();
         Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assert.assertEquals(1, currentStates.size());
-        Assert.assertEquals("state1", currentStates.iterator().next().getId());
+        Assertions.assertEquals(1, currentStates.size());
+        Assertions.assertEquals("state1", currentStates.iterator().next().getId());
         exec = SCXMLTestHelper.testInstanceSerializability(exec);
         currentStates = SCXMLTestHelper.fireEvent(exec, "foo.bar.baz");
-        Assert.assertEquals(1, currentStates.size());
-        Assert.assertEquals("state4", currentStates.iterator().next().getId());
+        Assertions.assertEquals(1, currentStates.size());
+        Assertions.assertEquals("state4", currentStates.iterator().next().getId());
     }
 }

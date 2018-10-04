@@ -22,8 +22,8 @@ import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.EventBuilder;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 /**
  * Unit tests {@link org.apache.commons.scxml2.SCXMLExecutor}.
  */
@@ -38,7 +38,7 @@ public class DatamodelTest {
         exec01.go();
         SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/datamodel-01.xml");
         exec02.go();
-        Assert.assertFalse(exec01 == exec02);
+        Assertions.assertFalse(exec01 == exec02);
         runtest(exec01, exec02);
     }
 
@@ -51,7 +51,7 @@ public class DatamodelTest {
         exec01.go();
         SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/groovy/datamodel-01.xml");
         exec02.go();
-        Assert.assertFalse(exec01 == exec02);
+        Assertions.assertFalse(exec01 == exec02);
         runtest(exec01, exec02);
     }
 
@@ -64,7 +64,7 @@ public class DatamodelTest {
         exec01.go();
         SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/javascript/datamodel-01.xml");
         exec02.go();
-        Assert.assertFalse(exec01 == exec02);
+        Assertions.assertFalse(exec01 == exec02);
         runtest(exec01, exec02);
     }
 
@@ -93,36 +93,36 @@ public class DatamodelTest {
         //// Interleaved
         // exec01
         Set<EnterableState> currentStates = exec01.getStatus().getStates();
-        Assert.assertEquals(1, currentStates.size());
-        Assert.assertEquals("ten", currentStates.iterator().next().getId());
+        Assertions.assertEquals(1, currentStates.size());
+        Assertions.assertEquals("ten", currentStates.iterator().next().getId());
         exec01 = SCXMLTestHelper.testInstanceSerializability(exec01);
         currentStates = fireEvent("done.state.ten", exec01);
-        Assert.assertEquals(1, currentStates.size());
-        Assert.assertEquals("twenty", currentStates.iterator().next().getId());
+        Assertions.assertEquals(1, currentStates.size());
+        Assertions.assertEquals("twenty", currentStates.iterator().next().getId());
         // exec02
         currentStates = exec02.getStatus().getStates();
-        Assert.assertEquals(1, currentStates.size());
-        Assert.assertEquals("ten", currentStates.iterator().next().getId());
+        Assertions.assertEquals(1, currentStates.size());
+        Assertions.assertEquals("ten", currentStates.iterator().next().getId());
         // exec01
         currentStates = fireEvent("done.state.twenty", exec01);
-        Assert.assertEquals(1, currentStates.size());
-        Assert.assertEquals("thirty", currentStates.iterator().next().getId());
+        Assertions.assertEquals(1, currentStates.size());
+        Assertions.assertEquals("thirty", currentStates.iterator().next().getId());
         exec01 = SCXMLTestHelper.testInstanceSerializability(exec01);
         // exec02
         currentStates = fireEvent("done.state.ten", exec02);
-        Assert.assertEquals(1, currentStates.size());
-        Assert.assertEquals("twenty", currentStates.iterator().next().getId());
+        Assertions.assertEquals(1, currentStates.size());
+        Assertions.assertEquals("twenty", currentStates.iterator().next().getId());
         exec02 = SCXMLTestHelper.testInstanceSerializability(exec02);
         currentStates = fireEvent("done.state.twenty", exec02);
-        Assert.assertEquals(1, currentStates.size());
-        Assert.assertEquals("thirty", currentStates.iterator().next().getId());
+        Assertions.assertEquals(1, currentStates.size());
+        Assertions.assertEquals("thirty", currentStates.iterator().next().getId());
         currentStates = fireEvent("done.state.thirty", exec02);
-        Assert.assertEquals(1, currentStates.size());
-        Assert.assertEquals("forty", currentStates.iterator().next().getId());
+        Assertions.assertEquals(1, currentStates.size());
+        Assertions.assertEquals("forty", currentStates.iterator().next().getId());
         // exec01
         currentStates = fireEvent("done.state.thirty", exec01);
-        Assert.assertEquals(1, currentStates.size());
-        Assert.assertEquals("forty", currentStates.iterator().next().getId());
+        Assertions.assertEquals(1, currentStates.size());
+        Assertions.assertEquals("forty", currentStates.iterator().next().getId());
     }
 
     private Set<EnterableState> fireEvent(String name, SCXMLExecutor exec) throws Exception {

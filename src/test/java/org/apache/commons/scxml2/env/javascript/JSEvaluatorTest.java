@@ -26,9 +26,9 @@ import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.io.SCXMLReader;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /** Test case for the JSEvaluator expression evaluator class.
  *  Includes basic tests for:
@@ -104,7 +104,7 @@ public class JSEvaluatorTest {
      * Creates and initialises an SCXML data model in the context.
      *
      */
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         SCXMLExecutor fsm = SCXMLTestHelper.getExecutor(SCXMLReader.read(new StringReader(SCRIPT)));
         fsm.go();
@@ -123,8 +123,8 @@ public class JSEvaluatorTest {
     public void testBasic() throws SCXMLExpressionException {
         Evaluator evaluator = new JSEvaluator();
 
-        Assert.assertNotNull(evaluator);
-        Assert.assertTrue   ((Boolean) evaluator.eval(context, "1+1 == 2"));
+        Assertions.assertNotNull(evaluator);
+        Assertions.assertTrue   ((Boolean) evaluator.eval(context, "1+1 == 2"));
     }
 
     @Test
@@ -138,8 +138,8 @@ public class JSEvaluatorTest {
             "} else {\n" +
                 "y = 2.0;\n" +
             "}";
-        Assert.assertEquals(2.0, evaluator.evalScript(context, script));
-        Assert.assertEquals(2.0, context.get("y"));
+        Assertions.assertEquals(2.0, evaluator.evalScript(context, script));
+        Assertions.assertEquals(2.0, context.get("y"));
     }
 
     /**
@@ -150,15 +150,15 @@ public class JSEvaluatorTest {
     public void testIllegalExpresssion() {
         Evaluator evaluator = new JSEvaluator();
 
-        Assert.assertNotNull(evaluator);
+        Assertions.assertNotNull(evaluator);
 
         try {
             evaluator.eval(context,BAD_EXPRESSION);
-            Assert.fail          ("JSEvaluator should throw SCXMLExpressionException");
+            Assertions.fail          ("JSEvaluator should throw SCXMLExpressionException");
 
         } catch (SCXMLExpressionException x) {
-            Assert.assertTrue("JSEvaluator: Incorrect error message",
-                       x.getMessage().startsWith("eval('" + BAD_EXPRESSION + "')"));
+            Assertions.assertTrue(x.getMessage().startsWith("eval('" + BAD_EXPRESSION + "')"),
+                    "JSEvaluator: Incorrect error message");
         }
     }
 
@@ -171,13 +171,13 @@ public class JSEvaluatorTest {
         for (TestItem item: SIMPLE_EXPRESSIONS) {
             Object eval = evaluator.eval(context,item.expression);
             if (item.result instanceof Integer && eval instanceof Number) {
-                Assert.assertEquals("Invalid result: " + item.expression,
-                        ((Integer) item.result).intValue(),
-                        ((Number) eval).intValue());
+                Assertions.assertEquals(((Integer) item.result).intValue(),
+                        ((Number) eval).intValue(),
+                        "Invalid result: " + item.expression);
             } else {
-                Assert.assertEquals("Invalid result: " + item.expression,
-                        item.result,
-                        eval);
+                Assertions.assertEquals(item.result,
+                        eval,
+                        "Invalid result: " + item.expression);
             }
         }
     }
@@ -191,11 +191,11 @@ public class JSEvaluatorTest {
         context.set("fibonacci", 12.0);
 
         for (TestItem item: VAR_EXPRESSIONS) {
-            Assert.assertNotNull(context.get("fibonacci"));
-            Assert.assertEquals (12.0,context.get("fibonacci"));
-            Assert.assertEquals ("Invalid result: " + item.expression,
-                          item.result,
-                          evaluator.eval(context,item.expression));
+            Assertions.assertNotNull(context.get("fibonacci"));
+            Assertions.assertEquals (12.0,context.get("fibonacci"));
+            Assertions.assertEquals(item.result,
+                    evaluator.eval(context,item.expression),
+                    "Invalid result: " + item.expression);
         }
     }
 
@@ -207,9 +207,9 @@ public class JSEvaluatorTest {
     public void testInvalidVarExpressions() {
         for (TestItem item: VAR_EXPRESSIONS) {
             try {
-                Assert.assertNull    (context.get("fibonacci"));
+                Assertions.assertNull    (context.get("fibonacci"));
                 evaluator.eval(context,item.expression);
-                Assert.fail          ("Evaluated invalid <var... expression: " + item.expression);
+                Assertions.fail          ("Evaluated invalid <var... expression: " + item.expression);
 
             } catch (SCXMLExpressionException x) {
                 // expected, ignore
@@ -223,9 +223,9 @@ public class JSEvaluatorTest {
      */    
     @Test
     public void testDataModelExpressions() throws Exception {
-        Assert.assertEquals("Invalid result: " + "forest.tree.branch.twig",
-                     "leaf",
-                     evaluator.eval(context,"forest.tree.branch.twig"));
+        Assertions.assertEquals("leaf",
+                     evaluator.eval(context,"forest.tree.branch.twig"),
+                "Invalid result: " + "forest.tree.branch.twig");
     }
 
     /**
@@ -234,11 +234,11 @@ public class JSEvaluatorTest {
      */    
     @Test
     public void testInvalidDataModelExpressions() {
-        Assert.assertNull(context.get("forestx"));
+        Assertions.assertNull(context.get("forestx"));
 
         try {
             evaluator.eval(context,"forestx.tree.branch.twig");
-            Assert.fail          ("Evaluated invalid DataModel expression: " + "forestx.tree.branch.twig");
+            Assertions.fail          ("Evaluated invalid DataModel expression: " + "forestx.tree.branch.twig");
 
         } catch (SCXMLExpressionException x) {
             // expected, ignore
@@ -251,11 +251,11 @@ public class JSEvaluatorTest {
      */    
     @Test
     public void testDataModelLocations() throws Exception {
-        Assert.assertTrue("Invalid result: forest instanceof Map",
-                evaluator.eval(context, "forest") instanceof Map);
+        Assertions.assertTrue(evaluator.eval(context, "forest") instanceof Map,
+                "Invalid result: forest instanceof Map");
 
-        Assert.assertTrue("Invalid result: forest.tree.branch.twig instanceof String",
-                evaluator.eval(context, "forest.tree.branch.twig") instanceof String);
+        Assertions.assertTrue(evaluator.eval(context, "forest.tree.branch.twig") instanceof String,
+                "Invalid result: forest.tree.branch.twig instanceof String");
     }
 
     /**
@@ -264,9 +264,9 @@ public class JSEvaluatorTest {
      */    
     @Test
     public void testInvalidDataModelLocations() throws Exception {
-            Assert.assertNotNull(context.get("forest"));
-            Assert.assertNull("Invalid result: " + "forest.tree.branch.twigx",
-                       evaluator.eval(context,"forest.tree.branch.twigx"));
+            Assertions.assertNotNull(context.get("forest"));
+            Assertions.assertNull(evaluator.eval(context,"forest.tree.branch.twigx"),
+                    "Invalid result: " + "forest.tree.branch.twigx");
     }
 
     /**
@@ -276,8 +276,8 @@ public class JSEvaluatorTest {
     @Test
     public void testScriptFunctions() throws Exception {
         context.set("FIVE", 5);
-        Assert.assertEquals(5,context.get("FIVE"));
-        Assert.assertEquals("Invalid function result", 120.0,evaluator.eval(context,FUNCTION));
+        Assertions.assertEquals(5,context.get("FIVE"));
+        Assertions.assertEquals(120.0, evaluator.eval(context,FUNCTION), "Invalid function result");
     }
 
 
