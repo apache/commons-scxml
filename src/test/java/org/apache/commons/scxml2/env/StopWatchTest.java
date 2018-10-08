@@ -16,10 +16,10 @@
  */
 package org.apache.commons.scxml2.env;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class StopWatchTest {
 
@@ -28,7 +28,7 @@ public class StopWatchTest {
     /**
      * Set up instance variables required by this test case.
      */
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         stopWatch = new StopWatch();
     }
@@ -36,24 +36,24 @@ public class StopWatchTest {
     /**
      * Tear down instance variables required by this test case.
      */
-    @After
+    @AfterEach
     public void tearDown() {
         stopWatch = null;
     }
 
     @Test
     public void testStopWatch() {
-        Assert.assertEquals("reset", stopWatch.getCurrentState());
+        Assertions.assertEquals("reset", stopWatch.getCurrentState());
         stopWatch.fireEvent(StopWatch.EVENT_START);
-        Assert.assertEquals("running", stopWatch.getCurrentState());
+        Assertions.assertEquals("running", stopWatch.getCurrentState());
         stopWatch.fireEvent(StopWatch.EVENT_SPLIT);
-        Assert.assertEquals("paused", stopWatch.getCurrentState());
+        Assertions.assertEquals("paused", stopWatch.getCurrentState());
         stopWatch.fireEvent(StopWatch.EVENT_UNSPLIT);
-        Assert.assertEquals("running", stopWatch.getCurrentState());
+        Assertions.assertEquals("running", stopWatch.getCurrentState());
         stopWatch.fireEvent(StopWatch.EVENT_STOP);
-        Assert.assertEquals("stopped", stopWatch.getCurrentState());
+        Assertions.assertEquals("stopped", stopWatch.getCurrentState());
         stopWatch.fireEvent(StopWatch.EVENT_RESET);
-        Assert.assertEquals("reset", stopWatch.getCurrentState());
+        Assertions.assertEquals("reset", stopWatch.getCurrentState());
     }
 
 }

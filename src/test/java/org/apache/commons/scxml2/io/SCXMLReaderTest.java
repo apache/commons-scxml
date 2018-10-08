@@ -47,11 +47,11 @@ import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.Send;
 import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.Transition;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests {@link org.apache.commons.scxml2.io.SCXMLReader}.
@@ -62,13 +62,13 @@ public class SCXMLReaderTest {
 
     private Log scxmlReaderLog;
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() {
         oldLogFactoryProperty = System.getProperty(LogFactory.FACTORY_PROPERTY);
         System.setProperty(LogFactory.FACTORY_PROPERTY, RecordingLogFactory.class.getName());
     }
 
-    @AfterClass
+    @AfterAll
     public static void afterClass() {
         if (oldLogFactoryProperty == null) {
             System.clearProperty(LogFactory.FACTORY_PROPERTY);
@@ -80,7 +80,7 @@ public class SCXMLReaderTest {
     /**
      * Set up instance variables required by this test case.
      */
-    @Before
+    @BeforeEach
     public void before() {
         scxmlReaderLog = LogFactory.getLog(SCXMLReader.class);
         clearRecordedLogMessages();
@@ -92,61 +92,61 @@ public class SCXMLReaderTest {
     @Test
     public void testSCXMLReaderMicrowave03Sample() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/env/jexl/microwave-03.xml");
-        Assert.assertNotNull(scxml);
-        Assert.assertNotNull(serialize(scxml));
+        Assertions.assertNotNull(scxml);
+        Assertions.assertNotNull(serialize(scxml));
     }
     
     @Test
     public void testSCXMLReaderMicrowave04Sample() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/env/jexl/microwave-04.xml");
-        Assert.assertNotNull(scxml);
-        Assert.assertNotNull(serialize(scxml));
+        Assertions.assertNotNull(scxml);
+        Assertions.assertNotNull(serialize(scxml));
     }
     
     @Test
     public void testSCXMLReaderTransitions01Sample() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/transitions-01.xml");
-        Assert.assertNotNull(scxml);
-        Assert.assertNotNull(serialize(scxml));
+        Assertions.assertNotNull(scxml);
+        Assertions.assertNotNull(serialize(scxml));
     }
     
     @Test
     public void testSCXMLReaderPrefix01Sample() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/prefix-01.xml");
-        Assert.assertNotNull(scxml);
-        Assert.assertNotNull(serialize(scxml));
+        Assertions.assertNotNull(scxml);
+        Assertions.assertNotNull(serialize(scxml));
     }
     
     @Test
     public void testSCXMLReaderSend01Sample() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/send-01.xml");
         State ten = (State) scxml.getInitialTransition().getTargets().iterator().next();
-        Assert.assertEquals("ten", ten.getId());
+        Assertions.assertEquals("ten", ten.getId());
         List<Transition> ten_done = ten.getTransitionsList("done.state.ten");
-        Assert.assertEquals(1, ten_done.size());
+        Assertions.assertEquals(1, ten_done.size());
         Transition ten2twenty = ten_done.get(0);
         List<Action> actions = ten2twenty.getActions();
-        Assert.assertEquals(1, actions.size());
+        Assertions.assertEquals(1, actions.size());
         Send send = (Send) actions.get(0);
-        Assert.assertEquals("send1", send.getId());
+        Assertions.assertEquals("send1", send.getId());
         /* Serialize
         scxmlAsString = serialize(scxml);
-        Assert.assertNotNull(scxmlAsString);
+        Assertions.assertNotNull(scxmlAsString);
         String expectedFoo2Serialization =
             "<foo xmlns=\"http://my.test.namespace\" id=\"foo2\">"
             + "<prompt xmlns=\"http://foo.bar.com/vxml3\">This is just"
             + " an example.</prompt></foo>";
-        Assert.assertFalse(scxmlAsString.indexOf(expectedFoo2Serialization) == -1);
+        Assertions.assertFalse(scxmlAsString.indexOf(expectedFoo2Serialization) == -1);
         */
     }
     
     @Test
     public void testSCXMLReaderInitialAttr() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/io/scxml-initial-attr.xml");
-        Assert.assertNotNull(scxml);
-        Assert.assertNotNull(serialize(scxml));
+        Assertions.assertNotNull(scxml);
+        Assertions.assertNotNull(serialize(scxml));
         Final foo = (Final) scxml.getInitialTransition().getTargets().iterator().next();
-        Assert.assertEquals("foo", foo.getId());
+        Assertions.assertEquals("foo", foo.getId());
     }
 
     @Test
@@ -155,16 +155,18 @@ public class SCXMLReaderTest {
         SCXMLTestHelper.parse(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/scxml-valid-transition-targets-test.xml"));
     }
 
-    @Test(expected=org.apache.commons.scxml2.model.ModelException.class)
-    public void testSCXMLInValidTransitionTargets1() throws Exception {
+    @Test
+    public void testSCXMLInValidTransitionTargets1() {
         // ModelUpdater will fail on invalid transition targets
-        SCXMLTestHelper.parse(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/scxml-invalid-transition-targets-test1.xml"));
+        Assertions.assertThrows(org.apache.commons.scxml2.model.ModelException.class,
+                () -> SCXMLTestHelper.parse(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/scxml-invalid-transition-targets-test1.xml")));
     }
 
-    @Test(expected=org.apache.commons.scxml2.model.ModelException.class)
-    public void testSCXMLInValidTransitionTargets2() throws Exception {
+    @Test
+    public void testSCXMLInValidTransitionTargets2() {
         // ModelUpdater will fail on invalid transition targets
-        SCXMLTestHelper.parse(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/scxml-invalid-transition-targets-test2.xml"));
+        Assertions.assertThrows(org.apache.commons.scxml2.model.ModelException.class,
+                () -> SCXMLTestHelper.parse(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/scxml-invalid-transition-targets-test2.xml")));
     }
 
     @Test
@@ -175,12 +177,12 @@ public class SCXMLReaderTest {
         cas.add(ca);
         SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/io/custom-action-body-test-1.xml", cas);
         EnterableState state = (EnterableState) scxml.getInitialTransition().getTargets().iterator().next();
-        Assert.assertEquals("actions", state.getId());
+        Assertions.assertEquals("actions", state.getId());
         List<Action> actions = state.getOnEntries().get(0).getActions();
-        Assert.assertEquals(1, actions.size());
+        Assertions.assertEquals(1, actions.size());
         MyAction my = (MyAction)((CustomActionWrapper)actions.get(0)).getAction();
-        Assert.assertNotNull(my);
-        Assert.assertTrue(my.getParsedValue() != null);
+        Assertions.assertNotNull(my);
+        Assertions.assertTrue(my.getParsedValue() != null);
     }
 
     @Test
@@ -190,15 +192,15 @@ public class SCXMLReaderTest {
         Configuration configuration = new Configuration();
         SCXML scxml = SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/scxml-with-invalid-elems.xml"),
                         configuration);
-        Assert.assertNotNull(scxml);
-        Assert.assertNotNull(serialize(scxml));
+        Assertions.assertNotNull(scxml);
+        Assertions.assertNotNull(serialize(scxml));
         Final foo = (Final) scxml.getInitialTransition().getTargets().iterator().next();
-        Assert.assertEquals("foo", foo.getId());
+        Assertions.assertEquals("foo", foo.getId());
         Datamodel dataModel = scxml.getDatamodel();
-        Assert.assertNotNull(dataModel);
+        Assertions.assertNotNull(dataModel);
         List<Data> dataList = dataModel.getData();
-        Assert.assertEquals(1, dataList.size());
-        Assert.assertEquals("time", dataList.get(0).getId());
+        Assertions.assertEquals(1, dataList.size());
+        Assertions.assertEquals("time", dataList.get(0).getId());
         assertContainsRecordedLogMessage("Ignoring unknown or invalid element <baddata> in namespace \"http://www.w3.org/2005/07/scxml\" as child of <datamodel>");
         assertContainsRecordedLogMessage("Ignoring unknown or invalid element <baddata> in namespace \"http://www.example.com/scxml\" as child of <datamodel>");
         assertContainsRecordedLogMessage("Ignoring unknown or invalid element <trace> in namespace \"http://www.w3.org/2005/07/scxml\" as child of <onentry>");
@@ -212,15 +214,15 @@ public class SCXMLReaderTest {
         configuration.setSilent(true);
         SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/scxml-with-invalid-elems.xml"),
                 configuration);
-        Assert.assertNotNull(scxml);
-        Assert.assertNotNull(serialize(scxml));
+        Assertions.assertNotNull(scxml);
+        Assertions.assertNotNull(serialize(scxml));
         foo = (Final) scxml.getInitialTransition().getTargets().iterator().next();
-        Assert.assertEquals("foo", foo.getId());
+        Assertions.assertEquals("foo", foo.getId());
         dataModel = scxml.getDatamodel();
-        Assert.assertNotNull(dataModel);
+        Assertions.assertNotNull(dataModel);
         dataList = dataModel.getData();
-        Assert.assertEquals(1, dataList.size());
-        Assert.assertEquals("time", dataList.get(0).getId());
+        Assertions.assertEquals(1, dataList.size());
+        Assertions.assertEquals("time", dataList.get(0).getId());
         assertNotContainsRecordedLogMessage("Ignoring unknown or invalid element <baddata> in namespace \"http://www.w3.org/2005/07/scxml\" as child of <datamodel>");
         assertNotContainsRecordedLogMessage("Ignoring unknown or invalid element <baddata> in namespace \"http://www.example.com/scxml\" as child of <datamodel>");
         assertNotContainsRecordedLogMessage("Ignoring unknown or invalid element <trace> in namespace \"http://www.w3.org/2005/07/scxml\" as child of <onentry>");
@@ -235,9 +237,9 @@ public class SCXMLReaderTest {
         try {
             SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/scxml-with-invalid-elems.xml"),
                     configuration);
-            Assert.fail("In strict mode, it should have thrown a model exception.");
+            Assertions.fail("In strict mode, it should have thrown a model exception.");
         } catch (ModelException e) {
-            Assert.assertTrue(e.getMessage().contains("Ignoring unknown or invalid element <baddata>"));
+            Assertions.assertTrue(e.getMessage().contains("Ignoring unknown or invalid element <baddata>"));
         }
 
         assertContainsRecordedLogMessage("Ignoring unknown or invalid element <baddata> in namespace \"http://www.w3.org/2005/07/scxml\" as child of <datamodel>");
@@ -255,9 +257,9 @@ public class SCXMLReaderTest {
         try {
             scxml = SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/scxml-with-invalid-elems.xml"),
                     configuration);
-            Assert.fail("In strict mode, it should have thrown a model exception.");
+            Assertions.fail("In strict mode, it should have thrown a model exception.");
         } catch (ModelException e) {
-            Assert.assertTrue(e.getMessage().contains("Ignoring unknown or invalid element <baddata>"));
+            Assertions.assertTrue(e.getMessage().contains("Ignoring unknown or invalid element <baddata>"));
         }
         assertNotContainsRecordedLogMessage("Ignoring unknown or invalid element <baddata> in namespace \"http://www.w3.org/2005/07/scxml\" as child of <datamodel>");
         assertNotContainsRecordedLogMessage("Ignoring unknown or invalid element <baddata> in namespace \"http://www.example.com/scxml\" as child of <datamodel>");
@@ -268,21 +270,22 @@ public class SCXMLReaderTest {
     @Test
     public void testSCXMLReaderGroovyClosure() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/env/groovy/groovy-closure.xml");
-        Assert.assertNotNull(scxml);
-        Assert.assertNotNull(scxml.getGlobalScript());
+        Assertions.assertNotNull(scxml);
+        Assertions.assertNotNull(scxml.getGlobalScript());
         String scxmlAsString = serialize(scxml);
-        Assert.assertNotNull(scxmlAsString);
+        Assertions.assertNotNull(scxmlAsString);
         scxml = SCXMLTestHelper.parse(new StringReader(scxmlAsString), null);
-        Assert.assertNotNull(scxml);
-        Assert.assertNotNull(scxml.getGlobalScript());
+        Assertions.assertNotNull(scxml);
+        Assertions.assertNotNull(scxml.getGlobalScript());
     }
 
-    @Test(expected=org.apache.commons.scxml2.model.ModelException.class)
-    public void dataWithSrcAndExprIsRejectedInStrictConfiguration() throws Exception {
+    @Test
+    public void dataWithSrcAndExprIsRejectedInStrictConfiguration() {
         Configuration configuration = new Configuration();
         configuration.setStrict(true);
         configuration.setSilent(true);
-        SCXMLReader.read(getClass().getResourceAsStream("data-with-src-and-expr.xml"), configuration);
+        Assertions.assertThrows(org.apache.commons.scxml2.model.ModelException.class,
+                () -> SCXMLReader.read(getClass().getResourceAsStream("data-with-src-and-expr.xml"), configuration));
     }
 
     @Test
@@ -291,54 +294,54 @@ public class SCXMLReaderTest {
         configuration.setStrict(false);
         configuration.setSilent(true);
         SCXML scxml = SCXMLReader.read(getClass().getResourceAsStream("data-with-src-and-expr.xml"), configuration);
-        Assert.assertNotNull(scxml);
-        Assert.assertNotNull(scxml.getDatamodel());
-        Assert.assertNotNull(scxml.getDatamodel().getData());
-        Assert.assertEquals("Exactly one data element parsed.", 1, scxml.getDatamodel().getData().size());
+        Assertions.assertNotNull(scxml);
+        Assertions.assertNotNull(scxml.getDatamodel());
+        Assertions.assertNotNull(scxml.getDatamodel().getData());
+        Assertions.assertEquals(1, scxml.getDatamodel().getData().size(), "Exactly one data element parsed.");
         Data data = scxml.getDatamodel().getData().get(0);
-        Assert.assertNotNull(data);
-        Assert.assertEquals("'an expression'", data.getExpr());
+        Assertions.assertNotNull(data);
+        Assertions.assertEquals("'an expression'", data.getExpr());
     }
 
     @Test
     public void srcAttributeOfDataIsParsed() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/io/data-with-src.xml");
-        Assert.assertNotNull(scxml);
-        Assert.assertNotNull(scxml.getDatamodel());
-        Assert.assertNotNull(scxml.getDatamodel().getData());
-        Assert.assertEquals("Exactly one data element parsed.", 1, scxml.getDatamodel().getData().size());
+        Assertions.assertNotNull(scxml);
+        Assertions.assertNotNull(scxml.getDatamodel());
+        Assertions.assertNotNull(scxml.getDatamodel().getData());
+        Assertions.assertEquals(1, scxml.getDatamodel().getData().size(), "Exactly one data element parsed.");
         Data data = scxml.getDatamodel().getData().get(0);
-        Assert.assertNotNull(data);
-        Assert.assertEquals("http://www.w3.org/TR/sxcml", data.getSrc());
+        Assertions.assertNotNull(data);
+        Assertions.assertEquals("http://www.w3.org/TR/sxcml", data.getSrc());
     }
 
     @Test
     public void exprAttributeOfDataIsParsed() throws Exception {
         SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/io/data-with-expr.xml");
-        Assert.assertNotNull(scxml);
-        Assert.assertNotNull(scxml.getDatamodel());
-        Assert.assertNotNull(scxml.getDatamodel().getData());
-        Assert.assertEquals("Exactly one data element parsed.", 1, scxml.getDatamodel().getData().size());
+        Assertions.assertNotNull(scxml);
+        Assertions.assertNotNull(scxml.getDatamodel());
+        Assertions.assertNotNull(scxml.getDatamodel().getData());
+        Assertions.assertEquals(1, scxml.getDatamodel().getData().size(), "Exactly one data element parsed.");
         Data data = scxml.getDatamodel().getData().get(0);
-        Assert.assertNotNull(data);
-        Assert.assertEquals("'an expression'", data.getExpr());
+        Assertions.assertNotNull(data);
+        Assertions.assertEquals("'an expression'", data.getExpr());
     }
 
     private String serialize(final SCXML scxml) throws IOException, XMLStreamException {
         String scxmlAsString = SCXMLWriter.write(scxml);
-        Assert.assertNotNull(scxmlAsString);
+        Assertions.assertNotNull(scxmlAsString);
         return scxmlAsString;
     }
 
     private void assertContainsRecordedLogMessage(final String message) {
         if (scxmlReaderLog instanceof RecordingSimpleLog) {
-            Assert.assertTrue(((RecordingSimpleLog) scxmlReaderLog).containsMessage(message));
+            Assertions.assertTrue(((RecordingSimpleLog) scxmlReaderLog).containsMessage(message));
         }
     }
 
     private void assertNotContainsRecordedLogMessage(final String message) {
         if (scxmlReaderLog instanceof RecordingSimpleLog) {
-            Assert.assertFalse(((RecordingSimpleLog) scxmlReaderLog).containsMessage(message));
+            Assertions.assertFalse(((RecordingSimpleLog) scxmlReaderLog).containsMessage(message));
         }
     }
 

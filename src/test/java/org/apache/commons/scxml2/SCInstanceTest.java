@@ -24,16 +24,16 @@ import org.apache.commons.scxml2.env.jexl.JexlEvaluator;
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.History;
 import org.apache.commons.scxml2.model.State;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class SCInstanceTest {
 
     private SCXMLExecutor executor;
     private SCInstance instance;
     
-    @Before
+    @BeforeEach
     public void setUp() {
         executor = new SCXMLExecutor();
         instance = executor.getSCInstance();
@@ -45,7 +45,7 @@ public class SCInstanceTest {
         context.set("name", "value");
         
         instance.setRootContext(context);
-        Assert.assertEquals("value", instance.getRootContext().get("name"));
+        Assertions.assertEquals("value", instance.getRootContext().get("name"));
     }
     
     @Test
@@ -58,7 +58,7 @@ public class SCInstanceTest {
         
         instance.setContext(target, context);
         
-        Assert.assertEquals("value", instance.getContext(target).get("name"));
+        Assertions.assertEquals("value", instance.getContext(target).get("name"));
     }
     
     @Test
@@ -73,8 +73,8 @@ public class SCInstanceTest {
         Evaluator evaluator = new JexlEvaluator();
         executor.setEvaluator(evaluator);
 
-        Assert.assertEquals("value", instance.getContext(target).get("name"));
-        Assert.assertEquals("value", instance.lookupContext(target).get("name"));
+        Assertions.assertEquals("value", instance.getContext(target).get("name"));
+        Assertions.assertEquals("value", instance.lookupContext(target).get("name"));
     }
 
     @Test
@@ -94,8 +94,8 @@ public class SCInstanceTest {
         Evaluator evaluator = new JexlEvaluator();
         executor.setEvaluator(evaluator);
 
-        Assert.assertEquals("value", instance.getContext(target).get("name"));
-        Assert.assertEquals("value", instance.lookupContext(target).get("name"));
+        Assertions.assertEquals("value", instance.getContext(target).get("name"));
+        Assertions.assertEquals("value", instance.lookupContext(target).get("name"));
     }
 
     @Test
@@ -104,7 +104,7 @@ public class SCInstanceTest {
         
         Set<EnterableState> returnConfiguration = instance.getLastConfiguration(history);
         
-        Assert.assertEquals(0, returnConfiguration.size());
+        Assertions.assertEquals(0, returnConfiguration.size());
     }
 
     @Test
@@ -122,14 +122,14 @@ public class SCInstanceTest {
         
         Set<EnterableState> returnConfiguration = instance.getLastConfiguration(history);
         
-        Assert.assertEquals(2, returnConfiguration.size());
-        Assert.assertTrue(returnConfiguration.contains(tt1));
-        Assert.assertTrue(returnConfiguration.contains(tt2));
+        Assertions.assertEquals(2, returnConfiguration.size());
+        Assertions.assertTrue(returnConfiguration.contains(tt1));
+        Assertions.assertTrue(returnConfiguration.contains(tt2));
     }
     
     @Test
     public void testIsEmpty() {
-        Assert.assertTrue(instance.getLastConfiguration(new History()).isEmpty());
+        Assertions.assertTrue(instance.getLastConfiguration(new History()).isEmpty());
     }
     
     @Test
@@ -143,7 +143,7 @@ public class SCInstanceTest {
         
         instance.setLastConfiguration(history, configuration);  
 
-        Assert.assertFalse(instance.getLastConfiguration(history).isEmpty());
+        Assertions.assertFalse(instance.getLastConfiguration(history).isEmpty());
     }
     
     @Test
@@ -159,7 +159,7 @@ public class SCInstanceTest {
 
         instance.resetConfiguration(history);
         
-        Assert.assertTrue(instance.getLastConfiguration(history).isEmpty());
+        Assertions.assertTrue(instance.getLastConfiguration(history).isEmpty());
     }
     
 }

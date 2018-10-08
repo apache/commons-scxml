@@ -20,8 +20,8 @@ import java.util.Set;
 
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 /**
  * Unit tests for &lt;assign&gt; element, particular the "src" attribute.
  */
@@ -32,9 +32,9 @@ public class AssignTest {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/assign-test-01.xml");
         exec.go();
         Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assert.assertEquals(1, currentStates.size());
-        Assert.assertEquals("assign3", currentStates.iterator().next().getId());
-        Assert.assertTrue(exec.getStatus().isFinal());
+        Assertions.assertEquals(1, currentStates.size());
+        Assertions.assertEquals("assign3", currentStates.iterator().next().getId());
+        Assertions.assertTrue(exec.getStatus().isFinal());
     }
     
     @Test
@@ -42,9 +42,9 @@ public class AssignTest {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/assign-test-02.xml");
         exec.go();
         Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assert.assertEquals(1, currentStates.size());
-        Assert.assertEquals("assign3", currentStates.iterator().next().getId());
-        Assert.assertTrue(exec.getStatus().isFinal());
+        Assertions.assertEquals(1, currentStates.size());
+        Assertions.assertEquals("assign3", currentStates.iterator().next().getId());
+        Assertions.assertTrue(exec.getStatus().isFinal());
     }
 }
 

@@ -25,8 +25,8 @@ import org.apache.commons.scxml2.model.Parallel;
 import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.Script;
 import org.apache.commons.scxml2.model.State;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -52,7 +52,7 @@ public class SCXMLWriterTest {
             + "version=\"version1\" initial=\"off\"><!--http://commons.apache.org/scxml--><state></state>"
             + "</scxml>";
 
-        Assert.assertEquals(assertValue, SCXMLWriter.write(scxml, new SCXMLWriter.Configuration(true, false)));
+        Assertions.assertEquals(assertValue, SCXMLWriter.write(scxml, new SCXMLWriter.Configuration(true, false)));
     }
     
     @Test
@@ -71,7 +71,7 @@ public class SCXMLWriterTest {
             + "xmlns:cs=\"http://commons.apache.org/scxml\" version=\"1.0\" initial=\"S1\">"
             + "<!--http://commons.apache.org/scxml--><state id=\"S1\"></state></scxml>";
 
-        Assert.assertEquals(assertValue, SCXMLWriter.write(scxml, new SCXMLWriter.Configuration(true, false)));
+        Assertions.assertEquals(assertValue, SCXMLWriter.write(scxml, new SCXMLWriter.Configuration(true, false)));
     }
     
     @Test
@@ -119,7 +119,7 @@ public class SCXMLWriterTest {
             + "</parallel>"
             + "</scxml>";
 
-        Assert.assertEquals(assertValue, SCXMLWriter.write(scxml, new SCXMLWriter.Configuration(true, false)));
+        Assertions.assertEquals(assertValue, SCXMLWriter.write(scxml, new SCXMLWriter.Configuration(true, false)));
      }
 
     @Test
@@ -143,6 +143,6 @@ public class SCXMLWriterTest {
                 + "xmlns:cs=\"http://commons.apache.org/scxml\" version=\"1.0\" initial=\"S1\">"
                 + "<!--http://commons.apache.org/scxml--><script><![CDATA[foo=\"abc\"]]></script><state id=\"S1\"></state></scxml>";
 
-        Assert.assertEquals(assertValue, SCXMLWriter.write(scxml, new SCXMLWriter.Configuration(true, false)));
+        Assertions.assertEquals(assertValue, SCXMLWriter.write(scxml, new SCXMLWriter.Configuration(true, false)));
     }
 }

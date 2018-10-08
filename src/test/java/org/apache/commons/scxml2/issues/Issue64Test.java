@@ -18,7 +18,7 @@ package org.apache.commons.scxml2.issues;
 
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test cases for issue 64.

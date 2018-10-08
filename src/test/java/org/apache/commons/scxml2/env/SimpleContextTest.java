@@ -19,15 +19,15 @@ package org.apache.commons.scxml2.env;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class SimpleContextTest {
 
     private SimpleContext context;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         context = new SimpleContext();
     }
@@ -39,7 +39,7 @@ public class SimpleContextTest {
         
         context.setVars(vars);
         
-        Assert.assertTrue(context.has("key"));
+        Assertions.assertTrue(context.has("key"));
     }
 
     @Test
@@ -49,7 +49,7 @@ public class SimpleContextTest {
         
         context.setVars(vars);
         
-        Assert.assertFalse(context.has("differentKey"));
+        Assertions.assertFalse(context.has("differentKey"));
     }
     
     @Test
@@ -65,7 +65,7 @@ public class SimpleContextTest {
         context.setVars(vars);
         context = new SimpleContext(parentContext, parentVars);
         
-        Assert.assertFalse(context.has("differentKey"));
+        Assertions.assertFalse(context.has("differentKey"));
     }
 
     @Test
@@ -81,14 +81,14 @@ public class SimpleContextTest {
         context.setVars(vars);
         context = new SimpleContext(parentContext, parentVars);
         
-        Assert.assertTrue(context.has("differentKey"));
+        Assertions.assertTrue(context.has("differentKey"));
     }
     
     @Test
     public void testGetNull() {
         Object value = context.get("key");
         
-        Assert.assertNull(value);
+        Assertions.assertNull(value);
     }
     
     @Test
@@ -98,7 +98,7 @@ public class SimpleContextTest {
         
         context.setVars(vars);
         
-        Assert.assertEquals("value", context.get("key"));
+        Assertions.assertEquals("value", context.get("key"));
     }
     
     @Test
@@ -114,7 +114,7 @@ public class SimpleContextTest {
         context.setVars(vars);
         context = new SimpleContext(parentContext, parentVars);
         
-        Assert.assertEquals("differentValue", context.get("differentKey"));
+        Assertions.assertEquals("differentValue", context.get("differentKey"));
     }
     
     @Test
@@ -124,7 +124,7 @@ public class SimpleContextTest {
         
         context.setVars(vars);
         
-        Assert.assertNull(context.get("differentKey"));
+        Assertions.assertNull(context.get("differentKey"));
     }
     
     @Test
@@ -140,7 +140,7 @@ public class SimpleContextTest {
         context.setVars(vars);
         context = new SimpleContext(parentContext, parentVars);
         
-        Assert.assertNull(context.get("reallyDifferentKey"));
+        Assertions.assertNull(context.get("reallyDifferentKey"));
     }
 
     @Test
@@ -152,7 +152,7 @@ public class SimpleContextTest {
         
         context.set("key", "newValue");
         
-        Assert.assertEquals("newValue", context.get("key"));
+        Assertions.assertEquals("newValue", context.get("key"));
     }
 
     @Test
@@ -162,7 +162,7 @@ public class SimpleContextTest {
         
         context.set("key", "newValue");
         
-        Assert.assertEquals("newValue", context.get("key"));
+        Assertions.assertEquals("newValue", context.get("key"));
     }
     
     @Test
@@ -180,7 +180,7 @@ public class SimpleContextTest {
         
         context.set("differentKey", "newValue");
         
-        Assert.assertEquals("newValue", context.get("differentKey"));
+        Assertions.assertEquals("newValue", context.get("differentKey"));
     }
 
     @Test
@@ -191,7 +191,7 @@ public class SimpleContextTest {
         SimpleContext parentContext = new SimpleContext(rootEffectiveContext);
         try {
             new EffectiveContextMap(parentContext);
-            Assert.fail("Nested EffectiveContextMap wrapping should fail");
+            Assertions.fail("Nested EffectiveContextMap wrapping should fail");
         }
         catch (IllegalArgumentException e) {
             // good
@@ -205,11 +205,11 @@ public class SimpleContextTest {
         SimpleContext parentContext = new SimpleContext(rootContext);
         parentContext.setLocal("key", "parent");
         SimpleContext effectiveContext = new SimpleContext(parentContext, new EffectiveContextMap(parentContext));
-        Assert.assertEquals("parent", effectiveContext.get("key"));
+        Assertions.assertEquals("parent", effectiveContext.get("key"));
         // ensure EffectiveContextMap provides complete local variable shadowing
         for (Map.Entry<String,Object> entry : effectiveContext.getVars().entrySet()) {
             if (entry.getKey().equals("key")) {
-                Assert.assertEquals("parent", entry.getValue());
+                Assertions.assertEquals("parent", entry.getValue());
             }
         }
     }

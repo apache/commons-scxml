@@ -22,8 +22,8 @@ import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.ModelException;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 /**
  * Test white box nature of <state> element "src" attribute.
  */
@@ -34,22 +34,22 @@ public class StateSrcTest {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/io/src-test-1.xml");
         exec.go();
         Set<EnterableState> states = exec.getStatus().getStates();
-        Assert.assertEquals(1, states.size());
-        Assert.assertEquals("srctest3", states.iterator().next().getId());
+        Assertions.assertEquals(1, states.size());
+        Assertions.assertEquals("srctest3", states.iterator().next().getId());
         states = SCXMLTestHelper.fireEvent(exec, "src.test");
-        Assert.assertEquals(1, states.size());
-        Assert.assertEquals("srctest1end", states.iterator().next().getId());
-        Assert.assertTrue(exec.getStatus().isFinal());
+        Assertions.assertEquals(1, states.size());
+        Assertions.assertEquals("srctest1end", states.iterator().next().getId());
+        Assertions.assertTrue(exec.getStatus().isFinal());
     }
     
     @Test
     public void testBadSrcInclude() throws Exception {
         try {
             SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/src-test-4.xml"));
-            Assert.fail("Document with bad <state> src attribute shouldn't be parsed!");
+            Assertions.fail("Document with bad <state> src attribute shouldn't be parsed!");
         } catch (ModelException me) {
-            Assert.assertTrue("Unexpected error message for bad <state> 'src' URI",
-                me.getMessage() != null && me.getMessage().contains("Source attribute in <state src="));
+            Assertions.assertTrue(me.getMessage() != null && me.getMessage().contains("Source attribute in <state src="),
+                    "Unexpected error message for bad <state> 'src' URI");
         }
     }
     
@@ -57,10 +57,10 @@ public class StateSrcTest {
     public void testBadSrcFragmentInclude() throws Exception {
         try {
             SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/src-test-5.xml"));
-            Assert.fail("Document with bad <state> src attribute shouldn't be parsed!");
+            Assertions.fail("Document with bad <state> src attribute shouldn't be parsed!");
         } catch (ModelException me) {
-            Assert.assertTrue("Unexpected error message for bad <state> 'src' URI fragment",
-                me.getMessage() != null && me.getMessage().contains("URI Fragment in <state src="));
+            Assertions.assertTrue(me.getMessage() != null && me.getMessage().contains("URI Fragment in <state src="),
+                    "Unexpected error message for bad <state> 'src' URI fragment");
         }
     }
 }

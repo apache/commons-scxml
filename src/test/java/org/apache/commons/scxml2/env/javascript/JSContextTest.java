@@ -18,42 +18,22 @@
 package org.apache.commons.scxml2.env.javascript;
 
 import org.apache.commons.scxml2.env.SimpleContext;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
- * JUnit 3 test case for the JSContext SCXML Context implementation for
+ * Test case for the JSContext SCXML Context implementation for
  * the Javascript expression evaluator.
  *
  */
 public class JSContextTest {
-        // TEST CONSTANTS
-
-        // TEST VARIABLES
-
-        // TEST SETUP
-
-        // CLASS METHODS
-
-        /**
-         * Standalone test runtime.
-         *
-         */
-        public static void main(String args[]) {
-            String[] testCaseName = {JSContextTest.class.getName()};
-
-            junit.textui.TestRunner.main(testCaseName);
-        }
-
-        // INSTANCE METHOD TESTS
-
         /**
          * Tests implementation of JSContext default constructor.
          *
          */
         @Test
         public void testDefaultConstructor() {
-            Assert.assertNotNull("Error in JSContext default constructor",new JSContext());
+            Assertions.assertNotNull(new JSContext(), "Error in JSContext default constructor");
         }
 
         /**
@@ -62,8 +42,7 @@ public class JSContextTest {
          */
         @Test
         public void testChildConstructor() {
-                Assert.assertNotNull("Error in JSContext child constructor",new JSContext(new SimpleContext()));
+                Assertions.assertNotNull(new JSContext(new SimpleContext()), "Error in JSContext child constructor");
         }
-
 }
 

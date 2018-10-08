@@ -23,8 +23,8 @@ import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.model.EnterableState;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class GroovyClosureTest {
 
@@ -34,8 +34,8 @@ public class GroovyClosureTest {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor(groovyClosure, new GroovyEvaluator(true));
         exec.go();
         Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "turn_on");
-        Assert.assertEquals(2, currentStates.size());
+        Assertions.assertEquals(2, currentStates.size());
         String id = currentStates.iterator().next().getId();
-        Assert.assertTrue(id.equals("closed") || id.equals("cooking"));
+        Assertions.assertTrue(id.equals("closed") || id.equals("cooking"));
     }
 }

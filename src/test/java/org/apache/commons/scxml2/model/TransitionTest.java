@@ -16,29 +16,29 @@
  */
 package org.apache.commons.scxml2.model;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class TransitionTest {
 
     private Transition transition;
     
-    @Before
+    @BeforeEach
     public void setUp() {
         transition = new Transition();
     }
         
     @Test
     public void testGetTargets() {
-        Assert.assertEquals(0, transition.getTargets().size());
+        Assertions.assertEquals(0, transition.getTargets().size());
 
         State state = new State();
         state.setId("1");
 
         transition.getTargets().add(state);
 
-        Assert.assertEquals(1, transition.getTargets().size());
-        Assert.assertEquals("1", transition.getTargets().iterator().next().getId());
+        Assertions.assertEquals(1, transition.getTargets().size());
+        Assertions.assertEquals("1", transition.getTargets().iterator().next().getId());
     }
 }

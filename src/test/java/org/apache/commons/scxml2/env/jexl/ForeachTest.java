@@ -18,8 +18,8 @@ package org.apache.commons.scxml2.env.jexl;
 
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Simple test for SCXML <foreach/>
@@ -30,6 +30,6 @@ public class ForeachTest {
     public void testForeach() throws Exception {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/foreach.xml");
         exec.go();
-        Assert.assertTrue(exec.getStatus().isFinal());
+        Assertions.assertTrue(exec.getStatus().isFinal());
     }
 }

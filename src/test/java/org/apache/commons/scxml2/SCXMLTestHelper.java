@@ -36,7 +36,7 @@ import org.apache.commons.scxml2.model.CustomAction;
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.TransitionTarget;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 /**
  * Helper methods for running SCXML unit tests.
@@ -64,7 +64,7 @@ public class SCXMLTestHelper {
     }
 
     public static SCXML parse(final String scxmlResource) throws Exception {
-        Assert.assertNotNull(scxmlResource);
+        Assertions.assertNotNull(scxmlResource);
         return parse(getResource(scxmlResource), null);
     }
 
@@ -73,23 +73,23 @@ public class SCXMLTestHelper {
     }
 
     public static SCXML parse(final String scxmlResource, final List<CustomAction> customActions) throws Exception {
-        Assert.assertNotNull(scxmlResource);
+        Assertions.assertNotNull(scxmlResource);
         return parse(getResource(scxmlResource), customActions);
     }
 
     public static SCXML parse(final URL url, final List<CustomAction> customActions) throws Exception {
-        Assert.assertNotNull(url);
+        Assertions.assertNotNull(url);
         Configuration configuration = new Configuration(null, null, customActions);
         SCXML scxml = SCXMLReader.read(url, configuration);
-        Assert.assertNotNull(scxml);
+        Assertions.assertNotNull(scxml);
         return testModelSerializability(scxml);
     }
 
     public static SCXML parse(final Reader scxmlReader, final List<CustomAction> customActions) throws Exception {
-        Assert.assertNotNull(scxmlReader);
+        Assertions.assertNotNull(scxmlReader);
         Configuration configuration = new Configuration(null, null, customActions);
         SCXML scxml = SCXMLReader.read(scxmlReader, configuration);
-        Assert.assertNotNull(scxml);
+        Assertions.assertNotNull(scxml);
         return testModelSerializability(scxml);
     }
 
@@ -135,10 +135,10 @@ public class SCXMLTestHelper {
 
     public static void assertState(SCXMLExecutor exec, String expectedStateId) {
         Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assert.assertEquals("Expected 1 simple (leaf) state with id '"
-            + expectedStateId + "' but found " + currentStates.size() + " states instead.",
-            1, currentStates.size());
-        Assert.assertEquals(expectedStateId, currentStates.iterator().
+        Assertions.assertEquals(1, currentStates.size(),
+                "Expected 1 simple (leaf) state with id '" + expectedStateId +
+                        "' but found " + currentStates.size() + " states instead.");
+        Assertions.assertEquals(expectedStateId, currentStates.iterator().
             next().getId());
     }
 
@@ -187,38 +187,38 @@ public class SCXMLTestHelper {
     public static void assertPostTriggerState(SCXMLExecutor exec,
             TriggerEvent triggerEvent, String expectedStateId) throws Exception {
         Set<EnterableState> currentStates = fireEvent(exec, triggerEvent);
-        Assert.assertEquals("Expected 1 simple (leaf) state with id '"
-            + expectedStateId + "' on firing event " + triggerEvent
-            + " but found " + currentStates.size() + " states instead.",
-            1, currentStates.size());
-        Assert.assertEquals(expectedStateId, currentStates.iterator().
+        Assertions.assertEquals(1, currentStates.size(),
+                "Expected 1 simple (leaf) state with id '"
+                        + expectedStateId + "' on firing event " + triggerEvent
+                        + " but found " + currentStates.size() + " states instead.");
+        Assertions.assertEquals(expectedStateId, currentStates.iterator().
             next().getId());
     }
 
     public static void assertPostTriggerStates(SCXMLExecutor exec,
             TriggerEvent triggerEvent, String[] expectedStateIds) throws Exception {
         if (expectedStateIds == null || expectedStateIds.length == 0) {
-            Assert.fail("Must specify an array of one or more "
+            Assertions.fail("Must specify an array of one or more "
                 + "expected state IDs");
         }
         Set<EnterableState> currentStates = fireEvent(exec, triggerEvent);
         int n = expectedStateIds.length;
-        Assert.assertEquals("Expected " + n + " simple (leaf) state(s) "
-            + " on firing event " + triggerEvent + " but found "
-            + currentStates.size() + " states instead.",
-            n, currentStates.size());
+        Assertions.assertEquals(n, currentStates.size(),
+                "Expected " + n + " simple (leaf) state(s) "
+                        + " on firing event " + triggerEvent + " but found "
+                        + currentStates.size() + " states instead.");
         List<String> expectedStateIdList = new ArrayList<>(Arrays.asList(expectedStateIds));
         for (TransitionTarget tt : currentStates) {
             String stateId = tt.getId();
             if(!expectedStateIdList.remove(stateId)) {
-                Assert.fail("Expected state with id '" + stateId
+                Assertions.fail("Expected state with id '" + stateId
                     + "' in current states on firing event "
                     + triggerEvent);
             }
         }
-        Assert.assertEquals("More states in current configuration than those"
-            + "specified in the expected state ids '" + Arrays.toString(expectedStateIds)
-            + "'", 0, expectedStateIdList.size());
+        Assertions.assertEquals(0, expectedStateIdList.size(),
+                "More states in current configuration than those"
+                        + "specified in the expected state ids '" + Arrays.toString(expectedStateIds) + "'");
     }
 
     public static SCXML testModelSerializability(final SCXML scxml) throws Exception {

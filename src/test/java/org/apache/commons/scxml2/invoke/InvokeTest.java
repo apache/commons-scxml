@@ -25,8 +25,8 @@ import org.apache.commons.scxml2.env.SimpleErrorReporter;
 import org.apache.commons.scxml2.io.SCXMLReader;
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.SCXML;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests {@link org.apache.commons.scxml2.SCXMLExecutor}.
@@ -45,8 +45,8 @@ public class InvokeTest {
         exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
         exec.go();
         Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assert.assertEquals(1, currentStates.size());
-        Assert.assertEquals("invoker", currentStates.iterator().next().getId());
+        Assertions.assertEquals(1, currentStates.size());
+        Assertions.assertEquals("invoker", currentStates.iterator().next().getId());
     }
     
     @Test
@@ -57,7 +57,7 @@ public class InvokeTest {
         exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
         exec.go();
         Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assert.assertEquals(1, currentStates.size());
+        Assertions.assertEquals(1, currentStates.size());
     }
     
     @Test
@@ -68,7 +68,7 @@ public class InvokeTest {
         exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
         exec.go();
         Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assert.assertEquals(1, currentStates.size());
+        Assertions.assertEquals(1, currentStates.size());
         SCXMLTestHelper.fireEvent(exec, "s1.next");
         SCXMLTestHelper.fireEvent(exec, "state1.next");
     }

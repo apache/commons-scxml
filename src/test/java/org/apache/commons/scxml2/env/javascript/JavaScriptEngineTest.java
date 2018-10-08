@@ -18,17 +18,17 @@ package org.apache.commons.scxml2.env.javascript;
 
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.commons.scxml2.SCXMLSystemContext;
 import org.apache.commons.scxml2.StateConfiguration;
 import org.apache.commons.scxml2.Status;
 import org.apache.commons.scxml2.model.Final;
 import org.apache.commons.scxml2.system.EventVariable;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class JavaScriptEngineTest {
 
@@ -37,7 +37,7 @@ public class JavaScriptEngineTest {
     private JSContext _systemContext;
     private JSContext context;
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
         evaluator = new JSEvaluator();
         _systemContext = new JSContext();

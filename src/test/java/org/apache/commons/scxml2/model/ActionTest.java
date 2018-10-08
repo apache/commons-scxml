@@ -16,15 +16,15 @@
  */
 package org.apache.commons.scxml2.model;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class ActionTest {
 
     private Action action;
     
-    @Before
+    @BeforeEach
     public void setUp() {
         action = new Assign();
     }
@@ -40,7 +40,7 @@ public class ActionTest {
 
         TransitionTarget returnValue = action.getParentEnterableState();
         
-        Assert.assertEquals("on", returnValue.getId());
+        Assertions.assertEquals("on", returnValue.getId());
     }
     
     @Test
@@ -60,7 +60,7 @@ public class ActionTest {
 
         TransitionTarget returnValue = action.getParentEnterableState();
         
-        Assert.assertEquals("on", returnValue.getId());
+        Assertions.assertEquals("on", returnValue.getId());
     }
     
     @Test
@@ -80,7 +80,7 @@ public class ActionTest {
 
         TransitionTarget returnValue = action.getParentEnterableState();
         
-        Assert.assertEquals("off", returnValue.getId());
+        Assertions.assertEquals("off", returnValue.getId());
     }
     
     @Test
@@ -99,6 +99,6 @@ public class ActionTest {
 
         TransitionTarget returnValue = action.getParentEnterableState();
 
-        Assert.assertEquals("off", returnValue.getId());
+        Assertions.assertEquals("off", returnValue.getId());
     }
 }

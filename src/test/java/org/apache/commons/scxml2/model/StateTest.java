@@ -20,22 +20,22 @@ import java.util.List;
 
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class StateTest {
 
     @Test
     public void testGetTransitionsListNull() {
         State state = new State();
-        Assert.assertNull(state.getTransitionsList("event"));
+        Assertions.assertNull(state.getTransitionsList("event"));
     }
         
     @Test
     public void testGetTransitionsList() {
         State state = new State();
         state.getTransitionsList().add(new Transition());
-        Assert.assertNotNull(state.getTransitionsList(null));
+        Assertions.assertNotNull(state.getTransitionsList(null));
     }
         
     @Test
@@ -48,8 +48,8 @@ public class StateTest {
         
         List<Transition> events = state.getTransitionsList("event");
         
-        Assert.assertEquals(1, events.size());
-        Assert.assertEquals("event", events.get(0).getEvent());
+        Assertions.assertEquals(1, events.size());
+        Assertions.assertEquals("event", events.get(0).getEvent());
     }
         
     @Test
@@ -66,7 +66,7 @@ public class StateTest {
         
         List<Transition> events = state.getTransitionsList("event");
         
-        Assert.assertEquals(2, events.size());
+        Assertions.assertEquals(2, events.size());
     }
         
     @Test
@@ -83,13 +83,13 @@ public class StateTest {
         
         List<Transition> events = state.getTransitionsList();
         
-        Assert.assertEquals(2, events.size());
+        Assertions.assertEquals(2, events.size());
     }
         
     @Test
     public void testHasHistoryEmpty() {
         State state = new State();
-        Assert.assertFalse(state.hasHistory());
+        Assertions.assertFalse(state.hasHistory());
     }
     
     @Test
@@ -99,13 +99,13 @@ public class StateTest {
         State state = new State();
         state.addHistory(history);
         
-        Assert.assertTrue(state.hasHistory());
+        Assertions.assertTrue(state.hasHistory());
     }
         
     @Test
     public void testIsSimple() {
         State state = new State();
-        Assert.assertTrue(state.isSimple());
+        Assertions.assertTrue(state.isSimple());
     }
         
     @Test
@@ -115,13 +115,13 @@ public class StateTest {
         State state = new State();
         state.addChild(state1);
         
-        Assert.assertFalse(state.isSimple());
+        Assertions.assertFalse(state.isSimple());
     }
         
     @Test
     public void testIsCompositeFalse() {
         State state = new State();
-        Assert.assertFalse(state.isComposite());
+        Assertions.assertFalse(state.isComposite());
     }
         
     @Test
@@ -131,7 +131,7 @@ public class StateTest {
         State state = new State();
         state.addChild(child);
         
-        Assert.assertTrue(state.isComposite());
+        Assertions.assertTrue(state.isComposite());
     }
         
     @Test
@@ -141,7 +141,7 @@ public class StateTest {
         State state = new State();
         state.addChild(state1);
         
-        Assert.assertTrue(state.isComposite());
+        Assertions.assertTrue(state.isComposite());
     }
         
     @Test
@@ -149,7 +149,7 @@ public class StateTest {
         State state = new State();
         state.setParent(new Parallel());
         
-        Assert.assertTrue(state.isRegion());
+        Assertions.assertTrue(state.isRegion());
     }
         
     @Test
@@ -157,13 +157,13 @@ public class StateTest {
         State state = new State();
         state.setParent(new State());
         
-        Assert.assertFalse(state.isRegion());
+        Assertions.assertFalse(state.isRegion());
     }
     
     @Test
     public void testInitialAttribute() throws Exception {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/state-01.xml");
         exec.go();
-        Assert.assertEquals("s11", exec.getStatus().getStates().iterator().next().getId());
+        Assertions.assertEquals("s11", exec.getStatus().getStates().iterator().next().getId());
     }
 }

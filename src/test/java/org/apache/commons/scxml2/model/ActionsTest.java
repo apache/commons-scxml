@@ -19,8 +19,8 @@ package org.apache.commons.scxml2.model;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 /**
  * Unit tests {@link org.apache.commons.scxml2.model.Assign}.
  * Unit tests {@link org.apache.commons.scxml2.model.Cancel}.
@@ -56,9 +56,8 @@ public class ActionsTest {
 
     private void runTest(SCXMLExecutor exec) {
         Context ctx = SCXMLTestHelper.lookupContext(exec, "actionsTest");
-        Assert.assertEquals(ctx.get("foo"), "foobar");
-        Assert.assertEquals("Missed event transition",
-            true, ctx.get("eventsent"));
+        Assertions.assertEquals(ctx.get("foo"), "foobar");
+        Assertions.assertEquals(true, ctx.get("eventsent"), "Missed event transition");
     }
 }
 
