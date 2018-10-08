@@ -35,6 +35,10 @@
     <release version="2.0" date="In Git master"
       description="Latest unreleased code">
 
+      <action dev="woonsan" type="update" issue="SCXML-283" due-to="Allon Mureinik">
+        [08-10-2018] Upgrade testing framework to JUnit Jupiter
+      </action>
+
       <action dev="ate" type="add" issue="SCXML-279">
         [21-01-2018] Only use default Jexl3 setting for silent and strict, cleanup APIs accordingly
       </action>
