@@ -36,7 +36,7 @@ public class CustomActionTest {
     }
 
     @Test
-    public void testAddGoodCustomAction01() throws Exception {
+    public void testAddGoodCustomAction01() {
         new CustomAction("http://my.actions.domain/CUSTOM", "hello",
             Hello.class);
     }

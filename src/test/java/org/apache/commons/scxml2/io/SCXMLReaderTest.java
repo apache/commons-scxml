@@ -353,7 +353,7 @@ public class SCXMLReaderTest {
         private ParsedValue parsedValue;
 
         @Override
-        public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
+        public void execute(ActionExecutionContext exctx) {
             // Not relevant to test
         }
 

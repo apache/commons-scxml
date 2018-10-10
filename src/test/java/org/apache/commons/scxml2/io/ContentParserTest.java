@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 public class ContentParserTest {
 
     @Test
-    public void testTrimContent() throws Exception {
+    public void testTrimContent() {
         Assertions.assertEquals(null, ContentParser.trimContent(null));
         Assertions.assertEquals("", ContentParser.trimContent(""));
         Assertions.assertEquals("", ContentParser.trimContent(" "));
@@ -42,7 +42,7 @@ public class ContentParserTest {
     }
 
     @Test
-    public void testSpaceNormalizeContent() throws Exception {
+    public void testSpaceNormalizeContent() {
         Assertions.assertEquals(null, ContentParser.spaceNormalizeContent(null));
         Assertions.assertEquals("", ContentParser.spaceNormalizeContent(""));
         Assertions.assertEquals("a", ContentParser.spaceNormalizeContent("a"));

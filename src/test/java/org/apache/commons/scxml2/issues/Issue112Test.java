@@ -94,7 +94,7 @@ public class Issue112Test {
         }
 
         @Override
-        public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
+        public void execute(ActionExecutionContext exctx) {
 
             Application.QUEUE.add(event);
 

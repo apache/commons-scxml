@@ -28,7 +28,7 @@ public class SimpleContextTest {
     private SimpleContext context;
 
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUp() {
         context = new SimpleContext();
     }
     

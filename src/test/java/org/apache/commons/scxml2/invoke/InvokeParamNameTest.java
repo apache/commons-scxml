@@ -81,15 +81,13 @@ public class InvokeParamNameTest {
         private String invokeId;
 
         @Override
-        public void invoke(String url, Map<String, Object> params)
-        throws InvokerException {
+        public void invoke(String url, Map<String, Object> params) {
             lastURL = url;
             lastParams = params;
         }
 
         @Override
-        public void invokeContent(String content, Map<String, Object> params)
-                throws InvokerException {
+        public void invokeContent(String content, Map<String, Object> params) {
             lastURL = null;
             lastParams = params;
         }
@@ -103,12 +101,12 @@ public class InvokeParamNameTest {
         }
 
         @Override
-        public void cancel() throws InvokerException {
+        public void cancel() {
             // Not needed
         }
 
         @Override
-        public void parentEvent(TriggerEvent evt) throws InvokerException {
+        public void parentEvent(TriggerEvent evt) {
             // Not needed
         }
 

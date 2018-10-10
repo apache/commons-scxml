@@ -611,7 +611,7 @@ public class W3CTests {
      * @throws Exception
      */
     protected void runAssert(final Assertions.Assertion assertion, final Tests tests, final Datamodel datamodel,
-                             final boolean status, final boolean singleTest, TestResults results) throws Exception {
+                             final boolean status, final boolean singleTest, TestResults results) {
         final Tests.Test test = tests.getTests().get(assertion.getId());
         if (test == null) {
             throw new IllegalStateException("No test configuration found for W3C IRP test with id: "+assertion.getId());

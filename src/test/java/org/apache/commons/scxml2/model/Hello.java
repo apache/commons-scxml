@@ -55,7 +55,7 @@ public class Hello extends Action {
     }
 
     @Override
-    public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
+    public void execute(ActionExecutionContext exctx) {
         if (exctx.getAppLog().isInfoEnabled()) {
             exctx.getAppLog().info("Hello " + name);
         }
