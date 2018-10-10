@@ -123,7 +123,7 @@ public class SCXMLWriterTest {
      }
 
     @Test
-    public void testSerializeGlobalScript() throws IOException, ModelException, XMLStreamException {
+    public void testSerializeGlobalScript() throws IOException, XMLStreamException {
         SCXML scxml = new CommonsSCXML();
         scxml.setVersion("1.0");
         scxml.setInitial("S1");

@@ -38,7 +38,7 @@ public class JavaScriptEngineTest {
     private JSContext context;
 
     @BeforeEach
-    public void before() throws Exception {
+    public void before() {
         evaluator = new JSEvaluator();
         _systemContext = new JSContext();
         SCXMLSystemContext systemContext = new SCXMLSystemContext(_systemContext);

@@ -25,8 +25,8 @@ import org.apache.commons.scxml2.model.SCXML;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Test enforcement of required SCXML element attributes, spec https://www.w3.org/TR/2015/REC-scxml-20150901
@@ -154,80 +154,66 @@ public class SCXMLRequiredAttributesTest {
     }
 
     @Test
-    public void testSCXMLMissingVersion() throws Exception {
-        try {
-            SCXMLTestHelper.parse(new StringReader(SCXML_WITH_MISSING_VERSION), null);
-            fail("SCXML reading should have failed due to missing version in SCXML");
-        }
-        catch (ModelException e) {
-            assertTrue(e.getMessage().startsWith("<scxml> is missing required attribute \"version\" value"));
-        }
+    public void testSCXMLMissingVersion() {
+        ModelException e = assertThrows(
+                ModelException.class,
+                () -> SCXMLTestHelper.parse(new StringReader(SCXML_WITH_MISSING_VERSION), null),
+                "SCXML reading should have failed due to missing version in SCXML");
+        assertTrue(e.getMessage().startsWith("<scxml> is missing required attribute \"version\" value"));
     }
 
     @Test
-    public void testSCXMLInvalidVersion() throws Exception {
-        try {
-            SCXMLTestHelper.parse(new StringReader(SCXML_WITH_INVALID_VERSION), null);
-            fail("SCXML reading should have failed due to missing version in SCXML");
-        }
-        catch (ModelException e) {
-            assertEquals("The <scxml> element defines an unsupported version \"2.0\", only version \"1.0\" is supported.", e.getMessage());
-        }
+    public void testSCXMLInvalidVersion() {
+        ModelException e = assertThrows(
+                ModelException.class,
+                () -> SCXMLTestHelper.parse(new StringReader(SCXML_WITH_INVALID_VERSION), null),
+                "SCXML reading should have failed due to missing version in SCXML");
+        assertEquals("The <scxml> element defines an unsupported version \"2.0\", only version \"1.0\" is supported.", e.getMessage());
     }
 
     @Test
-    public void testSCXMLMissingIfCond() throws Exception {
-        try {
-            SCXMLTestHelper.parse(new StringReader(SCXML_WITH_MISSING_IF_COND), null);
-            fail("SCXML reading should have failed due to missing if condition in SCXML");
-        }
-        catch (ModelException e) {
-            assertTrue(e.getMessage().startsWith("<if> is missing required attribute \"cond\" value"));
-        }
+    public void testSCXMLMissingIfCond() {
+        ModelException e = assertThrows(
+                ModelException.class,
+                () -> SCXMLTestHelper.parse(new StringReader(SCXML_WITH_MISSING_IF_COND), null),
+                "SCXML reading should have failed due to missing if condition in SCXML");
+        assertTrue(e.getMessage().startsWith("<if> is missing required attribute \"cond\" value"));
     }
 
     @Test
-    public void testSCXMLMissingElseIfCond() throws Exception {
-        try {
-            SCXMLTestHelper.parse(new StringReader(SCXML_WITH_MISSING_ELSEIF_COND), null);
-            fail("SCXML reading should have failed due to missing elseif condition in SCXML");
-        }
-        catch (ModelException e) {
-            assertTrue(e.getMessage().startsWith("<elseif> is missing required attribute \"cond\" value"));
-        }
+    public void testSCXMLMissingElseIfCond() {
+        ModelException e = assertThrows(
+                ModelException.class,
+                () -> SCXMLTestHelper.parse(new StringReader(SCXML_WITH_MISSING_ELSEIF_COND), null),
+                "SCXML reading should have failed due to missing elseif condition in SCXML");
+        assertTrue(e.getMessage().startsWith("<elseif> is missing required attribute \"cond\" value"));
     }
 
     @Test
-    public void testSCXMLMissingDataId() throws Exception {
-        try {
-            SCXMLTestHelper.parse(new StringReader(SCXML_WITH_MISSING_DATA_ID), null);
-            fail("SCXML reading should have failed due to missing data id in SCXML");
-        }
-        catch (ModelException e) {
-            assertTrue(e.getMessage().startsWith("<data> is missing required attribute \"id\" value"));
-        }
+    public void testSCXMLMissingDataId() {
+        ModelException e = assertThrows(
+                ModelException.class,
+                () -> SCXMLTestHelper.parse(new StringReader(SCXML_WITH_MISSING_DATA_ID), null),
+                "SCXML reading should have failed due to missing data id in SCXML");
+        assertTrue(e.getMessage().startsWith("<data> is missing required attribute \"id\" value"));
     }
 
     @Test
-    public void testSCXMLMissingAssignLocation() throws Exception {
-        try {
-            SCXMLTestHelper.parse(new StringReader(SCXML_WITH_MISSING_ASSIGN_LOCATION), null);
-            fail("SCXML reading should have failed due to missing assign location in SCXML");
-        }
-        catch (ModelException e) {
-            assertTrue(e.getMessage().startsWith("<assign> is missing required attribute \"location\" value"));
-        }
+    public void testSCXMLMissingAssignLocation() {
+        ModelException e = assertThrows(
+                ModelException.class,
+                () -> SCXMLTestHelper.parse(new StringReader(SCXML_WITH_MISSING_ASSIGN_LOCATION), null),
+                "SCXML reading should have failed due to missing assign location in SCXML");
+        assertTrue(e.getMessage().startsWith("<assign> is missing required attribute \"location\" value"));
     }
 
     @Test
-    public void testSCXMLMissingParamName() throws Exception {
-        try {
-            SCXMLTestHelper.parse(new StringReader(SCXML_WITH_MISSING_PARAM_NAME), null);
-            fail("SCXML reading should have failed due to missing param name in SCXML");
-        }
-        catch (ModelException e) {
-            assertTrue(e.getMessage().startsWith("<param> is missing required attribute \"name\" value"));
-        }
+    public void testSCXMLMissingParamName() {
+        ModelException e = assertThrows(
+                ModelException.class,
+                () -> SCXMLTestHelper.parse(new StringReader(SCXML_WITH_MISSING_PARAM_NAME), null),
+                "SCXML reading should have failed due to missing param name in SCXML");
+        assertTrue(e.getMessage().startsWith("<param> is missing required attribute \"name\" value"));
     }
 
     @Test
@@ -237,25 +223,21 @@ public class SCXMLRequiredAttributesTest {
     }
 
     @Test
-    public void testSCXMLMissingForeachArray() throws Exception {
-        try {
-            SCXMLTestHelper.parse(new StringReader(SCXML_WITH_MISSING_FOREACH_ARRAY), null);
-            fail("SCXML reading should have failed due to missing foreach array in SCXML");
-        }
-        catch (ModelException e) {
-            assertTrue(e.getMessage().startsWith("<foreach> is missing required attribute \"array\" value"));
-        }
+    public void testSCXMLMissingForeachArray() {
+        ModelException e = assertThrows(
+                ModelException.class,
+                () -> SCXMLTestHelper.parse(new StringReader(SCXML_WITH_MISSING_FOREACH_ARRAY), null),
+                "SCXML reading should have failed due to missing foreach array in SCXML");
+        assertTrue(e.getMessage().startsWith("<foreach> is missing required attribute \"array\" value"));
     }
 
     @Test
-    public void testSCXMLMissingForeachItem() throws Exception {
-        try {
-            SCXMLTestHelper.parse(new StringReader(SCXML_WITH_MISSING_FOREACH_ITEM), null);
-            fail("SCXML reading should have failed due to missing foreach item in SCXML");
-        }
-        catch (ModelException e) {
-            assertTrue(e.getMessage().startsWith("<foreach> is missing required attribute \"item\" value"));
-        }
+    public void testSCXMLMissingForeachItem() {
+        ModelException e = assertThrows(
+                ModelException.class,
+                () -> SCXMLTestHelper.parse(new StringReader(SCXML_WITH_MISSING_FOREACH_ITEM), null),
+                "SCXML reading should have failed due to missing foreach item in SCXML");
+        assertTrue(e.getMessage().startsWith("<foreach> is missing required attribute \"item\" value"));
     }
 
     @Test

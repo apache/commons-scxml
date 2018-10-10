@@ -81,13 +81,12 @@ public class GroovyEvaluatorTest {
     public void testErrorMessage() {
         Evaluator eval = new GroovyEvaluator();
         Assertions.assertNotNull(eval);
-        try {
-            eval.eval(ctx, BAD_EXPRESSION);
-            Assertions.fail("GroovyEvaluator should throw SCXMLExpressionException");
-        } catch (SCXMLExpressionException e) {
-            Assertions.assertTrue(e.getMessage().startsWith("eval('" + BAD_EXPRESSION + "'):"),
-                    "GroovyEvaluator: Incorrect error message");
-        }
+        SCXMLExpressionException e = Assertions.assertThrows(
+                SCXMLExpressionException.class,
+                () -> eval.eval(ctx, BAD_EXPRESSION),
+                "GroovyEvaluator should throw SCXMLExpressionException");
+        Assertions.assertTrue(e.getMessage().startsWith("eval('" + BAD_EXPRESSION + "'):"),
+                "GroovyEvaluator: Incorrect error message");
     }
 
     @Test

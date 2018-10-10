@@ -61,7 +61,7 @@ public class JSExampleTest {
     
     public static class EventDataMapTest extends Action {
         @Override
-        public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
+        public void execute(ActionExecutionContext exctx) {
             exctx.getInternalIOProcessor()
                     .addEvent(new EventBuilder("ok",TriggerEvent.SIGNAL_EVENT).data("and its ok with me to").build());
         }

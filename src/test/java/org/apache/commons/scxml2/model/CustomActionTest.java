@@ -36,62 +36,49 @@ public class CustomActionTest {
     }
 
     @Test
-    public void testAddGoodCustomAction01() throws Exception {
+    public void testAddGoodCustomAction01() {
         new CustomAction("http://my.actions.domain/CUSTOM", "hello",
             Hello.class);
     }
 
     @Test
     public void testAddBadCustomAction01() {
-        try {
-            new CustomAction(null, "hello", Hello.class);
-            Assertions.fail("Added custom action with illegal namespace");
-        } catch (IllegalArgumentException iae) {
-            // Expected
-        }
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> new CustomAction(null, "hello", Hello.class),
+                "Added custom action with illegal namespace");
     }
 
     @Test
     public void testAddBadCustomAction02() {
-        try {
-            new CustomAction("  ", "hello", Hello.class);
-            Assertions.fail("Added custom action with illegal namespace");
-        } catch (IllegalArgumentException iae) {
-            // Expected
-        }
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> new CustomAction("  ", "hello", Hello.class),
+                "Added custom action with illegal namespace");
     }
 
     @Test
     public void testAddBadCustomAction03() {
-        try {
-            new CustomAction("http://my.actions.domain/CUSTOM", "",
-                Hello.class);
-            Assertions.fail("Added custom action with illegal local name");
-        } catch (IllegalArgumentException iae) {
-            // Expected
-        }
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> new CustomAction("http://my.actions.domain/CUSTOM", "", Hello.class),
+                "Added custom action with illegal local name");
     }
 
     @Test
     public void testAddBadCustomAction04() {
-        try {
-            new CustomAction("http://my.actions.domain/CUSTOM", "  ",
-                Hello.class);
-            Assertions.fail("Added custom action with illegal local name");
-        } catch (IllegalArgumentException iae) {
-            // Expected
-        }
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> new CustomAction("http://my.actions.domain/CUSTOM", "  ", Hello.class),
+                "Added custom action with illegal local name");
     }
 
     @Test
     public void testAddBadCustomAction05() {
-        try {            
-            new CustomAction("http://www.w3.org/2005/07/scxml", "foo",
-                Hello.class);
-            Assertions.fail("Added custom action in the SCXML namespace");
-        } catch (IllegalArgumentException iae) {
-            // Expected
-        }
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> new CustomAction("http://www.w3.org/2005/07/scxml", "foo", Hello.class),
+                "Added custom action in the SCXML namespace");
     }
 
     // Hello World example using the SCXML <log> action

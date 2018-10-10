@@ -28,7 +28,7 @@ public class SimpleContextTest {
     private SimpleContext context;
 
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUp() {
         context = new SimpleContext();
     }
     
@@ -189,13 +189,11 @@ public class SimpleContextTest {
         rootContext.set("key", "root");
         SimpleContext rootEffectiveContext = new SimpleContext(rootContext, new EffectiveContextMap(rootContext));
         SimpleContext parentContext = new SimpleContext(rootEffectiveContext);
-        try {
-            new EffectiveContextMap(parentContext);
-            Assertions.fail("Nested EffectiveContextMap wrapping should fail");
-        }
-        catch (IllegalArgumentException e) {
-            // good
-        }
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> new EffectiveContextMap(parentContext),
+                "Nested EffectiveContextMap wrapping should fail"
+        );
     }
 
     @Test
