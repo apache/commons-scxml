@@ -35,6 +35,10 @@
     <release version="2.0" date="In Git master"
       description="Latest unreleased code">
 
+      <action dev="woonsan" type="update" issue="SCXML-284" due-to="Allon Mureinik">
+        [10-10-2018] Clear up exception handling in tests
+      </action>
+
       <action dev="woonsan" type="update" issue="SCXML-283" due-to="Allon Mureinik">
         [08-10-2018] Upgrade testing framework to JUnit Jupiter
       </action>
