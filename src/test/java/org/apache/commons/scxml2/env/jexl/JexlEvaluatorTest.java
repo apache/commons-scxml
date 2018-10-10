@@ -52,13 +52,12 @@ public class JexlEvaluatorTest {
     public void testErrorMessage() {
         Evaluator eval = new JexlEvaluator();
         Assertions.assertNotNull(eval);
-        try {
-            eval.eval(ctx, BAD_EXPRESSION);
-            Assertions.fail("JexlEvaluator should throw SCXMLExpressionException");
-        } catch (SCXMLExpressionException e) {
-            Assertions.assertTrue(e.getMessage().startsWith("eval('" + BAD_EXPRESSION + "'):"),
-                    "JexlEvaluator: Incorrect error message");
-        }
+        SCXMLExpressionException e = Assertions.assertThrows(
+                SCXMLExpressionException.class,
+                () -> eval.eval(ctx, BAD_EXPRESSION),
+                "JexlEvaluator should throw SCXMLExpressionException");
+        Assertions.assertTrue(e.getMessage().startsWith("eval('" + BAD_EXPRESSION + "'):"),
+                "JexlEvaluator: Incorrect error message");
     }
 
 }

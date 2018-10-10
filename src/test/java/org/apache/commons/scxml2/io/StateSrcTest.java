@@ -43,25 +43,23 @@ public class StateSrcTest {
     }
     
     @Test
-    public void testBadSrcInclude() throws Exception {
-        try {
-            SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/src-test-4.xml"));
-            Assertions.fail("Document with bad <state> src attribute shouldn't be parsed!");
-        } catch (ModelException me) {
-            Assertions.assertTrue(me.getMessage() != null && me.getMessage().contains("Source attribute in <state src="),
-                    "Unexpected error message for bad <state> 'src' URI");
-        }
+    public void testBadSrcInclude() {
+        ModelException me = Assertions.assertThrows(
+                ModelException.class,
+                () -> SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/src-test-4.xml")),
+                "Document with bad <state> src attribute shouldn't be parsed!");
+        Assertions.assertTrue(me.getMessage() != null && me.getMessage().contains("Source attribute in <state src="),
+                "Unexpected error message for bad <state> 'src' URI");
     }
     
     @Test
-    public void testBadSrcFragmentInclude() throws Exception {
-        try {
-            SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/src-test-5.xml"));
-            Assertions.fail("Document with bad <state> src attribute shouldn't be parsed!");
-        } catch (ModelException me) {
-            Assertions.assertTrue(me.getMessage() != null && me.getMessage().contains("URI Fragment in <state src="),
-                    "Unexpected error message for bad <state> 'src' URI fragment");
-        }
+    public void testBadSrcFragmentInclude() {
+        ModelException me = Assertions.assertThrows(
+                ModelException.class,
+                () -> SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/src-test-5.xml")),
+                "Document with bad <state> src attribute shouldn't be parsed!");
+        Assertions.assertTrue(me.getMessage() != null && me.getMessage().contains("URI Fragment in <state src="),
+                "Unexpected error message for bad <state> 'src' URI fragment");
     }
 }
 

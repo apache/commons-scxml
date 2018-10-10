@@ -18,7 +18,7 @@ package org.apache.commons.scxml2.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.StringReader;
 
@@ -75,12 +75,11 @@ public class ScxmlInitialAttributeTest {
     }
 
     @Test
-    public void testIllegalInitial() throws Exception {
-        try {
-            SCXMLTestHelper.parse(new StringReader(SCXML_WITH_ILLEGAL_INITIAL), null);
-            fail("SCXML reading should have failed due to the illegal state ID in SCXML.");
-        } catch (ModelException e) {
-            // expected because of the non-existing initial state id
-        }
+    public void testIllegalInitial() {
+        // expected because of the non-existing initial state id
+        assertThrows(
+                ModelException.class,
+                () -> SCXMLTestHelper.parse(new StringReader(SCXML_WITH_ILLEGAL_INITIAL), null),
+                "SCXML reading should have failed due to the illegal state ID in SCXML.");
     }
 }

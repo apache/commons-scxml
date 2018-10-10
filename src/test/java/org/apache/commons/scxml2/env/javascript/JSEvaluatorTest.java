@@ -151,15 +151,12 @@ public class JSEvaluatorTest {
         Evaluator evaluator = new JSEvaluator();
 
         Assertions.assertNotNull(evaluator);
-
-        try {
-            evaluator.eval(context,BAD_EXPRESSION);
-            Assertions.fail          ("JSEvaluator should throw SCXMLExpressionException");
-
-        } catch (SCXMLExpressionException x) {
-            Assertions.assertTrue(x.getMessage().startsWith("eval('" + BAD_EXPRESSION + "')"),
-                    "JSEvaluator: Incorrect error message");
-        }
+        SCXMLExpressionException x= Assertions.assertThrows(
+                SCXMLExpressionException.class,
+                () ->  evaluator.eval(context,BAD_EXPRESSION),
+                "JSEvaluator should throw SCXMLExpressionException");
+        Assertions.assertTrue(x.getMessage().startsWith("eval('" + BAD_EXPRESSION + "')"),
+                "JSEvaluator: Incorrect error message");
     }
 
     /**
@@ -206,14 +203,11 @@ public class JSEvaluatorTest {
     @Test
     public void testInvalidVarExpressions() {
         for (TestItem item: VAR_EXPRESSIONS) {
-            try {
-                Assertions.assertNull    (context.get("fibonacci"));
-                evaluator.eval(context,item.expression);
-                Assertions.fail          ("Evaluated invalid <var... expression: " + item.expression);
-
-            } catch (SCXMLExpressionException x) {
-                // expected, ignore
-            }
+            Assertions.assertNull(context.get("fibonacci"));
+            Assertions.assertThrows(
+                    SCXMLExpressionException.class,
+                    () -> evaluator.eval(context,item.expression),
+                    "Evaluated invalid <var... expression: " + item.expression);
         }
     }
 
@@ -235,14 +229,10 @@ public class JSEvaluatorTest {
     @Test
     public void testInvalidDataModelExpressions() {
         Assertions.assertNull(context.get("forestx"));
-
-        try {
-            evaluator.eval(context,"forestx.tree.branch.twig");
-            Assertions.fail          ("Evaluated invalid DataModel expression: " + "forestx.tree.branch.twig");
-
-        } catch (SCXMLExpressionException x) {
-            // expected, ignore
-        }
+        Assertions.assertThrows(
+                SCXMLExpressionException.class,
+                () -> evaluator.eval(context,"forestx.tree.branch.twig"),
+                "Evaluated invalid DataModel expression: " + "forestx.tree.branch.twig");
     }
 
     /**
