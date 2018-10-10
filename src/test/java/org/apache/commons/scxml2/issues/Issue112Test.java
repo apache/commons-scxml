@@ -69,11 +69,7 @@ public class Issue112Test {
         // Rest of the events in this test are added by custom action invocation during processing of the one above.
         // Same concept applies to adding events in listeners, invokes and WRT AbstractStateMachine, state handlers.
         while (!Application.QUEUE.isEmpty()) {
-            try {
-                SCXMLTestHelper.fireEvent(exec, Application.QUEUE.remove());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            SCXMLTestHelper.fireEvent(exec, Application.QUEUE.remove());
         }
 
         Assertions.assertTrue(exec.getStatus().isFinal());
