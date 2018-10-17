@@ -72,5 +72,18 @@ public class InvokeTest {
         SCXMLTestHelper.fireEvent(exec, "s1.next");
         SCXMLTestHelper.fireEvent(exec, "state1.next");
     }
+
+    @Test
+    public void testExecuteInvokeAfterAllInternalEventsAreProcessed() throws Exception {
+        SCXML scxml = SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/invoke/invoker-05.xml"));
+        SCXMLExecutor exec = new SCXMLExecutor(null, new SimpleDispatcher(), new SimpleErrorReporter());
+        exec.setStateMachine(scxml);
+        exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
+        exec.go();
+        while (exec.isRunning()) {
+            exec.triggerEvents();
+        }
+        Assertions.assertEquals("success", exec.getStatus().getStates().iterator().next().getId());
+    }
 }
 

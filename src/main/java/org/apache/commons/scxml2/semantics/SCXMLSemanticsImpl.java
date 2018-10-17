@@ -316,15 +316,13 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                             step = new Step(event);
                             selectTransitions(exctx, step);
                         }
+                    } else {
+                        macroStepDone = true;
                     }
                 }
-                if (step.getTransitList().isEmpty()) {
-                    macroStepDone = true;
-                }
-                else {
+                if (!step.getTransitList().isEmpty()) {
                     microStep(exctx, step, statesToInvoke);
                 }
-
             } while (exctx.isRunning() && !macroStepDone);
 
             if (exctx.isRunning() && !statesToInvoke.isEmpty()) {

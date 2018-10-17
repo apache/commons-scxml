@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+<!-- Test for REC-scxml-20150901, 3.13: Invoke handlers must be executed *after* completing a macrostrep,
+     for which first all internal events must have been processed.
+-->
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="jexl">
+    <datamodel>
+        <data id="var1" expr="0"/>
+    </datamodel>
+    <state id="start">
+        <onentry>
+            <!-- dummy internal event to force the next before.invoke to be not the first -->
+            <raise event="dummy"/>
+            <!-- Trigger an update of the param value: must be evaluated *before* executing invoke.
+                 This is a second internal event, to validate *all* internal events are processed first
+            -->
+            <raise event="before.invoke"/>
+        </onentry>
+        <invoke>
+            <param name="var1" expr="var1"/>
+            <content>
+                <scxml version="1.0" datamodel="jexl">
+                    <datamodel>
+                        <data id="var1" expr="0"/>
+                    </datamodel>
+                    <state id="invoked">
+                        <transition cond="var1==1" target="done">
+                            <!-- param val1 was updated through internal event before executing invoke -->
+                            <send target="#_parent" event="success"/>
+                        </transition>
+                        <transition target="done">
+                            <send target="#_parent" event="fail"/>
+                        </transition>
+                    </state>
+                    <final id="done"/>
+                </scxml>
+            </content>
+        </invoke>
+        <transition event="before.invoke">
+            <!-- all internal events like this one must be processed before completing the macrostep, only thereafter
+                 the invoke may be executed
+            -->
+            <assign location="var1" expr="1"/>
+        </transition>
+        <transition event="fail" target="fail"/>
+        <transition event="success" target="success"/>
+    </state>
+    <final id="fail"/>
+    <final id="success"/>
+</scxml>

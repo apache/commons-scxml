@@ -35,6 +35,10 @@
     <release version="2.0" date="In Git master"
       description="Latest unreleased code">
 
+      <action dev="ate" type="fix" issue="SCXML-285">
+        [18-10-2018] Before executing invoke handlers after a macrostep all internal events must have been processed
+      </action>
+
       <action dev="woonsan" type="update" issue="SCXML-284" due-to="Allon Mureinik">
         [10-10-2018] Clear up exception handling in tests
       </action>
