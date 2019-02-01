@@ -111,6 +111,9 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
      * Constructor using a parent SCXMLExecutor
      *
      * @param parentSCXMLExecutor the parent SCXMLExecutor
+     * @param invokeId SCXML invoke id
+     * @param scxml {@link SCXML} instance
+     * @throws ModelException if the internal {@link SCInstance} is already initialized
      */
     public SCXMLExecutor(final SCXMLExecutor parentSCXMLExecutor, final String invokeId, final SCXML scxml) throws ModelException {
         this.parentSCXMLIOProcessor = new ParentSCXMLIOProcessor(parentSCXMLExecutor, invokeId);
@@ -138,7 +141,8 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     }
 
     /**
-     * @return the (optionally) <final><donedata/></final> produced data after the current statemachine completed its execution.
+     * @return the (optionally) &lt;final&gt;&lt;donedata/&gt;&lt;/final&gt; produced data after the current statemachine
+     *         completed its execution.
      */
     public Object getFinalDoneData() {
         return getGlobalContext().getSystemContext().getPlatformVariables().get(SCXMLSystemContext.FINAL_DONE_DATA_KEY);
@@ -423,7 +427,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
 
     /**
      * Clear all state, optionally initialize/override global context data, and begin executing the state machine
-     * @data optional data to initialize/override data defined (only) in the global context of the state machine
+     * @param data optional data to initialize/override data defined (only) in the global context of the state machine
      * @throws ModelException if the state machine instance failed to initialize
      */
     public void go(final Map<String, Object> data) throws ModelException {

@@ -346,6 +346,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
     /**
      * Set the parent EnterableState.
      * @param parent The parent state to set
+     * @param invokeIndex the invoke index in the parent (TransitionalState) defined invokers
      */
     public void setParentEnterableState(final EnterableState parent, final int invokeIndex) {
         if (parent == null) {

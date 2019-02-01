@@ -37,7 +37,6 @@ import org.apache.commons.scxml2.io.SCXMLWriter;
  *     can be useful) before adding it to the object model</li>
  * </ul>
  * before write the SCXML model with {@link SCXMLWriter}. The writing will fail otherwise!
- * </p>
  */
 public class Var extends Action {
 

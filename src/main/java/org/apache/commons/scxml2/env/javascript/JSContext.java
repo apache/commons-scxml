@@ -26,7 +26,6 @@ import org.apache.commons.scxml2.env.SimpleContext;
  * SCXML Context for use by the JSEvaluator. It is simply a 'no functionality'
  * extension of SimpleContext that has been implemented to reduce the impact
  * if the JSEvaluator requires additional functionality at a later stage.
- * <p>
  */
 public class JSContext extends SimpleContext {
 

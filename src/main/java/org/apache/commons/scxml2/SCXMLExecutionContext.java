@@ -196,7 +196,8 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
 
     /**
      * Initialize will cancel all current active Invokers, clear the internal event queue and (re)initialize the state machine
-     * @throws ModelException
+     * @param data input model map to initialize the data model with
+     * @throws ModelException if the state machine hasn't been setup for the internal SCXML instance
      */
     public void initialize(final Map<String, Object> data) throws ModelException {
         if (!invokeIds.isEmpty()) {

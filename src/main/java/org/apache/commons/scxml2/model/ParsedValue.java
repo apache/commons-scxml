@@ -32,7 +32,6 @@ import java.io.Serializable;
  * For a &lt;invoke&gt; &lt;content&gt; body the special {@link NodeTextValue} implementation is used,
  * which stored the (only supported) embedded &lt;scxml&gt; document as plain XML text for the &lt;invoke&gt;
  * execution to parse (again) at runtime.
- * </p>
  */
 public interface ParsedValue extends Serializable {
 

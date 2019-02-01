@@ -157,7 +157,7 @@ public class ContentParser {
     }
 
     /**
-     * Parse and map JSON string to 'raw' Java Objects: object -> LinkedHashMap, array -> ArrayList
+     * Parse and map JSON string to 'raw' Java Objects: object -&gt; LinkedHashMap, array -&gt; ArrayList
      * @param jsonString JSON string to parse
      * @return 'raw' mapped Java Object for JSON string
      * @throws IOException In case of parsing exceptions
@@ -170,7 +170,7 @@ public class ContentParser {
      * Transforms a jsonObject to a json String
      * @param jsonObject object to transform
      * @return json string
-     * @throws IOException
+     * @throws IOException if IO error occurs while serializing it to JSON
      */
     public String toJson(final Object jsonObject) throws IOException {
         return jsonObjectMapper.writeValueAsString(jsonObject);
@@ -180,7 +180,7 @@ public class ContentParser {
      * Parse an XML String and return the document element
      * @param xmlString XML String to parse
      * @return document element
-     * @throws IOException
+     * @throws IOException if IO error occurs while parsing XML
      */
     public Node parseXml(final String xmlString) throws IOException {
         Document doc;
@@ -196,7 +196,7 @@ public class ContentParser {
      * Transforms a XML Node to XML
      * @param node node to transform
      * @return XML string
-     * @throws IOException
+     * @throws IOException if IO error occurs while serializing node to XML
      */
     public String toXml(final Node node) throws IOException {
         try {

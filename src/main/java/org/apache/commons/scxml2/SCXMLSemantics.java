@@ -86,7 +86,7 @@ public interface SCXMLSemantics {
      * @param data A data map to initialize/override &lt;data&gt; elements in the root (global) &lt;datamodel&gt; with
      *             ids matching the keys in the map (other data map entries will be ignored)
      * @param exctx The execution context to initialize
-     * @throws ModelException
+     * @throws ModelException if the state machine hasn't been setup for the internal SCXML instance
      */
     void initialize(final SCXMLExecutionContext exctx, final Map<String, Object> data) throws ModelException;
 

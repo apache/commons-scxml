@@ -141,6 +141,7 @@ public class JSEvaluator extends AbstractBaseEvaluator {
      * as needed for the <code>init_global.js</code> script in the global context.
      * This variable is bound to the ENGINE_SCOPE to ensure it cannot be 'shadowed' by an overriding variable assignment.
      * </p>
+     * <p>
      * The provided SCXML Context variables are bound via the GLOBAL_SCOPE using a {@link JSBindings} wrapper for each
      * invocation.
      * </p>
@@ -296,7 +297,7 @@ public class JSEvaluator extends AbstractBaseEvaluator {
      * @param ctx SCXML context
      * @param id context id of the data
      * @param data data to inject
-     * @throws SCXMLExpressionException
+     * @throws SCXMLExpressionException if a malformed expression is encountered
      */
     public void injectData(final Context ctx, final String id, final Object data) throws SCXMLExpressionException {
         ctx.setLocal(id, data);
