@@ -5,3 +5,6 @@ site-content
 *.ipr
 *.iws
 src/w3c
+/.classpath
+/.project
+/.settings/
