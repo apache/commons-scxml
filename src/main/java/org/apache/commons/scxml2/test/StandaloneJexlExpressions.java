@@ -45,7 +45,7 @@ public final class StandaloneJexlExpressions {
 
     /**
      * Launcher.
-     * @param args The arguments, one expected, the URI or filename of the
+     * @param args The arguments, one expected, the URI or file name of the
      *             SCXML document
      */
     public static void main(final String[] args) {
