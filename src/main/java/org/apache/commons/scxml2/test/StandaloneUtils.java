@@ -55,7 +55,7 @@ public final class StandaloneUtils {
      * using the SCXML document described by the specified URI and using
      * the specified expression evaluator.
      *
-     * @param uri The URI or filename of the SCXML document
+     * @param uri The URI or file name of the SCXML document
      * @param evaluator The expression evaluator for the expression language
      *                  used in the specified SCXML document
      *
