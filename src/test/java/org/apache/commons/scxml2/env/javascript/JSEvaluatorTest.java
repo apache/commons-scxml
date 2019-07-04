@@ -48,7 +48,7 @@ public class JSEvaluatorTest {
     private static final String BAD_EXPRESSION = ">";
     private static final String SCRIPT         = "<?xml version='1.0'?>" +
                                                  "<scxml xmlns = 'http://www.w3.org/2005/07/scxml'" +
-                                                 "       xmlns:scxml = 'http://commons.apache.org/scxml'" +
+                                                 "       xmlns:scxml = 'https://commons.apache.org/scxml'" +
                                                  "       datamodel = 'ecmascript'" +
                                                  "       initial = 'start'"  +
                                                  "       version = '1.0'>" +

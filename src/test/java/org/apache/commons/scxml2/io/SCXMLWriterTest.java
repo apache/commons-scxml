@@ -47,9 +47,9 @@ public class SCXMLWriterTest {
         scxml.addChild(s);
         
         String assertValue = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-            + "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" xmlns:cs=\"http://commons.apache.org/scxml\" "
+            + "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" xmlns:cs=\"https://commons.apache.org/scxml\" "
             + "xmlns:foo=\"http://f.o.o\" xmlns:bar=\"http://b.a.r\" "
-            + "version=\"version1\" initial=\"off\"><!--http://commons.apache.org/scxml--><state></state>"
+            + "version=\"version1\" initial=\"off\"><!--https://commons.apache.org/scxml--><state></state>"
             + "</scxml>";
 
         Assertions.assertEquals(assertValue, SCXMLWriter.write(scxml, new SCXMLWriter.Configuration(true, false)));
@@ -68,8 +68,8 @@ public class SCXMLWriterTest {
 
         String assertValue = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
             + "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" "
-            + "xmlns:cs=\"http://commons.apache.org/scxml\" version=\"1.0\" initial=\"S1\">"
-            + "<!--http://commons.apache.org/scxml--><state id=\"S1\"></state></scxml>";
+            + "xmlns:cs=\"https://commons.apache.org/scxml\" version=\"1.0\" initial=\"S1\">"
+            + "<!--https://commons.apache.org/scxml--><state id=\"S1\"></state></scxml>";
 
         Assertions.assertEquals(assertValue, SCXMLWriter.write(scxml, new SCXMLWriter.Configuration(true, false)));
     }
@@ -106,9 +106,9 @@ public class SCXMLWriterTest {
         scxml.addChild(par);
 
         String assertValue = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-            + "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" xmlns:cs=\"http://commons.apache.org/scxml\" "
+            + "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" xmlns:cs=\"https://commons.apache.org/scxml\" "
             + "version=\"1.0\" initial=\"par\">"
-            + "<!--http://commons.apache.org/scxml-->"
+            + "<!--https://commons.apache.org/scxml-->"
             + "<parallel id=\"par\">"
             + "<state id=\"S1\">"
             + "<state id=\"S11\"></state>"
@@ -140,8 +140,8 @@ public class SCXMLWriterTest {
 
         String assertValue = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" "
-                + "xmlns:cs=\"http://commons.apache.org/scxml\" version=\"1.0\" initial=\"S1\">"
-                + "<!--http://commons.apache.org/scxml--><script><![CDATA[foo=\"abc\"]]></script><state id=\"S1\"></state></scxml>";
+                + "xmlns:cs=\"https://commons.apache.org/scxml\" version=\"1.0\" initial=\"S1\">"
+                + "<!--https://commons.apache.org/scxml--><script><![CDATA[foo=\"abc\"]]></script><state id=\"S1\"></state></scxml>";
 
         Assertions.assertEquals(assertValue, SCXMLWriter.write(scxml, new SCXMLWriter.Configuration(true, false)));
     }

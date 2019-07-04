@@ -27,9 +27,9 @@
 
   <section name="Commons SCXML - Reading SCXML documents for Commons SCXML">
     <p>Commons SCXML provides its own implementation of the
-    <a href="http://commons.apache.org/scxml/apidocs/org/apache/commons/scxml2/model/package-summary.html">
+    <a href="https://commons.apache.org/scxml/apidocs/org/apache/commons/scxml2/model/package-summary.html">
     Java object model for SCXML</a>
-    and a dedicated <a href="http://commons.apache.org/scxml/apidocs/org/apache/commons/scxml2/io/SCXMLReader">
+    and a dedicated <a href="https://commons.apache.org/scxml/apidocs/org/apache/commons/scxml2/io/SCXMLReader">
     SCXMLReader</a> that can read SCXML documents into that object model.</p>
 
     <subsection name="Usage">

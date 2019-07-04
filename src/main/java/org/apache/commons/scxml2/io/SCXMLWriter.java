@@ -94,7 +94,7 @@ import org.w3c.dom.Node;
  *  <li>The default document namespace is the SCXML namespace:
  *      <i>http://www.w3.org/2005/07/scxml</i></li>
  *  <li>The Commons SCXML namespace
- *      ( <i>http://commons.apache.org/scxml</i> ), if needed, uses the
+ *      ( <i>https://commons.apache.org/scxml</i> ), if needed, uses the
  *      &quot;<i>cs</i>&quot; prefix</li>
  *  <li>All namespace prefixes needed throughout the document are
  *      declared on the document root element (&lt;scxml&gt;)</li>

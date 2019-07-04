@@ -28,7 +28,7 @@ public final class SCXMLConstants {
      * Any document that intends to use these custom actions needs to ensure that they are in the correct namespace.
      * Use of actions in this namespace makes the document non-portable across implementations.
      */
-    public static final String XMLNS_COMMONS_SCXML = "http://commons.apache.org/scxml";
+    public static final String XMLNS_COMMONS_SCXML = "https://commons.apache.org/scxml";
 
     /**
      * The default {@link #XMLNS_COMMONS_SCXML} prefix

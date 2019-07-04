@@ -61,5 +61,5 @@ client-side runtimes.
 
 Please visit the website for project information and documentation:
 
-http://commons.apache.org/scxml/
+https://commons.apache.org/scxml/
 

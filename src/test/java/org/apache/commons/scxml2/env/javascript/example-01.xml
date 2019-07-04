@@ -17,7 +17,7 @@
 -->
 <!-- SCXML Javascript environment: example script -->
 <scxml xmlns        = 'http://www.w3.org/2005/07/scxml'
-       xmlns:scxml  = 'http://commons.apache.org/scxml'
+       xmlns:scxml  = 'https://commons.apache.org/scxml'
        xmlns:my     = 'http://my.custom-actions.domain'
        initial      = 'start'
        datamodel    = "ecmascript"

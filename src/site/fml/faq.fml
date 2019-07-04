@@ -80,7 +80,7 @@
    </question>
    <answer>
     Commons SCXML currently supports
-    <a href="http://commons.apache.org/jexl/">Commons JEXL</a>, Javascript, XPath and
+    <a href="https://commons.apache.org/jexl/">Commons JEXL</a>, Javascript, XPath and
     <a href="http://groovy.codehaus.org/">Groovy</a>. For details,
     see the <a href="guide/testing-standalone.html">trying out</a> and
     <a href="guide/contexts-evaluators.html">contexts and evaluators</a>
