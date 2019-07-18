@@ -458,14 +458,14 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
 
     public Thread run(final Map<String, Object> data) throws ModelException {
         go(data);
-        Thread t = new Thread(() -> {
+        final Thread t = new Thread(() -> {
             try {
                 while (exctx.isRunning()) {
                     triggerEvents();
                 }
-            } catch (ModelException ignored) {
+            } catch (final Exception ignored) {
             }
-        });
+        }, getStateMachine().getName() + '-' + getClass().getSimpleName());
         t.start();
         return t;
     }
@@ -541,6 +541,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
         while (exctx.isRunning() && (evt = externalEventQueue.poll()) != null) {
             eventStep(evt);
         }
+        Thread.yield();
     }
 
     protected void eventStep(TriggerEvent event) throws ModelException {
