@@ -97,7 +97,7 @@
                   href="/team-list.html"/>
 
       <item       name="Source Repository (current)"
-                  href="/source-repository.html"/>
+                  href="/scm.html"/>
 
       <item       name="Download"
                   href="/download_scxml.cgi"/>
