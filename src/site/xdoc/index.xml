@@ -134,7 +134,7 @@
       <a href="https://github.com/jbeard4/SCION">SCION</a> - SCION provides an implementation of SCXML in portable
       JavaScript.
       <p>In the browser, SCION can be used to facilitate the development of rich, web-based user interfaces with complex
-         behavioural requirements; on the server, SCION can be used to manage asynchronous control flow.</p>
+         behavioral requirements; on the server, SCION can be used to manage asynchronous control flow.</p>
     </li>
      <li>
        <a href="https://github.com/jbeard4/SCION-Java">SCION-Java</a> -
