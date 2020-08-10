@@ -52,7 +52,7 @@ import org.codehaus.groovy.control.CompilerConfiguration;
  * to de-serialize previously defined/created classes and objects through this class, from within a containing object
  * readObject(ObjectInputStream in) method.<br>
  * For more information how this works and should be done, see:
- * <a href="http://jira.codehaus.org/browse/GROOVY-1627">Groovy-1627: Deserialization fails to work</a>
+ * <a href="https://issues.apache.org/jira/browse/GROOVY-1627">Groovy-1627: Deserialization fails to work</a>
  * </p>
  * <p>
  * One other optional feature is script pre-processing which can be configured through an instance of the
