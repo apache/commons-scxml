@@ -190,13 +190,13 @@ public class TriggerEvent implements Serializable {
         StringBuilder buf = new StringBuilder("TriggerEvent{name=");
         buf.append(name).append(", type=").append(type);
         if (sendId != null) {
-            buf.append(", sendid=").append(invokeId);
+            buf.append(", sendid=").append(sendId);
         }
         if (origin != null) {
-            buf.append(", origin=").append(invokeId);
+            buf.append(", origin=").append(origin);
         }
         if (originType != null) {
-            buf.append(", origintype=").append(invokeId);
+            buf.append(", origintype=").append(originType);
         }
         if (invokeId != null) {
             buf.append(", invokeid=").append(invokeId);
