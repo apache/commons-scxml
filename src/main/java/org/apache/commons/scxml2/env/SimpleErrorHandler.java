@@ -43,7 +43,6 @@ public class SimpleErrorHandler implements ErrorHandler, Serializable {
      * Constructor.
      */
     public SimpleErrorHandler() {
-        super();
     }
 
     /**

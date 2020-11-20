@@ -46,7 +46,6 @@ public class Final extends EnterableState {
      * Default no-args constructor.
      */
     public Final() {
-        super();
     }
 
     /**

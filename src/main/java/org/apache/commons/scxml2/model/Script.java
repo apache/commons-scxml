@@ -42,7 +42,6 @@ public class Script extends Action {
      * Constructor.
      */
     public Script() {
-        super();
     }
 
     public boolean isGlobalScript() {

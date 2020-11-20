@@ -40,7 +40,6 @@ public class ElseIf extends Action {
      * Constructor.
      */
     public ElseIf() {
-        super();
     }
 
     /**

@@ -70,8 +70,7 @@ public class ErrorConstants {
     /**
      * Discourage instantiation.
      */
-    private ErrorConstants() {
-        super(); // humor checkstyle
+    private ErrorConstants() { // humor checkstyle
     }
 
 }

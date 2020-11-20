@@ -63,7 +63,6 @@ public class If extends Action implements ActionsContainer {
      * Constructor.
      */
     public If() {
-        super();
         this.actions = new ArrayList<>();
         this.execute = false;
     }

@@ -120,7 +120,6 @@ final class ModelUpdater {
      * Discourage instantiation since this is a utility class.
      */
     private ModelUpdater() {
-        super();
     }
 
     /*

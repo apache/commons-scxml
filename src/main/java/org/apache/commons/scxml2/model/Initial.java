@@ -51,7 +51,6 @@ public class Initial implements Serializable {
      * Constructor.
      */
     public Initial() {
-        super();
     }
 
     /**

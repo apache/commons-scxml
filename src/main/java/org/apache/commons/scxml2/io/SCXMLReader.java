@@ -2610,7 +2610,6 @@ public final class SCXMLReader {
      * Discourage instantiation since this is a utility class.
      */
     private SCXMLReader() {
-        super();
     }
 
     //------------------------- CONFIGURATION CLASS -------------------------//

@@ -58,7 +58,6 @@ public class Assign extends Action implements ParsedValueContainer {
      * Constructor.
      */
     public Assign() {
-        super();
     }
 
     /**

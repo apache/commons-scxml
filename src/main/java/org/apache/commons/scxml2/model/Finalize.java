@@ -32,7 +32,6 @@ public class Finalize extends Executable {
      * Default no-args constructor.
      */
     public Finalize() {
-        super();
     }
 
     /**

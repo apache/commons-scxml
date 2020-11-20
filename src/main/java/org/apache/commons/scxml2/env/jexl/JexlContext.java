@@ -35,7 +35,6 @@ public class JexlContext extends SimpleContext
      * Constructor.
      */
     public JexlContext() {
-        super();
     }
 
     /**

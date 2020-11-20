@@ -77,7 +77,6 @@ public class SimpleTransition extends Executable implements Observable {
      * Constructor.
      */
     public SimpleTransition() {
-        super();
         this.targets = new HashSet<>();
     }
 

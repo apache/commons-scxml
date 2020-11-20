@@ -41,7 +41,6 @@ public final class EffectiveContextMap extends AbstractMap<String, Object> imple
      * @param ctx context of the current leave state node
      */
     public EffectiveContextMap(final Context ctx) {
-        super();
         Context current = ctx;
         while (current != null) {
             if (current.getVars() instanceof EffectiveContextMap) {

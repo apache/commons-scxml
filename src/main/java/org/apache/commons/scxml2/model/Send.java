@@ -143,7 +143,6 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
      * Constructor.
      */
     public Send() {
-        super();
     }
 
     /**

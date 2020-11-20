@@ -39,7 +39,6 @@ public class OnExit extends Executable {
      * Constructor.
      */
     public OnExit() {
-        super();
     }
 
     /**

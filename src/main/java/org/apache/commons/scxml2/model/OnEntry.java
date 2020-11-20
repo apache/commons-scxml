@@ -39,7 +39,6 @@ public class OnEntry extends Executable {
      * Constructor.
      */
     public OnEntry() {
-        super();
     }
 
     /**

@@ -33,7 +33,6 @@ public class ModelException extends Exception {
      * @see java.lang.Exception#Exception()
      */
     public ModelException() {
-        super();
     }
 
     /**

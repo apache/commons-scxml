@@ -43,7 +43,6 @@ public class SimpleXMLReporter implements XMLReporter, Serializable {
      * Constructor.
      */
     public SimpleXMLReporter() {
-        super();
     }
 
     /**

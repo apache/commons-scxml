@@ -1211,7 +1211,6 @@ public class SCXMLWriter {
      * Discourage instantiation since this is a utility class.
      */
     private SCXMLWriter() {
-        super();
     }
 
     //------------------------- CONFIGURATION CLASS -------------------------//

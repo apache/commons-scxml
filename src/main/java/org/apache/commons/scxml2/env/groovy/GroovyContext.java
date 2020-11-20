@@ -55,7 +55,6 @@ public class GroovyContext extends SimpleContext {
      * Constructor.
      */
     public GroovyContext() {
-        super();
     }
 
     /**

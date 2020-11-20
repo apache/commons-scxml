@@ -50,7 +50,6 @@ public abstract class TransitionTarget implements Serializable, Observable {
      * Constructor.
      */
     public TransitionTarget() {
-        super();
         parent = null;
     }
 

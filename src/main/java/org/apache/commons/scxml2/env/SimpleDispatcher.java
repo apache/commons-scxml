@@ -78,7 +78,6 @@ public class SimpleDispatcher implements EventDispatcher, Serializable {
          * @param target The target io processor
          */
         DelayedEventTask(final String id, final TriggerEvent event, SCXMLIOProcessor target) {
-            super();
             this.id = id;
             this.event = event;
             this.target = target;

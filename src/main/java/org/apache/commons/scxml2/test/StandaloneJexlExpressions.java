@@ -63,7 +63,6 @@ public final class StandaloneJexlExpressions {
      * Discourage instantiation since this is a utility class.
      */
     private StandaloneJexlExpressions() {
-        super();
     }
 
 }

@@ -64,7 +64,6 @@ public final class LogUtils {
      * Discourage instantiation since this is a utility class.
      */
     private LogUtils() {
-        super();
     }
 
 }

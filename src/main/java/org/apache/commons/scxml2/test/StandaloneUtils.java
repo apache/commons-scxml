@@ -155,7 +155,6 @@ public final class StandaloneUtils {
      * Discourage instantiation since this is a utility class.
      */
     private StandaloneUtils() {
-        super();
     }
 
 }

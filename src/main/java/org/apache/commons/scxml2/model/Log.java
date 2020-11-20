@@ -48,7 +48,6 @@ public class Log extends Action {
      * Constructor.
      */
     public Log() {
-        super();
     }
 
     /**

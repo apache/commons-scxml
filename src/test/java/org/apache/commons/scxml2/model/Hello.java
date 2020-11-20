@@ -33,7 +33,6 @@ public class Hello extends Action {
 
     /** Public constructor is needed for the I in SCXML IO. */
     public Hello() {
-        super();
     }
 
     /**

@@ -262,6 +262,5 @@ public class SCXMLTestHelper {
      * Discourage instantiation.
      */
     private SCXMLTestHelper() {
-        super();
     }
 }

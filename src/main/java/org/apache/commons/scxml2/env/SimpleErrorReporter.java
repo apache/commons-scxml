@@ -46,7 +46,6 @@ public class SimpleErrorReporter implements ErrorReporter, Serializable {
      * Constructor.
      */
     public SimpleErrorReporter() {
-        super();
     }
 
     /**

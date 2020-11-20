@@ -64,7 +64,6 @@ public class Transition extends SimpleTransition implements DocumentOrder {
      * Constructor.
      */
     public Transition() {
-        super();
     }
 
 

@@ -37,7 +37,6 @@ public abstract class Action implements Serializable {
      * Constructor.
      */
     public Action() {
-        super();
         this.parent = null;
     }
 

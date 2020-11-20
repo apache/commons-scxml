@@ -43,7 +43,6 @@ public class Raise extends Action {
      * Constructor.
      */
     public Raise() {
-        super();
     }
 
     /**

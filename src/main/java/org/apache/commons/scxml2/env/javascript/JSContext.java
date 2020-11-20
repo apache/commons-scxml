@@ -36,7 +36,6 @@ public class JSContext extends SimpleContext {
      * Default constructor - just invokes the SimpleContext default constructor.
      */
     public JSContext() {
-        super();
     }
 
     /**

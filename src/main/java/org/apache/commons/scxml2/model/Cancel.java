@@ -37,7 +37,6 @@ public class Cancel extends Action {
      * Constructor.
      */
     public Cancel() {
-        super();
     }
 
     /**

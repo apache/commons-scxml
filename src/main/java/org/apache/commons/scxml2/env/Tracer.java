@@ -53,7 +53,6 @@ public class Tracer implements ErrorHandler, ErrorReporter,
      * Constructor.
      */
     public Tracer() {
-        super();
         errHandler = new SimpleErrorHandler();
         errReporter = new SimpleErrorReporter();
         scxmlListener = new SimpleSCXMLListener();

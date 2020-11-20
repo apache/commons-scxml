@@ -44,7 +44,6 @@ public class History extends TransitionTarget {
      * Default no-args constructor
      */
     public History() {
-        super();
     }
 
     /**
