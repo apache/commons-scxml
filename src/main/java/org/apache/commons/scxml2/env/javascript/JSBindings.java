@@ -33,7 +33,7 @@ public class JSBindings implements Bindings {
     private JSContext  context;
 
     /**
-     * Initialise the Bindings
+     * Initialize the Bindings
      *
      * @param jsContext initial SCXML Context to use for script variables.
      *
