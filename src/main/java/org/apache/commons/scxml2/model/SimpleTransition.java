@@ -82,7 +82,7 @@ public class SimpleTransition extends Executable implements Observable {
     }
 
     private boolean isCompoundStateParent(TransitionalState ts) {
-        return ts != null && ts instanceof State && ((State)ts).isComposite();
+        return ts instanceof State && ((State)ts).isComposite();
     }
 
     /**
