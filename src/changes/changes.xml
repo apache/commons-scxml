@@ -338,6 +338,9 @@
       <action type="update" dev="ggregory">
         [05-28-2020] Update commons-io:commons-io from 2.6 to 2.7.
       </action>
+      <action type="update" dev="ggregory">
+        [11-24-2020] Update commons-parent from 48 to 52.
+      </action>
     </release>
 
     <release version="1.0" date="In SVN branch"
