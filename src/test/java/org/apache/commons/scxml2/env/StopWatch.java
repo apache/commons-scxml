@@ -84,9 +84,9 @@ public class StopWatch extends AbstractStateMachine {
     }
 
     public String getDisplay() {
-        String padhr = dhr > 9 ? EMPTY : ZERO;
-        String padmin = dmin > 9 ? EMPTY : ZERO;
-        String padsec = dsec > 9 ? EMPTY : ZERO;
+        final String padhr = dhr > 9 ? EMPTY : ZERO;
+        final String padmin = dmin > 9 ? EMPTY : ZERO;
+        final String padsec = dsec > 9 ? EMPTY : ZERO;
         return padhr + dhr + DELIM + padmin + dmin + DELIM + padsec + dsec + DOT + dfract;
     }
 

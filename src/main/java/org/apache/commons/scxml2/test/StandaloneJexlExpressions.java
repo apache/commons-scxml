@@ -55,7 +55,7 @@ public final class StandaloneJexlExpressions {
                     + "<url|filename>");
             System.exit(-1);
         }
-        Evaluator evaluator = new JexlEvaluator();
+        final Evaluator evaluator = new JexlEvaluator();
         StandaloneUtils.execute(args[0], evaluator);
     }
 

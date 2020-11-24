@@ -59,7 +59,7 @@ public class SimpleSCXMLListener implements SCXMLListener, Serializable {
 * @see SCXMLListener#onTransition(TransitionTarget,TransitionTarget,Transition,String)
      */
     public void onTransition(final TransitionTarget from,
-            final TransitionTarget to, final Transition transition, String event) {
+            final TransitionTarget to, final Transition transition, final String event) {
         if (log.isInfoEnabled()) {
             log.info("transition " + LogUtils.transToString(from, to, transition, event));
         }

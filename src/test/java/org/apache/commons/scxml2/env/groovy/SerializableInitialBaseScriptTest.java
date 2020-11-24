@@ -36,7 +36,7 @@ public class SerializableInitialBaseScriptTest {
      */
     @Test
     public void testSerializableInitialBaseScriptSample() throws Exception {
-        URL scxml = SCXMLTestHelper.getResource("org/apache/commons/scxml2/env/groovy/serializable-initial-base-script.xml");
+        final URL scxml = SCXMLTestHelper.getResource("org/apache/commons/scxml2/env/groovy/serializable-initial-base-script.xml");
     	SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml, new GroovyEvaluator(true));
         exec.go();
         Set<EnterableState> currentStates = exec.getStatus().getStates();

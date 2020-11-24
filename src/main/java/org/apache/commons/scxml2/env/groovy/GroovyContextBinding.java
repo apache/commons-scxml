@@ -30,9 +30,9 @@ public class GroovyContextBinding extends Binding implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private GroovyContext context;
+    private final GroovyContext context;
 
-    public GroovyContextBinding(GroovyContext context) {
+    public GroovyContextBinding(final GroovyContext context) {
         if (context == null) {
             throw new IllegalArgumentException("Parameter context may not be null");
         }
@@ -44,8 +44,8 @@ public class GroovyContextBinding extends Binding implements Serializable {
     }
 
     @Override
-    public Object getVariable(String name) {
-        Object result = context.get(name);
+    public Object getVariable(final String name) {
+        final Object result = context.get(name);
         if (result == null && !context.has(name)) {
             throw new MissingPropertyException(name, this.getClass());
         }
@@ -53,7 +53,7 @@ public class GroovyContextBinding extends Binding implements Serializable {
     }
 
     @Override
-    public void setVariable(String name, Object value) {
+    public void setVariable(final String name, final Object value) {
         if (context.has(name)) {
             context.set(name, value);
         } else {
@@ -62,7 +62,7 @@ public class GroovyContextBinding extends Binding implements Serializable {
     }
 
     @Override
-    public boolean hasVariable(String name) {
+    public boolean hasVariable(final String name) {
         return context.has(name);
     }
 
@@ -72,12 +72,12 @@ public class GroovyContextBinding extends Binding implements Serializable {
     }
 
     @Override
-    public Object getProperty(String property) {
+    public Object getProperty(final String property) {
         return getVariable(property);
     }
 
     @Override
-    public void setProperty(String property, Object newValue) {
+    public void setProperty(final String property, final Object newValue) {
         setVariable(property, newValue);
     }
 }

@@ -56,7 +56,7 @@ public final class EffectiveContextMap extends AbstractMap<String, Object> imple
      */
     @Override
     public Set<Entry<String, Object>> entrySet() {
-        Map<String, Object> map = new HashMap<>();
+        final Map<String, Object> map = new HashMap<>();
         mergeVars(leaf, map);
         return Collections.unmodifiableMap(map).entrySet();
     }
@@ -66,7 +66,7 @@ public final class EffectiveContextMap extends AbstractMap<String, Object> imple
      * @param leaf current leaf Context
      * @param map Map to merge vars into
      */
-    protected void mergeVars(Context leaf, Map<String, Object> map) {
+    protected void mergeVars(final Context leaf, final Map<String, Object> map) {
         if (leaf != null) {
             mergeVars(leaf.getParent(), map);
             map.putAll(leaf.getVars());
@@ -78,7 +78,7 @@ public final class EffectiveContextMap extends AbstractMap<String, Object> imple
      */
     @Override
     public Object put(final String key, final Object value) {
-        Object old = leaf.get(key);
+        final Object old = leaf.get(key);
         if (leaf.has(key)) {
             leaf.set(key, value);
         } else {

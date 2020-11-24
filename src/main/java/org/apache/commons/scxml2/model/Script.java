@@ -77,9 +77,9 @@ public class Script extends Action {
      * {@inheritDoc}
      */
     @Override
-    public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
-        Context ctx = isGlobalScript() ? exctx.getGlobalContext() : exctx.getContext(getParentEnterableState());
-        Evaluator eval = exctx.getEvaluator();
+    public void execute(final ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
+        final Context ctx = isGlobalScript() ? exctx.getGlobalContext() : exctx.getContext(getParentEnterableState());
+        final Evaluator eval = exctx.getEvaluator();
         eval.evalScript(ctx, getScript());
     }
 }

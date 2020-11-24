@@ -110,10 +110,10 @@ public class If extends Action implements ActionsContainer {
      * {@inheritDoc}
      */
     @Override
-    public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
-        EnterableState parentState = getParentEnterableState();
-        Context ctx = exctx.getContext(parentState);
-        Evaluator eval = exctx.getEvaluator();
+    public void execute(final ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
+        final EnterableState parentState = getParentEnterableState();
+        final Context ctx = exctx.getContext(parentState);
+        final Evaluator eval = exctx.getEvaluator();
         Boolean rslt;
         try {
             rslt = eval.evalCond(ctx, cond);
@@ -124,7 +124,7 @@ public class If extends Action implements ActionsContainer {
                 }
                 rslt = Boolean.FALSE;
             }
-        } catch (SCXMLExpressionException e) {
+        } catch (final SCXMLExpressionException e) {
             rslt = Boolean.FALSE;
             exctx.getInternalIOProcessor().addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT).build());
             exctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR, "Treating as false due to error: "
@@ -132,7 +132,7 @@ public class If extends Action implements ActionsContainer {
         }
         execute = rslt;
         // The "if" statement is a "container"
-        for (Action aa : actions) {
+        for (final Action aa : actions) {
             if (execute && !(aa instanceof ElseIf)) {
                 aa.execute(exctx);
             } else if (execute && aa instanceof ElseIf) {

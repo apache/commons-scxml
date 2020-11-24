@@ -35,27 +35,27 @@ public class ActionsTest {
 
     @Test
     public void testStateActions() throws Exception {
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/actions-state-test.xml");
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/actions-state-test.xml");
         exec.go();
         runTest(exec);
     }
     
     @Test
     public void testParallelActions() throws Exception {
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/actions-parallel-test.xml");
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/actions-parallel-test.xml");
         exec.go();
         runTest(exec);
     }
     
     @Test
     public void testInitialActions() throws Exception {
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/actions-initial-test.xml");
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/actions-initial-test.xml");
         exec.go();
         runTest(exec);
     }
 
-    private void runTest(SCXMLExecutor exec) {
-        Context ctx = SCXMLTestHelper.lookupContext(exec, "actionsTest");
+    private void runTest(final SCXMLExecutor exec) {
+        final Context ctx = SCXMLTestHelper.lookupContext(exec, "actionsTest");
         Assertions.assertEquals(ctx.get("foo"), "foobar");
         Assertions.assertEquals(true, ctx.get("eventsent"), "Missed event transition");
     }

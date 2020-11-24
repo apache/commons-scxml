@@ -57,7 +57,7 @@ public final class NotificationRegistry {
      */
     synchronized void addListener(final Observable source, final SCXMLListener lst) {
         if (source != null && source.getObservableId() != null) {
-            Set<SCXMLListener> entries = regs.computeIfAbsent(source.getObservableId(), k -> new LinkedHashSet<>());
+            final Set<SCXMLListener> entries = regs.computeIfAbsent(source.getObservableId(), k -> new LinkedHashSet<>());
             entries.add(lst);
         }
     }
@@ -70,7 +70,7 @@ public final class NotificationRegistry {
      */
     synchronized void removeListener(final Observable source, final SCXMLListener lst) {
         if (source != null && source.getObservableId() != null) {
-            Set<SCXMLListener> entries = regs.get(source.getObservableId());
+            final Set<SCXMLListener> entries = regs.get(source.getObservableId());
             if (entries != null) {
                 entries.remove(lst);
                 if (entries.size() == 0) {
@@ -90,9 +90,9 @@ public final class NotificationRegistry {
     public synchronized void fireOnEntry(final Observable source,
             final EnterableState state) {
         if (source != null && source.getObservableId() != null) {
-            Set<SCXMLListener> entries = regs.get(source.getObservableId());
+            final Set<SCXMLListener> entries = regs.get(source.getObservableId());
             if (entries != null) {
-                for (SCXMLListener lst : entries) {
+                for (final SCXMLListener lst : entries) {
                     lst.onEntry(state);
                 }
             }
@@ -109,9 +109,9 @@ public final class NotificationRegistry {
     public synchronized void fireOnExit(final Observable source,
             final EnterableState state) {
         if (source != null && source.getObservableId() != null) {
-            Set<SCXMLListener> entries = regs.get(source.getObservableId());
+            final Set<SCXMLListener> entries = regs.get(source.getObservableId());
             if (entries != null) {
-                for (SCXMLListener lst : entries) {
+                for (final SCXMLListener lst : entries) {
                     lst.onExit(state);
                 }
             }
@@ -131,9 +131,9 @@ public final class NotificationRegistry {
             final TransitionTarget from, final TransitionTarget to,
             final Transition transition, final String event) {
         if (source != null && source.getObservableId() != null) {
-            Set<SCXMLListener> entries = regs.get(source.getObservableId());
+            final Set<SCXMLListener> entries = regs.get(source.getObservableId());
             if (entries != null) {
-                for (SCXMLListener lst : entries) {
+                for (final SCXMLListener lst : entries) {
                     lst.onTransition(from, to, transition, event);
                 }
             }

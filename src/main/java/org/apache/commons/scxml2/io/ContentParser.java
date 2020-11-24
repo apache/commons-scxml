@@ -104,8 +104,8 @@ public class ContentParser {
     public static String spaceNormalizeContent(final String content) {
         if (content != null) {
             int index = 0;
-            int length = content.length();
-            StringBuilder buffer = new StringBuilder(length);
+            final int length = content.length();
+            final StringBuilder buffer = new StringBuilder(length);
             boolean whiteSpace = false;
             while (index < length) {
                 if (isWhiteSpace(content.charAt(index))) {
@@ -200,16 +200,16 @@ public class ContentParser {
      */
     public String toXml(final Node node) throws IOException {
         try {
-            StringWriter writer = new StringWriter();
-            Transformer transformer = TransformerFactory.newInstance().newTransformer();
-            Properties outputProps = new Properties();
+            final StringWriter writer = new StringWriter();
+            final Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            final Properties outputProps = new Properties();
             outputProps.put(OutputKeys.OMIT_XML_DECLARATION, "no");
             outputProps.put(OutputKeys.STANDALONE, "no");
             outputProps.put(OutputKeys.INDENT, "yes");
             transformer.setOutputProperties(outputProps);
             transformer.transform(new DOMSource(node), new StreamResult(writer));
             return writer.toString();
-        } catch (TransformerException e) {
+        } catch (final TransformerException e) {
             throw new IOException(e);
         }
     }
@@ -227,7 +227,7 @@ public class ContentParser {
      */
     public ParsedValue parseContent(final String content) throws IOException {
         if (content != null) {
-            String src = trimContent(content);
+            final String src = trimContent(content);
             if (hasJsonSignature(src)) {
                 return new JsonValue(parseJson(src), false);
             }
@@ -247,7 +247,7 @@ public class ContentParser {
      */
     public ParsedValue parseResource(final String resourceURL) throws IOException {
         try (InputStream in = new URL(resourceURL).openStream()) {
-            String content = IOUtils.toString(in, "UTF-8");
+            final String content = IOUtils.toString(in, "UTF-8");
             return parseContent(content);
         }
     }

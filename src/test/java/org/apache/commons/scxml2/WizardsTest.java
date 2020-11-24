@@ -79,11 +79,11 @@ public class WizardsTest {
         int callback = 0;
 
         @SuppressWarnings("unchecked")
-        public void send(Map<String, SCXMLIOProcessor> ioProcessors, String id, String target, String type,
-                String event, Object data, Object hints, long delay) {
+        public void send(final Map<String, SCXMLIOProcessor> ioProcessors, final String id, final String target, final String type,
+                final String event, final Object data, final Object hints, final long delay) {
             if ("foo".equals(type)) {
-                Map<String, Object> params = (Map<String, Object>)data;
-                int i = ((Integer) params.get("aValue"));
+                final Map<String, Object> params = (Map<String, Object>)data;
+                final int i = ((Integer) params.get("aValue"));
                 switch (callback) {
                     case 0:
                         Assertions.assertTrue(i == 2); // state2
@@ -101,7 +101,7 @@ public class WizardsTest {
                 super.send(ioProcessors, id, target, type, event, data, hints, delay);
             }
         }
-        public void cancel(String sendId) {
+        public void cancel(final String sendId) {
             // should never be called
             Assertions.fail("<cancel> TestEventDispatcher callback unexpected");
         }

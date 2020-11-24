@@ -54,24 +54,24 @@ public class ContentParserTest {
 
     @Test
     public void testParseJson() throws Exception {
-        ObjectMapper jsonObjectMapper = new ObjectMapper();
+        final ObjectMapper jsonObjectMapper = new ObjectMapper();
         jsonObjectMapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
         jsonObjectMapper.configure(JsonParser.Feature.ALLOW_YAML_COMMENTS, true);
         // not by default configured, but much easier for unit-testing Java embedded JSON Strings
         jsonObjectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
 
-        ContentParser contentParser = new ContentParser(jsonObjectMapper);
+        final ContentParser contentParser = new ContentParser(jsonObjectMapper);
 
-        String jsonObjectString = "{ /*comment*/ 'string' : 'foobar', 'int' : 1, 'boolean' : false, 'null' : null }";
-        LinkedHashMap<String, Object> jsonObject = new LinkedHashMap<>();
+        final String jsonObjectString = "{ /*comment*/ 'string' : 'foobar', 'int' : 1, 'boolean' : false, 'null' : null }";
+        final LinkedHashMap<String, Object> jsonObject = new LinkedHashMap<>();
         jsonObject.put("string", "foobar");
         jsonObject.put("int", 1);
         jsonObject.put("boolean", Boolean.FALSE);
         jsonObject.put("null", null);
         Assertions.assertEquals(jsonObject, contentParser.parseJson(jsonObjectString));
 
-        String jsonArrayString = "[" + jsonObjectString + "," + "# yaml comment\n" + jsonObjectString+"]";
-        ArrayList<Object> jsonArray = new ArrayList<>(2);
+        final String jsonArrayString = "[" + jsonObjectString + "," + "# yaml comment\n" + jsonObjectString+"]";
+        final ArrayList<Object> jsonArray = new ArrayList<>(2);
         jsonArray.add(jsonObject);
         jsonArray.add(jsonObject);
         Assertions.assertEquals(jsonArray, contentParser.parseJson(jsonArrayString));

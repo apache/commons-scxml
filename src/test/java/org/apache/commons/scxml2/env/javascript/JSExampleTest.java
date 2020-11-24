@@ -46,13 +46,13 @@ public class JSExampleTest {
     @Test
     public void testExample01Sample() throws Exception {
 
-        List<CustomAction> actions  = new ArrayList<>();
+        final List<CustomAction> actions  = new ArrayList<>();
         actions.add(new CustomAction("http://my.custom-actions.domain", "eventdatamaptest", EventDataMapTest.class));
 
-        SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/env/javascript/example-01.xml", actions);
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
+        final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/env/javascript/example-01.xml", actions);
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
         exec.go();
-        Set<EnterableState> currentStates = exec.getStatus().getStates();
+        final Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assertions.assertEquals(1, currentStates.size());
         Assertions.assertEquals("end", currentStates.iterator().next().getId());
     }
@@ -61,7 +61,7 @@ public class JSExampleTest {
     
     public static class EventDataMapTest extends Action {
         @Override
-        public void execute(ActionExecutionContext exctx) {
+        public void execute(final ActionExecutionContext exctx) {
             exctx.getInternalIOProcessor()
                     .addEvent(new EventBuilder("ok",TriggerEvent.SIGNAL_EVENT).data("and its ok with me to").build());
         }

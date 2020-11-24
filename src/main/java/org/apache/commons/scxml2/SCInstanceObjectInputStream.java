@@ -81,13 +81,13 @@ public class SCInstanceObjectInputStream extends ObjectInputStream {
      * @param classResolver custom class resolver
      * @return the old classResolver replaced by the new {@code classResolver}
      */
-    public ClassResolver setClassResolver(ClassResolver classResolver) {
-        ClassResolver old = this.classResolver;
+    public ClassResolver setClassResolver(final ClassResolver classResolver) {
+        final ClassResolver old = this.classResolver;
         this.classResolver = classResolver;
         return old;
     }
 
-    protected Class resolveClass(ObjectStreamClass osc) throws IOException, ClassNotFoundException {
+    protected Class resolveClass(final ObjectStreamClass osc) throws IOException, ClassNotFoundException {
         if (classResolver != null) {
             return classResolver.resolveClass(osc);
         }

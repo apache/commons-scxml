@@ -70,23 +70,23 @@ public final class StandaloneUtils {
      */
     public static void execute(final String uri, final Evaluator evaluator) {
         try {
-            String documentURI = getCanonicalURI(uri);
-            Context rootCtx = evaluator.newContext(null);
-            Tracer trc = new Tracer();
-            SCXML doc = SCXMLReader.read(new URL(documentURI));
+            final String documentURI = getCanonicalURI(uri);
+            final Context rootCtx = evaluator.newContext(null);
+            final Tracer trc = new Tracer();
+            final SCXML doc = SCXMLReader.read(new URL(documentURI));
             if (doc == null) {
                 System.err.println("The SCXML document " + uri
                         + " can not be parsed!");
                 System.exit(-1);
             }
             System.out.println(SCXMLWriter.write(doc));
-            SCXMLExecutor exec = new SCXMLExecutor(evaluator, null, trc);
+            final SCXMLExecutor exec = new SCXMLExecutor(evaluator, null, trc);
             exec.setStateMachine(doc);
             exec.addListener(doc, trc);
             exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
             exec.setRootContext(rootCtx);
             exec.go();
-            BufferedReader br = new BufferedReader(new
+            final BufferedReader br = new BufferedReader(new
                 InputStreamReader(System.in));
             String event;
             while ((event = br.readLine()) != null) {
@@ -104,23 +104,23 @@ public final class StandaloneUtils {
                 } else if (event.equalsIgnoreCase("reset")) {
                     exec.reset();
                 } else if (event.indexOf('=') != -1) {
-                    int marker = event.indexOf('=');
-                    String name = event.substring(0, marker);
-                    String value = event.substring(marker + 1);
+                    final int marker = event.indexOf('=');
+                    final String name = event.substring(0, marker);
+                    final String value = event.substring(marker + 1);
                     rootCtx.setLocal(name, value);
                     System.out.println("Set variable " + name + " to "
                         + value);
                 } else if (event.trim().length() == 0
                            || event.equalsIgnoreCase("null")) {
-                    TriggerEvent[] evts = {new EventBuilder(null,TriggerEvent.SIGNAL_EVENT).build()};
+                    final TriggerEvent[] evts = {new EventBuilder(null,TriggerEvent.SIGNAL_EVENT).build()};
                     exec.triggerEvents(evts);
                     if (exec.getStatus().isFinal()) {
                         System.out.println("A final configuration reached.");
                     }
                 } else {
-                    StringTokenizer st = new StringTokenizer(event);
-                    int tkns = st.countTokens();
-                    TriggerEvent[] evts = new TriggerEvent[tkns];
+                    final StringTokenizer st = new StringTokenizer(event);
+                    final int tkns = st.countTokens();
+                    final TriggerEvent[] evts = new TriggerEvent[tkns];
                     for (int i = 0; i < tkns; i++) {
                         evts[i] = new EventBuilder(st.nextToken(), TriggerEvent.SIGNAL_EVENT).build();
                     }
@@ -147,7 +147,7 @@ public final class StandaloneUtils {
             || uri.toLowerCase().startsWith("file://")) {
                 return uri;
         }
-        File in = new File(uri);
+        final File in = new File(uri);
         return "file:///" + in.getCanonicalPath();
     }
 

@@ -31,22 +31,22 @@ public class SCXMLSemanticsImplTest {
 
     @Test
     public void testIsLegalConfigNoStates() {
-        Set<EnterableState> states = new HashSet<>();
+        final Set<EnterableState> states = new HashSet<>();
 
         Assertions.assertTrue(new SCXMLSemanticsImpl().isLegalConfiguration(states, new SimpleErrorReporter()));
     }
 
     @Test
     public void testIsLegalConfigInvalidParallel() {
-        Set<EnterableState> states = new HashSet<>();
-        Parallel parallel = new Parallel();
+        final Set<EnterableState> states = new HashSet<>();
+        final Parallel parallel = new Parallel();
 
-        Parallel parent = new Parallel();
+        final Parallel parent = new Parallel();
         parent.setId("4");
 
-        State state1 = new State();
+        final State state1 = new State();
         state1.setId("1");
-        State state2 = new State();
+        final State state2 = new State();
         state2.setId("2");
 
         parent.addChild(state1);
@@ -56,7 +56,7 @@ public class SCXMLSemanticsImplTest {
 
         states.add(parallel);
 
-        MockErrorReporter errorReporter = new MockErrorReporter();
+        final MockErrorReporter errorReporter = new MockErrorReporter();
 
         Assertions.assertFalse(new SCXMLSemanticsImpl().isLegalConfiguration(states, errorReporter));
         Assertions.assertEquals(ErrorConstants.ILLEGAL_CONFIG, errorReporter.getErrCode());
@@ -65,17 +65,17 @@ public class SCXMLSemanticsImplTest {
 
     @Test
     public void testIsLegalConfigMultipleTopLevel() {
-        Set<EnterableState> states = new HashSet<>();
+        final Set<EnterableState> states = new HashSet<>();
 
-        State state1 = new State();
+        final State state1 = new State();
         state1.setId("1");
-        State state2 = new State();
+        final State state2 = new State();
         state2.setId("2");
 
         states.add(state1);
         states.add(state2);
 
-        MockErrorReporter errorReporter = new MockErrorReporter();
+        final MockErrorReporter errorReporter = new MockErrorReporter();
 
         Assertions.assertFalse(new SCXMLSemanticsImpl().isLegalConfiguration(states, errorReporter));
         Assertions.assertEquals(ErrorConstants.ILLEGAL_CONFIG, errorReporter.getErrCode());
@@ -84,15 +84,15 @@ public class SCXMLSemanticsImplTest {
 
     @Test
     public void testIsLegalConfigMultipleStatesActive() {
-        Set<EnterableState> states = new HashSet<>();
+        final Set<EnterableState> states = new HashSet<>();
 
-        State state1 = new State();
+        final State state1 = new State();
         state1.setId("1");
 
-        State state2 = new State();
+        final State state2 = new State();
         state2.setId("2");
 
-        State parent = new State();
+        final State parent = new State();
         parent.setId("parentid");
 
         state2.setParent(parent);
@@ -101,7 +101,7 @@ public class SCXMLSemanticsImplTest {
         states.add(state1);
         states.add(state2);
 
-        MockErrorReporter errorReporter = new MockErrorReporter();
+        final MockErrorReporter errorReporter = new MockErrorReporter();
 
         Assertions.assertFalse(new SCXMLSemanticsImpl().isLegalConfiguration(states, errorReporter));
         Assertions.assertEquals(ErrorConstants.ILLEGAL_CONFIG, errorReporter.getErrCode());

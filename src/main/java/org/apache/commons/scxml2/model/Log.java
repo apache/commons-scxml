@@ -90,9 +90,9 @@ public class Log extends Action {
      * {@inheritDoc}
      */
     @Override
-    public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
-        Context ctx = exctx.getContext(getParentEnterableState());
-        Evaluator eval = exctx.getEvaluator();
+    public void execute(final ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
+        final Context ctx = exctx.getContext(getParentEnterableState());
+        final Evaluator eval = exctx.getEvaluator();
         exctx.getAppLog().info(label + ": " + String.valueOf(eval.eval(ctx, expr)));
     }
 }

@@ -38,7 +38,7 @@ public class StatusTest {
     
     @Test
     public void testIsFinalStateFalse() {
-        State state = new State();
+        final State state = new State();
 
         stateConfiguration.enterState(state);
         
@@ -47,7 +47,7 @@ public class StatusTest {
     
     @Test
     public void testIsFinalStateHasParent() {
-        Final state = new Final();
+        final Final state = new Final();
         state.setParent(new State());
         
         stateConfiguration.enterState(state);
@@ -57,7 +57,7 @@ public class StatusTest {
     
     @Test
     public void testIsFinalState() {
-        Final state = new Final();
+        final Final state = new Final();
 
         stateConfiguration.enterState(state);
 
@@ -67,32 +67,32 @@ public class StatusTest {
     @Test
     public void testGetAllStatesEmptyStatus() {
 
-        Set<EnterableState> returnValue = status.getActiveStates();
+        final Set<EnterableState> returnValue = status.getActiveStates();
 
         Assertions.assertEquals(0, returnValue.size());
     }
 
     @Test
     public void testGetAllStatesContainsParent() {
-        State parent = new State();
+        final State parent = new State();
         parent.setId("0");
         stateConfiguration.enterState(parent);
-        State state = new State();
+        final State state = new State();
         state.setId("1");
         state.setParent(parent);
         stateConfiguration.enterState(state);
 
-        Set<EnterableState> returnValue = status.getActiveStates();
+        final Set<EnterableState> returnValue = status.getActiveStates();
 
         Assertions.assertEquals(2, returnValue.size());
     }
 
     @Test
     public void testIsInState() {
-        State parent = new State();
+        final State parent = new State();
         parent.setId("0");
         stateConfiguration.enterState(parent);
-        State state = new State();
+        final State state = new State();
         state.setId("1");
         state.setParent(parent);
         stateConfiguration.enterState(state);

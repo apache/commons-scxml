@@ -85,7 +85,7 @@ public class CustomActionTest {
     @Test
     public void testHelloWorld() throws Exception {
         // (1) Get a SCXMLExecutor
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/hello-world.xml");
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/hello-world.xml");
         exec.go();
         // (2) Single, final state
         Assertions.assertEquals("hello", (exec.getStatus().getStates().
@@ -98,21 +98,21 @@ public class CustomActionTest {
     public void testCustomActionHelloWorld() throws Exception {
         // (1) Form a list of custom actions defined in the SCXML
         //     document (and any included documents via "src" attributes)
-        CustomAction ca1 =
+        final CustomAction ca1 =
             new CustomAction("http://my.custom-actions.domain/CUSTOM1",
                              "hello", Hello.class);
         // Register the same action under a different name, just to test
         // multiple custom actions
-        CustomAction ca2 =
+        final CustomAction ca2 =
             new CustomAction("http://my.custom-actions.domain/CUSTOM2",
                              "bar", Hello.class);
-        List<CustomAction> customActions = new ArrayList<>();
+        final List<CustomAction> customActions = new ArrayList<>();
         customActions.add(ca1);
         customActions.add(ca2);
         // (2) Parse the document
-        SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/custom-hello-world-01.xml", customActions);
+        final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/custom-hello-world-01.xml", customActions);
         // (3) Get a SCXMLExecutor
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
         exec.go();
         // (4) Single, final state
         Assertions.assertEquals("custom", (exec.getStatus().getStates().
@@ -130,15 +130,15 @@ public class CustomActionTest {
     public void testCustomActionExternalSrcHelloWorld() throws Exception {
         // (1) Form a list of custom actions defined in the SCXML
         //     document (and any included documents via "src" attributes)
-        CustomAction ca =
+        final CustomAction ca =
             new CustomAction("http://my.custom-actions.domain/CUSTOM",
                              "hello", Hello.class);
-        List<CustomAction> customActions = new ArrayList<>();
+        final List<CustomAction> customActions = new ArrayList<>();
         customActions.add(ca);
         // (2) Parse the document
-        SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/external-hello-world.xml", customActions);
+        final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/external-hello-world.xml", customActions);
         // (3) Get a SCXMLExecutor
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
         exec.go();
         // (4) Single, final state
         Assertions.assertEquals("custom", (exec.getStatus().getStates().
@@ -154,15 +154,15 @@ public class CustomActionTest {
     @Test
     public void testCustomActionOverrideLocalName() throws Exception {
         // (1) List of custom actions, use same local name as SCXML action
-        CustomAction ca =
+        final CustomAction ca =
             new CustomAction("http://my.custom-actions.domain/CUSTOM",
                              "send", Hello.class);
-        List<CustomAction> customActions = new ArrayList<>();
+        final List<CustomAction> customActions = new ArrayList<>();
         customActions.add(ca);
         // (2) Parse the document
-        SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/custom-hello-world-03.xml", customActions);
+        final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/custom-hello-world-03.xml", customActions);
         // (3) Get a SCXMLExecutor
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
         exec.go();
         // (4) Single, final state
         Assertions.assertEquals("custom", (exec.getStatus().getStates().
@@ -179,15 +179,15 @@ public class CustomActionTest {
     public void testCustomActionEventPayloadHelloWorldJexl() throws Exception {
         // (1) Form a list of custom actions defined in the SCXML
         //     document (and any included documents via "src" attributes)
-        CustomAction ca =
+        final CustomAction ca =
             new CustomAction("http://my.custom-actions.domain/CUSTOM",
                              "hello", Hello.class);
-        List<CustomAction> customActions = new ArrayList<>();
+        final List<CustomAction> customActions = new ArrayList<>();
         customActions.add(ca);
         // (2) Parse the document
-        SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/custom-hello-world-04-jexl.xml", customActions);
+        final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/custom-hello-world-04-jexl.xml", customActions);
         // (3) Get a SCXMLExecutor
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
         exec.go();
         // (4) Single, final state
         Assertions.assertEquals("custom1", exec.getStatus().getStates().iterator().next().getId(),

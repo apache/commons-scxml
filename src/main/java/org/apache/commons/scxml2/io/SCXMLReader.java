@@ -278,7 +278,7 @@ public final class SCXMLReader {
         if (scxmlPath == null) {
             throw new IllegalArgumentException(ERR_NULL_PATH);
         }
-        SCXML scxml = readInternal(configuration, null, scxmlPath, null, null, null);
+        final SCXML scxml = readInternal(configuration, null, scxmlPath, null, null, null);
         if (scxml != null) {
             ModelUpdater.updateSCXML(scxml);
         }
@@ -322,7 +322,7 @@ public final class SCXMLReader {
         if (scxmlURL == null) {
             throw new IllegalArgumentException(ERR_NULL_URL);
         }
-        SCXML scxml = readInternal(configuration, scxmlURL, null, null, null, null);
+        final SCXML scxml = readInternal(configuration, scxmlURL, null, null, null, null);
         if (scxml != null) {
             ModelUpdater.updateSCXML(scxml);
         }
@@ -366,7 +366,7 @@ public final class SCXMLReader {
         if (scxmlStream == null) {
             throw new IllegalArgumentException(ERR_NULL_ISTR);
         }
-        SCXML scxml = readInternal(configuration, null, null, scxmlStream, null, null);
+        final SCXML scxml = readInternal(configuration, null, null, scxmlStream, null, null);
         if (scxml != null) {
             ModelUpdater.updateSCXML(scxml);
         }
@@ -410,7 +410,7 @@ public final class SCXMLReader {
         if (scxmlReader == null) {
             throw new IllegalArgumentException(ERR_NULL_READ);
         }
-        SCXML scxml = readInternal(configuration, null, null, null, scxmlReader, null);
+        final SCXML scxml = readInternal(configuration, null, null, null, scxmlReader, null);
         if (scxml != null) {
             ModelUpdater.updateSCXML(scxml);
         }
@@ -454,7 +454,7 @@ public final class SCXMLReader {
         if (scxmlSource == null) {
             throw new IllegalArgumentException(ERR_NULL_SRC);
         }
-        SCXML scxml = readInternal(configuration, null, null, null, null, scxmlSource);
+        final SCXML scxml = readInternal(configuration, null, null, null, null, scxmlSource);
         if (scxml != null) {
             ModelUpdater.updateSCXML(scxml);
         }
@@ -494,7 +494,7 @@ public final class SCXMLReader {
             }
         }
 
-        XMLStreamReader reader = getReader(configuration, scxmlURL, scxmlPath, scxmlStream, scxmlReader, scxmlSource);
+        final XMLStreamReader reader = getReader(configuration, scxmlURL, scxmlPath, scxmlStream, scxmlReader, scxmlSource);
 
         return readDocument(reader, configuration);
     }
@@ -519,7 +519,7 @@ public final class SCXMLReader {
     private static SCXML readDocument(final XMLStreamReader reader, final Configuration configuration)
             throws IOException, ModelException, XMLStreamException {
 
-        SCXML scxml = new SCXML();
+        final SCXML scxml = new SCXML();
         scxml.setPathResolver(configuration.pathResolver);
         while (reader.hasNext()) {
             String name, nsURI;
@@ -567,7 +567,7 @@ public final class SCXMLReader {
         scxml.setName(readAV(reader, SCXMLConstants.ATTR_NAME));
         scxml.setProfile(readAV(reader, SCXMLConstants.ATTR_PROFILE));
         scxml.setVersion(readRequiredAV(reader, SCXMLConstants.ELEM_SCXML, SCXMLConstants.ATTR_VERSION));
-        String binding = readAV(reader, SCXMLConstants.ATTR_BINDING);
+        final String binding = readAV(reader, SCXMLConstants.ATTR_BINDING);
         if (binding != null) {
             if (SCXMLConstants.ATTR_BINDING_LATE.equals(binding)) {
                 scxml.setLateBinding(true);
@@ -633,16 +633,16 @@ public final class SCXMLReader {
                                   final TransitionalState parent)
             throws IOException, ModelException, XMLStreamException {
 
-        State state = new State();
+        final State state = new State();
         state.setId(readOrGeneratedTransitionTargetId(reader, scxml, SCXMLConstants.ELEM_STATE));
-        String initial = readAV(reader, SCXMLConstants.ATTR_INITIAL);
+        final String initial = readAV(reader, SCXMLConstants.ATTR_INITIAL);
         if (initial != null) {
             state.setFirst(initial);
         }
-        String src = readAV(reader, SCXMLConstants.ATTR_SRC);
+        final String src = readAV(reader, SCXMLConstants.ATTR_SRC);
         if (src != null) {
             String source = src;
-            Configuration copy = new Configuration(configuration);
+            final Configuration copy = new Configuration(configuration);
             if (copy.parent == null) {
                 copy.parent = scxml;
             }
@@ -724,12 +724,12 @@ public final class SCXMLReader {
                                      final TransitionalState parent)
             throws IOException, ModelException, XMLStreamException {
 
-        Parallel parallel = new Parallel();
+        final Parallel parallel = new Parallel();
         parallel.setId(readOrGeneratedTransitionTargetId(reader, scxml, SCXMLConstants.ELEM_PARALLEL));
-        String src = readAV(reader, SCXMLConstants.ATTR_SRC);
+        final String src = readAV(reader, SCXMLConstants.ATTR_SRC);
         if (src != null) {
             String source = src;
-            Configuration copy = new Configuration(configuration);
+            final Configuration copy = new Configuration(configuration);
             if (copy.parent == null) {
                 copy.parent = scxml;
             }
@@ -807,7 +807,7 @@ public final class SCXMLReader {
                                   final State parent)
             throws XMLStreamException, ModelException, IOException {
 
-        Final end = new Final();
+        final Final end = new Final();
         end.setId(readOrGeneratedTransitionTargetId(reader, scxml, SCXMLConstants.ELEM_FINAL));
 
         if (parent == null) {
@@ -862,7 +862,7 @@ public final class SCXMLReader {
     private static void readDoneData(final XMLStreamReader reader, final Configuration configuration, final Final parent)
             throws XMLStreamException, ModelException {
 
-        DoneData doneData = new DoneData();
+        final DoneData doneData = new DoneData();
         parent.setDoneData(doneData);
 
         loop : while (reader.hasNext()) {
@@ -917,8 +917,8 @@ public final class SCXMLReader {
             throws ModelException {
 
         // Check for URI fragment
-        String[] fragments = src.split("#", 2);
-        String location = fragments[0];
+        final String[] fragments = src.split("#", 2);
+        final String location = fragments[0];
         String fragment = null;
         if (fragments.length > 1) {
             fragment = fragments[1];
@@ -928,9 +928,9 @@ public final class SCXMLReader {
         SCXML externalSCXML;
         try {
             externalSCXML = SCXMLReader.readInternal(configuration, new URL(location), null, null, null, null);
-        } catch (Exception e) {
-            MessageFormat msgFormat = new MessageFormat(ERR_STATE_SRC);
-            String errMsg = msgFormat.format(new Object[] {src});
+        } catch (final Exception e) {
+            final MessageFormat msgFormat = new MessageFormat(ERR_STATE_SRC);
+            final String errMsg = msgFormat.format(new Object[] {src});
             throw new ModelException(errMsg + " : " + e.getMessage(), e);
         }
 
@@ -938,13 +938,13 @@ public final class SCXMLReader {
         if (fragment == null) {
             // All targets pulled in since its not a src fragment
             if (ts instanceof State) {
-                State s = (State) ts;
-                Initial ini = new Initial();
-                SimpleTransition t = new SimpleTransition();
+                final State s = (State) ts;
+                final Initial ini = new Initial();
+                final SimpleTransition t = new SimpleTransition();
                 t.setNext(externalSCXML.getInitial());
                 ini.setTransition(t);
                 s.setInitial(ini);
-                for (EnterableState child : externalSCXML.getChildren()) {
+                for (final EnterableState child : externalSCXML.getChildren()) {
                     s.addChild(child);
                 }
                 s.setDatamodel(externalSCXML.getDatamodel());
@@ -953,48 +953,48 @@ public final class SCXMLReader {
             }
         } else {
             // Need to pull in only descendent targets
-            Object source = externalSCXML.getTargets().get(fragment);
+            final Object source = externalSCXML.getTargets().get(fragment);
             if (source == null) {
-                MessageFormat msgFormat = new MessageFormat(ERR_STATE_SRC_FRAGMENT);
-                String errMsg = msgFormat.format(new Object[] {src});
+                final MessageFormat msgFormat = new MessageFormat(ERR_STATE_SRC_FRAGMENT);
+                final String errMsg = msgFormat.format(new Object[] {src});
                 throw new ModelException(errMsg);
             }
             if (source instanceof State && ts instanceof State) {
-                State s = (State) ts;
-                State include = (State) source;
-                for (OnEntry onentry : include.getOnEntries()) {
+                final State s = (State) ts;
+                final State include = (State) source;
+                for (final OnEntry onentry : include.getOnEntries()) {
                     s.addOnEntry(onentry);
                 }
-                for (OnExit onexit : include.getOnExits()) {
+                for (final OnExit onexit : include.getOnExits()) {
                     s.addOnExit(onexit);
                 }
                 s.setDatamodel(include.getDatamodel());
-                List<History> histories = include.getHistory();
-                for (History h : histories) {
+                final List<History> histories = include.getHistory();
+                for (final History h : histories) {
                     s.addHistory(h);
                     configuration.parent.addTarget(h);
                 }
-                for (EnterableState child : include.getChildren()) {
+                for (final EnterableState child : include.getChildren()) {
                     s.addChild(child);
                     configuration.parent.addTarget(child);
                     readInExternalTargets(configuration.parent, child);
                 }
-                for (Invoke invoke : include.getInvokes()) {
+                for (final Invoke invoke : include.getInvokes()) {
                     s.addInvoke(invoke);
                 }
                 if (include.getInitial() != null) {
                     s.setInitial(include.getInitial());
                 }
-                List<Transition> transitions = include.getTransitionsList();
-                for (Transition t : transitions) {
+                final List<Transition> transitions = include.getTransitionsList();
+                for (final Transition t : transitions) {
                     s.addTransition(t);
                 }
             } else if (ts instanceof Parallel && source instanceof Parallel) {
                 // TODO src attribute for <parallel>
             } else {
-                MessageFormat msgFormat =
+                final MessageFormat msgFormat =
                         new MessageFormat(ERR_STATE_SRC_FRAGMENT_TARGET);
-                String errMsg = msgFormat.format(new Object[] {src});
+                final String errMsg = msgFormat.format(new Object[] {src});
                 throw new ModelException(errMsg);
             }
         }
@@ -1008,10 +1008,10 @@ public final class SCXMLReader {
      */
     private static void readInExternalTargets(final SCXML parent, final EnterableState es) {
         if (es instanceof TransitionalState) {
-            for (History h : ((TransitionalState)es).getHistory()) {
+            for (final History h : ((TransitionalState)es).getHistory()) {
                 parent.addTarget(h);
             }
-            for (EnterableState child : ((TransitionalState) es).getChildren()) {
+            for (final EnterableState child : ((TransitionalState) es).getChildren()) {
                 parent.addTarget(child);
                 readInExternalTargets(parent, child);
             }
@@ -1034,7 +1034,7 @@ public final class SCXMLReader {
                                       final SCXML scxml, final TransitionalState parent)
             throws XMLStreamException, ModelException {
 
-        Datamodel dm = new Datamodel();
+        final Datamodel dm = new Datamodel();
 
         loop : while (reader.hasNext()) {
             String name, nsURI;
@@ -1077,7 +1077,7 @@ public final class SCXMLReader {
     private static void readData(final XMLStreamReader reader, final Configuration configuration, final Datamodel dm)
             throws XMLStreamException, ModelException {
 
-        Data datum = new Data();
+        final Data datum = new Data();
         datum.setId(readRequiredAV(reader, SCXMLConstants.ELEM_DATA, SCXMLConstants.ATTR_ID));
         final String expr = readAV(reader, SCXMLConstants.ATTR_EXPR);
         final String src = readAV(reader, SCXMLConstants.ATTR_SRC);
@@ -1112,7 +1112,7 @@ public final class SCXMLReader {
                                    final TransitionalState parent)
             throws XMLStreamException, ModelException {
 
-        Invoke invoke = new Invoke();
+        final Invoke invoke = new Invoke();
         invoke.setId(readAV(reader, SCXMLConstants.ATTR_ID));
         invoke.setIdlocation(readAV(reader, SCXMLConstants.ATTR_IDLOCATION));
         invoke.setSrc(readAV(reader, SCXMLConstants.ATTR_SRC));
@@ -1163,10 +1163,10 @@ public final class SCXMLReader {
                                   final ParamsContainer parent)
             throws XMLStreamException, ModelException {
 
-        Param param = new Param();
+        final Param param = new Param();
         param.setName(readRequiredAV(reader, SCXMLConstants.ELEM_PARAM, SCXMLConstants.ATTR_NAME));
-        String location = readAV(reader, SCXMLConstants.ATTR_LOCATION);
-        String expr = readAV(reader, SCXMLConstants.ATTR_EXPR);
+        final String location = readAV(reader, SCXMLConstants.ATTR_LOCATION);
+        final String expr = readAV(reader, SCXMLConstants.ATTR_EXPR);
         if (expr != null) {
             if (location != null) {
                 reportConflictingAttribute(reader, configuration, SCXMLConstants.ELEM_PARAM, SCXMLConstants.ATTR_LOCATION, SCXMLConstants.ATTR_EXPR);
@@ -1202,7 +1202,7 @@ public final class SCXMLReader {
                                      final TransitionalState state, final Invoke invoke)
             throws XMLStreamException, ModelException {
 
-        Finalize finalize = new Finalize();
+        final Finalize finalize = new Finalize();
         readExecutableContext(reader, configuration, finalize, null);
         invoke.setFinalize(finalize);
         finalize.setParent(state);
@@ -1221,7 +1221,7 @@ public final class SCXMLReader {
                                     final ContentContainer contentContainer)
             throws XMLStreamException, ModelException {
 
-        Content content = new Content();
+        final Content content = new Content();
         content.setExpr(readAV(reader, SCXMLConstants.ATTR_EXPR));
         if (content.getExpr() != null) {
             skipToEndElement(reader);
@@ -1247,7 +1247,7 @@ public final class SCXMLReader {
                                     final State state)
             throws XMLStreamException, ModelException {
 
-        Initial initial = new Initial();
+        final Initial initial = new Initial();
 
         loop : while (reader.hasNext()) {
             String name, nsURI;
@@ -1290,7 +1290,7 @@ public final class SCXMLReader {
                                     final SCXML scxml, final TransitionalState ts)
             throws XMLStreamException, ModelException {
 
-        History history = new History();
+        final History history = new History();
         history.setId(readOrGeneratedTransitionTargetId(reader, scxml, SCXMLConstants.ELEM_HISTORY));
         history.setType(readAV(reader, SCXMLConstants.ATTR_TYPE));
 
@@ -1335,7 +1335,7 @@ public final class SCXMLReader {
                                     final EnterableState es)
             throws XMLStreamException, ModelException {
 
-        OnEntry onentry = new OnEntry();
+        final OnEntry onentry = new OnEntry();
         onentry.setRaiseEvent(readBooleanAV(reader, SCXMLConstants.ELEM_ONENTRY, SCXMLConstants.ATTR_EVENT));
         readExecutableContext(reader, configuration, onentry, null);
         es.addOnEntry(onentry);
@@ -1356,7 +1356,7 @@ public final class SCXMLReader {
                                    final EnterableState es)
             throws XMLStreamException, ModelException {
 
-        OnExit onexit = new OnExit();
+        final OnExit onexit = new OnExit();
         onexit.setRaiseEvent(readBooleanAV(reader, SCXMLConstants.ELEM_ONEXIT, SCXMLConstants.ATTR_EVENT));
         readExecutableContext(reader, configuration, onexit, null);
         es.addOnExit(onexit);
@@ -1375,16 +1375,16 @@ public final class SCXMLReader {
     private static SimpleTransition readSimpleTransition(final XMLStreamReader reader, final Configuration configuration)
             throws XMLStreamException, ModelException {
 
-        SimpleTransition transition = new SimpleTransition();
+        final SimpleTransition transition = new SimpleTransition();
         transition.setNext(readAV(reader, SCXMLConstants.ATTR_TARGET));
-        String type = readAV(reader, SCXMLConstants.ATTR_TYPE);
+        final String type = readAV(reader, SCXMLConstants.ATTR_TYPE);
         if (type != null) {
             try {
                 transition.setType(TransitionType.valueOf(type));
             }
-            catch (IllegalArgumentException e) {
-                MessageFormat msgFormat = new MessageFormat(ERR_UNSUPPORTED_TRANSITION_TYPE);
-                String errMsg = msgFormat.format(new Object[] {type, reader.getLocation()});
+            catch (final IllegalArgumentException e) {
+                final MessageFormat msgFormat = new MessageFormat(ERR_UNSUPPORTED_TRANSITION_TYPE);
+                final String errMsg = msgFormat.format(new Object[] {type, reader.getLocation()});
                 throw new ModelException(errMsg);
             }
         }
@@ -1407,18 +1407,18 @@ public final class SCXMLReader {
     private static Transition readTransition(final XMLStreamReader reader, final Configuration configuration)
             throws XMLStreamException, ModelException {
 
-        Transition transition = new Transition();
+        final Transition transition = new Transition();
         transition.setCond(readAV(reader, SCXMLConstants.ATTR_COND));
         transition.setEvent(readAV(reader, SCXMLConstants.ATTR_EVENT));
         transition.setNext(readAV(reader, SCXMLConstants.ATTR_TARGET));
-        String type = readAV(reader, SCXMLConstants.ATTR_TYPE);
+        final String type = readAV(reader, SCXMLConstants.ATTR_TYPE);
         if (type != null) {
             try {
                 transition.setType(TransitionType.valueOf(type));
             }
-            catch (IllegalArgumentException e) {
-                MessageFormat msgFormat = new MessageFormat(ERR_UNSUPPORTED_TRANSITION_TYPE);
-                String errMsg = msgFormat.format(new Object[] {type, reader.getLocation()});
+            catch (final IllegalArgumentException e) {
+                final MessageFormat msgFormat = new MessageFormat(ERR_UNSUPPORTED_TRANSITION_TYPE);
+                final String errMsg = msgFormat.format(new Object[] {type, reader.getLocation()});
                 throw new ModelException(errMsg);
             }
         }
@@ -1504,7 +1504,7 @@ public final class SCXMLReader {
                     } else { // custom action
                         CustomAction customAction = null;
                         if (!configuration.customActions.isEmpty()) {
-                            for (CustomAction ca : configuration.customActions) {
+                            for (final CustomAction ca : configuration.customActions) {
                                 if (ca.getNamespaceURI().equals(nsURI) && ca.getLocalName().equals(name)) {
                                     customAction = ca;
                                     break;
@@ -1548,7 +1548,7 @@ public final class SCXMLReader {
             reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_FINALIZE, SCXMLConstants.XMLNS_SCXML, SCXMLConstants.ELEM_RAISE);
         }
         else {
-            Raise raise = new Raise();
+            final Raise raise = new Raise();
             raise.setEvent(readAV(reader, SCXMLConstants.ATTR_EVENT));
             raise.setParent(executable);
             if (parent != null) {
@@ -1576,7 +1576,7 @@ public final class SCXMLReader {
                                final Executable executable, final ActionsContainer parent)
             throws XMLStreamException, ModelException {
 
-        If iff = new If();
+        final If iff = new If();
         iff.setCond(readRequiredAV(reader, SCXMLConstants.ELEM_IF, SCXMLConstants.ATTR_COND));
         iff.setParent(executable);
         if (parent != null) {
@@ -1599,7 +1599,7 @@ public final class SCXMLReader {
     private static void readElseIf(final XMLStreamReader reader, final Executable executable, final If iff)
             throws XMLStreamException, ModelException {
 
-        ElseIf elseif = new ElseIf();
+        final ElseIf elseif = new ElseIf();
         elseif.setCond(readRequiredAV(reader, SCXMLConstants.ELEM_ELSEIF, SCXMLConstants.ATTR_COND));
         elseif.setParent(executable);
         iff.addAction(elseif);
@@ -1618,7 +1618,7 @@ public final class SCXMLReader {
     private static void readElse(final XMLStreamReader reader, final Executable executable, final If iff)
             throws XMLStreamException {
 
-        Else els = new Else();
+        final Else els = new Else();
         els.setParent(executable);
         iff.addAction(els);
         skipToEndElement(reader);
@@ -1640,7 +1640,7 @@ public final class SCXMLReader {
                                     final Executable executable, final ActionsContainer parent)
             throws XMLStreamException, ModelException {
 
-        Foreach fe = new Foreach();
+        final Foreach fe = new Foreach();
         fe.setArray(readRequiredAV(reader, SCXMLConstants.ELEM_FOREACH, SCXMLConstants.ATTR_ARRAY));
         fe.setItem(readRequiredAV(reader, SCXMLConstants.ELEM_FOREACH, SCXMLConstants.ATTR_ITEM));
         fe.setIndex(readAV(reader, SCXMLConstants.ATTR_INDEX));
@@ -1665,7 +1665,7 @@ public final class SCXMLReader {
     private static void readLog(final XMLStreamReader reader, final Executable executable, final ActionsContainer parent)
             throws XMLStreamException {
 
-        Log log = new Log();
+        final Log log = new Log();
         log.setExpr(readAV(reader, SCXMLConstants.ATTR_EXPR));
         log.setLabel(readAV(reader, SCXMLConstants.ATTR_LABEL));
         log.setParent(executable);
@@ -1691,7 +1691,7 @@ public final class SCXMLReader {
                                    final Executable executable, final ActionsContainer parent)
             throws XMLStreamException, ModelException {
 
-        Assign assign = new Assign();
+        final Assign assign = new Assign();
         assign.setExpr(readAV(reader, SCXMLConstants.ATTR_EXPR));
         assign.setLocation(readRequiredAV(reader, SCXMLConstants.ELEM_ASSIGN, SCXMLConstants.ATTR_LOCATION));
         assign.setSrc(readAV(reader, SCXMLConstants.ATTR_SRC));
@@ -1709,12 +1709,12 @@ public final class SCXMLReader {
             }
             try {
                 assign.setParsedValue(ContentParser.DEFAULT_PARSER.parseResource(resolvedSrc));
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 throw new ModelException(e);
             }
         }
         else {
-            Location location = reader.getLocation();
+            final Location location = reader.getLocation();
             readParsedValue(reader, configuration, assign, false);
             if (assign.getParsedValue() == null) {
                 // report missing expression (as most common use-case)
@@ -1754,7 +1754,7 @@ public final class SCXMLReader {
             return;
         }
 
-        Send send = new Send();
+        final Send send = new Send();
         send.setId(readAV(reader, SCXMLConstants.ATTR_ID));
         String attrValue = readAV(reader, SCXMLConstants.ATTR_IDLOCATION);
         if (attrValue != null) {
@@ -1864,9 +1864,9 @@ public final class SCXMLReader {
                                    final Executable executable, final ActionsContainer parent)
             throws XMLStreamException, ModelException {
 
-        Cancel cancel = new Cancel();
+        final Cancel cancel = new Cancel();
         cancel.setSendid(readAV(reader, SCXMLConstants.ATTR_SENDID));
-        String attrValue = readAV(reader, SCXMLConstants.ATTR_SENDIDEXPR);
+        final String attrValue = readAV(reader, SCXMLConstants.ATTR_SENDIDEXPR);
         if (attrValue != null) {
             if (cancel.getSendid() != null) {
                 reportConflictingAttribute(reader, configuration, SCXMLConstants.ELEM_CANCEL, SCXMLConstants.ATTR_SENDID, SCXMLConstants.ATTR_SENDIDEXPR);
@@ -1898,7 +1898,7 @@ public final class SCXMLReader {
                                    final Executable executable, final ActionsContainer parent)
             throws XMLStreamException, ModelException {
 
-        Script script = readScript(reader, configuration);
+        final Script script = readScript(reader, configuration);
         script.setParent(executable);
         if (parent != null) {
             parent.addAction(script);
@@ -1922,7 +1922,7 @@ public final class SCXMLReader {
                                          final SCXML scxml)
             throws XMLStreamException, ModelException {
 
-        Script globalScript = readScript(reader, configuration);
+        final Script globalScript = readScript(reader, configuration);
         globalScript.setGlobalScript(true);
         scxml.setGlobalScript(globalScript);
     }
@@ -1938,7 +1938,7 @@ public final class SCXMLReader {
     private static Script readScript(final XMLStreamReader reader, final Configuration configuration)
             throws XMLStreamException, ModelException {
 
-        Script script = new Script();
+        final Script script = new Script();
         script.setSrc(readAV(reader, SCXMLConstants.ATTR_SRC));
         if (script.getSrc() != null) {
             String resolvedSrc = script.getSrc();
@@ -1948,7 +1948,7 @@ public final class SCXMLReader {
             try (InputStream in = new URL(resolvedSrc).openStream()){
                 script.setScript(IOUtils.toString(in, "UTF-8"));
             }
-            catch (IOException e) {
+            catch (final IOException e) {
                 throw new ModelException(e);
             }
             skipToEndElement(reader);
@@ -1977,7 +1977,7 @@ public final class SCXMLReader {
 
         // Instantiate custom action
         Object actionObject;
-        String className = customAction.getActionClass().getName();
+        final String className = customAction.getActionClass().getName();
         ClassLoader cl = configuration.customActionClassLoader;
         if (configuration.useContextClassLoaderForCustomActions) {
             cl = Thread.currentThread().getContextClassLoader();
@@ -1989,11 +1989,11 @@ public final class SCXMLReader {
         try {
             clazz = cl.loadClass(className);
             actionObject = clazz.newInstance();
-        } catch (ClassNotFoundException cnfe) {
+        } catch (final ClassNotFoundException cnfe) {
             throw new XMLStreamException("Cannot find custom action class:" + className, cnfe);
-        } catch (IllegalAccessException iae) {
+        } catch (final IllegalAccessException iae) {
             throw new XMLStreamException("Cannot access custom action class:" + className, iae);
-        } catch (InstantiationException ie) {
+        } catch (final InstantiationException ie) {
             throw new XMLStreamException("Cannot instantiate custom action class:" + className, ie);
         }
         if (!(actionObject instanceof Action)) {
@@ -2001,35 +2001,35 @@ public final class SCXMLReader {
         }
 
         // Set the attribute values as properties
-        Action action = (Action) actionObject;
+        final Action action = (Action) actionObject;
 
-        CustomActionWrapper actionWrapper = new CustomActionWrapper();
+        final CustomActionWrapper actionWrapper = new CustomActionWrapper();
         actionWrapper.setAction(action);
         actionWrapper.setPrefix(reader.getPrefix());
         actionWrapper.setLocalName(reader.getLocalName());
-        Map<String, String> namespaces = readNamespaces(reader);
+        final Map<String, String> namespaces = readNamespaces(reader);
         if (namespaces != null) {
             actionWrapper.getNamespaces().putAll(namespaces);
         }
 
-        Map<String, String> attributes = new HashMap<>();
+        final Map<String, String> attributes = new HashMap<>();
         for (int i = 0; i < reader.getAttributeCount(); i++) {
-            String name = reader.getAttributeLocalName(i);
-            String qname = createQualifiedName(reader.getAttributePrefix(i), name);
-            String value = reader.getAttributeValue(i);
+            final String name = reader.getAttributeLocalName(i);
+            final String qname = createQualifiedName(reader.getAttributePrefix(i), name);
+            final String value = reader.getAttributeValue(i);
             attributes.put(qname, value);
-            String setter = "set" + name.substring(0, 1).toUpperCase() + name.substring(1);
+            final String setter = "set" + name.substring(0, 1).toUpperCase() + name.substring(1);
             Method method;
             try {
                 method = clazz.getMethod(setter, String.class);
                 method.invoke(action, value);
-            } catch (NoSuchMethodException nsme) {
+            } catch (final NoSuchMethodException nsme) {
                 logger.warn("No method: " + setter + "(String) found in custom action class: " + className+ " for "
                         + qname + "=\"" + value + "\". Attribute ignored");
-            } catch (InvocationTargetException ite) {
+            } catch (final InvocationTargetException ite) {
                 throw new XMLStreamException("Exception calling method:" + setter + "(String) in custom action class:"
                         + className, ite);
-            } catch (IllegalAccessException iae) {
+            } catch (final IllegalAccessException iae) {
                 throw new XMLStreamException("Cannot access method: " + setter +"(String) in custom action class: "
                         + className, iae);
             }
@@ -2069,11 +2069,11 @@ public final class SCXMLReader {
     private static void readParsedValue(final XMLStreamReader reader, final Configuration configuration,
                                         final ParsedValueContainer valueContainer, final boolean invokeContent)
             throws XMLStreamException, ModelException {
-        Element element = readElement(reader);
+        final Element element = readElement(reader);
         if (element.hasChildNodes()) {
-            NodeList children = element.getChildNodes();
+            final NodeList children = element.getChildNodes();
             Node child = children.item(0);
-            boolean cdata = child.getNodeType() == Node.CDATA_SECTION_NODE;
+            final boolean cdata = child.getNodeType() == Node.CDATA_SECTION_NODE;
             if (invokeContent) {
                 // search or and only use first <scxml> element
                 if (child.getNodeType() != Node.ELEMENT_NODE) {
@@ -2090,7 +2090,7 @@ public final class SCXMLReader {
                         // transform <invoke><content><scxml> back to text
                         try {
                             valueContainer.setParsedValue(new NodeTextValue(ContentParser.DEFAULT_PARSER.toXml(child)));
-                        } catch (IOException e) {
+                        } catch (final IOException e) {
                             throw new XMLStreamException(e);
                         }
                     }
@@ -2101,11 +2101,11 @@ public final class SCXMLReader {
                 }
             }
             else if (children.getLength() == 1 && (cdata || child.getNodeType() == Node.TEXT_NODE )) {
-                String text = ContentParser.trimContent(child.getNodeValue());
+                final String text = ContentParser.trimContent(child.getNodeValue());
                 if (ContentParser.hasJsonSignature(text)) {
                     try {
                         valueContainer.setParsedValue(new JsonValue(configuration.contentParser.parseJson(text), cdata));
-                    } catch (IOException e) {
+                    } catch (final IOException e) {
                         throw new ModelException(e);
                     }
                 }
@@ -2116,7 +2116,7 @@ public final class SCXMLReader {
             } else if (children.getLength() == 1) {
                 valueContainer.setParsedValue(new NodeValue(child));
             } else {
-                ArrayList<Node> nodeList = new ArrayList<>();
+                final ArrayList<Node> nodeList = new ArrayList<>();
                 for (int i = 0, size = children.getLength(); i < size; i++) {
                     nodeList.add(children.item(i));
                 }
@@ -2141,12 +2141,12 @@ public final class SCXMLReader {
         Document document;
         try {
             document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-        } catch (ParserConfigurationException pce) {
+        } catch (final ParserConfigurationException pce) {
             throw new XMLStreamException(ERR_PARSER_CFG);
         }
 
         // This root element will be returned, add any attributes as specified
-        Element root = document.createElementNS(reader.getNamespaceURI(), createQualifiedName(reader.getPrefix(), reader.getLocalName()));
+        final Element root = document.createElementNS(reader.getNamespaceURI(), createQualifiedName(reader.getPrefix(), reader.getLocalName()));
         document.appendChild(root);
 
         boolean children = false, cdata = false;
@@ -2162,10 +2162,10 @@ public final class SCXMLReader {
                         root.setTextContent(null);
                     }
                     children = true;
-                    Element elem = document.createElementNS(reader.getNamespaceURI(),
+                    final Element elem = document.createElementNS(reader.getNamespaceURI(),
                             createQualifiedName(reader.getPrefix(), reader.getLocalName()));
                     for (int i = 0; i < reader.getAttributeCount(); i++) {
-                        Attr attr = document.createAttributeNS(reader.getAttributeNamespace(i),
+                        final Attr attr = document.createAttributeNS(reader.getAttributeNamespace(i),
                                 createQualifiedName(reader.getAttributePrefix(i), reader.getAttributeLocalName(i)));
                         attr.setValue(reader.getAttributeValue(i));
                         elem.setAttributeNodeNS(attr);
@@ -2199,7 +2199,7 @@ public final class SCXMLReader {
             }
         }
         if (!children && root.hasChildNodes() && root.getChildNodes().getLength() > 1) {
-            String text = root.getTextContent().trim();
+            final String text = root.getTextContent().trim();
             if (!cdata) {
                 root.setTextContent(text);
             } else {
@@ -2222,7 +2222,7 @@ public final class SCXMLReader {
     private static String readBody(final XMLStreamReader reader)
             throws XMLStreamException {
 
-        StringBuilder body = new StringBuilder();
+        final StringBuilder body = new StringBuilder();
 
         // Add all body content to StringBuilder
         loop : while (reader.hasNext()) {
@@ -2261,7 +2261,7 @@ public final class SCXMLReader {
      * @param input input string to check if null or empty after trim
      * @return null if input is null or empty after trim()
      */
-    private static String nullIfEmpty(String input) {
+    private static String nullIfEmpty(final String input) {
         return input == null || input.trim().length()==0 ? null : input.trim();
     }
 
@@ -2290,11 +2290,11 @@ public final class SCXMLReader {
     private static Boolean readBooleanAV(final XMLStreamReader reader, final String elementName,
                                          final String attrLocalName)
             throws ModelException {
-        String value = nullIfEmpty(reader.getAttributeValue(XMLNS_DEFAULT, attrLocalName));
-        Boolean result = "true".equals(value) ? Boolean.TRUE : "false".equals(value) ? Boolean.FALSE : null;
+        final String value = nullIfEmpty(reader.getAttributeValue(XMLNS_DEFAULT, attrLocalName));
+        final Boolean result = "true".equals(value) ? Boolean.TRUE : "false".equals(value) ? Boolean.FALSE : null;
         if (result == null && value != null) {
-            MessageFormat msgFormat = new MessageFormat(ERR_ATTRIBUTE_NOT_BOOLEAN);
-            String errMsg = msgFormat.format(new Object[] {value, attrLocalName, elementName, reader.getLocation()});
+            final MessageFormat msgFormat = new MessageFormat(ERR_ATTRIBUTE_NOT_BOOLEAN);
+            final String errMsg = msgFormat.format(new Object[] {value, attrLocalName, elementName, reader.getLocation()});
             throw new ModelException(errMsg);
         }
         return result;
@@ -2312,7 +2312,7 @@ public final class SCXMLReader {
      */
     private static String readRequiredAV(final XMLStreamReader reader, final String elementName, final String attrLocalName)
             throws ModelException {
-        String value = nullIfEmpty(reader.getAttributeValue(XMLNS_DEFAULT, attrLocalName));
+        final String value = nullIfEmpty(reader.getAttributeValue(XMLNS_DEFAULT, attrLocalName));
         if (value == null) {
             reportMissingAttribute(reader.getLocation(), elementName, attrLocalName);
         }
@@ -2327,8 +2327,8 @@ public final class SCXMLReader {
             id = scxml.generateTransitionTargetId();
         }
         else if (id.startsWith(SCXML.GENERATED_TT_ID_PREFIX)) {
-            MessageFormat msgFormat = new MessageFormat(ERR_RESERVED_ID_PREFIX);
-            String errMsg = msgFormat.format(new Object[] {elementName, id, reader.getLocation()});
+            final MessageFormat msgFormat = new MessageFormat(ERR_RESERVED_ID_PREFIX);
+            final String errMsg = msgFormat.format(new Object[] {elementName, id, reader.getLocation()});
             throw new ModelException(errMsg);
         }
         return id;
@@ -2362,8 +2362,8 @@ public final class SCXMLReader {
      */
     private static void reportMissingAttribute(final Location location, final String elementName, final String attrLocalName)
             throws ModelException {
-        MessageFormat msgFormat = new MessageFormat(ERR_REQUIRED_ATTRIBUTE_MISSING);
-        String errMsg = msgFormat.format(new Object[] {elementName, attrLocalName, location});
+        final MessageFormat msgFormat = new MessageFormat(ERR_REQUIRED_ATTRIBUTE_MISSING);
+        final String errMsg = msgFormat.format(new Object[] {elementName, attrLocalName, location});
         throw new ModelException(errMsg);
     }
 
@@ -2385,7 +2385,7 @@ public final class SCXMLReader {
                                              final String parent, final String nsURI, final String name)
             throws XMLStreamException, ModelException {
 
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         sb.append("Ignoring unknown or invalid element <").append(name)
                 .append("> in namespace \"").append(nsURI)
                 .append("\" as child of <").append(parent)
@@ -2396,7 +2396,7 @@ public final class SCXMLReader {
         if (configuration.isStrict()) {
             throw new ModelException(sb.toString());
         }
-        XMLReporter reporter = configuration.reporter;
+        final XMLReporter reporter = configuration.reporter;
         if (reporter != null) {
             reporter.report(sb.toString(), "COMMONS_SCXML", null, reader.getLocation());
         }
@@ -2411,7 +2411,7 @@ public final class SCXMLReader {
     private static void skipToEndElement(final XMLStreamReader reader) throws XMLStreamException {
         int elementsToSkip = 1;
         while (elementsToSkip > 0 && reader.hasNext()) {
-            int next = reader.next();
+            final int next = reader.next();
             if (next == XMLStreamConstants.START_ELEMENT) {
                 elementsToSkip++;
             }
@@ -2439,7 +2439,7 @@ public final class SCXMLReader {
                                                final String element, final String attr, final String value)
             throws XMLStreamException, ModelException {
 
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         sb.append("Ignoring unknown or invalid <").append(element).append("> attribute ").append(attr)
                 .append("=\"").append(value).append("\" at ").append(reader.getLocation());
         if (!configuration.isSilent() && logger.isWarnEnabled()) {
@@ -2448,7 +2448,7 @@ public final class SCXMLReader {
         if (configuration.isStrict()) {
             throw new ModelException(sb.toString());
         }
-        XMLReporter reporter = configuration.reporter;
+        final XMLReporter reporter = configuration.reporter;
         if (reporter != null) {
             reporter.report(sb.toString(), "COMMONS_SCXML", null, reader.getLocation());
         }
@@ -2472,7 +2472,7 @@ public final class SCXMLReader {
                                              final String element, final String attr, final String conflictingAttr)
             throws XMLStreamException, ModelException {
 
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         sb.append("Ignoring <").append(element).append("> attribute \"").append(conflictingAttr)
                 .append("\" which conflicts with already defined attribute \"").append(attr)
                 .append("\" at ").append(reader.getLocation());
@@ -2482,7 +2482,7 @@ public final class SCXMLReader {
         if (configuration.isStrict()) {
             throw new ModelException(sb.toString());
         }
-        XMLReporter reporter = configuration.reporter;
+        final XMLReporter reporter = configuration.reporter;
         if (reporter != null) {
             reporter.report(sb.toString(), "COMMONS_SCXML", null, reader.getLocation());
         }
@@ -2518,7 +2518,7 @@ public final class SCXMLReader {
         if (factory.isPropertySupported(XMLInputFactory_JDK_PROP_REPORT_CDATA)) {
             factory.setProperty(XMLInputFactory_JDK_PROP_REPORT_CDATA, Boolean.TRUE);
         }
-        for (Map.Entry<String, Object> property : configuration.properties.entrySet()) {
+        for (final Map.Entry<String, Object> property : configuration.properties.entrySet()) {
             if (factory.isPropertySupported(property.getKey())) {
                 factory.setProperty(property.getKey(), property.getValue());
             }
@@ -2529,8 +2529,8 @@ public final class SCXMLReader {
         // Consolidate InputStream options
         InputStream urlStream = null;
         if (url != null || path != null) {
-            URL scxml = (url != null ? url : new URL(path));
-            URLConnection conn = scxml.openConnection();
+            final URL scxml = (url != null ? url : new URL(path));
+            final URLConnection conn = scxml.openConnection();
             conn.setUseCaches(false);
             urlStream = conn.getInputStream();
         } else if (stream != null) {
@@ -2543,16 +2543,16 @@ public final class SCXMLReader {
         if (configuration.validate) {
             // Validation requires us to use a Source
 
-            URL scxmlSchema = new URL("TODO"); // TODO, point to appropriate location
-            SchemaFactory schemaFactory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
+            final URL scxmlSchema = new URL("TODO"); // TODO, point to appropriate location
+            final SchemaFactory schemaFactory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
             Schema schema;
             try {
                 schema = schemaFactory.newSchema(scxmlSchema);
-            } catch (SAXException se) {
+            } catch (final SAXException se) {
                 throw new XMLStreamException("Failed to create SCXML Schema for validation", se);
             }
 
-            Validator validator = schema.newValidator();
+            final Validator validator = schema.newValidator();
             validator.setErrorHandler(new SimpleErrorHandler());
 
             Source src = null;
@@ -2575,7 +2575,7 @@ public final class SCXMLReader {
             xsr = factory.createXMLStreamReader(src);
             try {
                 validator.validate(src);
-            } catch (SAXException se) {
+            } catch (final SAXException se) {
                 throw new XMLStreamException("Failed to create apply SCXML Validator", se);
             }
 
@@ -2915,7 +2915,7 @@ public final class SCXMLReader {
          * @param silent silent mode (whether to read models silently without any model error warning logs)
          * @see #silent
          */
-        public void setSilent(boolean silent) {
+        public void setSilent(final boolean silent) {
             this.silent = silent;
         }
 
@@ -2933,7 +2933,7 @@ public final class SCXMLReader {
          * @param strict strict model (whether to check model strictly with throwing exception on any model error)
          * @see #strict
          */
-        public void setStrict(boolean strict) {
+        public void setStrict(final boolean strict) {
             this.strict = strict;
         }
     }

@@ -26,28 +26,28 @@ public class GroovyContextTest {
 
     @Test
     public void testNew() {
-        GroovyContext ctx = new GroovyContext();
+        final GroovyContext ctx = new GroovyContext();
         Assertions.assertNotNull(ctx);
     }
     
     @Test
     public void testPrepopulated() {
-        Map<String, Object> m = new HashMap<>();
+        final Map<String, Object> m = new HashMap<>();
         m.put("foo", "bar");
-        GroovyContext ctx = new GroovyContext(null, m, null);
+        final GroovyContext ctx = new GroovyContext(null, m, null);
         Assertions.assertNotNull(ctx);
         Assertions.assertEquals(1, ctx.getVars().size());
-        String fooValue = (String) ctx.get("foo");
+        final String fooValue = (String) ctx.get("foo");
         Assertions.assertEquals("bar", fooValue);
     }
     
     @Test
     public void testSetVars() {
-        GroovyContext ctx = new GroovyContext();
+        final GroovyContext ctx = new GroovyContext();
         Assertions.assertNotNull(ctx);
         ctx.set("foo", "bar");
         Assertions.assertEquals(1, ctx.getVars().size());
-        String fooValue = (String) ctx.get("foo");
+        final String fooValue = (String) ctx.get("foo");
         Assertions.assertEquals("bar", fooValue);
     }
 

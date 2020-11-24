@@ -41,7 +41,7 @@ public class SCInstanceTest {
     
     @Test
     public void testGetRootContext() {
-        Context context = new SimpleContext();
+        final Context context = new SimpleContext();
         context.set("name", "value");
         
         instance.setRootContext(context);
@@ -50,10 +50,10 @@ public class SCInstanceTest {
     
     @Test
     public void testGetContext() {
-        State target = new State();
+        final State target = new State();
         target.setId("1");
         
-        Context context = new SimpleContext();
+        final Context context = new SimpleContext();
         context.set("name", "value");
         
         instance.setContext(target, context);
@@ -63,14 +63,14 @@ public class SCInstanceTest {
     
     @Test
     public void testGetContextNullParent() throws Exception {
-        State target = new State();
+        final State target = new State();
         target.setId("1");
 
-        Context context = new SimpleContext();
+        final Context context = new SimpleContext();
         context.set("name", "value");
         instance.setRootContext(context);
 
-        Evaluator evaluator = new JexlEvaluator();
+        final Evaluator evaluator = new JexlEvaluator();
         executor.setEvaluator(evaluator);
 
         Assertions.assertEquals("value", instance.getContext(target).get("name"));
@@ -79,19 +79,19 @@ public class SCInstanceTest {
 
     @Test
     public void testGetContextParent() throws Exception {
-        State target = new State();
+        final State target = new State();
         target.setId("1");
         
-        State parent = new State();
+        final State parent = new State();
         parent.setId("parent");
         
         target.setParent(parent);
 
-        Context context = new SimpleContext();
+        final Context context = new SimpleContext();
         context.set("name", "value");
         instance.setRootContext(context);
 
-        Evaluator evaluator = new JexlEvaluator();
+        final Evaluator evaluator = new JexlEvaluator();
         executor.setEvaluator(evaluator);
 
         Assertions.assertEquals("value", instance.getContext(target).get("name"));
@@ -100,27 +100,27 @@ public class SCInstanceTest {
 
     @Test
     public void testGetLastConfigurationNull() {
-        History history = new History();
+        final History history = new History();
         
-        Set<EnterableState> returnConfiguration = instance.getLastConfiguration(history);
+        final Set<EnterableState> returnConfiguration = instance.getLastConfiguration(history);
         
         Assertions.assertEquals(0, returnConfiguration.size());
     }
 
     @Test
     public void testGetLastConfiguration() {
-        History history = new History();
+        final History history = new History();
         history.setId("1");
         
-        Set<EnterableState> configuration = new HashSet<>();
-        EnterableState tt1 = new State();
-        EnterableState tt2 = new State();
+        final Set<EnterableState> configuration = new HashSet<>();
+        final EnterableState tt1 = new State();
+        final EnterableState tt2 = new State();
         configuration.add(tt1);
         configuration.add(tt2);
         
         instance.setLastConfiguration(history, configuration);  
         
-        Set<EnterableState> returnConfiguration = instance.getLastConfiguration(history);
+        final Set<EnterableState> returnConfiguration = instance.getLastConfiguration(history);
         
         Assertions.assertEquals(2, returnConfiguration.size());
         Assertions.assertTrue(returnConfiguration.contains(tt1));
@@ -134,11 +134,11 @@ public class SCInstanceTest {
     
     @Test
     public void testIsEmptyFalse() {
-        History history = new History();
+        final History history = new History();
         history.setId("1");
         
-        Set<EnterableState> configuration = new HashSet<>();
-        EnterableState tt1 = new State();
+        final Set<EnterableState> configuration = new HashSet<>();
+        final EnterableState tt1 = new State();
         configuration.add(tt1);
         
         instance.setLastConfiguration(history, configuration);  
@@ -148,11 +148,11 @@ public class SCInstanceTest {
     
     @Test
     public void testReset() {
-        History history = new History();
+        final History history = new History();
         history.setId("1");
 
-        Set<EnterableState> configuration = new HashSet<>();
-        EnterableState tt1 = new State();
+        final Set<EnterableState> configuration = new HashSet<>();
+        final EnterableState tt1 = new State();
         configuration.add(tt1);
         
         instance.setLastConfiguration(history, configuration);  

@@ -58,7 +58,7 @@ public class URLResolver implements PathResolver, Serializable {
         try {
             combined = new URL(baseURL, ctxPath);
             return combined.toString();
-        } catch (MalformedURLException e) {
+        } catch (final MalformedURLException e) {
             log.error("Malformed URL", e);
         }
         return null;
@@ -72,7 +72,7 @@ public class URLResolver implements PathResolver, Serializable {
         try {
             combined = new URL(baseURL, ctxPath);
             return new URLResolver(combined);
-        } catch (MalformedURLException e) {
+        } catch (final MalformedURLException e) {
             log.error("Malformed URL", e);
         }
         return null;

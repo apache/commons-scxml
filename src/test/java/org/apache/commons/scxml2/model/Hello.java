@@ -49,17 +49,17 @@ public class Hello extends Action {
      *
      * @param name The name to set.
      */
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
     @Override
-    public void execute(ActionExecutionContext exctx) {
+    public void execute(final ActionExecutionContext exctx) {
         if (exctx.getAppLog().isInfoEnabled()) {
             exctx.getAppLog().info("Hello " + name);
         }
         // For derived events payload testing
-        TriggerEvent event = new EventBuilder("helloevent", TriggerEvent.SIGNAL_EVENT).data(name).build();
+        final TriggerEvent event = new EventBuilder("helloevent", TriggerEvent.SIGNAL_EVENT).data(name).build();
         exctx.getInternalIOProcessor().addEvent(event);
         callbacks++;
     }

@@ -154,7 +154,7 @@ public class SCXML implements Serializable, Observable {
         return globalScript;
     }
 
-    public final void setGlobalScript(Script script) {
+    public final void setGlobalScript(final Script script) {
         this.globalScript = script;
     }
 
@@ -353,7 +353,7 @@ public class SCXML implements Serializable, Observable {
 	 *
 	 * @param name The name for this state machine.
 	 */
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 
@@ -371,7 +371,7 @@ public class SCXML implements Serializable, Observable {
 	 *
 	 * @param profile The profile to be used.
 	 */
-	public void setProfile(String profile) {
+	public void setProfile(final String profile) {
 		this.profile = profile;
 	}
 
@@ -389,7 +389,7 @@ public class SCXML implements Serializable, Observable {
 	 *
 	 * @param exmode The exmode to be used.
 	 */
-	public void setExmode(String exmode) {
+	public void setExmode(final String exmode) {
 		this.exmode = exmode;
 	}
 

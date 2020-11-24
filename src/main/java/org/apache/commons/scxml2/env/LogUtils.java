@@ -35,7 +35,7 @@ public final class LogUtils {
      * @return String The human readable log entry
      */
     public static String transToString(final TransitionTarget from,
-            final TransitionTarget to, final Transition transition, String event) {
+            final TransitionTarget to, final Transition transition, final String event) {
         return "(" + "event = " + event +
                 ", cond = " + transition.getCond() +
                 ", from = " + getTTPath(from) +
@@ -51,7 +51,7 @@ public final class LogUtils {
      *                the SCXML document
      */
     public static String getTTPath(final TransitionTarget tt) {
-        StringBuilder sb = new StringBuilder("/");
+        final StringBuilder sb = new StringBuilder("/");
         for (int i = 0; i < tt.getNumberOfAncestors(); i++) {
             sb.append(tt.getAncestor(i).getId());
             sb.append("/");

@@ -167,7 +167,7 @@ public class TriggerEvent implements Serializable {
     @Override
     public boolean equals(final Object obj) {
         if (obj instanceof TriggerEvent) {
-            TriggerEvent te2 = (TriggerEvent) obj;
+            final TriggerEvent te2 = (TriggerEvent) obj;
             if (type == te2.type && name.equals(te2.name) &&
                     equals(sendId, te2.sendId) &&
                     equals(origin, te2.origin) &&
@@ -187,7 +187,7 @@ public class TriggerEvent implements Serializable {
      */
     @Override
     public String toString() {
-        StringBuilder buf = new StringBuilder("TriggerEvent{name=");
+        final StringBuilder buf = new StringBuilder("TriggerEvent{name=");
         buf.append(name).append(", type=").append(type);
         if (sendId != null) {
             buf.append(", sendid=").append(invokeId);

@@ -25,14 +25,14 @@ public class ParallelTest {
 
     @Test
     public void testParallel01() throws Exception {
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/parallel-01.xml");
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/parallel-01.xml");
         exec.go();
         SCXMLTestHelper.assertPostTriggerState(exec, "foo", "end");
     }
     
     @Test
     public void testParallel02() throws Exception {
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/parallel-02.xml");
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/parallel-02.xml");
         exec.go();
         SCXMLTestHelper.assertPostTriggerStates(exec, "dummy.event", new String[] { "state01", "state02" });
         SCXMLTestHelper.assertPostTriggerState(exec, "event1", "state1");
@@ -40,7 +40,7 @@ public class ParallelTest {
     
     @Test
     public void testParallel03() throws Exception {
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/parallel-03.xml");
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/parallel-03.xml");
         exec.go();
         SCXMLTestHelper.assertPostTriggerStates(exec, "dummy.event", new String[] { "para11", "para21" });
         Object count = exec.getEvaluator().eval(exec.getGlobalContext(),"root.root.count");

@@ -135,10 +135,10 @@ public class Assign extends Action implements ParsedValueContainer {
      * {@inheritDoc}
      */
     @Override
-    public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
-        EnterableState parentState = getParentEnterableState();
-        Context ctx = exctx.getContext(parentState);
-        Evaluator evaluator = exctx.getEvaluator();
+    public void execute(final ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
+        final EnterableState parentState = getParentEnterableState();
+        final Context ctx = exctx.getContext(parentState);
+        final Evaluator evaluator = exctx.getEvaluator();
         Object data = null;
         if (expr != null) {
             data = evaluator.eval(ctx, expr);

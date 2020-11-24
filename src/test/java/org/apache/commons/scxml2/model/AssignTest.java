@@ -29,9 +29,9 @@ public class AssignTest {
 
     @Test
     public void testAssignSrc() throws Exception {
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/assign-test-01.xml");
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/assign-test-01.xml");
         exec.go();
-        Set<EnterableState> currentStates = exec.getStatus().getStates();
+        final Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assertions.assertEquals(1, currentStates.size());
         Assertions.assertEquals("assign3", currentStates.iterator().next().getId());
         Assertions.assertTrue(exec.getStatus().isFinal());
@@ -39,9 +39,9 @@ public class AssignTest {
     
     @Test
     public void testAssignDeep() throws Exception {
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/assign-test-02.xml");
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/assign-test-02.xml");
         exec.go();
-        Set<EnterableState> currentStates = exec.getStatus().getStates();
+        final Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assertions.assertEquals(1, currentStates.size());
         Assertions.assertEquals("assign3", currentStates.iterator().next().getId());
         Assertions.assertTrue(exec.getStatus().isFinal());

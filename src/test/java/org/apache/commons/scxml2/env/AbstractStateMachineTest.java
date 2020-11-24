@@ -29,11 +29,11 @@ public class AbstractStateMachineTest {
 
     @Test
     public void testMoreThanOneScxmlDocument() throws Exception {
-        URL fooScxmlDocument = getClass().getResource("foo.xml");
-        URL barScxmlDocument = getClass().getResource("bar.xml");
+        final URL fooScxmlDocument = getClass().getResource("foo.xml");
+        final URL barScxmlDocument = getClass().getResource("bar.xml");
 
-        Foo f = new Foo(fooScxmlDocument);
-        Bar b = new Bar(barScxmlDocument);
+        final Foo f = new Foo(fooScxmlDocument);
+        final Bar b = new Bar(barScxmlDocument);
 
         Assertions.assertTrue(f.fooCalled());
         Assertions.assertTrue(b.barCalled());

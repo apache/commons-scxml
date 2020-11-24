@@ -66,7 +66,7 @@ public class EvaluatorFactory {
         providers.put(DEFAULT_DATA_MODEL, providers.get(JexlEvaluator.SUPPORTED_DATA_MODEL));
     }
 
-    public static void setDefaultProvider(EvaluatorProvider defaultProvider) {
+    public static void setDefaultProvider(final EvaluatorProvider defaultProvider) {
         INSTANCE.providers.put(DEFAULT_DATA_MODEL, defaultProvider);
     }
 
@@ -76,17 +76,17 @@ public class EvaluatorFactory {
     }
 
     @SuppressWarnings("unused")
-    public static EvaluatorProvider getEvaluatorProvider(String datamodelName) {
+    public static EvaluatorProvider getEvaluatorProvider(final String datamodelName) {
         return INSTANCE.providers.get(datamodelName == null ? DEFAULT_DATA_MODEL : datamodelName);
     }
 
     @SuppressWarnings("unused")
-    public static void registerEvaluatorProvider(EvaluatorProvider provider) {
+    public static void registerEvaluatorProvider(final EvaluatorProvider provider) {
         INSTANCE.providers.put(provider.getSupportedDatamodel(), provider);
     }
 
     @SuppressWarnings("unused")
-    public static void unregisterEvaluatorProvider(String datamodelName) {
+    public static void unregisterEvaluatorProvider(final String datamodelName) {
         INSTANCE.providers.remove(datamodelName == null ? DEFAULT_DATA_MODEL : datamodelName);
     }
 
@@ -98,8 +98,8 @@ public class EvaluatorFactory {
      * @throws ModelException If the SCXML document datamodel is not supported.
      */
     public static Evaluator getEvaluator(final SCXML document) throws ModelException {
-        String datamodelName = document != null ? document.getDatamodelName() : null;
-        EvaluatorProvider provider = INSTANCE.providers.get(datamodelName == null ? DEFAULT_DATA_MODEL : datamodelName);
+        final String datamodelName = document != null ? document.getDatamodelName() : null;
+        final EvaluatorProvider provider = INSTANCE.providers.get(datamodelName == null ? DEFAULT_DATA_MODEL : datamodelName);
         if (provider == null) {
             throw new ModelException("Unsupported SCXML document datamodel \""+(datamodelName)+"\"");
         }

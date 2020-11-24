@@ -160,11 +160,11 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
      * @see SCInstance#initialize()
      * @see SCXMLSemantics#isLegalConfiguration(java.util.Set, ErrorReporter)
      */
-    public synchronized void setConfiguration(Set<String> atomicStateIds) throws ModelException {
+    public synchronized void setConfiguration(final Set<String> atomicStateIds) throws ModelException {
         semantics.initialize(exctx, Collections.emptyMap());
-        Set<EnterableState> states = new HashSet<>();
-        for (String stateId : atomicStateIds) {
-            TransitionTarget tt = getStateMachine().getTargets().get(stateId);
+        final Set<EnterableState> states = new HashSet<>();
+        for (final String stateId : atomicStateIds) {
+            final TransitionTarget tt = getStateMachine().getTargets().get(stateId);
             if (tt instanceof EnterableState && ((EnterableState)tt).isAtomicState()) {
                 EnterableState es = (EnterableState)tt;
                 while (es != null && !states.add(es)) {
@@ -176,7 +176,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
             }
         }
         if (semantics.isLegalConfiguration(states, getErrorReporter())) {
-            for (EnterableState es : states) {
+            for (final EnterableState es : states) {
                 exctx.getScInstance().getStateConfiguration().enterState(es);
             }
             logState();
@@ -246,7 +246,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
         exctx.getScInstance().setRootContext(rootContext);
     }
 
-    public void setSingleContext(boolean singleContext) throws ModelException {
+    public void setSingleContext(final boolean singleContext) throws ModelException {
         getSCInstance().setSingleContext(singleContext);
     }
 
@@ -327,7 +327,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
      * Set if the SCXML configuration should be checked before execution (default = true)
      * @param checkLegalConfiguration flag to set
      */
-    public void setCheckLegalConfiguration(boolean checkLegalConfiguration) {
+    public void setCheckLegalConfiguration(final boolean checkLegalConfiguration) {
         this.exctx.setCheckLegalConfiguration(checkLegalConfiguration);
     }
 
@@ -410,7 +410,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
      * </p>
      * @param instance An previously detached SCInstance
      */
-    public void attachInstance(SCInstance instance) {
+    public void attachInstance(final SCInstance instance) {
         exctx.attachInstance(instance);
     }
 
@@ -458,12 +458,12 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
 
     public Thread run(final Map<String, Object> data) throws ModelException {
         go(data);
-        Thread t = new Thread(() -> {
+        final Thread t = new Thread(() -> {
             try {
                 while (exctx.isRunning()) {
                     triggerEvents();
                 }
-            } catch (ModelException ignored) {
+            } catch (final ModelException ignored) {
             }
         });
         t.start();
@@ -525,7 +525,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     public void triggerEvents(final TriggerEvent[] evts)
             throws ModelException {
         if (evts != null) {
-            for (TriggerEvent evt : evts) {
+            for (final TriggerEvent evt : evts) {
                 addEvent(evt);
             }
         }
@@ -543,7 +543,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
         }
     }
 
-    protected void eventStep(TriggerEvent event) throws ModelException {
+    protected void eventStep(final TriggerEvent event) throws ModelException {
         semantics.nextStep(exctx, event);
         logState();
     }
@@ -562,11 +562,11 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
      */
     protected void logState() {
         if (log.isDebugEnabled()) {
-            StringBuilder sb = new StringBuilder("Current States: [ ");
-            for (EnterableState es : getStatus().getStates()) {
+            final StringBuilder sb = new StringBuilder("Current States: [ ");
+            for (final EnterableState es : getStatus().getStates()) {
                 sb.append(es.getId()).append(", ");
             }
-            int length = sb.length();
+            final int length = sb.length();
             sb.delete(length - 2, length).append(" ]");
             log.debug(sb.toString());
         }

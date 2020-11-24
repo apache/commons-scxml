@@ -79,7 +79,7 @@ public class SCXMLSystemContext implements Context, Serializable {
      * @param systemContext the system context to set
      * @throws java.lang.NullPointerException if systemContext == null
      */
-    void setSystemContext(Context systemContext) {
+    void setSystemContext(final Context systemContext) {
         if (this.systemContext != null) {
             // replace systemContext
             systemContext.getVars().putAll(this.systemContext.getVars());
@@ -97,7 +97,7 @@ public class SCXMLSystemContext implements Context, Serializable {
      */
     private Map<String, Object> protectedVars;
 
-    public SCXMLSystemContext(Context systemContext) {
+    public SCXMLSystemContext(final Context systemContext) {
         setSystemContext(systemContext);
     }
 

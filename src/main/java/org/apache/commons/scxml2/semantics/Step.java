@@ -73,7 +73,7 @@ public class Step {
     /**
      * @param event The event received in this unit of progression
      */
-    public Step(TriggerEvent event) {
+    public Step(final TriggerEvent event) {
         this.event = event;
         this.exitSet = new HashSet<>();
         this.entrySet = new HashSet<>();

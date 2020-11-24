@@ -30,12 +30,12 @@ public class GroovyClosureTest {
 
     @Test
     public void testGroovyClosure() throws Exception {
-        URL groovyClosure = SCXMLTestHelper.getResource("org/apache/commons/scxml2/env/groovy/groovy-closure.xml");
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor(groovyClosure, new GroovyEvaluator(true));
+        final URL groovyClosure = SCXMLTestHelper.getResource("org/apache/commons/scxml2/env/groovy/groovy-closure.xml");
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor(groovyClosure, new GroovyEvaluator(true));
         exec.go();
-        Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "turn_on");
+        final Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "turn_on");
         Assertions.assertEquals(2, currentStates.size());
-        String id = currentStates.iterator().next().getId();
+        final String id = currentStates.iterator().next().getId();
         Assertions.assertTrue(id.equals("closed") || id.equals("cooking"));
     }
 }

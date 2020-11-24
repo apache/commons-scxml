@@ -39,35 +39,35 @@ public class InvokeTest {
      */    
     @Test
     public void testInvoke01Sample() throws Exception {
-        SCXML scxml = SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/invoke/invoker-01.xml"));
-        SCXMLExecutor exec = new SCXMLExecutor(null, new SimpleDispatcher(), new SimpleErrorReporter());
+        final SCXML scxml = SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/invoke/invoker-01.xml"));
+        final SCXMLExecutor exec = new SCXMLExecutor(null, new SimpleDispatcher(), new SimpleErrorReporter());
         exec.setStateMachine(scxml);
         exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
         exec.go();
-        Set<EnterableState> currentStates = exec.getStatus().getStates();
+        final Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assertions.assertEquals(1, currentStates.size());
         Assertions.assertEquals("invoker", currentStates.iterator().next().getId());
     }
     
     @Test
     public void testInvoke02Sample() throws Exception {
-        SCXML scxml = SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/invoke/invoker-02.xml"));
-        SCXMLExecutor exec = new SCXMLExecutor(null, new SimpleDispatcher(), new SimpleErrorReporter());
+        final SCXML scxml = SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/invoke/invoker-02.xml"));
+        final SCXMLExecutor exec = new SCXMLExecutor(null, new SimpleDispatcher(), new SimpleErrorReporter());
         exec.setStateMachine(scxml);
         exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
         exec.go();
-        Set<EnterableState> currentStates = exec.getStatus().getStates();
+        final Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assertions.assertEquals(1, currentStates.size());
     }
     
     @Test
     public void testInvoke03Sample() throws Exception {
-        SCXML scxml = SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/invoke/invoker-03.xml"));
-        SCXMLExecutor exec = new SCXMLExecutor(null, new SimpleDispatcher(), new SimpleErrorReporter());
+        final SCXML scxml = SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/invoke/invoker-03.xml"));
+        final SCXMLExecutor exec = new SCXMLExecutor(null, new SimpleDispatcher(), new SimpleErrorReporter());
         exec.setStateMachine(scxml);
         exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
         exec.go();
-        Set<EnterableState> currentStates = exec.getStatus().getStates();
+        final Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assertions.assertEquals(1, currentStates.size());
         SCXMLTestHelper.fireEvent(exec, "s1.next");
         SCXMLTestHelper.fireEvent(exec, "state1.next");
@@ -75,8 +75,8 @@ public class InvokeTest {
 
     @Test
     public void testExecuteInvokeAfterAllInternalEventsAreProcessed() throws Exception {
-        SCXML scxml = SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/invoke/invoker-05.xml"));
-        SCXMLExecutor exec = new SCXMLExecutor(null, new SimpleDispatcher(), new SimpleErrorReporter());
+        final SCXML scxml = SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/invoke/invoker-05.xml"));
+        final SCXMLExecutor exec = new SCXMLExecutor(null, new SimpleDispatcher(), new SimpleErrorReporter());
         exec.setStateMachine(scxml);
         exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
         exec.go();

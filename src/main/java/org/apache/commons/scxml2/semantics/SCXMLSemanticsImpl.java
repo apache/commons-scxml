@@ -115,8 +115,8 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
         // execute global script if defined
         executeGlobalScript(exctx);
         // enter initial states
-        HashSet<TransitionalState> statesToInvoke = new HashSet<>();
-        Step step = new Step(null);
+        final HashSet<TransitionalState> statesToInvoke = new HashSet<>();
+        final Step step = new Step(null);
         step.getTransitList().add(exctx.getStateMachine().getInitialTransition());
         microStep(exctx, step, statesToInvoke);
         // Execute Immediate Transitions
@@ -166,10 +166,10 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
         else {
             setSystemEventVariable(exctx.getScInstance(), event, false);
             processInvokes(exctx, event);
-            Step step = new Step(event);
+            final Step step = new Step(event);
             selectTransitions(exctx, step);
             if (!step.getTransitList().isEmpty()) {
-                HashSet<TransitionalState> statesToInvoke = new HashSet<>();
+                final HashSet<TransitionalState> statesToInvoke = new HashSet<>();
                 microStep(exctx, step, statesToInvoke);
                 if (exctx.isRunning()) {
                     macroStep(exctx, statesToInvoke);
@@ -197,29 +197,29 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * @param exctx The execution context for this step
      * @throws ModelException if a SCXML model error occurred during the execution.
      */
-    public void finalStep(SCXMLExecutionContext exctx) throws ModelException {
+    public void finalStep(final SCXMLExecutionContext exctx) throws ModelException {
         if (exctx.isRunning()) {
             return;
         }
-        ArrayList<EnterableState> configuration = new ArrayList<>(exctx.getScInstance().getStateConfiguration().getActiveStates());
+        final ArrayList<EnterableState> configuration = new ArrayList<>(exctx.getScInstance().getStateConfiguration().getActiveStates());
         configuration.sort(DocumentOrder.reverseDocumentOrderComparator);
-        for (EnterableState es : configuration) {
-            for (OnExit onexit : es.getOnExits()) {
+        for (final EnterableState es : configuration) {
+            for (final OnExit onexit : es.getOnExits()) {
                 executeContent(exctx, onexit);
             }
             if (es instanceof TransitionalState) {
                 // check if invokers are active in this state
-                for (Invoke inv : ((TransitionalState)es).getInvokes()) {
+                for (final Invoke inv : ((TransitionalState)es).getInvokes()) {
                     exctx.cancelInvoker(inv);
                 }
             }
             exctx.getNotificationRegistry().fireOnExit(es, es);
             exctx.getNotificationRegistry().fireOnExit(exctx.getStateMachine(), es);
             if (es instanceof Final && es.getParent() == null) {
-                Object donedata = ((Final)es).processDoneData(exctx);
+                final Object donedata = ((Final)es).processDoneData(exctx);
                 exctx.getScInstance().getGlobalContext().getSystemContext().getPlatformVariables().put(SCXMLSystemContext.FINAL_DONE_DATA_KEY, donedata);
                 if (exctx.getSCXMLExecutor().getParentSCXMLIOProcessor() != null) {
-                    ParentSCXMLIOProcessor ioProcessor = exctx.getSCXMLExecutor().getParentSCXMLIOProcessor();
+                    final ParentSCXMLIOProcessor ioProcessor = exctx.getSCXMLExecutor().getParentSCXMLIOProcessor();
                     if (!ioProcessor.isClosed()) {
                         ioProcessor.addEvent(
                                 new EventBuilder("done.invoke."+ioProcessor.getInvokeId(), TriggerEvent.SIGNAL_EVENT)
@@ -306,7 +306,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                 Step step = new Step(null);
                 selectTransitions(exctx, step);
                 if (step.getTransitList().isEmpty()) {
-                    TriggerEvent event = exctx.nextInternalEvent();
+                    final TriggerEvent event = exctx.nextInternalEvent();
                     if (event != null) {
                         if (isCancelEvent(event)) {
                             exctx.stop();
@@ -342,7 +342,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      */
     public void computeExitSet(final Step step, final StateConfiguration stateConfiguration) {
         if (!stateConfiguration.getActiveStates().isEmpty()) {
-            for (SimpleTransition st : step.getTransitList()) {
+            for (final SimpleTransition st : step.getTransitList()) {
                 computeExitSet(st, step.getExitSet(), stateConfiguration.getActiveStates());
             }
             recordHistory(step, stateConfiguration.getStates(), stateConfiguration.getActiveStates());
@@ -358,15 +358,15 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * @param exitSet The set for adding the states to exit to
      * @param activeStates The current active states of the state machine ({@link StateConfiguration#getActiveStates()}).
      */
-    public void computeExitSet(SimpleTransition transition, Set<EnterableState> exitSet, Set<EnterableState> activeStates) {
+    public void computeExitSet(final SimpleTransition transition, final Set<EnterableState> exitSet, final Set<EnterableState> activeStates) {
         if (!transition.getTargets().isEmpty()) {
-            TransitionalState transitionDomain = transition.getTransitionDomain();
+            final TransitionalState transitionDomain = transition.getTransitionDomain();
             if (transitionDomain == null) {
                 // root transition: every active state will be exited
                 exitSet.addAll(activeStates);
             }
             else {
-                for (EnterableState state : activeStates) {
+                for (final EnterableState state : activeStates) {
                     if (state.isDescendantOf(transitionDomain)) {
                         exitSet.add(state);
                     }
@@ -391,17 +391,17 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * @param activeStates The current set of all active states in the state machine
      */
     public void recordHistory(final Step step, final Set<EnterableState> atomicStates, final Set<EnterableState> activeStates) {
-        for (EnterableState es : step.getExitSet()) {
+        for (final EnterableState es : step.getExitSet()) {
             if (es instanceof TransitionalState && ((TransitionalState)es).hasHistory()) {
-                TransitionalState ts = (TransitionalState)es;
+                final TransitionalState ts = (TransitionalState)es;
                 Set<EnterableState> shallow = null;
                 Set<EnterableState> deep = null;
-                for (History h : ts.getHistory()) {
+                for (final History h : ts.getHistory()) {
                     if (h.isDeep()) {
                         if (deep == null) {
                             //calculate deep history for a given state once
                             deep = new HashSet<>();
-                            for (EnterableState ott : atomicStates) {
+                            for (final EnterableState ott : atomicStates) {
                                 if (ott.isDescendantOf(es)) {
                                     deep.add(ott);
                                 }
@@ -430,10 +430,10 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * @param step The step containing the list of transitions to be taken
      */
     public void computeEntrySet(final SCXMLExecutionContext exctx, final Step step) {
-        Set<History> historyTargets = new HashSet<>();
-        Set<EnterableState> entrySet = new HashSet<>();
-        for (SimpleTransition st : step.getTransitList()) {
-            for (TransitionTarget tt : st.getTargets()) {
+        final Set<History> historyTargets = new HashSet<>();
+        final Set<EnterableState> entrySet = new HashSet<>();
+        for (final SimpleTransition st : step.getTransitList()) {
+            for (final TransitionTarget tt : st.getTargets()) {
                 if (tt instanceof EnterableState) {
                     entrySet.add((EnterableState) tt);
                 }
@@ -443,15 +443,15 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                 }
             }
         }
-        for (EnterableState es : entrySet) {
+        for (final EnterableState es : entrySet) {
             addDescendantStatesToEnter(exctx, step, es);
         }
-        for (History h : historyTargets) {
+        for (final History h : historyTargets) {
             addDescendantStatesToEnter(exctx, step, h);
         }
-        for (SimpleTransition st : step.getTransitList()) {
-            TransitionalState ancestor = st.getTransitionDomain();
-            for (TransitionTarget tt : st.getTargets()) {
+        for (final SimpleTransition st : step.getTransitList()) {
+            final TransitionalState ancestor = st.getTransitionDomain();
+            for (final TransitionTarget tt : st.getTargets()) {
                 addAncestorStatesToEnter(exctx, step, tt, ancestor);
             }
         }
@@ -467,33 +467,33 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
     public void addDescendantStatesToEnter(final SCXMLExecutionContext exctx, final Step step,
                                               final TransitionTarget tt) {
         if (tt instanceof History) {
-            History h = (History) tt;
+            final History h = (History) tt;
             Set<EnterableState> lastConfiguration = step.getNewHistoryConfigurations().get(h);
             if (lastConfiguration == null) {
                 lastConfiguration = exctx.getScInstance().getLastConfiguration(h);
             }
             if (lastConfiguration.isEmpty()) {
                 step.getDefaultHistoryTransitions().put(h.getParent(), h.getTransition());
-                for (TransitionTarget dtt : h.getTransition().getTargets()) {
+                for (final TransitionTarget dtt : h.getTransition().getTargets()) {
                     addDescendantStatesToEnter(exctx, step, dtt);
                 }
-                for (TransitionTarget dtt : h.getTransition().getTargets()) {
+                for (final TransitionTarget dtt : h.getTransition().getTargets()) {
                     addAncestorStatesToEnter(exctx, step, dtt, tt.getParent());
                 }
             } else {
-                for (TransitionTarget dtt : lastConfiguration) {
+                for (final TransitionTarget dtt : lastConfiguration) {
                     addDescendantStatesToEnter(exctx, step, dtt);
                 }
-                for (TransitionTarget dtt : lastConfiguration) {
+                for (final TransitionTarget dtt : lastConfiguration) {
                     addAncestorStatesToEnter(exctx, step, dtt, tt.getParent());
                 }
             }
         }
         else { // tt instanceof EnterableState
-            EnterableState es = (EnterableState)tt;
+            final EnterableState es = (EnterableState)tt;
             step.getEntrySet().add(es);
             if (es instanceof Parallel) {
-                for (EnterableState child : ((Parallel)es).getChildren()) {
+                for (final EnterableState child : ((Parallel)es).getChildren()) {
                     if (containsNoDescendant(step.getEntrySet(), child)) {
                         addDescendantStatesToEnter(exctx, step, child);
                     }
@@ -501,10 +501,10 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
             }
             else if (es instanceof State && ((State) es).isComposite()) {
                 step.getDefaultEntrySet().add(es);
-                for (TransitionTarget dtt : ((State)es).getInitial().getTransition().getTargets()) {
+                for (final TransitionTarget dtt : ((State)es).getInitial().getTransition().getTargets()) {
                     addDescendantStatesToEnter(exctx, step, dtt);
                 }
-                for (TransitionTarget dtt : ((State)es).getInitial().getTransition().getTargets()) {
+                for (final TransitionTarget dtt : ((State)es).getInitial().getTransition().getTargets()) {
                     addAncestorStatesToEnter(exctx, step, dtt, tt);
                 }
             }
@@ -520,16 +520,16 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * @param ancestor The ancestor TransitionTarget
      */
     public void addAncestorStatesToEnter(final SCXMLExecutionContext exctx, final Step step,
-                                            final TransitionTarget tt, TransitionTarget ancestor) {
+                                            final TransitionTarget tt, final TransitionTarget ancestor) {
         // for for anc in getProperAncestors(tt,ancestor)
         for (int i = tt.getNumberOfAncestors()-1; i > -1; i--) {
-            EnterableState anc = tt.getAncestor(i);
+            final EnterableState anc = tt.getAncestor(i);
             if (anc == ancestor) {
                 break;
             }
             step.getEntrySet().add(anc);
             if (anc instanceof Parallel) {
-                for (EnterableState child : ((Parallel)anc).getChildren()) {
+                for (final EnterableState child : ((Parallel)anc).getChildren()) {
                     if (containsNoDescendant(step.getEntrySet(), child)) {
                         addDescendantStatesToEnter(exctx, step, child);
                     }
@@ -544,8 +544,8 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * @param states the set of states to check for descendants
      * @param state the state to check with
      */
-    public boolean containsNoDescendant(Set<EnterableState> states, EnterableState state) {
-        for (EnterableState es : states) {
+    public boolean containsNoDescendant(final Set<EnterableState> states, final EnterableState state) {
+        for (final EnterableState es : states) {
             if (es.isDescendantOf(state)) {
                 return false;
             }
@@ -563,14 +563,14 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      */
     public void selectTransitions(final SCXMLExecutionContext exctx, final Step step) throws ModelException {
         step.getTransitList().clear();
-        ArrayList<Transition> enabledTransitions = new ArrayList<>();
+        final ArrayList<Transition> enabledTransitions = new ArrayList<>();
 
-        ArrayList<EnterableState> configuration = new ArrayList<>(exctx.getScInstance().getStateConfiguration().getActiveStates());
+        final ArrayList<EnterableState> configuration = new ArrayList<>(exctx.getScInstance().getStateConfiguration().getActiveStates());
         configuration.sort(DocumentOrder.documentOrderComparator);
 
-        HashSet<EnterableState> visited = new HashSet<>();
+        final HashSet<EnterableState> visited = new HashSet<>();
 
-        String eventName = step.getEvent() != null ? step.getEvent().getName() : null;
+        final String eventName = step.getEvent() != null ? step.getEvent().getName() : null;
         for (EnterableState es : configuration) {
             if (es.isAtomicState()) {
                 if (es instanceof Final) {
@@ -584,12 +584,12 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                         es = es.getParent();
                     }
                 }
-                TransitionalState state = (TransitionalState)es;
+                final TransitionalState state = (TransitionalState)es;
                 TransitionalState current = state;
                 int ancestorIndex = state.getNumberOfAncestors()-1;
                 boolean transitionMatched = false;
                 do {
-                    for (Transition transition : current.getTransitionsList()) {
+                    for (final Transition transition : current.getTransitionsList()) {
                         if (transitionMatched = matchTransition(exctx, transition, eventName)) {
                             enabledTransitions.add(transition);
                             break;
@@ -611,17 +611,17 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      */
     public void removeConflictingTransitions(final SCXMLExecutionContext exctx, final Step step,
                                              final List<Transition> enabledTransitions) {
-        LinkedHashSet<Transition> filteredTransitions = new LinkedHashSet<>();
-        LinkedHashSet<Transition> preemptedTransitions = new LinkedHashSet<>();
-        Map<Transition, Set<EnterableState>> exitSets = new HashMap<>();
+        final LinkedHashSet<Transition> filteredTransitions = new LinkedHashSet<>();
+        final LinkedHashSet<Transition> preemptedTransitions = new LinkedHashSet<>();
+        final Map<Transition, Set<EnterableState>> exitSets = new HashMap<>();
 
-        Set<EnterableState> configuration = exctx.getScInstance().getStateConfiguration().getActiveStates();
+        final Set<EnterableState> configuration = exctx.getScInstance().getStateConfiguration().getActiveStates();
         enabledTransitions.sort(DocumentOrder.documentOrderComparator);
 
-        for (Transition t1 : enabledTransitions) {
+        for (final Transition t1 : enabledTransitions) {
             boolean t1Preempted = false;
             Set<EnterableState> t1ExitSet = exitSets.get(t1);
-            for (Transition t2 : filteredTransitions) {
+            for (final Transition t2 : filteredTransitions) {
                 if (t1ExitSet == null) {
                     t1ExitSet = new HashSet<>();
                     computeExitSet(t1, t1ExitSet, configuration);
@@ -633,10 +633,10 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                     computeExitSet(t2, t2ExitSet, configuration);
                     exitSets.put(t2, t2ExitSet);
                 }
-                Set<EnterableState> smaller = t1ExitSet.size() < t2ExitSet.size() ? t1ExitSet : t2ExitSet;
-                Set<EnterableState> larger = smaller == t1ExitSet ? t2ExitSet : t1ExitSet;
+                final Set<EnterableState> smaller = t1ExitSet.size() < t2ExitSet.size() ? t1ExitSet : t2ExitSet;
+                final Set<EnterableState> larger = smaller == t1ExitSet ? t2ExitSet : t1ExitSet;
                 boolean hasIntersection = false;
-                for (EnterableState s1 : smaller) {
+                for (final EnterableState s1 : smaller) {
                     hasIntersection = larger.contains(s1);
                     if (hasIntersection) {
                         break;
@@ -656,7 +656,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                 exitSets.remove(t1);
             }
             else {
-                for (Transition preempted : preemptedTransitions) {
+                for (final Transition preempted : preemptedTransitions) {
                     filteredTransitions.remove(preempted);
                     exitSets.remove(preempted);
                 }
@@ -677,7 +677,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
         if (eventName != null) {
             if (!(transition.isNoEventsTransition() || transition.isAllEventsTransition())) {
                 boolean eventMatch = false;
-                for (String event : transition.getEvents()) {
+                for (final String event : transition.getEvents()) {
                     if (eventName.startsWith(event)) {
                         if (eventName.length() == event.length() || eventName.charAt(event.length())=='.') {
                             eventMatch = true;
@@ -698,7 +698,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
         }
         if (transition.getCond() != null) {
             Boolean result = Boolean.FALSE;
-            Context context = exctx.getScInstance().getContext(transition.getParent());
+            final Context context = exctx.getScInstance().getContext(transition.getParent());
             try {
                 if ((result = exctx.getEvaluator().evalCond(context, transition.getCond())) == null) {
                     result = Boolean.FALSE;
@@ -708,7 +708,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                     }
                 }
             }
-            catch (SCXMLExpressionException e) {
+            catch (final SCXMLExpressionException e) {
                 exctx.getInternalIOProcessor().addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT).build());
                 exctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR, "Treating as false due to error: "
                         + e.getMessage(), transition);
@@ -728,14 +728,14 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      */
     public boolean isInFinalState(final EnterableState es, final Set<EnterableState> configuration) {
         if (es instanceof State) {
-            for (EnterableState child : ((State)es).getChildren()) {
+            for (final EnterableState child : ((State)es).getChildren()) {
                 if (child instanceof Final && configuration.contains(child)) {
                     return true;
                 }
             }
         }
         else if (es instanceof Parallel) {
-            for (EnterableState child : ((Parallel)es).getChildren()) {
+            for (final EnterableState child : ((Parallel)es).getChildren()) {
                 if (!isInFinalState(child, configuration)) {
                     return false;
                 }
@@ -751,7 +751,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * @param event received external event
      * @return true if this event is of type {@link TriggerEvent#CANCEL_EVENT}.
      */
-    public boolean isCancelEvent(TriggerEvent event) {
+    public boolean isCancelEvent(final TriggerEvent event) {
         return (event.getType() == TriggerEvent.CANCEL_EVENT);
     }
 
@@ -774,12 +774,12 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
          * states = active configuration.
          */
         boolean legalConfig = true; // let's be optimists
-        Map<EnterableState, Set<EnterableState>> counts = new HashMap<>();
-        Set<EnterableState> scxmlCount = new HashSet<>();
+        final Map<EnterableState, Set<EnterableState>> counts = new HashMap<>();
+        final Set<EnterableState> scxmlCount = new HashSet<>();
         for (EnterableState es : states) {
             EnterableState parent;
             while ((parent = es.getParent()) != null) {
-                Set<EnterableState> cnt = counts.computeIfAbsent(parent, k -> new HashSet<>());
+                final Set<EnterableState> cnt = counts.computeIfAbsent(parent, k -> new HashSet<>());
                 cnt.add(es);
                 es = parent;
             }
@@ -792,11 +792,11 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
         }
         else {
             //Validate child counts:
-            for (Map.Entry<EnterableState, Set<EnterableState>> entry : counts.entrySet()) {
-                EnterableState es = entry.getKey();
-                Set<EnterableState> count = entry.getValue();
+            for (final Map.Entry<EnterableState, Set<EnterableState>> entry : counts.entrySet()) {
+                final EnterableState es = entry.getKey();
+                final Set<EnterableState> count = entry.getValue();
                 if (es instanceof Parallel) {
-                    Parallel p = (Parallel) es;
+                    final Parallel p = (Parallel) es;
                     if (count.size() < p.getChildren().size()) {
                         errRep.onError(ErrorConstants.ILLEGAL_CONFIG, "Not all AND states active for parallel " + p.getId(), entry);
                         legalConfig = false;
@@ -826,8 +826,8 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * @param event The event being stored
      * @param internal Flag indicating the event was received internally or externally
      */
-    public void setSystemEventVariable(final SCInstance scInstance, final TriggerEvent event, boolean internal) {
-        Context systemContext = scInstance.getSystemContext();
+    public void setSystemEventVariable(final SCInstance scInstance, final TriggerEvent event, final boolean internal) {
+        final Context systemContext = scInstance.getSystemContext();
         EventVariable eventVar = null;
         if (event != null) {
             String eventType = internal ? EventVariable.TYPE_INTERNAL : EventVariable.TYPE_EXTERNAL;
@@ -849,11 +849,11 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * @throws ModelException if a SCXML model error occurred during the execution.
      */
     public void executeGlobalScript(final SCXMLExecutionContext exctx) throws ModelException {
-        Script globalScript = exctx.getStateMachine().getGlobalScript();
+        final Script globalScript = exctx.getStateMachine().getGlobalScript();
         if ( globalScript != null) {
             try {
                 globalScript.execute(exctx.getActionExecutionContext());
-            } catch (SCXMLExpressionException e) {
+            } catch (final SCXMLExpressionException e) {
                 exctx.getInternalIOProcessor().addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT).build());
                 exctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR, e.getMessage(), exctx.getStateMachine());
             }
@@ -876,20 +876,20 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
         if (step.getExitSet().isEmpty()) {
             return;
         }
-        ArrayList<EnterableState> exitList = new ArrayList<>(step.getExitSet());
+        final ArrayList<EnterableState> exitList = new ArrayList<>(step.getExitSet());
         exitList.sort(DocumentOrder.reverseDocumentOrderComparator);
 
-        for (EnterableState es : exitList) {
+        for (final EnterableState es : exitList) {
 
             if (es instanceof TransitionalState && ((TransitionalState)es).hasHistory()) {
                 // persist the new history configurations for this state to exit
-                for (History h : ((TransitionalState)es).getHistory()) {
+                for (final History h : ((TransitionalState)es).getHistory()) {
                     exctx.getScInstance().setLastConfiguration(h, step.getNewHistoryConfigurations().get(h));
                 }
             }
 
             boolean onexitEventRaised = false;
-            for (OnExit onexit : es.getOnExits()) {
+            for (final OnExit onexit : es.getOnExits()) {
                 executeContent(exctx, onexit);
                 if (!onexitEventRaised && onexit.isRaiseEvent()) {
                     onexitEventRaised = true;
@@ -901,7 +901,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
 
             if (es instanceof TransitionalState && !statesToInvoke.remove(es)) {
                 // check if invokers are active in this state
-                for (Invoke inv : ((TransitionalState)es).getInvokes()) {
+                for (final Invoke inv : ((TransitionalState)es).getInvokes()) {
                     exctx.cancelInvoker(inv);
                 }
             }
@@ -917,7 +917,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * @throws ModelException if a SCXML model error occurred during the execution.
      */
     public void executeTransitionContent(final SCXMLExecutionContext exctx, final Step step) throws ModelException {
-        for (SimpleTransition transition : step.getTransitList()) {
+        for (final SimpleTransition transition : step.getTransitList()) {
             executeContent(exctx, transition);
         }
     }
@@ -929,15 +929,15 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * @param exec the executable providing the execution content
      * @throws ModelException if a SCXML model error occurred during the execution.
      */
-    public void executeContent(SCXMLExecutionContext exctx, Executable exec) throws ModelException {
+    public void executeContent(final SCXMLExecutionContext exctx, final Executable exec) throws ModelException {
         try {
-            for (Action action : exec.getActions()) {
+            for (final Action action : exec.getActions()) {
                 action.execute(exctx.getActionExecutionContext());
             }
-        } catch (SCXMLExpressionException e) {
+        } catch (final SCXMLExpressionException e) {
             exctx.getInternalIOProcessor().addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT).build());
             exctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR, e.getMessage(), exec);
-        } catch (ActionExecutionError e) {
+        } catch (final ActionExecutionError e) {
             if (!e.isEventRaised()) {
                 exctx.getInternalIOProcessor().addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT).build());
             }
@@ -946,12 +946,12 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
             }
         }
         if (exec instanceof Transition) {
-            Transition t = (Transition)exec;
+            final Transition t = (Transition)exec;
             if (t.getTargets().isEmpty()) {
                 notifyOnTransition(exctx, t, t.getParent());
             }
             else {
-                for (TransitionTarget tt : t.getTargets()) {
+                for (final TransitionTarget tt : t.getTargets()) {
                     notifyOnTransition(exctx, t, tt);
                 }
             }
@@ -967,8 +967,8 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      */
     public void notifyOnTransition(final SCXMLExecutionContext exctx, final Transition t,
                                       final TransitionTarget target) {
-        EventVariable event = (EventVariable)exctx.getScInstance().getSystemContext().getVars().get(SCXMLSystemContext.EVENT_KEY);
-        String eventName = event != null ? event.getName() : null;
+        final EventVariable event = (EventVariable)exctx.getScInstance().getSystemContext().getVars().get(SCXMLSystemContext.EVENT_KEY);
+        final String eventName = event != null ? event.getName() : null;
         exctx.getNotificationRegistry().fireOnTransition(t, t.getParent(), target, t, eventName);
         exctx.getNotificationRegistry().fireOnTransition(exctx.getStateMachine(), t.getParent(), target, t, eventName);
     }
@@ -989,9 +989,9 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
         if (step.getEntrySet().isEmpty()) {
             return;
         }
-        ArrayList<EnterableState> entryList = new ArrayList<>(step.getEntrySet());
+        final ArrayList<EnterableState> entryList = new ArrayList<>(step.getEntrySet());
         entryList.sort(DocumentOrder.documentOrderComparator);
-        for (EnterableState es : entryList) {
+        for (final EnterableState es : entryList) {
             exctx.getScInstance().getStateConfiguration().enterState(es);
             // ensure state context creation and datamodel cloned
             exctx.getScInstance().getContext(es);
@@ -1000,7 +1000,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
             }
 
             boolean onentryEventRaised = false;
-            for (OnEntry onentry : es.getOnEntries()) {
+            for (final OnEntry onentry : es.getOnEntries()) {
                 executeContent(exctx, onentry);
                 if (!onentryEventRaised && onentry.isRaiseEvent()) {
                     onentryEventRaised = true;
@@ -1014,19 +1014,19 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                 executeContent(exctx, ((State)es).getInitial().getTransition());
             }
             if (es instanceof TransitionalState) {
-                SimpleTransition hTransition = step.getDefaultHistoryTransitions().get(es);
+                final SimpleTransition hTransition = step.getDefaultHistoryTransitions().get(es);
                 if (hTransition != null) {
                     executeContent(exctx, hTransition);
                 }
             }
 
             if (es instanceof Final) {
-                State parent = (State)es.getParent();
+                final State parent = (State)es.getParent();
                 if (parent == null) {
                     exctx.stop();
                 }
                 else {
-                    Object donedata = ((Final)es).processDoneData(exctx);
+                    final Object donedata = ((Final)es).processDoneData(exctx);
                     exctx.getInternalIOProcessor().addEvent(new EventBuilder("done.state."+parent.getId(),TriggerEvent.CHANGE_EVENT).data(donedata).build());
                     if (parent.isRegion()) {
                         if (isInFinalState(parent.getParent(), exctx.getScInstance().getStateConfiguration().getActiveStates())) {
@@ -1048,11 +1048,11 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      */
     public void initiateInvokes(final SCXMLExecutionContext exctx,
                                 final Set<TransitionalState> statesToInvoke) throws ModelException {
-        ActionExecutionContext aexctx = exctx.getActionExecutionContext();
-        for (TransitionalState ts : statesToInvoke) {
-            for (Invoke invoke : ts.getInvokes()) {
-                Context ctx = aexctx.getContext(invoke.getParentEnterableState());
-                String exctxKey = invoke.getCurrentSCXMLExecutionContextKey();
+        final ActionExecutionContext aexctx = exctx.getActionExecutionContext();
+        for (final TransitionalState ts : statesToInvoke) {
+            for (final Invoke invoke : ts.getInvokes()) {
+                final Context ctx = aexctx.getContext(invoke.getParentEnterableState());
+                final String exctxKey = invoke.getCurrentSCXMLExecutionContextKey();
                 ctx.setLocal(exctxKey, exctx);
                 invoke.execute(aexctx);
                 ctx.setLocal(exctxKey, null);
@@ -1069,10 +1069,10 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * @throws ModelException in case there is a fatal SCXML object model problem.
      */
     public void processInvokes(final SCXMLExecutionContext exctx, final TriggerEvent event) throws ModelException {
-        for (Map.Entry<Invoke, String> entry : exctx.getInvokeIds().entrySet()) {
+        for (final Map.Entry<Invoke, String> entry : exctx.getInvokeIds().entrySet()) {
             if (entry.getValue().equals(event.getInvokeId())) {
-                Invoke invoke = entry.getKey();
-                Finalize finalize = invoke.getFinalize();
+                final Invoke invoke = entry.getKey();
+                final Finalize finalize = invoke.getFinalize();
                 if (finalize != null) {
                     if (finalize.getActions().isEmpty()) {
                         /*
@@ -1095,7 +1095,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                                 event.getName().startsWith("done.invoke."+entry.getValue()+"."))) {
                     try {
                         exctx.getInvoker(entry.getKey()).parentEvent(event);
-                    } catch (InvokerException ie) {
+                    } catch (final InvokerException ie) {
                         exctx.getAppLog().error(ie.getMessage(), ie);
                         throw new ModelException(ie.getMessage(), ie.getCause());
                     }

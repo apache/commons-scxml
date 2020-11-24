@@ -23,25 +23,25 @@ public class TransitionTargetTest {
 
     @Test
     public void testIsDescendantNullParent() {
-        State state = new State();
-        State context = new State();
+        final State state = new State();
+        final State context = new State();
 
         Assertions.assertFalse(state.isDescendantOf(context));
     }
 
     @Test
     public void testIsDescendantNotEqual() {
-        State state = new State();
+        final State state = new State();
         state.setParent(new State());
-        State context = new State();
+        final State context = new State();
 
         Assertions.assertFalse(state.isDescendantOf(context));
     }
 
     @Test
     public void testIsDescendantEqual() {
-        State state = new State();
-        State context = new State();
+        final State state = new State();
+        final State context = new State();
         state.setParent(context);
 
         Assertions.assertTrue(state.isDescendantOf(context));
@@ -49,9 +49,9 @@ public class TransitionTargetTest {
 
     @Test
     public void testIsDescendantParentEqual() {
-        State state = new State();
-        State context = new State();
-        State parent = new State();
+        final State state = new State();
+        final State context = new State();
+        final State parent = new State();
 
         parent.setParent(context);
         state.setParent(parent);

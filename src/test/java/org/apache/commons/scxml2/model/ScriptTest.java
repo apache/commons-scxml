@@ -30,9 +30,9 @@ public class ScriptTest {
      */    
     @Test
     public void testJexlScriptExecution() throws Exception {
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/script-01.xml");
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/script-01.xml");
         exec.go();
-        Set<EnterableState> currentStates = exec.getStatus().getStates();
+        final Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assertions.assertEquals(1, currentStates.size());
         Assertions.assertEquals("end", currentStates.iterator().next().getId());
     }
@@ -42,9 +42,9 @@ public class ScriptTest {
      */
     @Test
     public void testJavaScriptExecution() throws Exception {
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/javascript/script-01.xml");
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/javascript/script-01.xml");
         exec.go();
-        Set<EnterableState> currentStates = exec.getStatus().getStates();
+        final Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assertions.assertEquals(1, currentStates.size());
         Assertions.assertEquals("end", currentStates.iterator().next().getId());
     }

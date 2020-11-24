@@ -34,7 +34,7 @@ public class EventDataTest {
      */
     @Test
     public void testEventdata01Sample() throws Exception {
-    	SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/eventdata-01.xml");
+    	final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/eventdata-01.xml");
         exec.go();
         Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assertions.assertEquals(1, currentStates.size());
@@ -43,7 +43,7 @@ public class EventDataTest {
         currentStates = SCXMLTestHelper.fireEvent(exec, te);
         Assertions.assertEquals(1, currentStates.size());
         Assertions.assertEquals("state3", currentStates.iterator().next().getId());
-        TriggerEvent[] evts = new TriggerEvent[] { te,
+        final TriggerEvent[] evts = new TriggerEvent[] { te,
             new EventBuilder("event.bar", TriggerEvent.SIGNAL_EVENT).data(6).build()};
         currentStates = SCXMLTestHelper.fireEvents(exec, evts);
         Assertions.assertEquals(1, currentStates.size());
@@ -56,16 +56,16 @@ public class EventDataTest {
 
     @Test
     public void testEventdata02Sample() throws Exception {
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/eventdata-02.xml");
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/eventdata-02.xml");
         exec.go();
         Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assertions.assertEquals(1, currentStates.size());
         Assertions.assertEquals("state0", currentStates.iterator().next().getId());
-        TriggerEvent te1 = new EventBuilder("connection.alerting", TriggerEvent.SIGNAL_EVENT).data("line2").build();
+        final TriggerEvent te1 = new EventBuilder("connection.alerting", TriggerEvent.SIGNAL_EVENT).data("line2").build();
         currentStates = SCXMLTestHelper.fireEvent(exec, te1);
         Assertions.assertEquals(1, currentStates.size());
         Assertions.assertEquals("state2", currentStates.iterator().next().getId());
-        TriggerEvent te2 = new EventBuilder("connection.alerting", TriggerEvent.SIGNAL_EVENT)
+        final TriggerEvent te2 = new EventBuilder("connection.alerting", TriggerEvent.SIGNAL_EVENT)
                 .data(new ConnectionAlertingPayload(4)).build();
         currentStates = SCXMLTestHelper.fireEvent(exec, te2);
         Assertions.assertEquals(1, currentStates.size());
@@ -74,12 +74,12 @@ public class EventDataTest {
 
     @Test
     public void testEventdata03Sample() throws Exception {
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/eventdata-03.xml");
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/eventdata-03.xml");
         exec.go();
         Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assertions.assertEquals(1, currentStates.size());
         Assertions.assertEquals("ten", currentStates.iterator().next().getId());
-        TriggerEvent te = new EventBuilder("event.foo", TriggerEvent.SIGNAL_EVENT).build();
+        final TriggerEvent te = new EventBuilder("event.foo", TriggerEvent.SIGNAL_EVENT).build();
         currentStates = SCXMLTestHelper.fireEvent(exec, te);
         Assertions.assertEquals(1, currentStates.size());
         Assertions.assertEquals("thirty", currentStates.iterator().next().getId());
@@ -87,9 +87,9 @@ public class EventDataTest {
 
     @Test
     public void testEventdata04Sample() throws Exception {
-        SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/env/jexl/eventdata-03.xml");
-        Tracer trc = new Tracer();
-        SCXMLExecutor exec = new SCXMLExecutor(null, null, trc);
+        final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/env/jexl/eventdata-03.xml");
+        final Tracer trc = new Tracer();
+        final SCXMLExecutor exec = new SCXMLExecutor(null, null, trc);
         exec.addListener(scxml, trc);
         exec.setStateMachine(scxml);
         exec.go();
@@ -98,11 +98,11 @@ public class EventDataTest {
 
     public static class ConnectionAlertingPayload {
         private int line;
-        ConnectionAlertingPayload(int line) {
+        ConnectionAlertingPayload(final int line) {
             this.line = line;
         }
         @SuppressWarnings("unsed")
-        public void setLine(int line) {
+        public void setLine(final int line) {
             this.line = line;
         }
         @SuppressWarnings("unsed")

@@ -47,12 +47,12 @@ public class SendTest {
             }
         });
         exec.go();
-        TriggerEvent te = new EventBuilder("event.foo", TriggerEvent.SIGNAL_EVENT).data(3).build();
+        final TriggerEvent te = new EventBuilder("event.foo", TriggerEvent.SIGNAL_EVENT).data(3).build();
         SCXMLTestHelper.fireEvent(exec, te);
 
         Assertions.assertFalse(payloads.isEmpty(), "Payloads empty.");
         Assertions.assertTrue(payloads.get(0) instanceof Map, "Payload is not a map.");
-        Map<String, Object> firstPayload = (Map<String, Object>) payloads.get(0);
+        final Map<String, Object> firstPayload = (Map<String, Object>) payloads.get(0);
         Assertions.assertEquals(2, firstPayload.size(), "Only two in the namelist data expected.");
 
         Assertions.assertEquals(1, firstPayload.get("one"), "Unexpected value for 'one'.");
@@ -65,7 +65,7 @@ public class SendTest {
         Assertions.assertEquals("two", it.next(), "The first one in the namelist must be 'two'.");
     }
 
-    private long parseDelay(String delayString) throws SCXMLExpressionException {
+    private long parseDelay(final String delayString) throws SCXMLExpressionException {
         return Send.parseDelay(delayString, true, delayString);
     }
 

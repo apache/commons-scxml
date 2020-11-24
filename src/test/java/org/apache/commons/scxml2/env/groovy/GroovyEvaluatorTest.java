@@ -39,24 +39,24 @@ public class GroovyEvaluatorTest {
 
     @Test
     public void testEval() throws SCXMLExpressionException {
-        Evaluator eval = new GroovyEvaluator();
+        final Evaluator eval = new GroovyEvaluator();
         Assertions.assertEquals(2, eval.eval(ctx, "1 + 1"));
     }
 
     @Test
     public void testPristine() throws SCXMLExpressionException {
-        Evaluator eval = new GroovyEvaluator();
+        final Evaluator eval = new GroovyEvaluator();
         Assertions.assertTrue(eval.evalCond(ctx, "1 + 1 == 2"));
     }
 
     @Test
     public void testBuiltInFunctions() throws SCXMLExpressionException {
-        Evaluator eval = new GroovyEvaluator();
-        StateConfiguration stateConfiguration = new StateConfiguration();
-        Status status = new Status(stateConfiguration);
+        final Evaluator eval = new GroovyEvaluator();
+        final StateConfiguration stateConfiguration = new StateConfiguration();
+        final Status status = new Status(stateConfiguration);
         ctx.getSystemContext().getPlatformVariables().put(SCXMLSystemContext.STATUS_KEY, status);
 
-        State state1 = new State();
+        final State state1 = new State();
         state1.setId("state1");
         stateConfiguration.enterState(state1);
         Assertions.assertTrue(eval.evalCond(ctx, "In('state1')"));
@@ -64,10 +64,10 @@ public class GroovyEvaluatorTest {
 
     @Test
     public void testScript() throws SCXMLExpressionException {
-        Evaluator eval = new GroovyEvaluator();
+        final Evaluator eval = new GroovyEvaluator();
         ctx.set("x", 3);
         ctx.set("y", 0);
-        String script = 
+        final String script = 
             "if ((x * 2) == 5) {" +
                 "y = 1;\n" +
             "} else {\n" +
@@ -79,9 +79,9 @@ public class GroovyEvaluatorTest {
 
     @Test
     public void testErrorMessage() {
-        Evaluator eval = new GroovyEvaluator();
+        final Evaluator eval = new GroovyEvaluator();
         Assertions.assertNotNull(eval);
-        SCXMLExpressionException e = Assertions.assertThrows(
+        final SCXMLExpressionException e = Assertions.assertThrows(
                 SCXMLExpressionException.class,
                 () -> eval.eval(ctx, BAD_EXPRESSION),
                 "GroovyEvaluator should throw SCXMLExpressionException");
@@ -91,7 +91,7 @@ public class GroovyEvaluatorTest {
 
     @Test
     public void testPreprocessScript() {
-        GroovyEvaluator evaluator = new GroovyEvaluator();
+        final GroovyEvaluator evaluator = new GroovyEvaluator();
         Assertions.assertEquals("x &&  x || x  !  x == x <  x <= x != x >  x >= x", evaluator.getScriptPreProcessor().
                 preProcess("x and x or x not x eq x lt x le x ne x gt x ge x"));
         Assertions.assertEquals("and x OR x\n ! \nx\n== x < \nx(le)x ne. xgt x ge", evaluator.getScriptPreProcessor().

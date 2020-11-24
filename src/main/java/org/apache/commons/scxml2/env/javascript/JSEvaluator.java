@@ -105,7 +105,7 @@ public class JSEvaluator extends AbstractBaseEvaluator {
                 try {
                     initGlobalsScript = IOUtils.toString(JSEvaluator.class.getResourceAsStream("init_global.js"), "UTF-8");
                 }
-                catch (IOException ioe) {
+                catch (final IOException ioe) {
                     throw new RuntimeException("Failed to load init_global.js from classpath", ioe);
                 }
             }
@@ -155,7 +155,7 @@ public class JSEvaluator extends AbstractBaseEvaluator {
      * @return The SCXML instance shared ScriptContext
      * @throws ScriptException Thrown if the initialization of the Global Javascript engine itself failed
      */
-    protected ScriptContext getScriptContext(JSContext jsContext) throws ScriptException {
+    protected ScriptContext getScriptContext(final JSContext jsContext) throws ScriptException {
         if (scriptContext == null) {
             scriptContext = new SimpleScriptContext();
             scriptContext.setBindings(getEngine().createBindings(), ScriptContext.ENGINE_SCOPE);
@@ -192,7 +192,7 @@ public class JSEvaluator extends AbstractBaseEvaluator {
      *
      */
     @Override
-    public Context newContext(Context parent) {
+    public Context newContext(final Context parent) {
         return new JSContext(parent);
     }
 
@@ -208,7 +208,7 @@ public class JSEvaluator extends AbstractBaseEvaluator {
      * @throws SCXMLExpressionException Thrown if the expression was invalid or the execution raised an error itself.
      */
     @Override
-    public Object eval(Context context, String expression) throws SCXMLExpressionException {
+    public Object eval(final Context context, final String expression) throws SCXMLExpressionException {
         if (expression == null) {
             return null;
         }
@@ -217,14 +217,14 @@ public class JSEvaluator extends AbstractBaseEvaluator {
         }
 
         try {
-            JSContext effectiveContext = getEffectiveContext((JSContext)context);
-            ScriptContext scriptContext = getScriptContext(effectiveContext);
-            Object ret = getEngine().eval(expression, scriptContext);
+            final JSContext effectiveContext = getEffectiveContext((JSContext)context);
+            final ScriptContext scriptContext = getScriptContext(effectiveContext);
+            final Object ret = getEngine().eval(expression, scriptContext);
             // copy Javascript global variables to SCXML context.
             copyJavascriptGlobalsToScxmlContext(scriptContext.getBindings(ScriptContext.ENGINE_SCOPE), effectiveContext);
             return ret;
-        } catch (Exception e) {
-            String exMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getCanonicalName();
+        } catch (final Exception e) {
+            final String exMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getCanonicalName();
             throw new SCXMLExpressionException("eval('" + expression + "'): " + exMessage, e);
         }
     }
@@ -241,7 +241,7 @@ public class JSEvaluator extends AbstractBaseEvaluator {
      * @throws SCXMLExpressionException Thrown if the expression was invalid.
      */
     @Override
-    public Boolean evalCond(Context context, String expression) throws SCXMLExpressionException {
+    public Boolean evalCond(final Context context, final String expression) throws SCXMLExpressionException {
         return (Boolean)eval(context, "Boolean("+expression+")");
     }
 
@@ -256,7 +256,7 @@ public class JSEvaluator extends AbstractBaseEvaluator {
      * @throws SCXMLExpressionException Thrown if the script was invalid.
      */
     @Override
-    public Object evalScript(Context ctx, String script) throws SCXMLExpressionException {
+    public Object evalScript(final Context ctx, final String script) throws SCXMLExpressionException {
         return eval(ctx, script);
     }
 
@@ -283,7 +283,7 @@ public class JSEvaluator extends AbstractBaseEvaluator {
      */
     private void copyJavascriptGlobalsToScxmlContext(final Bindings global, final JSContext jsContext) {
         if (global != null) {
-            for (String key : global.keySet()) {
+            for (final String key : global.keySet()) {
                 if (!SCXML_SYSTEM_CONTEXT.equals(key)) {
                     jsContext.set(key, global.get(key));
                 }

@@ -92,10 +92,10 @@ public class Foreach extends Action implements ActionsContainer {
      * {@inheritDoc}
      */
     @Override
-    public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
-        Context ctx = exctx.getContext(getParentEnterableState());
-        Evaluator eval = exctx.getEvaluator();
-        Object arrayObject = eval.eval(ctx,array);
+    public void execute(final ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
+        final Context ctx = exctx.getContext(getParentEnterableState());
+        final Evaluator eval = exctx.getEvaluator();
+        final Object arrayObject = eval.eval(ctx,array);
         if (arrayObject != null && (arrayObject.getClass().isArray() || arrayObject instanceof Iterable || arrayObject instanceof Map)) {
             if (arrayObject.getClass().isArray()) {
                 for (int currentIndex = 0, size = Array.getLength(arrayObject); currentIndex < size; currentIndex++) {
@@ -104,7 +104,7 @@ public class Foreach extends Action implements ActionsContainer {
                         ctx.setLocal(index, currentIndex);
                     }
                     // The "foreach" statement is a "container"
-                    for (Action aa : actions) {
+                    for (final Action aa : actions) {
                         aa.execute(exctx);
                     }
                 }
@@ -112,24 +112,24 @@ public class Foreach extends Action implements ActionsContainer {
             else {
                 // In case of Javascript based arrays, the (Nashorn) engine returns a ScriptObjectMirror
                 // which (also) implements Map<String, Object), so then we can/must use the map values as Iterable
-                Iterable iterable = arrayObject instanceof Iterable ? (Iterable)arrayObject : ((Map)arrayObject).values();
+                final Iterable iterable = arrayObject instanceof Iterable ? (Iterable)arrayObject : ((Map)arrayObject).values();
 
                 // Spec requires to iterate over a shallow copy of underlying array in a way that modifications to
                 // the collection during the execution of <foreach> must not affect the iteration behavior.
                 // For array objects (see above) this isn't needed, but for Iterables we don't have that guarantee
                 // so we make a copy first
-                ArrayList<Object> arrayList = new ArrayList<>();
-                for (Object value: iterable) {
+                final ArrayList<Object> arrayList = new ArrayList<>();
+                for (final Object value: iterable) {
                     arrayList.add(value);
                 }
                 int currentIndex = 0;
-                for (Object value : arrayList) {
+                for (final Object value : arrayList) {
                     eval.evalAssign(ctx, item, value);
                     if (index != null) {
                         ctx.setLocal(index, currentIndex);
                     }
                     // The "foreach" statement is a "container"
-                    for (Action aa : actions) {
+                    for (final Action aa : actions) {
                         aa.execute(exctx);
                     }
                     currentIndex++;

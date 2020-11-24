@@ -29,16 +29,16 @@ public class JexlEvaluatorTest {
 
     @Test
     public void testPristine() throws SCXMLExpressionException {
-        Evaluator eval = new JexlEvaluator();
+        final Evaluator eval = new JexlEvaluator();
         Assertions.assertTrue((Boolean) eval.eval(ctx, "1+1 eq 2"));
     }
 
     @Test
     public void testScript() throws SCXMLExpressionException {
-        Evaluator eval = new JexlEvaluator();
+        final Evaluator eval = new JexlEvaluator();
         ctx.set("x", 3);
         ctx.set("y", 0);
-        String script = 
+        final String script = 
             "if ((x * 2) == 5) {" +
                 "y = 1;\n" +
             "} else {\n" +
@@ -50,9 +50,9 @@ public class JexlEvaluatorTest {
 
     @Test
     public void testErrorMessage() {
-        Evaluator eval = new JexlEvaluator();
+        final Evaluator eval = new JexlEvaluator();
         Assertions.assertNotNull(eval);
-        SCXMLExpressionException e = Assertions.assertThrows(
+        final SCXMLExpressionException e = Assertions.assertThrows(
                 SCXMLExpressionException.class,
                 () -> eval.eval(ctx, BAD_EXPRESSION),
                 "JexlEvaluator should throw SCXMLExpressionException");

@@ -83,9 +83,9 @@ public class State extends TransitionalState {
      */
     public final void setFirst(final String target) {
         this.first = target;
-        SimpleTransition t = new SimpleTransition();
+        final SimpleTransition t = new SimpleTransition();
         t.setNext(target);
-        Initial ini = new Initial();
+        final Initial ini = new Initial();
         ini.setGenerated();
         ini.setTransition(t);
         ini.setParent(this);

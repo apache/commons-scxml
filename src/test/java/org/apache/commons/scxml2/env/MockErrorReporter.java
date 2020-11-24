@@ -24,7 +24,7 @@ public class MockErrorReporter implements ErrorReporter {
     private String errDetail;
     private Object errCtx;
     
-    public void onError( String errCode, String errDetail, Object errCtx ) {
+    public void onError( final String errCode, final String errDetail, final Object errCtx ) {
         this.errCode = errCode;
         this.errDetail = errDetail;
         this.errCtx = errCtx;
@@ -34,7 +34,7 @@ public class MockErrorReporter implements ErrorReporter {
         return errCode;
     }
 
-    public void setErrCode( String errCode ) {
+    public void setErrCode( final String errCode ) {
         this.errCode = errCode;
     }
 
@@ -42,7 +42,7 @@ public class MockErrorReporter implements ErrorReporter {
         return errCtx;
     }
 
-    public void setErrCtx( Object errCtx ) {
+    public void setErrCtx( final Object errCtx ) {
         this.errCtx = errCtx;
     }
 
@@ -50,7 +50,7 @@ public class MockErrorReporter implements ErrorReporter {
         return errDetail;
     }
 
-    public void setErrDetail( String errDetail ) {
+    public void setErrDetail( final String errDetail ) {
         this.errDetail = errDetail;
     }
 

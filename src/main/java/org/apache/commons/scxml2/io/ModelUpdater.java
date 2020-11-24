@@ -137,8 +137,8 @@ final class ModelUpdater {
     static void updateSCXML(final SCXML scxml) throws ModelException {
         initDocumentOrder(scxml.getChildren(), 1);
 
-        String initial = scxml.getInitial();
-        SimpleTransition initialTransition = new SimpleTransition();
+        final String initial = scxml.getInitial();
+        final SimpleTransition initialTransition = new SimpleTransition();
 
         if (initial != null) {
 
@@ -156,7 +156,7 @@ final class ModelUpdater {
         }
 
         scxml.setInitialTransition(initialTransition);
-        Map<String, TransitionTarget> targets = scxml.getTargets();
+        final Map<String, TransitionTarget> targets = scxml.getTargets();
         updateEnterableStates(scxml.getChildren(), targets);
 
         scxml.getInitialTransition().setObservableId(1);
@@ -171,11 +171,11 @@ final class ModelUpdater {
      * @return Returns the next to be used order value
      */
     private static int initDocumentOrder(final List<EnterableState> states, int nextOrder) {
-        for (EnterableState state : states) {
+        for (final EnterableState state : states) {
             state.setOrder(nextOrder++);
             if (state instanceof TransitionalState) {
-                TransitionalState ts = (TransitionalState)state;
-                for (Transition t : ts.getTransitionsList()) {
+                final TransitionalState ts = (TransitionalState)state;
+                for (final Transition t : ts.getTransitionsList()) {
                     t.setOrder(nextOrder++);
                 }
                 nextOrder = initDocumentOrder(ts.getChildren(), nextOrder);
@@ -192,20 +192,20 @@ final class ModelUpdater {
      * @return Returns the next to be used observable id sequence value
      */
     private static int initObservables(final List<EnterableState>states, int nextObservableId) {
-        for (EnterableState es : states) {
+        for (final EnterableState es : states) {
             es.setObservableId(nextObservableId++);
             if (es instanceof TransitionalState) {
-                TransitionalState ts = (TransitionalState)es;
+                final TransitionalState ts = (TransitionalState)es;
                 if (ts instanceof State) {
-                    State s = (State)ts;
+                    final State s = (State)ts;
                     if (s.getInitial() != null && s.getInitial().getTransition() != null) {
                         s.getInitial().getTransition().setObservableId(nextObservableId++);
                     }
                 }
-                for (Transition t : ts.getTransitionsList()) {
+                for (final Transition t : ts.getTransitionsList()) {
                     t.setObservableId(nextObservableId++);
                 }
-                for (History h : ts.getHistory()) {
+                for (final History h : ts.getHistory()) {
                     h.setObservableId(nextObservableId++);
                     if (h.getTransition() != null) {
                         h.getTransition().setObservableId(nextObservableId++);
@@ -227,7 +227,7 @@ final class ModelUpdater {
      */
     private static void updateState(final State state, final Map<String, TransitionTarget> targets)
             throws ModelException {
-        List<EnterableState> children = state.getChildren();
+        final List<EnterableState> children = state.getChildren();
         if (state.isComposite()) {
             //initialize next / initial
             Initial ini = state.getInitial();
@@ -235,16 +235,16 @@ final class ModelUpdater {
                 state.setFirst(children.get(0).getId());
                 ini = state.getInitial();
             }
-            SimpleTransition initialTransition = ini.getTransition();
+            final SimpleTransition initialTransition = ini.getTransition();
             updateTransition(initialTransition, targets);
-            Set<TransitionTarget> initialStates = initialTransition.getTargets();
+            final Set<TransitionTarget> initialStates = initialTransition.getTargets();
             // we have to allow for an indirect descendant initial (targets)
             //check that initialState is a descendant of s
             if (initialStates.size() == 0) {
                 logAndThrowModelError(ERR_STATE_BAD_INIT,
                         new Object[] {getName(state)});
             } else {
-                for (TransitionTarget initialState : initialStates) {
+                for (final TransitionTarget initialState : initialStates) {
                     if (!initialState.isDescendantOf(state)) {
                         logAndThrowModelError(ERR_STATE_BAD_INIT,
                                 new Object[] {getName(state)});
@@ -256,19 +256,19 @@ final class ModelUpdater {
             logAndThrowModelError(ERR_UNSUPPORTED_INIT, new Object[] {getName(state)});
         }
 
-        List<History> histories = state.getHistory();
+        final List<History> histories = state.getHistory();
         if (histories.size() > 0 && state.isSimple()) {
             logAndThrowModelError(ERR_HISTORY_SIMPLE_STATE,
                     new Object[] {getName(state)});
         }
-        for (History history : histories) {
+        for (final History history : histories) {
             updateHistory(history, targets, state);
         }
-        for (Transition transition : state.getTransitionsList()) {
+        for (final Transition transition : state.getTransitionsList()) {
             updateTransition(transition, targets);
         }
 
-        for (Invoke inv : state.getInvokes()) {
+        for (final Invoke inv : state.getInvokes()) {
             if (inv.getSrc() != null && inv.getSrcexpr() != null) {
                 logAndThrowModelError(ERR_INVOKE_AMBIGUOUS_SRC, new Object[] {getName(state)});
             }
@@ -287,11 +287,11 @@ final class ModelUpdater {
     private static void updateParallel(final Parallel parallel, final Map<String, TransitionTarget> targets)
             throws ModelException {
         updateEnterableStates(parallel.getChildren(), targets);
-        for (Transition transition : parallel.getTransitionsList()) {
+        for (final Transition transition : parallel.getTransitionsList()) {
             updateTransition(transition, targets);
         }
-        List<History> histories = parallel.getHistory();
-        for (History history : histories) {
+        final List<History> histories = parallel.getHistory();
+        for (final History history : histories) {
             updateHistory(history, targets, parallel);
         }
         // TODO: parallel must may have invokes too
@@ -307,7 +307,7 @@ final class ModelUpdater {
     private static void updateEnterableStates(final List<EnterableState> states,
                                               final Map<String, TransitionTarget> targets)
         throws ModelException {
-        for (EnterableState es : states) {
+        for (final EnterableState es : states) {
             if (es instanceof State) {
                 updateState((State) es, targets);
             } else if (es instanceof Parallel) {
@@ -328,19 +328,19 @@ final class ModelUpdater {
                                       final Map<String, TransitionTarget> targets,
                                       final TransitionalState parent)
             throws ModelException {
-        SimpleTransition transition = history.getTransition();
+        final SimpleTransition transition = history.getTransition();
         if (transition == null || transition.getNext() == null) {
             logAndThrowModelError(ERR_HISTORY_NO_DEFAULT,
                     new Object[] {history.getId(), getName(parent)});
         }
         else {
             updateTransition(transition, targets);
-            Set<TransitionTarget> historyStates = transition.getTargets();
+            final Set<TransitionTarget> historyStates = transition.getTargets();
             if (historyStates.size() == 0) {
                 logAndThrowModelError(ERR_STATE_NO_HIST,
                         new Object[] {getName(parent)});
             }
-            for (TransitionTarget historyState : historyStates) {
+            for (final TransitionTarget historyState : historyStates) {
                 if (!history.isDeep()) {
                     // Shallow history
                     if (!parent.getChildren().contains(historyState)) {
@@ -367,17 +367,17 @@ final class ModelUpdater {
      */
     private static void updateTransition(final SimpleTransition transition,
                                          final Map<String, TransitionTarget> targets) throws ModelException {
-        String next = transition.getNext();
+        final String next = transition.getNext();
         if (next == null) { // stay transition
             return;
         }
-        Set<TransitionTarget> tts = transition.getTargets();
+        final Set<TransitionTarget> tts = transition.getTargets();
         if (tts.isEmpty()) {
             // 'next' is a space separated list of transition target IDs
-            StringTokenizer ids = new StringTokenizer(next);
+            final StringTokenizer ids = new StringTokenizer(next);
             while (ids.hasMoreTokens()) {
-                String id = ids.nextToken();
-                TransitionTarget tt = targets.get(id);
+                final String id = ids.nextToken();
+                final TransitionTarget tt = targets.get(id);
                 if (tt == null) {
                     logAndThrowModelError(ERR_TARGET_NOT_FOUND, new Object[] {
                             id });
@@ -385,7 +385,7 @@ final class ModelUpdater {
                 tts.add(tt);
             }
             if (tts.size() > 1) {
-                boolean legal = verifyTransitionTargets(tts);
+                final boolean legal = verifyTransitionTargets(tts);
                 if (!legal) {
                     logAndThrowModelError(ERR_ILLEGAL_TARGETS, new Object[] {
                             next });
@@ -403,9 +403,9 @@ final class ModelUpdater {
      */
     private static void logAndThrowModelError(final String errType,
                                               final Object[] msgArgs) throws ModelException {
-        MessageFormat msgFormat = new MessageFormat(errType);
-        String errMsg = msgFormat.format(msgArgs);
-        org.apache.commons.logging.Log log = LogFactory.
+        final MessageFormat msgFormat = new MessageFormat(errType);
+        final String errMsg = msgFormat.format(msgArgs);
+        final org.apache.commons.logging.Log log = LogFactory.
                 getLog(ModelUpdater.class);
         log.error(errMsg);
         throw new ModelException(errMsg);
@@ -460,7 +460,7 @@ final class ModelUpdater {
         }
         TransitionTarget first = null;
         int i = 0;
-        for (TransitionTarget tt : tts) {
+        for (final TransitionTarget tt : tts) {
             if (first == null) {
                 first = tt;
                 i = tt.getNumberOfAncestors();
@@ -473,7 +473,7 @@ final class ModelUpdater {
                 return false;
             }
             // ensure no target is an ancestor of any other target on the list
-            for (TransitionTarget other : tts) {
+            for (final TransitionTarget other : tts) {
                 if (other != tt && other.isDescendantOf(tt) || tt.isDescendantOf(other)) {
                     return false;
                 }

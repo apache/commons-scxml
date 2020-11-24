@@ -56,8 +56,8 @@ public class SimpleErrorReporter implements ErrorReporter, Serializable {
             final Object errCtx) {
         //Note: the if-then-else below is based on the actual usage
         // (codebase search), it has to be kept up-to-date as the code changes
-        String errCode = errorCode.intern();
-        StringBuffer msg = new StringBuffer();
+        final String errCode = errorCode.intern();
+        final StringBuffer msg = new StringBuffer();
         msg.append(errCode).append(" (");
         msg.append(errDetail).append("): ");
         if (errCode == ErrorConstants.NO_INITIAL) {
@@ -75,13 +75,13 @@ public class SimpleErrorReporter implements ErrorReporter, Serializable {
         } else if (errCode == ErrorConstants.ILLEGAL_CONFIG) {
             //isLegalConfig
             if (errCtx instanceof Map.Entry) { //unchecked cast below
-                Map.Entry<EnterableState, Set<EnterableState>> badConfigMap =
+                final Map.Entry<EnterableState, Set<EnterableState>> badConfigMap =
                     (Map.Entry<EnterableState, Set<EnterableState>>) errCtx;
-                EnterableState es = badConfigMap.getKey();
-                Set<EnterableState> vals = badConfigMap.getValue();
+                final EnterableState es = badConfigMap.getKey();
+                final Set<EnterableState> vals = badConfigMap.getValue();
                 msg.append(LogUtils.getTTPath(es)).append(" : [");
-                for (Iterator<EnterableState> i = vals.iterator(); i.hasNext();) {
-                    EnterableState ex = i.next();
+                for (final Iterator<EnterableState> i = vals.iterator(); i.hasNext();) {
+                    final EnterableState ex = i.next();
                     msg.append(LogUtils.getTTPath(ex));
                     if (i.hasNext()) { // reason for iterator usage
                         msg.append(", ");
@@ -89,10 +89,10 @@ public class SimpleErrorReporter implements ErrorReporter, Serializable {
                 }
                 msg.append(']');
             } else if (errCtx instanceof Set) { //unchecked cast below
-                Set<EnterableState> vals = (Set<EnterableState>) errCtx;
+                final Set<EnterableState> vals = (Set<EnterableState>) errCtx;
                 msg.append("<SCXML> : [");
-                for (Iterator<EnterableState> i = vals.iterator(); i.hasNext();) {
-                    EnterableState ex = i.next();
+                for (final Iterator<EnterableState> i = vals.iterator(); i.hasNext();) {
+                    final EnterableState ex = i.next();
                     msg.append(LogUtils.getTTPath(ex));
                     if (i.hasNext()) {
                         msg.append(", ");
@@ -102,7 +102,7 @@ public class SimpleErrorReporter implements ErrorReporter, Serializable {
             }
         } else if (errCode == ErrorConstants.EXPRESSION_ERROR) {
             if (errCtx instanceof Executable) {
-                TransitionTarget parent = ((Executable) errCtx).getParent();
+                final TransitionTarget parent = ((Executable) errCtx).getParent();
                 msg.append("Expression error inside ").append(LogUtils.getTTPath(parent));
             }
             else if (errCtx instanceof Data) {

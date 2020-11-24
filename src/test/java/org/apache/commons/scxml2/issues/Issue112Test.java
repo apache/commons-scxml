@@ -52,13 +52,13 @@ public class Issue112Test {
     @Test
     public void test01issue112() throws Exception {
 
-        CustomAction ca1 =
+        final CustomAction ca1 =
             new CustomAction("http://my.custom-actions.domain/CUSTOM", "enqueue", Enqueue.class);
-        List<CustomAction> customActions = new ArrayList<>();
+        final List<CustomAction> customActions = new ArrayList<>();
         customActions.add(ca1);
 
-        SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/issues/queue-01.xml", customActions);
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
+        final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/issues/queue-01.xml", customActions);
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
         exec.go();
         Assertions.assertEquals("init", exec.getStatus().getStates().
                 iterator().next().getId());
@@ -89,12 +89,12 @@ public class Issue112Test {
             return event;
         }
 
-        public void setEvent(String event) {
+        public void setEvent(final String event) {
             this.event = event;
         }
 
         @Override
-        public void execute(ActionExecutionContext exctx) {
+        public void execute(final ActionExecutionContext exctx) {
 
             Application.QUEUE.add(event);
 

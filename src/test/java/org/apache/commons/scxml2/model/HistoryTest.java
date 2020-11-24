@@ -27,7 +27,7 @@ public class HistoryTest {
 
     @Test
     public void testSetTypeDeep() {
-        History history = new History();
+        final History history = new History();
         history.setType("deep");
         
         Assertions.assertTrue(history.isDeep());
@@ -35,7 +35,7 @@ public class HistoryTest {
         
     @Test
     public void testSetTypeNotDeep() {
-        History history = new History();
+        final History history = new History();
         history.setType("shallow");
         
         Assertions.assertFalse(history.isDeep());
@@ -43,21 +43,21 @@ public class HistoryTest {
     
     @Test
     public void testShallowHistory01() throws Exception {
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/history-shallow-01.xml");
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/history-shallow-01.xml");
         exec.go();
         runHistoryFlow(exec);
     }
     
     @Test
     public void testDeepHistory01() throws Exception {
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/history-deep-01.xml");
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/history-deep-01.xml");
         exec.go();
         runHistoryFlow(exec);
     }
     
     @Test
     public void testHistoryDefaults01() throws Exception {
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/history-default-01.xml");
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/history-default-01.xml");
         exec.go();
         Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assertions.assertEquals(1, currentStates.size());
@@ -72,9 +72,9 @@ public class HistoryTest {
     
     @Test
     public void testHistoryParallel01() throws Exception {
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/history-parallel-01.xml");
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/history-parallel-01.xml");
         exec.go();
-        Set<EnterableState> currentStates = exec.getStatus().getStates();
+        final Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assertions.assertEquals(1, currentStates.size());
         SCXMLTestHelper.assertState(exec, "off_call");
         SCXMLTestHelper.assertPostTriggerStates(exec, "dial", new String[] { "talking", "on_call" });
@@ -88,7 +88,7 @@ public class HistoryTest {
         SCXMLTestHelper.assertPostTriggerStates(exec, "alternate", new String[] { "held", "on_call" });
     }
 
-    private void runHistoryFlow(SCXMLExecutor exec) throws Exception {
+    private void runHistoryFlow(final SCXMLExecutor exec) throws Exception {
         Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assertions.assertEquals(1, currentStates.size());
         Assertions.assertEquals("phase1", currentStates.iterator().next().getId());
@@ -116,8 +116,8 @@ public class HistoryTest {
         return currentStates.iterator().next().getId();
     }
 
-    private String nextPhase(SCXMLExecutor exec) throws Exception {
-        Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "done.state.phase");
+    private String nextPhase(final SCXMLExecutor exec) throws Exception {
+        final Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "done.state.phase");
         Assertions.assertEquals(1, currentStates.size());
         return currentStates.iterator().next().getId();
     }

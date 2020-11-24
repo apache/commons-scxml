@@ -35,7 +35,7 @@ public class ActionExecutionContext {
      * Constructor
      * @param exctx The SCXML execution context this action execution context belongs to
      */
-    public ActionExecutionContext(SCXMLExecutionContext exctx) {
+    public ActionExecutionContext(final SCXMLExecutionContext exctx) {
         this.exctx = exctx;
     }
 
@@ -57,7 +57,7 @@ public class ActionExecutionContext {
      * @param state an EnterableState
      * @return Returns the context for an EnterableState
      */
-    public Context getContext(EnterableState state) {
+    public Context getContext(final EnterableState state) {
         return exctx.getScInstance().getContext(state);
     }
 

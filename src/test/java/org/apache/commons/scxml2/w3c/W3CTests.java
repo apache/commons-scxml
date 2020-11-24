@@ -124,7 +124,7 @@ public class W3CTests {
         }
 
         public static Datamodel fromValue(final String value) {
-            for (Datamodel datamodel : Datamodel.values()) {
+            for (final Datamodel datamodel : Datamodel.values()) {
                 if (datamodel.value().equals(value)) {
                     return datamodel;
                 }
@@ -214,7 +214,7 @@ public class W3CTests {
             if (testsMap == null) {
                 testsMap = new LinkedHashMap<>();
                 if (tests != null) {
-                    for (Test t : tests) {
+                    for (final Test t : tests) {
                         testsMap.put(t.getId(), t);
                     }
                 }
@@ -361,7 +361,7 @@ public class W3CTests {
             if (assertionsMap == null) {
                 assertionsMap = new LinkedHashMap<>();
                 if (assertions != null) {
-                    for (Assertion a : assertions) {
+                    for (final Assertion a : assertions) {
                         assertionsMap.put(a.getId(), a);
                     }
                 }
@@ -419,8 +419,8 @@ public class W3CTests {
                 return;
             }
             else if ("run".equals(args[0])) {
-                Datamodel datamodel = Datamodel.fromValue(System.getProperty("datamodel"));
-                String testId = System.getProperty("test");
+                final Datamodel datamodel = Datamodel.fromValue(System.getProperty("datamodel"));
+                final String testId = System.getProperty("test");
                 new W3CTests().runTests(testId, datamodel);
                 return;
             }
@@ -460,10 +460,10 @@ public class W3CTests {
         FileUtils.copyURLToFile(new URL(SCXML_IRP_BASE_URL + SCXML_IRP_MANIFEST_URI), new File(testsSrcDir, SCXML_IRP_MANIFEST_URI));
         System.out.println("Downloading ecma stylesheet: " + SCXML_IRP_BASE_URL + SCXML_IRP_ECMA_XSL_URI);
         FileUtils.copyURLToFile(new URL(SCXML_IRP_BASE_URL + SCXML_IRP_ECMA_XSL_URI), new File(testsSrcDir, SCXML_IRP_ECMA_XSL_URI));
-        Assertions assertions = loadAssertions();
-        for (Assertions.Assertion entry : assertions.getAssertions().values()) {
-            for (Assertions.TestCase test : entry.getTestCases()) {
-                for (Assertions.Resource resource : test.getResources()) {
+        final Assertions assertions = loadAssertions();
+        for (final Assertions.Assertion entry : assertions.getAssertions().values()) {
+            for (final Assertions.TestCase test : entry.getTestCases()) {
+                for (final Assertions.Resource resource : test.getResources()) {
                     System.out.println("Downloading IRP test file: " + SCXML_IRP_BASE_URL + resource.getUri());
                     FileUtils.copyURLToFile(new URL(SCXML_IRP_BASE_URL + resource.getUri()), new File(TXML_TESTS_DIR + resource.getFilename()));
                 }
@@ -481,17 +481,17 @@ public class W3CTests {
     protected void makeTests() throws Exception {
         final File testsSrcDir = new File(TESTS_SRC_DIR);
 
-        TransformerFactory factory = TransformerFactory.newInstance("net.sf.saxon.TransformerFactoryImpl",null);
+        final TransformerFactory factory = TransformerFactory.newInstance("net.sf.saxon.TransformerFactoryImpl",null);
         factory.setFeature("http://saxon.sf.net/feature/suppressXsltNamespaceCheck", true);
         final Map<Datamodel, Transformer> transformers = new HashMap<>();
         transformers.put(Datamodel.ECMA, factory.newTransformer(new StreamSource(new FileInputStream(new File(testsSrcDir, SCXML_IRP_ECMA_XSL_URI)))));
         transformers.put(Datamodel.MINIMAL, factory.newTransformer(new StreamSource(getClass().getResourceAsStream(SCXML_IRP_MINIMAL_XSL_FILENAME))));
         transformers.put(Datamodel.JEXL, factory.newTransformer(new StreamSource(getClass().getResourceAsStream(SCXML_IRP_JEXL_XSL_FILENAME))));
         transformers.put(Datamodel.GROOVY, factory.newTransformer(new StreamSource(getClass().getResourceAsStream(SCXML_IRP_GROOVY_XSL_FILENAME))));
-        Assertions assertions = loadAssertions();
-        for (Assertions.Assertion entry : assertions.getAssertions().values()) {
-            for (Assertions.TestCase test : entry.getTestCases()) {
-                for (Assertions.Resource resource : test.getResources()) {
+        final Assertions assertions = loadAssertions();
+        for (final Assertions.Assertion entry : assertions.getAssertions().values()) {
+            for (final Assertions.TestCase test : entry.getTestCases()) {
+                for (final Assertions.Resource resource : test.getResources()) {
                     processResource(entry.getSpecId(), resource, transformers);
                 }
             }
@@ -518,7 +518,7 @@ public class W3CTests {
                 transformResource(resource, transformers.get(Datamodel.ECMA), Datamodel.ECMA.testDir());
                 break;
             default:
-                for (Datamodel dm : transformers.keySet()) {
+                for (final Datamodel dm : transformers.keySet()) {
                     if (dm != Datamodel.MINIMAL) {
                         transformResource(resource, transformers.get(dm), dm.testDir());
                     }
@@ -538,7 +538,7 @@ public class W3CTests {
     protected void transformResource(final Assertions.Resource resource, final Transformer transformer,
                                      final String targetDir) throws Exception {
         if (resource.getFilename().endsWith(".txml")) {
-            StreamSource txmlSource = new StreamSource(new FileInputStream(new File(TXML_TESTS_DIR, resource.getFilename())));
+            final StreamSource txmlSource = new StreamSource(new FileInputStream(new File(TXML_TESTS_DIR, resource.getFilename())));
             transformer.transform(txmlSource, new StreamResult(new FileOutputStream(new File(targetDir, resource.getName() + ".scxml"))));
         }
         else {
@@ -574,7 +574,7 @@ public class W3CTests {
             }
         }
         else {
-            for (Assertions.Assertion entry : assertions.getAssertions().values()) {
+            for (final Assertions.Assertion entry : assertions.getAssertions().values()) {
                 runAssert(entry, tests, datamodel, enabled, false, results);
             }
         }
@@ -594,7 +594,7 @@ public class W3CTests {
         System.out.print("\n");
         if (testId == null && !results.changedStatusTests.isEmpty()) {
             System.out.println("  "+(enabled? "failed" : "passed")+" tests: ");
-            for (String filename : results.changedStatusTests) {
+            for (final String filename : results.changedStatusTests) {
                 System.out.println("    "+filename);
             }
             System.out.print("\n");
@@ -611,22 +611,22 @@ public class W3CTests {
      * @throws Exception
      */
     protected void runAssert(final Assertions.Assertion assertion, final Tests tests, final Datamodel datamodel,
-                             final boolean status, final boolean singleTest, TestResults results) {
+                             final boolean status, final boolean singleTest, final TestResults results) {
         final Tests.Test test = tests.getTests().get(assertion.getId());
         if (test == null) {
             throw new IllegalStateException("No test configuration found for W3C IRP test with id: "+assertion.getId());
         }
         if (test.isImplemented()) {
-            for (Assertions.TestCase testCase : assertion.getTestCases()) {
+            for (final Assertions.TestCase testCase : assertion.getTestCases()) {
                 for (final Datamodel dm : Datamodel.values()) {
                     if (assertion.getDatamodel() == null && dm != Datamodel.MINIMAL || dm == assertion.getDatamodel()) {
                         boolean skipped = true;
                         if (datamodel == null || datamodel == dm) {
                             if (singleTest || test.getStatus(dm) == null || status == test.getStatus(dm)) {
-                                for (Assertions.Resource scxmlResource : testCase.getScxmlResources()) {
-                                    File scxmlFile = new File(dm.testDir(), scxmlResource.getName()+".scxml");
+                                for (final Assertions.Resource scxmlResource : testCase.getScxmlResources()) {
+                                    final File scxmlFile = new File(dm.testDir(), scxmlResource.getName()+".scxml");
                                     skipped = false;
-                                    boolean success = runTest(testCase, test, scxmlFile);
+                                    final boolean success = runTest(testCase, test, scxmlFile);
                                     if (!success) {
                                         results.failed.put(dm, results.failed(dm)+1);
                                     } else {
@@ -672,7 +672,7 @@ public class W3CTests {
             exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
             exec.registerInvokerClass("http://www.w3.org/TR/scxml/", SimpleSCXMLInvoker.class);
             exec.run().join();
-            Final end = exec.getStatus().getFinalState();
+            final Final end = exec.getStatus().getFinalState();
             System.out.println("                final state: "+end.getId());
             if (!testCase.isManual()) {
                 return end.getId().equals("pass");
@@ -685,7 +685,7 @@ public class W3CTests {
                 return false;
             }
         }
-        catch (Exception e) {
+        catch (final Exception e) {
             if (test.isManual() && e.getMessage() != null && e.getMessage().equals(test.getFinalState())) {
                 System.out.println("                PASS: "+e.getMessage());
                 return true;

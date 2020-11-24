@@ -33,7 +33,7 @@ public class TransitionTest {
     public void testGetTargets() {
         Assertions.assertEquals(0, transition.getTargets().size());
 
-        State state = new State();
+        final State state = new State();
         state.setId("1");
 
         transition.getTargets().add(state);

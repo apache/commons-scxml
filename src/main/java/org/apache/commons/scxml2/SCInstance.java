@@ -180,12 +180,12 @@ public class SCInstance implements Serializable {
     protected void initializeDatamodel(final Map<String, Object> data) {
         if (globalContext == null) {
             // Clone root datamodel
-            Datamodel rootdm = stateMachine.getDatamodel();
+            final Datamodel rootdm = stateMachine.getDatamodel();
             cloneDatamodel(rootdm, getGlobalContext(), evaluator, errorReporter);
 
             // initialize/override global context data
             if (data != null) {
-                for (String key : data.keySet()) {
+                for (final String key : data.keySet()) {
                     if (globalContext.has(key)) {
                         globalContext.set(key, data.get(key));
                     }
@@ -193,7 +193,7 @@ public class SCInstance implements Serializable {
             }
             if (stateMachine.isLateBinding() == null || Boolean.FALSE.equals(stateMachine.isLateBinding())) {
                 // early binding
-                for (EnterableState es : stateMachine.getChildren()) {
+                for (final EnterableState es : stateMachine.getChildren()) {
                     getContext(es);
                 }
             }
@@ -216,7 +216,7 @@ public class SCInstance implements Serializable {
      * Sets the I/O Processor for the internal event queue
      * @param internalIOProcessor the I/O Processor
      */
-    protected void setInternalIOProcessor(SCXMLIOProcessor internalIOProcessor) {
+    protected void setInternalIOProcessor(final SCXMLIOProcessor internalIOProcessor) {
         this.internalIOProcessor = internalIOProcessor;
     }
 
@@ -230,7 +230,7 @@ public class SCInstance implements Serializable {
      * @param reAttach Flag whether or not re-attaching it
      * @throws ModelException if {@code evaluator} is null
      */
-    protected void setEvaluator(Evaluator evaluator, boolean reAttach) throws ModelException {
+    protected void setEvaluator(final Evaluator evaluator, final boolean reAttach) throws ModelException {
         this.evaluator = evaluator;
         if (initialized) {
             if (!reAttach) {
@@ -255,7 +255,7 @@ public class SCInstance implements Serializable {
      * @param errorReporter The error reporter for this state machine instance.
      * @throws ModelException if an attempt is made to set a null value for the error reporter
      */
-    protected void setErrorReporter(ErrorReporter errorReporter) throws ModelException {
+    protected void setErrorReporter(final ErrorReporter errorReporter) throws ModelException {
         if (errorReporter == null) {
             throw new ModelException(ERR_NO_ERROR_REPORTER);
         }
@@ -278,7 +278,7 @@ public class SCInstance implements Serializable {
      * @param stateMachine The state machine for this instance
      * @throws ModelException if an attempt is made to set a null value for the state machine
      */
-    protected void setStateMachine(SCXML stateMachine) throws ModelException {
+    protected void setStateMachine(final SCXML stateMachine) throws ModelException {
         if (stateMachine == null) {
             throw new ModelException(ERR_NO_STATE_MACHINE);
         }
@@ -286,7 +286,7 @@ public class SCInstance implements Serializable {
         initialize();
     }
 
-    public void setSingleContext(boolean singleContext) throws ModelException {
+    public void setSingleContext(final boolean singleContext) throws ModelException {
         if (initialized) {
             throw new ModelException("SCInstance: already initialized");
         }
@@ -310,11 +310,11 @@ public class SCInstance implements Serializable {
         if (datamodel == null || Evaluator.NULL_DATA_MODEL.equals(evaluator.getSupportedDatamodel())) {
             return;
         }
-        List<Data> data = datamodel.getData();
+        final List<Data> data = datamodel.getData();
         if (data == null) {
             return;
         }
-        for (Data datum : data) {
+        for (final Data datum : data) {
             if (getGlobalContext() == ctx && ctx.has(datum.getId())) {
                 // earlier/externally defined 'initial' value found: do not overwrite
                 continue;
@@ -332,7 +332,7 @@ public class SCInstance implements Serializable {
                     datum.setParsedValue(ContentParser.DEFAULT_PARSER.parseResource(resolvedSrc));
                     value = evaluator.cloneData(datum.getParsedValue().getValue());
                     setValue = true;
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     if (internalIOProcessor != null) {
                         internalIOProcessor.addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT).build());
                     }
@@ -343,7 +343,7 @@ public class SCInstance implements Serializable {
                 try {
                     value = evaluator.eval(ctx, datum.getExpr());
                     setValue = true;
-                } catch (SCXMLExpressionException see) {
+                } catch (final SCXMLExpressionException see) {
                     if (internalIOProcessor != null) {
                         internalIOProcessor.addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT).build());
                     }
@@ -364,7 +364,7 @@ public class SCInstance implements Serializable {
                     // directly injecting them in the context.
                     try {
                         ((JSEvaluator)evaluator).injectData(ctx, datum.getId(), value);
-                    } catch (SCXMLExpressionException e) {
+                    } catch (final SCXMLExpressionException e) {
                         if (internalIOProcessor != null) {
                             internalIOProcessor.addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT).build());
                         }
@@ -452,10 +452,10 @@ public class SCInstance implements Serializable {
             // force initialization of rootContext
             getRootContext();
             if (rootContext != null) {
-                Context internalContext = new SimpleContext(rootContext);
+                final Context internalContext = new SimpleContext(rootContext);
                 systemContext = new SCXMLSystemContext(internalContext);
                 systemContext.getContext().set(SCXMLSystemContext.SESSIONID_KEY, UUID.randomUUID().toString());
-                String _name = stateMachine != null && stateMachine.getName() != null ? stateMachine.getName() : "";
+                final String _name = stateMachine != null && stateMachine.getName() != null ? stateMachine.getName() : "";
                 systemContext.getContext().set(SCXMLSystemContext.SCXML_NAME_KEY, _name);
                 systemContext.getPlatformVariables().put(SCXMLSystemContext.STATUS_KEY, currentStatus);
             }
@@ -490,7 +490,7 @@ public class SCInstance implements Serializable {
                 context = getGlobalContext();
             }
             else {
-                EnterableState parent = state.getParent();
+                final EnterableState parent = state.getParent();
                 if (parent == null) {
                     // docroot
                     context = evaluator.newContext(getGlobalContext());
@@ -499,7 +499,7 @@ public class SCInstance implements Serializable {
                 }
             }
             if (state instanceof TransitionalState) {
-                Datamodel datamodel = ((TransitionalState)state).getDatamodel();
+                final Datamodel datamodel = ((TransitionalState)state).getDatamodel();
                 cloneDatamodel(datamodel, context, evaluator, errorReporter);
             }
             contexts.put(state, context);

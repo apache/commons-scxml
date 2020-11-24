@@ -58,7 +58,7 @@ public class PayloadBuilder {
      * @param payload the payload data map to be updated
      */
     @SuppressWarnings("unchecked")
-    public static void addToPayload(final String attrName, final Object attrValue, Map<String, Object> payload) {
+    public static void addToPayload(final String attrName, final Object attrValue, final Map<String, Object> payload) {
         DataValueList valueList = null;
         Object value = payload.get(attrName);
         if (value != null) {
@@ -97,11 +97,11 @@ public class PayloadBuilder {
      * @see PayloadBuilder#addToPayload(String, Object, java.util.Map)
      */
     public static void addParamsToPayload(final Context ctx, final Evaluator evaluator, final List<Param> paramsList,
-                                          Map<String, Object> payload)
+                                          final Map<String, Object> payload)
             throws SCXMLExpressionException {
         if (!paramsList.isEmpty()) {
             Object paramValue;
-            for (Param p : paramsList) {
+            for (final Param p : paramsList) {
                 if (p.getExpr() != null) {
                     paramValue = evaluator.eval(ctx, p.getExpr());
                 }
@@ -132,13 +132,13 @@ public class PayloadBuilder {
      */
     public static void addNamelistDataToPayload(final EnterableState parentState, final Context ctx,
                                                 final Evaluator evaluator, final ErrorReporter errorReporter,
-                                                final String namelist, Map<String, Object> payload)
+                                                final String namelist, final Map<String, Object> payload)
             throws SCXMLExpressionException {
         if (namelist != null) {
-            StringTokenizer tkn = new StringTokenizer(namelist);
+            final StringTokenizer tkn = new StringTokenizer(namelist);
             while (tkn.hasMoreTokens()) {
-                String varName = tkn.nextToken();
-                Object varObj = evaluator.eval(ctx, varName);
+                final String varName = tkn.nextToken();
+                final Object varObj = evaluator.eval(ctx, varName);
                 if (varObj == null) {
                     //considered as a warning here
                     errorReporter.onError(ErrorConstants.UNDEFINED_VARIABLE, varName + " = null", parentState);

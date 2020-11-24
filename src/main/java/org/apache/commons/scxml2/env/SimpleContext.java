@@ -103,7 +103,7 @@ public class SimpleContext implements Context, Serializable {
      * @see org.apache.commons.scxml2.Context#get(java.lang.String)
      */
     public Object get(final String name) {
-        Object localValue = getVars().get(name);
+        final Object localValue = getVars().get(name);
         if (localValue != null) {
             return localValue;
         } else if (parent != null) {

@@ -64,12 +64,12 @@ public class AbstractSCXMLListenerTest {
 
     @Test
     public void testAbstractSCXMLListener0() {
-        SCXMLListener listener0 = new AbstractSCXMLListener() {
+        final SCXMLListener listener0 = new AbstractSCXMLListener() {
                 /**
                  * @see SCXMLListener#onEntry(EnterableState)
                  */
                 @Override
-                public void onEntry(EnterableState state) {
+                public void onEntry(final EnterableState state) {
                     heardOnEntry = true;
                 }
 
@@ -77,7 +77,7 @@ public class AbstractSCXMLListenerTest {
                  * @see SCXMLListener#onExit(EnterableState)
                  */
                 @Override
-                public void onExit(EnterableState state) {
+                public void onExit(final EnterableState state) {
                     heardOnExit = true;
                 }
 
@@ -85,8 +85,8 @@ public class AbstractSCXMLListenerTest {
                  * @see SCXMLListener#onTransition(TransitionTarget,TransitionTarget,Transition,String)
                  */
                 @Override
-                public void onTransition(TransitionTarget from, TransitionTarget to,
-                                         Transition transition, String event) {
+                public void onTransition(final TransitionTarget from, final TransitionTarget to,
+                                         final Transition transition, final String event) {
                     heardOnTransition = true;
                 }
             };
@@ -104,12 +104,12 @@ public class AbstractSCXMLListenerTest {
 
     @Test
     public void testAbstractSCXMLListener1() {
-        SCXMLListener listener1 = new AbstractSCXMLListener() {
+        final SCXMLListener listener1 = new AbstractSCXMLListener() {
                 /**
                  * @see SCXMLListener#onEntry(EnterableState)
                  */
                 @Override
-                public void onEntry(EnterableState state) {
+                public void onEntry(final EnterableState state) {
                     heardOnEntry = true;
                 }
 
@@ -117,7 +117,7 @@ public class AbstractSCXMLListenerTest {
                  * @see SCXMLListener#onExit(EnterableState)
                  */
                 @Override
-                public void onExit(EnterableState state) {
+                public void onExit(final EnterableState state) {
                     heardOnExit = true;
                 }
             };
@@ -135,12 +135,12 @@ public class AbstractSCXMLListenerTest {
 
     @Test
     public void testAbstractSCXMLListener2() {
-        SCXMLListener listener2 = new AbstractSCXMLListener() {
+        final SCXMLListener listener2 = new AbstractSCXMLListener() {
                 /**
                  * @see SCXMLListener#onEntry(EnterableState)
                  */
                 @Override
-                public void onEntry(EnterableState state) {
+                public void onEntry(final EnterableState state) {
                     heardOnEntry = true;
                 }
             };
@@ -158,7 +158,7 @@ public class AbstractSCXMLListenerTest {
 
     @Test
     public void testAbstractSCXMLListener3() {
-        SCXMLListener listener3 = new AbstractSCXMLListener() {
+        final SCXMLListener listener3 = new AbstractSCXMLListener() {
                 // empty
             };
 

@@ -383,11 +383,11 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
+    public void execute(final ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
         // Send attributes evaluation
-        EnterableState parentState = getParentEnterableState();
-        Context ctx = exctx.getContext(parentState);
-        Evaluator eval = exctx.getEvaluator();
+        final EnterableState parentState = getParentEnterableState();
+        final Context ctx = exctx.getContext(parentState);
+        final Evaluator eval = exctx.getEvaluator();
         // Most attributes of <send> are expressions so need to be
         // evaluated before the EventDispatcher callback
         Object hintsValue = null;
@@ -425,7 +425,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
             typeValue = SCXMLIOProcessor.DEFAULT_EVENT_PROCESSOR;
         }
         Object payload = null;
-        Map<String, Object> payloadDataMap = new LinkedHashMap<>();
+        final Map<String, Object> payloadDataMap = new LinkedHashMap<>();
         PayloadBuilder.addNamelistDataToPayload(parentState, ctx, eval, exctx.getErrorReporter(), namelist, payloadDataMap);
         PayloadBuilder.addParamsToPayload(ctx, eval, paramsList, payloadDataMap);
         if (!payloadDataMap.isEmpty()) {
@@ -436,7 +436,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
                 Object evalResult;
                 try {
                     evalResult = eval.eval(ctx, content.getExpr());
-                } catch (SCXMLExpressionException e) {
+                } catch (final SCXMLExpressionException e) {
                     exctx.getInternalIOProcessor().addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION,
                             TriggerEvent.ERROR_EVENT).build());
                     exctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR,
@@ -452,7 +452,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
         long wait = 0L;
         String delayString = delay;
         if (delayString == null && delayexpr != null) {
-            Object delayValue = eval.eval(ctx, delayexpr);
+            final Object delayValue = eval.eval(ctx, delayexpr);
             if (delayValue != null) {
                 delayString = delayValue.toString();
             }
@@ -468,7 +468,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
                         + "\" evaluated to null");
             }
         }
-        Map<String, SCXMLIOProcessor> ioProcessors = (Map<String, SCXMLIOProcessor>) ctx.get(SCXMLSystemContext.IOPROCESSORS_KEY);
+        final Map<String, SCXMLIOProcessor> ioProcessors = (Map<String, SCXMLIOProcessor>) ctx.get(SCXMLSystemContext.IOPROCESSORS_KEY);
         if (exctx.getAppLog().isDebugEnabled()) {
             exctx.getAppLog().debug("<send>: Dispatching event '" + eventValue
                     + "' to target '" + targetValue + "' of target type '"
@@ -497,7 +497,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
         if (delayString != null && delayString.trim().length() > 0) {
 
             try {
-                String trimDelay = delayString.trim();
+                final String trimDelay = delayString.trim();
                 String numericDelay = trimDelay;
                 if (trimDelay.endsWith(MILLIS)) {
                     numericDelay = trimDelay.substring(0, trimDelay.length() - 2);
@@ -508,7 +508,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
                     multiplier = multiplier*MILLIS_IN_A_MINUTE;
                     numericDelay = trimDelay.substring(0, trimDelay.length() - 1);
                 }
-                int fractionIndex = numericDelay.indexOf('.');
+                final int fractionIndex = numericDelay.indexOf('.');
                 if (fractionIndex > -1) {
                     if (fractionIndex > 0) {
                         wait = Long.parseLong(numericDelay.substring(0, fractionIndex));
@@ -520,7 +520,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
                 if (numericDelay.length() > 0) {
                     wait += Long.parseLong(numericDelay) * multiplier;
                 }
-            } catch (NumberFormatException nfe) {
+            } catch (final NumberFormatException nfe) {
                 throw new SCXMLExpressionException("<send>: invalid " + (expression ? "delayexpr=\"" : "delay=\"") + delayStringSource +"\"");
             }
         }

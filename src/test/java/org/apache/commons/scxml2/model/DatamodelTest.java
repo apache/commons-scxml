@@ -34,9 +34,9 @@ public class DatamodelTest {
      */    
     @Test
     public void testDatamodelSimultaneousJexl() throws Exception {
-        SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/datamodel-01.xml");
+        final SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/datamodel-01.xml");
         exec01.go();
-        SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/datamodel-01.xml");
+        final SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/datamodel-01.xml");
         exec02.go();
         Assertions.assertFalse(exec01 == exec02);
         runtest(exec01, exec02);
@@ -47,9 +47,9 @@ public class DatamodelTest {
      */
     @Test
     public void testDatamodelSimultaneousGroovy() throws Exception {
-        SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/groovy/datamodel-01.xml");
+        final SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/groovy/datamodel-01.xml");
         exec01.go();
-        SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/groovy/datamodel-01.xml");
+        final SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/groovy/datamodel-01.xml");
         exec02.go();
         Assertions.assertFalse(exec01 == exec02);
         runtest(exec01, exec02);
@@ -60,9 +60,9 @@ public class DatamodelTest {
      */
     @Test
     public void testDatamodelSimultaneousJavascript() throws Exception {
-        SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/javascript/datamodel-01.xml");
+        final SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/javascript/datamodel-01.xml");
         exec01.go();
-        SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/javascript/datamodel-01.xml");
+        final SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/javascript/datamodel-01.xml");
         exec02.go();
         Assertions.assertFalse(exec01 == exec02);
         runtest(exec01, exec02);
@@ -70,21 +70,21 @@ public class DatamodelTest {
 
     @Test
     public void testDatamodel05Jexl() throws Exception {
-        SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/datamodel-05.xml");
+        final SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/datamodel-05.xml");
         exec01.go();
         SCXMLTestHelper.assertState(exec01, "end");
     }
 
     @Test
     public void testDatamodel05Groovy() throws Exception {
-        SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/groovy/datamodel-05.xml");
+        final SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/groovy/datamodel-05.xml");
         exec01.go();
         SCXMLTestHelper.assertState(exec01, "end");
     }
 
     @Test
     public void testDatamodel05Javascript() throws Exception {
-        SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/javascript/datamodel-05.xml");
+        final SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/javascript/datamodel-05.xml");
         exec01.go();
         SCXMLTestHelper.assertState(exec01, "end");
     }
@@ -125,8 +125,8 @@ public class DatamodelTest {
         Assertions.assertEquals("forty", currentStates.iterator().next().getId());
     }
 
-    private Set<EnterableState> fireEvent(String name, SCXMLExecutor exec) throws Exception {
-        TriggerEvent[] evts = {new EventBuilder(name, TriggerEvent.SIGNAL_EVENT).build()};
+    private Set<EnterableState> fireEvent(final String name, final SCXMLExecutor exec) throws Exception {
+        final TriggerEvent[] evts = {new EventBuilder(name, TriggerEvent.SIGNAL_EVENT).build()};
         exec.triggerEvents(evts);
         return exec.getStatus().getStates();
     }

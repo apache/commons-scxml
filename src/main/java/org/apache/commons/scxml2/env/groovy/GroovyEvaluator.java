@@ -90,7 +90,7 @@ public class GroovyEvaluator extends AbstractBaseEvaluator {
                 return script;
             }
             StringBuffer sb = null;
-            Matcher m = GROOVY_OPERATOR_ALIASES_PATTERN.matcher(script);
+            final Matcher m = GROOVY_OPERATOR_ALIASES_PATTERN.matcher(script);
             while (m.find()) {
                 if (sb == null) {
                     sb = new StringBuffer();
@@ -112,7 +112,7 @@ public class GroovyEvaluator extends AbstractBaseEvaluator {
         this(false);
     }
 
-    public GroovyEvaluator(boolean useInitialScriptAsBaseScript) {
+    public GroovyEvaluator(final boolean useInitialScriptAsBaseScript) {
         this.useInitialScriptAsBaseScript = useInitialScriptAsBaseScript;
         this.scriptCache = newScriptCache();
     }
@@ -127,15 +127,15 @@ public class GroovyEvaluator extends AbstractBaseEvaluator {
      * @return GroovyExtendableScriptCache for this GroovyEvaluator
      */
     protected GroovyExtendableScriptCache newScriptCache() {
-        GroovyExtendableScriptCache scriptCache = new GroovyExtendableScriptCache();
+        final GroovyExtendableScriptCache scriptCache = new GroovyExtendableScriptCache();
         scriptCache.setScriptPreProcessor(getScriptPreProcessor());
         scriptCache.setScriptBaseClass(GroovySCXMLScript.class.getName());
         return scriptCache;
     }
 
     @SuppressWarnings("unchecked")
-    protected Script getScript(GroovyContext groovyContext, String scriptBaseClassName, String scriptSource) {
-        Script script = scriptCache.getScript(scriptBaseClassName, scriptSource);
+    protected Script getScript(final GroovyContext groovyContext, final String scriptBaseClassName, final String scriptSource) {
+        final Script script = scriptCache.getScript(scriptBaseClassName, scriptSource);
         script.setBinding(groovyContext.getBinding());
         return script;
     }
@@ -188,8 +188,8 @@ public class GroovyEvaluator extends AbstractBaseEvaluator {
         try {
             return getScript(getEffectiveContext(groovyCtx), groovyCtx.getScriptBaseClass(), expr).run();
         }
-        catch (Exception e) {
-            String exMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getCanonicalName();
+        catch (final Exception e) {
+            final String exMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getCanonicalName();
             throw new SCXMLExpressionException("eval('" + expr + "'): " + exMessage, e);
         }
     }
@@ -214,8 +214,8 @@ public class GroovyEvaluator extends AbstractBaseEvaluator {
         try {
             final Object result = getScript(getEffectiveContext(groovyCtx), groovyCtx.getScriptBaseClass(), expr).run();
             return result == null ? Boolean.FALSE : (Boolean)result;
-        } catch (Exception e) {
-            String exMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getCanonicalName();
+        } catch (final Exception e) {
+            final String exMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getCanonicalName();
             throw new SCXMLExpressionException("evalCond('" + expr + "'): " + exMessage, e);
         }
     }
@@ -246,7 +246,7 @@ public class GroovyEvaluator extends AbstractBaseEvaluator {
                 groovyCtx.setScriptBaseClass(script.getClass().getName());
             }
             return result;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             final String exMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getCanonicalName();
             throw new SCXMLExpressionException("evalScript('" + scriptSource + "'): " + exMessage, e);
         }

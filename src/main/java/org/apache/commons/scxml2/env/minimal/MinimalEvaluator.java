@@ -79,9 +79,9 @@ public class MinimalEvaluator implements Evaluator, Serializable {
     @Override
     public Boolean evalCond(final Context ctx, final String expr) throws SCXMLExpressionException {
         // only support the "In(stateId)" predicate
-        String predicate = expr != null ? expr.trim() : "";
+        final String predicate = expr != null ? expr.trim() : "";
         if (predicate.startsWith("In(") && predicate.endsWith(")")) {
-            String stateId = predicate.substring(3, predicate.length()-1);
+            final String stateId = predicate.substring(3, predicate.length()-1);
             return Builtin.isMember(ctx, stateId);
         }
         return false;

@@ -60,7 +60,7 @@ public class Final extends EnterableState {
      * Set the parent State.
      * @param parent The parent state to set
      */
-    public final void setParent(State parent) {
+    public final void setParent(final State parent) {
         super.setParent(parent);
     }
 
@@ -80,19 +80,19 @@ public class Final extends EnterableState {
         this.doneData = doneData;
     }
 
-    public Object processDoneData(SCXMLExecutionContext exctx) throws ModelException {
+    public Object processDoneData(final SCXMLExecutionContext exctx) throws ModelException {
         Object result = null;
         if (doneData != null) {
             try {
-                Content content = doneData.getContent();
-                Evaluator eval = exctx.getEvaluator();
-                Context ctx = exctx.getScInstance().getGlobalContext();
+                final Content content = doneData.getContent();
+                final Evaluator eval = exctx.getEvaluator();
+                final Context ctx = exctx.getScInstance().getGlobalContext();
                 if (content != null) {
                     if (content.getExpr() != null) {
                         Object evalResult;
                         try {
                             evalResult = eval.eval(ctx, content.getExpr());
-                        } catch (SCXMLExpressionException e) {
+                        } catch (final SCXMLExpressionException e) {
                             exctx.getInternalIOProcessor().addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION,
                                     TriggerEvent.ERROR_EVENT).build());
                             exctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR,
@@ -105,14 +105,14 @@ public class Final extends EnterableState {
                         result = eval.cloneData(content.getParsedValue().getValue());
                     }
                 } else {
-                    Map<String, Object> payloadDataMap = new LinkedHashMap<>();
+                    final Map<String, Object> payloadDataMap = new LinkedHashMap<>();
                     PayloadBuilder.addParamsToPayload(exctx.getScInstance().getGlobalContext(),
                             exctx.getEvaluator(), doneData.getParams(), payloadDataMap);
                     if (!payloadDataMap.isEmpty()) {
                         result = payloadDataMap;
                     }
                 }
-            } catch (SCXMLExpressionException e) {
+            } catch (final SCXMLExpressionException e) {
                 result = null;
                 exctx.getInternalIOProcessor().addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT).build());
                 exctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR,

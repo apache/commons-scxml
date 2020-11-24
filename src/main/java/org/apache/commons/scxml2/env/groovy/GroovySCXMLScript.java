@@ -75,11 +75,11 @@ public abstract class GroovySCXMLScript extends Script {
      * @param property the name of variable to check if it exists
      * @return true if the variable exists, false otherwise
      */
-    public boolean var(String property) {
+    public boolean var(final String property) {
         if (!context.has(property)) {
             try {
                 getMetaClass().getProperty(this, property);
-            } catch (MissingPropertyException e) {
+            } catch (final MissingPropertyException e) {
                 return false;
             }
         }
@@ -104,7 +104,7 @@ public abstract class GroovySCXMLScript extends Script {
      * @param obj the object to check if it is empty
      * @return true if the object is empty, false otherwise
      */
-    public boolean empty(Object obj) {
+    public boolean empty(final Object obj) {
         return obj == null ||
                 (obj instanceof String && ((String)obj).isEmpty()) ||
                 ((obj.getClass().isArray() && Array.getLength(obj)==0)) ||

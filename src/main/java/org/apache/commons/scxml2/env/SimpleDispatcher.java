@@ -77,7 +77,7 @@ public class SimpleDispatcher implements EventDispatcher, Serializable {
          * @param event The event to be triggered.
          * @param target The target io processor
          */
-        DelayedEventTask(final String id, final TriggerEvent event, SCXMLIOProcessor target) {
+        DelayedEventTask(final String id, final TriggerEvent event, final SCXMLIOProcessor target) {
             this.id = id;
             this.event = event;
             this.target = target;
@@ -140,7 +140,7 @@ public class SimpleDispatcher implements EventDispatcher, Serializable {
         if (!timers.containsKey(sendId)) {
             return; // done, we don't track this one or its already expired
         }
-        Timer timer = timers.get(sendId);
+        final Timer timer = timers.get(sendId);
         if (timer != null) {
             timer.cancel();
             if (log.isDebugEnabled()) {
@@ -173,7 +173,7 @@ public class SimpleDispatcher implements EventDispatcher, Serializable {
 
         if (type == null || type.equalsIgnoreCase(SCXMLIOProcessor.SCXML_EVENT_PROCESSOR) ||
                 type.equals(SCXMLIOProcessor.DEFAULT_EVENT_PROCESSOR)) {
-            String originType = SCXMLIOProcessor.DEFAULT_EVENT_PROCESSOR;
+            final String originType = SCXMLIOProcessor.DEFAULT_EVENT_PROCESSOR;
             SCXMLIOProcessor ioProcessor;
 
             boolean internal = false;
@@ -211,7 +211,7 @@ public class SimpleDispatcher implements EventDispatcher, Serializable {
                 throw new ActionExecutionError(true, "<send>: Cannot send without event name");
             }
             else {
-                EventBuilder eventBuilder = new EventBuilder(event, TriggerEvent.SIGNAL_EVENT)
+                final EventBuilder eventBuilder = new EventBuilder(event, TriggerEvent.SIGNAL_EVENT)
                         .sendId(id)
                         .data(data);
                 if (!internal) {
@@ -221,7 +221,7 @@ public class SimpleDispatcher implements EventDispatcher, Serializable {
                     }
                     if (delay > 0L) {
                         // Need to schedule this one
-                        Timer timer = new Timer(true);
+                        final Timer timer = new Timer(true);
                         timer.schedule(new DelayedEventTask(id, eventBuilder.build(), ioProcessor), delay);
                         timers.put(id, timer);
                         if (log.isDebugEnabled()) {

@@ -40,7 +40,7 @@ public class JSBindings implements Bindings {
      * @throws IllegalArgumentException Thrown if <code>jsContext</code> is <code>null</code>.
      *
      */
-    public JSBindings(JSContext jsContext) {
+    public JSBindings(final JSContext jsContext) {
         setContext(jsContext);
     }
 
@@ -50,7 +50,7 @@ public class JSBindings implements Bindings {
      * @param jsContext the SCXML context to use for script variables.
      * @throws IllegalArgumentException Thrown if <code>jsContext</code> is <code>null</code>.
      */
-    public void setContext(JSContext jsContext) {
+    public void setContext(final JSContext jsContext) {
         if (jsContext == null) {
             throw new IllegalArgumentException("SCXML context is required");
         }
@@ -61,7 +61,7 @@ public class JSBindings implements Bindings {
      * Returns <code>true</code> if the SCXML context contains a variable identified by <code>key</code>.
      */
     @Override
-    public boolean containsKey(Object key) {
+    public boolean containsKey(final Object key) {
         return context.has(key.toString());
     }
 
@@ -85,7 +85,7 @@ public class JSBindings implements Bindings {
      * Returns <code>true</code> if the SCXML context contains <code>value</code>.
      */
     @Override
-    public boolean containsValue(Object value) {
+    public boolean containsValue(final Object value) {
         return context.getVars().containsValue(value);
     }
 
@@ -117,7 +117,7 @@ public class JSBindings implements Bindings {
      * Returns the value from the SCXML context identified by <code>key</code>.
      */
     @Override
-    public Object get(Object key) {
+    public Object get(final Object key) {
         return context.get(key.toString());
     }
 
@@ -131,7 +131,7 @@ public class JSBindings implements Bindings {
      * @param value The variable value
      */
     @Override
-    public Object put(String name, Object value) {
+    public Object put(final String name, final Object value) {
         Object old = null;
         if (context.has(name)) {
             old = context.get(name);
@@ -147,8 +147,8 @@ public class JSBindings implements Bindings {
      * @param toMerge the map of variables to merge
      */
     @Override
-    public void putAll(Map<? extends String, ?> toMerge) {
-        for (Map.Entry<? extends String, ?> entry : toMerge.entrySet()) {
+    public void putAll(final Map<? extends String, ?> toMerge) {
+        for (final Map.Entry<? extends String, ?> entry : toMerge.entrySet()) {
             put(entry.getKey(), entry.getValue());
         }
     }
@@ -158,7 +158,7 @@ public class JSBindings implements Bindings {
      * @param name the variable name
      */
     @Override
-    public Object remove(Object name) {
+    public Object remove(final Object name) {
         return context.getVars().remove(name);
     }
 

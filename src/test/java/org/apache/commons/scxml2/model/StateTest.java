@@ -27,26 +27,26 @@ public class StateTest {
 
     @Test
     public void testGetTransitionsListNull() {
-        State state = new State();
+        final State state = new State();
         Assertions.assertNull(state.getTransitionsList("event"));
     }
         
     @Test
     public void testGetTransitionsList() {
-        State state = new State();
+        final State state = new State();
         state.getTransitionsList().add(new Transition());
         Assertions.assertNotNull(state.getTransitionsList(null));
     }
         
     @Test
     public void testAddTransitionDoesNotContainKey() {
-        Transition transition = new Transition();
+        final Transition transition = new Transition();
         transition.setEvent("event");
 
-        State state = new State();
+        final State state = new State();
         state.addTransition(transition);
         
-        List<Transition> events = state.getTransitionsList("event");
+        final List<Transition> events = state.getTransitionsList("event");
         
         Assertions.assertEquals(1, events.size());
         Assertions.assertEquals("event", events.get(0).getEvent());
@@ -54,49 +54,49 @@ public class StateTest {
         
     @Test
     public void testAddTransitionContainKey() {
-        Transition transition1 = new Transition();
+        final Transition transition1 = new Transition();
         transition1.setEvent("event");
 
-        Transition transition2 = new Transition();
+        final Transition transition2 = new Transition();
         transition2.setEvent("event");
 
-        State state = new State();
+        final State state = new State();
         state.addTransition(transition1);
         state.addTransition(transition2);
         
-        List<Transition> events = state.getTransitionsList("event");
+        final List<Transition> events = state.getTransitionsList("event");
         
         Assertions.assertEquals(2, events.size());
     }
         
     @Test
     public void testGetTransitionList() {
-        Transition transition1 = new Transition();
+        final Transition transition1 = new Transition();
         transition1.setEvent("event");
 
-        Transition transition2 = new Transition();
+        final Transition transition2 = new Transition();
         transition2.setEvent("event");
 
-        State state = new State();
+        final State state = new State();
         state.addTransition(transition1);
         state.addTransition(transition2);
         
-        List<Transition> events = state.getTransitionsList();
+        final List<Transition> events = state.getTransitionsList();
         
         Assertions.assertEquals(2, events.size());
     }
         
     @Test
     public void testHasHistoryEmpty() {
-        State state = new State();
+        final State state = new State();
         Assertions.assertFalse(state.hasHistory());
     }
     
     @Test
     public void testHasHistory() {
-        History history = new History();
+        final History history = new History();
 
-        State state = new State();
+        final State state = new State();
         state.addHistory(history);
         
         Assertions.assertTrue(state.hasHistory());
@@ -104,15 +104,15 @@ public class StateTest {
         
     @Test
     public void testIsSimple() {
-        State state = new State();
+        final State state = new State();
         Assertions.assertTrue(state.isSimple());
     }
         
     @Test
     public void testIsSimpleHasChildren() {
-        State state1 = new State();
+        final State state1 = new State();
         
-        State state = new State();
+        final State state = new State();
         state.addChild(state1);
         
         Assertions.assertFalse(state.isSimple());
@@ -120,15 +120,15 @@ public class StateTest {
         
     @Test
     public void testIsCompositeFalse() {
-        State state = new State();
+        final State state = new State();
         Assertions.assertFalse(state.isComposite());
     }
         
     @Test
     public void testIsCompositeParallel() {
-        State child = new State();
+        final State child = new State();
 
-        State state = new State();
+        final State state = new State();
         state.addChild(child);
         
         Assertions.assertTrue(state.isComposite());
@@ -136,9 +136,9 @@ public class StateTest {
         
     @Test
     public void testIsCompositeHasChildren() {
-        State state1 = new State();
+        final State state1 = new State();
 
-        State state = new State();
+        final State state = new State();
         state.addChild(state1);
         
         Assertions.assertTrue(state.isComposite());
@@ -146,7 +146,7 @@ public class StateTest {
         
     @Test
     public void testIsRegion() {
-        State state = new State();
+        final State state = new State();
         state.setParent(new Parallel());
         
         Assertions.assertTrue(state.isRegion());
@@ -154,7 +154,7 @@ public class StateTest {
         
     @Test
     public void testIsRegionNotParallel() {
-        State state = new State();
+        final State state = new State();
         state.setParent(new State());
         
         Assertions.assertFalse(state.isRegion());
@@ -162,7 +162,7 @@ public class StateTest {
     
     @Test
     public void testInitialAttribute() throws Exception {
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/state-01.xml");
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/state-01.xml");
         exec.go();
         Assertions.assertEquals("s11", exec.getStatus().getStates().iterator().next().getId());
     }

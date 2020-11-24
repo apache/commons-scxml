@@ -48,7 +48,7 @@ import org.apache.commons.scxml2.model.ModelException;
 public class StopWatchDisplay extends JFrame
         implements ActionListener {
 
-    private StopWatch stopWatch;
+    private final StopWatch stopWatch;
     private Image watchImage;
 
     public StopWatchDisplay() throws ModelException {
@@ -57,8 +57,8 @@ public class StopWatchDisplay extends JFrame
         setupUI();
     }
 
-    public void actionPerformed(ActionEvent e) {
-        String command = e.getActionCommand();
+    public void actionPerformed(final ActionEvent e) {
+        final String command = e.getActionCommand();
         if (command.equals("START")) {
             if (start.getText().equals("Start")) {
                 stopWatch.fireEvent(StopWatch.EVENT_START);
@@ -85,14 +85,14 @@ public class StopWatchDisplay extends JFrame
     }
 
     private void setupUI() {
-        URL imageURL = this.getClass().getClassLoader().
+        final URL imageURL = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml2/env/stopwatch.gif");
-        URL iconURL = this.getClass().getClassLoader().
+        final URL iconURL = this.getClass().getClassLoader().
             getResource("org/apache/commons/scxml2/env/stopwatchicon.gif");
-        Toolkit kit = Toolkit.getDefaultToolkit();
+        final Toolkit kit = Toolkit.getDefaultToolkit();
         watchImage = kit.createImage(imageURL);
-        Image watchIcon = kit.createImage(iconURL);
-        WatchPanel panel = new WatchPanel();
+        final Image watchIcon = kit.createImage(iconURL);
+        final WatchPanel panel = new WatchPanel();
         panel.setLayout(new BorderLayout());
         setContentPane(panel);
         display = new JLabel(stopWatch.getDisplay());
@@ -111,7 +111,7 @@ public class StopWatchDisplay extends JFrame
         setSize(300,125);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        Timer displayTimer = new Timer();
+        final Timer displayTimer = new Timer();
         displayTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -125,7 +125,7 @@ public class StopWatchDisplay extends JFrame
 
     private JButton makeButton(final String actionCommand,
             final String toolTipText, final String altText) {
-        JButton button = new JButton(altText);
+        final JButton button = new JButton(altText);
         button.setActionCommand(actionCommand);
         button.setToolTipText(toolTipText);
         button.addActionListener(this);
@@ -135,14 +135,14 @@ public class StopWatchDisplay extends JFrame
 
     class WatchPanel extends JPanel {
         @Override
-        public void paintComponent(Graphics g) {
+        public void paintComponent(final Graphics g) {
             if(watchImage != null) {
                 g.drawImage(watchImage,0,0,this.getWidth(),this.getHeight(),this);
             }
         }
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(final String[] args) throws Exception {
         new StopWatchDisplay();
     }
 

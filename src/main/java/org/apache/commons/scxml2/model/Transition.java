@@ -81,7 +81,7 @@ public class Transition extends SimpleTransition implements DocumentOrder {
      * @param order the document order
      * @see DocumentOrder
      */
-    public final void setOrder(int order) {
+    public final void setOrder(final int order) {
         this.order = order;
     }
 
@@ -124,7 +124,7 @@ public class Transition extends SimpleTransition implements DocumentOrder {
         if (this.event != null) {
             // 'event' is a space separated list of event descriptors
             events = new ArrayList<>();
-            StringTokenizer st = new StringTokenizer(this.event);
+            final StringTokenizer st = new StringTokenizer(this.event);
             while (st.hasMoreTokens()) {
                 String token = st.nextToken();
                 if (token.equals("*") || token.equals(".*")) {

@@ -29,10 +29,10 @@ public class StaticMethodTest {
 
     @Test
     public void testJexlStaticMethodInvocation() throws Exception {
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/static-method.xml");
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/static-method.xml");
         exec.getRootContext().set("System", System.class);
         exec.go();
-        Set<EnterableState> currentStates = exec.getStatus().getStates();
+        final Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assertions.assertEquals(1, currentStates.size());
         Assertions.assertEquals("static", currentStates.iterator().next().getId());
     }

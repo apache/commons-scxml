@@ -107,10 +107,10 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
         }
         try {
             final JexlContext effective = getEffectiveContext((JexlContext)ctx);
-            JexlExpression exp = getJexlEngine().createExpression(expr);
+            final JexlExpression exp = getJexlEngine().createExpression(expr);
             return exp.evaluate(effective);
-        } catch (Exception e) {
-            String exMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getCanonicalName();
+        } catch (final Exception e) {
+            final String exMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getCanonicalName();
             throw new SCXMLExpressionException("eval('" + expr + "'): " + exMessage, e);
         }
     }
@@ -128,11 +128,11 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
         }
         try {
             final JexlContext effective = getEffectiveContext((JexlContext)ctx);
-            JexlExpression exp = getJexlEngine().createExpression(expr);
+            final JexlExpression exp = getJexlEngine().createExpression(expr);
             final Object result = exp.evaluate(effective);
             return result == null ? Boolean.FALSE : (Boolean)result;
-        } catch (Exception e) {
-            String exMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getCanonicalName();
+        } catch (final Exception e) {
+            final String exMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getCanonicalName();
             throw new SCXMLExpressionException("evalCond('" + expr + "'): " + exMessage, e);
         }
     }
@@ -152,8 +152,8 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
             final JexlContext effective = getEffectiveContext((JexlContext) ctx);
             final JexlScript jexlScript = getJexlEngine().createScript(script);
             return jexlScript.execute(effective);
-        } catch (Exception e) {
-            String exMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getCanonicalName();
+        } catch (final Exception e) {
+            final String exMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getCanonicalName();
             throw new SCXMLExpressionException("evalScript('" + script + "'): " + exMessage, e);
         }
     }
@@ -178,7 +178,7 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
     protected JexlEngine createJexlEngine() {
         // With null prefix, define top-level user defined functions.
         // See javadoc of org.apache.commons.jexl2.JexlEngine#setFunctions(Map<String,Object> funcs) for detail.
-        Map<String, Object> funcs = new HashMap<>();
+        final Map<String, Object> funcs = new HashMap<>();
         funcs.put(null, JexlBuiltin.class);
         return new JexlBuilder().namespaces(funcs).cache(256).create();
     }

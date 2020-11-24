@@ -26,18 +26,18 @@ public class JexlContextTest {
 
     @Test
     public void testNew() {
-        JexlContext ctx = new JexlContext();
+        final JexlContext ctx = new JexlContext();
         Assertions.assertNotNull(ctx);
     }
     
     @Test
     public void testPrepopulated() {
-        Map<String, Object> m = new HashMap<>();
+        final Map<String, Object> m = new HashMap<>();
         m.put("foo", "bar");
-        JexlContext ctx = new JexlContext(null, m);
+        final JexlContext ctx = new JexlContext(null, m);
         Assertions.assertNotNull(ctx);
         Assertions.assertEquals(1, ctx.getVars().size());
-        String fooValue = (String) ctx.get("foo");
+        final String fooValue = (String) ctx.get("foo");
         Assertions.assertEquals("bar", fooValue);
     }
 

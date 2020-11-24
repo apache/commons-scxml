@@ -81,13 +81,13 @@ public class InvokeParamNameTest {
         private String invokeId;
 
         @Override
-        public void invoke(String url, Map<String, Object> params) {
+        public void invoke(final String url, final Map<String, Object> params) {
             lastURL = url;
             lastParams = params;
         }
 
         @Override
-        public void invokeContent(String content, Map<String, Object> params) {
+        public void invokeContent(final String content, final Map<String, Object> params) {
             lastURL = null;
             lastParams = params;
         }
@@ -106,7 +106,7 @@ public class InvokeParamNameTest {
         }
 
         @Override
-        public void parentEvent(TriggerEvent evt) {
+        public void parentEvent(final TriggerEvent evt) {
             // Not needed
         }
 
@@ -116,12 +116,12 @@ public class InvokeParamNameTest {
         }
 
         @Override
-        public void setInvokeId(String invokeId) {
+        public void setInvokeId(final String invokeId) {
             this.invokeId = invokeId;
         }
 
         @Override
-        public void setParentSCXMLExecutor(SCXMLExecutor parentSCXMLExecutor) {
+        public void setParentSCXMLExecutor(final SCXMLExecutor parentSCXMLExecutor) {
             // Not needed
         }
 

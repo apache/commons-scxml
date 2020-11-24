@@ -44,11 +44,11 @@ public abstract class AbstractBaseEvaluator implements Evaluator, Serializable {
      * @see Evaluator#evalAssign(Context, String, Object)
      */
     public void evalAssign(final Context ctx, final String location, final Object data) throws SCXMLExpressionException {
-        StringBuilder sb = new StringBuilder(location).append("=").append(ASSIGN_VARIABLE_NAME);
+        final StringBuilder sb = new StringBuilder(location).append("=").append(ASSIGN_VARIABLE_NAME);
         try {
             ctx.getVars().put(ASSIGN_VARIABLE_NAME, data);
             eval(ctx, sb.toString());
-        } catch (SCXMLExpressionException e) {
+        } catch (final SCXMLExpressionException e) {
             if (e.getCause() != null && e.getCause() != null && e.getCause().getMessage() != null) {
                 throw new SCXMLExpressionException("Error evaluating assign to location=\"" + location + "\": " + e.getCause().getMessage());
             }
@@ -68,24 +68,24 @@ public abstract class AbstractBaseEvaluator implements Evaluator, Serializable {
                 return ((Node)data).cloneNode(true);
             }
             else if (data instanceof NodeList) {
-                NodeList nodeList = (NodeList)data;
-                ArrayList<Node> list = new ArrayList<>();
+                final NodeList nodeList = (NodeList)data;
+                final ArrayList<Node> list = new ArrayList<>();
                 for (int i = 0, size = nodeList.getLength(); i < size; i++) {
                     list.add(nodeList.item(i).cloneNode(true));
                 }
                 return list;
             }
             else if (data instanceof List) {
-                ArrayList<Object> list = new ArrayList<>();
-                for (Object v : (List)data) {
+                final ArrayList<Object> list = new ArrayList<>();
+                for (final Object v : (List)data) {
                     list.add(cloneData(v));
                 }
                 return list;
             }
             else if (data instanceof Map) {
-                Map<?,?> dataMap = (Map<?,?>)data;
-                HashMap<Object, Object> map = new LinkedHashMap<>();
-                for (Map.Entry<?,?> entry : dataMap.entrySet()) {
+                final Map<?,?> dataMap = (Map<?,?>)data;
+                final HashMap<Object, Object> map = new LinkedHashMap<>();
+                for (final Map.Entry<?,?> entry : dataMap.entrySet()) {
                     map.put(cloneData(entry.getKey()), cloneData(entry.getValue()));
                 }
                 return map;

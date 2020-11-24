@@ -64,7 +64,7 @@ public abstract class TransitionTarget implements Serializable, Observable {
      * Sets the observableId for this Observable, which must be unique within the SCXML state machine
      * @param observableId the observableId
      */
-    public final void setObservableId(Integer observableId) {
+    public final void setObservableId(final Integer observableId) {
         this.observableId = observableId;
     }
 
@@ -98,7 +98,7 @@ public abstract class TransitionTarget implements Serializable, Observable {
      * @param level the level of the ancestor to return, zero being top
      * @return the ancestor at specified level
      */
-    public EnterableState getAncestor(int level) {
+    public EnterableState getAncestor(final int level) {
         return ancestors[level];
     }
 
@@ -138,7 +138,7 @@ public abstract class TransitionTarget implements Serializable, Observable {
      * Update TransitionTarget descendants their ancestors
      */
     protected void updateDescendantsAncestors() {
-        TransitionTarget ttParent = parent;
+        final TransitionTarget ttParent = parent;
         ancestors = new EnterableState[ttParent.ancestors.length+1];
         System.arraycopy(ttParent.ancestors, 0, ancestors, 0, ttParent.ancestors.length);
         ancestors[ttParent.ancestors.length] = parent;
@@ -152,7 +152,7 @@ public abstract class TransitionTarget implements Serializable, Observable {
      *            TransitionTarget context - a potential ancestor
      * @return true if this is a descendant of context, false otherwise
      */
-    public final boolean isDescendantOf(TransitionTarget context) {
+    public final boolean isDescendantOf(final TransitionTarget context) {
         return getNumberOfAncestors() > context.getNumberOfAncestors()
                 && getAncestor(context.getNumberOfAncestors()) == context;
     }

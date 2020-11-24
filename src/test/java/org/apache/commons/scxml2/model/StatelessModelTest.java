@@ -36,10 +36,10 @@ public class StatelessModelTest {
     @Test
     public void testStatelessModelSimultaneousJexl() throws Exception {
     	// parse once, use many times
-        SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/env/jexl/stateless-01.xml");
-        SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor(scxml);
+        final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/env/jexl/stateless-01.xml");
+        final SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor(scxml);
         exec01.go();
-        SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor(scxml);
+        final SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor(scxml);
         exec02.go();
         Assertions.assertFalse(exec01 == exec02);
         runSimultaneousTest(exec01, exec02);
@@ -51,9 +51,9 @@ public class StatelessModelTest {
     @Test
     public void testStatelessModelSequentialJexl() throws Exception {
         // rinse and repeat
-        SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/env/jexl/stateless-01.xml");
+        final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/env/jexl/stateless-01.xml");
         for (int i = 0; i < 3; i++) {
-            SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor(scxml);
+            final SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor(scxml);
             exec01.go();
             runSequentialTest(exec01);
         }
@@ -64,10 +64,10 @@ public class StatelessModelTest {
      */    
     @Test
     public void testStatelessModelParallelSharedSCXML() throws Exception {
-        SCXML scxml01par = SCXMLTestHelper.parse("org/apache/commons/scxml2/model/stateless-parallel-01.xml");
-        SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor(scxml01par);
+        final SCXML scxml01par = SCXMLTestHelper.parse("org/apache/commons/scxml2/model/stateless-parallel-01.xml");
+        final SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor(scxml01par);
         exec01.go();
-        SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor(scxml01par);
+        final SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor(scxml01par);
         exec02.go();
         Assertions.assertFalse(exec01 == exec02);
 
@@ -113,11 +113,11 @@ public class StatelessModelTest {
     }
      */
 
-    private void checkParallelStates(Set<EnterableState> currentStates,
-            String s1, String s2, String label) {
-        Iterator<EnterableState> i = currentStates.iterator();
+    private void checkParallelStates(final Set<EnterableState> currentStates,
+            final String s1, final String s2, final String label) {
+        final Iterator<EnterableState> i = currentStates.iterator();
         Assertions.assertTrue(i.hasNext(), "Not enough states");
-        String cs1 = i.next().getId();
+        final String cs1 = i.next().getId();
         String cs2;
         if (s2 != null) {
             Assertions.assertTrue(i.hasNext(), "Not enough states, found one state: " + cs1);
@@ -142,7 +142,7 @@ public class StatelessModelTest {
         Assertions.fail(label + " in unexpected state " + cs1);
     }
 
-    private void runSimultaneousTest(SCXMLExecutor exec01, SCXMLExecutor exec02) throws Exception {
+    private void runSimultaneousTest(final SCXMLExecutor exec01, final SCXMLExecutor exec02) throws Exception {
         //// Interleaved
         // exec01
         Set<EnterableState> currentStates = exec01.getStatus().getStates();
@@ -168,7 +168,7 @@ public class StatelessModelTest {
         Assertions.assertEquals("thirty", currentStates.iterator().next().getId());
     }
 
-    private void runSequentialTest(SCXMLExecutor exec) throws Exception {
+    private void runSequentialTest(final SCXMLExecutor exec) throws Exception {
         Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assertions.assertEquals(1, currentStates.size());
         Assertions.assertEquals("ten", (currentStates.iterator().
@@ -183,8 +183,8 @@ public class StatelessModelTest {
             next()).getId());
     }
 
-    private Set<EnterableState> fireEvent(String name, SCXMLExecutor exec) throws Exception {
-        TriggerEvent[] evts = {new EventBuilder(name, TriggerEvent.SIGNAL_EVENT).build()};
+    private Set<EnterableState> fireEvent(final String name, final SCXMLExecutor exec) throws Exception {
+        final TriggerEvent[] evts = {new EventBuilder(name, TriggerEvent.SIGNAL_EVENT).build()};
         exec.triggerEvents(evts);
         return exec.getStatus().getStates();
     }

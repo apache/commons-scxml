@@ -72,7 +72,7 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
      * {@inheritDoc}.
      */
     @Override
-    public void setParentSCXMLExecutor(SCXMLExecutor parentSCXMLExecutor) {
+    public void setParentSCXMLExecutor(final SCXMLExecutor parentSCXMLExecutor) {
         this.parentSCXMLExecutor = parentSCXMLExecutor;
     }
 
@@ -115,17 +115,17 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
         execute(scxml, params);
     }
 
-    protected void execute(SCXML scxml, final Map<String, Object> params) throws InvokerException {
+    protected void execute(final SCXML scxml, final Map<String, Object> params) throws InvokerException {
         try {
             executor = new SCXMLExecutor(parentSCXMLExecutor, invokeId, scxml);
         }
-        catch (ModelException me) {
+        catch (final ModelException me) {
             throw new InvokerException(me);
         }
         executor.addListener(scxml, new SimpleSCXMLListener());
         try {
             executor.run(params);
-        } catch (ModelException me) {
+        } catch (final ModelException me) {
             throw new InvokerException(me.getMessage(), me.getCause());
         }
     }

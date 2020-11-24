@@ -305,11 +305,11 @@ public class SCXMLWriter {
         }
 
         // Make the writer an arbitrary bit larger than the source string
-        int len = str.length();
-        StringWriter stringWriter = new StringWriter(len + 8);
+        final int len = str.length();
+        final StringWriter stringWriter = new StringWriter(len + 8);
 
         for (int i = 0; i < len; i++) {
-            char c = str.charAt(i);
+            final char c = str.charAt(i);
             String entityName = null; // Look for XML 1.0 predefined entities
             switch (c) {
                 case '"':
@@ -361,7 +361,7 @@ public class SCXMLWriter {
                                       final OutputStream scxmlStream, final Writer scxmlWriter, final Result scxmlResult)
             throws IOException, XMLStreamException {
 
-        XMLStreamWriter writer = getWriter(configuration, scxmlStream, scxmlWriter, scxmlResult);
+        final XMLStreamWriter writer = getWriter(configuration, scxmlStream, scxmlWriter, scxmlResult);
         writeDocument(writer, configuration, scxml);
         writer.flush();
         writer.close();
@@ -369,7 +369,7 @@ public class SCXMLWriter {
             configuration.internalWriter.flush();
         }
         if (configuration.usePrettyPrint) {
-            Writer prettyPrintWriter = (scxmlWriter != null ? scxmlWriter : new StringWriter());
+            final Writer prettyPrintWriter = (scxmlWriter != null ? scxmlWriter : new StringWriter());
             writePretty(configuration, scxmlStream, prettyPrintWriter, scxmlResult);
             if (configuration.writeToString) {
                 prettyPrintWriter.flush();
@@ -419,8 +419,8 @@ public class SCXMLWriter {
         writer.writeNamespace(null, SCXMLConstants.XMLNS_SCXML);
 //        writer.writeNamespace("cs", XMLNS_COMMONS_SCXML);
         if (scxml.getNamespaces() != null) {
-            for (Map.Entry<String, String> entry : scxml.getNamespaces().entrySet()) {
-                String key = entry.getKey();
+            for (final Map.Entry<String, String> entry : scxml.getNamespaces().entrySet()) {
+                final String key = entry.getKey();
                 if (key != null && key.trim().length() > 0) {
                     writer.writeNamespace(key, entry.getValue());
                 }
@@ -443,7 +443,7 @@ public class SCXMLWriter {
 
         // Write global script if defined
         if (scxml.getGlobalScript() != null) {
-            Script s = scxml.getGlobalScript();
+            final Script s = scxml.getGlobalScript();
             writer.writeStartElement(SCXMLConstants.XMLNS_SCXML, SCXMLConstants.ELEM_SCRIPT);
             if (s.getSrc() != null) {
                 writeAV(writer, SCXMLConstants.ATTR_SRC, s.getSrc());
@@ -477,7 +477,7 @@ public class SCXMLWriter {
         }
 
         writer.writeStartElement(SCXMLConstants.ELEM_DATAMODEL);
-        for (Data d : datamodel.getData()) {
+        for (final Data d : datamodel.getData()) {
             writer.writeStartElement(SCXMLConstants.ELEM_DATA);
             writeAV(writer, SCXMLConstants.ATTR_ID, d.getId());
             writeAV(writer, SCXMLConstants.ATTR_SRC, escapeXML(d.getSrc()));
@@ -518,21 +518,21 @@ public class SCXMLWriter {
         writeInitial(writer, state.getInitial());
         writeDatamodel(writer, state.getDatamodel());
         writeHistory(writer, state.getHistory());
-        for (OnEntry onentry : state.getOnEntries()) {
+        for (final OnEntry onentry : state.getOnEntries()) {
             writeOnEntry(writer, onentry);
         }
 
-        for (Transition t : state.getTransitionsList()) {
+        for (final Transition t : state.getTransitionsList()) {
             writeTransition(writer, t);
         }
 
-        for (Invoke inv : state.getInvokes()) {
+        for (final Invoke inv : state.getInvokes()) {
             writeInvoke(writer, inv);
         }
 
         writeEnterableStates(writer, state.getChildren());
 
-        for (OnExit onexit : state.getOnExits()) {
+        for (final OnExit onexit : state.getOnExits()) {
             writeOnExit(writer, onexit);
         }
         writer.writeEndElement();
@@ -554,21 +554,21 @@ public class SCXMLWriter {
 
         writeDatamodel(writer, parallel.getDatamodel());
         writeHistory(writer, parallel.getHistory());
-        for (OnEntry onentry : parallel.getOnEntries()) {
+        for (final OnEntry onentry : parallel.getOnEntries()) {
             writeOnEntry(writer, onentry);
         }
 
-        for (Transition t : parallel.getTransitionsList()) {
+        for (final Transition t : parallel.getTransitionsList()) {
             writeTransition(writer, t);
         }
 
-        for (Invoke inv : parallel.getInvokes()) {
+        for (final Invoke inv : parallel.getInvokes()) {
             writeInvoke(writer, inv);
         }
 
         writeEnterableStates(writer, parallel.getChildren());
 
-        for (OnExit onexit : parallel.getOnExits()) {
+        for (final OnExit onexit : parallel.getOnExits()) {
             writeOnExit(writer, onexit);
         }
         writer.writeEndElement();
@@ -587,10 +587,10 @@ public class SCXMLWriter {
 
         writer.writeStartElement(SCXMLConstants.ELEM_FINAL);
         writeTransitionTargetId(writer, end);
-        for (OnEntry onentry : end.getOnEntries()) {
+        for (final OnEntry onentry : end.getOnEntries()) {
             writeOnEntry(writer, onentry);
         }
-        for (OnExit onexit : end.getOnExits()) {
+        for (final OnExit onexit : end.getOnExits()) {
             writeOnExit(writer, onexit);
         }
         if (end.getDoneData() != null) {
@@ -612,7 +612,7 @@ public class SCXMLWriter {
      */
     private static void writeEnterableStates(final XMLStreamWriter writer, final List<EnterableState> states)
             throws XMLStreamException {
-        for (EnterableState es : states) {
+        for (final EnterableState es : states) {
             if (es instanceof Final) {
                 writeFinal(writer, (Final) es);
             } else if (es instanceof State) {
@@ -659,7 +659,7 @@ public class SCXMLWriter {
             return;
         }
 
-        for (History h : history) {
+        for (final History h : history) {
             writer.writeStartElement(SCXMLConstants.ELEM_HISTORY);
             writeTransitionTargetId(writer, h);
             if (h.isDeep()) {
@@ -795,9 +795,9 @@ public class SCXMLWriter {
         if (actions == null) {
             return;
         }
-        for (Action a : actions) {
+        for (final Action a : actions) {
             if (a instanceof Assign) {
-                Assign asn = (Assign) a;
+                final Assign asn = (Assign) a;
                 writer.writeStartElement(SCXMLConstants.XMLNS_SCXML, SCXMLConstants.ELEM_ASSIGN);
                 writeAV(writer, SCXMLConstants.ATTR_LOCATION, asn.getLocation());
                 writeAV(writer, SCXMLConstants.ATTR_SRC, asn.getSrc());
@@ -807,25 +807,25 @@ public class SCXMLWriter {
             } else if (a instanceof Send) {
                 writeSend(writer, (Send) a);
             } else if (a instanceof Cancel) {
-                Cancel c = (Cancel) a;
+                final Cancel c = (Cancel) a;
                 writer.writeStartElement(SCXMLConstants.XMLNS_SCXML, SCXMLConstants.ELEM_CANCEL);
                 writeAV(writer, SCXMLConstants.ATTR_SENDID, c.getSendid());
                 writer.writeEndElement();
             } else if (a instanceof Foreach) {
                 writeForeach(writer, (Foreach) a);
             } else if (a instanceof Log) {
-                Log lg = (Log) a;
+                final Log lg = (Log) a;
                 writer.writeStartElement(SCXMLConstants.XMLNS_SCXML, SCXMLConstants.ELEM_LOG);
                 writeAV(writer, SCXMLConstants.ATTR_LABEL, lg.getLabel());
                 writeAV(writer, SCXMLConstants.ATTR_EXPR, escapeXML(lg.getExpr()));
                 writer.writeEndElement();
             } else if (a instanceof Raise) {
-                Raise e = (Raise) a;
+                final Raise e = (Raise) a;
                 writer.writeStartElement(SCXMLConstants.XMLNS_SCXML, SCXMLConstants.ELEM_RAISE);
                 writeAV(writer, SCXMLConstants.ATTR_EVENT, e.getEvent());
                 writer.writeEndElement();
             } else if (a instanceof Script) {
-                Script s = (Script) a;
+                final Script s = (Script) a;
                 writer.writeStartElement(SCXMLConstants.XMLNS_SCXML, SCXMLConstants.ELEM_SCRIPT);
                 if (s.getSrc() != null) {
                     writeAV(writer, SCXMLConstants.ATTR_SRC, s.getSrc());
@@ -838,19 +838,19 @@ public class SCXMLWriter {
             } else if (a instanceof Else) {
                 writer.writeEmptyElement(SCXMLConstants.ELEM_ELSE);
             } else if (a instanceof ElseIf) {
-                ElseIf eif = (ElseIf) a;
+                final ElseIf eif = (ElseIf) a;
                 writer.writeStartElement(SCXMLConstants.XMLNS_SCXML, SCXMLConstants.ELEM_ELSEIF);
                 writeAV(writer, SCXMLConstants.ATTR_COND, escapeXML(eif.getCond()));
                 writer.writeEndElement();
             } else if (a instanceof Var) {
                 // 'naked' Var custom action, not wrapped in a CustomActionWrapper
-                Var v = (Var) a;
+                final Var v = (Var) a;
                 writer.writeStartElement(SCXMLConstants.XMLNS_COMMONS_SCXML, SCXMLConstants.ELEM_VAR);
                 writeAV(writer, SCXMLConstants.ATTR_NAME, v.getName());
                 writeAV(writer, SCXMLConstants.ATTR_EXPR, escapeXML(v.getExpr()));
                 writer.writeEndElement();
             } else if (a instanceof CustomActionWrapper) {
-                CustomActionWrapper actionWrapper = (CustomActionWrapper)a;
+                final CustomActionWrapper actionWrapper = (CustomActionWrapper)a;
                 writer.writeStartElement(createQualifiedName(actionWrapper.getPrefix(), actionWrapper.getLocalName()));
                 if (actionWrapper.getAttributes() != null) {
                     for (final String attr : actionWrapper.getAttributes().keySet()) {
@@ -911,7 +911,7 @@ public class SCXMLWriter {
      */
     private static void writeParams(final XMLStreamWriter writer, final List<Param> params)
             throws XMLStreamException {
-        for (Param p : params) {
+        for (final Param p : params) {
             writer.writeStartElement(SCXMLConstants.ELEM_PARAM);
             writeAV(writer, SCXMLConstants.ATTR_NAME, p.getName());
             writeAV(writer, SCXMLConstants.ATTR_LOCATION, p.getLocation());
@@ -1012,7 +1012,7 @@ public class SCXMLWriter {
                         }
                         break;
                     case NODE_LIST:
-                        List<Node> nodeList = ((NodeListValue)parsedValue).getValue();
+                        final List<Node> nodeList = ((NodeListValue)parsedValue).getValue();
                         if (!nodeList.isEmpty() && XFORMER == null) {
                             writer.writeComment("element body was not serialized");
                         } else {
@@ -1026,7 +1026,7 @@ public class SCXMLWriter {
                         break;
                 }
             }
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new XMLStreamException(e);
         }
     }
@@ -1042,13 +1042,13 @@ public class SCXMLWriter {
     private static void writeNode(final XMLStreamWriter writer, final Node node)
             throws XMLStreamException {
 
-        Source input = new DOMSource(node);
-        StringWriter out = new StringWriter();
-        Result output = new StreamResult(out);
+        final Source input = new DOMSource(node);
+        final StringWriter out = new StringWriter();
+        final Result output = new StreamResult(out);
         try {
             XFORMER.transform(input, output);
-        } catch (TransformerException te) {
-            org.apache.commons.logging.Log log = LogFactory.getLog(SCXMLWriter.class);
+        } catch (final TransformerException te) {
+            final org.apache.commons.logging.Log log = LogFactory.getLog(SCXMLWriter.class);
             log.error(te.getMessage(), te);
             writer.writeComment("TransformerException: Node was not serialized");
         }
@@ -1115,7 +1115,7 @@ public class SCXMLWriter {
 
         // There isn't any portable way to write pretty using the JDK 1.6 StAX API
         configuration.internalWriter.flush();
-        Source prettyPrintSource = new StreamSource(new StringReader(configuration.internalWriter.toString()));
+        final Source prettyPrintSource = new StreamSource(new StringReader(configuration.internalWriter.toString()));
         Result prettyPrintResult = null;
         if (scxmlStream != null) {
             prettyPrintResult = new StreamResult(scxmlStream);
@@ -1125,15 +1125,15 @@ public class SCXMLWriter {
             prettyPrintResult = scxmlResult;
         }
 
-        TransformerFactory factory = TransformerFactory.newInstance();
+        final TransformerFactory factory = TransformerFactory.newInstance();
         try {
-            Transformer transformer = factory.newTransformer();
+            final Transformer transformer = factory.newTransformer();
             if (configuration.encoding != null) {
                 transformer.setOutputProperty(OutputKeys.ENCODING, configuration.encoding);
             }
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.transform(prettyPrintSource, prettyPrintResult);
-        } catch (TransformerException te) {
+        } catch (final TransformerException te) {
             throw new XMLStreamException("TransformerException while pretty printing SCXML", te);
         }
     }
@@ -1156,14 +1156,14 @@ public class SCXMLWriter {
             throws XMLStreamException {
 
         // Instantiate the XMLOutputFactory
-        XMLOutputFactory factory = XMLOutputFactory.newInstance();
+        final XMLOutputFactory factory = XMLOutputFactory.newInstance();
         /*
         if (configuration.factoryId != null && configuration.factoryClassLoader != null) {
             // TODO StAX API bug means we can't use custom factories yet
             //factory = XMLOutputFactory.newInstance(configuration.factoryId, configuration.factoryClassLoader);
         }
         */
-        for (Map.Entry<String, Object> property : configuration.properties.entrySet()) {
+        for (final Map.Entry<String, Object> property : configuration.properties.entrySet()) {
             factory.setProperty(property.getKey(), property.getValue());
         }
 
@@ -1191,16 +1191,16 @@ public class SCXMLWriter {
      */
     private static Transformer getTransformer() {
         Transformer transformer;
-        Properties outputProps = new Properties();
+        final Properties outputProps = new Properties();
         outputProps.put(OutputKeys.OMIT_XML_DECLARATION, "yes");
         outputProps.put(OutputKeys.STANDALONE, "no");
         outputProps.put(OutputKeys.INDENT, "yes");
         try {
-            TransformerFactory tfFactory = TransformerFactory.newInstance();
+            final TransformerFactory tfFactory = TransformerFactory.newInstance();
             transformer = tfFactory.newTransformer();
             transformer.setOutputProperties(outputProps);
         } catch (TransformerFactoryConfigurationError | TransformerConfigurationException t) {
-            org.apache.commons.logging.Log log = LogFactory.getLog(SCXMLWriter.class);
+            final org.apache.commons.logging.Log log = LogFactory.getLog(SCXMLWriter.class);
             log.error(t.getMessage(), t);
             return null;
         }

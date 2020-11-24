@@ -81,7 +81,7 @@ public class Cancel extends Action {
      * 
      * @param sendidexpr the expression that evaluates to the ID of the send message that should be cancelled.
      */
-    public void setSendidexpr(String sendidexpr) {
+    public void setSendidexpr(final String sendidexpr) {
         this.sendidexpr = sendidexpr;
     }
 
@@ -89,10 +89,10 @@ public class Cancel extends Action {
      * {@inheritDoc}
      */
     @Override
-    public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
-        EnterableState parentState = getParentEnterableState();
-        Context ctx = exctx.getContext(parentState);
-        Evaluator eval = exctx.getEvaluator();
+    public void execute(final ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
+        final EnterableState parentState = getParentEnterableState();
+        final Context ctx = exctx.getContext(parentState);
+        final Evaluator eval = exctx.getEvaluator();
 
         String sendidValue = sendid;
         if (sendidValue == null && sendidexpr != null) {

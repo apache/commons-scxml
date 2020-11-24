@@ -67,12 +67,12 @@ public class Raise extends Action {
      * {@inheritDoc}
      */
     @Override
-    public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
+    public void execute(final ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
 
         if (exctx.getAppLog().isDebugEnabled()) {
             exctx.getAppLog().debug("<raise>: Adding event '" + event + "' to list of derived events.");
         }
-        TriggerEvent ev = new EventBuilder(event, TriggerEvent.SIGNAL_EVENT).build();
+        final TriggerEvent ev = new EventBuilder(event, TriggerEvent.SIGNAL_EVENT).build();
         exctx.getInternalIOProcessor().addEvent(ev);
 
     }

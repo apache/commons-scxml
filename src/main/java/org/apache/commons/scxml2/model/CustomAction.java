@@ -66,17 +66,17 @@ public class CustomAction {
     /**
      * The namespace this custom action belongs to.
      */
-    private String namespaceURI;
+    private final String namespaceURI;
 
     /**
      * The local name of the custom action.
      */
-    private String localName;
+    private final String localName;
 
     /**
      * The implementation of this custom action.
      */
-    private Class<? extends Action> actionClass;
+    private final Class<? extends Action> actionClass;
 
     /**
      * Constructor, if the namespace or local name is null or empty,
@@ -90,7 +90,7 @@ public class CustomAction {
      */
     public CustomAction(final String namespaceURI, final String localName,
             final Class<? extends Action> actionClass) {
-        Log log = LogFactory.getLog(CustomAction.class);
+        final Log log = LogFactory.getLog(CustomAction.class);
         if (namespaceURI == null || namespaceURI.trim().length() == 0) {
             log.error(ERR_NO_NAMESPACE);
             throw new IllegalArgumentException(ERR_NO_NAMESPACE);

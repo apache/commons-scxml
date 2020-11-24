@@ -181,7 +181,7 @@ public abstract class AbstractStateMachine {
         engine.addListener(stateMachine, new EntryListener());
         try {
             engine.go();
-        } catch (ModelException me) {
+        } catch (final ModelException me) {
             logError(me);
         }
     }
@@ -194,10 +194,10 @@ public abstract class AbstractStateMachine {
      *         configuration.
      */
     public boolean fireEvent(final String event) {
-        TriggerEvent[] evts = {new EventBuilder(event, TriggerEvent.SIGNAL_EVENT).build()};
+        final TriggerEvent[] evts = {new EventBuilder(event, TriggerEvent.SIGNAL_EVENT).build()};
         try {
             engine.triggerEvents(evts);
-        } catch (ModelException me) {
+        } catch (final ModelException me) {
             logError(me);
         }
         return engine.getStatus().isFinal();
@@ -238,9 +238,9 @@ public abstract class AbstractStateMachine {
      * @return Whether the invoke was successful.
      */
     public boolean invoke(final String methodName) {
-        Class<?> clas = this.getClass();
+        final Class<?> clas = this.getClass();
         try {
-            Method method = clas.getDeclaredMethod(methodName, SIGNATURE);
+            final Method method = clas.getDeclaredMethod(methodName, SIGNATURE);
             method.invoke(this, PARAMETERS);
         } catch (SecurityException | NoSuchMethodException | IllegalAccessException | IllegalArgumentException |
                 InvocationTargetException se) {
@@ -258,7 +258,7 @@ public abstract class AbstractStateMachine {
     public boolean resetMachine() {
         try {
             engine.reset();
-        } catch (ModelException me) {
+        } catch (final ModelException me) {
             logError(me);
             return false;
         }

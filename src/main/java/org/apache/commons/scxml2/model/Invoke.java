@@ -358,14 +358,14 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
 
     @Override
     public void execute(final ActionExecutionContext axctx) throws ModelException {
-        EnterableState parentState = getParentEnterableState();
-        Context ctx = axctx.getContext(parentState);
-        SCXMLExecutionContext exctx = (SCXMLExecutionContext)ctx.getVars().get(getCurrentSCXMLExecutionContextKey());
+        final EnterableState parentState = getParentEnterableState();
+        final Context ctx = axctx.getContext(parentState);
+        final SCXMLExecutionContext exctx = (SCXMLExecutionContext)ctx.getVars().get(getCurrentSCXMLExecutionContextKey());
         if (exctx == null) {
             throw new ModelException("Missing current SCXMLExecutionContext instance in context under key: "+ getCurrentSCXMLExecutionContextKey());
         }
         try {
-            Evaluator eval = axctx.getEvaluator();
+            final Evaluator eval = axctx.getEvaluator();
 
             String typeValue = type;
             if (typeValue == null && typeexpr != null) {
@@ -378,7 +378,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
             if (typeValue == null) {
                 typeValue = SCXMLExecutionContext.SCXML_INVOKER_TYPE;
             }
-            Invoker invoker = exctx.newInvoker(typeValue);
+            final Invoker invoker = exctx.newInvoker(typeValue);
 
             String invokeId = getId();
             if (invokeId == null) {
@@ -394,7 +394,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
                 src = (String)eval.eval(ctx, getSrcexpr());
             }
             if (src != null) {
-                PathResolver pr = exctx.getStateMachine().getPathResolver();
+                final PathResolver pr = exctx.getStateMachine().getPathResolver();
                 if (pr != null) {
                     src = pr.resolvePath(src);
                 }
@@ -404,7 +404,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
                 if (content.getExpr() != null) {
                     try {
                         contentValue = eval.eval(ctx, content.getExpr());
-                    } catch (SCXMLExpressionException e) {
+                    } catch (final SCXMLExpressionException e) {
                         exctx.getInternalIOProcessor().addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION,
                                 TriggerEvent.ERROR_EVENT).build());
                         exctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR,
@@ -419,14 +419,14 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
                     // inline content
                 } else if (contentValue instanceof Element) {
                     // xml based content (must be assigned through data)
-                    Element contentElement = (Element)contentValue;
+                    final Element contentElement = (Element)contentValue;
                     if (SCXMLConstants.ELEM_SCXML.equals(contentElement.getLocalName()) &&
                             SCXMLConstants.XMLNS_SCXML.equals(contentElement.getNamespaceURI())) {
                         // statemachine definition: transform to string as we cannot (yet) pass XML directly to invoker
                         try {
                             contentValue = ContentParser.DEFAULT_PARSER.toXml(contentElement);
                         }
-                        catch (IOException e) {
+                        catch (final IOException e) {
                             throw new ActionExecutionError("<invoke> for state "+parentState.getId() +
                                     ": invalid <content><scxml> definition");
                         }
@@ -443,7 +443,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
                 throw new ActionExecutionError("<invoke> for state "+parentState.getId() +
                         ": no src and no content defined");
             }
-            Map<String, Object> payloadDataMap = new HashMap<>();
+            final Map<String, Object> payloadDataMap = new HashMap<>();
             PayloadBuilder.addNamelistDataToPayload(parentState, ctx, eval, exctx.getErrorReporter(), namelist, payloadDataMap);
             PayloadBuilder.addParamsToPayload(ctx, eval, paramsList, payloadDataMap);
             invoker.setParentSCXMLExecutor(exctx.getSCXMLExecutor());

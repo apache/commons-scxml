@@ -91,43 +91,43 @@ public class SCXMLReaderTest {
      */    
     @Test
     public void testSCXMLReaderMicrowave03Sample() throws Exception {
-        SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/env/jexl/microwave-03.xml");
+        final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/env/jexl/microwave-03.xml");
         Assertions.assertNotNull(scxml);
         Assertions.assertNotNull(serialize(scxml));
     }
     
     @Test
     public void testSCXMLReaderMicrowave04Sample() throws Exception {
-        SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/env/jexl/microwave-04.xml");
+        final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/env/jexl/microwave-04.xml");
         Assertions.assertNotNull(scxml);
         Assertions.assertNotNull(serialize(scxml));
     }
     
     @Test
     public void testSCXMLReaderTransitions01Sample() throws Exception {
-        SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/transitions-01.xml");
+        final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/transitions-01.xml");
         Assertions.assertNotNull(scxml);
         Assertions.assertNotNull(serialize(scxml));
     }
     
     @Test
     public void testSCXMLReaderPrefix01Sample() throws Exception {
-        SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/prefix-01.xml");
+        final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/prefix-01.xml");
         Assertions.assertNotNull(scxml);
         Assertions.assertNotNull(serialize(scxml));
     }
     
     @Test
     public void testSCXMLReaderSend01Sample() throws Exception {
-        SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/send-01.xml");
-        State ten = (State) scxml.getInitialTransition().getTargets().iterator().next();
+        final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/send-01.xml");
+        final State ten = (State) scxml.getInitialTransition().getTargets().iterator().next();
         Assertions.assertEquals("ten", ten.getId());
-        List<Transition> ten_done = ten.getTransitionsList("done.state.ten");
+        final List<Transition> ten_done = ten.getTransitionsList("done.state.ten");
         Assertions.assertEquals(1, ten_done.size());
-        Transition ten2twenty = ten_done.get(0);
-        List<Action> actions = ten2twenty.getActions();
+        final Transition ten2twenty = ten_done.get(0);
+        final List<Action> actions = ten2twenty.getActions();
         Assertions.assertEquals(1, actions.size());
-        Send send = (Send) actions.get(0);
+        final Send send = (Send) actions.get(0);
         Assertions.assertEquals("send1", send.getId());
         /* Serialize
         scxmlAsString = serialize(scxml);
@@ -142,10 +142,10 @@ public class SCXMLReaderTest {
     
     @Test
     public void testSCXMLReaderInitialAttr() throws Exception {
-        SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/io/scxml-initial-attr.xml");
+        final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/io/scxml-initial-attr.xml");
         Assertions.assertNotNull(scxml);
         Assertions.assertNotNull(serialize(scxml));
-        Final foo = (Final) scxml.getInitialTransition().getTargets().iterator().next();
+        final Final foo = (Final) scxml.getInitialTransition().getTargets().iterator().next();
         Assertions.assertEquals("foo", foo.getId());
     }
 
@@ -171,16 +171,16 @@ public class SCXMLReaderTest {
 
     @Test
     public void testSCXMLReaderCustomActionWithBodyTextSample() throws Exception {
-        List<CustomAction> cas = new ArrayList<>();
-        CustomAction ca = new CustomAction("http://my.custom-actions.domain",
+        final List<CustomAction> cas = new ArrayList<>();
+        final CustomAction ca = new CustomAction("http://my.custom-actions.domain",
             "action", MyAction.class);
         cas.add(ca);
-        SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/io/custom-action-body-test-1.xml", cas);
-        EnterableState state = (EnterableState) scxml.getInitialTransition().getTargets().iterator().next();
+        final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/io/custom-action-body-test-1.xml", cas);
+        final EnterableState state = (EnterableState) scxml.getInitialTransition().getTargets().iterator().next();
         Assertions.assertEquals("actions", state.getId());
-        List<Action> actions = state.getOnEntries().get(0).getActions();
+        final List<Action> actions = state.getOnEntries().get(0).getActions();
         Assertions.assertEquals(1, actions.size());
-        MyAction my = (MyAction)((CustomActionWrapper)actions.get(0)).getAction();
+        final MyAction my = (MyAction)((CustomActionWrapper)actions.get(0)).getAction();
         Assertions.assertNotNull(my);
         Assertions.assertTrue(my.getParsedValue() != null);
     }
@@ -189,8 +189,8 @@ public class SCXMLReaderTest {
     public void testSCXMLReaderWithInvalidElements() throws Exception {
         // In the default lenient/verbose mode (strict == false && silent == false),
         // the model exception should be just logged without a model exception.
-        Configuration configuration = new Configuration();
-        SCXML scxml = SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/scxml-with-invalid-elems.xml"),
+        final Configuration configuration = new Configuration();
+        final SCXML scxml = SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/scxml-with-invalid-elems.xml"),
                         configuration);
         Assertions.assertNotNull(scxml);
         Assertions.assertNotNull(serialize(scxml));
@@ -209,7 +209,7 @@ public class SCXMLReaderTest {
         // In the lenient/silent mode (strict == false && silent == true),
         // no model exception is logged.
         clearRecordedLogMessages();
-        Configuration configuration2 = new Configuration();
+        final Configuration configuration2 = new Configuration();
         configuration2.setStrict(false);
         configuration2.setSilent(true);
         SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/scxml-with-invalid-elems.xml"),
@@ -231,7 +231,7 @@ public class SCXMLReaderTest {
         // In strict/verbose mode (strict == true && silent == false), it should fail to read the model and catch a model exception
         // with warning logs because of the invalid <baddata> element.
         clearRecordedLogMessages();
-        Configuration configuration3 = new Configuration();
+        final Configuration configuration3 = new Configuration();
         configuration3.setStrict(true);
         configuration3.setSilent(false);
         ModelException e = Assertions.assertThrows(
@@ -249,7 +249,7 @@ public class SCXMLReaderTest {
         // In strict/silent mode (strict == true && silent == true), it should fail to read the model and catch a model exception
         // without warning logs because of the invalid <baddata> element.
         clearRecordedLogMessages();
-        Configuration configuration4 = new Configuration();
+        final Configuration configuration4 = new Configuration();
         configuration4.setStrict(true);
         configuration4.setSilent(true);
         e = Assertions.assertThrows(
@@ -269,7 +269,7 @@ public class SCXMLReaderTest {
         SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/env/groovy/groovy-closure.xml");
         Assertions.assertNotNull(scxml);
         Assertions.assertNotNull(scxml.getGlobalScript());
-        String scxmlAsString = serialize(scxml);
+        final String scxmlAsString = serialize(scxml);
         Assertions.assertNotNull(scxmlAsString);
         scxml = SCXMLTestHelper.parse(new StringReader(scxmlAsString), null);
         Assertions.assertNotNull(scxml);
@@ -278,7 +278,7 @@ public class SCXMLReaderTest {
 
     @Test
     public void dataWithSrcAndExprIsRejectedInStrictConfiguration() {
-        Configuration configuration = new Configuration();
+        final Configuration configuration = new Configuration();
         configuration.setStrict(true);
         configuration.setSilent(true);
         Assertions.assertThrows(org.apache.commons.scxml2.model.ModelException.class,
@@ -287,45 +287,45 @@ public class SCXMLReaderTest {
 
     @Test
     public void dataWithSrcAndExprUsesExprInNonStrictConfiguration() throws Exception {
-        Configuration configuration = new Configuration();
+        final Configuration configuration = new Configuration();
         configuration.setStrict(false);
         configuration.setSilent(true);
-        SCXML scxml = SCXMLReader.read(getClass().getResourceAsStream("data-with-src-and-expr.xml"), configuration);
+        final SCXML scxml = SCXMLReader.read(getClass().getResourceAsStream("data-with-src-and-expr.xml"), configuration);
         Assertions.assertNotNull(scxml);
         Assertions.assertNotNull(scxml.getDatamodel());
         Assertions.assertNotNull(scxml.getDatamodel().getData());
         Assertions.assertEquals(1, scxml.getDatamodel().getData().size(), "Exactly one data element parsed.");
-        Data data = scxml.getDatamodel().getData().get(0);
+        final Data data = scxml.getDatamodel().getData().get(0);
         Assertions.assertNotNull(data);
         Assertions.assertEquals("'an expression'", data.getExpr());
     }
 
     @Test
     public void srcAttributeOfDataIsParsed() throws Exception {
-        SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/io/data-with-src.xml");
+        final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/io/data-with-src.xml");
         Assertions.assertNotNull(scxml);
         Assertions.assertNotNull(scxml.getDatamodel());
         Assertions.assertNotNull(scxml.getDatamodel().getData());
         Assertions.assertEquals(1, scxml.getDatamodel().getData().size(), "Exactly one data element parsed.");
-        Data data = scxml.getDatamodel().getData().get(0);
+        final Data data = scxml.getDatamodel().getData().get(0);
         Assertions.assertNotNull(data);
         Assertions.assertEquals("http://www.w3.org/TR/sxcml", data.getSrc());
     }
 
     @Test
     public void exprAttributeOfDataIsParsed() throws Exception {
-        SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/io/data-with-expr.xml");
+        final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/io/data-with-expr.xml");
         Assertions.assertNotNull(scxml);
         Assertions.assertNotNull(scxml.getDatamodel());
         Assertions.assertNotNull(scxml.getDatamodel().getData());
         Assertions.assertEquals(1, scxml.getDatamodel().getData().size(), "Exactly one data element parsed.");
-        Data data = scxml.getDatamodel().getData().get(0);
+        final Data data = scxml.getDatamodel().getData().get(0);
         Assertions.assertNotNull(data);
         Assertions.assertEquals("'an expression'", data.getExpr());
     }
 
     private String serialize(final SCXML scxml) throws IOException, XMLStreamException {
-        String scxmlAsString = SCXMLWriter.write(scxml);
+        final String scxmlAsString = SCXMLWriter.write(scxml);
         Assertions.assertNotNull(scxmlAsString);
         return scxmlAsString;
     }
@@ -353,7 +353,7 @@ public class SCXMLReaderTest {
         private ParsedValue parsedValue;
 
         @Override
-        public void execute(ActionExecutionContext exctx) {
+        public void execute(final ActionExecutionContext exctx) {
             // Not relevant to test
         }
 
@@ -373,7 +373,7 @@ public class SCXMLReaderTest {
      */
     public static class RecordingLogFactory extends LogFactoryImpl {
         @Override
-        protected Log newInstance(String name) throws LogConfigurationException {
+        protected Log newInstance(final String name) throws LogConfigurationException {
             return new RecordingSimpleLog(name);
         }
     }
@@ -385,7 +385,7 @@ public class SCXMLReaderTest {
 
         private final List<String> messages = new LinkedList<>();
 
-        RecordingSimpleLog(String name) {
+        RecordingSimpleLog(final String name) {
             super(name);
         }
 
@@ -402,7 +402,7 @@ public class SCXMLReaderTest {
          * @return
          */
         boolean containsMessage(final String msg) {
-            for (String message : messages) {
+            for (final String message : messages) {
                 if (message.contains(msg)) {
                     return true;
                 }
@@ -411,12 +411,12 @@ public class SCXMLReaderTest {
         }
 
         @Override
-        protected boolean isLevelEnabled(int logLevel) {
+        protected boolean isLevelEnabled(final int logLevel) {
             return (logLevel >= LOG_LEVEL_INFO);
         }
 
         @Override
-        protected void log(int type, Object message, Throwable t) {
+        protected void log(final int type, final Object message, final Throwable t) {
             messages.add(message.toString());
         }
     }

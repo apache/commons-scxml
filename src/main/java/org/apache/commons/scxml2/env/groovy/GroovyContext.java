@@ -64,7 +64,7 @@ public class GroovyContext extends SimpleContext {
      * @param initialVars The initial set of variables.
      * @param evaluator The groovy evaluator
      */
-    public GroovyContext(final Context parent, final Map<String, Object> initialVars, GroovyEvaluator evaluator) {
+    public GroovyContext(final Context parent, final Map<String, Object> initialVars, final GroovyEvaluator evaluator) {
         super(parent, initialVars);
         this.evaluator = evaluator;
     }
@@ -75,7 +75,7 @@ public class GroovyContext extends SimpleContext {
      * @param parent The parent context.
      * @param evaluator The groovy evaluator
      */
-    public GroovyContext(final Context parent, GroovyEvaluator evaluator) {
+    public GroovyContext(final Context parent, final GroovyEvaluator evaluator) {
         super(parent);
         this.evaluator = evaluator;
     }
@@ -84,7 +84,7 @@ public class GroovyContext extends SimpleContext {
         return evaluator;
     }
 
-    protected void setGroovyEvaluator(GroovyEvaluator evaluator) {
+    protected void setGroovyEvaluator(final GroovyEvaluator evaluator) {
         this.evaluator = evaluator;
     }
 
@@ -98,7 +98,7 @@ public class GroovyContext extends SimpleContext {
         this.vars = vars;
     }
 
-    protected void setScriptBaseClass(String scriptBaseClass) {
+    protected void setScriptBaseClass(final String scriptBaseClass) {
         this.scriptBaseClass = scriptBaseClass;
     }
 
@@ -112,12 +112,12 @@ public class GroovyContext extends SimpleContext {
         return null;
     }
 
-    private void writeObject(ObjectOutputStream out) throws IOException {
+    private void writeObject(final ObjectOutputStream out) throws IOException {
         boolean closureErased = false;
         if (vars != null) {
-            Iterator<Map.Entry<String, Object>> iterator = getVars().entrySet().iterator();
+            final Iterator<Map.Entry<String, Object>> iterator = getVars().entrySet().iterator();
             while (iterator.hasNext()) {
-                Map.Entry<String, Object> entry = iterator.next();
+                final Map.Entry<String, Object> entry = iterator.next();
                 if (entry.getValue() != null && entry.getValue() instanceof Closure) {
                     iterator.remove();
                     closureErased = true;
@@ -134,7 +134,7 @@ public class GroovyContext extends SimpleContext {
     }
 
     @SuppressWarnings("unchecked")
-    private void readObject(ObjectInputStream in) throws IOException,ClassNotFoundException {
+    private void readObject(final ObjectInputStream in) throws IOException,ClassNotFoundException {
         this.scriptBaseClass = (String)in.readObject();
         this.evaluator = (GroovyEvaluator)in.readObject();
         this.binding = (GroovyContextBinding)in.readObject();

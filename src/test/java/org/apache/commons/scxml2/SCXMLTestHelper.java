@@ -59,7 +59,7 @@ public class SCXMLTestHelper {
         return Integer.toString(++sequence);
     }
 
-    public static URL getResource(String name) {
+    public static URL getResource(final String name) {
         return SCXMLTestHelper.class.getClassLoader().getResource(name);
     }
 
@@ -79,16 +79,16 @@ public class SCXMLTestHelper {
 
     public static SCXML parse(final URL url, final List<CustomAction> customActions) throws Exception {
         Assertions.assertNotNull(url);
-        Configuration configuration = new Configuration(null, null, customActions);
-        SCXML scxml = SCXMLReader.read(url, configuration);
+        final Configuration configuration = new Configuration(null, null, customActions);
+        final SCXML scxml = SCXMLReader.read(url, configuration);
         Assertions.assertNotNull(scxml);
         return testModelSerializability(scxml);
     }
 
     public static SCXML parse(final Reader scxmlReader, final List<CustomAction> customActions) throws Exception {
         Assertions.assertNotNull(scxmlReader);
-        Configuration configuration = new Configuration(null, null, customActions);
-        SCXML scxml = SCXMLReader.read(scxmlReader, configuration);
+        final Configuration configuration = new Configuration(null, null, customActions);
+        final SCXML scxml = SCXMLReader.read(scxmlReader, configuration);
         Assertions.assertNotNull(scxml);
         return testModelSerializability(scxml);
     }
@@ -114,27 +114,27 @@ public class SCXMLTestHelper {
     }
 
     public static SCXMLExecutor getExecutor(final SCXML scxml, final Evaluator evaluator, final EventDispatcher eventDispatcher) throws Exception {
-        Tracer trc = new Tracer();
-        SCXMLExecutor exec = new SCXMLExecutor(evaluator, eventDispatcher, trc);
+        final Tracer trc = new Tracer();
+        final SCXMLExecutor exec = new SCXMLExecutor(evaluator, eventDispatcher, trc);
         exec.setStateMachine(scxml);
         exec.addListener(scxml, trc);
         return exec;
     }
 
-    public static TransitionTarget lookupTransitionTarget(SCXMLExecutor exec, String id) {
+    public static TransitionTarget lookupTransitionTarget(final SCXMLExecutor exec, final String id) {
         return exec.getStateMachine().getTargets().get(id);
     }
 
-    public static Context lookupContext(SCXMLExecutor exec, String id) {
-        TransitionTarget tt = lookupTransitionTarget(exec, id);
+    public static Context lookupContext(final SCXMLExecutor exec, final String id) {
+        final TransitionTarget tt = lookupTransitionTarget(exec, id);
         if (tt == null || !(tt instanceof EnterableState)) {
             return null;
         }
         return exec.getSCInstance().lookupContext((EnterableState)tt);
     }
 
-    public static void assertState(SCXMLExecutor exec, String expectedStateId) {
-        Set<EnterableState> currentStates = exec.getStatus().getStates();
+    public static void assertState(final SCXMLExecutor exec, final String expectedStateId) {
+        final Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assertions.assertEquals(1, currentStates.size(),
                 "Expected 1 simple (leaf) state with id '" + expectedStateId +
                         "' but found " + currentStates.size() + " states instead.");
@@ -142,51 +142,51 @@ public class SCXMLTestHelper {
             next().getId());
     }
 
-    public static Set<EnterableState> fireEvent(SCXMLExecutor exec, String name) throws Exception {
+    public static Set<EnterableState> fireEvent(final SCXMLExecutor exec, final String name) throws Exception {
         return fireEvent(exec, name, null);
     }
 
-    public static Set<EnterableState> fireEvent(SCXMLExecutor exec, String name, Object data) throws Exception {
-        TriggerEvent[] evts = {new EventBuilder(name, TriggerEvent.SIGNAL_EVENT).data(data).build()};
+    public static Set<EnterableState> fireEvent(final SCXMLExecutor exec, final String name, final Object data) throws Exception {
+        final TriggerEvent[] evts = {new EventBuilder(name, TriggerEvent.SIGNAL_EVENT).data(data).build()};
         exec.triggerEvents(evts);
         return exec.getStatus().getStates();
     }
 
-    public static Set<EnterableState> fireEvent(SCXMLExecutor exec, TriggerEvent te) throws Exception {
+    public static Set<EnterableState> fireEvent(final SCXMLExecutor exec, final TriggerEvent te) throws Exception {
         exec.triggerEvent(te);
         return exec.getStatus().getStates();
     }
 
-    public static Set<EnterableState> fireEvents(SCXMLExecutor exec, TriggerEvent[] evts) throws Exception {
+    public static Set<EnterableState> fireEvents(final SCXMLExecutor exec, final TriggerEvent[] evts) throws Exception {
         exec.triggerEvents(evts);
         return exec.getStatus().getStates();
     }
 
-    public static void assertPostTriggerState(SCXMLExecutor exec,
-            String triggerEventName, String expectedStateId) throws Exception {
+    public static void assertPostTriggerState(final SCXMLExecutor exec,
+            final String triggerEventName, final String expectedStateId) throws Exception {
         assertPostTriggerState(exec, triggerEventName, null, expectedStateId);
     }
 
-    public static void assertPostTriggerState(SCXMLExecutor exec,
-            String triggerEventName, Object data, String expectedStateId) throws Exception {
+    public static void assertPostTriggerState(final SCXMLExecutor exec,
+            final String triggerEventName, final Object data, final String expectedStateId) throws Exception {
         assertPostTriggerState(exec, new EventBuilder(triggerEventName, TriggerEvent.SIGNAL_EVENT)
                 .data(data).build(), expectedStateId);
     }
 
-    public static void assertPostTriggerStates(SCXMLExecutor exec,
-            String triggerEventName, String[] expectedStateIds) throws Exception {
+    public static void assertPostTriggerStates(final SCXMLExecutor exec,
+            final String triggerEventName, final String[] expectedStateIds) throws Exception {
         assertPostTriggerStates(exec, triggerEventName, null, expectedStateIds);
     }
 
-    public static void assertPostTriggerStates(SCXMLExecutor exec,
-            String triggerEventName, Object data, String[] expectedStateIds) throws Exception {
+    public static void assertPostTriggerStates(final SCXMLExecutor exec,
+            final String triggerEventName, final Object data, final String[] expectedStateIds) throws Exception {
         assertPostTriggerStates(exec, new EventBuilder(triggerEventName, TriggerEvent.SIGNAL_EVENT)
                 .data(data).build(), expectedStateIds);
     }
 
-    public static void assertPostTriggerState(SCXMLExecutor exec,
-            TriggerEvent triggerEvent, String expectedStateId) throws Exception {
-        Set<EnterableState> currentStates = fireEvent(exec, triggerEvent);
+    public static void assertPostTriggerState(final SCXMLExecutor exec,
+            final TriggerEvent triggerEvent, final String expectedStateId) throws Exception {
+        final Set<EnterableState> currentStates = fireEvent(exec, triggerEvent);
         Assertions.assertEquals(1, currentStates.size(),
                 "Expected 1 simple (leaf) state with id '"
                         + expectedStateId + "' on firing event " + triggerEvent
@@ -195,21 +195,21 @@ public class SCXMLTestHelper {
             next().getId());
     }
 
-    public static void assertPostTriggerStates(SCXMLExecutor exec,
-            TriggerEvent triggerEvent, String[] expectedStateIds) throws Exception {
+    public static void assertPostTriggerStates(final SCXMLExecutor exec,
+            final TriggerEvent triggerEvent, final String[] expectedStateIds) throws Exception {
         if (expectedStateIds == null || expectedStateIds.length == 0) {
             Assertions.fail("Must specify an array of one or more "
                 + "expected state IDs");
         }
-        Set<EnterableState> currentStates = fireEvent(exec, triggerEvent);
-        int n = expectedStateIds.length;
+        final Set<EnterableState> currentStates = fireEvent(exec, triggerEvent);
+        final int n = expectedStateIds.length;
         Assertions.assertEquals(n, currentStates.size(),
                 "Expected " + n + " simple (leaf) state(s) "
                         + " on firing event " + triggerEvent + " but found "
                         + currentStates.size() + " states instead.");
-        List<String> expectedStateIdList = new ArrayList<>(Arrays.asList(expectedStateIds));
-        for (TransitionTarget tt : currentStates) {
-            String stateId = tt.getId();
+        final List<String> expectedStateIdList = new ArrayList<>(Arrays.asList(expectedStateIds));
+        for (final TransitionTarget tt : currentStates) {
+            final String stateId = tt.getId();
             if(!expectedStateIdList.remove(stateId)) {
                 Assertions.fail("Expected state with id '" + stateId
                     + "' in current states on firing event "
@@ -222,18 +222,18 @@ public class SCXMLTestHelper {
     }
 
     public static SCXML testModelSerializability(final SCXML scxml) throws Exception {
-        File fileDir = new File(SERIALIZATION_DIR);
+        final File fileDir = new File(SERIALIZATION_DIR);
         if (!fileDir.exists()) {
             fileDir.mkdirs();
         }
-        String filename = SERIALIZATION_FILE_PREFIX
+        final String filename = SERIALIZATION_FILE_PREFIX
             + getSequenceNumber() + SERIALIZATION_FILE_SUFFIX;
         SCXML roundtrip;
-        ObjectOutputStream out =
+        final ObjectOutputStream out =
             new ObjectOutputStream(new FileOutputStream(filename));
         out.writeObject(scxml);
         out.close();
-        ObjectInputStream in =
+        final ObjectInputStream in =
             new ObjectInputStream(new FileInputStream(filename));
         roundtrip = (SCXML) in.readObject();
         in.close();
@@ -241,17 +241,17 @@ public class SCXMLTestHelper {
     }
 
     public static SCXMLExecutor testInstanceSerializability(final SCXMLExecutor exec) throws Exception {
-        File fileDir = new File(SERIALIZATION_DIR);
+        final File fileDir = new File(SERIALIZATION_DIR);
         if (!fileDir.exists()) {
             fileDir.mkdirs();
         }
-        String filename = SERIALIZATION_FILE_PREFIX
+        final String filename = SERIALIZATION_FILE_PREFIX
             + getSequenceNumber() + SERIALIZATION_FILE_SUFFIX;
-        ObjectOutputStream out =
+        final ObjectOutputStream out =
             new ObjectOutputStream(new FileOutputStream(filename));
         out.writeObject(exec.detachInstance());
         out.close();
-        ObjectInputStream in =
+        final ObjectInputStream in =
             new SCInstanceObjectInputStream(new FileInputStream(filename));
         exec.attachInstance((SCInstance) in.readObject());
         in.close();

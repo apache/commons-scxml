@@ -111,7 +111,7 @@ public class GroovyExtendableScriptCache implements Serializable {
         protected String scriptName;
         protected transient Class<? extends Script> scriptClass;
 
-        public ScriptCacheElement(String baseClass, String scriptSource) {
+        public ScriptCacheElement(final String baseClass, final String scriptSource) {
             this.baseClass = baseClass;
             this.scriptSource = scriptSource;
         }
@@ -128,7 +128,7 @@ public class GroovyExtendableScriptCache implements Serializable {
             return scriptName;
         }
 
-        public void setScriptName(String scriptName) {
+        public void setScriptName(final String scriptName) {
             this.scriptName = scriptName;
         }
 
@@ -136,7 +136,7 @@ public class GroovyExtendableScriptCache implements Serializable {
             return scriptClass;
         }
 
-        public void setScriptClass(Class<? extends Script> scriptClass) {
+        public void setScriptClass(final Class<? extends Script> scriptClass) {
             this.scriptClass = scriptClass;
         }
 
@@ -183,7 +183,7 @@ public class GroovyExtendableScriptCache implements Serializable {
      * Hook into the de-serialization process, reloading the transient GroovyClassLoader, CompilerConfiguration and
      * re-generate Script classes through {@link #ensureInitializedOrReloaded()}
      */
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         ensureInitializedOrReloaded();
     }
@@ -198,21 +198,21 @@ public class GroovyExtendableScriptCache implements Serializable {
      * @return A new Script instance from a compiled (or cached) Groovy class parsed from the provided
      * scriptSource
      */
-    public Script getScript(String scriptSource) {
+    public Script getScript(final String scriptSource) {
         return getScript(null, scriptSource);
     }
 
-    public Script getScript(String scriptBaseClass, String scriptSource) {
+    public Script getScript(final String scriptBaseClass, final String scriptSource) {
         Class<? extends Script> scriptClass;
         synchronized (scriptCache) {
             ensureInitializedOrReloaded();
-            ScriptCacheElement cacheKey = new ScriptCacheElement(scriptBaseClass, scriptSource);
-            ScriptCacheElement cacheElement = scriptCache.get(cacheKey);
+            final ScriptCacheElement cacheKey = new ScriptCacheElement(scriptBaseClass, scriptSource);
+            final ScriptCacheElement cacheElement = scriptCache.get(cacheKey);
             if (cacheElement != null) {
                 scriptClass = cacheElement.getScriptClass();
             }
             else {
-                String scriptName = generatedScriptName(scriptSource, scriptCache.size());
+                final String scriptName = generatedScriptName(scriptSource, scriptCache.size());
                 scriptClass = compileScript(scriptBaseClass, scriptSource, scriptName);
                 cacheKey.setScriptName(scriptName);
                 cacheKey.setScriptClass(scriptClass);
@@ -221,7 +221,7 @@ public class GroovyExtendableScriptCache implements Serializable {
         }
         try {
             return scriptClass.newInstance();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new GroovyRuntimeException("Failed to create Script instance for class: "+ scriptClass + ". Reason: " + e, e);
         }
     }
@@ -237,7 +237,7 @@ public class GroovyExtendableScriptCache implements Serializable {
                     () -> new GroovyClassLoader(getParentClassLoaderFactory().getClassLoader(), compilerConfiguration));
             if (!scriptCache.isEmpty()) {
                 // de-serialized: need to re-generate all previously compiled scripts (this can cause a hick-up...):
-                for (ScriptCacheElement element : scriptCache.keySet()) {
+                for (final ScriptCacheElement element : scriptCache.keySet()) {
                     element.setScriptClass(compileScript(element.getBaseClass(), element.getScriptSource(), element.getScriptName()));
                 }
             }
@@ -245,13 +245,13 @@ public class GroovyExtendableScriptCache implements Serializable {
     }
 
     @SuppressWarnings("unchecked")
-    protected Class<Script> compileScript(final String scriptBaseClass, String scriptSource, final String scriptName) {
+    protected Class<Script> compileScript(final String scriptBaseClass, final String scriptSource, final String scriptName) {
         final String script = preProcessScript(scriptSource);
 
-        GroovyCodeSource codeSource = AccessController.doPrivileged((PrivilegedAction<GroovyCodeSource>)
+        final GroovyCodeSource codeSource = AccessController.doPrivileged((PrivilegedAction<GroovyCodeSource>)
                 () -> new GroovyCodeSource(script, scriptName, getScriptCodeBase()));
 
-        String currentScriptBaseClass = compilerConfiguration.getScriptBaseClass();
+        final String currentScriptBaseClass = compilerConfiguration.getScriptBaseClass();
         try {
             if (scriptBaseClass != null) {
                 compilerConfiguration.setScriptBaseClass(scriptBaseClass);
@@ -263,11 +263,11 @@ public class GroovyExtendableScriptCache implements Serializable {
         }
     }
 
-    protected String preProcessScript(String scriptSource) {
+    protected String preProcessScript(final String scriptSource) {
         return getScriptPreProcessor() != null ? getScriptPreProcessor().preProcess(scriptSource) : scriptSource;
     }
 
-    protected String generatedScriptName(String scriptSource, int seed) {
+    protected String generatedScriptName(final String scriptSource, final int seed) {
         return "script"+seed+"_"+Math.abs(scriptSource.hashCode())+".groovy";
     }
 
@@ -282,7 +282,7 @@ public class GroovyExtendableScriptCache implements Serializable {
      *                             the {@link #DEFAULT_SCRIPT_CODE_BASE} will be set instead.
      */
     @SuppressWarnings("unused")
-    public void setScriptCodeBase(String scriptCodeBase) {
+    public void setScriptCodeBase(final String scriptCodeBase) {
         if (scriptCodeBase != null && scriptCodeBase.length() > 0 && scriptCodeBase.charAt(0) == '/') {
             this.scriptCodeBase = scriptCodeBase;
         }
@@ -295,7 +295,7 @@ public class GroovyExtendableScriptCache implements Serializable {
         return scriptBaseClass;
     }
 
-    public void setScriptBaseClass(String scriptBaseClass) {
+    public void setScriptBaseClass(final String scriptBaseClass) {
         this.scriptBaseClass = scriptBaseClass;
     }
 
@@ -304,7 +304,7 @@ public class GroovyExtendableScriptCache implements Serializable {
     }
 
     @SuppressWarnings("unused")
-    public void setParentClassLoaderFactory(ParentClassLoaderFactory parentClassLoaderFactory) {
+    public void setParentClassLoaderFactory(final ParentClassLoaderFactory parentClassLoaderFactory) {
         this.parentClassLoaderFactory = parentClassLoaderFactory != null ? parentClassLoaderFactory : DEFAULT_PARENT_CLASS_LOADER_FACTORY;
     }
 
@@ -313,7 +313,7 @@ public class GroovyExtendableScriptCache implements Serializable {
     }
 
     @SuppressWarnings("unused")
-    public void setCompilerConfigurationFactory(CompilerConfigurationFactory compilerConfigurationFactory) {
+    public void setCompilerConfigurationFactory(final CompilerConfigurationFactory compilerConfigurationFactory) {
         this.compilerConfigurationFactory = compilerConfigurationFactory != null ? compilerConfigurationFactory : DEFAULT_COMPILER_CONFIGURATION_FACTORY;
     }
 

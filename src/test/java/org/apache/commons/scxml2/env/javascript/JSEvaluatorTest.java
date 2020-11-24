@@ -106,7 +106,7 @@ public class JSEvaluatorTest {
      */
     @BeforeEach
     public void setUp() throws Exception {
-        SCXMLExecutor fsm = SCXMLTestHelper.getExecutor(SCXMLReader.read(new StringReader(SCRIPT)));
+        final SCXMLExecutor fsm = SCXMLTestHelper.getExecutor(SCXMLReader.read(new StringReader(SCRIPT)));
         fsm.go();
         evaluator = fsm.getEvaluator();
         context = fsm.getGlobalContext();
@@ -121,7 +121,7 @@ public class JSEvaluatorTest {
      */    
     @Test
     public void testBasic() throws SCXMLExpressionException {
-        Evaluator evaluator = new JSEvaluator();
+        final Evaluator evaluator = new JSEvaluator();
 
         Assertions.assertNotNull(evaluator);
         Assertions.assertTrue   ((Boolean) evaluator.eval(context, "1+1 == 2"));
@@ -129,10 +129,10 @@ public class JSEvaluatorTest {
 
     @Test
     public void testScript() throws SCXMLExpressionException {
-        Evaluator evaluator = new JSEvaluator();
+        final Evaluator evaluator = new JSEvaluator();
         context.set("x", 3);
         context.set("y", 0);
-        String script = 
+        final String script = 
             "if ((x * 2.0) == 5.0) {" +
                 "y = 1.0;\n" +
             "} else {\n" +
@@ -148,10 +148,10 @@ public class JSEvaluatorTest {
      */    
     @Test
     public void testIllegalExpresssion() {
-        Evaluator evaluator = new JSEvaluator();
+        final Evaluator evaluator = new JSEvaluator();
 
         Assertions.assertNotNull(evaluator);
-        SCXMLExpressionException x= Assertions.assertThrows(
+        final SCXMLExpressionException x= Assertions.assertThrows(
                 SCXMLExpressionException.class,
                 () ->  evaluator.eval(context,BAD_EXPRESSION),
                 "JSEvaluator should throw SCXMLExpressionException");
@@ -165,8 +165,8 @@ public class JSEvaluatorTest {
      */    
     @Test
     public void testStandardExpressions() throws Exception {
-        for (TestItem item: SIMPLE_EXPRESSIONS) {
-            Object eval = evaluator.eval(context,item.expression);
+        for (final TestItem item: SIMPLE_EXPRESSIONS) {
+            final Object eval = evaluator.eval(context,item.expression);
             if (item.result instanceof Integer && eval instanceof Number) {
                 Assertions.assertEquals(((Integer) item.result).intValue(),
                         ((Number) eval).intValue(),
@@ -187,7 +187,7 @@ public class JSEvaluatorTest {
     public void testVarExpressions() throws Exception {
         context.set("fibonacci", 12.0);
 
-        for (TestItem item: VAR_EXPRESSIONS) {
+        for (final TestItem item: VAR_EXPRESSIONS) {
             Assertions.assertNotNull(context.get("fibonacci"));
             Assertions.assertEquals (12.0,context.get("fibonacci"));
             Assertions.assertEquals(item.result,
@@ -202,7 +202,7 @@ public class JSEvaluatorTest {
      */    
     @Test
     public void testInvalidVarExpressions() {
-        for (TestItem item: VAR_EXPRESSIONS) {
+        for (final TestItem item: VAR_EXPRESSIONS) {
             Assertions.assertNull(context.get("fibonacci"));
             Assertions.assertThrows(
                     SCXMLExpressionException.class,
@@ -277,7 +277,7 @@ public class JSEvaluatorTest {
         private final String expression;
         private final Object result;
 
-        private TestItem(String expression,Object result) {
+        private TestItem(final String expression,final Object result) {
             this.expression = expression;
             this.result     = result;
         }

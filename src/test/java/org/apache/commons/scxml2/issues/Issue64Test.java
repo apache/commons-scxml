@@ -28,14 +28,14 @@ public class Issue64Test {
 
     @Test
     public void test01issue64() throws Exception {
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/issues/issue64-01.xml");
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/issues/issue64-01.xml");
         exec.go();
         SCXMLTestHelper.assertPostTriggerState(exec, "show.bug", "end");
     }
     
     @Test
     public void test02issue64() throws Exception {
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/issues/issue64-02.xml");
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/issues/issue64-02.xml");
         exec.go();
         SCXMLTestHelper.assertPostTriggerState(exec, "show.bug", "end");
     }

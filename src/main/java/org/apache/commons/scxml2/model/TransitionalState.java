@@ -66,11 +66,11 @@ public abstract class TransitionalState extends EnterableState {
      */
     protected void updateDescendantsAncestors() {
         super.updateDescendantsAncestors();
-        for (History h : history) {
+        for (final History h : history) {
             // reset ancestors
             h.updateDescendantsAncestors();
         }
-        for (TransitionTarget child : children) {
+        for (final TransitionTarget child : children) {
             child.updateDescendantsAncestors();
         }
     }
@@ -100,7 +100,7 @@ public abstract class TransitionalState extends EnterableState {
      * @return the ancestor at specified level
      */
     @Override
-    public TransitionalState getAncestor(int level) {
+    public TransitionalState getAncestor(final int level) {
         return (TransitionalState)super.getAncestor(level);
     }
 
@@ -113,7 +113,7 @@ public abstract class TransitionalState extends EnterableState {
      */
     public final List<Transition> getTransitionsList(final String event) {
         List<Transition> matchingTransitions = null; // since we returned null upto v0.6
-        for (Transition t : transitions) {
+        for (final Transition t : transitions) {
             if ((event == null && t.getEvent() == null)
                     || (event != null && event.equals(t.getEvent()))) {
                 if (matchingTransitions == null) {

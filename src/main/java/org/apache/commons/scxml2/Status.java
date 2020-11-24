@@ -36,7 +36,7 @@ public class Status implements Serializable {
     private final StateConfiguration configuration;
 
 
-    public Status(StateConfiguration configuration) {
+    public Status(final StateConfiguration configuration) {
         this.configuration = configuration;
     }
 
@@ -52,7 +52,7 @@ public class Status implements Serializable {
      */
     public Final getFinalState() {
         if (configuration.getStates().size() == 1) {
-            EnterableState es = configuration.getStates().iterator().next();
+            final EnterableState es = configuration.getStates().iterator().next();
             if (es instanceof Final && es.getParent() == null) {
                 return (Final)es;
             }
@@ -80,7 +80,7 @@ public class Status implements Serializable {
     }
 
     public boolean isInState(final String state) {
-        for (EnterableState es : configuration.getActiveStates()) {
+        for (final EnterableState es : configuration.getActiveStates()) {
             if (state.equals(es.getId())) {
                 return true;
             }

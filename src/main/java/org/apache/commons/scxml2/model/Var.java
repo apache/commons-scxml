@@ -100,16 +100,16 @@ public class Var extends Action {
      * {@inheritDoc}
      */
     @Override
-    public void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
-        Context ctx = exctx.getContext(getParentEnterableState());
-        Evaluator eval = exctx.getEvaluator();
-        Object varObj = eval.eval(ctx, expr);
+    public void execute(final ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
+        final Context ctx = exctx.getContext(getParentEnterableState());
+        final Evaluator eval = exctx.getEvaluator();
+        final Object varObj = eval.eval(ctx, expr);
         ctx.setLocal(name, varObj);
         if (exctx.getAppLog().isDebugEnabled()) {
             exctx.getAppLog().debug("<var>: Defined variable '" + name
                 + "' with initial value '" + String.valueOf(varObj) + "'");
         }
-        TriggerEvent ev = new EventBuilder(name + ".change", TriggerEvent.CHANGE_EVENT).build();
+        final TriggerEvent ev = new EventBuilder(name + ".change", TriggerEvent.CHANGE_EVENT).build();
         exctx.getInternalIOProcessor().addEvent(ev);
     }
 }

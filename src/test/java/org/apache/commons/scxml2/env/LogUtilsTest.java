@@ -25,7 +25,7 @@ public class LogUtilsTest {
 
     @Test
     public void testGetTTPathParentNull() {
-        State target = new State();
+        final State target = new State();
         target.setId("ID");
         
         Assertions.assertEquals("/ID", LogUtils.getTTPath(target));
@@ -33,13 +33,13 @@ public class LogUtilsTest {
     
     @Test
     public void testGetTTPathParent() {
-        State target = new State();
+        final State target = new State();
         target.setId("ID");
 
-        State parent1 = new State();
+        final State parent1 = new State();
         parent1.setId("parent1");
 
-        State parent2 = new State();
+        final State parent2 = new State();
         parent2.setId("parent2");
 
         parent1.setParent(parent2);
@@ -50,13 +50,13 @@ public class LogUtilsTest {
     
     @Test
     public void testTransToString() {
-        State targetTo = new State();
+        final State targetTo = new State();
         targetTo.setId("TO");
 
-        State targetFrom = new State();
+        final State targetFrom = new State();
         targetFrom.setId("FROM");
         
-        Transition transition = new Transition();
+        final Transition transition = new Transition();
         transition.setCond("condition");
         transition.setEvent("event happened");
         

@@ -80,7 +80,7 @@ public class SimpleTransition extends Executable implements Observable {
         this.targets = new HashSet<>();
     }
 
-    private boolean isCompoundStateParent(TransitionalState ts) {
+    private boolean isCompoundStateParent(final TransitionalState ts) {
         return ts instanceof State && ((State)ts).isComposite();
     }
 
@@ -95,7 +95,7 @@ public class SimpleTransition extends Executable implements Observable {
      * Sets the observableId for this Observable, which must be unique within the SCXML state machine
      * @param observableId the observableId
      */
-    public final void setObservableId(Integer observableId) {
+    public final void setObservableId(final Integer observableId) {
         this.observableId = observableId;
     }
 
@@ -160,7 +160,7 @@ public class SimpleTransition extends Executable implements Observable {
             typeInternal = TransitionType.internal == type && isCompoundStateParent(getParent());
 
             if (typeInternal && targets.size() > 0) {
-                for (TransitionTarget tt : targets) {
+                for (final TransitionTarget tt : targets) {
                     if (!tt.isDescendantOf(getParent())) {
                         typeInternal = false;
                         break;
@@ -206,7 +206,7 @@ public class SimpleTransition extends Executable implements Observable {
                     for (int i = getParent().getNumberOfAncestors()-1; i > -1; i--) {
                         if (isCompoundStateParent(getParent().getAncestor(i))) {
                             boolean allDescendants = true;
-                            for (TransitionTarget tt : targets) {
+                            for (final TransitionTarget tt : targets) {
                                 if (i >= tt.getNumberOfAncestors()) {
                                     i = tt.getNumberOfAncestors();
                                     allDescendants = false;

@@ -41,7 +41,7 @@ public class JavaScriptEngineTest {
     public void before() {
         evaluator = new JSEvaluator();
         _systemContext = new JSContext();
-        SCXMLSystemContext systemContext = new SCXMLSystemContext(_systemContext);
+        final SCXMLSystemContext systemContext = new SCXMLSystemContext(_systemContext);
         _systemContext.set(SCXMLSystemContext.SESSIONID_KEY, UUID.randomUUID().toString());
         _systemContext.set(SCXMLSystemContext.SCXML_NAME_KEY, "test");
         stateConfiguration = new StateConfiguration();
@@ -57,7 +57,7 @@ public class JavaScriptEngineTest {
     @Test
     public void testScxmlEvent() throws Exception {
         assertTrue(evaluator.evalCond(context, "_event === undefined"));
-        EventVariable event = new EventVariable("myEvent", EventVariable.TYPE_INTERNAL, null, null, null, null,"myData");
+        final EventVariable event = new EventVariable("myEvent", EventVariable.TYPE_INTERNAL, null, null, null, null,"myData");
         _systemContext.setLocal(SCXMLSystemContext.EVENT_KEY, event);
         assertFalse(evaluator.evalCond(context, "_event === undefined"));
         assertTrue(evaluator.evalCond(context, "_event.name == 'myEvent'"));
@@ -69,7 +69,7 @@ public class JavaScriptEngineTest {
     @Test
     public void testScxmlInPredicate() throws Exception {
         assertFalse(evaluator.evalCond(context, "In('foo')"));
-        Final foo = new Final();
+        final Final foo = new Final();
         foo.setId("foo");
         stateConfiguration.enterState(foo);
         assertTrue(evaluator.evalCond(context, "In('foo')"));

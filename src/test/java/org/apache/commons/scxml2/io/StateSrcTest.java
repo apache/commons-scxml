@@ -31,7 +31,7 @@ public class StateSrcTest {
 
     @Test
     public void testRecursiveSrcInclude() throws Exception {
-        SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/io/src-test-1.xml");
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/io/src-test-1.xml");
         exec.go();
         Set<EnterableState> states = exec.getStatus().getStates();
         Assertions.assertEquals(1, states.size());
@@ -44,7 +44,7 @@ public class StateSrcTest {
     
     @Test
     public void testBadSrcInclude() {
-        ModelException me = Assertions.assertThrows(
+        final ModelException me = Assertions.assertThrows(
                 ModelException.class,
                 () -> SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/src-test-4.xml")),
                 "Document with bad <state> src attribute shouldn't be parsed!");
@@ -54,7 +54,7 @@ public class StateSrcTest {
     
     @Test
     public void testBadSrcFragmentInclude() {
-        ModelException me = Assertions.assertThrows(
+        final ModelException me = Assertions.assertThrows(
                 ModelException.class,
                 () -> SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/src-test-5.xml")),
                 "Document with bad <state> src attribute shouldn't be parsed!");
