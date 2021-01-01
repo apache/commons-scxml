@@ -453,7 +453,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
             }
             exctx.registerInvoker(this, invoker);
         }
-        catch (InvokerException|ActionExecutionError|SCXMLExpressionException e) {
+        catch (final InvokerException|ActionExecutionError|SCXMLExpressionException e) {
             axctx.getInternalIOProcessor().addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT).build());
             if (e.getMessage() != null) {
                 axctx.getErrorReporter().onError(e instanceof SCXMLExpressionException

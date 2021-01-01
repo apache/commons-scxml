@@ -203,7 +203,7 @@ public class GroovyExtendableScriptCache implements Serializable {
     }
 
     public Script getScript(final String scriptBaseClass, final String scriptSource) {
-        Class<? extends Script> scriptClass;
+        final Class<? extends Script> scriptClass;
         synchronized (scriptCache) {
             ensureInitializedOrReloaded();
             final ScriptCacheElement cacheKey = new ScriptCacheElement(scriptBaseClass, scriptSource);
