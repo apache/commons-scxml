@@ -23,11 +23,9 @@ import java.util.Queue;
 
 import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.SCXMLExecutor;
-import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.model.Action;
 import org.apache.commons.scxml2.model.CustomAction;
-import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.SCXML;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;

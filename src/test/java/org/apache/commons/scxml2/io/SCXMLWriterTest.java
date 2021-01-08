@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 
 import org.apache.commons.scxml2.model.CommonsSCXML;
-import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.Parallel;
 import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.Script;

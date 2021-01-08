@@ -30,7 +30,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.impl.LogFactoryImpl;
 import org.apache.commons.logging.impl.SimpleLog;
 import org.apache.commons.scxml2.ActionExecutionContext;
-import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.io.SCXMLReader.Configuration;
 import org.apache.commons.scxml2.model.Action;
