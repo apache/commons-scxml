@@ -73,7 +73,7 @@ public final class NotificationRegistry {
             final Set<SCXMLListener> entries = regs.get(source.getObservableId());
             if (entries != null) {
                 entries.remove(lst);
-                if (entries.size() == 0) {
+                if (entries.isEmpty()) {
                     regs.remove(source.getObservableId());
                 }
             }

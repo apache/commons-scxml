@@ -145,7 +145,7 @@ final class ModelUpdater {
             initialTransition.setNext(scxml.getInitial());
             updateTransition(initialTransition, scxml.getTargets());
 
-            if (initialTransition.getTargets().size() == 0) {
+            if (initialTransition.getTargets().isEmpty()) {
                 logAndThrowModelError(ERR_SCXML_NO_INIT, new Object[] {
                         initial });
             }
@@ -240,7 +240,7 @@ final class ModelUpdater {
             final Set<TransitionTarget> initialStates = initialTransition.getTargets();
             // we have to allow for an indirect descendant initial (targets)
             //check that initialState is a descendant of s
-            if (initialStates.size() == 0) {
+            if (initialStates.isEmpty()) {
                 logAndThrowModelError(ERR_STATE_BAD_INIT,
                         new Object[] {getName(state)});
             } else {
@@ -336,7 +336,7 @@ final class ModelUpdater {
         else {
             updateTransition(transition, targets);
             final Set<TransitionTarget> historyStates = transition.getTargets();
-            if (historyStates.size() == 0) {
+            if (historyStates.isEmpty()) {
                 logAndThrowModelError(ERR_STATE_NO_HIST,
                         new Object[] {getName(parent)});
             }
