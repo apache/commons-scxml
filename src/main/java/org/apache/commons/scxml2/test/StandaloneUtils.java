@@ -110,7 +110,7 @@ public final class StandaloneUtils {
                     rootCtx.setLocal(name, value);
                     System.out.println("Set variable " + name + " to "
                         + value);
-                } else if (event.trim().length() == 0
+                } else if (event.trim().isEmpty()
                            || event.equalsIgnoreCase("null")) {
                     final TriggerEvent[] evts = {new EventBuilder(null,TriggerEvent.SIGNAL_EVENT).build()};
                     exec.triggerEvents(evts);

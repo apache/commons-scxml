@@ -97,7 +97,7 @@ public class Cancel extends Action {
         String sendidValue = sendid;
         if (sendidValue == null && sendidexpr != null) {
             sendidValue = (String) eval.eval(ctx, sendidexpr);
-            if ((sendidValue == null || sendidValue.trim().length() == 0)
+            if ((sendidValue == null || sendidValue.trim().isEmpty())
                     && exctx.getAppLog().isWarnEnabled()) {
                 exctx.getAppLog().warn("<send>: sendid expression \"" + sendidexpr
                         + "\" evaluated to null or empty String");

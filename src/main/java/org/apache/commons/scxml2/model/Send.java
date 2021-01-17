@@ -403,7 +403,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
         String targetValue = target;
         if (targetValue == null && targetexpr != null) {
             targetValue = (String)eval.eval(ctx, targetexpr);
-            if ((targetValue == null || targetValue.trim().length() == 0)
+            if ((targetValue == null || targetValue.trim().isEmpty())
                     && exctx.getAppLog().isWarnEnabled()) {
                 exctx.getAppLog().warn("<send>: target expression \"" + targetexpr
                         + "\" evaluated to null or empty String");
@@ -412,7 +412,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
         String typeValue = type;
         if (typeValue == null && typeexpr != null) {
             typeValue = (String)eval.eval(ctx, typeexpr);
-            if ((typeValue == null || typeValue.trim().length() == 0)
+            if ((typeValue == null || typeValue.trim().isEmpty())
                     && exctx.getAppLog().isWarnEnabled()) {
                 exctx.getAppLog().warn("<send>: type expression \"" + typeexpr
                         + "\" evaluated to null or empty String");

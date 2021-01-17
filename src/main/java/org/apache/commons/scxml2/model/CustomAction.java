@@ -91,7 +91,7 @@ public class CustomAction {
     public CustomAction(final String namespaceURI, final String localName,
             final Class<? extends Action> actionClass) {
         final Log log = LogFactory.getLog(CustomAction.class);
-        if (namespaceURI == null || namespaceURI.trim().length() == 0) {
+        if (namespaceURI == null || namespaceURI.trim().isEmpty()) {
             log.error(ERR_NO_NAMESPACE);
             throw new IllegalArgumentException(ERR_NO_NAMESPACE);
         }
@@ -99,7 +99,7 @@ public class CustomAction {
             log.error(ERR_RESERVED_NAMESPACE);
             throw new IllegalArgumentException(ERR_RESERVED_NAMESPACE);
         }
-        if (localName == null || localName.trim().length() == 0) {
+        if (localName == null || localName.trim().isEmpty()) {
             log.error(ERR_NO_LOCAL_NAME);
             throw new IllegalArgumentException(ERR_NO_LOCAL_NAME);
         }

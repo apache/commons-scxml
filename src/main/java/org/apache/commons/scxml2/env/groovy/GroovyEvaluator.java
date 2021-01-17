@@ -86,7 +86,7 @@ public class GroovyEvaluator extends AbstractBaseEvaluator {
 
         @Override
         public String preProcess(final String script) {
-            if (script == null || script.length() == 0) {
+            if (script == null || script.isEmpty()) {
                 return script;
             }
             StringBuffer sb = null;
