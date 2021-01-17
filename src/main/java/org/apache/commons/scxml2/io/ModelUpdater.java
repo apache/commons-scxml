@@ -257,7 +257,7 @@ final class ModelUpdater {
         }
 
         final List<History> histories = state.getHistory();
-        if (histories.size() > 0 && state.isSimple()) {
+        if (!histories.isEmpty() && state.isSimple()) {
             logAndThrowModelError(ERR_HISTORY_SIMPLE_STATE,
                     new Object[] {getName(state)});
         }

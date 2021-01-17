@@ -159,7 +159,7 @@ public class SimpleTransition extends Executable implements Observable {
             // derive typeInternal
             typeInternal = TransitionType.internal == type && isCompoundStateParent(getParent());
 
-            if (typeInternal && targets.size() > 0) {
+            if (typeInternal && !targets.isEmpty()) {
                 for (final TransitionTarget tt : targets) {
                     if (!tt.isDescendantOf(getParent())) {
                         typeInternal = false;
@@ -195,7 +195,7 @@ public class SimpleTransition extends Executable implements Observable {
      */
     public TransitionalState getTransitionDomain() {
         TransitionalState ts = transitionDomain;
-        if (ts == null && targets.size() > 0 && !scxmlTransitionDomain) {
+        if (ts == null && !targets.isEmpty() && !scxmlTransitionDomain) {
 
             if (getParent() != null) {
                 if (isTypeInternal()) {

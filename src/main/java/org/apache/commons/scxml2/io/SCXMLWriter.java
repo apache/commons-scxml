@@ -683,7 +683,7 @@ public class SCXMLWriter {
     private static void writeOnEntry(final XMLStreamWriter writer, final OnEntry onentry)
             throws XMLStreamException {
 
-        if (onentry != null && (onentry.isRaiseEvent() || onentry.getActions().size() > 0 )) {
+        if (onentry != null && (onentry.isRaiseEvent() || !onentry.getActions().isEmpty() )) {
             writer.writeStartElement(SCXMLConstants.ELEM_ONENTRY);
             writeAV(writer, SCXMLConstants.ATTR_EVENT, onentry.getRaiseEvent());
             writeExecutableContent(writer, onentry.getActions());
@@ -702,7 +702,7 @@ public class SCXMLWriter {
     private static void writeOnExit(final XMLStreamWriter writer, final OnExit onexit)
             throws XMLStreamException {
 
-        if (onexit != null && (onexit.isRaiseEvent() || onexit.getActions().size() > 0)) {
+        if (onexit != null && (onexit.isRaiseEvent() || !onexit.getActions().isEmpty())) {
             writer.writeStartElement(SCXMLConstants.ELEM_ONEXIT);
             writeAV(writer, SCXMLConstants.ATTR_EVENT, onexit.getRaiseEvent());
             writeExecutableContent(writer, onexit.getActions());
@@ -773,7 +773,7 @@ public class SCXMLWriter {
     private static void writeFinalize(final XMLStreamWriter writer, final Finalize finalize)
             throws XMLStreamException {
 
-        if (finalize != null && finalize.getActions().size() > 0) {
+        if (finalize != null && !finalize.getActions().isEmpty()) {
             writer.writeStartElement(SCXMLConstants.ELEM_FINALIZE);
             writeExecutableContent(writer, finalize.getActions());
             writer.writeEndElement();
