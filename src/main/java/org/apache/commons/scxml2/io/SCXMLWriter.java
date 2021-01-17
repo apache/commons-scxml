@@ -421,7 +421,7 @@ public class SCXMLWriter {
         if (scxml.getNamespaces() != null) {
             for (final Map.Entry<String, String> entry : scxml.getNamespaces().entrySet()) {
                 final String key = entry.getKey();
-                if (key != null && key.trim().length() > 0) {
+                if (key != null && !key.trim().isEmpty()) {
                     writer.writeNamespace(key, entry.getValue());
                 }
             }
@@ -1093,7 +1093,7 @@ public class SCXMLWriter {
      * @return a qualified name from a prefix and localName
      */
     private static String createQualifiedName(final String prefix, final String localName) {
-        return (prefix != null && prefix.length() > 0 ? prefix + ":" : "") +localName;
+        return (prefix != null && !prefix.isEmpty() ? prefix + ":" : "") + localName;
     }
 
     /**

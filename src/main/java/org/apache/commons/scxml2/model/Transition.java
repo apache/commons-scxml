@@ -132,16 +132,14 @@ public class Transition extends SimpleTransition implements DocumentOrder {
                     events.add("*");
                     break;
                 }
-                else {
-                    if (token.endsWith("*")) {
-                        token = token.substring(0, token.length()-1);
-                    }
-                    if (token.endsWith(".")) {
-                        token = token.substring(0, token.length()-1);
-                    }
-                    if (token.length() > 0) {
-                        events.add(token);
-                    }
+                if (token.endsWith("*")) {
+                    token = token.substring(0, token.length()-1);
+                }
+                if (token.endsWith(".")) {
+                    token = token.substring(0, token.length()-1);
+                }
+                if (!token.isEmpty()) {
+                    events.add(token);
                 }
             }
         }

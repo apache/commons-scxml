@@ -283,7 +283,7 @@ public class GroovyExtendableScriptCache implements Serializable {
      */
     @SuppressWarnings("unused")
     public void setScriptCodeBase(final String scriptCodeBase) {
-        if (scriptCodeBase != null && scriptCodeBase.length() > 0 && scriptCodeBase.charAt(0) == '/') {
+        if (scriptCodeBase != null && !scriptCodeBase.isEmpty() && scriptCodeBase.charAt(0) == '/') {
             this.scriptCodeBase = scriptCodeBase;
         }
         else {

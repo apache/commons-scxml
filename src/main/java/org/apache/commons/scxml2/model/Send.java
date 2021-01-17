@@ -494,7 +494,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
         long wait = 0L;
         long multiplier = 1L;
 
-        if (delayString != null && delayString.trim().length() > 0) {
+        if (delayString != null && !delayString.trim().isEmpty()) {
 
             try {
                 final String trimDelay = delayString.trim();
@@ -517,7 +517,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
                     numericDelay = numericDelay.substring(fractionIndex+1);
                     multiplier /= Math.pow(10, numericDelay.length());
                 }
-                if (numericDelay.length() > 0) {
+                if (!numericDelay.isEmpty()) {
                     wait += Long.parseLong(numericDelay) * multiplier;
                 }
             } catch (final NumberFormatException nfe) {

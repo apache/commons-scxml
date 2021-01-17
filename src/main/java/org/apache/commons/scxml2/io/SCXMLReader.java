@@ -2254,7 +2254,7 @@ public final class SCXMLReader {
      * @return a qualified name from a prefix and localName
      */
     private static String createQualifiedName(final String prefix, final String localName) {
-        return (prefix != null && prefix.length() > 0 ? prefix + ":" : "") +localName;
+        return (prefix != null && !prefix.isEmpty() ? prefix + ":" : "") + localName;
     }
 
     /**

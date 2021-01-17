@@ -143,7 +143,7 @@ public class ContentParser {
      * @return true if content start with '{' or '[' character
      */
     public static boolean hasJsonSignature(final String content) {
-        final char c = content.length() > 0 ? content.charAt(0) : 0;
+        final char c = !content.isEmpty() ? content.charAt(0) : 0;
         return c == '{' || c == '[';
     }
 
