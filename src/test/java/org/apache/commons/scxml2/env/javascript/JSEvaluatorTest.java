@@ -101,7 +101,7 @@ public class JSEvaluatorTest {
     // TEST SETUP
 
     /**
-     * Creates and initialises an SCXML data model in the context.
+     * Creates and initializes an SCXML data model in the context.
      *
      */
     @BeforeEach
