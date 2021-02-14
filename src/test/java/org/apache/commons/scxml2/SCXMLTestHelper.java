@@ -228,7 +228,7 @@ public class SCXMLTestHelper {
         }
         final String filename = SERIALIZATION_FILE_PREFIX
             + getSequenceNumber() + SERIALIZATION_FILE_SUFFIX;
-        SCXML roundtrip;
+        final SCXML roundtrip;
         final ObjectOutputStream out =
             new ObjectOutputStream(new FileOutputStream(filename));
         out.writeObject(scxml);

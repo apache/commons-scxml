@@ -18,6 +18,7 @@
 package org.apache.commons.scxml2.env.javascript;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import javax.script.Bindings;
@@ -103,7 +104,7 @@ public class JSEvaluator extends AbstractBaseEvaluator {
             engine = new ScriptEngineManager().getEngineByName("JavaScript");
             if (initGlobalsScript == null) {
                 try {
-                    initGlobalsScript = IOUtils.toString(JSEvaluator.class.getResourceAsStream("init_global.js"), "UTF-8");
+                    initGlobalsScript = IOUtils.toString(JSEvaluator.class.getResourceAsStream("init_global.js"), StandardCharsets.UTF_8);
                 }
                 catch (final IOException ioe) {
                     throw new RuntimeException("Failed to load init_global.js from classpath", ioe);

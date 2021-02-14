@@ -448,7 +448,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
         }
         try {
             return invokerClass.newInstance();
-        } catch (InstantiationException | IllegalAccessException ie) {
+        } catch (final InstantiationException | IllegalAccessException ie) {
             throw new InvokerException(ie.getMessage(), ie.getCause());
         }
     }

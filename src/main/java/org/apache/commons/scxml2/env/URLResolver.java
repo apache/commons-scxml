@@ -54,7 +54,7 @@ public class URLResolver implements PathResolver, Serializable {
      * @see org.apache.commons.scxml2.PathResolver#resolvePath(java.lang.String)
      */
     public String resolvePath(final String ctxPath) {
-        URL combined;
+        final URL combined;
         try {
             combined = new URL(baseURL, ctxPath);
             return combined.toString();
@@ -68,7 +68,7 @@ public class URLResolver implements PathResolver, Serializable {
      * @see org.apache.commons.scxml2.PathResolver#getResolver(java.lang.String)
      */
     public PathResolver getResolver(final String ctxPath) {
-        URL combined;
+        final URL combined;
         try {
             combined = new URL(baseURL, ctxPath);
             return new URLResolver(combined);

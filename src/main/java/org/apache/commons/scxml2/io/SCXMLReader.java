@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -522,7 +523,8 @@ public final class SCXMLReader {
         final SCXML scxml = new SCXML();
         scxml.setPathResolver(configuration.pathResolver);
         while (reader.hasNext()) {
-            String name, nsURI;
+            final String name;
+            final String nsURI;
             switch (reader.next()) {
                 case XMLStreamConstants.START_ELEMENT:
                     nsURI = reader.getNamespaceURI();
@@ -585,7 +587,8 @@ public final class SCXMLReader {
         boolean hasGlobalScript = false;
 
         loop : while (reader.hasNext()) {
-            String name, nsURI;
+            final String name;
+            final String nsURI;
             switch (reader.next()) {
                 case XMLStreamConstants.START_ELEMENT:
                     nsURI = reader.getNamespaceURI();
@@ -667,7 +670,8 @@ public final class SCXMLReader {
         }
 
         loop : while (reader.hasNext()) {
-            String name, nsURI;
+            final String name;
+            final String nsURI;
             switch (reader.next()) {
                 case XMLStreamConstants.START_ELEMENT:
                     nsURI = reader.getNamespaceURI();
@@ -754,7 +758,8 @@ public final class SCXMLReader {
         }
 
         loop : while (reader.hasNext()) {
-            String name, nsURI;
+            final String name;
+            final String nsURI;
             switch (reader.next()) {
                 case XMLStreamConstants.START_ELEMENT:
                     nsURI = reader.getNamespaceURI();
@@ -822,7 +827,8 @@ public final class SCXMLReader {
         }
 
         loop : while (reader.hasNext()) {
-            String name, nsURI;
+            final String name;
+            final String nsURI;
             switch (reader.next()) {
                 case XMLStreamConstants.START_ELEMENT:
                     nsURI = reader.getNamespaceURI();
@@ -866,7 +872,8 @@ public final class SCXMLReader {
         parent.setDoneData(doneData);
 
         loop : while (reader.hasNext()) {
-            String name, nsURI;
+            final String name;
+            final String nsURI;
             switch (reader.next()) {
                 case XMLStreamConstants.START_ELEMENT:
                     nsURI = reader.getNamespaceURI();
@@ -925,7 +932,7 @@ public final class SCXMLReader {
         }
 
         // Parse external document
-        SCXML externalSCXML;
+        final SCXML externalSCXML;
         try {
             externalSCXML = SCXMLReader.readInternal(configuration, new URL(location), null, null, null, null);
         } catch (final Exception e) {
@@ -1037,7 +1044,8 @@ public final class SCXMLReader {
         final Datamodel dm = new Datamodel();
 
         loop : while (reader.hasNext()) {
-            String name, nsURI;
+            final String name;
+            final String nsURI;
             switch (reader.next()) {
                 case XMLStreamConstants.START_ELEMENT:
                     nsURI = reader.getNamespaceURI();
@@ -1122,7 +1130,8 @@ public final class SCXMLReader {
         invoke.setNamelist(readAV(reader, SCXMLConstants.ATTR_NAMELIST));
 
         loop : while (reader.hasNext()) {
-            String name, nsURI;
+            final String name;
+            final String nsURI;
             switch (reader.next()) {
                 case XMLStreamConstants.START_ELEMENT:
                     nsURI = reader.getNamespaceURI();
@@ -1250,7 +1259,8 @@ public final class SCXMLReader {
         final Initial initial = new Initial();
 
         loop : while (reader.hasNext()) {
-            String name, nsURI;
+            final String name;
+            final String nsURI;
             switch (reader.next()) {
                 case XMLStreamConstants.START_ELEMENT:
                     nsURI = reader.getNamespaceURI();
@@ -1298,7 +1308,8 @@ public final class SCXMLReader {
         scxml.addTarget(history);
 
         loop : while (reader.hasNext()) {
-            String name, nsURI;
+            final String name;
+            final String nsURI;
             switch (reader.next()) {
                 case XMLStreamConstants.START_ELEMENT:
                     nsURI = reader.getNamespaceURI();
@@ -1458,7 +1469,8 @@ public final class SCXMLReader {
         }
 
         loop : while (reader.hasNext()) {
-            String name, nsURI;
+            final String name;
+            final String nsURI;
             switch (reader.next()) {
                 case XMLStreamConstants.START_ELEMENT:
                     nsURI = reader.getNamespaceURI();
@@ -1809,7 +1821,8 @@ public final class SCXMLReader {
         }
 
         loop : while (reader.hasNext()) {
-            String name, nsURI;
+            final String name;
+            final String nsURI;
             switch (reader.next()) {
                 case XMLStreamConstants.START_ELEMENT:
                     nsURI = reader.getNamespaceURI();
@@ -1945,8 +1958,8 @@ public final class SCXMLReader {
             if (configuration.pathResolver != null) {
                 resolvedSrc = configuration.pathResolver.resolvePath(resolvedSrc);
             }
-            try (InputStream in = new URL(resolvedSrc).openStream()){
-                script.setScript(IOUtils.toString(in, "UTF-8"));
+            try (final InputStream in = new URL(resolvedSrc).openStream()){
+                script.setScript(IOUtils.toString(in, StandardCharsets.UTF_8));
             }
             catch (final IOException e) {
                 throw new ModelException(e);
@@ -1976,7 +1989,7 @@ public final class SCXMLReader {
             throws XMLStreamException, ModelException {
 
         // Instantiate custom action
-        Object actionObject;
+        final Object actionObject;
         final String className = customAction.getActionClass().getName();
         ClassLoader cl = configuration.customActionClassLoader;
         if (configuration.useContextClassLoaderForCustomActions) {
@@ -1985,7 +1998,7 @@ public final class SCXMLReader {
         if (cl == null) {
             cl = SCXMLReader.class.getClassLoader();
         }
-        Class<?> clazz;
+        final Class<?> clazz;
         try {
             clazz = cl.loadClass(className);
             actionObject = clazz.newInstance();
@@ -2019,7 +2032,7 @@ public final class SCXMLReader {
             final String value = reader.getAttributeValue(i);
             attributes.put(qname, value);
             final String setter = "set" + name.substring(0, 1).toUpperCase() + name.substring(1);
-            Method method;
+            final Method method;
             try {
                 method = clazz.getMethod(setter, String.class);
                 method.invoke(action, value);
@@ -2138,7 +2151,7 @@ public final class SCXMLReader {
             throws XMLStreamException {
 
         // Create a document in which to build the DOM node
-        Document document;
+        final Document document;
         try {
             document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
         } catch (final ParserConfigurationException pce) {
@@ -2545,7 +2558,7 @@ public final class SCXMLReader {
 
             final URL scxmlSchema = new URL("TODO"); // TODO, point to appropriate location
             final SchemaFactory schemaFactory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
-            Schema schema;
+            final Schema schema;
             try {
                 schema = schemaFactory.newSchema(scxmlSchema);
             } catch (final SAXException se) {

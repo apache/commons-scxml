@@ -174,7 +174,7 @@ public class SimpleDispatcher implements EventDispatcher, Serializable {
         if (type == null || type.equalsIgnoreCase(SCXMLIOProcessor.SCXML_EVENT_PROCESSOR) ||
                 type.equals(SCXMLIOProcessor.DEFAULT_EVENT_PROCESSOR)) {
             final String originType = SCXMLIOProcessor.DEFAULT_EVENT_PROCESSOR;
-            SCXMLIOProcessor ioProcessor;
+            final SCXMLIOProcessor ioProcessor;
 
             boolean internal = false;
 
