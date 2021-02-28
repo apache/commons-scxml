@@ -118,7 +118,7 @@ public class JSEvaluatorTest {
      * Ensures implementation of JSEvaluator default constructor and test basic
      * expression evaluation.
      *
-     */    
+     */
     @Test
     public void testBasic() throws SCXMLExpressionException {
         final Evaluator evaluator = new JSEvaluator();
@@ -132,7 +132,7 @@ public class JSEvaluatorTest {
         final Evaluator evaluator = new JSEvaluator();
         context.set("x", 3);
         context.set("y", 0);
-        final String script = 
+        final String script =
             "if ((x * 2.0) == 5.0) {" +
                 "y = 1.0;\n" +
             "} else {\n" +
@@ -145,7 +145,7 @@ public class JSEvaluatorTest {
     /**
      * Tests handling of illegal expressions.
      *
-     */    
+     */
     @Test
     public void testIllegalExpresssion() {
         final Evaluator evaluator = new JSEvaluator();
@@ -162,7 +162,7 @@ public class JSEvaluatorTest {
     /**
      * Tests evaluation with simple standard expressions.
      *
-     */    
+     */
     @Test
     public void testStandardExpressions() throws Exception {
         for (final TestItem item: SIMPLE_EXPRESSIONS) {
@@ -182,7 +182,7 @@ public class JSEvaluatorTest {
     /**
      * Tests evaluation with SCXML context variables.
      *
-     */    
+     */
     @Test
     public void testVarExpressions() throws Exception {
         context.set("fibonacci", 12.0);
@@ -199,7 +199,7 @@ public class JSEvaluatorTest {
     /**
      * Tests evaluation with invalid SCXML context variables.
      *
-     */    
+     */
     @Test
     public void testInvalidVarExpressions() {
         for (final TestItem item: VAR_EXPRESSIONS) {
@@ -214,7 +214,7 @@ public class JSEvaluatorTest {
     /**
      * Tests evaluation with SCXML data model expressions.
      *
-     */    
+     */
     @Test
     public void testDataModelExpressions() throws Exception {
         Assertions.assertEquals("leaf",
@@ -225,7 +225,7 @@ public class JSEvaluatorTest {
     /**
      * Tests evaluation with invalid SCXML data model expressions.
      *
-     */    
+     */
     @Test
     public void testInvalidDataModelExpressions() {
         Assertions.assertNull(context.get("forestx"));
@@ -238,7 +238,7 @@ public class JSEvaluatorTest {
     /**
      * Tests evaluation of SCXML data model locations.
      *
-     */    
+     */
     @Test
     public void testDataModelLocations() throws Exception {
         Assertions.assertTrue(evaluator.eval(context, "forest") instanceof Map,
@@ -251,7 +251,7 @@ public class JSEvaluatorTest {
     /**
      * Tests evaluation of invalid SCXML data model locations.
      *
-     */    
+     */
     @Test
     public void testInvalidDataModelLocations() throws Exception {
             Assertions.assertNotNull(context.get("forest"));
@@ -262,7 +262,7 @@ public class JSEvaluatorTest {
     /**
      * Tests evaluation of Javascript functions with variables from SCXML context.
      *
-     */    
+     */
     @Test
     public void testScriptFunctions() throws Exception {
         context.set("FIVE", 5);

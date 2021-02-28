@@ -36,26 +36,26 @@ public class InvokeParamNameTest {
 
     private static String lastURL;
     private static Map<String, Object> lastParams;
-    
+
     @BeforeEach
     public void setUp() throws Exception {
         exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/invoke/invoker-04.xml");
         exec.registerInvokerClass("x-test", DummyInvoker.class);
         exec.go();
     }
-    
+
     @AfterEach
     public void tearDown() {
-        exec.unregisterInvokerClass("x-test");    
+        exec.unregisterInvokerClass("x-test");
     }
-    
+
     private void trigger() throws ModelException {
         lastParams = null;
         lastURL = null;
         exec.triggerEvent(new EventBuilder("test.trigger", TriggerEvent.SIGNAL_EVENT).build());
     }
-    
-    // Tests "param" element with "name" and "expr" attribute    
+
+    // Tests "param" element with "name" and "expr" attribute
     @Test
     public void testNameAndExpr() throws Exception {
         trigger();

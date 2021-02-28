@@ -56,7 +56,7 @@ public class JSExampleTest {
     }
 
     // INNER CLASSES
-    
+
     public static class EventDataMapTest extends Action {
         @Override
         public void execute(final ActionExecutionContext exctx) {

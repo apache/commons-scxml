@@ -36,7 +36,7 @@ public class InvokeTest {
 
     /**
      * Test the SCXML documents, usage of &lt;invoke&gt;
-     */    
+     */
     @Test
     public void testInvoke01Sample() throws Exception {
         final SCXML scxml = SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/invoke/invoker-01.xml"));
@@ -48,7 +48,7 @@ public class InvokeTest {
         Assertions.assertEquals(1, currentStates.size());
         Assertions.assertEquals("invoker", currentStates.iterator().next().getId());
     }
-    
+
     @Test
     public void testInvoke02Sample() throws Exception {
         final SCXML scxml = SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/invoke/invoker-02.xml"));
@@ -59,7 +59,7 @@ public class InvokeTest {
         final Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assertions.assertEquals(1, currentStates.size());
     }
-    
+
     @Test
     public void testInvoke03Sample() throws Exception {
         final SCXML scxml = SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/invoke/invoker-03.xml"));

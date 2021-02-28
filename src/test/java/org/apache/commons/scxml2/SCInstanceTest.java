@@ -32,35 +32,35 @@ public class SCInstanceTest {
 
     private SCXMLExecutor executor;
     private SCInstance instance;
-    
+
     @BeforeEach
     public void setUp() {
         executor = new SCXMLExecutor();
         instance = executor.getSCInstance();
     }
-    
+
     @Test
     public void testGetRootContext() {
         final Context context = new SimpleContext();
         context.set("name", "value");
-        
+
         instance.setRootContext(context);
         Assertions.assertEquals("value", instance.getRootContext().get("name"));
     }
-    
+
     @Test
     public void testGetContext() {
         final State target = new State();
         target.setId("1");
-        
+
         final Context context = new SimpleContext();
         context.set("name", "value");
-        
+
         instance.setContext(target, context);
-        
+
         Assertions.assertEquals("value", instance.getContext(target).get("name"));
     }
-    
+
     @Test
     public void testGetContextNullParent() throws Exception {
         final State target = new State();
@@ -81,10 +81,10 @@ public class SCInstanceTest {
     public void testGetContextParent() throws Exception {
         final State target = new State();
         target.setId("1");
-        
+
         final State parent = new State();
         parent.setId("parent");
-        
+
         target.setParent(parent);
 
         final Context context = new SimpleContext();
@@ -101,9 +101,9 @@ public class SCInstanceTest {
     @Test
     public void testGetLastConfigurationNull() {
         final History history = new History();
-        
+
         final Set<EnterableState> returnConfiguration = instance.getLastConfiguration(history);
-        
+
         Assertions.assertEquals(0, returnConfiguration.size());
     }
 
@@ -111,41 +111,41 @@ public class SCInstanceTest {
     public void testGetLastConfiguration() {
         final History history = new History();
         history.setId("1");
-        
+
         final Set<EnterableState> configuration = new HashSet<>();
         final EnterableState tt1 = new State();
         final EnterableState tt2 = new State();
         configuration.add(tt1);
         configuration.add(tt2);
-        
-        instance.setLastConfiguration(history, configuration);  
-        
+
+        instance.setLastConfiguration(history, configuration);
+
         final Set<EnterableState> returnConfiguration = instance.getLastConfiguration(history);
-        
+
         Assertions.assertEquals(2, returnConfiguration.size());
         Assertions.assertTrue(returnConfiguration.contains(tt1));
         Assertions.assertTrue(returnConfiguration.contains(tt2));
     }
-    
+
     @Test
     public void testIsEmpty() {
         Assertions.assertTrue(instance.getLastConfiguration(new History()).isEmpty());
     }
-    
+
     @Test
     public void testIsEmptyFalse() {
         final History history = new History();
         history.setId("1");
-        
+
         final Set<EnterableState> configuration = new HashSet<>();
         final EnterableState tt1 = new State();
         configuration.add(tt1);
-        
-        instance.setLastConfiguration(history, configuration);  
+
+        instance.setLastConfiguration(history, configuration);
 
         Assertions.assertFalse(instance.getLastConfiguration(history).isEmpty());
     }
-    
+
     @Test
     public void testReset() {
         final History history = new History();
@@ -154,12 +154,12 @@ public class SCInstanceTest {
         final Set<EnterableState> configuration = new HashSet<>();
         final EnterableState tt1 = new State();
         configuration.add(tt1);
-        
-        instance.setLastConfiguration(history, configuration);  
+
+        instance.setLastConfiguration(history, configuration);
 
         instance.resetConfiguration(history);
-        
+
         Assertions.assertTrue(instance.getLastConfiguration(history).isEmpty());
     }
-    
+
 }

@@ -27,7 +27,7 @@ public class ScriptTest {
 
     /**
      * Test JEXL script execution.
-     */    
+     */
     @Test
     public void testJexlScriptExecution() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/script-01.xml");

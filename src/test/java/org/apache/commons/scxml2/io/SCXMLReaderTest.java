@@ -87,35 +87,35 @@ public class SCXMLReaderTest {
 
     /**
      * Test the implementation
-     */    
+     */
     @Test
     public void testSCXMLReaderMicrowave03Sample() throws Exception {
         final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/env/jexl/microwave-03.xml");
         Assertions.assertNotNull(scxml);
         Assertions.assertNotNull(serialize(scxml));
     }
-    
+
     @Test
     public void testSCXMLReaderMicrowave04Sample() throws Exception {
         final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/env/jexl/microwave-04.xml");
         Assertions.assertNotNull(scxml);
         Assertions.assertNotNull(serialize(scxml));
     }
-    
+
     @Test
     public void testSCXMLReaderTransitions01Sample() throws Exception {
         final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/transitions-01.xml");
         Assertions.assertNotNull(scxml);
         Assertions.assertNotNull(serialize(scxml));
     }
-    
+
     @Test
     public void testSCXMLReaderPrefix01Sample() throws Exception {
         final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/prefix-01.xml");
         Assertions.assertNotNull(scxml);
         Assertions.assertNotNull(serialize(scxml));
     }
-    
+
     @Test
     public void testSCXMLReaderSend01Sample() throws Exception {
         final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/send-01.xml");
@@ -138,7 +138,7 @@ public class SCXMLReaderTest {
         Assertions.assertFalse(scxmlAsString.indexOf(expectedFoo2Serialization) == -1);
         */
     }
-    
+
     @Test
     public void testSCXMLReaderInitialAttr() throws Exception {
         final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/io/scxml-initial-attr.xml");

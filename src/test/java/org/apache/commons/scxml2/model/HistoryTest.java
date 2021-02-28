@@ -29,32 +29,32 @@ public class HistoryTest {
     public void testSetTypeDeep() {
         final History history = new History();
         history.setType("deep");
-        
+
         Assertions.assertTrue(history.isDeep());
     }
-        
+
     @Test
     public void testSetTypeNotDeep() {
         final History history = new History();
         history.setType("shallow");
-        
+
         Assertions.assertFalse(history.isDeep());
     }
-    
+
     @Test
     public void testShallowHistory01() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/history-shallow-01.xml");
         exec.go();
         runHistoryFlow(exec);
     }
-    
+
     @Test
     public void testDeepHistory01() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/history-deep-01.xml");
         exec.go();
         runHistoryFlow(exec);
     }
-    
+
     @Test
     public void testHistoryDefaults01() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/history-default-01.xml");
@@ -69,7 +69,7 @@ public class HistoryTest {
         Assertions.assertEquals(1, currentStates.size());
         Assertions.assertEquals("state31", currentStates.iterator().next().getId());
     }
-    
+
     @Test
     public void testHistoryParallel01() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/history-parallel-01.xml");

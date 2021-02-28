@@ -46,7 +46,7 @@ public class Issue112Test {
     }
 
     // Example using a custom <my:enqueue> action that generates more events during event processing.
-    // An external event queue is used by <my:enqueue> instead of SCXMLExecutor#triggerEvent(TriggerEvent)    
+    // An external event queue is used by <my:enqueue> instead of SCXMLExecutor#triggerEvent(TriggerEvent)
     @Test
     public void test01issue112() throws Exception {
 

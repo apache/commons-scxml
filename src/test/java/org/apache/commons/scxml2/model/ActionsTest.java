@@ -39,14 +39,14 @@ public class ActionsTest {
         exec.go();
         runTest(exec);
     }
-    
+
     @Test
     public void testParallelActions() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/actions-parallel-test.xml");
         exec.go();
         runTest(exec);
     }
-    
+
     @Test
     public void testInitialActions() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/actions-initial-test.xml");

@@ -40,14 +40,14 @@ public class Issue62Test {
         Assertions.assertEquals("s1.1", currentStates.iterator().next().getId());
         SCXMLTestHelper.assertPostTriggerState(exec, "foo", "s1.1");
     }
-    
+
     @Test
     public void test02issue62() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/issues/issue62-02.xml");
         exec.go();
         fragmenttest(exec);
     }
-    
+
     @Test
     public void test03issue62() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/issues/issue62-03.xml");

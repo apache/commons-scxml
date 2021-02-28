@@ -29,7 +29,7 @@ public class ParallelTest {
         exec.go();
         SCXMLTestHelper.assertPostTriggerState(exec, "foo", "end");
     }
-    
+
     @Test
     public void testParallel02() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/parallel-02.xml");
@@ -37,7 +37,7 @@ public class ParallelTest {
         SCXMLTestHelper.assertPostTriggerStates(exec, "dummy.event", new String[] { "state01", "state02" });
         SCXMLTestHelper.assertPostTriggerState(exec, "event1", "state1");
     }
-    
+
     @Test
     public void testParallel03() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/parallel-03.xml");

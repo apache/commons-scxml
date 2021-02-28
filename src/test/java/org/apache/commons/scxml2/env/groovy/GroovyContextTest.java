@@ -29,7 +29,7 @@ public class GroovyContextTest {
         final GroovyContext ctx = new GroovyContext();
         Assertions.assertNotNull(ctx);
     }
-    
+
     @Test
     public void testPrepopulated() {
         final Map<String, Object> m = new HashMap<>();
@@ -40,7 +40,7 @@ public class GroovyContextTest {
         final String fooValue = (String) ctx.get("foo");
         Assertions.assertEquals("bar", fooValue);
     }
-    
+
     @Test
     public void testSetVars() {
         final GroovyContext ctx = new GroovyContext();

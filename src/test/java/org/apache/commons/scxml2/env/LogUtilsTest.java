@@ -27,10 +27,10 @@ public class LogUtilsTest {
     public void testGetTTPathParentNull() {
         final State target = new State();
         target.setId("ID");
-        
+
         Assertions.assertEquals("/ID", LogUtils.getTTPath(target));
     }
-    
+
     @Test
     public void testGetTTPathParent() {
         final State target = new State();
@@ -44,10 +44,10 @@ public class LogUtilsTest {
 
         parent1.setParent(parent2);
         target.setParent(parent1);
-        
+
         Assertions.assertEquals("/parent2/parent1/ID", LogUtils.getTTPath(target));
     }
-    
+
     @Test
     public void testTransToString() {
         final State targetTo = new State();
@@ -55,11 +55,11 @@ public class LogUtilsTest {
 
         final State targetFrom = new State();
         targetFrom.setId("FROM");
-        
+
         final Transition transition = new Transition();
         transition.setCond("condition");
         transition.setEvent("event happened");
-        
+
         Assertions.assertEquals( "(event = event happened, cond = condition, from = /FROM, to = /TO)",
                                         LogUtils.transToString(targetFrom, targetTo, transition, transition.getEvent()));
     }

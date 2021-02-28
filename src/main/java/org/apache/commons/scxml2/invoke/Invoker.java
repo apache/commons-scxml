@@ -57,7 +57,7 @@ import org.apache.commons.scxml2.TriggerEvent;
  *  <li>Zero or more bi-directional event triggering.</li>
  *  <li>Either completion or cancellation.</li>
  * </ol>
- * 
+ *
  * <p><b>Note:</b> The semantics of &lt;invoke&gt; are necessarily
  * asynchronous, tending towards long(er) running interactions with external
  * processes. Implementations cannot communicate with the parent state

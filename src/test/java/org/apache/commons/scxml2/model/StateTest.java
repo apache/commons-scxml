@@ -30,14 +30,14 @@ public class StateTest {
         final State state = new State();
         Assertions.assertNull(state.getTransitionsList("event"));
     }
-        
+
     @Test
     public void testGetTransitionsList() {
         final State state = new State();
         state.getTransitionsList().add(new Transition());
         Assertions.assertNotNull(state.getTransitionsList(null));
     }
-        
+
     @Test
     public void testAddTransitionDoesNotContainKey() {
         final Transition transition = new Transition();
@@ -45,13 +45,13 @@ public class StateTest {
 
         final State state = new State();
         state.addTransition(transition);
-        
+
         final List<Transition> events = state.getTransitionsList("event");
-        
+
         Assertions.assertEquals(1, events.size());
         Assertions.assertEquals("event", events.get(0).getEvent());
     }
-        
+
     @Test
     public void testAddTransitionContainKey() {
         final Transition transition1 = new Transition();
@@ -63,12 +63,12 @@ public class StateTest {
         final State state = new State();
         state.addTransition(transition1);
         state.addTransition(transition2);
-        
+
         final List<Transition> events = state.getTransitionsList("event");
-        
+
         Assertions.assertEquals(2, events.size());
     }
-        
+
     @Test
     public void testGetTransitionList() {
         final Transition transition1 = new Transition();
@@ -80,86 +80,86 @@ public class StateTest {
         final State state = new State();
         state.addTransition(transition1);
         state.addTransition(transition2);
-        
+
         final List<Transition> events = state.getTransitionsList();
-        
+
         Assertions.assertEquals(2, events.size());
     }
-        
+
     @Test
     public void testHasHistoryEmpty() {
         final State state = new State();
         Assertions.assertFalse(state.hasHistory());
     }
-    
+
     @Test
     public void testHasHistory() {
         final History history = new History();
 
         final State state = new State();
         state.addHistory(history);
-        
+
         Assertions.assertTrue(state.hasHistory());
     }
-        
+
     @Test
     public void testIsSimple() {
         final State state = new State();
         Assertions.assertTrue(state.isSimple());
     }
-        
+
     @Test
     public void testIsSimpleHasChildren() {
         final State state1 = new State();
-        
+
         final State state = new State();
         state.addChild(state1);
-        
+
         Assertions.assertFalse(state.isSimple());
     }
-        
+
     @Test
     public void testIsCompositeFalse() {
         final State state = new State();
         Assertions.assertFalse(state.isComposite());
     }
-        
+
     @Test
     public void testIsCompositeParallel() {
         final State child = new State();
 
         final State state = new State();
         state.addChild(child);
-        
+
         Assertions.assertTrue(state.isComposite());
     }
-        
+
     @Test
     public void testIsCompositeHasChildren() {
         final State state1 = new State();
 
         final State state = new State();
         state.addChild(state1);
-        
+
         Assertions.assertTrue(state.isComposite());
     }
-        
+
     @Test
     public void testIsRegion() {
         final State state = new State();
         state.setParent(new Parallel());
-        
+
         Assertions.assertTrue(state.isRegion());
     }
-        
+
     @Test
     public void testIsRegionNotParallel() {
         final State state = new State();
         state.setParent(new State());
-        
+
         Assertions.assertFalse(state.isRegion());
     }
-    
+
     @Test
     public void testInitialAttribute() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/state-01.xml");

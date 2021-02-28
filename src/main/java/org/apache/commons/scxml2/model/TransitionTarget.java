@@ -156,7 +156,7 @@ public abstract class TransitionTarget implements Serializable, Observable {
         return getNumberOfAncestors() > context.getNumberOfAncestors()
                 && getAncestor(context.getNumberOfAncestors()) == context;
     }
-    
+
     /**
      * Enforce identity equality only
      * @param other other object to compare with

@@ -67,7 +67,7 @@ public class GroovyEvaluatorTest {
         final Evaluator eval = new GroovyEvaluator();
         ctx.set("x", 3);
         ctx.set("y", 0);
-        final String script = 
+        final String script =
             "if ((x * 2) == 5) {" +
                 "y = 1;\n" +
             "} else {\n" +

@@ -31,7 +31,7 @@ public class DatamodelTest {
 
     /**
      * Test the stateless model (jexl), simultaneous executions
-     */    
+     */
     @Test
     public void testDatamodelSimultaneousJexl() throws Exception {
         final SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/datamodel-01.xml");

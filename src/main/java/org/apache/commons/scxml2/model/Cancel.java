@@ -69,7 +69,7 @@ public class Cancel extends Action {
 
     /**
      * Get the expression that evaluates to the ID of the send message that should be cancelled.
-     * 
+     *
      * @return the expression that evaluates to the ID of the send message that should be cancelled.
      */
     public String getSendidexpr() {
@@ -78,7 +78,7 @@ public class Cancel extends Action {
 
     /**
      * Set the expression that evaluates to the ID of the send message that should be cancelled.
-     * 
+     *
      * @param sendidexpr the expression that evaluates to the ID of the send message that should be cancelled.
      */
     public void setSendidexpr(final String sendidexpr) {

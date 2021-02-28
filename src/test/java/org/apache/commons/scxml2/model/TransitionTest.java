@@ -23,12 +23,12 @@ import org.junit.jupiter.api.Test;
 public class TransitionTest {
 
     private Transition transition;
-    
+
     @BeforeEach
     public void setUp() {
         transition = new Transition();
     }
-        
+
     @Test
     public void testGetTargets() {
         Assertions.assertEquals(0, transition.getTargets().size());

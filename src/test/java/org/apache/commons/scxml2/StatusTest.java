@@ -29,32 +29,32 @@ public class StatusTest {
 
     private StateConfiguration stateConfiguration;
     private Status status;
-    
+
     @BeforeEach
     public void setUp() {
         stateConfiguration = new StateConfiguration();
         status = new Status(stateConfiguration);
     }
-    
+
     @Test
     public void testIsFinalStateFalse() {
         final State state = new State();
 
         stateConfiguration.enterState(state);
-        
+
         Assertions.assertFalse(status.isFinal());
     }
-    
+
     @Test
     public void testIsFinalStateHasParent() {
         final Final state = new Final();
         state.setParent(new State());
-        
+
         stateConfiguration.enterState(state);
 
         Assertions.assertFalse(status.isFinal());
     }
-    
+
     @Test
     public void testIsFinalState() {
         final Final state = new Final();

@@ -44,7 +44,7 @@ public class SCXMLWriterTest {
         final State s = new State();
         s.setId(scxml.generateTransitionTargetId());
         scxml.addChild(s);
-        
+
         final String assertValue = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
             + "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" xmlns:cs=\"https://commons.apache.org/scxml\" "
             + "xmlns:foo=\"http://f.o.o\" xmlns:bar=\"http://b.a.r\" "
@@ -53,7 +53,7 @@ public class SCXMLWriterTest {
 
         Assertions.assertEquals(assertValue, SCXMLWriter.write(scxml, new SCXMLWriter.Configuration(true, false)));
     }
-    
+
     @Test
     public void testSerializeSCXMLState() throws IOException, XMLStreamException {
         final SCXML scxml = new CommonsSCXML();
@@ -72,7 +72,7 @@ public class SCXMLWriterTest {
 
         Assertions.assertEquals(assertValue, SCXMLWriter.write(scxml, new SCXMLWriter.Configuration(true, false)));
     }
-    
+
     @Test
     public void testSerializeParallel() throws IOException, XMLStreamException {
 

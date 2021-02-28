@@ -29,7 +29,7 @@ public class JexlContextTest {
         final JexlContext ctx = new JexlContext();
         Assertions.assertNotNull(ctx);
     }
-    
+
     @Test
     public void testPrepopulated() {
         final Map<String, Object> m = new HashMap<>();

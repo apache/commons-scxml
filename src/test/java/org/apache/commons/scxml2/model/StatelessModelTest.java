@@ -32,7 +32,7 @@ public class StatelessModelTest {
 
     /**
      * Test the stateless model, simultaneous executions, JEXL expressions
-     */    
+     */
     @Test
     public void testStatelessModelSimultaneousJexl() throws Exception {
     	// parse once, use many times
@@ -47,7 +47,7 @@ public class StatelessModelTest {
 
     /**
      * Test the stateless model, sequential executions, JEXL expressions
-     */    
+     */
     @Test
     public void testStatelessModelSequentialJexl() throws Exception {
         // rinse and repeat
@@ -61,7 +61,7 @@ public class StatelessModelTest {
 
     /**
      * Test sharing a single SCXML object between two executors
-     */    
+     */
     @Test
     public void testStatelessModelParallelSharedSCXML() throws Exception {
         final SCXML scxml01par = SCXMLTestHelper.parse("org/apache/commons/scxml2/model/stateless-parallel-01.xml");

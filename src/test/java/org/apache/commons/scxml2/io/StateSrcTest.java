@@ -41,7 +41,7 @@ public class StateSrcTest {
         Assertions.assertEquals("srctest1end", states.iterator().next().getId());
         Assertions.assertTrue(exec.getStatus().isFinal());
     }
-    
+
     @Test
     public void testBadSrcInclude() {
         final ModelException me = Assertions.assertThrows(
@@ -51,7 +51,7 @@ public class StateSrcTest {
         Assertions.assertTrue(me.getMessage() != null && me.getMessage().contains("Source attribute in <state src="),
                 "Unexpected error message for bad <state> 'src' URI");
     }
-    
+
     @Test
     public void testBadSrcFragmentInclude() {
         final ModelException me = Assertions.assertThrows(

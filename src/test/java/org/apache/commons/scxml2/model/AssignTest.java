@@ -36,7 +36,7 @@ public class AssignTest {
         Assertions.assertEquals("assign3", currentStates.iterator().next().getId());
         Assertions.assertTrue(exec.getStatus().isFinal());
     }
-    
+
     @Test
     public void testAssignDeep() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/assign-test-02.xml");

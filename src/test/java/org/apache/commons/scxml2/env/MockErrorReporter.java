@@ -23,7 +23,7 @@ public class MockErrorReporter implements ErrorReporter {
     private String errCode;
     private String errDetail;
     private Object errCtx;
-    
+
     public void onError( final String errCode, final String errDetail, final Object errCtx ) {
         this.errCode = errCode;
         this.errDetail = errDetail;

@@ -32,7 +32,7 @@ public class Issue64Test {
         exec.go();
         SCXMLTestHelper.assertPostTriggerState(exec, "show.bug", "end");
     }
-    
+
     @Test
     public void test02issue64() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/issues/issue64-02.xml");
