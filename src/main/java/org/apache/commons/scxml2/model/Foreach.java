@@ -96,48 +96,46 @@ public class Foreach extends Action implements ActionsContainer {
         final Context ctx = exctx.getContext(getParentEnterableState());
         final Evaluator eval = exctx.getEvaluator();
         final Object arrayObject = eval.eval(ctx,array);
-        if (arrayObject != null && (arrayObject.getClass().isArray() || arrayObject instanceof Iterable || arrayObject instanceof Map)) {
-            if (arrayObject.getClass().isArray()) {
-                for (int currentIndex = 0, size = Array.getLength(arrayObject); currentIndex < size; currentIndex++) {
-                    eval.evalAssign(ctx, item, Array.get(arrayObject, currentIndex));
-                    if (index != null) {
-                        ctx.setLocal(index, currentIndex);
-                    }
-                    // The "foreach" statement is a "container"
-                    for (final Action aa : actions) {
-                        aa.execute(exctx);
-                    }
+        if ((arrayObject == null) || (!arrayObject.getClass().isArray() && !(arrayObject instanceof Iterable) && !(arrayObject instanceof Map))) {
+            throw new ActionExecutionError("<foreach> in state " + getParentEnterableState().getId()+": invalid array value '"+array+"'");
+        }
+        if (arrayObject.getClass().isArray()) {
+            for (int currentIndex = 0, size = Array.getLength(arrayObject); currentIndex < size; currentIndex++) {
+                eval.evalAssign(ctx, item, Array.get(arrayObject, currentIndex));
+                if (index != null) {
+                    ctx.setLocal(index, currentIndex);
                 }
-            }
-            else {
-                // In case of Javascript based arrays, the (Nashorn) engine returns a ScriptObjectMirror
-                // which (also) implements Map<String, Object), so then we can/must use the map values as Iterable
-                final Iterable iterable = arrayObject instanceof Iterable ? (Iterable)arrayObject : ((Map)arrayObject).values();
-
-                // Spec requires to iterate over a shallow copy of underlying array in a way that modifications to
-                // the collection during the execution of <foreach> must not affect the iteration behavior.
-                // For array objects (see above) this isn't needed, but for Iterables we don't have that guarantee
-                // so we make a copy first
-                final ArrayList<Object> arrayList = new ArrayList<>();
-                for (final Object value: iterable) {
-                    arrayList.add(value);
-                }
-                int currentIndex = 0;
-                for (final Object value : arrayList) {
-                    eval.evalAssign(ctx, item, value);
-                    if (index != null) {
-                        ctx.setLocal(index, currentIndex);
-                    }
-                    // The "foreach" statement is a "container"
-                    for (final Action aa : actions) {
-                        aa.execute(exctx);
-                    }
-                    currentIndex++;
+                // The "foreach" statement is a "container"
+                for (final Action aa : actions) {
+                    aa.execute(exctx);
                 }
             }
         }
         else {
-            throw new ActionExecutionError("<foreach> in state " + getParentEnterableState().getId()+": invalid array value '"+array+"'");
+            // In case of Javascript based arrays, the (Nashorn) engine returns a ScriptObjectMirror
+            // which (also) implements Map<String, Object), so then we can/must use the map values as Iterable
+            final Iterable iterable = arrayObject instanceof Iterable ? (Iterable)arrayObject : ((Map)arrayObject).values();
+
+            // Spec requires to iterate over a shallow copy of underlying array in a way that modifications to
+            // the collection during the execution of <foreach> must not affect the iteration behavior.
+            // For array objects (see above) this isn't needed, but for Iterables we don't have that guarantee
+            // so we make a copy first
+            final ArrayList<Object> arrayList = new ArrayList<>();
+            for (final Object value: iterable) {
+                arrayList.add(value);
+            }
+            int currentIndex = 0;
+            for (final Object value : arrayList) {
+                eval.evalAssign(ctx, item, value);
+                if (index != null) {
+                    ctx.setLocal(index, currentIndex);
+                }
+                // The "foreach" statement is a "container"
+                for (final Action aa : actions) {
+                    aa.execute(exctx);
+                }
+                currentIndex++;
+            }
         }
     }
 }

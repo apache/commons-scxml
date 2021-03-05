@@ -171,75 +171,69 @@ public class SimpleDispatcher implements EventDispatcher, Serializable {
 
         // We only handle the "scxml" type (which is the default too) and optionally the #_internal target
 
-        if (type == null || type.equalsIgnoreCase(SCXMLIOProcessor.SCXML_EVENT_PROCESSOR) ||
-                type.equals(SCXMLIOProcessor.DEFAULT_EVENT_PROCESSOR)) {
-            final String originType = SCXMLIOProcessor.DEFAULT_EVENT_PROCESSOR;
-            SCXMLIOProcessor ioProcessor;
-
-            boolean internal = false;
-
-            String origin = target;
-            if (target == null) {
-                ioProcessor = ioProcessors.get(SCXMLIOProcessor.SCXML_EVENT_PROCESSOR);
-                origin = SCXMLIOProcessor.SCXML_EVENT_PROCESSOR;
-            }
-            else if (ioProcessors.containsKey(target)) {
-                ioProcessor = ioProcessors.get(target);
-                internal = SCXMLIOProcessor.INTERNAL_EVENT_PROCESSOR.equals(target);
-            }
-            else if (SCXMLIOProcessor.INTERNAL_EVENT_PROCESSOR.equals(target)) {
-                ioProcessor = ioProcessors.get(SCXMLIOProcessor.INTERNAL_EVENT_PROCESSOR);
-                internal = true;
-            }
-            else {
-                if (target.startsWith(SCXMLIOProcessor.EVENT_PROCESSOR_ALIAS_PREFIX)) {
-                    ioProcessors.get(SCXMLIOProcessor.INTERNAL_EVENT_PROCESSOR).addEvent(
-                            new EventBuilder(TriggerEvent.ERROR_COMMUNICATION, TriggerEvent.ERROR_EVENT)
-                                    .sendId(id).build());
-                    throw new ActionExecutionError(true, "<send>: Unavailable target - " + target);
-                } else {
-                    ioProcessors.get(SCXMLIOProcessor.INTERNAL_EVENT_PROCESSOR).addEvent(
-                            new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT)
-                                    .sendId(id).build());
-                    throw new ActionExecutionError(true, "<send>: Invalid or unsupported target - " + target);
-                }
-            }
-
-            if (event == null) {
-                ioProcessors.get(SCXMLIOProcessor.INTERNAL_EVENT_PROCESSOR)
-                        .addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT).sendId(id).build());
-                throw new ActionExecutionError(true, "<send>: Cannot send without event name");
-            }
-            else {
-                final EventBuilder eventBuilder = new EventBuilder(event, TriggerEvent.SIGNAL_EVENT)
-                        .sendId(id)
-                        .data(data);
-                if (!internal) {
-                    eventBuilder.origin(origin).originType(originType);
-                    if (SCXMLIOProcessor.PARENT_EVENT_PROCESSOR.equals(target)) {
-                        eventBuilder.invokeId(((ParentSCXMLIOProcessor)ioProcessor).getInvokeId());
-                    }
-                    if (delay > 0L) {
-                        // Need to schedule this one
-                        final Timer timer = new Timer(true);
-                        timer.schedule(new DelayedEventTask(id, eventBuilder.build(), ioProcessor), delay);
-                        timers.put(id, timer);
-                        if (log.isDebugEnabled()) {
-                            log.debug("Scheduled event '" + event + "' with delay "
-                                    + delay + "ms, as specified by <send> with id '"
-                                    + id + "'");
-                        }
-                        return;
-                    }
-                }
-                ioProcessor.addEvent(eventBuilder.build());
-            }
-        }
-        else {
+        if ((type != null) && !type.equalsIgnoreCase(SCXMLIOProcessor.SCXML_EVENT_PROCESSOR) && !type.equals(SCXMLIOProcessor.DEFAULT_EVENT_PROCESSOR)) {
             ioProcessors.get(SCXMLIOProcessor.INTERNAL_EVENT_PROCESSOR)
                     .addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT).sendId(id).build());
             throw new ActionExecutionError(true, "<send>: Unsupported type - " + type);
         }
+        final String originType = SCXMLIOProcessor.DEFAULT_EVENT_PROCESSOR;
+        SCXMLIOProcessor ioProcessor;
+
+        boolean internal = false;
+
+        String origin = target;
+        if (target == null) {
+            ioProcessor = ioProcessors.get(SCXMLIOProcessor.SCXML_EVENT_PROCESSOR);
+            origin = SCXMLIOProcessor.SCXML_EVENT_PROCESSOR;
+        }
+        else if (ioProcessors.containsKey(target)) {
+            ioProcessor = ioProcessors.get(target);
+            internal = SCXMLIOProcessor.INTERNAL_EVENT_PROCESSOR.equals(target);
+        }
+        else if (SCXMLIOProcessor.INTERNAL_EVENT_PROCESSOR.equals(target)) {
+            ioProcessor = ioProcessors.get(SCXMLIOProcessor.INTERNAL_EVENT_PROCESSOR);
+            internal = true;
+        }
+        else {
+            if (target.startsWith(SCXMLIOProcessor.EVENT_PROCESSOR_ALIAS_PREFIX)) {
+                ioProcessors.get(SCXMLIOProcessor.INTERNAL_EVENT_PROCESSOR).addEvent(
+                        new EventBuilder(TriggerEvent.ERROR_COMMUNICATION, TriggerEvent.ERROR_EVENT)
+                                .sendId(id).build());
+                throw new ActionExecutionError(true, "<send>: Unavailable target - " + target);
+            }
+            ioProcessors.get(SCXMLIOProcessor.INTERNAL_EVENT_PROCESSOR).addEvent(
+                    new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT)
+                            .sendId(id).build());
+            throw new ActionExecutionError(true, "<send>: Invalid or unsupported target - " + target);
+        }
+
+        if (event == null) {
+            ioProcessors.get(SCXMLIOProcessor.INTERNAL_EVENT_PROCESSOR)
+                    .addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT).sendId(id).build());
+            throw new ActionExecutionError(true, "<send>: Cannot send without event name");
+        }
+        final EventBuilder eventBuilder = new EventBuilder(event, TriggerEvent.SIGNAL_EVENT)
+                .sendId(id)
+                .data(data);
+        if (!internal) {
+            eventBuilder.origin(origin).originType(originType);
+            if (SCXMLIOProcessor.PARENT_EVENT_PROCESSOR.equals(target)) {
+                eventBuilder.invokeId(((ParentSCXMLIOProcessor)ioProcessor).getInvokeId());
+            }
+            if (delay > 0L) {
+                // Need to schedule this one
+                final Timer timer = new Timer(true);
+                timer.schedule(new DelayedEventTask(id, eventBuilder.build(), ioProcessor), delay);
+                timers.put(id, timer);
+                if (log.isDebugEnabled()) {
+                    log.debug("Scheduled event '" + event + "' with delay "
+                            + delay + "ms, as specified by <send> with id '"
+                            + id + "'");
+                }
+                return;
+            }
+        }
+        ioProcessor.addEvent(eventBuilder.build());
     }
 }
 

@@ -73,7 +73,7 @@ public abstract class Action implements Serializable {
             // global script doesn't have a EnterableState
             return null;
         }
-        else if (parent == null) {
+        if (parent == null) {
             throw new ModelException("Action "
                     + this.getClass().getName() + " instance missing required parent TransitionTarget");
         }

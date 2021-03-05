@@ -165,25 +165,21 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
         final Set<EnterableState> states = new HashSet<>();
         for (final String stateId : atomicStateIds) {
             final TransitionTarget tt = getStateMachine().getTargets().get(stateId);
-            if (tt instanceof EnterableState && ((EnterableState)tt).isAtomicState()) {
-                EnterableState es = (EnterableState)tt;
-                while (es != null && !states.add(es)) {
-                    es = es.getParent();
-                }
-            }
-            else {
+            if (!(tt instanceof EnterableState) || !((EnterableState)tt).isAtomicState()) {
                 throw new ModelException("Illegal atomic stateId "+stateId+": state unknown or not an atomic state");
             }
-        }
-        if (semantics.isLegalConfiguration(states, getErrorReporter())) {
-            for (final EnterableState es : states) {
-                exctx.getScInstance().getStateConfiguration().enterState(es);
+            EnterableState es = (EnterableState)tt;
+            while (es != null && !states.add(es)) {
+                es = es.getParent();
             }
-            logState();
         }
-        else {
+        if (!semantics.isLegalConfiguration(states, getErrorReporter())) {
             throw new ModelException("Illegal state machine configuration!");
         }
+        for (final EnterableState es : states) {
+            exctx.getScInstance().getStateConfiguration().enterState(es);
+        }
+        logState();
         exctx.start();
     }
 

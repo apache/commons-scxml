@@ -216,7 +216,8 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     public void start() {
         if (scInstance.isRunning()) {
             throw new IllegalStateException("The state machine has already started.");
-        } else if (scInstance.getGlobalContext() == null) {
+        }
+        if (scInstance.getGlobalContext() == null) {
             throw new IllegalStateException("The state machine has not been initialized yet.");
         }
         scInstance.start();

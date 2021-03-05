@@ -420,19 +420,17 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
                 } else if (contentValue instanceof Element) {
                     // xml based content (must be assigned through data)
                     final Element contentElement = (Element)contentValue;
-                    if (SCXMLConstants.ELEM_SCXML.equals(contentElement.getLocalName()) &&
-                            SCXMLConstants.XMLNS_SCXML.equals(contentElement.getNamespaceURI())) {
-                        // statemachine definition: transform to string as we cannot (yet) pass XML directly to invoker
-                        try {
-                            contentValue = ContentParser.DEFAULT_PARSER.toXml(contentElement);
-                        }
-                        catch (final IOException e) {
-                            throw new ActionExecutionError("<invoke> for state "+parentState.getId() +
-                                    ": invalid <content><scxml> definition");
-                        }
-                    } else {
+                    if (!SCXMLConstants.ELEM_SCXML.equals(contentElement.getLocalName()) || !SCXMLConstants.XMLNS_SCXML.equals(contentElement.getNamespaceURI())) {
                         throw new ActionExecutionError("<invoke> for state "+parentState.getId() +
                                 ": invalid <content> definition");
+                    }
+                    // statemachine definition: transform to string as we cannot (yet) pass XML directly to invoker
+                    try {
+                        contentValue = ContentParser.DEFAULT_PARSER.toXml(contentElement);
+                    }
+                    catch (final IOException e) {
+                        throw new ActionExecutionError("<invoke> for state "+parentState.getId() +
+                                ": invalid <content><scxml> definition");
                     }
                 } else {
                     throw new ActionExecutionError("<invoke> for state "+parentState.getId() +

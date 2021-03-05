@@ -580,9 +580,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                         throw new ModelException("Illegal state machine configuration: encountered top level <final> "
                                 + "state while processing an event");
                     }
-                    else {
-                        es = es.getParent();
-                    }
+                    es = es.getParent();
                 }
                 final TransitionalState state = (TransitionalState)es;
                 TransitionalState current = state;
@@ -643,13 +641,11 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                     }
                 }
                 if (hasIntersection) {
-                    if (t1.getParent().isDescendantOf(t2.getParent())) {
-                        preemptedTransitions.add(t2);
-                    }
-                    else {
+                    if (!t1.getParent().isDescendantOf(t2.getParent())) {
                         t1Preempted = true;
                         break;
                     }
+                    preemptedTransitions.add(t2);
                 }
             }
             if (t1Preempted) {

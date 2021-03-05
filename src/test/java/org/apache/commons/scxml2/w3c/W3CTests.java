@@ -274,7 +274,7 @@ public class W3CTests {
                 if ("#minimal-profile".equals(specid)) {
                     return Datamodel.MINIMAL;
                 }
-                else if ("#ecma-profile".equals(specid)) {
+                if ("#ecma-profile".equals(specid)) {
                     return Datamodel.ECMA;
                 }
                 return null;
@@ -414,11 +414,11 @@ public class W3CTests {
                 new W3CTests().getTests();
                 return;
             }
-            else if ("make".equals(args[0])) {
+            if ("make".equals(args[0])) {
                 new W3CTests().makeTests();
                 return;
             }
-            else if ("run".equals(args[0])) {
+            if ("run".equals(args[0])) {
                 final Datamodel datamodel = Datamodel.fromValue(System.getProperty("datamodel"));
                 final String testId = System.getProperty("test");
                 new W3CTests().runTests(testId, datamodel);
@@ -566,12 +566,10 @@ public class W3CTests {
         final boolean enabled = Boolean.parseBoolean(System.getProperty("enabled", "true"));
         if (testId != null) {
             final Assertions.Assertion assertion = assertions.getAssertions().get(testId);
-            if (assertion != null) {
-                runAssert(assertion, tests, datamodel, enabled, true, results);
-            }
-            else {
+            if (assertion == null) {
                 throw new IllegalArgumentException("Unknown test with id: "+testId);
             }
+            runAssert(assertion, tests, datamodel, enabled, true, results);
         }
         else {
             for (final Assertions.Assertion entry : assertions.getAssertions().values()) {
@@ -677,13 +675,11 @@ public class W3CTests {
             if (!testCase.isManual()) {
                 return end.getId().equals("pass");
             }
-            else if (test.getFinalState() != null) {
+            if (test.getFinalState() != null) {
                 return end.getId().equals(test.getFinalState());
             }
-            else {
-                // todo: manual verification for specific tests
-                return false;
-            }
+            // todo: manual verification for specific tests
+            return false;
         }
         catch (final Exception e) {
             if (test.isManual() && e.getMessage() != null && e.getMessage().equals(test.getFinalState())) {

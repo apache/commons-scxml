@@ -67,7 +67,7 @@ public abstract class AbstractBaseEvaluator implements Evaluator, Serializable {
             if (data instanceof Node) {
                 return ((Node)data).cloneNode(true);
             }
-            else if (data instanceof NodeList) {
+            if (data instanceof NodeList) {
                 final NodeList nodeList = (NodeList)data;
                 final ArrayList<Node> list = new ArrayList<>();
                 for (int i = 0, size = nodeList.getLength(); i < size; i++) {
@@ -75,24 +75,22 @@ public abstract class AbstractBaseEvaluator implements Evaluator, Serializable {
                 }
                 return list;
             }
-            else if (data instanceof List) {
+            if (data instanceof List) {
                 final ArrayList<Object> list = new ArrayList<>();
                 for (final Object v : (List)data) {
                     list.add(cloneData(v));
                 }
                 return list;
             }
-            else if (data instanceof Map) {
-                final Map<?,?> dataMap = (Map<?,?>)data;
-                final HashMap<Object, Object> map = new LinkedHashMap<>();
-                for (final Map.Entry<?,?> entry : dataMap.entrySet()) {
-                    map.put(cloneData(entry.getKey()), cloneData(entry.getValue()));
-                }
-                return map;
-            }
-            else {
+            if (!(data instanceof Map)) {
                 return cloneUnknownDataType(data);
             }
+            final Map<?,?> dataMap = (Map<?,?>)data;
+            final HashMap<Object, Object> map = new LinkedHashMap<>();
+            for (final Map.Entry<?,?> entry : dataMap.entrySet()) {
+                map.put(cloneData(entry.getKey()), cloneData(entry.getValue()));
+            }
+            return map;
         }
         return null;
     }

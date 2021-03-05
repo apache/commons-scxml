@@ -231,7 +231,7 @@ public class ContentParser {
             if (hasJsonSignature(src)) {
                 return new JsonValue(parseJson(src), false);
             }
-            else if (hasXmlSignature(src)) {
+            if (hasXmlSignature(src)) {
                 return new NodeValue(parseXml(src));
             }
             return new TextValue(spaceNormalizeContent(src), false);

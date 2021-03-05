@@ -168,10 +168,9 @@ public class SCXMLWriter {
         writeInternal(scxml, configuration, null, null, null);
         if (configuration.usePrettyPrint) {
             return configuration.prettyPrintOutput;
-        } else {
-            configuration.internalWriter.flush();
-            return configuration.internalWriter.toString();
         }
+        configuration.internalWriter.flush();
+        return configuration.internalWriter.toString();
     }
 
     /**

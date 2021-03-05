@@ -106,11 +106,11 @@ public class SimpleContext implements Context, Serializable {
         final Object localValue = getVars().get(name);
         if (localValue != null) {
             return localValue;
-        } else if (parent != null) {
-            return parent.get(name);
-        } else {
-            return null;
         }
+        if (parent != null) {
+            return parent.get(name);
+        }
+        return null;
     }
 
     /**
