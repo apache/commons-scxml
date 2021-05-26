@@ -336,7 +336,7 @@
       </action>
 
       <action type="update" dev="ggregory">
-        [05-28-2020] Update commons-io:commons-io from 2.6 to 2.7.
+        [05-25-2021] Update commons-io:commons-io from 2.6 to 2.9.0.
       </action>
 
       <action type="update" dev="ggregory">
