@@ -168,14 +168,12 @@ public class TriggerEvent implements Serializable {
     public boolean equals(final Object obj) {
         if (obj instanceof TriggerEvent) {
             final TriggerEvent te2 = (TriggerEvent) obj;
-            if (type == te2.type && name.equals(te2.name) &&
+            return type == te2.type && name.equals(te2.name) &&
                     equals(sendId, te2.sendId) &&
                     equals(origin, te2.origin) &&
                     equals(originType, te2.originType) &&
                     equals(invokeId, te2.invokeId) &&
-                    equals(data, te2.data)) {
-                return true;
-            }
+                    equals(data, te2.data);
         }
         return false;
     }

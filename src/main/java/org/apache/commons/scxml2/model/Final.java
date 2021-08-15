@@ -113,7 +113,6 @@ public class Final extends EnterableState {
                     }
                 }
             } catch (final SCXMLExpressionException e) {
-                result = null;
                 exctx.getInternalIOProcessor().addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT).build());
                 exctx.getErrorReporter().onError(ErrorConstants.EXPRESSION_ERROR,
                         "Failed to process final donedata due to error: "+ e.getMessage(), getParent());
