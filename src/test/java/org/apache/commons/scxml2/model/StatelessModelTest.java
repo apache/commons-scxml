@@ -41,7 +41,7 @@ public class StatelessModelTest {
         exec01.go();
         final SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor(scxml);
         exec02.go();
-        Assertions.assertFalse(exec01 == exec02);
+        Assertions.assertNotSame(exec01, exec02);
         runSimultaneousTest(exec01, exec02);
     }
 
@@ -69,7 +69,7 @@ public class StatelessModelTest {
         exec01.go();
         final SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor(scxml01par);
         exec02.go();
-        Assertions.assertFalse(exec01 == exec02);
+        Assertions.assertNotSame(exec01, exec02);
 
         Set<EnterableState> currentStates = exec01.getStatus().getStates();
         checkParallelStates(currentStates, "state1.init", "state2.init", "exec01");
