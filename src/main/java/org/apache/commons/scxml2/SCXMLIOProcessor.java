@@ -54,7 +54,7 @@ public interface SCXMLIOProcessor {
 
     /**
      * Send an event into the SCXML processor queue
-     * <p>
+     *
      * @param event the event to send
      */
     void addEvent(TriggerEvent event);

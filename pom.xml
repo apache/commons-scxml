@@ -358,6 +358,55 @@
 
   <profiles>
     <profile>
+      <activation>
+        <jdk>[11.,)</jdk>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>com.sun.xml.bind</groupId>
+          <artifactId>jaxb-impl</artifactId>
+          <version>2.3.6</version>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.openjdk.nashorn</groupId>
+          <artifactId>nashorn-core</artifactId>
+          <version>15.3</version>
+        </dependency>
+        <!-- Graal's JS support is not 100% compatible with Java 8.
+        <dependency>
+          <groupId>org.graalvm.js</groupId>
+          <artifactId>js</artifactId>
+          <version>22.0.0</version>
+          <scope>test</scope>
+        </dependency>  
+        <dependency>
+          <groupId>org.graalvm.js</groupId>
+          <artifactId>js-scriptengine</artifactId>
+          <version>22.0.0</version>
+          <scope>test</scope>
+        </dependency>
+        -->
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <!-- Disable Doclint for missing jacadocs warnings. -->
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+              <additionalparam>-Xdoclint:all -Xdoclint:-missing</additionalparam>
+              <additionalOptions>-Xdoclint:all -Xdoclint:-missing</additionalOptions>
+              <additionalJOptions>
+                <additionalJOption>-Xdoclint:all</additionalJOption>
+                <additionalJOption>-Xdoclint:-missing</additionalJOption>
+              </additionalJOptions>
+            </configuration>
+          </plugin>
+        </plugins>      
+      </build>
+    </profile>  
+    <profile>
       <id>rc</id>
       <distributionManagement>
         <!-- Cannot define in parent ATM, see COMMONSSITE-26 -->

@@ -238,7 +238,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * Perform a micro step in the execution of a state machine.
      * <p>
      * This micro step is corresponding to the Algorithm for SCXML processing microstep() procedure.
-     * <p>
+     * </p>
      * @param exctx The execution context for this step
      * @param step The current micro step
      * @param statesToInvoke the set of activated states which invokes need to be invoked at the end of the current
@@ -292,7 +292,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * This macro step is corresponding to the Algorithm for SCXML processing mainEventLoop() procedure macro step
      * sub-flow, which are the first <em>3</em> steps of the described <em>4</em>, so everything up to the blocking
      * wait for an external event.
-     * <p>
+     * </p>
      * @param exctx The execution context for this step
      * @param statesToInvoke the set of activated states which invokes need to be invoked at the end of the current
      *                       macro step
@@ -336,7 +336,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * Compute and store the set of states to exit for the current list of transitions in the provided step.
      * <p>
      * This method corresponds to the Algorithm for SCXML processing computeExitSet() procedure.
-     * <p>
+     * </p>
      * @param step The step containing the list of transitions to be taken
      * @param stateConfiguration The current configuration of the state machine ({@link SCInstance#getStateConfiguration()}).
      */
@@ -353,7 +353,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * Compute and store the set of states to exit for one specific transition in the provided step.
      * <p>
      * This method corresponds to the Algorithm for SCXML processing computeExitSet() procedure.
-     * <p>
+     * </p>
      * @param transition The transition to compute the states to exit from
      * @param exitSet The set for adding the states to exit to
      * @param activeStates The current active states of the state machine ({@link StateConfiguration#getActiveStates()}).
@@ -425,7 +425,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * Compute and store the set of states to enter for the current list of transitions in the provided step.
      * <p>
      * This method corresponds to the Algorithm for SCXML processing computeEntrySet() procedure.
-     * <p>
+     * </p>
      * @param exctx The execution context for this step
      * @param step The step containing the list of transitions to be taken
      */
@@ -556,7 +556,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
     /**
      * This method corresponds to the Algorithm for SCXML processing selectTransitions() as well as the
      * selectEventlessTransitions() procedure, depending on the event (or null) in the provided step
-     * <p>
+     *
      * @param exctx The execution context for this step
      * @param step The step
      * @throws ModelException if there is a fatal SCXML state error
