@@ -210,7 +210,7 @@
   </properties>
 
   <build>
-    <defaultGoal>clean package javadoc:javadoc</defaultGoal>
+    <defaultGoal>clean verify javadoc:javadoc</defaultGoal>
     <sourceDirectory>src/main/java</sourceDirectory>
     <resources>
       <resource>
