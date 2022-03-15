@@ -356,6 +356,8 @@
       <action type="update" dev="ggregory">Bump groovy from 2.4.13 to 3.0.10 #38</action>
       <action type="update" dev="ggregory">Bump commons-io from 2.9.0 to 2.11.0 #37</action>
       <action type="update" dev="ggregory">Bump commons-jexl3 from 3.1 to 3.2.1 #36</action>
+      <action type="update" dev="ggregory">Bump commons-jexl3 from 3.1 to 3.2.1 #36</action>
+      <action type="update" dev="ggregory" due-to="Dependabot">Bump Saxon-HE from 9.6.0-1 to 11.2 #42</action>
 
     </release>
 
