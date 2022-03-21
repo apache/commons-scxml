@@ -28,9 +28,6 @@ import org.apache.commons.scxml2.env.SimpleContext;
 public class JexlContext extends SimpleContext
     implements org.apache.commons.jexl3.JexlContext {
 
-    /** Serial version UID. */
-    private static final long serialVersionUID = 1L;
-
     /**
      * Constructor.
      */

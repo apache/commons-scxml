@@ -36,15 +36,6 @@ public final class SCXMLConstants {
     public static final String XMLNS_COMMONS_SCXML_PREFIX = "cs";
 
     // W3C SCXML XML Element names
-    public static final String ELEM_ASSIGN = "assign";
-    public static final String ELEM_CANCEL = "cancel";
-    public static final String ELEM_CONTENT = "content";
-    public static final String ELEM_DATA = "data";
-    public static final String ELEM_DATAMODEL = "datamodel";
-    public static final String ELEM_DONEDATA = "donedata";
-    public static final String ELEM_ELSE = "else";
-    public static final String ELEM_ELSEIF = "elseif";
-    public static final String ELEM_FINAL = "final";
     public static final String ELEM_FINALIZE = "finalize";
     public static final String ELEM_HISTORY = "history";
     public static final String ELEM_IF = "if";

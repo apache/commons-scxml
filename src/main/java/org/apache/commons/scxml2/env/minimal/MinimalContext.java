@@ -36,9 +36,6 @@ import org.apache.commons.scxml2.env.SimpleContext;
  */
 public class MinimalContext extends SimpleContext {
 
-    /** Serial version UID. */
-    private static final long serialVersionUID = 1L;
-
     private static Context getMinimalContextParent(final Context parent) {
         if (parent != null) {
             if (parent instanceof MinimalContext) {

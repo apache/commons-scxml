@@ -35,8 +35,6 @@ import org.apache.commons.scxml2.env.SimpleContext;
  */
 public class GroovyContext extends SimpleContext {
 
-    private static final long serialVersionUID = 1L;
-
     private static final Log log = LogFactory.getLog(GroovyContext.class);
 
     private String scriptBaseClass;

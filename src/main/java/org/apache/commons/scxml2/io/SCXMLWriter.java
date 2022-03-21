@@ -475,9 +475,9 @@ public class SCXMLWriter {
             return;
         }
 
-        writer.writeStartElement(SCXMLConstants.ELEM_DATAMODEL);
+        writer.writeStartElement(SCXMLReader.ELEM_DATAMODEL);
         for (final Data d : datamodel.getData()) {
-            writer.writeStartElement(SCXMLConstants.ELEM_DATA);
+            writer.writeStartElement(SCXMLReader.ELEM_DATA);
             writeAV(writer, SCXMLConstants.ATTR_ID, d.getId());
             writeAV(writer, SCXMLConstants.ATTR_SRC, escapeXML(d.getSrc()));
             writeAV(writer, SCXMLConstants.ATTR_EXPR, escapeXML(d.getExpr()));
@@ -584,7 +584,7 @@ public class SCXMLWriter {
     private static void writeFinal(final XMLStreamWriter writer, final Final end)
             throws XMLStreamException {
 
-        writer.writeStartElement(SCXMLConstants.ELEM_FINAL);
+        writer.writeStartElement(SCXMLReader.ELEM_FINAL);
         writeTransitionTargetId(writer, end);
         for (final OnEntry onentry : end.getOnEntries()) {
             writeOnEntry(writer, onentry);
@@ -593,7 +593,7 @@ public class SCXMLWriter {
             writeOnExit(writer, onexit);
         }
         if (end.getDoneData() != null) {
-            writer.writeStartElement(SCXMLConstants.ELEM_DONEDATA);
+            writer.writeStartElement(SCXMLReader.ELEM_DONEDATA);
             writeParams(writer, end.getDoneData().getParams());
             writeContent(writer, end.getDoneData().getContent());
             writer.writeEndElement();
@@ -797,7 +797,7 @@ public class SCXMLWriter {
         for (final Action a : actions) {
             if (a instanceof Assign) {
                 final Assign asn = (Assign) a;
-                writer.writeStartElement(SCXMLConstants.XMLNS_SCXML, SCXMLConstants.ELEM_ASSIGN);
+                writer.writeStartElement(SCXMLConstants.XMLNS_SCXML, SCXMLReader.ELEM_ASSIGN);
                 writeAV(writer, SCXMLConstants.ATTR_LOCATION, asn.getLocation());
                 writeAV(writer, SCXMLConstants.ATTR_SRC, asn.getSrc());
                 writeAV(writer, SCXMLConstants.ATTR_EXPR, escapeXML(asn.getExpr()));
@@ -807,7 +807,7 @@ public class SCXMLWriter {
                 writeSend(writer, (Send) a);
             } else if (a instanceof Cancel) {
                 final Cancel c = (Cancel) a;
-                writer.writeStartElement(SCXMLConstants.XMLNS_SCXML, SCXMLConstants.ELEM_CANCEL);
+                writer.writeStartElement(SCXMLConstants.XMLNS_SCXML, SCXMLReader.ELEM_CANCEL);
                 writeAV(writer, SCXMLConstants.ATTR_SENDID, c.getSendid());
                 writer.writeEndElement();
             } else if (a instanceof Foreach) {
@@ -835,10 +835,10 @@ public class SCXMLWriter {
             } else if (a instanceof If) {
                 writeIf(writer, (If) a);
             } else if (a instanceof Else) {
-                writer.writeEmptyElement(SCXMLConstants.ELEM_ELSE);
+                writer.writeEmptyElement(SCXMLReader.ELEM_ELSE);
             } else if (a instanceof ElseIf) {
                 final ElseIf eif = (ElseIf) a;
-                writer.writeStartElement(SCXMLConstants.XMLNS_SCXML, SCXMLConstants.ELEM_ELSEIF);
+                writer.writeStartElement(SCXMLConstants.XMLNS_SCXML, SCXMLReader.ELEM_ELSEIF);
                 writeAV(writer, SCXMLConstants.ATTR_COND, escapeXML(eif.getCond()));
                 writer.writeEndElement();
             } else if (a instanceof Var) {
@@ -967,7 +967,7 @@ public class SCXMLWriter {
             throws XMLStreamException {
 
         if (content != null) {
-            writer.writeStartElement(SCXMLConstants.ELEM_CONTENT);
+            writer.writeStartElement(SCXMLReader.ELEM_CONTENT);
             writeAV(writer, SCXMLConstants.ATTR_EXPR, content.getExpr());
             writeParsedValue(writer, content.getParsedValue());
             writer.writeEndElement();
