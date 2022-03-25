@@ -16,25 +16,6 @@
  */
 package org.apache.commons.scxml2.io;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.scxml2.PathResolver;
-import org.apache.commons.scxml2.SCXMLConstants;
-import org.apache.commons.scxml2.env.SimpleErrorHandler;
-import org.apache.commons.scxml2.env.URLResolver;
-import org.apache.commons.scxml2.model.*;
-import org.w3c.dom.*;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.stream.*;
-import javax.xml.stream.util.XMLEventAllocator;
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -43,7 +24,85 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.Location;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLReporter;
+import javax.xml.stream.XMLResolver;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.util.XMLEventAllocator;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.scxml2.PathResolver;
+import org.apache.commons.scxml2.SCXMLConstants;
+import org.apache.commons.scxml2.env.SimpleErrorHandler;
+import org.apache.commons.scxml2.env.URLResolver;
+import org.apache.commons.scxml2.model.Action;
+import org.apache.commons.scxml2.model.ActionsContainer;
+import org.apache.commons.scxml2.model.Assign;
+import org.apache.commons.scxml2.model.Cancel;
+import org.apache.commons.scxml2.model.Content;
+import org.apache.commons.scxml2.model.ContentContainer;
+import org.apache.commons.scxml2.model.CustomAction;
+import org.apache.commons.scxml2.model.CustomActionWrapper;
+import org.apache.commons.scxml2.model.Data;
+import org.apache.commons.scxml2.model.Datamodel;
+import org.apache.commons.scxml2.model.DoneData;
+import org.apache.commons.scxml2.model.Else;
+import org.apache.commons.scxml2.model.ElseIf;
+import org.apache.commons.scxml2.model.EnterableState;
+import org.apache.commons.scxml2.model.Executable;
+import org.apache.commons.scxml2.model.JsonValue;
+import org.apache.commons.scxml2.model.NodeListValue;
+import org.apache.commons.scxml2.model.NodeValue;
+import org.apache.commons.scxml2.model.ParsedValueContainer;
+import org.apache.commons.scxml2.model.Final;
+import org.apache.commons.scxml2.model.Finalize;
+import org.apache.commons.scxml2.model.Foreach;
+import org.apache.commons.scxml2.model.History;
+import org.apache.commons.scxml2.model.If;
+import org.apache.commons.scxml2.model.Initial;
+import org.apache.commons.scxml2.model.Invoke;
+import org.apache.commons.scxml2.model.Log;
+import org.apache.commons.scxml2.model.ModelException;
+import org.apache.commons.scxml2.model.OnEntry;
+import org.apache.commons.scxml2.model.OnExit;
+import org.apache.commons.scxml2.model.Parallel;
+import org.apache.commons.scxml2.model.Param;
+import org.apache.commons.scxml2.model.ParamsContainer;
+import org.apache.commons.scxml2.model.Raise;
+import org.apache.commons.scxml2.model.SCXML;
+import org.apache.commons.scxml2.model.Script;
+import org.apache.commons.scxml2.model.Send;
+import org.apache.commons.scxml2.model.SimpleTransition;
+import org.apache.commons.scxml2.model.State;
+import org.apache.commons.scxml2.model.TextValue;
+import org.apache.commons.scxml2.model.Transition;
+import org.apache.commons.scxml2.model.TransitionType;
+import org.apache.commons.scxml2.model.TransitionalState;
+import org.apache.commons.scxml2.model.Var;
+import org.apache.commons.scxml2.model.NodeTextValue;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  * <p>The SCXMLReader provides the ability to read a SCXML document into
@@ -1096,7 +1155,7 @@ public final class SCXMLReader {
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
-     * @param parent The parent {@link ParamsContainer} for this param.
+     * @param parent The parent {@link org.apache.commons.scxml2.model.ParamsContainer} for this param.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
@@ -1221,7 +1280,7 @@ public final class SCXMLReader {
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
      * @param scxml The root of the object model being parsed.
-     * @param ts The parent {@link TransitionalState} for this history.
+     * @param ts The parent {@link org.apache.commons.scxml2.model.TransitionalState} for this history.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
@@ -2410,7 +2469,7 @@ public final class SCXMLReader {
      *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void reportConflictingAttribute(final XMLStreamReader reader, final Configuration configuration,
-                                             final String element, final String attr, final String conflictingAttr)
+                                                   final String element, final String attr, final String conflictingAttr)
             throws XMLStreamException, ModelException {
 
         final StringBuilder sb = new StringBuilder();

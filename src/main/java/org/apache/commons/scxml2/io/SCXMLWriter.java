@@ -16,23 +16,71 @@
  */
 package org.apache.commons.scxml2.io;
 
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.scxml2.SCXMLConstants;
-import org.apache.commons.scxml2.model.*;
-import org.w3c.dom.Node;
-
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-import java.io.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.scxml2.SCXMLConstants;
+import org.apache.commons.scxml2.model.Action;
+import org.apache.commons.scxml2.model.Assign;
+import org.apache.commons.scxml2.model.Cancel;
+import org.apache.commons.scxml2.model.Content;
+import org.apache.commons.scxml2.model.CustomActionWrapper;
+import org.apache.commons.scxml2.model.Data;
+import org.apache.commons.scxml2.model.Datamodel;
+import org.apache.commons.scxml2.model.Else;
+import org.apache.commons.scxml2.model.ElseIf;
+import org.apache.commons.scxml2.model.EnterableState;
+import org.apache.commons.scxml2.model.JsonValue;
+import org.apache.commons.scxml2.model.NodeListValue;
+import org.apache.commons.scxml2.model.NodeValue;
+import org.apache.commons.scxml2.model.ParsedValue;
+import org.apache.commons.scxml2.model.Raise;
+import org.apache.commons.scxml2.model.ParsedValueContainer;
+import org.apache.commons.scxml2.model.Final;
+import org.apache.commons.scxml2.model.Finalize;
+import org.apache.commons.scxml2.model.Foreach;
+import org.apache.commons.scxml2.model.History;
+import org.apache.commons.scxml2.model.If;
+import org.apache.commons.scxml2.model.Initial;
+import org.apache.commons.scxml2.model.Invoke;
+import org.apache.commons.scxml2.model.Log;
+import org.apache.commons.scxml2.model.OnEntry;
+import org.apache.commons.scxml2.model.OnExit;
+import org.apache.commons.scxml2.model.Parallel;
+import org.apache.commons.scxml2.model.Param;
+import org.apache.commons.scxml2.model.SCXML;
+import org.apache.commons.scxml2.model.Script;
+import org.apache.commons.scxml2.model.Send;
+import org.apache.commons.scxml2.model.SimpleTransition;
+import org.apache.commons.scxml2.model.State;
+import org.apache.commons.scxml2.model.TextValue;
+import org.apache.commons.scxml2.model.Transition;
+import org.apache.commons.scxml2.model.TransitionTarget;
+import org.apache.commons.scxml2.model.Var;
+import org.w3c.dom.Node;
 
 /**
  * <p>Utility class for serializing the Commons SCXML Java object
