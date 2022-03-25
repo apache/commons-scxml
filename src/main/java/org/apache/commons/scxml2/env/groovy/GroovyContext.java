@@ -78,14 +78,6 @@ public class GroovyContext extends SimpleContext {
         this.evaluator = evaluator;
     }
 
-    protected GroovyEvaluator getGroovyEvaluator() {
-        return evaluator;
-    }
-
-    protected void setGroovyEvaluator(final GroovyEvaluator evaluator) {
-        this.evaluator = evaluator;
-    }
-
     @Override
     public Map<String, Object> getVars() {
         return vars;

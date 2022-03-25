@@ -16,71 +16,23 @@
  */
 package org.apache.commons.scxml2.io;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.scxml2.SCXMLConstants;
+import org.apache.commons.scxml2.model.*;
+import org.w3c.dom.Node;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.scxml2.SCXMLConstants;
-import org.apache.commons.scxml2.model.Action;
-import org.apache.commons.scxml2.model.Assign;
-import org.apache.commons.scxml2.model.Cancel;
-import org.apache.commons.scxml2.model.Content;
-import org.apache.commons.scxml2.model.CustomActionWrapper;
-import org.apache.commons.scxml2.model.Data;
-import org.apache.commons.scxml2.model.Datamodel;
-import org.apache.commons.scxml2.model.Else;
-import org.apache.commons.scxml2.model.ElseIf;
-import org.apache.commons.scxml2.model.EnterableState;
-import org.apache.commons.scxml2.model.JsonValue;
-import org.apache.commons.scxml2.model.NodeListValue;
-import org.apache.commons.scxml2.model.NodeValue;
-import org.apache.commons.scxml2.model.ParsedValue;
-import org.apache.commons.scxml2.model.Raise;
-import org.apache.commons.scxml2.model.ParsedValueContainer;
-import org.apache.commons.scxml2.model.Final;
-import org.apache.commons.scxml2.model.Finalize;
-import org.apache.commons.scxml2.model.Foreach;
-import org.apache.commons.scxml2.model.History;
-import org.apache.commons.scxml2.model.If;
-import org.apache.commons.scxml2.model.Initial;
-import org.apache.commons.scxml2.model.Invoke;
-import org.apache.commons.scxml2.model.Log;
-import org.apache.commons.scxml2.model.OnEntry;
-import org.apache.commons.scxml2.model.OnExit;
-import org.apache.commons.scxml2.model.Parallel;
-import org.apache.commons.scxml2.model.Param;
-import org.apache.commons.scxml2.model.SCXML;
-import org.apache.commons.scxml2.model.Script;
-import org.apache.commons.scxml2.model.Send;
-import org.apache.commons.scxml2.model.SimpleTransition;
-import org.apache.commons.scxml2.model.State;
-import org.apache.commons.scxml2.model.TextValue;
-import org.apache.commons.scxml2.model.Transition;
-import org.apache.commons.scxml2.model.TransitionTarget;
-import org.apache.commons.scxml2.model.Var;
-import org.w3c.dom.Node;
+import java.io.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * <p>Utility class for serializing the Commons SCXML Java object
@@ -475,9 +427,9 @@ public class SCXMLWriter {
             return;
         }
 
-        writer.writeStartElement(SCXMLReader.ELEM_DATAMODEL);
+        writer.writeStartElement(SCXMLConstants.ELEM_DATAMODEL);
         for (final Data d : datamodel.getData()) {
-            writer.writeStartElement(SCXMLReader.ELEM_DATA);
+            writer.writeStartElement(SCXMLConstants.ELEM_DATA);
             writeAV(writer, SCXMLConstants.ATTR_ID, d.getId());
             writeAV(writer, SCXMLConstants.ATTR_SRC, escapeXML(d.getSrc()));
             writeAV(writer, SCXMLConstants.ATTR_EXPR, escapeXML(d.getExpr()));
@@ -584,7 +536,7 @@ public class SCXMLWriter {
     private static void writeFinal(final XMLStreamWriter writer, final Final end)
             throws XMLStreamException {
 
-        writer.writeStartElement(SCXMLReader.ELEM_FINAL);
+        writer.writeStartElement(SCXMLConstants.ELEM_FINAL);
         writeTransitionTargetId(writer, end);
         for (final OnEntry onentry : end.getOnEntries()) {
             writeOnEntry(writer, onentry);
@@ -593,7 +545,7 @@ public class SCXMLWriter {
             writeOnExit(writer, onexit);
         }
         if (end.getDoneData() != null) {
-            writer.writeStartElement(SCXMLReader.ELEM_DONEDATA);
+            writer.writeStartElement(SCXMLConstants.ELEM_DONEDATA);
             writeParams(writer, end.getDoneData().getParams());
             writeContent(writer, end.getDoneData().getContent());
             writer.writeEndElement();
@@ -797,7 +749,7 @@ public class SCXMLWriter {
         for (final Action a : actions) {
             if (a instanceof Assign) {
                 final Assign asn = (Assign) a;
-                writer.writeStartElement(SCXMLConstants.XMLNS_SCXML, SCXMLReader.ELEM_ASSIGN);
+                writer.writeStartElement(SCXMLConstants.XMLNS_SCXML, SCXMLConstants.ELEM_ASSIGN);
                 writeAV(writer, SCXMLConstants.ATTR_LOCATION, asn.getLocation());
                 writeAV(writer, SCXMLConstants.ATTR_SRC, asn.getSrc());
                 writeAV(writer, SCXMLConstants.ATTR_EXPR, escapeXML(asn.getExpr()));
@@ -807,7 +759,7 @@ public class SCXMLWriter {
                 writeSend(writer, (Send) a);
             } else if (a instanceof Cancel) {
                 final Cancel c = (Cancel) a;
-                writer.writeStartElement(SCXMLConstants.XMLNS_SCXML, SCXMLReader.ELEM_CANCEL);
+                writer.writeStartElement(SCXMLConstants.XMLNS_SCXML, SCXMLConstants.ELEM_CANCEL);
                 writeAV(writer, SCXMLConstants.ATTR_SENDID, c.getSendid());
                 writer.writeEndElement();
             } else if (a instanceof Foreach) {
@@ -835,10 +787,10 @@ public class SCXMLWriter {
             } else if (a instanceof If) {
                 writeIf(writer, (If) a);
             } else if (a instanceof Else) {
-                writer.writeEmptyElement(SCXMLReader.ELEM_ELSE);
+                writer.writeEmptyElement(SCXMLConstants.ELEM_ELSE);
             } else if (a instanceof ElseIf) {
                 final ElseIf eif = (ElseIf) a;
-                writer.writeStartElement(SCXMLConstants.XMLNS_SCXML, SCXMLReader.ELEM_ELSEIF);
+                writer.writeStartElement(SCXMLConstants.XMLNS_SCXML, SCXMLConstants.ELEM_ELSEIF);
                 writeAV(writer, SCXMLConstants.ATTR_COND, escapeXML(eif.getCond()));
                 writer.writeEndElement();
             } else if (a instanceof Var) {
@@ -967,7 +919,7 @@ public class SCXMLWriter {
             throws XMLStreamException {
 
         if (content != null) {
-            writer.writeStartElement(SCXMLReader.ELEM_CONTENT);
+            writer.writeStartElement(SCXMLConstants.ELEM_CONTENT);
             writeAV(writer, SCXMLConstants.ATTR_EXPR, content.getExpr());
             writeParsedValue(writer, content.getParsedValue());
             writer.writeEndElement();

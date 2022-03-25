@@ -162,7 +162,7 @@ public class SCInstance implements Serializable {
             singleContext = true;
         }
         if (stateMachine.getDatamodelName() != null && !stateMachine.getDatamodelName().equals(evaluator.getSupportedDatamodel())) {
-            extracted();
+            showException();
         }
         if (errorReporter == null) {
             throw new ModelException(ERR_NO_ERROR_REPORTER);
@@ -176,7 +176,7 @@ public class SCInstance implements Serializable {
         initialized = true;
     }
 
-    private void extracted() throws ModelException {
+    private void showException() throws ModelException {
         throw new ModelException("Incompatible SCXML document datamodel \""+stateMachine.getDatamodelName()+"\""
                 + " for evaluator "+evaluator.getClass().getName()+" supported datamodel \""+evaluator.getSupportedDatamodel()+"\"");
     }
@@ -363,21 +363,25 @@ public class SCInstance implements Serializable {
                 setValue = true;
             }
             if (setValue) {
-                if (evaluator instanceof JSEvaluator) {
-                    // the Javascript engine (Nashorn) may require special handling/wrapping of data objects which
-                    // directly injecting them in the context.
-                    try {
-                        ((JSEvaluator)evaluator).injectData(ctx, datum.getId(), value);
-                    } catch (final SCXMLExpressionException e) {
-                        if (internalIOProcessor != null) {
-                            internalIOProcessor.addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT).build());
-                        }
-                        errorReporter.onError(ErrorConstants.EXPRESSION_ERROR, e.getMessage(), datum);
-                    }
-                } else {
-                    ctx.setLocal(datum.getId(), value);
-                }
+                injectContext(ctx, evaluator, errorReporter, datum, value);
             }
+        }
+    }
+
+    private void injectContext(Context ctx, Evaluator evaluator, ErrorReporter errorReporter, Data datum, Object value) {
+        if (evaluator instanceof JSEvaluator) {
+            // the Javascript engine (Nashorn) may require special handling/wrapping of data objects which
+            // directly injecting them in the context.
+            try {
+                ((JSEvaluator) evaluator).injectData(ctx, datum.getId(), value);
+            } catch (final SCXMLExpressionException e) {
+                if (internalIOProcessor != null) {
+                    internalIOProcessor.addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT).build());
+                }
+                errorReporter.onError(ErrorConstants.EXPRESSION_ERROR, e.getMessage(), datum);
+            }
+        } else {
+            ctx.setLocal(datum.getId(), value);
         }
     }
 

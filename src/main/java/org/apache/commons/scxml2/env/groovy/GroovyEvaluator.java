@@ -46,6 +46,8 @@ public class GroovyEvaluator extends AbstractBaseEvaluator {
 
     public static final String SUPPORTED_DATA_MODEL = "groovy";
 
+    private GroovyEvaluator evaluator;
+
     public static class GroovyEvaluatorProvider implements EvaluatorProvider {
 
         @Override
@@ -63,6 +65,15 @@ public class GroovyEvaluator extends AbstractBaseEvaluator {
             return new GroovyEvaluator();
         }
     }
+
+    protected GroovyEvaluator getGroovyEvaluator() {
+        return evaluator;
+    }
+
+    protected void setGroovyEvaluator(final GroovyEvaluator evaluator) {
+        this.evaluator = evaluator;
+    }
+
 
     /** Error message if evaluation context is not a GroovyContext. */
     private static final String ERR_CTX_TYPE = "Error evaluating Groovy "
@@ -182,8 +193,8 @@ public class GroovyEvaluator extends AbstractBaseEvaluator {
         }
 
         final GroovyContext groovyCtx = (GroovyContext) ctx;
-        if (groovyCtx.getGroovyEvaluator() == null) {
-            groovyCtx.setGroovyEvaluator(this);
+        if (getGroovyEvaluator() == null) {
+            setGroovyEvaluator(this);
         }
         try {
             return getScript(getEffectiveContext(groovyCtx), groovyCtx.getScriptBaseClass(), expr).run();
@@ -208,8 +219,8 @@ public class GroovyEvaluator extends AbstractBaseEvaluator {
         }
 
         final GroovyContext groovyCtx = (GroovyContext) ctx;
-        if (groovyCtx.getGroovyEvaluator() == null) {
-            groovyCtx.setGroovyEvaluator(this);
+        if (getGroovyEvaluator() == null) {
+            setGroovyEvaluator(this);
         }
         try {
             final Object result = getScript(getEffectiveContext(groovyCtx), groovyCtx.getScriptBaseClass(), expr).run();
@@ -234,8 +245,8 @@ public class GroovyEvaluator extends AbstractBaseEvaluator {
         }
 
         final GroovyContext groovyCtx = (GroovyContext) ctx;
-        if (groovyCtx.getGroovyEvaluator() == null) {
-            groovyCtx.setGroovyEvaluator(this);
+        if (getGroovyEvaluator() == null) {
+            setGroovyEvaluator(this);
         }
         try {
             final GroovyContext effective = getEffectiveContext(groovyCtx);

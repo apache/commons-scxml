@@ -16,6 +16,25 @@
  */
 package org.apache.commons.scxml2.io;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.scxml2.PathResolver;
+import org.apache.commons.scxml2.SCXMLConstants;
+import org.apache.commons.scxml2.env.SimpleErrorHandler;
+import org.apache.commons.scxml2.env.URLResolver;
+import org.apache.commons.scxml2.model.*;
+import org.w3c.dom.*;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.*;
+import javax.xml.stream.util.XMLEventAllocator;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -24,85 +43,7 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.stream.Location;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLReporter;
-import javax.xml.stream.XMLResolver;
-import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.util.XMLEventAllocator;
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.scxml2.PathResolver;
-import org.apache.commons.scxml2.SCXMLConstants;
-import org.apache.commons.scxml2.env.SimpleErrorHandler;
-import org.apache.commons.scxml2.env.URLResolver;
-import org.apache.commons.scxml2.model.Action;
-import org.apache.commons.scxml2.model.ActionsContainer;
-import org.apache.commons.scxml2.model.Assign;
-import org.apache.commons.scxml2.model.Cancel;
-import org.apache.commons.scxml2.model.Content;
-import org.apache.commons.scxml2.model.ContentContainer;
-import org.apache.commons.scxml2.model.CustomAction;
-import org.apache.commons.scxml2.model.CustomActionWrapper;
-import org.apache.commons.scxml2.model.Data;
-import org.apache.commons.scxml2.model.Datamodel;
-import org.apache.commons.scxml2.model.DoneData;
-import org.apache.commons.scxml2.model.Else;
-import org.apache.commons.scxml2.model.ElseIf;
-import org.apache.commons.scxml2.model.EnterableState;
-import org.apache.commons.scxml2.model.Executable;
-import org.apache.commons.scxml2.model.JsonValue;
-import org.apache.commons.scxml2.model.NodeListValue;
-import org.apache.commons.scxml2.model.NodeValue;
-import org.apache.commons.scxml2.model.ParsedValueContainer;
-import org.apache.commons.scxml2.model.Final;
-import org.apache.commons.scxml2.model.Finalize;
-import org.apache.commons.scxml2.model.Foreach;
-import org.apache.commons.scxml2.model.History;
-import org.apache.commons.scxml2.model.If;
-import org.apache.commons.scxml2.model.Initial;
-import org.apache.commons.scxml2.model.Invoke;
-import org.apache.commons.scxml2.model.Log;
-import org.apache.commons.scxml2.model.ModelException;
-import org.apache.commons.scxml2.model.OnEntry;
-import org.apache.commons.scxml2.model.OnExit;
-import org.apache.commons.scxml2.model.Parallel;
-import org.apache.commons.scxml2.model.Param;
-import org.apache.commons.scxml2.model.ParamsContainer;
-import org.apache.commons.scxml2.model.Raise;
-import org.apache.commons.scxml2.model.SCXML;
-import org.apache.commons.scxml2.model.Script;
-import org.apache.commons.scxml2.model.Send;
-import org.apache.commons.scxml2.model.SimpleTransition;
-import org.apache.commons.scxml2.model.State;
-import org.apache.commons.scxml2.model.TextValue;
-import org.apache.commons.scxml2.model.Transition;
-import org.apache.commons.scxml2.model.TransitionType;
-import org.apache.commons.scxml2.model.TransitionalState;
-import org.apache.commons.scxml2.model.Var;
-import org.apache.commons.scxml2.model.NodeTextValue;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
+import java.util.*;
 
 /**
  * <p>The SCXMLReader provides the ability to read a SCXML document into
@@ -236,17 +177,6 @@ public final class SCXMLReader {
      */
     private static final String ERR_INVALID_VERSION = "The <scxml> element defines"
             +" an unsupported version \"{0}\", only version \"1.0\" is supported.";
-
-    // W3C SCXML XML Element names
-    public static final String ELEM_ASSIGN = "assign";
-    public static final String ELEM_CANCEL = "cancel";
-    public static final String ELEM_CONTENT = "content";
-    public static final String ELEM_DATA = "data";
-    public static final String ELEM_DATAMODEL = "datamodel";
-    public static final String ELEM_DONEDATA = "donedata";
-    public static final String ELEM_ELSE = "else";
-    public static final String ELEM_ELSEIF = "elseif";
-    public static final String ELEM_FINAL = "final";
 
     //------------------------- PUBLIC API METHODS -------------------------//
     /*
@@ -606,9 +536,9 @@ public final class SCXMLReader {
                             readState(reader, configuration, scxml, null);
                         } else if (SCXMLConstants.ELEM_PARALLEL.equals(name)) {
                             readParallel(reader, configuration, scxml, null);
-                        } else if (ELEM_FINAL.equals(name)) {
+                        } else if (SCXMLConstants.ELEM_FINAL.equals(name)) {
                             readFinal(reader, configuration, scxml, null);
-                        } else if (ELEM_DATAMODEL.equals(name)) {
+                        } else if (SCXMLConstants.ELEM_DATAMODEL.equals(name)) {
                             readDatamodel(reader, configuration, scxml, null);
                         } else if (SCXMLConstants.ELEM_SCRIPT.equals(name) && !hasGlobalScript) {
                             readGlobalScript(reader, configuration, scxml);
@@ -690,7 +620,7 @@ public final class SCXMLReader {
                             readState(reader, configuration, scxml, state);
                         } else if (SCXMLConstants.ELEM_INITIAL.equals(name)) {
                             readInitial(reader, configuration, state);
-                        } else if (ELEM_FINAL.equals(name)) {
+                        } else if (SCXMLConstants.ELEM_FINAL.equals(name)) {
                             readFinal(reader, configuration, scxml, state);
                         } else if (SCXMLConstants.ELEM_ONENTRY.equals(name)) {
                             readOnEntry(reader, configuration, state);
@@ -698,7 +628,7 @@ public final class SCXMLReader {
                             readOnExit(reader, configuration, state);
                         } else if (SCXMLConstants.ELEM_PARALLEL.equals(name)) {
                             readParallel(reader, configuration, scxml, state);
-                        } else if (ELEM_DATAMODEL.equals(name)) {
+                        } else if (SCXMLConstants.ELEM_DATAMODEL.equals(name)) {
                             readDatamodel(reader, configuration, null, state);
                         } else if (SCXMLConstants.ELEM_INVOKE.equals(name)) {
                             readInvoke(reader, configuration, state);
@@ -781,7 +711,7 @@ public final class SCXMLReader {
                             readOnEntry(reader, configuration, parallel);
                         } else if (SCXMLConstants.ELEM_ONEXIT.equals(name)) {
                             readOnExit(reader, configuration, parallel);
-                        } else if (ELEM_DATAMODEL.equals(name)) {
+                        } else if (SCXMLConstants.ELEM_DATAMODEL.equals(name)) {
                             readDatamodel(reader, configuration, null, parallel);
                         } else if (SCXMLConstants.ELEM_INVOKE.equals(name)) {
                             readInvoke(reader, configuration, parallel);
@@ -819,7 +749,7 @@ public final class SCXMLReader {
             throws XMLStreamException, ModelException, IOException {
 
         final Final end = new Final();
-        end.setId(readOrGeneratedTransitionTargetId(reader, scxml, ELEM_FINAL));
+        end.setId(readOrGeneratedTransitionTargetId(reader, scxml, SCXMLConstants.ELEM_FINAL));
 
         if (parent == null) {
             scxml.addChild(end);
@@ -843,13 +773,13 @@ public final class SCXMLReader {
                             readOnEntry(reader, configuration, end);
                         } else if (SCXMLConstants.ELEM_ONEXIT.equals(name)) {
                             readOnExit(reader, configuration, end);
-                        } else if (ELEM_DONEDATA.equals(name) && end.getDoneData() == null) {
+                        } else if (SCXMLConstants.ELEM_DONEDATA.equals(name) && end.getDoneData() == null) {
                             readDoneData(reader, configuration, end);
                         } else {
-                            reportIgnoredElement(reader, configuration, ELEM_FINAL, nsURI, name);
+                            reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_FINAL, nsURI, name);
                         }
                     } else {
-                        reportIgnoredElement(reader, configuration, ELEM_FINAL, nsURI, name);
+                        reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_FINAL, nsURI, name);
                     }
                     break;
                 case XMLStreamConstants.END_ELEMENT:
@@ -888,20 +818,20 @@ public final class SCXMLReader {
                                 readParam(reader, configuration, doneData);
                             }
                             else {
-                                reportIgnoredElement(reader, configuration, ELEM_DONEDATA, nsURI, name);
+                                reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_DONEDATA, nsURI, name);
                             }
-                        } else if (ELEM_CONTENT.equals(name)) {
+                        } else if (SCXMLConstants.ELEM_CONTENT.equals(name)) {
                             if (doneData.getParams().isEmpty()) {
                                 readContent(reader, configuration, doneData);
                             }
                             else {
-                                reportIgnoredElement(reader, configuration, ELEM_DONEDATA, nsURI, name);
+                                reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_DONEDATA, nsURI, name);
                             }
                         } else {
-                            reportIgnoredElement(reader, configuration, ELEM_DONEDATA, nsURI, name);
+                            reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_DONEDATA, nsURI, name);
                         }
                     } else {
-                        reportIgnoredElement(reader, configuration, ELEM_DONEDATA, nsURI, name);
+                        reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_DONEDATA, nsURI, name);
                     }
                     break;
                 case XMLStreamConstants.END_ELEMENT:
@@ -1054,13 +984,13 @@ public final class SCXMLReader {
                     nsURI = reader.getNamespaceURI();
                     name = reader.getLocalName();
                     if (SCXMLConstants.XMLNS_SCXML.equals(nsURI)) {
-                        if (ELEM_DATA.equals(name)) {
+                        if (SCXMLConstants.ELEM_DATA.equals(name)) {
                             readData(reader, configuration, dm);
                         } else {
-                            reportIgnoredElement(reader, configuration, ELEM_DATAMODEL, nsURI, name);
+                            reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_DATAMODEL, nsURI, name);
                         }
                     } else {
-                        reportIgnoredElement(reader, configuration, ELEM_DATAMODEL, nsURI, name);
+                        reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_DATAMODEL, nsURI, name);
                     }
                     break;
                 case XMLStreamConstants.END_ELEMENT:
@@ -1089,13 +1019,13 @@ public final class SCXMLReader {
             throws XMLStreamException, ModelException {
 
         final Data datum = new Data();
-        datum.setId(readRequiredAV(reader, ELEM_DATA, SCXMLConstants.ATTR_ID));
+        datum.setId(readRequiredAV(reader, SCXMLConstants.ELEM_DATA, SCXMLConstants.ATTR_ID));
         final String expr = readAV(reader, SCXMLConstants.ATTR_EXPR);
         final String src = readAV(reader, SCXMLConstants.ATTR_SRC);
 
         if (expr != null) {
             if (src != null) {
-                reportConflictingAttribute(reader, configuration, ELEM_DATA, SCXMLConstants.ATTR_EXPR, SCXMLConstants.ATTR_SRC);
+                reportConflictingAttribute(reader, configuration, SCXMLConstants.ELEM_DATA, SCXMLConstants.ATTR_EXPR, SCXMLConstants.ATTR_SRC);
             }
             datum.setExpr(expr);
             skipToEndElement(reader);
@@ -1143,7 +1073,7 @@ public final class SCXMLReader {
                             readParam(reader, configuration, invoke);
                         } else if (SCXMLConstants.ELEM_FINALIZE.equals(name)) {
                             readFinalize(reader, configuration, parent, invoke);
-                        } else if (ELEM_CONTENT.equals(name)) {
+                        } else if (SCXMLConstants.ELEM_CONTENT.equals(name)) {
                             readContent(reader, configuration, invoke);
                         } else {
                             reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_INVOKE, nsURI, name);
@@ -1166,7 +1096,7 @@ public final class SCXMLReader {
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
-     * @param parent The parent {@link org.apache.commons.scxml2.model.ParamsContainer} for this param.
+     * @param parent The parent {@link ParamsContainer} for this param.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      */
@@ -1291,7 +1221,7 @@ public final class SCXMLReader {
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
      * @param scxml The root of the object model being parsed.
-     * @param ts The parent {@link org.apache.commons.scxml2.model.TransitionalState} for this history.
+     * @param ts The parent {@link TransitionalState} for this history.
      *
      * @throws XMLStreamException An exception processing the underlying {@link XMLStreamReader}.
      * @throws ModelException The Commons SCXML object model is incomplete or inconsistent (includes
@@ -1487,7 +1417,7 @@ public final class SCXMLReader {
                             readIf(reader, configuration, executable, parent);
                         } else if (SCXMLConstants.ELEM_LOG.equals(name)) {
                             readLog(reader, executable, parent);
-                        } else if (ELEM_ASSIGN.equals(name)) {
+                        } else if (SCXMLConstants.ELEM_ASSIGN.equals(name)) {
                             readAssign(reader, configuration, executable, parent);
                         } else if (SCXMLConstants.ELEM_SEND.equals(name)) {
                             if (executable instanceof Finalize) {
@@ -1495,13 +1425,13 @@ public final class SCXMLReader {
                             } else {
                                 readSend(reader, configuration, executable, parent);
                             }
-                        } else if (ELEM_CANCEL.equals(name)) {
+                        } else if (SCXMLConstants.ELEM_CANCEL.equals(name)) {
                             readCancel(reader, configuration, executable, parent);
                         } else if (SCXMLConstants.ELEM_SCRIPT.equals(name)) {
                             readScript(reader, configuration, executable, parent);
-                        } else if (SCXMLConstants.ELEM_IF.equals(end) && ELEM_ELSEIF.equals(name)) {
+                        } else if (SCXMLConstants.ELEM_IF.equals(end) && SCXMLConstants.ELEM_ELSEIF.equals(name)) {
                             readElseIf(reader, executable, (If) parent);
-                        } else if (SCXMLConstants.ELEM_IF.equals(end) && ELEM_ELSE.equals(name)) {
+                        } else if (SCXMLConstants.ELEM_IF.equals(end) && SCXMLConstants.ELEM_ELSE.equals(name)) {
                             readElse(reader, executable, (If)parent);
                         } else {
                             reportIgnoredElement(reader, configuration, end, nsURI, name);
@@ -1611,7 +1541,7 @@ public final class SCXMLReader {
             throws XMLStreamException, ModelException {
 
         final ElseIf elseif = new ElseIf();
-        elseif.setCond(readRequiredAV(reader, ELEM_ELSEIF, SCXMLConstants.ATTR_COND));
+        elseif.setCond(readRequiredAV(reader, SCXMLConstants.ELEM_ELSEIF, SCXMLConstants.ATTR_COND));
         elseif.setParent(executable);
         iff.addAction(elseif);
         skipToEndElement(reader);
@@ -1704,10 +1634,10 @@ public final class SCXMLReader {
 
         final Assign assign = new Assign();
         assign.setExpr(readAV(reader, SCXMLConstants.ATTR_EXPR));
-        assign.setLocation(readRequiredAV(reader, ELEM_ASSIGN, SCXMLConstants.ATTR_LOCATION));
+        assign.setLocation(readRequiredAV(reader, SCXMLConstants.ELEM_ASSIGN, SCXMLConstants.ATTR_LOCATION));
         assign.setSrc(readAV(reader, SCXMLConstants.ATTR_SRC));
         if (assign.getExpr() != null && assign.getSrc() != null) {
-            reportConflictingAttribute(reader, configuration, ELEM_ASSIGN, SCXMLConstants.ATTR_EXPR, SCXMLConstants.ATTR_SRC);
+            reportConflictingAttribute(reader, configuration, SCXMLConstants.ELEM_ASSIGN, SCXMLConstants.ATTR_EXPR, SCXMLConstants.ATTR_SRC);
         }
         else if (assign.getExpr() != null) {
             skipToEndElement(reader);
@@ -1729,7 +1659,7 @@ public final class SCXMLReader {
             readParsedValue(reader, configuration, assign, false);
             if (assign.getParsedValue() == null) {
                 // report missing expression (as most common use-case)
-                reportMissingAttribute(location, ELEM_ASSIGN, SCXMLConstants.ATTR_EXPR);
+                reportMissingAttribute(location, SCXMLConstants.ELEM_ASSIGN, SCXMLConstants.ATTR_EXPR);
             }
         }
 
@@ -1833,7 +1763,7 @@ public final class SCXMLReader {
                             else {
                                 reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_SEND, nsURI, name);
                             }
-                        } else if (ELEM_CONTENT.equals(name)) {
+                        } else if (SCXMLConstants.ELEM_CONTENT.equals(name)) {
                             if (send.getNamelist() == null && send.getParams().isEmpty()) {
                                 readContent(reader, configuration, send);
                             }
@@ -1880,7 +1810,7 @@ public final class SCXMLReader {
         final String attrValue = readAV(reader, SCXMLConstants.ATTR_SENDIDEXPR);
         if (attrValue != null) {
             if (cancel.getSendid() != null) {
-                reportConflictingAttribute(reader, configuration, ELEM_CANCEL, SCXMLConstants.ATTR_SENDID, SCXMLConstants.ATTR_SENDIDEXPR);
+                reportConflictingAttribute(reader, configuration, SCXMLConstants.ELEM_CANCEL, SCXMLConstants.ATTR_SENDID, SCXMLConstants.ATTR_SENDIDEXPR);
             }
             else {
                 cancel.setSendidexpr(attrValue);
@@ -2108,7 +2038,7 @@ public final class SCXMLReader {
                 }
                 if (valueContainer.getParsedValue() == null) {
                     reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_INVOKE, SCXMLConstants.XMLNS_SCXML,
-                            ELEM_CONTENT);
+                            SCXMLConstants.ELEM_CONTENT);
                 }
             }
             else if (children.getLength() == 1 && (cdata || child.getNodeType() == Node.TEXT_NODE )) {
