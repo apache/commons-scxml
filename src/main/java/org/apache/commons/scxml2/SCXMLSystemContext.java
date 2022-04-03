@@ -77,7 +77,7 @@ public class SCXMLSystemContext implements Context, Serializable {
     /**
      * Initialize or replace systemContext
      * @param systemContext the system context to set
-     * @throws java.lang.NullPointerException if systemContext == null
+     * @throws NullPointerException if systemContext == null
      */
     void setSystemContext(final Context systemContext) {
         if (this.systemContext != null) {
