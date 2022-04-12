@@ -362,6 +362,7 @@
       <action type="update" dev="ggregory" due-to="Dependabot">Bump jackson-core from 2.9.3 to 2.13.2 #39</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump jackson-databind from 2.9.3 to 2.13.2.2 #35, #46</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump junit-jupiter-engine from 5.4.2 to 5.8.2 #40</action>
+      <action type="update" dev="ggregory" due-to="Dependabot">Bump commons-parent from 52 to 53 #48</action>
 
     </release>
 
