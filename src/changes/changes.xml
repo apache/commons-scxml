@@ -347,8 +347,8 @@
         [04-19-2021] Bump actions/setup-java from v1.4.0 to v2.
       </action>
       
+      <action type="update" dev="ggregory" due-to="Dependabot">Bump actions/cache from 2.1.4 to 3.0.6 #31, #47, #50.</action>
       <action type="update" dev="ggregory">Bump actions/checkout from 2 to 3 #34.</action>
-      <action type="update" dev="ggregory" due-to="Dependabot">Bump actions/cache from 2.1.4 to 3.0.5 #31, #47, #50.</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump actions/setup-java from 2 to 3 #49.</action>
       <action type="update" dev="ggregory">Bump junit-jupiter-api from 5.4.2 to 5.8.2 #32.</action>
       <action type="update" dev="ggregory">Bump commons-logging from 1.1.3 to 1.2 #12.</action>
