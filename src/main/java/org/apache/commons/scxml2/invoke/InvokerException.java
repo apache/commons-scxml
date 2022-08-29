@@ -29,7 +29,7 @@ public class InvokerException extends Exception {
     private static final long serialVersionUID = 1L;
 
     /**
-     * @see java.lang.Exception#Exception(java.lang.String)
+     * @see Exception#Exception(String)
      * @param message The error message
      */
     public InvokerException(final String message) {
@@ -37,7 +37,7 @@ public class InvokerException extends Exception {
     }
 
     /**
-     * @see java.lang.Exception#Exception(java.lang.Throwable)
+     * @see Exception#Exception(Throwable)
      * @param cause The cause
      */
     public InvokerException(final Throwable cause) {
@@ -45,7 +45,7 @@ public class InvokerException extends Exception {
     }
 
     /**
-     * @see java.lang.Exception#Exception(String, Throwable)
+     * @see Exception#Exception(String, Throwable)
      * @param message The error message
      * @param cause The cause
      */

@@ -30,13 +30,13 @@ public class ModelException extends Exception {
     private static final long serialVersionUID = 1L;
 
     /**
-     * @see java.lang.Exception#Exception()
+     * @see Exception#Exception()
      */
     public ModelException() {
     }
 
     /**
-     * @see java.lang.Exception#Exception(java.lang.String)
+     * @see Exception#Exception(String)
      * @param message the detail message
      */
     public ModelException(final String message) {
@@ -44,7 +44,7 @@ public class ModelException extends Exception {
     }
 
     /**
-     * @see java.lang.Exception#Exception(java.lang.Throwable)
+     * @see Exception#Exception(Throwable)
      * @param cause the cause
      */
     public ModelException(final Throwable cause) {
@@ -52,7 +52,7 @@ public class ModelException extends Exception {
     }
 
     /**
-     * @see java.lang.Exception#Exception(String, java.lang.Throwable)
+     * @see Exception#Exception(String, Throwable)
      * @param message the detail message
      * @param cause the cause
      */

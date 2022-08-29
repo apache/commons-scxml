@@ -162,7 +162,7 @@ public class TriggerEvent implements Serializable {
     /**
      * Define an equals operator for TriggerEvent.
      *
-     * @see java.lang.Object#equals(java.lang.Object)
+     * @see Object#equals(Object)
      */
     @Override
     public boolean equals(final Object obj) {
@@ -183,7 +183,7 @@ public class TriggerEvent implements Serializable {
     /**
      * Returns a string representation of this TriggerEvent object.
      *
-     * @see java.lang.Object#toString()
+     * @see Object#toString()
      */
     @Override
     public String toString() {
@@ -211,7 +211,7 @@ public class TriggerEvent implements Serializable {
     /**
      * Returns the hash code for this TriggerEvent object.
      *
-     * @see java.lang.Object#hashCode()
+     * @see Object#hashCode()
      */
     @Override
     public int hashCode() {

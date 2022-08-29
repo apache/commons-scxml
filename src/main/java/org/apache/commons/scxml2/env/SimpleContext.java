@@ -100,7 +100,7 @@ public class SimpleContext implements Context, Serializable {
      *
      * @param name The variable name
      * @return Object The variable value
-     * @see org.apache.commons.scxml2.Context#get(java.lang.String)
+     * @see org.apache.commons.scxml2.Context#get(String)
      */
     public Object get(final String name) {
         final Object localValue = getVars().get(name);
@@ -118,7 +118,7 @@ public class SimpleContext implements Context, Serializable {
      *
      * @param name The variable name
      * @return boolean true if this variable exists
-     * @see org.apache.commons.scxml2.Context#has(java.lang.String)
+     * @see org.apache.commons.scxml2.Context#has(String)
      */
     public boolean has(final String name) {
         return (hasLocal(name) || (parent != null && parent.has(name)));
@@ -129,7 +129,7 @@ public class SimpleContext implements Context, Serializable {
      *
      * @param name The variable name
      * @return boolean true if this variable exists
-     * @see org.apache.commons.scxml2.Context#hasLocal(java.lang.String)
+     * @see org.apache.commons.scxml2.Context#hasLocal(String)
      */
     public boolean hasLocal(final String name) {
         return (getVars().containsKey(name));
