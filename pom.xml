@@ -371,7 +371,7 @@
         <dependency>
           <groupId>org.openjdk.nashorn</groupId>
           <artifactId>nashorn-core</artifactId>
-          <version>15.3</version>
+          <version>15.4</version>
         </dependency>
         <!-- Graal's JS support is not 100% compatible with Java 8.
         <dependency>
