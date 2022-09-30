@@ -349,7 +349,7 @@
       <action type="update" dev="ggregory" due-to="Dependabot">Bump jackson-core from 2.9.3 to 2.13.4 #39, #59.</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump jackson-databind from 2.9.3 to 2.13.4 #35, #46, #60.</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump junit-jupiter-api from 5.4.2 to 5.9.1 #32, #70.</action>
-      <action type="update" dev="ggregory" due-to="Dependabot">Bump junit-jupiter-engine from 5.4.2 to 5.8.2 #40.</action>
+      <action type="update" dev="ggregory" due-to="Dependabot">Bump junit-jupiter-engine from 5.4.2 to 5.9.1 #40, #68.</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump commons-parent from 48 to 53 #48.</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump nashorn-core from 15.3 to 15.4 #52.</action>
 
