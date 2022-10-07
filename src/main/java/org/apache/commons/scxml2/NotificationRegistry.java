@@ -119,7 +119,7 @@ public final class NotificationRegistry {
     }
 
     /**
-     * Inform all relevant listeners of a transition that has occured.
+     * Inform all relevant listeners of a transition that has occurred.
      *
      * @param source The Observable
      * @param from The source EnterableState
