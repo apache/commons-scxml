@@ -38,7 +38,7 @@ public class DatamodelTest {
         exec01.go();
         final SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/datamodel-01.xml");
         exec02.go();
-        Assertions.assertFalse(exec01 == exec02);
+        Assertions.assertNotSame(exec01, exec02);
         runtest(exec01, exec02);
     }
 
@@ -51,7 +51,7 @@ public class DatamodelTest {
         exec01.go();
         final SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/groovy/datamodel-01.xml");
         exec02.go();
-        Assertions.assertFalse(exec01 == exec02);
+        Assertions.assertNotSame(exec01, exec02);
         runtest(exec01, exec02);
     }
 
@@ -64,7 +64,7 @@ public class DatamodelTest {
         exec01.go();
         final SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/javascript/datamodel-01.xml");
         exec02.go();
-        Assertions.assertFalse(exec01 == exec02);
+        Assertions.assertNotSame(exec01, exec02);
         runtest(exec01, exec02);
     }
 

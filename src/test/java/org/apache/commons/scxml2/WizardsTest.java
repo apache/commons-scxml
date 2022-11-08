@@ -86,11 +86,11 @@ public class WizardsTest {
                 final int i = ((Integer) params.get("aValue"));
                 switch (callback) {
                     case 0:
-                        Assertions.assertTrue(i == 2); // state2
+                        Assertions.assertEquals(2, i); // state2
                         callback++;
                         break;
                     case 1:
-                        Assertions.assertTrue(i == 4); // state4
+                        Assertions.assertEquals(4, i); // state4
                         callback++;
                         break;
                     default:

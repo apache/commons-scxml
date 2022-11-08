@@ -181,7 +181,7 @@ public class SCXMLReaderTest {
         Assertions.assertEquals(1, actions.size());
         final MyAction my = (MyAction)((CustomActionWrapper)actions.get(0)).getAction();
         Assertions.assertNotNull(my);
-        Assertions.assertTrue(my.getParsedValue() != null);
+        Assertions.assertNotNull(my.getParsedValue());
     }
 
     @Test
