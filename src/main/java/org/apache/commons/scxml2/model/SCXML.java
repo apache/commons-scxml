@@ -320,7 +320,7 @@ public class SCXML implements Serializable, Observable {
     }
 
     /**
-     * Get the the initial transition target.
+     * Get the initial transition target.
      *
      * @return String Returns the initial transition target ID
      * @see #getInitialTransition()

@@ -19,7 +19,7 @@ package org.apache.commons.scxml2.model;
 /**
  * Exception that is thrown when the SCXML model supplied to the
  * executor has a fatal flaw that prevents the executor from
- * further interpreting the the model.
+ * further interpreting the model.
  *
  */
 public class ModelException extends Exception {
