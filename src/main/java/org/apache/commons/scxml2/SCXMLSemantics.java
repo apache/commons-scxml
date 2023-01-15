@@ -24,7 +24,7 @@ import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.SCXML;
 
 /**
- * <p>The purpose of this interface is to separate the the
+ * <p>The purpose of this interface is to separate the
  * <a href="https://www.w3.org/TR/2015/REC-scxml-20150901/#AlgorithmforSCXMLInterpretation">
  *     W3C SCXML Algorithm for SCXML Interpretation</a>
  * from the <code>SCXMLExecutor</code> and therefore make it pluggable.</p>

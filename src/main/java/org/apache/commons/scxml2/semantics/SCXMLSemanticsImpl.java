@@ -521,7 +521,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      */
     public void addAncestorStatesToEnter(final SCXMLExecutionContext exctx, final Step step,
                                             final TransitionTarget tt, final TransitionTarget ancestor) {
-        // for for anc in getProperAncestors(tt,ancestor)
+        // for anc in getProperAncestors(tt,ancestor)
         for (int i = tt.getNumberOfAncestors()-1; i > -1; i--) {
             final EnterableState anc = tt.getAncestor(i);
             if (anc == ancestor) {
