@@ -16,21 +16,15 @@
  * limitations under the License.
 -->
 
-<document>
+<document xmlns="http://maven.apache.org/changes/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
 
   <properties>
     <title>Apache Commons SCXML Changes</title>
   </properties>
 
   <body>
-
-    <section name="About this document">
-      <ul>
-        <li>The latest release of Commons SCXML is version 0.9.</li>
-        <li>If you are interested in helping the project, join us on the
-            <a href="mail-lists.html">commons-dev mailing list</a></li>
-      </ul>
-    </section>
 
     <release version="2.0" date="In Git master"
       description="Latest unreleased code">
@@ -658,7 +652,7 @@
       <action dev="rahul" type="fix" issue="SCXML-45">
        [05-29-2007] Payload of events sent to current scxml session using
        &lt;send&gt; tag are now injected into engine. Commons SCXML adds
-       the special <i>_eventdatamap</i> variable for storing payloads
+       the special _eventdatamap variable for storing payloads
        for derived events.
       </action>
 
@@ -811,7 +805,7 @@
        [10-11-2006] Update to new ASLv2 license headers for source files.
       </action>
 
-      <action dev="rahul" type="add" issues="SCXML-20">
+      <action dev="rahul" type="add" issue="SCXML-20">
        [10-05-2006] The Commons SCXML object model as well as the
        SCXMLExecutor instances are now serializable.
       </action>
