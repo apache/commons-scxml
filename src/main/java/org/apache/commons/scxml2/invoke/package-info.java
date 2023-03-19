@@ -1,5 +1,4 @@
-<html>
-<!-- 
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -14,14 +13,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
--->
-<head>
-</head>
-<body>
+ */
 
-  <p>A collection of classes related to the SCXML &lt;invoke&gt;
-     element and its children, dealing with the invocation of
-     activities associated with a particular state in the state machine.</p>
-
-</body>
-</html>
+/**
+ * A collection of classes related to the SCXML &lt;invoke&gt; element and its children, dealing with the invocation of activities associated with a particular
+ * state in the state machine.
+ */
+package org.apache.commons.scxml2.invoke;
