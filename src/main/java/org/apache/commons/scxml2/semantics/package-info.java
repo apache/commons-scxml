@@ -1,5 +1,4 @@
-<html>
-<!-- 
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -14,27 +13,23 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
--->
-<head>
-</head>
-<body>
+ */
 
- <p>A collection of classes responsible for implementations of the
- <code>org.apache.commons.scxml2.SCXMLSemantics</code> interface.</p>
-
- <p>Some possible semantic interpretations are, for example:</p>
-
- <ul>
-  <li>STATEMATE
-  <li>RHAPSODY
-  <li>ROOMCharts
-  <li>UML 1.5
-  <li>UML 2.0
- </ul>
-
- <p>Specific semantics can be created by subclassing
- <code>org.apache.commons.scxml2.semantics.SCXMLSemanticsImpl</code>,
- which is the default implementation used.</p>
-
-</body>
-</html>
+/**
+ * A collection of classes responsible for implementations of the <code>org.apache.commons.scxml2.SCXMLSemantics</code> interface.
+ * <p>
+ * Some possible semantic interpretations are, for example:
+ * </p>
+ * <ul>
+ * <li>STATEMATE
+ * <li>RHAPSODY
+ * <li>ROOMCharts
+ * <li>UML 1.5
+ * <li>UML 2.0
+ * </ul>
+ * <p>
+ * Specific semantics can be created by subclassing <code>org.apache.commons.scxml2.semantics.SCXMLSemanticsImpl</code>, which is the default implementation
+ * used.
+ * </p>
+ */
+package org.apache.commons.scxml2.semantics;
