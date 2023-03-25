@@ -23,7 +23,6 @@ package org.apache.commons.scxml2.model;
  * to be useful, each of its &lt;state&gt; substates must itself be
  * complex, that is, one with either &lt;state&gt; or &lt;parallel&gt;
  * children.
- *
  */
 public class Parallel extends TransitionalState {
 

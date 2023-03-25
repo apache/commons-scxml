@@ -33,7 +33,6 @@ import org.xml.sax.SAXParseException;
 
 /**
  * A simple tracer connected to Apache Commons Logging.
- *
  */
 public class Tracer implements ErrorHandler, ErrorReporter,
                                SCXMLListener, Serializable, XMLReporter {

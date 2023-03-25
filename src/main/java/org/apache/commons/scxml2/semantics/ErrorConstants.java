@@ -18,7 +18,6 @@ package org.apache.commons.scxml2.semantics;
 
 /**
  * Errors reported by the default SCXMLSemantics implementation.
- *
  */
 public class ErrorConstants {
 

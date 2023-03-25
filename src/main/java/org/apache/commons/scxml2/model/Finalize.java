@@ -19,7 +19,6 @@ package org.apache.commons.scxml2.model;
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;finalize&gt; SCXML element.
- *
  */
 public class Finalize extends Executable {
 

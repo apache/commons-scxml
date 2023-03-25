@@ -19,7 +19,6 @@ package org.apache.commons.scxml2.invoke;
 /**
  * Exception thrown when a process specified by an &lt;invoke&gt;
  * cannot be initiated.
- *
  */
 public class InvokerException extends Exception {
 

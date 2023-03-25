@@ -24,7 +24,6 @@ import org.junit.jupiter.api.Test;
 /**
  * Test case for the JSContext SCXML Context implementation for
  * the Javascript expression evaluator.
- *
  */
 public class JSContextTest {
         /**

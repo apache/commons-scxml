@@ -23,7 +23,6 @@ import java.util.List;
 /**
  * The class in this SCXML object model that corresponds to the SCXML
  * &lt;datamodel&gt; element.
- *
  */
 public class Datamodel implements Serializable {
 

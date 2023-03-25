@@ -33,7 +33,6 @@ import org.apache.commons.scxml2.semantics.ErrorConstants;
  * executed elements. &lt;else&gt; and &lt;elseif&gt; can optionally
  * appear within an &lt;if&gt; as immediate children, and serve to partition
  * the elements within an &lt;if&gt;.
- *
  */
 public class If extends Action implements ActionsContainer {
 

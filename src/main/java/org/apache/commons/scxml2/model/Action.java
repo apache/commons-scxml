@@ -24,7 +24,6 @@ import org.apache.commons.scxml2.SCXMLExpressionException;
 /**
  * An abstract base class for executable elements in SCXML,
  * such as &lt;assign&gt;, &lt;log&gt; etc.
- *
  */
 public abstract class Action implements Serializable {
 

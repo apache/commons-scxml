@@ -19,7 +19,6 @@ package org.apache.commons.scxml2;
 /**
  * Exception thrown when a malformed expression is encountered during
  * evaluation of an expression in a SCXML document.
- *
  */
 public class SCXMLExpressionException extends Exception {
 

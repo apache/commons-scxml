@@ -34,7 +34,6 @@ import org.apache.commons.scxml2.semantics.ErrorConstants;
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;send&gt; SCXML element.
- *
  */
 public class Send extends Action implements ContentContainer, ParamsContainer {
 

@@ -27,7 +27,6 @@ import org.apache.commons.scxml2.SCXMLSystemContext;
 
 /**
  * Simple Context wrapping a map of variables.
- *
  */
 public class SimpleContext implements Context, Serializable {
 

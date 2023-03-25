@@ -23,7 +23,6 @@ import java.util.List;
 /**
  * An abstract base class for containers of executable elements in SCXML,
  * such as &lt;onentry&gt; and &lt;onexit&gt;.
- *
  */
 public abstract class Executable implements Serializable {
 

@@ -25,7 +25,6 @@ import org.apache.commons.scxml2.invoke.Invoker;
  * events or other information directly to another SCXML Interpreter,
  * other external systems using an Event I/O Processor or to raise
  * events in the current SCXML session.
- *
  */
 public interface EventDispatcher {
 

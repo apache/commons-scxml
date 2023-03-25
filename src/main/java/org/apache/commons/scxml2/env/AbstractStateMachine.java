@@ -62,7 +62,6 @@ import org.apache.commons.scxml2.model.TransitionTarget;
  * catering to other end users, and therefore ensure that the subclasses
  * are free of <code>ModelException</code>s and the like. Most methods
  * are <code>protected</code> for ease of subclassing.</p>
- *
  */
 public abstract class AbstractStateMachine {
 

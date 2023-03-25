@@ -28,7 +28,6 @@ import org.apache.commons.scxml2.model.TransitionTarget;
  * particular entry and exit notifications) and
  * {@link org.apache.commons.scxml2.model.Transition} instances (subscribe to
  * particular transitions).
- *
  */
 public interface SCXMLListener {
 

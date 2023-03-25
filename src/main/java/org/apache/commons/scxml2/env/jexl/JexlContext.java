@@ -23,7 +23,6 @@ import org.apache.commons.scxml2.env.SimpleContext;
 
 /**
  * JEXL Context implementation for Commons SCXML.
- *
  */
 public class JexlContext extends SimpleContext
     implements org.apache.commons.jexl3.JexlContext {

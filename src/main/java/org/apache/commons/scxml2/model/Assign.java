@@ -24,7 +24,6 @@ import org.apache.commons.scxml2.SCXMLExpressionException;
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;assign&gt; SCXML element.
- *
  */
 public class Assign extends Action implements ParsedValueContainer {
 

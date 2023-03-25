@@ -20,7 +20,6 @@ package org.apache.commons.scxml2;
  * An interface for reporting SCXML errors to the host environment,
  * containing the definition of commonly occuring errors while executing
  * SCXML documents.
- *
  */
 public interface ErrorReporter {
 

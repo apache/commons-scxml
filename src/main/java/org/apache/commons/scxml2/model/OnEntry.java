@@ -21,7 +21,6 @@ package org.apache.commons.scxml2.model;
  * &lt;onentry&gt; SCXML element, which is an optional property
  * holding executable content to be run upon entering the parent
  * State or Parallel.
- *
  */
 public class OnEntry extends Executable {
 

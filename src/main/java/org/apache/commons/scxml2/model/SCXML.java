@@ -28,7 +28,6 @@ import org.apache.commons.scxml2.PathResolver;
  * The class in this SCXML object model that corresponds to the
  * &lt;scxml&gt; root element, and serves as the &quot;document
  * root&quot;.
- *
  */
 public class SCXML implements Serializable, Observable {
 

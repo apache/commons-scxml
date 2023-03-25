@@ -33,7 +33,6 @@ import org.apache.commons.scxml2.model.TransitionTarget;
  * The notification registry keeps track of all
  * <code>SCXMLListener</code>s attached and notifies relevant
  * listeners of the events that interest them.
- *
  */
 public final class NotificationRegistry {
 

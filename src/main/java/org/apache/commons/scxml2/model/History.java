@@ -19,7 +19,6 @@ package org.apache.commons.scxml2.model;
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;history&gt; SCXML pseudo state element.
- *
  */
 public class History extends TransitionTarget {
 

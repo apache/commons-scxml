@@ -24,7 +24,6 @@ import org.apache.commons.logging.Log;
  * A custom action is simply a tuple consisting of a namespace URI,
  * the local name for the custom action and the corresponding
  * {@link Action} class.
- *
  */
 public class CustomAction {
 

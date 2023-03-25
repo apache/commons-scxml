@@ -31,7 +31,6 @@ import org.apache.commons.scxml2.model.TransitionalState;
 
 /**
  * A logical unit of progression in the execution of a SCXML model.
- *
  */
 public class Step {
 

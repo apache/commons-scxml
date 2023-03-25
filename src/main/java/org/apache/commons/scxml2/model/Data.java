@@ -19,7 +19,6 @@ package org.apache.commons.scxml2.model;
 /**
  * The class in this SCXML object model that corresponds to the SCXML
  * &lt;data&gt; child element of the &lt;datamodel&gt; element.
- *
  */
 public class Data implements ParsedValueContainer {
 

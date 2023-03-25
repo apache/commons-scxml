@@ -43,7 +43,6 @@ import org.apache.commons.scxml2.model.ActionExecutionError;
  * <code>send(...)</code> and <code>cancel(...)</code> methods and
  * delegating to their <code>super</code> counterparts for the
  * &quot;scxml&quot; <code>type</code>.</p>
- *
  */
 public class SimpleDispatcher implements EventDispatcher, Serializable {
 

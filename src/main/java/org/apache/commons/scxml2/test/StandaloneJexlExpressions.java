@@ -39,7 +39,6 @@ import org.apache.commons.scxml2.env.jexl.JexlEvaluator;
  *      type "name=value"</li>
  *  <li>To reset state machine, enter "reset"</li>
  * </ul>
- *
  */
 public final class StandaloneJexlExpressions {
 

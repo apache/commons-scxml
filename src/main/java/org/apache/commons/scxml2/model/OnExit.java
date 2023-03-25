@@ -21,7 +21,6 @@ package org.apache.commons.scxml2.model;
  * &lt;onexit&gt; SCXML element, which is an optional property
  * holding executable content to be run upon exiting the parent
  * State or Parallel.
- *
  */
 public class OnExit extends Executable {
 

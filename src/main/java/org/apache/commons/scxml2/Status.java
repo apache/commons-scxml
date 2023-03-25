@@ -24,7 +24,6 @@ import org.apache.commons.scxml2.model.Final;
 
 /**
  * The immutable encapsulation of the current state of a state machine.
- *
  */
 public class Status implements Serializable {
 

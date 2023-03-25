@@ -24,7 +24,6 @@ import java.io.Serializable;
  *
  * <b>NOTE:</b> Instances are {@link Serializable} as long as the associated
  * data, if any, is {@link Serializable}.
- *
  */
 public class TriggerEvent implements Serializable {
 

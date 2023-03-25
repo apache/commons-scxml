@@ -36,7 +36,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * SCXML application for the example JavaScript scripts.
- *
  */
 public class JSExampleTest {
 

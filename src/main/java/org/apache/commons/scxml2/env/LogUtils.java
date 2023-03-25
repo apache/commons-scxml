@@ -21,7 +21,6 @@ import org.apache.commons.scxml2.model.TransitionTarget;
 
 /**
  * Helper methods for Commons SCXML logging.
- *
  */
 public final class LogUtils {
 

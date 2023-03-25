@@ -23,7 +23,6 @@ import java.util.Set;
  * The class in this SCXML object model that corresponds to the
  * simple &lt;transition&gt; SCXML element, without Transition rules for &quot;events&quot; or
  * &quot;guard-conditions&quot;. Used for &lt;history&gt; or &lt;history&gt; elements.
- *
  */
 public class SimpleTransition extends Executable implements Observable {
 

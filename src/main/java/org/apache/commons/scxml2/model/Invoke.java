@@ -41,7 +41,6 @@ import org.w3c.dom.Element;
 /**
  * The class in this SCXML object model that corresponds to the
  * &lt;invoke&gt; SCXML element.
- *
  */
 public class Invoke extends Action implements ContentContainer, ParamsContainer {
 
