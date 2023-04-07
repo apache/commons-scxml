@@ -341,7 +341,7 @@
       <action type="update" dev="ggregory">Bump commons-io from 2.6 to 2.11.0 #37.</action>
       <action type="update" dev="ggregory">Bump commons-jexl3 from 3.1 to 3.2.1 #36.</action>
       <action type="update" dev="ggregory">Bump commons-jexl3 from 3.1 to 3.2.1 #36.</action>
-      <action type="update" dev="ggregory" due-to="Dependabot">Bump Saxon-HE from 9.6.0-1 to 12.0 #42, #43, #64, #104.</action>
+      <action type="update" dev="ggregory" due-to="Dependabot">Bump Saxon-HE from 9.6.0-1 to 12.1 #42, #43, #64, #104, #117.</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump jackson-core from 2.9.3 to 2.14.2 #39, #59, #84, #85, #106.</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump jackson-databind from 2.9.3 to 2.14.2 #35, #46, #60, #83, #86, #107.</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump junit-jupiter-api from 5.4.2 to 5.9.1 #32, #70.</action>
