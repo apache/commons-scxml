@@ -23,6 +23,7 @@ import org.apache.commons.jexl3.JexlBuilder;
 import org.apache.commons.jexl3.JexlExpression;
 import org.apache.commons.jexl3.JexlEngine;
 import org.apache.commons.jexl3.JexlScript;
+import org.apache.commons.jexl3.introspection.JexlPermissions;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.EvaluatorProvider;
@@ -180,7 +181,8 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
         // See javadoc of org.apache.commons.jexl2.JexlEngine#setFunctions(Map<String,Object> funcs) for detail.
         final Map<String, Object> funcs = new HashMap<>();
         funcs.put(null, JexlBuiltin.class);
-        return new JexlBuilder().namespaces(funcs).cache(256).create();
+        JexlPermissions permissions = JexlPermissions.RESTRICTED.compose("org.apache.commons.scxml2.*");
+        return new JexlBuilder().permissions(permissions).namespaces(funcs).cache(256).create();
     }
 
     /**
