@@ -138,11 +138,11 @@
       </action>
 
       <action dev="woonsan" type="fix" issue="SCXML-233">
-        [07-12-2015] SCInstance becomes not serialzable after triggering event. 
+        [07-12-2015] SCInstance becomes not serialzable after triggering event.
       </action>
 
       <action dev="woonsan" type="fix" issue="SCXML-234">
-        [07-12-2015] Unit test (ScriptTest) fails on Java 1.8 due to new JS Engine. 
+        [07-12-2015] Unit test (ScriptTest) fails on Java 1.8 due to new JS Engine.
       </action>
 
       <action dev="ate" type="fix" issue="SCXML-194">
@@ -329,6 +329,7 @@
         [11-01-2013] Support for JEXL2 Evaluator.
       </action>
 
+      <action type="update" dev="henrib">Bump commons-jexl3 from 3.2.1 to 3.3</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump actions/cache from 2.1.4 to 3.0.11 #31, #47, #50, #78.</action>
       <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump actions/checkout from 2 to 3.1.0 #34, #75.</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump actions/setup-java from 1.4.0 to 3.6.0 #49, #79.</action>
@@ -971,7 +972,7 @@
       <action dev="rahul" type="add">
        [02-24-2006] Define ExternalContent interface to mark elements
        that may contain "body content" (in external namespaces), for
-       example, the SCXML "send" element. 
+       example, the SCXML "send" element.
       </action>
 
       <action dev="rahul" type="fix">
@@ -1095,7 +1096,7 @@
         <li>Firing events on an SCXML engine</li>
         <li>Standalone testing</li>
         <li>Fun with EL</li>
-       </ol>       
+       </ol>
       </action>
 
       <action dev="rahul" type="add">
@@ -1106,7 +1107,7 @@
       <action dev="rahul" type="add">
        [10-14-2005] Added Commons look and feel (navigation bar) to website.
       </action>
- 
+
       <action dev="rahul" type="add">
        [10-10-2005] Added second usecase for Commons SCXML (within ASF projects).
        Demonstrated the use of SCXML documents for describing Shale dialogs.
@@ -1150,7 +1151,7 @@
       </action>
 
       <action dev="rahul" type="update" due-to="Jaroslav Gergic">
-        [09-15-2005] Now handling outgoing transitions from a Parallel 
+        [09-15-2005] Now handling outgoing transitions from a Parallel
         (Section 3.4 SCXML WD).
       </action>
 
@@ -1187,7 +1188,7 @@
       </action>
 
       <action dev="rahul" type="fix">
-        [08-24-2005] RootContext (used in the JSP environment) should override 
+        [08-24-2005] RootContext (used in the JSP environment) should override
         ELContext#has(String) method.
       </action>
 
