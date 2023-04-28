@@ -330,7 +330,7 @@
       </action>
 
       <action type="update" dev="henrib">Bump commons-jexl3 from 3.2.1 to 3.3</action>
-      <action type="update" dev="ggregory" due-to="Dependabot">Bump actions/cache from 2.1.4 to 3.0.11 #31, #47, #50, #78.</action>
+      <action type="update" dev="ggregory" due-to="Dependabot">Bump actions/cache from 2.1.4 to current #31, #47, #50, #78.</action>
       <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump actions/checkout from 2 to 3.1.0 #34, #75.</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump actions/setup-java from 1.4.0 to 3.6.0 #49, #79.</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump actions/upload-artifact from 3.1.0 to 3.1.1 #82.</action>
@@ -344,7 +344,7 @@
       <action type="update" dev="ggregory">Bump commons-jexl3 from 3.1 to 3.2.1 #36.</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump Saxon-HE from 9.6.0-1 to 12.1 #42, #43, #64, #104, #117.</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump jackson-core from 2.9.3 to 2.14.2 #39, #59, #84, #85, #106.</action>
-      <action type="update" dev="ggregory" due-to="Dependabot">Bump jackson-databind from 2.9.3 to 2.14.2 #35, #46, #60, #83, #86, #107.</action>
+      <action type="update" dev="ggregory" due-to="Dependabot">Bump jackson-databind from 2.9.3 to 2.15.0 #35, #46, #60, #83, #86, #107, #125.</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump junit-jupiter-api from 5.4.2 to 5.9.1 #32, #70.</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump junit-jupiter-engine from 5.4.2 to 5.9.1 #40, #68.</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump nashorn-core from 15.3 to 15.4 #52.</action>
