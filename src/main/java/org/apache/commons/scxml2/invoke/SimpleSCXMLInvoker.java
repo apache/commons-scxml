@@ -91,10 +91,10 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
     @Override
     public void invoke(final String url, final Map<String, Object> params)
     throws InvokerException {
-        SCXML scxml;
+        final SCXML scxml;
         try {
             scxml = SCXMLReader.read(new URL(url));
-        } catch (ModelException | IOException | XMLStreamException me) {
+        } catch (final ModelException | IOException | XMLStreamException me) {
             throw new InvokerException(me.getMessage(), me.getCause());
         }
         execute(scxml, params);
@@ -106,10 +106,10 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
     @Override
     public void invokeContent(final String content, final Map<String, Object> params)
             throws InvokerException {
-        SCXML scxml;
+        final SCXML scxml;
         try {
             scxml = SCXMLReader.read(new StringReader(content));
-        } catch (ModelException | IOException | XMLStreamException me) {
+        } catch (final ModelException | IOException | XMLStreamException me) {
             throw new InvokerException(me.getMessage(), me.getCause());
         }
         execute(scxml, params);

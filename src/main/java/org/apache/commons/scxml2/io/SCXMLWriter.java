@@ -1189,7 +1189,7 @@ public class SCXMLWriter {
      * @return Transformer The indenting {@link Transformer} instance.
      */
     private static Transformer getTransformer() {
-        Transformer transformer;
+        final Transformer transformer;
         final Properties outputProps = new Properties();
         outputProps.put(OutputKeys.OMIT_XML_DECLARATION, "yes");
         outputProps.put(OutputKeys.STANDALONE, "no");
@@ -1198,7 +1198,7 @@ public class SCXMLWriter {
             final TransformerFactory tfFactory = TransformerFactory.newInstance();
             transformer = tfFactory.newTransformer();
             transformer.setOutputProperties(outputProps);
-        } catch (TransformerFactoryConfigurationError | TransformerConfigurationException t) {
+        } catch (final TransformerFactoryConfigurationError | TransformerConfigurationException t) {
             final org.apache.commons.logging.Log log = LogFactory.getLog(SCXMLWriter.class);
             log.error(t.getMessage(), t);
             return null;

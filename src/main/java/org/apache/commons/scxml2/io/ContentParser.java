@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -183,10 +184,10 @@ public class ContentParser {
      * @throws IOException if IO error occurs while parsing XML
      */
     public Node parseXml(final String xmlString) throws IOException {
-        Document doc;
+        final Document doc;
         try {
             doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(xmlString);
-        } catch (SAXException | ParserConfigurationException e) {
+        } catch (final SAXException | ParserConfigurationException e) {
             throw new IOException(e);
         }
         return doc != null ? doc.getDocumentElement() : null;
@@ -247,7 +248,7 @@ public class ContentParser {
      */
     public ParsedValue parseResource(final String resourceURL) throws IOException {
         try (InputStream in = new URL(resourceURL).openStream()) {
-            final String content = IOUtils.toString(in, "UTF-8");
+            final String content = IOUtils.toString(in, StandardCharsets.UTF_8);
             return parseContent(content);
         }
     }
