@@ -98,7 +98,7 @@ public class SCInstance implements Serializable {
     /**
      * The error reporter.
      */
-    private transient ErrorReporter errorReporter = null;
+    private transient ErrorReporter errorReporter;
 
     /**
      * The map of contexts per EnterableState.

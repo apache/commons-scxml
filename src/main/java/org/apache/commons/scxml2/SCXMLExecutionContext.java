@@ -87,7 +87,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     /**
      * The environment specific error reporter.
      */
-    private ErrorReporter errorReporter = null;
+    private ErrorReporter errorReporter;
 
     /**
      * The notification registry.

@@ -127,7 +127,7 @@ public class SCXMLTestHelper {
 
     public static Context lookupContext(final SCXMLExecutor exec, final String id) {
         final TransitionTarget tt = lookupTransitionTarget(exec, id);
-        if (tt == null || !(tt instanceof EnterableState)) {
+        if (!(tt instanceof EnterableState)) {
             return null;
         }
         return exec.getSCInstance().lookupContext((EnterableState)tt);

@@ -38,7 +38,7 @@ public class URLResolver implements PathResolver, Serializable {
     private static final Log log = LogFactory.getLog(PathResolver.class);
 
     /** The base URL to resolve against. */
-    private URL baseURL = null;
+    private URL baseURL;
 
     /**
      * Constructor.

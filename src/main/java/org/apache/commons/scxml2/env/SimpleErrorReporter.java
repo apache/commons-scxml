@@ -19,6 +19,7 @@ package org.apache.commons.scxml2.env;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -60,7 +61,7 @@ public class SimpleErrorReporter implements ErrorReporter, Serializable {
         final StringBuffer msg = new StringBuffer();
         msg.append(errCode).append(" (");
         msg.append(errDetail).append("): ");
-        if (errCode == ErrorConstants.NO_INITIAL) {
+        if (Objects.equals(errCode, ErrorConstants.NO_INITIAL)) {
             if (errCtx instanceof SCXML) {
                 //determineInitialStates
                 msg.append("<SCXML>");
@@ -69,10 +70,10 @@ public class SimpleErrorReporter implements ErrorReporter, Serializable {
                 //determineTargetStates
                 msg.append("State ").append(LogUtils.getTTPath((State) errCtx));
             }
-        } else if (errCode == ErrorConstants.UNKNOWN_ACTION) {
+        } else if (Objects.equals(errCode, ErrorConstants.UNKNOWN_ACTION)) {
             //executeActionList
             msg.append("Action: ").append(errCtx.getClass().getName());
-        } else if (errCode == ErrorConstants.ILLEGAL_CONFIG) {
+        } else if (Objects.equals(errCode, ErrorConstants.ILLEGAL_CONFIG)) {
             //isLegalConfig
             if (errCtx instanceof Map.Entry) { //unchecked cast below
                 final Map.Entry<EnterableState, Set<EnterableState>> badConfigMap =
@@ -100,7 +101,7 @@ public class SimpleErrorReporter implements ErrorReporter, Serializable {
                 }
                 msg.append(']');
             }
-        } else if (errCode == ErrorConstants.EXPRESSION_ERROR) {
+        } else if (Objects.equals(errCode, ErrorConstants.EXPRESSION_ERROR)) {
             if (errCtx instanceof Executable) {
                 final TransitionTarget parent = ((Executable) errCtx).getParent();
                 msg.append("Expression error inside ").append(LogUtils.getTTPath(parent));
