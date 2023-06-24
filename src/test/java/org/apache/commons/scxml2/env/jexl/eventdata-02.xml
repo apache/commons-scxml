@@ -28,7 +28,7 @@
      </state>
      <final id="state1"/>
      <state id="state2">
-           <!-- ... or an arbitrary, user defined object. -->
+           <!-- ... or an arbitrary, user-defined object. -->
            <transition event="connection.alerting"
                        cond="_event.data.line eq 3" target="state3"/>
            <transition event="connection.alerting"

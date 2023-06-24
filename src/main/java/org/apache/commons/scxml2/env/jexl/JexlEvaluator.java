@@ -177,7 +177,7 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
      * @return new JexlEngine instance
      */
     protected JexlEngine createJexlEngine() {
-        // With null prefix, define top-level user defined functions.
+        // With null prefix, define top-level user-defined functions.
         // See javadoc of org.apache.commons.jexl2.JexlEngine#setFunctions(Map<String,Object> funcs) for detail.
         final Map<String, Object> funcs = new HashMap<>();
         funcs.put(null, JexlBuiltin.class);
