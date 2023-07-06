@@ -18,6 +18,7 @@
 package org.apache.commons.scxml2.env.javascript;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.List;
 
 import javax.script.Bindings;
@@ -106,7 +107,7 @@ public class JSEvaluator extends AbstractBaseEvaluator {
                     initGlobalsScript = IOUtils.toString(JSEvaluator.class.getResourceAsStream("init_global.js"), "UTF-8");
                 }
                 catch (final IOException ioe) {
-                    throw new RuntimeException("Failed to load init_global.js from classpath", ioe);
+                    throw new UncheckedIOException("Failed to load init_global.js from classpath", ioe);
                 }
             }
         }
