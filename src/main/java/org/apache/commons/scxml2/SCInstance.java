@@ -484,12 +484,11 @@ public class SCInstance implements Serializable {
      * @return The context.
      */
     public Context getContext(final EnterableState state) {
-        Context context = contexts.get(state);
-        if (context == null) {
+        return contexts.computeIfAbsent(state, k -> {
+            Context context;
             if (singleContext) {
                 context = getGlobalContext();
-            }
-            else {
+            } else {
                 final EnterableState parent = state.getParent();
                 if (parent == null) {
                     // docroot
@@ -499,12 +498,11 @@ public class SCInstance implements Serializable {
                 }
             }
             if (state instanceof TransitionalState) {
-                final Datamodel datamodel = ((TransitionalState)state).getDatamodel();
+                final Datamodel datamodel = ((TransitionalState) state).getDatamodel();
                 cloneDatamodel(datamodel, context, evaluator, errorReporter);
             }
-            contexts.put(state, context);
-        }
-        return context;
+            return context;
+        });
     }
 
     /**
