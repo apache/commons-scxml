@@ -17,6 +17,7 @@
 package org.apache.commons.scxml2;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * A class representing an event. Specific event types have been
@@ -154,10 +155,6 @@ public class TriggerEvent implements Serializable {
         return data;
     }
 
-    private static boolean equals(final Object a, final Object b) {
-        return (a == null && b == null) || (a != null && a.equals(b));
-    }
-
     /**
      * Define an equals operator for TriggerEvent.
      *
@@ -168,11 +165,11 @@ public class TriggerEvent implements Serializable {
         if (obj instanceof TriggerEvent) {
             final TriggerEvent te2 = (TriggerEvent) obj;
             if (type == te2.type && name.equals(te2.name) &&
-                    equals(sendId, te2.sendId) &&
-                    equals(origin, te2.origin) &&
-                    equals(originType, te2.originType) &&
-                    equals(invokeId, te2.invokeId) &&
-                    equals(data, te2.data)) {
+                    Objects.equals(sendId, te2.sendId) &&
+                    Objects.equals(origin, te2.origin) &&
+                    Objects.equals(originType, te2.originType) &&
+                    Objects.equals(invokeId, te2.invokeId) &&
+                    Objects.equals(data, te2.data)) {
                 return true;
             }
         }
