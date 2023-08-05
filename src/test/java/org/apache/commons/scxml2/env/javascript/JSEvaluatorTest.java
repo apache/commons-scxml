@@ -124,7 +124,7 @@ public class JSEvaluatorTest {
         final Evaluator evaluator = new JSEvaluator();
 
         Assertions.assertNotNull(evaluator);
-        Assertions.assertTrue   ((Boolean) evaluator.eval(context, "1+1 == 2"));
+        Assertions.assertTrue((Boolean) evaluator.eval(context, "1+1 == 2"));
     }
 
     @Test
