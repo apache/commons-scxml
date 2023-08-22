@@ -85,10 +85,8 @@ public class StopWatchDisplay extends JFrame
     }
 
     private void setupUI() {
-        final URL imageURL = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/env/stopwatch.gif");
-        final URL iconURL = this.getClass().getClassLoader().
-            getResource("org/apache/commons/scxml2/env/stopwatchicon.gif");
+        final URL imageURL = this.getClass().getClassLoader().getResource("org/apache/commons/scxml2/env/stopwatch.gif");
+        final URL iconURL = this.getClass().getClassLoader().getResource("org/apache/commons/scxml2/env/stopwatchicon.gif");
         final Toolkit kit = Toolkit.getDefaultToolkit();
         watchImage = kit.createImage(imageURL);
         final Image watchIcon = kit.createImage(iconURL);
@@ -105,20 +103,18 @@ public class StopWatchDisplay extends JFrame
         split.setEnabled(false);
         panel.add(split, BorderLayout.LINE_END);
         pack();
-        setLocation(200,200);
+        setLocation(200, 200);
         setIconImage(watchIcon);
         setResizable(false);
-        setSize(300,125);
+        setSize(300, 125);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         final Timer displayTimer = new Timer();
         displayTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                display.setText(DISPLAY_PREFIX + stopWatch.getDisplay()
-                    + DISPLAY_SUFFIX);
-                state.setText(STATE_PREFIX + stopWatch.getCurrentState()
-                    + STATE_SUFFIX);
+                display.setText(DISPLAY_PREFIX + stopWatch.getDisplay() + DISPLAY_SUFFIX);
+                state.setText(STATE_PREFIX + stopWatch.getCurrentState() + STATE_SUFFIX);
             }
         }, 100, 100);
     }
@@ -136,8 +132,8 @@ public class StopWatchDisplay extends JFrame
     class WatchPanel extends JPanel {
         @Override
         public void paintComponent(final Graphics g) {
-            if(watchImage != null) {
-                g.drawImage(watchImage,0,0,this.getWidth(),this.getHeight(),this);
+            if (watchImage != null) {
+                g.drawImage(watchImage, 0, 0, this.getWidth(), this.getHeight(), this);
             }
         }
     }
