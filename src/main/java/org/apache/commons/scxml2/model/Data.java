@@ -107,6 +107,7 @@ public class Data implements ParsedValueContainer {
      *
      * @return The data value
      */
+    @Override
     public final ParsedValue getParsedValue() {
         return dataValue;
     }
@@ -116,6 +117,7 @@ public class Data implements ParsedValueContainer {
      *
      * @param dataValue The data value
      */
+    @Override
     public final void setParsedValue(final ParsedValue dataValue) {
         this.dataValue = dataValue;
     }

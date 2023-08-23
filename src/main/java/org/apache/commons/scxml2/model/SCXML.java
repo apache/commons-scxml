@@ -137,6 +137,7 @@ public class SCXML implements Serializable, Observable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final Integer getObservableId() {
         return SCXML_OBSERVABLE_ID;
     }

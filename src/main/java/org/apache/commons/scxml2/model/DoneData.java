@@ -40,6 +40,7 @@ public class DoneData implements ContentContainer, ParamsContainer, Serializable
      *
      * @return the content
      */
+    @Override
     public Content getContent() {
         return content;
     }
@@ -49,6 +50,7 @@ public class DoneData implements ContentContainer, ParamsContainer, Serializable
      *
      * @param content the content to set
      */
+    @Override
     public void setContent(final Content content) {
         this.content = content;
     }
@@ -58,6 +60,7 @@ public class DoneData implements ContentContainer, ParamsContainer, Serializable
      *
      * @return List The params list.
      */
+    @Override
     public List<Param> getParams() {
         return paramsList;
     }

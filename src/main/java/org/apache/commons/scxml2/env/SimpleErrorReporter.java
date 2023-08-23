@@ -51,6 +51,7 @@ public class SimpleErrorReporter implements ErrorReporter, Serializable {
     /**
      * @see ErrorReporter#onError(String, String, Object)
      */
+    @Override
     @SuppressWarnings("unchecked")
     public void onError(final String errorCode, final String errDetail,
             final Object errCtx) {

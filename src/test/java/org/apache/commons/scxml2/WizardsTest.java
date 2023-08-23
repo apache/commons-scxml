@@ -78,6 +78,7 @@ public class WizardsTest {
         // If you change this, you must also change testWizard02Sample()
         int callback = 0;
 
+        @Override
         @SuppressWarnings("unchecked")
         public void send(final Map<String, SCXMLIOProcessor> ioProcessors, final String id, final String target, final String type,
                 final String event, final Object data, final Object hints, final long delay) {
@@ -101,6 +102,7 @@ public class WizardsTest {
                 super.send(ioProcessors, id, target, type, event, data, hints, delay);
             }
         }
+        @Override
         public void cancel(final String sendId) {
             // should never be called
             Assertions.fail("<cancel> TestEventDispatcher callback unexpected");

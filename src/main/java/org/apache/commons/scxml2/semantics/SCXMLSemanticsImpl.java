@@ -78,11 +78,13 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * @param errRep ErrorReporter callback
      * @return normalized SCXML state machine, pseudo states are removed, etc.
      */
+    @Override
     public SCXML normalizeStateMachine(final SCXML input, final ErrorReporter errRep) {
         //it is a no-op for now
         return input;
     }
 
+    @Override
     public void initialize(final SCXMLExecutionContext exctx, final Map<String, Object> data) throws ModelException {
         // (re)initialize the execution context and state machine instance
         exctx.initialize(data);
@@ -109,6 +111,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * @throws ModelException if the state machine instance failed to initialize or a SCXML model error occurred during
      * the execution.
      */
+    @Override
     public void firstStep(final SCXMLExecutionContext exctx) throws ModelException {
         // starts the state machine instance
         exctx.start();
@@ -156,6 +159,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * @param event The event to process
      * @throws ModelException if a SCXML model error occurred during the execution.
      */
+    @Override
     public void nextStep(final SCXMLExecutionContext exctx, final TriggerEvent event) throws ModelException {
         if (!exctx.isRunning()) {
             return;
@@ -197,6 +201,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * @param exctx The execution context for this step
      * @throws ModelException if a SCXML model error occurred during the execution.
      */
+    @Override
     public void finalStep(final SCXMLExecutionContext exctx) throws ModelException {
         if (exctx.isRunning()) {
             return;
@@ -760,6 +765,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * @param errRep ErrorReporter to report detailed error info if needed
      * @return true if a given state configuration is legal, false otherwise
      */
+    @Override
     public boolean isLegalConfiguration(final Set<EnterableState> states, final ErrorReporter errRep) {
         /*
          * For every active state we add 1 to the count of its parent. Each

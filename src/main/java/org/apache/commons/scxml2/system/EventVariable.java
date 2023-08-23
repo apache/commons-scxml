@@ -105,6 +105,7 @@ public class EventVariable implements Serializable {
         return data;
     }
 
+    @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("_event(");
         sb.append("name: ").append(name);

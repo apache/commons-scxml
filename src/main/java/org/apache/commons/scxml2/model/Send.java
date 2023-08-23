@@ -337,6 +337,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
      *
      * @return the content
      */
+    @Override
     public Content getContent() {
         return content;
     }
@@ -346,6 +347,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
      *
      * @param content the content to set
      */
+    @Override
     public void setContent(final Content content) {
         this.content = content;
     }
@@ -355,6 +357,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
      *
      * @return List The params list.
      */
+    @Override
     public List<Param> getParams() {
         return paramsList;
     }

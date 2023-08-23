@@ -132,6 +132,7 @@ public class SimpleDispatcher implements EventDispatcher, Serializable {
     /**
      * @see EventDispatcher#cancel(String)
      */
+    @Override
     public void cancel(final String sendId) {
         if (log.isInfoEnabled()) {
             log.info("cancel( sendId: " + sendId + ")");
@@ -153,6 +154,7 @@ public class SimpleDispatcher implements EventDispatcher, Serializable {
     /**
     @see EventDispatcher#send(java.util.Map, String, String, String, String, Object, Object, long)
      */
+    @Override
     public void send(final Map<String, SCXMLIOProcessor> ioProcessors, final String id, final String target,
             final String type, final String event, final Object data, final Object hints, final long delay) {
         if (log.isInfoEnabled()) {

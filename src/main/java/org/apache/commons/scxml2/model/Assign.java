@@ -118,6 +118,7 @@ public class Assign extends Action implements ParsedValueContainer {
      *
      * @return The assign value
      */
+    @Override
     public final ParsedValue getParsedValue() {
         return assignValue;
     }
@@ -127,6 +128,7 @@ public class Assign extends Action implements ParsedValueContainer {
      *
      * @param assignValue The assign value
      */
+    @Override
     public final void setParsedValue(final ParsedValue assignValue) {
         this.assignValue = assignValue;
     }

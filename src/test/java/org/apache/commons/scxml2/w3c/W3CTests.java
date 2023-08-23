@@ -200,6 +200,7 @@ public class W3CTests {
                 return comment;
             }
 
+            @Override
             public String toString() {
                 return id;
             }
@@ -280,6 +281,7 @@ public class W3CTests {
                 return null;
             }
 
+            @Override
             public String toString() {
                 return id;
             }

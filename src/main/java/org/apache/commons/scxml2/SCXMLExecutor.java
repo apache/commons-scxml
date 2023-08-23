@@ -473,6 +473,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
      * </p>
      * @param evt an external event
      */
+    @Override
     public void addEvent(final TriggerEvent evt) {
         if (evt != null) {
             externalEventQueue.add(evt);

@@ -71,6 +71,7 @@ public class If extends Action implements ActionsContainer {
      *
      * @return Returns the actions.
      */
+    @Override
     public final List<Action> getActions() {
         return actions;
     }
@@ -81,6 +82,7 @@ public class If extends Action implements ActionsContainer {
      *
      * @param action The action to add.
      */
+    @Override
     public final void addAction(final Action action) {
         if (action != null) {
             this.actions.add(action);

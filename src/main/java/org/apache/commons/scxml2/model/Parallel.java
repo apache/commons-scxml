@@ -41,6 +41,7 @@ public class Parallel extends TransitionalState {
      * {@inheritDoc}
      * @return Returns always false (a state of type Parallel is never atomic)
      */
+    @Override
     public final boolean isAtomicState() {
         return false;
     }

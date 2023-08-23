@@ -98,6 +98,7 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
      * @throws SCXMLExpressionException For a malformed expression
      * @see Evaluator#eval(Context, String)
      */
+    @Override
     public Object eval(final Context ctx, final String expr)
     throws SCXMLExpressionException {
         if (expr == null) {
@@ -119,6 +120,7 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
     /**
      * @see Evaluator#evalCond(Context, String)
      */
+    @Override
     public Boolean evalCond(final Context ctx, final String expr)
     throws SCXMLExpressionException {
         if (expr == null) {
@@ -141,6 +143,7 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
     /**
      * @see Evaluator#evalScript(Context, String)
      */
+    @Override
     public Object evalScript(final Context ctx, final String script)
     throws SCXMLExpressionException {
         if (script == null) {
@@ -166,6 +169,7 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
      * @return new child context
      * @see Evaluator#newContext(Context)
      */
+    @Override
     public Context newContext(final Context parent) {
         return new JexlContext(parent);
     }

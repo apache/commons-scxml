@@ -57,6 +57,7 @@ public class StopWatchDisplay extends JFrame
         setupUI();
     }
 
+    @Override
     public void actionPerformed(final ActionEvent e) {
         final String command = e.getActionCommand();
         if (command.equals("START")) {

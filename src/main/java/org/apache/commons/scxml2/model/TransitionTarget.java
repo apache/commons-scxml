@@ -55,6 +55,7 @@ public abstract class TransitionTarget implements Serializable, Observable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final Integer getObservableId() {
         return observableId;
     }

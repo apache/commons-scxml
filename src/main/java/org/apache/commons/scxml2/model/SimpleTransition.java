@@ -86,6 +86,7 @@ public class SimpleTransition extends Executable implements Observable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final Integer getObservableId() {
         return observableId;
     }

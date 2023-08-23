@@ -61,6 +61,7 @@ public class Tracer implements ErrorHandler, ErrorReporter,
     /**
      * @see org.xml.sax.ErrorHandler#warning(org.xml.sax.SAXParseException)
      */
+    @Override
     public void warning(final SAXParseException exception)
     throws SAXException {
         errHandler.warning(exception);
@@ -69,6 +70,7 @@ public class Tracer implements ErrorHandler, ErrorReporter,
     /**
      * @see org.xml.sax.ErrorHandler#error(org.xml.sax.SAXParseException)
      */
+    @Override
     public void error(final SAXParseException exception)
     throws SAXException {
         errHandler.error(exception);
@@ -77,6 +79,7 @@ public class Tracer implements ErrorHandler, ErrorReporter,
     /**
      * @see org.xml.sax.ErrorHandler#fatalError(org.xml.sax.SAXParseException)
      */
+    @Override
     public void fatalError(final SAXParseException exception)
     throws SAXException {
         errHandler.fatalError(exception);
@@ -85,6 +88,7 @@ public class Tracer implements ErrorHandler, ErrorReporter,
     /**
      * @see ErrorReporter#onError(String, String, Object)
      */
+    @Override
     public void onError(final String errCode, final String errDetail,
             final Object errCtx) {
         errReporter.onError(errCode, errDetail, errCtx);
@@ -93,6 +97,7 @@ public class Tracer implements ErrorHandler, ErrorReporter,
     /**
      * @see SCXMLListener#onEntry(EnterableState)
      */
+    @Override
     public void onEntry(final EnterableState state) {
         scxmlListener.onEntry(state);
     }
@@ -100,6 +105,7 @@ public class Tracer implements ErrorHandler, ErrorReporter,
     /**
      * @see SCXMLListener#onExit(EnterableState)
      */
+    @Override
     public void onExit(final EnterableState state) {
         scxmlListener.onExit(state);
     }
@@ -107,6 +113,7 @@ public class Tracer implements ErrorHandler, ErrorReporter,
     /**
      * @see SCXMLListener#onTransition(TransitionTarget,TransitionTarget,Transition,String)
      */
+    @Override
     public void onTransition(final TransitionTarget from,
             final TransitionTarget to, final Transition transition, final String event) {
         scxmlListener.onTransition(from, to, transition, event);
@@ -115,7 +122,8 @@ public class Tracer implements ErrorHandler, ErrorReporter,
     /**
      * @see XMLReporter#report(String, String, Object, Location)
      */
-	public void report(final String message, final String errorType, final Object relatedInformation,
+	@Override
+    public void report(final String message, final String errorType, final Object relatedInformation,
 			final Location location)
 	throws XMLStreamException {
 		xmlReporter.report(message, errorType, relatedInformation, location);

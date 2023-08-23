@@ -48,6 +48,7 @@ public class SimpleErrorHandler implements ErrorHandler, Serializable {
     /**
      * @see ErrorHandler#error(SAXParseException)
      */
+    @Override
     public void error(final SAXParseException exception) {
         if (log.isErrorEnabled()) {
             log.error(MSG_PREFIX + exception.getMessage() + MSG_POSTFIX,
@@ -58,6 +59,7 @@ public class SimpleErrorHandler implements ErrorHandler, Serializable {
     /**
      * @see ErrorHandler#fatalError(SAXParseException)
      */
+    @Override
     public void fatalError(final SAXParseException exception) {
         if (log.isFatalEnabled()) {
             log.fatal(MSG_PREFIX + exception.getMessage() + MSG_POSTFIX,
@@ -68,6 +70,7 @@ public class SimpleErrorHandler implements ErrorHandler, Serializable {
     /**
      * @see ErrorHandler#warning(SAXParseException)
      */
+    @Override
     public void warning(final SAXParseException exception) {
         if (log.isWarnEnabled()) {
             log.warn(MSG_PREFIX + exception.getMessage() + MSG_POSTFIX,

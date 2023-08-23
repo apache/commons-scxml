@@ -64,6 +64,7 @@ public abstract class TransitionalState extends EnterableState {
     /**
      * Update TransitionTarget descendants their ancestors
      */
+    @Override
     protected void updateDescendantsAncestors() {
         super.updateDescendantsAncestors();
         for (final History h : history) {

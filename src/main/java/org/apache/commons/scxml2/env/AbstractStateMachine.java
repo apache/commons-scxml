@@ -284,6 +284,7 @@ public abstract class AbstractStateMachine {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void onEntry(final EnterableState entered) {
             invoke(entered.getId());
         }
@@ -296,6 +297,7 @@ public abstract class AbstractStateMachine {
          * @param transition The transition being followed.
          * @param event The event triggering the transition
          */
+        @Override
         public void onTransition(final TransitionTarget from,
                 final TransitionTarget to, final Transition transition, final String event) {
             // nothing to do
@@ -306,6 +308,7 @@ public abstract class AbstractStateMachine {
          *
          * @param exited The state being exited.
          */
+        @Override
         public void onExit(final EnterableState exited) {
             // nothing to do
         }

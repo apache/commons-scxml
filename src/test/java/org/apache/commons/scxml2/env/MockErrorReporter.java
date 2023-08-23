@@ -24,6 +24,7 @@ public class MockErrorReporter implements ErrorReporter {
     private String errDetail;
     private Object errCtx;
 
+    @Override
     public void onError( final String errCode, final String errDetail, final Object errCtx ) {
         this.errCode = errCode;
         this.errDetail = errDetail;

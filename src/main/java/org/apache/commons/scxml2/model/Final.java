@@ -68,6 +68,7 @@ public class Final extends EnterableState {
      * {@inheritDoc}
      * @return Returns always true (a state of type Final is always atomic)
      */
+    @Override
     public final boolean isAtomicState() {
         return true;
     }

@@ -84,6 +84,7 @@ public class SimpleContext implements Context, Serializable {
      * @param value The variable value
      * @see org.apache.commons.scxml2.Context#set(String, Object)
      */
+    @Override
     public void set(final String name, final Object value) {
         if (getVars().containsKey(name)) { //first try to override local
             setLocal(name, value);
@@ -101,6 +102,7 @@ public class SimpleContext implements Context, Serializable {
      * @return Object The variable value
      * @see org.apache.commons.scxml2.Context#get(String)
      */
+    @Override
     public Object get(final String name) {
         final Object localValue = getVars().get(name);
         if (localValue != null) {
@@ -119,6 +121,7 @@ public class SimpleContext implements Context, Serializable {
      * @return boolean true if this variable exists
      * @see org.apache.commons.scxml2.Context#has(String)
      */
+    @Override
     public boolean has(final String name) {
         return (hasLocal(name) || (parent != null && parent.has(name)));
     }
@@ -130,6 +133,7 @@ public class SimpleContext implements Context, Serializable {
      * @return boolean true if this variable exists
      * @see org.apache.commons.scxml2.Context#hasLocal(String)
      */
+    @Override
     public boolean hasLocal(final String name) {
         return (getVars().containsKey(name));
     }
@@ -139,6 +143,7 @@ public class SimpleContext implements Context, Serializable {
      *
      * @see org.apache.commons.scxml2.Context#reset()
      */
+    @Override
     public void reset() {
         getVars().clear();
     }
@@ -149,6 +154,7 @@ public class SimpleContext implements Context, Serializable {
      * @return Context The parent Context
      * @see org.apache.commons.scxml2.Context#getParent()
      */
+    @Override
     public Context getParent() {
         return parent;
     }
@@ -158,6 +164,7 @@ public class SimpleContext implements Context, Serializable {
      *
      * @return The SCXMLSystemContext in a chained Context environment
      */
+    @Override
     public final SCXMLSystemContext getSystemContext() {
         return systemContext;
     }
@@ -171,6 +178,7 @@ public class SimpleContext implements Context, Serializable {
      * @param value The variable value
      * @see org.apache.commons.scxml2.Context#setLocal(String, Object)
      */
+    @Override
     public void setLocal(final String name, final Object value) {
         getVars().put(name, value);
         if (log.isDebugEnabled()) {
@@ -192,6 +200,7 @@ public class SimpleContext implements Context, Serializable {
      *
      * @return Returns the vars.
      */
+    @Override
     public Map<String, Object> getVars() {
         return vars;
     }

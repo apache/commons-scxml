@@ -33,6 +33,7 @@ public abstract class AbstractSCXMLListener implements SCXMLListener {
     /**
      * @see SCXMLListener#onEntry(EnterableState)
      */
+    @Override
     public void onEntry(final EnterableState state) {
         // empty
     }
@@ -40,6 +41,7 @@ public abstract class AbstractSCXMLListener implements SCXMLListener {
     /**
      * @see SCXMLListener#onExit(EnterableState)
      */
+    @Override
     public void onExit(final EnterableState state) {
         // empty
     }
@@ -47,6 +49,7 @@ public abstract class AbstractSCXMLListener implements SCXMLListener {
     /**
 * @see SCXMLListener#onTransition(TransitionTarget,TransitionTarget,Transition,String)
      */
+    @Override
     public void onTransition(final TransitionTarget from,
             final TransitionTarget to, final Transition transition, final String event) {
         // empty

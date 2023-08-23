@@ -87,6 +87,7 @@ public class SCInstanceObjectInputStream extends ObjectInputStream {
         return old;
     }
 
+    @Override
     protected Class resolveClass(final ObjectStreamClass osc) throws IOException, ClassNotFoundException {
         if (classResolver != null) {
             return classResolver.resolveClass(osc);

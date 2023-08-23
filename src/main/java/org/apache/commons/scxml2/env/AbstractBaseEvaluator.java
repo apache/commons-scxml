@@ -43,6 +43,7 @@ public abstract class AbstractBaseEvaluator implements Evaluator, Serializable {
     /**
      * @see Evaluator#evalAssign(Context, String, Object)
      */
+    @Override
     public void evalAssign(final Context ctx, final String location, final Object data) throws SCXMLExpressionException {
         final StringBuilder sb = new StringBuilder(location).append("=").append(ASSIGN_VARIABLE_NAME);
         try {

@@ -60,6 +60,7 @@ public class Content implements ParsedValueContainer {
      *
      * @return The content element body.
      */
+    @Override
     public final ParsedValue getParsedValue() {
         return contentBody;
     }
@@ -69,6 +70,7 @@ public class Content implements ParsedValueContainer {
      *
      * @param contentBody The content element body
      */
+    @Override
     public final void setParsedValue(final ParsedValue contentBody) {
         this.contentBody = contentBody;
     }
