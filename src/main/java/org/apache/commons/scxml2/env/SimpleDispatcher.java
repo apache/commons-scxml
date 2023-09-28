@@ -49,52 +49,7 @@ public class SimpleDispatcher implements EventDispatcher, Serializable {
      /** Serial version UID. */
     private static final long serialVersionUID = 1L;
 
-    /**
-     * TimerTask implementation.
-     */
-    class DelayedEventTask extends TimerTask {
 
-        /**
-         * The ID of the &lt;send&gt; element.
-         */
-        private final String id;
-
-        /**
-         * The event
-         */
-        private final TriggerEvent event;
-
-        /**
-         * The target io processor
-         */
-        private final SCXMLIOProcessor target;
-
-        /**
-         * Constructor for events with payload.
-         *
-         * @param id The ID of the send element.
-         * @param event The event to be triggered.
-         * @param target The target io processor
-         */
-        DelayedEventTask(final String id, final TriggerEvent event, final SCXMLIOProcessor target) {
-            this.id = id;
-            this.event = event;
-            this.target = target;
-        }
-
-        /**
-         * What to do when timer expires.
-         */
-        @Override
-        public void run() {
-            timers.remove(id);
-            target.addEvent(event);
-            if (log.isDebugEnabled()) {
-                log.debug("Fired event '" + event.getName() + "' as scheduled by "
-                        + "<send> with id '" + id + "'");
-            }
-        }
-    }
 
     /** Implementation independent log category. */
      private static final Log log = LogFactory.getLog(EventDispatcher.class);
@@ -235,6 +190,62 @@ public class SimpleDispatcher implements EventDispatcher, Serializable {
             }
         }
         ioProcessor.addEvent(eventBuilder.build());
+    }
+}
+
+/**
+ * TimerTask implementation.
+ */
+class DelayedEventTask extends TimerTask {
+
+    /**
+     * The ID of the &lt;send&gt; element.
+     */
+    private final String id;
+
+    /** Implementation independent log category. */
+    private static final Log log = LogFactory.getLog(EventDispatcher.class);
+
+    /**
+     * The <code>Map</code> of active <code>Timer</code>s, keyed by
+     * &lt;send&gt; element <code>id</code>s.
+     */
+    private final Map<String, Timer> timers = Collections.synchronizedMap(new HashMap<String, Timer>());
+
+    /**
+     * The event
+     */
+    private final TriggerEvent event;
+
+    /**
+     * The target io processor
+     */
+    private final SCXMLIOProcessor target;
+
+    /**
+     * Constructor for events with payload.
+     *
+     * @param id The ID of the send element.
+     * @param event The event to be triggered.
+     * @param target The target io processor
+     */
+    DelayedEventTask(final String id, final TriggerEvent event, final SCXMLIOProcessor target) {
+        this.id = id;
+        this.event = event;
+        this.target = target;
+    }
+
+    /**
+     * What to do when timer expires.
+     */
+    @Override
+    public void run() {
+        timers.remove(id);
+        target.addEvent(event);
+        if (log.isDebugEnabled()) {
+            log.debug("Fired event '" + event.getName() + "' as scheduled by "
+                    + "<send> with id '" + id + "'");
+        }
     }
 }
 

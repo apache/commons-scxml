@@ -83,7 +83,7 @@ public class SCInstance implements Serializable {
     /**
      * Running status for this state machine
      */
-    private boolean running;
+    private boolean runningStatus;
 
     /**
      * The SCXML I/O Processor for the internal event queue
@@ -151,7 +151,7 @@ public class SCInstance implements Serializable {
      * @throws ModelException if the state machine hasn't been setup for this instance
      */
     protected void initialize() throws ModelException {
-        running = false;
+        runningStatus = false;
         if (stateMachine == null) {
             throw new ModelException(ERR_NO_STATE_MACHINE);
         }
@@ -162,8 +162,7 @@ public class SCInstance implements Serializable {
             singleContext = true;
         }
         if (stateMachine.getDatamodelName() != null && !stateMachine.getDatamodelName().equals(evaluator.getSupportedDatamodel())) {
-            throw new ModelException("Incompatible SCXML document datamodel \""+stateMachine.getDatamodelName()+"\""
-                    + " for evaluator "+evaluator.getClass().getName()+" supported datamodel \""+evaluator.getSupportedDatamodel()+"\"");
+            showException();
         }
         if (errorReporter == null) {
             throw new ModelException(ERR_NO_ERROR_REPORTER);
@@ -175,6 +174,11 @@ public class SCInstance implements Serializable {
         stateConfiguration.clear();
 
         initialized = true;
+    }
+
+    private void showException() throws ModelException {
+        throw new ModelException("Incompatible SCXML document datamodel \""+stateMachine.getDatamodelName()+"\""
+                + " for evaluator "+evaluator.getClass().getName()+" supported datamodel \""+evaluator.getSupportedDatamodel()+"\"");
     }
 
     protected void initializeDatamodel(final Map<String, Object> data) {
@@ -359,21 +363,25 @@ public class SCInstance implements Serializable {
                 setValue = true;
             }
             if (setValue) {
-                if (evaluator instanceof JSEvaluator) {
-                    // the Javascript engine (Nashorn) may require special handling/wrapping of data objects which
-                    // directly injecting them in the context.
-                    try {
-                        ((JSEvaluator)evaluator).injectData(ctx, datum.getId(), value);
-                    } catch (final SCXMLExpressionException e) {
-                        if (internalIOProcessor != null) {
-                            internalIOProcessor.addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT).build());
-                        }
-                        errorReporter.onError(ErrorConstants.EXPRESSION_ERROR, e.getMessage(), datum);
-                    }
-                } else {
-                    ctx.setLocal(datum.getId(), value);
-                }
+                injectContext(ctx, evaluator, errorReporter, datum, value);
             }
+        }
+    }
+
+    private void injectContext(Context ctx, Evaluator evaluator, ErrorReporter errorReporter, Data datum, Object value) {
+        if (evaluator instanceof JSEvaluator) {
+            // the Javascript engine (Nashorn) may require special handling/wrapping of data objects which
+            // directly injecting them in the context.
+            try {
+                ((JSEvaluator) evaluator).injectData(ctx, datum.getId(), value);
+            } catch (final SCXMLExpressionException e) {
+                if (internalIOProcessor != null) {
+                    internalIOProcessor.addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT).build());
+                }
+                errorReporter.onError(ErrorConstants.EXPRESSION_ERROR, e.getMessage(), datum);
+            }
+        } else {
+            ctx.setLocal(datum.getId(), value);
         }
     }
 
@@ -395,7 +403,7 @@ public class SCInstance implements Serializable {
      * @return Returns if the state machine is running
      */
     public boolean isRunning() {
-        return running;
+        return runningStatus;
     }
 
     /**
@@ -403,17 +411,17 @@ public class SCInstance implements Serializable {
      * @throws IllegalStateException Exception thrown if trying to start the state machine when in a Final state
      */
     public void start() throws IllegalStateException {
-        if (!this.running &&  currentStatus.isFinal()) {
+        if (!this.runningStatus &&  currentStatus.isFinal()) {
             throw new IllegalStateException("The state machine is in a Final state and cannot be set running again");
         }
-        this.running = true;
+        this.runningStatus = true;
     }
 
     /**
      * Stops the state machine, {@link #isRunning()} hereafter will return false
      */
     public void stop() {
-        this.running = false;
+        this.runningStatus = false;
     }
 
     /**

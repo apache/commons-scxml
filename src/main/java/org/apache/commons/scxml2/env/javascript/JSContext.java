@@ -29,9 +29,6 @@ import org.apache.commons.scxml2.env.SimpleContext;
  */
 public class JSContext extends SimpleContext {
 
-    /** Serial version UID. */
-    private static final long serialVersionUID = 1L;
-
     /**
      * Default constructor - just invokes the SimpleContext default constructor.
      */

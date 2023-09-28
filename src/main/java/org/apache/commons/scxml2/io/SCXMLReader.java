@@ -2469,7 +2469,7 @@ public final class SCXMLReader {
      *                        errors in the SCXML document that may not be identified by the schema).
      */
     private static void reportConflictingAttribute(final XMLStreamReader reader, final Configuration configuration,
-                                             final String element, final String attr, final String conflictingAttr)
+                                                   final String element, final String attr, final String conflictingAttr)
             throws XMLStreamException, ModelException {
 
         final StringBuilder sb = new StringBuilder();

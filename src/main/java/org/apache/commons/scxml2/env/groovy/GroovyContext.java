@@ -35,8 +35,6 @@ import org.apache.commons.scxml2.env.SimpleContext;
  */
 public class GroovyContext extends SimpleContext {
 
-    private static final long serialVersionUID = 1L;
-
     private static final Log log = LogFactory.getLog(GroovyContext.class);
 
     private String scriptBaseClass;
@@ -77,14 +75,6 @@ public class GroovyContext extends SimpleContext {
      */
     public GroovyContext(final Context parent, final GroovyEvaluator evaluator) {
         super(parent);
-        this.evaluator = evaluator;
-    }
-
-    protected GroovyEvaluator getGroovyEvaluator() {
-        return evaluator;
-    }
-
-    protected void setGroovyEvaluator(final GroovyEvaluator evaluator) {
         this.evaluator = evaluator;
     }
 
