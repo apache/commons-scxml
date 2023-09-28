@@ -198,7 +198,7 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
 
         JexlPermissions permissions = JexlPermissions.RESTRICTED.compose("org.apache.commons.scxml2.*");
 
-        if(customAllowedClasses != null && customAllowedClasses.length > 0) {
+        if (customAllowedClasses != null && customAllowedClasses.length > 0) {
             permissions = permissions.compose(customAllowedClasses);
         }
 
