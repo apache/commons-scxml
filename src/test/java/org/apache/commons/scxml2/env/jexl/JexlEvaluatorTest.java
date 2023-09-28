@@ -16,6 +16,7 @@
  */
 package org.apache.commons.scxml2.env.jexl;
 
+import com.custom.Payload;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.SCXMLExpressionException;
@@ -60,4 +61,17 @@ public class JexlEvaluatorTest {
                 "JexlEvaluator: Incorrect error message");
     }
 
+    @Test
+    void testEvalInCustomClass() throws SCXMLExpressionException {
+
+        // Arrange
+        final Evaluator eval = new JexlEvaluator("com.custom.*");
+        ctx.set("payload", new Payload(1, "hello"));
+
+        // Act
+        final Object result = eval.evalScript(ctx, "payload.getId()");
+
+        // Assert
+        Assertions.assertEquals(1, result);
+    }
 }

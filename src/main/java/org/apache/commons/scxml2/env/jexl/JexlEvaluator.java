@@ -74,10 +74,20 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
     /** The internal JexlEngine instance to use. */
     private transient volatile JexlEngine jexlEngine;
 
+    /** Optional: saves user defined packages, which JEXL should allow for evaluation */
+    private String[] customAllowedClasses;
+
     /** Constructor. */
     public JexlEvaluator() {
         jexlEngine = getJexlEngine();
     }
+
+    /** Constructor with further allowed classes or packages. Use an asterix for all classes in a package */
+    public JexlEvaluator(String... customAllowedClasses) {
+        this.customAllowedClasses = customAllowedClasses;
+        jexlEngine = getJexlEngine();
+    }
+
 
     @Override
     public String getSupportedDatamodel() {
@@ -176,7 +186,7 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
 
     /**
      * Create the internal JexlEngine member during the initialization.
-     * This method can be overriden to specify more detailed options
+     * This method can be overridden to specify more detailed options
      * into the JexlEngine.
      * @return new JexlEngine instance
      */
@@ -185,7 +195,13 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
         // See javadoc of org.apache.commons.jexl2.JexlEngine#setFunctions(Map<String,Object> funcs) for detail.
         final Map<String, Object> funcs = new HashMap<>();
         funcs.put(null, JexlBuiltin.class);
+
         JexlPermissions permissions = JexlPermissions.RESTRICTED.compose("org.apache.commons.scxml2.*");
+
+        if(customAllowedClasses != null && customAllowedClasses.length > 0) {
+            permissions = permissions.compose(customAllowedClasses);
+        }
+
         return new JexlBuilder().permissions(permissions).namespaces(funcs).cache(256).create();
     }
 
