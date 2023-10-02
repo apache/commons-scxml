@@ -220,7 +220,7 @@ public class GroovyExtendableScriptCache implements Serializable {
             }
         }
         try {
-            return scriptClass.newInstance();
+            return scriptClass.getConstructor().newInstance();
         } catch (final Exception e) {
             throw new GroovyRuntimeException("Failed to create Script instance for class: "+ scriptClass + ". Reason: " + e, e);
         }

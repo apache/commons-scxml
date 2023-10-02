@@ -48,7 +48,7 @@ import org.apache.commons.scxml2.TriggerEvent;
  *
  * <p>The Invoker "lifecycle" is outlined below:</p>
  * <ol>
- *  <li>Instantiation via {@link Class#newInstance()}
+ *  <li>Instantiation via {@code clazz.getConstructor().newInstance()}
  *      (Invoker implementation requires accessible constructor).</li>
  *  <li>Configuration (setters for invoke ID and
  *      {@link org.apache.commons.scxml2.SCXMLExecutor}).</li>
