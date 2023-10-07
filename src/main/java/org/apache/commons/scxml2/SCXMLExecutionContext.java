@@ -448,8 +448,8 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
             throw new InvokerException("No Invoker registered for type \"" + stripTrailingSlash(type) + "\"");
         }
         try {
-            return invokerClass.newInstance();
-        } catch (InstantiationException | IllegalAccessException ie) {
+            return invokerClass.getConstructor().newInstance();
+        } catch (ReflectiveOperationException ie) {
             throw new InvokerException(ie.getMessage(), ie.getCause());
         }
     }

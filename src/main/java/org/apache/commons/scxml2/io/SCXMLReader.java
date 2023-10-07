@@ -1988,12 +1988,12 @@ public final class SCXMLReader {
         Class<?> clazz;
         try {
             clazz = cl.loadClass(className);
-            actionObject = clazz.newInstance();
+            actionObject = clazz.getConstructor().newInstance();
         } catch (final ClassNotFoundException cnfe) {
             throw new XMLStreamException("Cannot find custom action class:" + className, cnfe);
         } catch (final IllegalAccessException iae) {
             throw new XMLStreamException("Cannot access custom action class:" + className, iae);
-        } catch (final InstantiationException ie) {
+        } catch (final ReflectiveOperationException ie) {
             throw new XMLStreamException("Cannot instantiate custom action class:" + className, ie);
         }
         if (!(actionObject instanceof Action)) {
