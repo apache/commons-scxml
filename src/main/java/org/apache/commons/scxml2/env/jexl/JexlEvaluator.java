@@ -74,8 +74,8 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
     /** The internal JexlEngine instance to use. */
     private transient volatile JexlEngine jexlEngine;
 
-    /** Optional: saves user defined packages, which JEXL should allow for evaluation */
-    private String[] customAllowedClasses;
+    /** Optional: saves user defined packages, which JEXL should allow or deny for evaluation */
+    private String[] customJexlPermissions;
 
     /** Constructor. */
     public JexlEvaluator() {
@@ -83,8 +83,8 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
     }
 
     /** Constructor with further allowed classes or packages. Use an asterix for all classes in a package */
-    public JexlEvaluator(String... customAllowedClasses) {
-        this.customAllowedClasses = customAllowedClasses;
+    public JexlEvaluator(JexlEvaluatorBuilder builder) {
+        customJexlPermissions = builder.getJexlPermissions();
         jexlEngine = getJexlEngine();
     }
 
@@ -198,8 +198,8 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
 
         JexlPermissions permissions = JexlPermissions.RESTRICTED.compose("org.apache.commons.scxml2.*");
 
-        if (customAllowedClasses != null && customAllowedClasses.length > 0) {
-            permissions = permissions.compose(customAllowedClasses);
+        if (customJexlPermissions != null && customJexlPermissions.length > 0) {
+            permissions = permissions.compose(customJexlPermissions);
         }
 
         return new JexlBuilder().permissions(permissions).namespaces(funcs).cache(256).create();
