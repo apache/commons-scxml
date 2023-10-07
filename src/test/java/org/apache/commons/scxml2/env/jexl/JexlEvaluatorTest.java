@@ -65,7 +65,10 @@ public class JexlEvaluatorTest {
     void testEvalInCustomClass() throws SCXMLExpressionException {
 
         // Arrange
-        final Evaluator eval = new JexlEvaluator("com.custom.*");
+        final JexlEvaluator eval = new JexlEvaluatorBuilder()
+                .addAllowedPackage("com.custom")
+                .build();
+
         ctx.set("payload", new Payload(1, "hello"));
 
         // Act
