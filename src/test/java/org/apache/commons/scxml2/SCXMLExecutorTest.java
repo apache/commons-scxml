@@ -21,6 +21,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.custom.Payload;
+import org.apache.commons.scxml2.env.jexl.JexlEvaluator;
+import org.apache.commons.scxml2.env.jexl.JexlEvaluatorBuilder;
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.TransitionTarget;
 import org.junit.jupiter.api.Assertions;
@@ -287,6 +290,20 @@ public class SCXMLExecutorTest {
         Assertions.assertNull(exec.getFinalDoneData());
         exec.go();
         Assertions.assertEquals("done", exec.getFinalDoneData());
+    }
+
+    @Test
+    public void testSCXMLExecutorWithExternalPayloadObject() throws Exception {
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/external-payload.xml");
+        final JexlEvaluator evaluator = new JexlEvaluatorBuilder()
+                .addAllowedPackage("com.custom")
+                .build();
+
+        exec.setEvaluator(evaluator);
+
+        exec.go();
+        SCXMLTestHelper.assertPostTriggerState(exec, "done", new Payload(1, "someString"), "end");
+        Assertions.assertEquals(1, exec.getGlobalContext().getVars().get("idFromEventPayload"));
     }
 
     private void checkMicrowave01Sample(final SCXMLExecutor exec) throws Exception {
