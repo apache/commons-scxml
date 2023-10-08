@@ -82,7 +82,7 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
         jexlEngine = getJexlEngine();
     }
 
-    /** Constructor with further allowed classes or packages. Use an asterix for all classes in a package */
+    /** Constructor with a given builder to set up specific options */
     public JexlEvaluator(JexlEvaluatorBuilder builder) {
         customJexlPermissions = builder.getJexlPermissions();
         jexlEngine = getJexlEngine();
