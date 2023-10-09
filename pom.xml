@@ -327,9 +327,9 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
         <configuration>
-          <configLocation>${basedir}/scxml-checks.xml</configLocation>
+          <configLocation>${basedir}/checkstyle.xml</configLocation>
           <enableRulesSummary>false</enableRulesSummary>
-          <headerFile>${basedir}/scxml-asl-header.txt</headerFile>
+          <headerFile>${basedir}/checkstyle-header.txt</headerFile>
         </configuration>
       </plugin>
       <!--
