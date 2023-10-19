@@ -349,7 +349,7 @@ public class W3CTests {
                 return uri.substring(uri.indexOf("/")+1, uri.indexOf("."));
             }
 
-            public String getFilename() {
+            public String getFileName() {
                 return uri.substring(uri.indexOf("/")+1);
             }
         }
@@ -467,7 +467,7 @@ public class W3CTests {
             for (final Assertions.TestCase test : entry.getTestCases()) {
                 for (final Assertions.Resource resource : test.getResources()) {
                     System.out.println("Downloading IRP test file: " + SCXML_IRP_BASE_URL + resource.getUri());
-                    FileUtils.copyURLToFile(new URL(SCXML_IRP_BASE_URL + resource.getUri()), new File(TXML_TESTS_DIR + resource.getFilename()));
+                    FileUtils.copyURLToFile(new URL(SCXML_IRP_BASE_URL + resource.getUri()), new File(TXML_TESTS_DIR + resource.getFileName()));
                 }
             }
         }
@@ -510,8 +510,8 @@ public class W3CTests {
      */
     protected void processResource(final String specid, final Assertions.Resource resource, final Map<Datamodel, Transformer> transformers)
             throws Exception {
-        System.out.println("processing IRP test file " + resource.getFilename());
-        FileUtils.copyURLToFile(new URL(SCXML_IRP_BASE_URL + resource.getUri()), new File(TXML_TESTS_DIR + resource.getFilename()));
+        System.out.println("processing IRP test file " + resource.getFileName());
+        FileUtils.copyURLToFile(new URL(SCXML_IRP_BASE_URL + resource.getUri()), new File(TXML_TESTS_DIR + resource.getFileName()));
         switch (specid) {
             case "#minimal-profile":
                 transformResource(resource, transformers.get(Datamodel.MINIMAL), Datamodel.MINIMAL.testDir());
@@ -539,12 +539,12 @@ public class W3CTests {
      */
     protected void transformResource(final Assertions.Resource resource, final Transformer transformer,
                                      final String targetDir) throws Exception {
-        if (resource.getFilename().endsWith(".txml")) {
-            final StreamSource txmlSource = new StreamSource(new FileInputStream(new File(TXML_TESTS_DIR, resource.getFilename())));
+        if (resource.getFileName().endsWith(".txml")) {
+            final StreamSource txmlSource = new StreamSource(new FileInputStream(new File(TXML_TESTS_DIR, resource.getFileName())));
             transformer.transform(txmlSource, new StreamResult(new FileOutputStream(new File(targetDir, resource.getName() + ".scxml"))));
         }
         else {
-            FileUtils.copyFile(new File(TXML_TESTS_DIR, resource.getFilename()), new File(targetDir, resource.getFilename()));
+            FileUtils.copyFile(new File(TXML_TESTS_DIR, resource.getFileName()), new File(targetDir, resource.getFileName()));
         }
     }
 
