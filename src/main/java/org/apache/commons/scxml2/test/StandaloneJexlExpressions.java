@@ -25,10 +25,10 @@ import org.apache.commons.scxml2.env.jexl.JexlEvaluator;
  *
  * <p>USAGE:</p>
  * <p><code>java org.apache.commons.scxml2.test.StandaloneJexlExpressions
- *          url</code></p>
+ *          URL</code></p>
  * <p>or</p>
  * <p><code>java org.apache.commons.scxml2.test.StandaloneJexlExpressions
- *          filename</code>
+ *          FileName</code>
  * </p>
  *
  * <p>RUNNING:</p>
