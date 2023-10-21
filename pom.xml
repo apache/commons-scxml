@@ -192,7 +192,10 @@
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <commons.componentid>scxml2</commons.componentid>
+    <!-- Do not change: "scxml" is the name of the component even if the
+         name of the base package evolves with major release numbers
+    -->
+    <commons.componentid>scxml</commons.componentid>
     <commons.module.name>org.apache.commons.scxml2</commons.module.name>
     <commons.release.version>2.0-alpha-1</commons.release.version>
     <commons.release.desc>(Java 8.0+)</commons.release.desc>

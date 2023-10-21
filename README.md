@@ -43,8 +43,7 @@
 Apache Commons SCXML
 ===================
 
-[![Travis-CI Status](https://travis-ci.org/apache/commons-scxml2.svg)](https://travis-ci.org/apache/commons-scxml2)
-[![GitHub Actions Status](https://github.com/apache/commons-scxml2/workflows/Java%20CI/badge.svg)](https://github.com/apache/commons-scxml2/actions)
+[![GitHub Actions Status](https://github.com/apache/commons-scxml/workflows/Java%20CI/badge.svg)](https://github.com/apache/commons-scxml/actions)
 [![Coverage Status](https://coveralls.io/repos/apache/commons-scxml2/badge.svg)](https://coveralls.io/r/apache/commons-scxml2)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-scxml2/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-scxml2/)
 [![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-scxml2/2.0-alpha-1.svg)](https://javadoc.io/doc/org.apache.commons/commons-scxml2/2.0-alpha-1)
