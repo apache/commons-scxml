@@ -332,7 +332,6 @@
         <configuration>
           <configLocation>${basedir}/checkstyle.xml</configLocation>
           <enableRulesSummary>false</enableRulesSummary>
-          <headerFile>${basedir}/checkstyle-header.txt</headerFile>
         </configuration>
       </plugin>
       <!--
