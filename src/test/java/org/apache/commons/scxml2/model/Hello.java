@@ -28,7 +28,7 @@ public class Hello extends Action {
     /** This is who we say hello to. */
     private String name;
     /** We count callbacks to execute() as part of the test suite. */
-    public static int callbacks = 0;
+    public static int callbacks;
 
     /** Public constructor is needed for the I in SCXML IO. */
     public Hello() {
