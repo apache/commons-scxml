@@ -168,7 +168,7 @@ public class SCXML implements Serializable, Observable {
     }
 
     /**
-     * Set the {@link PathResolver}.
+     * Sets the {@link PathResolver}.
      *
      * @param pathResolver The pathResolver to set.
      */
@@ -188,7 +188,7 @@ public class SCXML implements Serializable, Observable {
     }
 
     /**
-     * Set the initial Transition.
+     * Sets the initial Transition.
      * <p>Note: the initial transition can/may not have executable content!</p>
      *
      * @param initialTransition The initial transition to set.
@@ -209,7 +209,7 @@ public class SCXML implements Serializable, Observable {
     }
 
     /**
-     * Set the data model at document root.
+     * Sets the data model at document root.
      *
      * @param datamodel The Datamodel to set.
      */
@@ -290,7 +290,7 @@ public class SCXML implements Serializable, Observable {
     }
 
     /**
-     * Set the SCXML document version.
+     * Sets the SCXML document version.
      *
      * @param version The version to set.
      */
@@ -310,7 +310,7 @@ public class SCXML implements Serializable, Observable {
     }
 
     /**
-     * Set the namespace definitions specified on the SCXML element.
+     * Sets the namespace definitions specified on the SCXML element.
      *
      * @param namespaces The namespace definitions specified on the
      *                   SCXML element.
@@ -330,7 +330,7 @@ public class SCXML implements Serializable, Observable {
     }
 
     /**
-     * Set the initial transition target.
+     * Sets the initial transition target.
      *
      * @param initial The initial transition target
      * @see #setInitialTransition(SimpleTransition)
@@ -349,7 +349,7 @@ public class SCXML implements Serializable, Observable {
 	}
 
 	/**
-	 * Set the name for this state machine.
+	 * Sets the name for this state machine.
 	 *
 	 * @param name The name for this state machine.
 	 */
@@ -367,7 +367,7 @@ public class SCXML implements Serializable, Observable {
 	}
 
 	/**
-	 * Set the profile in use for this state machine.
+	 * Sets the profile in use for this state machine.
 	 *
 	 * @param profile The profile to be used.
 	 */
@@ -385,7 +385,7 @@ public class SCXML implements Serializable, Observable {
 	}
 
 	/**
-	 * Set the exmode to be used for this state machine.
+	 * Sets the exmode to be used for this state machine.
 	 *
 	 * @param exmode The exmode to be used.
 	 */

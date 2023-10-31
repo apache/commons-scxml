@@ -58,7 +58,7 @@ public class Data implements ParsedValueContainer {
     }
 
     /**
-     * Set the id.
+     * Sets the id.
      *
      * @param id The identifier.
      */
@@ -76,7 +76,7 @@ public class Data implements ParsedValueContainer {
     }
 
     /**
-     * Set the URL for external data.
+     * Sets the URL for external data.
      *
      * @param src The source URL.
      */
@@ -94,7 +94,7 @@ public class Data implements ParsedValueContainer {
     }
 
     /**
-     * Set the expression that evaluates to the value of this data instance.
+     * Sets the expression that evaluates to the value of this data instance.
      *
      * @param expr The expression.
      */
@@ -113,7 +113,7 @@ public class Data implements ParsedValueContainer {
     }
 
     /**
-     * Set the data value
+     * Sets the data value
      *
      * @param dataValue The data value
      */

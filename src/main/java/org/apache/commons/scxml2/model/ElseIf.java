@@ -51,7 +51,7 @@ public class ElseIf extends Action {
     }
 
     /**
-     * Set the conditional expression.
+     * Sets the conditional expression.
      *
      * @param cond The cond to set.
      */

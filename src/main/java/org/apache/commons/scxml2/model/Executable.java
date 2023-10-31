@@ -75,7 +75,7 @@ public abstract class Executable implements Serializable {
     }
 
     /**
-     * Set the EnterableState parent.
+     * Sets the EnterableState parent.
      *
      * @param parent The parent to set.
      */

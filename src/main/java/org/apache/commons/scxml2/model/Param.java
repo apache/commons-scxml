@@ -62,7 +62,7 @@ public class Param implements Serializable {
     }
 
     /**
-     * Set the name for this param.
+     * Sets the name for this param.
      *
      * @param name The param name.
      */
@@ -80,7 +80,7 @@ public class Param implements Serializable {
     }
 
     /**
-     * Set the location for a previously defined XML data tree.
+     * Sets the location for a previously defined XML data tree.
      *
      * @param location The location.
      */
@@ -98,7 +98,7 @@ public class Param implements Serializable {
     }
 
     /**
-     * Set the expression for this param value.
+     * Sets the expression for this param value.
      *
      * @param expr The expression for this param value.
      */

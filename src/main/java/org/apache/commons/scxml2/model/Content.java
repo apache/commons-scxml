@@ -47,7 +47,7 @@ public class Content implements ParsedValueContainer {
     }
 
     /**
-     * Set the expression for this content.
+     * Sets the expression for this content.
      *
      * @param expr The expression for this content.
      */
@@ -66,7 +66,7 @@ public class Content implements ParsedValueContainer {
     }
 
     /**
-     * Set the content element body
+     * Sets the content element body
      *
      * @param contentBody The content element body
      */

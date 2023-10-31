@@ -42,7 +42,7 @@ public class Finalize extends Executable {
     }
 
     /**
-     * Set the TransitionalState parent.
+     * Sets the TransitionalState parent.
      *
      * @param parent The parent to set.
      */

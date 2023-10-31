@@ -184,7 +184,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     }
 
     /**
-     * Set or replace the expression evaluator
+     * Sets or replace the expression evaluator
      * <p>
      * If the state machine instance has been initialized before, it will be initialized again, destroying all existing
      * state!
@@ -233,7 +233,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     }
 
     /**
-     * Set the root context for the state machine execution.
+     * Sets the root context for the state machine execution.
      * <b>NOTE:</b> Should only be used before the executor is set in motion.
      *
      * @param rootContext The Context that ties to the host environment.
@@ -267,7 +267,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     }
 
     /**
-     * Set or replace the state machine to be executed
+     * Sets or replace the state machine to be executed
      * <p>
      * If the state machine instance has been initialized before, it will be initialized again, destroying all existing
      * state!
@@ -293,7 +293,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     }
 
     /**
-     * Set or replace the error reporter
+     * Sets or replace the error reporter
      *
      * @param errorReporter The error reporter to set, if null a SimpleErrorReporter instance will be used instead
      */
@@ -311,7 +311,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     }
 
     /**
-     * Set or replace the event dispatch
+     * Sets or replace the event dispatch
      *
      * @param eventdispatcher The event dispatcher to set, if null a SimpleDispatcher instance will be used instead
      */
@@ -320,7 +320,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     }
 
     /**
-     * Set if the SCXML configuration should be checked before execution (default = true)
+     * Sets if the SCXML configuration should be checked before execution (default = true)
      * @param checkLegalConfiguration flag to set
      */
     public void setCheckLegalConfiguration(final boolean checkLegalConfiguration) {

@@ -55,7 +55,7 @@ public class History extends TransitionTarget {
     }
 
     /**
-     * Set the transition.
+     * Sets the transition.
      *
      * @param transition The transition to set.
      */
@@ -96,7 +96,7 @@ public class History extends TransitionTarget {
     }
 
     /**
-     * Set the TransitionalState parent.
+     * Sets the TransitionalState parent.
      *
      * @param parent The parent to set.
      */

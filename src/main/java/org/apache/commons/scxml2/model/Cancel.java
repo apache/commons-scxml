@@ -58,7 +58,7 @@ public class Cancel extends Action {
     }
 
     /**
-     * Set the ID of the send message that should be cancelled.
+     * Sets the ID of the send message that should be cancelled.
      *
      * @param sendid The sendid to set.
      */
@@ -76,7 +76,7 @@ public class Cancel extends Action {
     }
 
     /**
-     * Set the expression that evaluates to the ID of the send message that should be cancelled.
+     * Sets the expression that evaluates to the ID of the send message that should be cancelled.
      *
      * @param sendidexpr the expression that evaluates to the ID of the send message that should be cancelled.
      */

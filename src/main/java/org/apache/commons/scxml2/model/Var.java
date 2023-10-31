@@ -69,7 +69,7 @@ public class Var extends Action {
     }
 
     /**
-     * Set the expression that evaluates to the initial value
+     * Sets the expression that evaluates to the initial value
      * of the variable.
      *
      * @param expr The expr to set.
@@ -88,7 +88,7 @@ public class Var extends Action {
     }
 
     /**
-     * Set the name of the (new) variable.
+     * Sets the name of the (new) variable.
      *
      * @param name The name to set.
      */

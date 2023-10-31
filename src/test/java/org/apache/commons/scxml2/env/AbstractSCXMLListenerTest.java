@@ -40,7 +40,7 @@ public class AbstractSCXMLListenerTest {
     private boolean heardOnTransition;
 
     /**
-     * Set up instance variables required by this test case.
+     * Sets up instance variables required by this test case.
      */
     @BeforeEach
     public void setUp() {

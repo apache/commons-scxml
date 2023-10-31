@@ -94,7 +94,7 @@ public class Transition extends SimpleTransition implements DocumentOrder {
     }
 
     /**
-     * Set the guard condition.
+     * Sets the guard condition.
      *
      * @param cond The cond to set.
      */
@@ -113,7 +113,7 @@ public class Transition extends SimpleTransition implements DocumentOrder {
     }
 
     /**
-     * Set the event that will trigger this transition (pending
+     * Sets the event that will trigger this transition (pending
      * evaluation of the guard condition in favor).
      *
      * @param event The event to set.

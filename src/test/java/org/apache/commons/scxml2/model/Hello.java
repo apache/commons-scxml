@@ -44,7 +44,7 @@ public class Hello extends Action {
     }
 
     /**
-     * Set the name.
+     * Sets the name.
      *
      * @param name The name to set.
      */

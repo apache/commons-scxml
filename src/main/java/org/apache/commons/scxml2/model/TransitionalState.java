@@ -87,7 +87,7 @@ public abstract class TransitionalState extends EnterableState {
     }
 
     /**
-     * Set the TransitionalState parent
+     * Sets the TransitionalState parent
      *
      * @param parent The parent to set.
      */
@@ -157,7 +157,7 @@ public abstract class TransitionalState extends EnterableState {
     }
 
     /**
-     * Set the data model for this transition target.
+     * Sets the data model for this transition target.
      *
      * @param datamodel The Datamodel to set.
      */
@@ -210,7 +210,7 @@ public abstract class TransitionalState extends EnterableState {
     }
 
     /**
-     * Set the Invoke child.
+     * Sets the Invoke child.
      *
      * @param invoke
      *            The invoke to set.

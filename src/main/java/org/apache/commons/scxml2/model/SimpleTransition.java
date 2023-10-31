@@ -110,7 +110,7 @@ public class SimpleTransition extends Executable implements Observable {
     }
 
     /**
-     * Set the TransitionalState (State or Parallel) parent
+     * Sets the TransitionalState (State or Parallel) parent
      * <p>
      * For transitions of Initial or History elements their TransitionalState parent must be set.
      * </p>
@@ -257,7 +257,7 @@ public class SimpleTransition extends Executable implements Observable {
     }
 
     /**
-     * Set the transition target by specifying its ID.
+     * Sets the transition target by specifying its ID.
      *
      * @param next The the transition target ID
      */

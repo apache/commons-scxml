@@ -152,7 +152,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
     }
 
     /**
-     * Set the idlocation expression
+     * Sets the idlocation expression
      *
      * @param idlocation The idlocation expression
      */
@@ -170,7 +170,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
     }
 
     /**
-     * Set the delay.
+     * Sets the delay.
      *
      * @param delay The delay to set.
      */
@@ -186,7 +186,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
     }
 
     /**
-     * Set the delay expression
+     * Sets the delay expression
      *
      * @param delayexpr The delay expression to set
      */
@@ -204,7 +204,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
     }
 
     /**
-     * Set the hints for this &lt;send&gt; element.
+     * Sets the hints for this &lt;send&gt; element.
      *
      * @param hints The hints to set.
      */
@@ -222,7 +222,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
     }
 
     /**
-     * Set the identifier for this &lt;send&gt; element.
+     * Sets the identifier for this &lt;send&gt; element.
      *
      * @param id The id to set.
      */
@@ -240,7 +240,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
     }
 
     /**
-     * Set the target for this &lt;send&gt; element.
+     * Sets the target for this &lt;send&gt; element.
      *
      * @param target The target to set.
      */
@@ -256,7 +256,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
     }
 
     /**
-     * Set the target expression
+     * Sets the target expression
      *
      * @param targetexpr The target expression to set
      */
@@ -274,7 +274,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
     }
 
     /**
-     * Set the type for this &lt;send&gt; element.
+     * Sets the type for this &lt;send&gt; element.
      *
      * @param type The type to set.
      */
@@ -308,7 +308,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
     }
 
     /**
-     * Set the event to send.
+     * Sets the event to send.
      *
      * @return String Returns the event.
      */
@@ -372,7 +372,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
     }
 
     /**
-     * Set the namelist.
+     * Sets the namelist.
      *
      * @param namelist The namelist to set.
      */

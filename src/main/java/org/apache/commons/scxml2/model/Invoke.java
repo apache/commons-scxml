@@ -127,7 +127,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
     }
 
     /**
-     * Set the identifier for this invoke.
+     * Sets the identifier for this invoke.
      *
      * @param id The id to set.
      */
@@ -143,7 +143,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
     }
 
     /**
-     * Set the idlocation expression
+     * Sets the idlocation expression
      * @param idlocation The idlocation expression
      */
     public void setIdlocation(final String idlocation) {
@@ -160,7 +160,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
     }
 
     /**
-     * Set the type for this &lt;invoke&gt; element.
+     * Sets the type for this &lt;invoke&gt; element.
      *
      * @param type The type to set.
      */
@@ -193,7 +193,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
     }
 
     /**
-     * Set the URL for the external service.
+     * Sets the URL for the external service.
      *
      * @param src The source URL.
      */
@@ -212,7 +212,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
     }
 
     /**
-     * Set the expression that evaluates to the source URL for the
+     * Sets the expression that evaluates to the source URL for the
      * external service.
      *
      * @param srcexpr The source expression.
@@ -237,7 +237,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
     }
 
     /**
-     * Set the flag indicating whether to forward events to the invoked process.
+     * Sets the flag indicating whether to forward events to the invoked process.
      * @param autoForward the flag
      */
     public final void setAutoForward(final Boolean autoForward) {
@@ -254,7 +254,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
     }
 
     /**
-     * Set the Finalize for this Invoke.
+     * Sets the Finalize for this Invoke.
      *
      * @param finalize The Finalize for this Invoke.
      */
@@ -282,7 +282,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
     }
 
     /**
-     * Set the namelist.
+     * Sets the namelist.
      *
      * @param namelist The namelist to set.
      */
@@ -347,7 +347,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
     }
 
     /**
-     * Set the parent EnterableState.
+     * Sets the parent EnterableState.
      * @param parent The parent state to set
      * @param invokeIndex the invoke index in the parent (TransitionalState) defined invokers
      */

@@ -35,7 +35,7 @@ public class TriggerEventTest {
     private TriggerEvent te1, te2, te3, te4, te5, te6, te7;
 
     /**
-     * Set up instance variables required by this test case.
+     * Sets up instance variables required by this test case.
      */
     @BeforeEach
     public void setUp() {

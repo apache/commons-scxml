@@ -41,7 +41,7 @@ public class OnExit extends Executable {
     }
 
     /**
-     * Set the EnterableState parent.
+     * Sets the EnterableState parent.
      *
      * @param parent The parent to set.
      */
@@ -66,7 +66,7 @@ public class OnExit extends Executable {
     }
 
     /**
-     * Set the indicator whether to raise the non-standard "exit.state.id" internal event after executing this OnExit.
+     * Sets the indicator whether to raise the non-standard "exit.state.id" internal event after executing this OnExit.
      * @param raiseEvent The indicator, when null no event will be raised
      */
     public final void setRaiseEvent(final Boolean raiseEvent) {

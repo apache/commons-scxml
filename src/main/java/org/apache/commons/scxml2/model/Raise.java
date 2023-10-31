@@ -55,7 +55,7 @@ public class Raise extends Action {
     }
 
     /**
-     * Set the event.
+     * Sets the event.
      *
      * @param event The event to set.
      */

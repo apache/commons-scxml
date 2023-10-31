@@ -78,7 +78,7 @@ public abstract class TransitionTarget implements Serializable, Observable {
     }
 
     /**
-     * Set the identifier for this transition target.
+     * Sets the identifier for this transition target.
      *
      * @param id The id to set.
      */
@@ -113,7 +113,7 @@ public abstract class TransitionTarget implements Serializable, Observable {
     }
 
     /**
-     * Set the parent EnterableState.
+     * Sets the parent EnterableState.
      * <p>
      * The parent of a TransitionTarget must be of type EnterableState as a History (as only non-EnterableState)
      * TransitionTarget cannot have children.

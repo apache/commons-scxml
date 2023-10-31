@@ -57,7 +57,7 @@ public class Final extends EnterableState {
     }
 
     /**
-     * Set the parent State.
+     * Sets the parent State.
      * @param parent The parent state to set
      */
     public final void setParent(final State parent) {

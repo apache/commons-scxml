@@ -59,7 +59,7 @@ public class Log extends Action {
     }
 
     /**
-     * Set the log expression.
+     * Sets the log expression.
      *
      * @param expr The expr to set.
      */
@@ -77,7 +77,7 @@ public class Log extends Action {
     }
 
     /**
-     * Set the log label.
+     * Sets the log label.
      *
      * @param label The label to set.
      */

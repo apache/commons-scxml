@@ -180,7 +180,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     }
 
     /**
-     * Set if the SCXML configuration should be checked before execution (default = true)
+     * Sets if the SCXML configuration should be checked before execution (default = true)
      * @param checkLegalConfiguration flag to set
      */
     public void setCheckLegalConfiguration(final boolean checkLegalConfiguration) {
@@ -252,7 +252,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     }
 
     /**
-     * Set or replace the state machine to be executed
+     * Sets or replace the state machine to be executed
      * <p>
      * If the state machine instance has been initialized before, it will be initialized again, destroying all existing
      * state!
@@ -282,7 +282,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     }
 
     /**
-     * Set or replace the evaluator
+     * Sets or replace the evaluator
      * <p>
      * If the state machine instance has been initialized before, it will be initialized again, destroying all existing
      * state!
@@ -305,7 +305,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     }
 
     /**
-     * Set or replace the error reporter
+     * Sets or replace the error reporter
      *
      * @param errorReporter The error reporter to set, if null a SimpleErrorReporter instance will be used instead
      */
@@ -327,7 +327,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     }
 
     /**
-     * Set or replace the event dispatch
+     * Sets or replace the event dispatch
      *
      * @param eventdispatcher The event dispatcher to set, if null a SimpleDispatcher instance will be used instead
      */

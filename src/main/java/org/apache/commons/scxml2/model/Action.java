@@ -49,7 +49,7 @@ public abstract class Action implements Serializable {
     }
 
     /**
-     * Set the Executable parent.
+     * Sets the Executable parent.
      *
      * @param parent The parent to set.
      */

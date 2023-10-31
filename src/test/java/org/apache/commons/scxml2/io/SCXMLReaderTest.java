@@ -77,7 +77,7 @@ public class SCXMLReaderTest {
     }
 
     /**
-     * Set up instance variables required by this test case.
+     * Sets up instance variables required by this test case.
      */
     @BeforeEach
     public void before() {

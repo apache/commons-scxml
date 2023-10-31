@@ -54,7 +54,7 @@ public class State extends TransitionalState {
     }
 
     /**
-     * Set the initial state.
+     * Sets the initial state.
      *
      * @param target
      *            The target to set.
@@ -75,7 +75,7 @@ public class State extends TransitionalState {
     }
 
     /**
-     * Set the initial state by its ID string.
+     * Sets the initial state by its ID string.
      *
      * @param target
      *            The initial target's ID to set.

@@ -45,7 +45,7 @@ public class JSBindings implements Bindings {
     }
 
     /**
-     * Set or update the SCXML context delegate
+     * Sets or update the SCXML context delegate
      *
      * @param jsContext the SCXML context to use for script variables.
      * @throws IllegalArgumentException Thrown if <code>jsContext</code> is <code>null</code>.

@@ -187,7 +187,7 @@ public class SimpleContext implements Context, Serializable {
     }
 
     /**
-     * Set the variables map.
+     * Sets the variables map.
      *
      * @param vars The new Map of variables.
      */

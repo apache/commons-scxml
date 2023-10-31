@@ -222,7 +222,7 @@ public abstract class AbstractStateMachine {
     }
 
     /**
-     * Set the log for this class.
+     * Sets the log for this class.
      *
      * @param log The log to set.
      */

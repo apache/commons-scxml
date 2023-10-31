@@ -63,7 +63,7 @@ public class Initial implements Serializable {
 
 
     /**
-     * Set the parent TransitionTarget.
+     * Sets the parent TransitionTarget.
      *
      * @param parent The parent state to set
      */
@@ -84,7 +84,7 @@ public class Initial implements Serializable {
     }
 
     /**
-     * Set the initial transition.
+     * Sets the initial transition.
      *
      * @param transition The transition to set.
      */

@@ -58,7 +58,7 @@ public class SCInstanceObjectInputStream extends ObjectInputStream {
     }
 
     /**
-     * Set custom class resolver callback, or null when no longer needed.
+     * Sets custom class resolver callback, or null when no longer needed.
      * <p>
      * Typically usage:
      * <pre><code>

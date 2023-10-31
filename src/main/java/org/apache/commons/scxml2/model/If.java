@@ -99,7 +99,7 @@ public class If extends Action implements ActionsContainer {
     }
 
     /**
-     * Set the conditional expression.
+     * Sets the conditional expression.
      *
      * @param cond The cond to set.
      */

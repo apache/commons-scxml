@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 public class CustomActionTest {
 
     /**
-     * Set up instance variables required by this test case.
+     * Sets up instance variables required by this test case.
      */
     @BeforeEach
     public void setUp() {

@@ -221,7 +221,7 @@ public class SCInstance implements Serializable {
     }
 
     /**
-     * Set or re-attach the evaluator
+     * Sets or re-attach the evaluator
      * <p>
      * If not re-attaching and this state machine instance has been initialized before,
      * it will be initialized again, destroying all existing state!
@@ -251,7 +251,7 @@ public class SCInstance implements Serializable {
     }
 
     /**
-     * Set or re-attach the error reporter
+     * Sets or re-attach the error reporter
      * @param errorReporter The error reporter for this state machine instance.
      * @throws ModelException if an attempt is made to set a null value for the error reporter
      */
@@ -429,7 +429,7 @@ public class SCInstance implements Serializable {
     }
 
     /**
-     * Set or replace the root context.
+     * Sets or replace the root context.
      * @param context The new root context.
      */
     protected void setRootContext(final Context context) {
@@ -520,7 +520,7 @@ public class SCInstance implements Serializable {
     }
 
     /**
-     * Set the context for an EnterableState
+     * Sets the context for an EnterableState
      *
      * <p>Note: used for testing purposes only</p>
      *
@@ -547,7 +547,7 @@ public class SCInstance implements Serializable {
     }
 
     /**
-     * Set the last configuration for this history.
+     * Sets the last configuration for this history.
      *
      * @param history The history.
      * @param lc The lastConfiguration to set.

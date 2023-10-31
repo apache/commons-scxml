@@ -72,7 +72,7 @@ public interface Invoker {
     String getInvokeId();
 
     /**
-     * Set the invoke ID provided by the parent state machine executor
+     * Sets the invoke ID provided by the parent state machine executor
      * Implementations must use this ID for constructing the event name for
      * the special "done" event (and optionally, for other event names
      * as well).
