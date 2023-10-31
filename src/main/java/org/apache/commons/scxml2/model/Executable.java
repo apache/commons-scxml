@@ -45,7 +45,7 @@ public abstract class Executable implements Serializable {
     }
 
     /**
-     * Get the executable actions contained in this Executable.
+     * Gets the executable actions contained in this Executable.
      *
      * @return Returns the actions.
      */
@@ -66,7 +66,7 @@ public abstract class Executable implements Serializable {
     }
 
     /**
-     * Get the EnterableState parent.
+     * Gets the EnterableState parent.
      *
      * @return Returns the parent.
      */

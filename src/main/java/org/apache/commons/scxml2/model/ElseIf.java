@@ -42,7 +42,7 @@ public class ElseIf extends Action {
     }
 
     /**
-     * Get the conditional expression.
+     * Gets the conditional expression.
      *
      * @return Returns the cond.
      */

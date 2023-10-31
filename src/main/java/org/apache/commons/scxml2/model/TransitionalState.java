@@ -77,7 +77,7 @@ public abstract class TransitionalState extends EnterableState {
     }
 
     /**
-     * Get the TransitionalState (State or Parallel) parent.
+     * Gets the TransitionalState (State or Parallel) parent.
      *
      * @return Returns the parent.
      */
@@ -96,7 +96,7 @@ public abstract class TransitionalState extends EnterableState {
     }
 
     /**
-     * Get the ancestor of this TransitionalState at specified level
+     * Gets the ancestor of this TransitionalState at specified level
      * @param level the level of the ancestor to return, zero being top
      * @return the ancestor at specified level
      */
@@ -106,7 +106,7 @@ public abstract class TransitionalState extends EnterableState {
     }
 
     /**
-     * Get the list of all outgoing transitions from this state, that
+     * Gets the list of all outgoing transitions from this state, that
      * will be candidates for being fired on the given event.
      *
      * @param event The event
@@ -139,7 +139,7 @@ public abstract class TransitionalState extends EnterableState {
     }
 
     /**
-     * Get the outgoing transitions for this state as a java.util.List.
+     * Gets the outgoing transitions for this state as a java.util.List.
      *
      * @return List Returns the transitions list.
      */
@@ -148,7 +148,7 @@ public abstract class TransitionalState extends EnterableState {
     }
 
     /**
-     * Get the data model for this transition target.
+     * Gets the data model for this transition target.
      *
      * @return Returns the data model.
      */
@@ -188,7 +188,7 @@ public abstract class TransitionalState extends EnterableState {
     }
 
     /**
-     * Get the list of history pseudo states for this state.
+     * Gets the list of history pseudo states for this state.
      *
      * @return a list of all history pseudo states contained by a given state
      *         (can be empty)
@@ -201,7 +201,7 @@ public abstract class TransitionalState extends EnterableState {
     }
 
     /**
-     * Get the Invoke children (may be empty).
+     * Gets the Invoke children (may be empty).
      *
      * @return Invoke Returns the invoke.
      */
@@ -221,7 +221,7 @@ public abstract class TransitionalState extends EnterableState {
     }
 
     /**
-     * Get the set of child transition targets (may be empty).
+     * Gets the set of child transition targets (may be empty).
      *
      * @return Returns the children.
      *

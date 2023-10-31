@@ -92,7 +92,7 @@ public class CustomActionWrapper extends Action {
     }
 
     /**
-     * Get the custom XML namespaces in effect for this custom action
+     * Gets the custom XML namespaces in effect for this custom action
      *
      * @return Returns the map of namespaces.
      */
@@ -101,7 +101,7 @@ public class CustomActionWrapper extends Action {
     }
 
     /**
-     * Get the attributes defined on the custom action element
+     * Gets the attributes defined on the custom action element
      *
      * @return Returns the map of attributes.
      */

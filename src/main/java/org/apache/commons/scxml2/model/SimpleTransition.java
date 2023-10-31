@@ -100,7 +100,7 @@ public class SimpleTransition extends Executable implements Observable {
     }
 
     /**
-     * Get the TransitionalState (State or Parallel) parent.
+     * Gets the TransitionalState (State or Parallel) parent.
      *
      * @return Returns the parent.
      */
@@ -234,7 +234,7 @@ public class SimpleTransition extends Executable implements Observable {
     }
 
     /**
-     * Get the set of transition targets (may be an empty list).
+     * Gets the set of transition targets (may be an empty list).
      *
      * @return Returns the target(s) as specified in SCXML markup.
      * <p>Remarks: Is <code>empty</code> for &quot;stay&quot; transitions.
@@ -246,7 +246,7 @@ public class SimpleTransition extends Executable implements Observable {
     }
 
     /**
-     * Get the ID of the transition target (may be null, if, for example,
+     * Gets the ID of the transition target (may be null, if, for example,
      * the target is specified inline).
      *
      * @return String Returns the transition target ID

@@ -112,7 +112,7 @@ public class CustomAction {
     }
 
     /**
-     * Get this custom action's implementation.
+     * Gets this custom action's implementation.
      *
      * @return Returns the action class.
      */
@@ -121,7 +121,7 @@ public class CustomAction {
     }
 
     /**
-     * Get the local name for this custom action.
+     * Gets the local name for this custom action.
      *
      * @return Returns the local name.
      */
@@ -130,7 +130,7 @@ public class CustomAction {
     }
 
     /**
-     * Get the namespace URI for this custom action.
+     * Gets the namespace URI for this custom action.
      *
      * @return Returns the namespace URI.
      */

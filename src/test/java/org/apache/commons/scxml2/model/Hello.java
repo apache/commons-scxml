@@ -35,7 +35,7 @@ public class Hello extends Action {
     }
 
     /**
-     * Get the name.
+     * Gets the name.
      *
      * @return Returns the name.
      */

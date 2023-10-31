@@ -412,7 +412,7 @@ final class ModelUpdater {
     }
 
     /**
-     * Get a transition target identifier for error messages. This method is
+     * Gets a transition target identifier for error messages. This method is
      * only called to produce an appropriate log message in some error
      * conditions.
      *

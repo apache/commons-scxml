@@ -45,7 +45,7 @@ public class State extends TransitionalState {
     }
 
     /**
-     * Get the initial state.
+     * Gets the initial state.
      *
      * @return Initial Returns the initial state.
      */
@@ -66,7 +66,7 @@ public class State extends TransitionalState {
     }
 
     /**
-     * Get the initial state's ID.
+     * Gets the initial state's ID.
      *
      * @return The initial state's string ID.
      */

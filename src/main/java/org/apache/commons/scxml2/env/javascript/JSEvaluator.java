@@ -114,7 +114,7 @@ public class JSEvaluator extends AbstractBaseEvaluator {
     }
 
     /**
-     * Get the singleton ScriptEngine, initializing it on first access
+     * Gets the singleton ScriptEngine, initializing it on first access
      * @return The ScriptEngine
      */
     protected ScriptEngine getEngine() {
@@ -125,7 +125,7 @@ public class JSEvaluator extends AbstractBaseEvaluator {
     }
 
     /**
-     * Get the current ScriptContext or create a new one.
+     * Gets the current ScriptContext or create a new one.
      * <p>
      * The ScriptContext is (to be) shared across invocations for the same SCXML instance as it holds the Javascript 'global'
      * context.

@@ -159,7 +159,7 @@ public class SCXML implements Serializable, Observable {
     }
 
     /**
-     * Get the {@link PathResolver}.
+     * Gets the {@link PathResolver}.
      *
      * @return Returns the pathResolver.
      */
@@ -177,7 +177,7 @@ public class SCXML implements Serializable, Observable {
     }
 
     /**
-     * Get the initial Transition.
+     * Gets the initial Transition.
      *
      * @return Returns the initial transition for this state machine.
      *
@@ -200,7 +200,7 @@ public class SCXML implements Serializable, Observable {
     }
 
     /**
-     * Get the data model placed at document root.
+     * Gets the data model placed at document root.
      *
      * @return Returns the data model.
      */
@@ -226,7 +226,7 @@ public class SCXML implements Serializable, Observable {
     }
 
     /**
-     * Get the immediate child targets of the SCXML root.
+     * Gets the immediate child targets of the SCXML root.
      *
      * @return List Returns list of the child targets.
      *
@@ -237,7 +237,7 @@ public class SCXML implements Serializable, Observable {
     }
 
     /**
-     * Get the first immediate child of the SCXML root. Return null if there's no child.
+     * Gets the first immediate child of the SCXML root. Return null if there's no child.
      *
      * @return Returns the first immediate child of the SCXML root. Return null if there's no child.
      *
@@ -262,7 +262,7 @@ public class SCXML implements Serializable, Observable {
     }
 
     /**
-     * Get the targets map, which is a Map of all States and Parallels
+     * Gets the targets map, which is a Map of all States and Parallels
      * associated with this state machine, keyed by their id.
      *
      * @return Map Returns the targets.
@@ -281,7 +281,7 @@ public class SCXML implements Serializable, Observable {
     }
 
     /**
-     * Get the SCXML document version.
+     * Gets the SCXML document version.
      *
      * @return Returns the version.
      */
@@ -299,7 +299,7 @@ public class SCXML implements Serializable, Observable {
     }
 
     /**
-     * Get the namespace definitions specified on the SCXML element.
+     * Gets the namespace definitions specified on the SCXML element.
      * May be <code>null</code>.
      *
      * @return The namespace definitions specified on the SCXML element,
@@ -320,7 +320,7 @@ public class SCXML implements Serializable, Observable {
     }
 
     /**
-     * Get the initial transition target.
+     * Gets the initial transition target.
      *
      * @return String Returns the initial transition target ID
      * @see #getInitialTransition()
@@ -340,7 +340,7 @@ public class SCXML implements Serializable, Observable {
     }
 
     /**
-     * Get the name for this state machine.
+     * Gets the name for this state machine.
      *
      * @return The name for this state machine.
      */
@@ -358,7 +358,7 @@ public class SCXML implements Serializable, Observable {
 	}
 
 	/**
-	 * Get the profile in use for this state machine.
+	 * Gets the profile in use for this state machine.
 	 *
 	 * @return The profile in use.
 	 */
@@ -376,7 +376,7 @@ public class SCXML implements Serializable, Observable {
 	}
 
 	/**
-	 * Get the exmode in use for this state machine.
+	 * Gets the exmode in use for this state machine.
 	 *
 	 * @return The exmode in use.
 	 */
@@ -394,7 +394,7 @@ public class SCXML implements Serializable, Observable {
 	}
 
     /**
-     * Get the datamodel name as specified as attribute on this document
+     * Gets the datamodel name as specified as attribute on this document
      * @return The datamodel name of this document
      */
     public String getDatamodelName() {

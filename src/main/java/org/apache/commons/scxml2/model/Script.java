@@ -61,7 +61,7 @@ public class Script extends Action {
     }
 
     /**
-     * Get the script to execute.
+     * Gets the script to execute.
      *
      * @return The script to execute.
      */

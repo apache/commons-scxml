@@ -88,7 +88,7 @@ public interface Invoker {
     void setParentSCXMLExecutor(SCXMLExecutor scxmlExecutor);
 
     /**
-     * Get the child IO Processor to register for communication with
+     * Gets the child IO Processor to register for communication with
      * the parent session.
      *
      * @return Child IO Processor

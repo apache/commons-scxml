@@ -60,7 +60,7 @@ public class Assign extends Action implements ParsedValueContainer {
     }
 
     /**
-     * Get the expr that will evaluate to the new value.
+     * Gets the expr that will evaluate to the new value.
      *
      * @return Returns the expr.
      */
@@ -78,7 +78,7 @@ public class Assign extends Action implements ParsedValueContainer {
     }
 
     /**
-     * Get the location for a previously defined XML data tree.
+     * Gets the location for a previously defined XML data tree.
      *
      * @return Returns the location.
      */
@@ -96,7 +96,7 @@ public class Assign extends Action implements ParsedValueContainer {
     }
 
     /**
-     * Get the source where the new XML instance for this location exists.
+     * Gets the source where the new XML instance for this location exists.
      *
      * @return Returns the source.
      */
@@ -114,7 +114,7 @@ public class Assign extends Action implements ParsedValueContainer {
     }
 
     /**
-     * Get the assign value
+     * Gets the assign value
      *
      * @return The assign value
      */

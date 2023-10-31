@@ -118,7 +118,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
     private String namelist;
 
     /**
-     * Get the identifier for this invoke (may be null).
+     * Gets the identifier for this invoke (may be null).
      *
      * @return Returns the id.
      */
@@ -151,7 +151,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
     }
 
     /**
-     * Get the type for this &lt;invoke&gt; element.
+     * Gets the type for this &lt;invoke&gt; element.
      *
      * @return String Returns the type.
      */
@@ -184,7 +184,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
     }
 
     /**
-     * Get the URL for the external service.
+     * Gets the URL for the external service.
      *
      * @return String The URL.
      */
@@ -202,7 +202,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
     }
 
     /**
-     * Get the expression that evaluates to the source URL for the
+     * Gets the expression that evaluates to the source URL for the
      * external service.
      *
      * @return String The source expression.
@@ -245,7 +245,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
     }
 
     /**
-     * Get the Finalize for this Invoke.
+     * Gets the Finalize for this Invoke.
      *
      * @return Finalize The Finalize for this Invoke.
      */
@@ -263,7 +263,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
     }
 
     /**
-     * Get the list of {@link Param}s.
+     * Gets the list of {@link Param}s.
      *
      * @return List The params list.
      */
@@ -273,7 +273,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
     }
 
     /**
-     * Get the namelist.
+     * Gets the namelist.
      *
      * @return String Returns the namelist.
      */
@@ -337,7 +337,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
     }
 
     /**
-     * Get the parent EnterableState.
+     * Gets the parent EnterableState.
      *
      * @return Returns the parent state
      */

@@ -45,7 +45,7 @@ public class StateConfiguration implements Serializable {
     private final Set<EnterableState> atomicStatesSet = Collections.unmodifiableSet(atomicStates);
 
     /**
-     * Get the active states
+     * Gets the active states
      *
      * @return active states including simple states and their
      *         complex ancestors up to the root.
@@ -55,7 +55,7 @@ public class StateConfiguration implements Serializable {
     }
 
     /**
-     * Get the current atomic states (leaf only).
+     * Gets the current atomic states (leaf only).
      *
      * @return Returns the atomic states - simple (leaf) states only.
      */

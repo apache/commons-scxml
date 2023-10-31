@@ -69,7 +69,7 @@ public abstract class TransitionTarget implements Serializable, Observable {
     }
 
     /**
-     * Get the identifier for this transition target (may be null).
+     * Gets the identifier for this transition target (may be null).
      *
      * @return Returns the id.
      */
@@ -94,7 +94,7 @@ public abstract class TransitionTarget implements Serializable, Observable {
     }
 
     /**
-     * Get the ancestor of this TransitionTarget at specified level
+     * Gets the ancestor of this TransitionTarget at specified level
      * @param level the level of the ancestor to return, zero being top
      * @return the ancestor at specified level
      */
@@ -103,7 +103,7 @@ public abstract class TransitionTarget implements Serializable, Observable {
     }
 
     /**
-     * Get the parent TransitionTarget.
+     * Gets the parent TransitionTarget.
      *
      * @return Returns the parent state
      * (null if parent is &lt;scxml&gt; element)

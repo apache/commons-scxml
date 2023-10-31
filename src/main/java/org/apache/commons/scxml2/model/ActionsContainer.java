@@ -24,7 +24,7 @@ import java.util.List;
 public interface ActionsContainer {
 
     /**
-     * Get the executable actions contained in this &lt;container&gt;.
+     * Gets the executable actions contained in this &lt;container&gt;.
      *
      * @return Returns the actions.
      */

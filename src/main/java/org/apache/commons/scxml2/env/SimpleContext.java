@@ -96,7 +96,7 @@ public class SimpleContext implements Context, Serializable {
     }
 
     /**
-     * Get the value of this variable; delegating to parent.
+     * Gets the value of this variable; delegating to parent.
      *
      * @param name The variable name
      * @return Object The variable value
@@ -149,7 +149,7 @@ public class SimpleContext implements Context, Serializable {
     }
 
     /**
-     * Get the parent Context, may be null.
+     * Gets the parent Context, may be null.
      *
      * @return Context The parent Context
      * @see org.apache.commons.scxml2.Context#getParent()
@@ -160,7 +160,7 @@ public class SimpleContext implements Context, Serializable {
     }
 
     /**
-     * Get the SCXMLSystemContext for this Context, should not be null unless this is the root Context
+     * Gets the SCXMLSystemContext for this Context, should not be null unless this is the root Context
      *
      * @return The SCXMLSystemContext in a chained Context environment
      */
@@ -196,7 +196,7 @@ public class SimpleContext implements Context, Serializable {
     }
 
     /**
-     * Get the Map of all local variables in this Context.
+     * Gets the Map of all local variables in this Context.
      *
      * @return Returns the vars.
      */
@@ -206,7 +206,7 @@ public class SimpleContext implements Context, Serializable {
     }
 
     /**
-     * Get the log used by this <code>Context</code> instance.
+     * Gets the log used by this <code>Context</code> instance.
      *
      * @return Log The log being used.
      */

@@ -46,7 +46,7 @@ public class Raise extends Action {
     }
 
     /**
-     * Get the event.
+     * Gets the event.
      *
      * @return Returns the event.
      */

@@ -106,7 +106,7 @@ public class SimpleDispatcher implements EventDispatcher, Serializable {
     private final Map<String, Timer> timers = Collections.synchronizedMap(new HashMap<String, Timer>());
 
     /**
-     * Get the log instance.
+     * Gets the log instance.
      *
      * @return The current log instance
      */
@@ -115,7 +115,7 @@ public class SimpleDispatcher implements EventDispatcher, Serializable {
     }
 
     /**
-     * Get the current timers.
+     * Gets the current timers.
      *
      * @return The currently scheduled timers
      */

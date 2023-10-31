@@ -56,7 +56,7 @@ public class DoneData implements ContentContainer, ParamsContainer, Serializable
     }
 
     /**
-     * Get the list of {@link Param}s.
+     * Gets the list of {@link Param}s.
      *
      * @return List The params list.
      */

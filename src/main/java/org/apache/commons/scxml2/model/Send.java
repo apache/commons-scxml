@@ -161,7 +161,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
     }
 
     /**
-     * Get the delay.
+     * Gets the delay.
      *
      * @return Returns the delay.
      */
@@ -195,7 +195,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
     }
 
     /**
-     * Get the hints for this &lt;send&gt; element.
+     * Gets the hints for this &lt;send&gt; element.
      *
      * @return String Returns the hints.
      */
@@ -213,7 +213,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
     }
 
     /**
-     * Get the identifier for this &lt;send&gt; element.
+     * Gets the identifier for this &lt;send&gt; element.
      *
      * @return String Returns the id.
      */
@@ -231,7 +231,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
     }
 
     /**
-     * Get the target for this &lt;send&gt; element.
+     * Gets the target for this &lt;send&gt; element.
      *
      * @return String Returns the target.
      */
@@ -265,7 +265,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
     }
 
     /**
-     * Get the type for this &lt;send&gt; element.
+     * Gets the type for this &lt;send&gt; element.
      *
      * @return String Returns the type.
      */
@@ -299,7 +299,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
     }
 
     /**
-     * Get the event to send.
+     * Gets the event to send.
      *
      * @param event The event to set.
      */
@@ -353,7 +353,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
     }
 
     /**
-     * Get the list of {@link Param}s.
+     * Gets the list of {@link Param}s.
      *
      * @return List The params list.
      */
@@ -363,7 +363,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
     }
 
     /**
-     * Get the namelist.
+     * Gets the namelist.
      *
      * @return String Returns the namelist.
      */

@@ -59,7 +59,7 @@ public class Var extends Action {
     private String expr;
 
     /**
-     * Get the expression that evaluates to the initial value
+     * Gets the expression that evaluates to the initial value
      * of the variable.
      *
      * @return String Returns the expr.
@@ -79,7 +79,7 @@ public class Var extends Action {
     }
 
     /**
-     * Get the name of the (new) variable.
+     * Gets the name of the (new) variable.
      *
      * @return String Returns the name.
      */

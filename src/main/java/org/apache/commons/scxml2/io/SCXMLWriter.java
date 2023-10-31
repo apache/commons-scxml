@@ -1184,7 +1184,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Get a {@link Transformer} instance that pretty prints the output.
+     * Gets a {@link Transformer} instance that pretty prints the output.
      *
      * @return Transformer The indenting {@link Transformer} instance.
      */

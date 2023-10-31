@@ -2266,7 +2266,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Get the attribute value at the current reader location.
+     * Gets the attribute value at the current reader location.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param attrLocalName The attribute name whose value is needed.
@@ -2278,7 +2278,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Get the Boolean attribute value at the current reader location.
+     * Gets the Boolean attribute value at the current reader location.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param elementName The name of the element for which the attribute value is needed.
@@ -2301,7 +2301,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Get a required attribute value at the current reader location,
+     * Gets a required attribute value at the current reader location,
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param elementName The name of the element for which the attribute value is needed.

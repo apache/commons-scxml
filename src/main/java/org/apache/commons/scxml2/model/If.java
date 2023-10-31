@@ -67,7 +67,7 @@ public class If extends Action implements ActionsContainer {
     }
 
     /**
-     * Get the executable actions contained in this &lt;if&gt;.
+     * Gets the executable actions contained in this &lt;if&gt;.
      *
      * @return Returns the actions.
      */
@@ -90,7 +90,7 @@ public class If extends Action implements ActionsContainer {
     }
 
     /**
-     * Get the conditional expression.
+     * Gets the conditional expression.
      *
      * @return Returns the cond.
      */

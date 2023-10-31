@@ -46,7 +46,7 @@ public class History extends TransitionTarget {
     }
 
     /**
-     * Get the transition.
+     * Gets the transition.
      *
      * @return Returns the transition.
      */

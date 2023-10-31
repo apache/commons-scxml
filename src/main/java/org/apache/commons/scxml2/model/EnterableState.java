@@ -65,7 +65,7 @@ public abstract class EnterableState extends TransitionTarget implements Documen
     }
 
     /**
-     * Get the OnEntry elements.
+     * Gets the OnEntry elements.
      *
      * @return Returns the onEntry elements
      */
@@ -84,7 +84,7 @@ public abstract class EnterableState extends TransitionTarget implements Documen
     }
 
     /**
-     * Get the OnExit elements
+     * Gets the OnExit elements
      *
      * @return Returns the onExit elements
      */

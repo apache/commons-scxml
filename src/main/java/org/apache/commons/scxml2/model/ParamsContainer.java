@@ -26,7 +26,7 @@ import java.util.List;
 public interface ParamsContainer {
 
     /**
-     * Get the list of {@link Param}s.
+     * Gets the list of {@link Param}s.
      *
      * @return List The params list.
      */

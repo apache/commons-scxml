@@ -38,7 +38,7 @@ public class Content implements ParsedValueContainer {
     private ParsedValue contentBody;
 
     /**
-     * Get the expression for this content.
+     * Gets the expression for this content.
      *
      * @return String The expression for this content.
      */
@@ -56,7 +56,7 @@ public class Content implements ParsedValueContainer {
     }
 
     /**
-     * Get the content element body
+     * Gets the content element body
      *
      * @return The content element body.
      */

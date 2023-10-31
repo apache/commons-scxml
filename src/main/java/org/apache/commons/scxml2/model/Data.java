@@ -49,7 +49,7 @@ public class Data implements ParsedValueContainer {
     private ParsedValue dataValue;
 
     /**
-     * Get the id.
+     * Gets the id.
      *
      * @return String An identifier.
      */
@@ -67,7 +67,7 @@ public class Data implements ParsedValueContainer {
     }
 
     /**
-     * Get the URL for external data.
+     * Gets the URL for external data.
      *
      * @return String The URL.
      */
@@ -85,7 +85,7 @@ public class Data implements ParsedValueContainer {
     }
 
     /**
-     * Get the expression that evaluates to the value of this data instance.
+     * Gets the expression that evaluates to the value of this data instance.
      *
      * @return String The expression.
      */
@@ -103,7 +103,7 @@ public class Data implements ParsedValueContainer {
     }
 
     /**
-     * Get the data value
+     * Gets the data value
      *
      * @return The data value
      */

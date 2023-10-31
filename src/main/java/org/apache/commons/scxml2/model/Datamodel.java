@@ -45,7 +45,7 @@ public class Datamodel implements Serializable {
    }
 
    /**
-    * Get all the data children of this datamodel.
+    * Gets all the data children of this datamodel.
     *
     * @return Returns the data.
     */

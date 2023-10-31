@@ -60,7 +60,7 @@ public class Status implements Serializable {
     }
 
     /**
-     * Get the atomic states configuration (leaf only).
+     * Gets the atomic states configuration (leaf only).
      *
      * @return Returns the atomic states configuration - simple (leaf) states only.
      */
@@ -69,7 +69,7 @@ public class Status implements Serializable {
     }
 
     /**
-     * Get the active states configuration.
+     * Gets the active states configuration.
      *
      * @return active states configuration including simple states and their
      *         complex ancestors up to the root.

@@ -45,7 +45,7 @@ public interface Context {
     void setLocal(String name, Object value);
 
     /**
-     * Get the value of this variable; delegating to parent.
+     * Gets the value of this variable; delegating to parent.
      *
      * @param name The name of the variable
      * @return The value (or null)
@@ -69,7 +69,7 @@ public interface Context {
     boolean hasLocal(String name);
 
     /**
-     * Get the Map of all variables in this Context.
+     * Gets the Map of all variables in this Context.
      *
      * @return Local variable entries Map
      * To get variables in parent Context, call getParent().getVars().
@@ -83,14 +83,14 @@ public interface Context {
     void reset();
 
     /**
-     * Get the parent Context, may be null.
+     * Gets the parent Context, may be null.
      *
      * @return The parent Context in a chained Context environment
      */
     Context getParent();
 
     /**
-     * Get the SCXMLSystemContext for this Context, should not be null unless this is the root Context
+     * Gets the SCXMLSystemContext for this Context, should not be null unless this is the root Context
      *
      * @return The SCXMLSystemContext in a chained Context environment
      */

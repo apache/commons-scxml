@@ -417,7 +417,7 @@ public class SCInstance implements Serializable {
     }
 
     /**
-     * Get the root context.
+     * Gets the root context.
      *
      * @return The root context.
      */
@@ -443,7 +443,7 @@ public class SCInstance implements Serializable {
     }
 
     /**
-     * Get the unwrapped (modifiable) system context.
+     * Gets the unwrapped (modifiable) system context.
      *
      * @return The unwrapped system context.
      */
@@ -478,7 +478,7 @@ public class SCInstance implements Serializable {
     }
 
     /**
-     * Get the context for an EnterableState or create one if not created before.
+     * Gets the context for an EnterableState or create one if not created before.
      *
      * @param state The EnterableState.
      * @return The context.
@@ -508,7 +508,7 @@ public class SCInstance implements Serializable {
     }
 
     /**
-     * Get the context for an EnterableState if available.
+     * Gets the context for an EnterableState if available.
      *
      * <p>Note: used for testing purposes only</p>
      *
@@ -533,7 +533,7 @@ public class SCInstance implements Serializable {
     }
 
     /**
-     * Get the last configuration for this history.
+     * Gets the last configuration for this history.
      *
      * @param history The history.
      * @return Returns the lastConfiguration.

@@ -132,7 +132,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     }
 
     /**
-     * Get the current state machine instance status.
+     * Gets the current state machine instance status.
      *
      * @return The current Status
      */
@@ -200,7 +200,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     }
 
     /**
-     * Get the expression evaluator in use.
+     * Gets the expression evaluator in use.
      *
      * @return Evaluator The evaluator in use.
      */
@@ -209,7 +209,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     }
 
     /**
-     * Get the root context for the state machine execution.
+     * Gets the root context for the state machine execution.
      * <p>
      * The root context can be used for providing external data to the state machine
      * </p>
@@ -221,7 +221,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     }
 
     /**
-     * Get the global context for the state machine execution.
+     * Gets the global context for the state machine execution.
      * <p>
      * The global context is the top level context within the state machine itself and should be regarded and treated
      * "read-only" from external usage.
@@ -251,7 +251,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     }
 
     /**
-     * Get the state machine that is being executed.
+     * Gets the state machine that is being executed.
      * <b>NOTE:</b> This is the state machine definition or model used by this
      * executor instance. It may be shared across multiple executor instances
      * and should not be altered once in use. Also note that
@@ -284,7 +284,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     }
 
     /**
-     * Get the environment specific error reporter.
+     * Gets the environment specific error reporter.
      *
      * @return Returns the errorReporter.
      */
@@ -302,7 +302,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     }
 
     /**
-     * Get the event dispatcher.
+     * Gets the event dispatcher.
      *
      * @return Returns the eventdispatcher.
      */
@@ -335,7 +335,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     }
 
     /**
-     * Get the notification registry.
+     * Gets the notification registry.
      *
      * @return The notification registry.
      */
@@ -546,7 +546,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     }
 
     /**
-     * Get the state chart instance for this executor.
+     * Gets the state chart instance for this executor.
      *
      * @return The SCInstance for this executor.
      */

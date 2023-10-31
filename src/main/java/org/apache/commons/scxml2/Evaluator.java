@@ -32,7 +32,7 @@ public interface Evaluator {
     String DEFAULT_DATA_MODEL = "";
 
     /**
-     * Get the datamodel type supported by this Evaluator
+     * Gets the datamodel type supported by this Evaluator
      * @return The supported datamodel type
      */
     String getSupportedDatamodel();

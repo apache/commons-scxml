@@ -50,7 +50,7 @@ public class Log extends Action {
     }
 
     /**
-     * Get the log expression.
+     * Gets the log expression.
      *
      * @return Returns the expression.
      */
@@ -68,7 +68,7 @@ public class Log extends Action {
     }
 
     /**
-     * Get the log label.
+     * Gets the log label.
      *
      * @return Returns the label.
      */
