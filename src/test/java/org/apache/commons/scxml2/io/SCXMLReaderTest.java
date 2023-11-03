@@ -276,7 +276,7 @@ public class SCXMLReaderTest {
     }
 
     @Test
-    public void dataWithSrcAndExprIsRejectedInStrictConfiguration() {
+    public void testDataWithSrcAndExprIsRejectedInStrictConfiguration() {
         final Configuration configuration = new Configuration();
         configuration.setStrict(true);
         configuration.setSilent(true);
@@ -285,7 +285,7 @@ public class SCXMLReaderTest {
     }
 
     @Test
-    public void dataWithSrcAndExprUsesExprInNonStrictConfiguration() throws Exception {
+    public void testDataWithSrcAndExprUsesExprInNonStrictConfiguration() throws Exception {
         final Configuration configuration = new Configuration();
         configuration.setStrict(false);
         configuration.setSilent(true);
@@ -300,7 +300,7 @@ public class SCXMLReaderTest {
     }
 
     @Test
-    public void srcAttributeOfDataIsParsed() throws Exception {
+    public void testSrcAttributeOfDataIsParsed() throws Exception {
         final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/io/data-with-src.xml");
         Assertions.assertNotNull(scxml);
         Assertions.assertNotNull(scxml.getDatamodel());
@@ -312,7 +312,7 @@ public class SCXMLReaderTest {
     }
 
     @Test
-    public void exprAttributeOfDataIsParsed() throws Exception {
+    public void testExprAttributeOfDataIsParsed() throws Exception {
         final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/io/data-with-expr.xml");
         Assertions.assertNotNull(scxml);
         Assertions.assertNotNull(scxml.getDatamodel());
