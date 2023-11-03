@@ -62,6 +62,23 @@ public final class EffectiveContextMap extends AbstractMap<String, Object> imple
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Object get(final Object key) {
+        if (key != null) {
+            Context current = leaf;
+            while (current != null) {
+                if (current.getVars().containsKey(key.toString())) {
+                    return current.getVars().get(key);
+                }
+                current = current.getParent();
+            }
+        }
+        return null;
+    }
+
+    /**
      * Parent Context first merging of all Context vars, to ensure same named 'local' vars shadows parent var
      * @param leaf current leaf Context
      * @param map Map to merge vars into
@@ -85,22 +102,5 @@ public final class EffectiveContextMap extends AbstractMap<String, Object> imple
             leaf.setLocal(key, value);
         }
         return old;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Object get(final Object key) {
-        if (key != null) {
-            Context current = leaf;
-            while (current != null) {
-                if (current.getVars().containsKey(key.toString())) {
-                    return current.getVars().get(key);
-                }
-                current = current.getParent();
-            }
-        }
-        return null;
     }
 }

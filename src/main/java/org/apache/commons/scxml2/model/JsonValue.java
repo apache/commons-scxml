@@ -44,15 +44,15 @@ public class JsonValue implements ParsedValue {
         return ValueType.JSON;
     }
 
+    @Override
+    public final Object getValue() {
+        return jsonObject;
+    }
+
     /**
      * @return true if the json string requires wrapping in a CDATA section when writing out to XML
      */
     public final boolean isCDATA() {
         return cdata;
-    }
-
-    @Override
-    public final Object getValue() {
-        return jsonObject;
     }
 }

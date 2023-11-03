@@ -54,12 +54,13 @@ public class MinimalContext extends SimpleContext {
     }
 
     @Override
-    public void set(final String name, final Object value) {
+    public Object get(final String name) {
+        return null;
     }
 
     @Override
-    public Object get(final String name) {
-        return null;
+    public Map<String, Object> getVars() {
+        return Collections.emptyMap();
     }
 
     @Override
@@ -77,15 +78,14 @@ public class MinimalContext extends SimpleContext {
     }
 
     @Override
+    public void set(final String name, final Object value) {
+    }
+
+    @Override
     public void setLocal(final String name, final Object value) {
     }
 
     @Override
     protected void setVars(final Map<String, Object> vars) {
-    }
-
-    @Override
-    public Map<String, Object> getVars() {
-        return Collections.emptyMap();
     }
 }

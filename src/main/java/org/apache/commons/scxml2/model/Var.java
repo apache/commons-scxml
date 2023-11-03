@@ -59,44 +59,6 @@ public class Var extends Action {
     private String expr;
 
     /**
-     * Gets the expression that evaluates to the initial value
-     * of the variable.
-     *
-     * @return String Returns the expr.
-     */
-    public final String getExpr() {
-        return expr;
-    }
-
-    /**
-     * Sets the expression that evaluates to the initial value
-     * of the variable.
-     *
-     * @param expr The expr to set.
-     */
-    public final void setExpr(final String expr) {
-        this.expr = expr;
-    }
-
-    /**
-     * Gets the name of the (new) variable.
-     *
-     * @return String Returns the name.
-     */
-    public final String getName() {
-        return name;
-    }
-
-    /**
-     * Sets the name of the (new) variable.
-     *
-     * @param name The name to set.
-     */
-    public final void setName(final String name) {
-        this.name = name;
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -111,6 +73,44 @@ public class Var extends Action {
         }
         final TriggerEvent ev = new EventBuilder(name + ".change", TriggerEvent.CHANGE_EVENT).build();
         exctx.getInternalIOProcessor().addEvent(ev);
+    }
+
+    /**
+     * Gets the expression that evaluates to the initial value
+     * of the variable.
+     *
+     * @return String Returns the expr.
+     */
+    public final String getExpr() {
+        return expr;
+    }
+
+    /**
+     * Gets the name of the (new) variable.
+     *
+     * @return String Returns the name.
+     */
+    public final String getName() {
+        return name;
+    }
+
+    /**
+     * Sets the expression that evaluates to the initial value
+     * of the variable.
+     *
+     * @param expr The expr to set.
+     */
+    public final void setExpr(final String expr) {
+        this.expr = expr;
+    }
+
+    /**
+     * Sets the name of the (new) variable.
+     *
+     * @param name The name to set.
+     */
+    public final void setName(final String name) {
+        this.name = name;
     }
 }
 

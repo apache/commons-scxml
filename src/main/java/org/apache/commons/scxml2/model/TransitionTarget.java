@@ -53,44 +53,13 @@ public abstract class TransitionTarget implements Serializable, Observable {
     }
 
     /**
-     * {@inheritDoc}
+     * Enforce identity equality only
+     * @param other other object to compare with
+     * @return this == other
      */
     @Override
-    public final Integer getObservableId() {
-        return observableId;
-    }
-
-    /**
-     * Sets the observableId for this Observable, which must be unique within the SCXML state machine
-     * @param observableId the observableId
-     */
-    public final void setObservableId(final Integer observableId) {
-        this.observableId = observableId;
-    }
-
-    /**
-     * Gets the identifier for this transition target (may be null).
-     *
-     * @return Returns the id.
-     */
-    public final String getId() {
-        return id;
-    }
-
-    /**
-     * Sets the identifier for this transition target.
-     *
-     * @param id The id to set.
-     */
-    public final void setId(final String id) {
-        this.id = id;
-    }
-
-    /**
-     * @return the number of TransitionTarget ancestors
-     */
-    public int getNumberOfAncestors() {
-        return ancestors.length;
+    public final boolean equals(final Object other) {
+        return this == other;
     }
 
     /**
@@ -103,6 +72,30 @@ public abstract class TransitionTarget implements Serializable, Observable {
     }
 
     /**
+     * Gets the identifier for this transition target (may be null).
+     *
+     * @return Returns the id.
+     */
+    public final String getId() {
+        return id;
+    }
+
+    /**
+     * @return the number of TransitionTarget ancestors
+     */
+    public int getNumberOfAncestors() {
+        return ancestors.length;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final Integer getObservableId() {
+        return observableId;
+    }
+
+    /**
      * Gets the parent TransitionTarget.
      *
      * @return Returns the parent state
@@ -110,6 +103,45 @@ public abstract class TransitionTarget implements Serializable, Observable {
      */
     public EnterableState getParent() {
         return parent;
+    }
+
+    /**
+     * Enforce returning identity based hascode
+     * @return {@link System#identityHashCode(Object) System.identityHashCode(this)}
+     */
+    @Override
+    public final int hashCode() {
+        return System.identityHashCode(this);
+    }
+
+    /**
+     * Checks whether this transition target (State or Parallel) is a
+     * descendant of the transition target context.
+     *
+     * @param context
+     *            TransitionTarget context - a potential ancestor
+     * @return true if this is a descendant of context, false otherwise
+     */
+    public final boolean isDescendantOf(final TransitionTarget context) {
+        return getNumberOfAncestors() > context.getNumberOfAncestors()
+                && getAncestor(context.getNumberOfAncestors()) == context;
+    }
+
+    /**
+     * Sets the identifier for this transition target.
+     *
+     * @param id The id to set.
+     */
+    public final void setId(final String id) {
+        this.id = id;
+    }
+
+    /**
+     * Sets the observableId for this Observable, which must be unique within the SCXML state machine
+     * @param observableId the observableId
+     */
+    public final void setObservableId(final Integer observableId) {
+        this.observableId = observableId;
     }
 
     /**
@@ -142,38 +174,6 @@ public abstract class TransitionTarget implements Serializable, Observable {
         ancestors = new EnterableState[ttParent.ancestors.length+1];
         System.arraycopy(ttParent.ancestors, 0, ancestors, 0, ttParent.ancestors.length);
         ancestors[ttParent.ancestors.length] = parent;
-    }
-
-    /**
-     * Checks whether this transition target (State or Parallel) is a
-     * descendant of the transition target context.
-     *
-     * @param context
-     *            TransitionTarget context - a potential ancestor
-     * @return true if this is a descendant of context, false otherwise
-     */
-    public final boolean isDescendantOf(final TransitionTarget context) {
-        return getNumberOfAncestors() > context.getNumberOfAncestors()
-                && getAncestor(context.getNumberOfAncestors()) == context;
-    }
-
-    /**
-     * Enforce identity equality only
-     * @param other other object to compare with
-     * @return this == other
-     */
-    @Override
-    public final boolean equals(final Object other) {
-        return this == other;
-    }
-
-    /**
-     * Enforce returning identity based hascode
-     * @return {@link System#identityHashCode(Object) System.identityHashCode(this)}
-     */
-    @Override
-    public final int hashCode() {
-        return System.identityHashCode(this);
     }
 }
 

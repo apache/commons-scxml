@@ -51,48 +51,31 @@ public class ContentParser {
     public static final ContentParser DEFAULT_PARSER = new ContentParser();
 
     /**
-     * Jackson JSON ObjectMapper
+     * Check if content starts with JSON object '{' or array '[' marker
+     * @param content text to check
+     * @return true if content start with '{' or '[' character
      */
-    private final ObjectMapper jsonObjectMapper;
-
-    /**
-     * Default constructor initializing a Jackson ObjectMapper allowing embedded comments, including YAML style
-     */
-    public ContentParser() {
-        this.jsonObjectMapper = new ObjectMapper();
-        jsonObjectMapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
-        jsonObjectMapper.configure(JsonParser.Feature.ALLOW_YAML_COMMENTS, true);
+    public static boolean hasJsonSignature(final String content) {
+        final char c = !content.isEmpty() ? content.charAt(0) : 0;
+        return c == '{' || c == '[';
     }
 
     /**
-     * Constructor with a custom configured Jackson ObjectMapper
-     * @param jsonObjectMapper custom configured Jackson ObjectMapper
+     * Check if content indicates its an XML document
+     * @param content content to check
+     * @return true if content indicates its an XML document
      */
-    public ContentParser(final ObjectMapper jsonObjectMapper) {
-        this.jsonObjectMapper = jsonObjectMapper;
+    public static boolean hasXmlSignature(final String content) {
+        return content != null && content.startsWith("<?xml ");
     }
 
     /**
-     * Trim pre/post-fixed whitespace from content string
-     * @param content content to trim
-     * @return trimmed content
+     * Check if a character is whitespace (space, tab, newline, cr) or not
+     * @param c character to check
+     * @return true if character is whitespace
      */
-    public static String trimContent(final String content) {
-        if (content != null) {
-            int start = 0;
-            int length = content.length();
-            while (start < length && isWhiteSpace(content.charAt(start))) {
-                start++;
-            }
-            while (length > start && isWhiteSpace(content.charAt(length - 1))) {
-                length--;
-            }
-            if (start == length) {
-                return "";
-            }
-            return content.substring(start, length);
-        }
-        return null;
+    public static boolean isWhiteSpace(final char c) {
+        return c==' ' || c=='\n' || c=='\t' || c=='\r';
     }
 
     /**
@@ -129,89 +112,48 @@ public class ContentParser {
     }
 
     /**
-     * Check if a character is whitespace (space, tab, newline, cr) or not
-     * @param c character to check
-     * @return true if character is whitespace
+     * Trim pre/post-fixed whitespace from content string
+     * @param content content to trim
+     * @return trimmed content
      */
-    public static boolean isWhiteSpace(final char c) {
-        return c==' ' || c=='\n' || c=='\t' || c=='\r';
-    }
-
-    /**
-     * Check if content starts with JSON object '{' or array '[' marker
-     * @param content text to check
-     * @return true if content start with '{' or '[' character
-     */
-    public static boolean hasJsonSignature(final String content) {
-        final char c = !content.isEmpty() ? content.charAt(0) : 0;
-        return c == '{' || c == '[';
-    }
-
-    /**
-     * Check if content indicates its an XML document
-     * @param content content to check
-     * @return true if content indicates its an XML document
-     */
-    public static boolean hasXmlSignature(final String content) {
-        return content != null && content.startsWith("<?xml ");
-    }
-
-    /**
-     * Parse and map JSON string to 'raw' Java Objects: object -&gt; LinkedHashMap, array -&gt; ArrayList
-     * @param jsonString JSON string to parse
-     * @return 'raw' mapped Java Object for JSON string
-     * @throws IOException In case of parsing exceptions
-     */
-    public Object parseJson(final String jsonString) throws IOException {
-        return jsonObjectMapper.readValue(jsonString, Object.class);
-    }
-
-    /**
-     * Transforms a jsonObject to a json String
-     * @param jsonObject object to transform
-     * @return json string
-     * @throws IOException if IO error occurs while serializing it to JSON
-     */
-    public String toJson(final Object jsonObject) throws IOException {
-        return jsonObjectMapper.writeValueAsString(jsonObject);
-    }
-
-    /**
-     * Parse an XML String and return the document element
-     * @param xmlString XML String to parse
-     * @return document element
-     * @throws IOException if IO error occurs while parsing XML
-     */
-    public Node parseXml(final String xmlString) throws IOException {
-        Document doc;
-        try {
-            doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(xmlString);
-        } catch (SAXException | ParserConfigurationException e) {
-            throw new IOException(e);
+    public static String trimContent(final String content) {
+        if (content != null) {
+            int start = 0;
+            int length = content.length();
+            while (start < length && isWhiteSpace(content.charAt(start))) {
+                start++;
+            }
+            while (length > start && isWhiteSpace(content.charAt(length - 1))) {
+                length--;
+            }
+            if (start == length) {
+                return "";
+            }
+            return content.substring(start, length);
         }
-        return doc != null ? doc.getDocumentElement() : null;
+        return null;
     }
 
     /**
-     * Transforms a XML Node to XML
-     * @param node node to transform
-     * @return XML string
-     * @throws IOException if IO error occurs while serializing node to XML
+     * Jackson JSON ObjectMapper
      */
-    public String toXml(final Node node) throws IOException {
-        try {
-            final StringWriter writer = new StringWriter();
-            final Transformer transformer = TransformerFactory.newInstance().newTransformer();
-            final Properties outputProps = new Properties();
-            outputProps.put(OutputKeys.OMIT_XML_DECLARATION, "no");
-            outputProps.put(OutputKeys.STANDALONE, "no");
-            outputProps.put(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperties(outputProps);
-            transformer.transform(new DOMSource(node), new StreamResult(writer));
-            return writer.toString();
-        } catch (final TransformerException e) {
-            throw new IOException(e);
-        }
+    private final ObjectMapper jsonObjectMapper;
+
+    /**
+     * Default constructor initializing a Jackson ObjectMapper allowing embedded comments, including YAML style
+     */
+    public ContentParser() {
+        this.jsonObjectMapper = new ObjectMapper();
+        jsonObjectMapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
+        jsonObjectMapper.configure(JsonParser.Feature.ALLOW_YAML_COMMENTS, true);
+    }
+
+    /**
+     * Constructor with a custom configured Jackson ObjectMapper
+     * @param jsonObjectMapper custom configured Jackson ObjectMapper
+     */
+    public ContentParser(final ObjectMapper jsonObjectMapper) {
+        this.jsonObjectMapper = jsonObjectMapper;
     }
 
     /**
@@ -240,6 +182,16 @@ public class ContentParser {
     }
 
     /**
+     * Parse and map JSON string to 'raw' Java Objects: object -&gt; LinkedHashMap, array -&gt; ArrayList
+     * @param jsonString JSON string to parse
+     * @return 'raw' mapped Java Object for JSON string
+     * @throws IOException In case of parsing exceptions
+     */
+    public Object parseJson(final String jsonString) throws IOException {
+        return jsonObjectMapper.readValue(jsonString, Object.class);
+    }
+
+    /**
      * Load a resource (URL) as an UTF-8 encoded content string to be parsed into a ParsedValue content object through {@link #parseContent(String)}
      * @param resourceURL Resource URL to load content from
      * @return the parsed content object
@@ -249,6 +201,54 @@ public class ContentParser {
         try (InputStream in = new URL(resourceURL).openStream()) {
             final String content = IOUtils.toString(in, "UTF-8");
             return parseContent(content);
+        }
+    }
+
+    /**
+     * Parse an XML String and return the document element
+     * @param xmlString XML String to parse
+     * @return document element
+     * @throws IOException if IO error occurs while parsing XML
+     */
+    public Node parseXml(final String xmlString) throws IOException {
+        Document doc;
+        try {
+            doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(xmlString);
+        } catch (SAXException | ParserConfigurationException e) {
+            throw new IOException(e);
+        }
+        return doc != null ? doc.getDocumentElement() : null;
+    }
+
+    /**
+     * Transforms a jsonObject to a json String
+     * @param jsonObject object to transform
+     * @return json string
+     * @throws IOException if IO error occurs while serializing it to JSON
+     */
+    public String toJson(final Object jsonObject) throws IOException {
+        return jsonObjectMapper.writeValueAsString(jsonObject);
+    }
+
+    /**
+     * Transforms a XML Node to XML
+     * @param node node to transform
+     * @return XML string
+     * @throws IOException if IO error occurs while serializing node to XML
+     */
+    public String toXml(final Node node) throws IOException {
+        try {
+            final StringWriter writer = new StringWriter();
+            final Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            final Properties outputProps = new Properties();
+            outputProps.put(OutputKeys.OMIT_XML_DECLARATION, "no");
+            outputProps.put(OutputKeys.STANDALONE, "no");
+            outputProps.put(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperties(outputProps);
+            transformer.transform(new DOMSource(node), new StreamResult(writer));
+            return writer.toString();
+        } catch (final TransformerException e) {
+            throw new IOException(e);
         }
     }
 }

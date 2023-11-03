@@ -71,24 +71,26 @@ import org.apache.commons.scxml2.model.SCXML;
 public interface SCXMLSemantics {
 
     /**
-     * Optional post processing after loading an {@link SCXML} document, invoked by {@link SCXMLExecutor}
-     * when setting the {@link SCXMLExecutor#setStateMachine(SCXML)}. May be used for removing pseudo-states etc.
-     *
-     * @param input  SCXML state machine
-     * @param errRep ErrorReporter callback
-     * @return normalized SCXML state machine, pseudo states are removed, etc.
+     * The final step in the execution of an SCXML state machine.
+     * <p>
+     * This final step is corresponding to the Algorithm for SCXML processing exitInterpreter() procedure, after the
+     * state machine stopped running.
+     * </p>
+     * <p>
+     * If the state machine still is {@link SCXMLExecutionContext#isRunning()} invoking this method should simply
+     * do nothing.
+     * </p>
+     * <p>
+     * This final step should first exit all remaining active states and cancel any active invokers, before handling
+     * the possible donedata element for the last final state.
+     * </p>
+     * <p>
+     *  <em>NOTE: the current implementation does not yet provide final donedata handling.</em>
+     * </p>
+     * @param exctx The execution context for this step
+     * @throws ModelException if a SCXML model error occurred during the execution.
      */
-    SCXML normalizeStateMachine(final SCXML input, final ErrorReporter errRep);
-
-    /**
-     * Initialize the SCXML state machine, optionally initializing (overriding) root &lt;datamodel&gt;&lt;data&gt; elements
-     * with external values provided through a data map.
-     * @param data A data map to initialize/override &lt;data&gt; elements in the root (global) &lt;datamodel&gt; with
-     *             ids matching the keys in the map (other data map entries will be ignored)
-     * @param exctx The execution context to initialize
-     * @throws ModelException if the state machine hasn't been setup for the internal SCXML instance
-     */
-    void initialize(final SCXMLExecutionContext exctx, final Map<String, Object> data) throws ModelException;
+    void finalStep(final SCXMLExecutionContext exctx) throws ModelException;
 
     /**
      * First step in the execution of an SCXML state machine.
@@ -113,6 +115,35 @@ public interface SCXMLSemantics {
      * the execution.
      */
     void firstStep(final SCXMLExecutionContext exctx) throws ModelException;
+
+    /**
+     * Initialize the SCXML state machine, optionally initializing (overriding) root &lt;datamodel&gt;&lt;data&gt; elements
+     * with external values provided through a data map.
+     * @param data A data map to initialize/override &lt;data&gt; elements in the root (global) &lt;datamodel&gt; with
+     *             ids matching the keys in the map (other data map entries will be ignored)
+     * @param exctx The execution context to initialize
+     * @throws ModelException if the state machine hasn't been setup for the internal SCXML instance
+     */
+    void initialize(final SCXMLExecutionContext exctx, final Map<String, Object> data) throws ModelException;
+
+    /**
+     * Checks whether a given set of states is a legal Harel State Table
+     * configuration (with the respect to the definition of the OR and AND
+     * states).
+     * <p>
+     * When {@link SCXMLExecutionContext#isCheckLegalConfiguration()} is true (default) the SCXMLSemantics implementation
+     * <em>should</em> invoke this method before executing a step, and throw a ModelException if a non-legal
+     * configuration is encountered.
+     * </p>
+     * <p>
+     * This method is also first invoked when manually initializing the status of a state machine through
+     * {@link SCXMLExecutor#setConfiguration(java.util.Set)}.
+     * </p>
+     * @param states a set of states
+     * @param errRep ErrorReporter to report detailed error info if needed
+     * @return true if a given state configuration is legal, false otherwise
+     */
+    boolean isLegalConfiguration(final Set<EnterableState> states, final ErrorReporter errRep);
 
     /**
      * Next step in the execution of an SCXML state machine.
@@ -142,43 +173,12 @@ public interface SCXMLSemantics {
     void nextStep(final SCXMLExecutionContext exctx, final TriggerEvent event) throws ModelException;
 
     /**
-     * The final step in the execution of an SCXML state machine.
-     * <p>
-     * This final step is corresponding to the Algorithm for SCXML processing exitInterpreter() procedure, after the
-     * state machine stopped running.
-     * </p>
-     * <p>
-     * If the state machine still is {@link SCXMLExecutionContext#isRunning()} invoking this method should simply
-     * do nothing.
-     * </p>
-     * <p>
-     * This final step should first exit all remaining active states and cancel any active invokers, before handling
-     * the possible donedata element for the last final state.
-     * </p>
-     * <p>
-     *  <em>NOTE: the current implementation does not yet provide final donedata handling.</em>
-     * </p>
-     * @param exctx The execution context for this step
-     * @throws ModelException if a SCXML model error occurred during the execution.
+     * Optional post processing after loading an {@link SCXML} document, invoked by {@link SCXMLExecutor}
+     * when setting the {@link SCXMLExecutor#setStateMachine(SCXML)}. May be used for removing pseudo-states etc.
+     *
+     * @param input  SCXML state machine
+     * @param errRep ErrorReporter callback
+     * @return normalized SCXML state machine, pseudo states are removed, etc.
      */
-    void finalStep(final SCXMLExecutionContext exctx) throws ModelException;
-
-    /**
-     * Checks whether a given set of states is a legal Harel State Table
-     * configuration (with the respect to the definition of the OR and AND
-     * states).
-     * <p>
-     * When {@link SCXMLExecutionContext#isCheckLegalConfiguration()} is true (default) the SCXMLSemantics implementation
-     * <em>should</em> invoke this method before executing a step, and throw a ModelException if a non-legal
-     * configuration is encountered.
-     * </p>
-     * <p>
-     * This method is also first invoked when manually initializing the status of a state machine through
-     * {@link SCXMLExecutor#setConfiguration(java.util.Set)}.
-     * </p>
-     * @param states a set of states
-     * @param errRep ErrorReporter to report detailed error info if needed
-     * @return true if a given state configuration is legal, false otherwise
-     */
-    boolean isLegalConfiguration(final Set<EnterableState> states, final ErrorReporter errRep);
+    SCXML normalizeStateMachine(final SCXML input, final ErrorReporter errRep);
 }

@@ -45,15 +45,6 @@ public abstract class Executable implements Serializable {
     }
 
     /**
-     * Gets the executable actions contained in this Executable.
-     *
-     * @return Returns the actions.
-     */
-    public final List<Action> getActions() {
-        return actions;
-    }
-
-    /**
      * Add an Action to the list of executable actions contained in
      * this Executable.
      *
@@ -63,6 +54,15 @@ public abstract class Executable implements Serializable {
         if (action != null) {
             this.actions.add(action);
         }
+    }
+
+    /**
+     * Gets the executable actions contained in this Executable.
+     *
+     * @return Returns the actions.
+     */
+    public final List<Action> getActions() {
+        return actions;
     }
 
     /**

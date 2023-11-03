@@ -50,6 +50,21 @@ public class URLResolver implements PathResolver, Serializable {
     }
 
     /**
+     * @see org.apache.commons.scxml2.PathResolver#getResolver(String)
+     */
+    @Override
+    public PathResolver getResolver(final String ctxPath) {
+        URL combined;
+        try {
+            combined = new URL(baseURL, ctxPath);
+            return new URLResolver(combined);
+        } catch (final MalformedURLException e) {
+            log.error("Malformed URL", e);
+        }
+        return null;
+    }
+
+    /**
      * Uses URL(URL, String) constructor to combine URL's.
      * @see org.apache.commons.scxml2.PathResolver#resolvePath(String)
      */
@@ -59,21 +74,6 @@ public class URLResolver implements PathResolver, Serializable {
         try {
             combined = new URL(baseURL, ctxPath);
             return combined.toString();
-        } catch (final MalformedURLException e) {
-            log.error("Malformed URL", e);
-        }
-        return null;
-    }
-
-    /**
-     * @see org.apache.commons.scxml2.PathResolver#getResolver(String)
-     */
-    @Override
-    public PathResolver getResolver(final String ctxPath) {
-        URL combined;
-        try {
-            combined = new URL(baseURL, ctxPath);
-            return new URLResolver(combined);
         } catch (final MalformedURLException e) {
             log.error("Malformed URL", e);
         }

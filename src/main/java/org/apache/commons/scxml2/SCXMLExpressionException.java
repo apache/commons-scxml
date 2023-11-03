@@ -42,14 +42,6 @@ public class SCXMLExpressionException extends Exception {
     }
 
     /**
-     * @see Exception#Exception(Throwable)
-     * @param cause The cause
-     */
-    public SCXMLExpressionException(final Throwable cause) {
-        super(cause);
-    }
-
-    /**
      * @see Exception#Exception(String, Throwable)
      * @param message The error message
      * @param cause The cause
@@ -57,6 +49,14 @@ public class SCXMLExpressionException extends Exception {
     public SCXMLExpressionException(final String message,
             final Throwable cause) {
         super(message, cause);
+    }
+
+    /**
+     * @see Exception#Exception(Throwable)
+     * @param cause The cause
+     */
+    public SCXMLExpressionException(final Throwable cause) {
+        super(cause);
     }
 
 }

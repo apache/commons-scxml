@@ -135,11 +135,23 @@ public class SCXML implements Serializable, Observable {
     }
 
     /**
-     * {@inheritDoc}
+     * Add an immediate child of the SCXML root.
+     *
+     * @param es The child to be added.
+     *
+     * @since 0.7
      */
-    @Override
-    public final Integer getObservableId() {
-        return SCXML_OBSERVABLE_ID;
+    public final void addChild(final EnterableState es) {
+        children.add(es);
+    }
+
+    /**
+     * Add a target to this SCXML document.
+     *
+     * @param target The target to be added to the targets Map.
+     */
+    public final void addTarget(final TransitionTarget target) {
+        targets.put(target.getId(), target);
     }
 
     /**
@@ -148,81 +160,6 @@ public class SCXML implements Serializable, Observable {
      */
     public final String generateTransitionTargetId() {
         return GENERATED_TT_ID_PREFIX +ttNextId++;
-    }
-
-    public final Script getGlobalScript() {
-        return globalScript;
-    }
-
-    public final void setGlobalScript(final Script script) {
-        this.globalScript = script;
-    }
-
-    /**
-     * Gets the {@link PathResolver}.
-     *
-     * @return Returns the pathResolver.
-     */
-    public PathResolver getPathResolver() {
-        return pathResolver;
-    }
-
-    /**
-     * Sets the {@link PathResolver}.
-     *
-     * @param pathResolver The pathResolver to set.
-     */
-    public void setPathResolver(final PathResolver pathResolver) {
-        this.pathResolver = pathResolver;
-    }
-
-    /**
-     * Gets the initial Transition.
-     *
-     * @return Returns the initial transition for this state machine.
-     *
-     * @since 2.0
-     */
-    public final SimpleTransition getInitialTransition() {
-        return initialTransition;
-    }
-
-    /**
-     * Sets the initial Transition.
-     * <p>Note: the initial transition can/may not have executable content!</p>
-     *
-     * @param initialTransition The initial transition to set.
-     *
-     * @since 2.0
-     */
-    public final void setInitialTransition(final SimpleTransition initialTransition) {
-        this.initialTransition = initialTransition;
-    }
-
-    /**
-     * Gets the data model placed at document root.
-     *
-     * @return Returns the data model.
-     */
-    public final Datamodel getDatamodel() {
-        return datamodel;
-    }
-
-    /**
-     * Sets the data model at document root.
-     *
-     * @param datamodel The Datamodel to set.
-     */
-    public final void setDatamodel(final Datamodel datamodel) {
-        this.datamodel = datamodel;
-    }
-
-    public final void setLateBinding(final Boolean lateBinding) {
-        this.lateBinding = lateBinding;
-    }
-
-    public final Boolean isLateBinding() {
-        return lateBinding;
     }
 
     /**
@@ -235,6 +172,32 @@ public class SCXML implements Serializable, Observable {
     public final List<EnterableState> getChildren() {
         return children;
     }
+
+    /**
+     * Gets the data model placed at document root.
+     *
+     * @return Returns the data model.
+     */
+    public final Datamodel getDatamodel() {
+        return datamodel;
+    }
+
+    /**
+     * Gets the datamodel name as specified as attribute on this document
+     * @return The datamodel name of this document
+     */
+    public String getDatamodelName() {
+        return datamodelName;
+    }
+
+    /**
+	 * Gets the exmode in use for this state machine.
+	 *
+	 * @return The exmode in use.
+	 */
+	public String getExmode() {
+		return exmode;
+	}
 
     /**
      * Gets the first immediate child of the SCXML root. Return null if there's no child.
@@ -250,73 +213,8 @@ public class SCXML implements Serializable, Observable {
         return null;
     }
 
-    /**
-     * Add an immediate child of the SCXML root.
-     *
-     * @param es The child to be added.
-     *
-     * @since 0.7
-     */
-    public final void addChild(final EnterableState es) {
-        children.add(es);
-    }
-
-    /**
-     * Gets the targets map, which is a Map of all States and Parallels
-     * associated with this state machine, keyed by their id.
-     *
-     * @return Map Returns the targets.
-     */
-    public final Map<String, TransitionTarget> getTargets() {
-        return targets;
-    }
-
-    /**
-     * Add a target to this SCXML document.
-     *
-     * @param target The target to be added to the targets Map.
-     */
-    public final void addTarget(final TransitionTarget target) {
-        targets.put(target.getId(), target);
-    }
-
-    /**
-     * Gets the SCXML document version.
-     *
-     * @return Returns the version.
-     */
-    public final String getVersion() {
-        return version;
-    }
-
-    /**
-     * Sets the SCXML document version.
-     *
-     * @param version The version to set.
-     */
-    public final void setVersion(final String version) {
-        this.version = version;
-    }
-
-    /**
-     * Gets the namespace definitions specified on the SCXML element.
-     * May be <code>null</code>.
-     *
-     * @return The namespace definitions specified on the SCXML element,
-     *         may be <code>null</code>.
-     */
-    public final Map<String, String> getNamespaces() {
-        return namespaces;
-    }
-
-    /**
-     * Sets the namespace definitions specified on the SCXML element.
-     *
-     * @param namespaces The namespace definitions specified on the
-     *                   SCXML element.
-     */
-    public final void setNamespaces(final Map<String, String> namespaces) {
-        this.namespaces = namespaces;
+    public final Script getGlobalScript() {
+        return globalScript;
     }
 
     /**
@@ -330,13 +228,14 @@ public class SCXML implements Serializable, Observable {
     }
 
     /**
-     * Sets the initial transition target.
+     * Gets the initial Transition.
      *
-     * @param initial The initial transition target
-     * @see #setInitialTransition(SimpleTransition)
+     * @return Returns the initial transition for this state machine.
+     *
+     * @since 2.0
      */
-    public final void setInitial(final String initial) {
-        this.initial = initial;
+    public final SimpleTransition getInitialTransition() {
+        return initialTransition;
     }
 
     /**
@@ -348,6 +247,122 @@ public class SCXML implements Serializable, Observable {
 		return name;
 	}
 
+    /**
+     * Gets the namespace definitions specified on the SCXML element.
+     * May be <code>null</code>.
+     *
+     * @return The namespace definitions specified on the SCXML element,
+     *         may be <code>null</code>.
+     */
+    public final Map<String, String> getNamespaces() {
+        return namespaces;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final Integer getObservableId() {
+        return SCXML_OBSERVABLE_ID;
+    }
+
+    /**
+     * Gets the {@link PathResolver}.
+     *
+     * @return Returns the pathResolver.
+     */
+    public PathResolver getPathResolver() {
+        return pathResolver;
+    }
+
+    /**
+	 * Gets the profile in use for this state machine.
+	 *
+	 * @return The profile in use.
+	 */
+	public String getProfile() {
+		return profile;
+	}
+
+    /**
+     * Gets the targets map, which is a Map of all States and Parallels
+     * associated with this state machine, keyed by their id.
+     *
+     * @return Map Returns the targets.
+     */
+    public final Map<String, TransitionTarget> getTargets() {
+        return targets;
+    }
+
+    /**
+     * Gets the SCXML document version.
+     *
+     * @return Returns the version.
+     */
+    public final String getVersion() {
+        return version;
+    }
+
+    public final Boolean isLateBinding() {
+        return lateBinding;
+    }
+
+    /**
+     * Sets the data model at document root.
+     *
+     * @param datamodel The Datamodel to set.
+     */
+    public final void setDatamodel(final Datamodel datamodel) {
+        this.datamodel = datamodel;
+    }
+
+    /**
+     * Sets the datamodel name as specified as attribute on this document
+     * @param datamodelName The datamodel name
+     */
+    public void setDatamodelName(final String datamodelName) {
+        this.datamodelName = datamodelName;
+    }
+
+    /**
+	 * Sets the exmode to be used for this state machine.
+	 *
+	 * @param exmode The exmode to be used.
+	 */
+	public void setExmode(final String exmode) {
+		this.exmode = exmode;
+	}
+
+    public final void setGlobalScript(final Script script) {
+        this.globalScript = script;
+    }
+
+    /**
+     * Sets the initial transition target.
+     *
+     * @param initial The initial transition target
+     * @see #setInitialTransition(SimpleTransition)
+     */
+    public final void setInitial(final String initial) {
+        this.initial = initial;
+    }
+
+	/**
+     * Sets the initial Transition.
+     * <p>Note: the initial transition can/may not have executable content!</p>
+     *
+     * @param initialTransition The initial transition to set.
+     *
+     * @since 2.0
+     */
+    public final void setInitialTransition(final SimpleTransition initialTransition) {
+        this.initialTransition = initialTransition;
+    }
+
+	public final void setLateBinding(final Boolean lateBinding) {
+        this.lateBinding = lateBinding;
+    }
+
 	/**
 	 * Sets the name for this state machine.
 	 *
@@ -358,15 +373,25 @@ public class SCXML implements Serializable, Observable {
 	}
 
 	/**
-	 * Gets the profile in use for this state machine.
-	 *
-	 * @return The profile in use.
-	 */
-	public String getProfile() {
-		return profile;
-	}
+     * Sets the namespace definitions specified on the SCXML element.
+     *
+     * @param namespaces The namespace definitions specified on the
+     *                   SCXML element.
+     */
+    public final void setNamespaces(final Map<String, String> namespaces) {
+        this.namespaces = namespaces;
+    }
 
 	/**
+     * Sets the {@link PathResolver}.
+     *
+     * @param pathResolver The pathResolver to set.
+     */
+    public void setPathResolver(final PathResolver pathResolver) {
+        this.pathResolver = pathResolver;
+    }
+
+    /**
 	 * Sets the profile in use for this state machine.
 	 *
 	 * @param profile The profile to be used.
@@ -375,38 +400,13 @@ public class SCXML implements Serializable, Observable {
 		this.profile = profile;
 	}
 
-	/**
-	 * Gets the exmode in use for this state machine.
-	 *
-	 * @return The exmode in use.
-	 */
-	public String getExmode() {
-		return exmode;
-	}
-
-	/**
-	 * Sets the exmode to be used for this state machine.
-	 *
-	 * @param exmode The exmode to be used.
-	 */
-	public void setExmode(final String exmode) {
-		this.exmode = exmode;
-	}
-
     /**
-     * Gets the datamodel name as specified as attribute on this document
-     * @return The datamodel name of this document
+     * Sets the SCXML document version.
+     *
+     * @param version The version to set.
      */
-    public String getDatamodelName() {
-        return datamodelName;
-    }
-
-    /**
-     * Sets the datamodel name as specified as attribute on this document
-     * @param datamodelName The datamodel name
-     */
-    public void setDatamodelName(final String datamodelName) {
-        this.datamodelName = datamodelName;
+    public final void setVersion(final String version) {
+        this.version = version;
     }
 }
 

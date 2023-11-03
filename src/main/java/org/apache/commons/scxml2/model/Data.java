@@ -49,42 +49,6 @@ public class Data implements ParsedValueContainer {
     private ParsedValue dataValue;
 
     /**
-     * Gets the id.
-     *
-     * @return String An identifier.
-     */
-    public final String getId() {
-        return id;
-    }
-
-    /**
-     * Sets the id.
-     *
-     * @param id The identifier.
-     */
-    public final void setId(final String id) {
-        this.id = id;
-    }
-
-    /**
-     * Gets the URL for external data.
-     *
-     * @return String The URL.
-     */
-    public final String getSrc() {
-        return src;
-    }
-
-    /**
-     * Sets the URL for external data.
-     *
-     * @param src The source URL.
-     */
-    public final void setSrc(final String src) {
-        this.src = src;
-    }
-
-    /**
      * Gets the expression that evaluates to the value of this data instance.
      *
      * @return String The expression.
@@ -94,12 +58,12 @@ public class Data implements ParsedValueContainer {
     }
 
     /**
-     * Sets the expression that evaluates to the value of this data instance.
+     * Gets the id.
      *
-     * @param expr The expression.
+     * @return String An identifier.
      */
-    public final void setExpr(final String expr) {
-        this.expr = expr;
+    public final String getId() {
+        return id;
     }
 
     /**
@@ -113,6 +77,33 @@ public class Data implements ParsedValueContainer {
     }
 
     /**
+     * Gets the URL for external data.
+     *
+     * @return String The URL.
+     */
+    public final String getSrc() {
+        return src;
+    }
+
+    /**
+     * Sets the expression that evaluates to the value of this data instance.
+     *
+     * @param expr The expression.
+     */
+    public final void setExpr(final String expr) {
+        this.expr = expr;
+    }
+
+    /**
+     * Sets the id.
+     *
+     * @param id The identifier.
+     */
+    public final void setId(final String id) {
+        this.id = id;
+    }
+
+    /**
      * Sets the data value
      *
      * @param dataValue The data value
@@ -120,6 +111,15 @@ public class Data implements ParsedValueContainer {
     @Override
     public final void setParsedValue(final ParsedValue dataValue) {
         this.dataValue = dataValue;
+    }
+
+    /**
+     * Sets the URL for external data.
+     *
+     * @param src The source URL.
+     */
+    public final void setSrc(final String src) {
+        this.src = src;
     }
 }
 

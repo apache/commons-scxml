@@ -36,14 +36,6 @@ public class InvokerException extends Exception {
     }
 
     /**
-     * @see Exception#Exception(Throwable)
-     * @param cause The cause
-     */
-    public InvokerException(final Throwable cause) {
-        super(cause);
-    }
-
-    /**
      * @see Exception#Exception(String, Throwable)
      * @param message The error message
      * @param cause The cause
@@ -51,6 +43,14 @@ public class InvokerException extends Exception {
     public InvokerException(final String message,
             final Throwable cause) {
         super(message, cause);
+    }
+
+    /**
+     * @see Exception#Exception(Throwable)
+     * @param cause The cause
+     */
+    public InvokerException(final Throwable cause) {
+        super(cause);
     }
 
 }

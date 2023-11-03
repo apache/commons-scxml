@@ -62,68 +62,36 @@ public abstract class TransitionalState extends EnterableState {
     }
 
     /**
-     * Update TransitionTarget descendants their ancestors
-     */
-    @Override
-    protected void updateDescendantsAncestors() {
-        super.updateDescendantsAncestors();
-        for (final History h : history) {
-            // reset ancestors
-            h.updateDescendantsAncestors();
-        }
-        for (final TransitionTarget child : children) {
-            child.updateDescendantsAncestors();
-        }
-    }
-
-    /**
-     * Gets the TransitionalState (State or Parallel) parent.
+     * Add a child.
      *
-     * @return Returns the parent.
-     */
-    @Override
-    public TransitionalState getParent() {
-        return (TransitionalState)super.getParent();
-    }
-
-    /**
-     * Sets the TransitionalState parent
+     * @param es A child enterable state.
      *
-     * @param parent The parent to set.
+     * @since 0.7
      */
-    public final void setParent(final TransitionalState parent) {
-        super.setParent(parent);
+    protected void addChild(final EnterableState es) {
+        children.add(es);
+        es.setParent(this);
     }
 
     /**
-     * Gets the ancestor of this TransitionalState at specified level
-     * @param level the level of the ancestor to return, zero being top
-     * @return the ancestor at specified level
-     */
-    @Override
-    public TransitionalState getAncestor(final int level) {
-        return (TransitionalState)super.getAncestor(level);
-    }
-
-    /**
-     * Gets the list of all outgoing transitions from this state, that
-     * will be candidates for being fired on the given event.
+     * @param h History pseudo state
      *
-     * @param event The event
-     * @return List Returns the candidate transitions for given event
+     * @since 0.7
      */
-    public final List<Transition> getTransitionsList(final String event) {
-        List<Transition> matchingTransitions = null; // since we returned null upto v0.6
-        for (final Transition t : transitions) {
-            if ((event == null && t.getEvent() == null)
-                    || (event != null && event.equals(t.getEvent()))) {
-                if (matchingTransitions == null) {
-                    matchingTransitions = new ArrayList<>();
-                }
-                matchingTransitions.add(t);
-            }
-        }
-        return matchingTransitions;
+    public final void addHistory(final History h) {
+        history.add(h);
+        h.setParent(this);
+    }
+
+    /**
+     * Sets the Invoke child.
+     *
+     * @param invoke
+     *            The invoke to set.
+     */
+    public final void addInvoke(final Invoke invoke) {
+        invoke.setParentEnterableState(this, this.invokes.size());
+        this.invokes.add(invoke);
     }
 
     /**
@@ -139,12 +107,24 @@ public abstract class TransitionalState extends EnterableState {
     }
 
     /**
-     * Gets the outgoing transitions for this state as a java.util.List.
-     *
-     * @return List Returns the transitions list.
+     * Gets the ancestor of this TransitionalState at specified level
+     * @param level the level of the ancestor to return, zero being top
+     * @return the ancestor at specified level
      */
-    public final List<Transition> getTransitionsList() {
-        return transitions;
+    @Override
+    public TransitionalState getAncestor(final int level) {
+        return (TransitionalState)super.getAncestor(level);
+    }
+
+    /**
+     * Gets the set of child transition targets (may be empty).
+     *
+     * @return Returns the children.
+     *
+     * @since 0.7
+     */
+    public final List<EnterableState> getChildren() {
+        return children;
     }
 
     /**
@@ -154,37 +134,6 @@ public abstract class TransitionalState extends EnterableState {
      */
     public final Datamodel getDatamodel() {
         return datamodel;
-    }
-
-    /**
-     * Sets the data model for this transition target.
-     *
-     * @param datamodel The Datamodel to set.
-     */
-    public final void setDatamodel(final Datamodel datamodel) {
-        this.datamodel = datamodel;
-    }
-
-    /**
-     * @param h History pseudo state
-     *
-     * @since 0.7
-     */
-    public final void addHistory(final History h) {
-        history.add(h);
-        h.setParent(this);
-    }
-
-    /**
-     * Does this state have a history pseudo state.
-     *
-     * @return boolean true if a given state contains at least one
-     *                 history pseudo state
-     *
-     * @since 0.7
-     */
-    public final boolean hasHistory() {
-        return (!history.isEmpty());
     }
 
     /**
@@ -210,36 +159,87 @@ public abstract class TransitionalState extends EnterableState {
     }
 
     /**
-     * Sets the Invoke child.
+     * Gets the TransitionalState (State or Parallel) parent.
      *
-     * @param invoke
-     *            The invoke to set.
+     * @return Returns the parent.
      */
-    public final void addInvoke(final Invoke invoke) {
-        invoke.setParentEnterableState(this, this.invokes.size());
-        this.invokes.add(invoke);
+    @Override
+    public TransitionalState getParent() {
+        return (TransitionalState)super.getParent();
     }
 
     /**
-     * Gets the set of child transition targets (may be empty).
+     * Gets the outgoing transitions for this state as a java.util.List.
      *
-     * @return Returns the children.
-     *
-     * @since 0.7
+     * @return List Returns the transitions list.
      */
-    public final List<EnterableState> getChildren() {
-        return children;
+    public final List<Transition> getTransitionsList() {
+        return transitions;
     }
 
     /**
-     * Add a child.
+     * Gets the list of all outgoing transitions from this state, that
+     * will be candidates for being fired on the given event.
      *
-     * @param es A child enterable state.
+     * @param event The event
+     * @return List Returns the candidate transitions for given event
+     */
+    public final List<Transition> getTransitionsList(final String event) {
+        List<Transition> matchingTransitions = null; // since we returned null upto v0.6
+        for (final Transition t : transitions) {
+            if ((event == null && t.getEvent() == null)
+                    || (event != null && event.equals(t.getEvent()))) {
+                if (matchingTransitions == null) {
+                    matchingTransitions = new ArrayList<>();
+                }
+                matchingTransitions.add(t);
+            }
+        }
+        return matchingTransitions;
+    }
+
+    /**
+     * Does this state have a history pseudo state.
+     *
+     * @return boolean true if a given state contains at least one
+     *                 history pseudo state
      *
      * @since 0.7
      */
-    protected void addChild(final EnterableState es) {
-        children.add(es);
-        es.setParent(this);
+    public final boolean hasHistory() {
+        return (!history.isEmpty());
+    }
+
+    /**
+     * Sets the data model for this transition target.
+     *
+     * @param datamodel The Datamodel to set.
+     */
+    public final void setDatamodel(final Datamodel datamodel) {
+        this.datamodel = datamodel;
+    }
+
+    /**
+     * Sets the TransitionalState parent
+     *
+     * @param parent The parent to set.
+     */
+    public final void setParent(final TransitionalState parent) {
+        super.setParent(parent);
+    }
+
+    /**
+     * Update TransitionTarget descendants their ancestors
+     */
+    @Override
+    protected void updateDescendantsAncestors() {
+        super.updateDescendantsAncestors();
+        for (final History h : history) {
+            // reset ancestors
+            h.updateDescendantsAncestors();
+        }
+        for (final TransitionTarget child : children) {
+            child.updateDescendantsAncestors();
+        }
     }
 }

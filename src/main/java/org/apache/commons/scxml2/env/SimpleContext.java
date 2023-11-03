@@ -76,26 +76,6 @@ public class SimpleContext implements Context, Serializable {
     }
 
     /**
-     * Assigns a new value to an existing variable or creates a new one.
-     * The method searches the chain of parent Contexts for variable
-     * existence.
-     *
-     * @param name The variable name
-     * @param value The variable value
-     * @see org.apache.commons.scxml2.Context#set(String, Object)
-     */
-    @Override
-    public void set(final String name, final Object value) {
-        if (getVars().containsKey(name)) { //first try to override local
-            setLocal(name, value);
-        } else if (parent != null && parent.has(name)) { //then check for global
-            parent.set(name, value);
-        } else { //otherwise create a new local variable
-            setLocal(name, value);
-        }
-    }
-
-    /**
      * Gets the value of this variable; delegating to parent.
      *
      * @param name The variable name
@@ -112,6 +92,46 @@ public class SimpleContext implements Context, Serializable {
             return parent.get(name);
         }
         return null;
+    }
+
+    /**
+     * Gets the log used by this <code>Context</code> instance.
+     *
+     * @return Log The log being used.
+     */
+    protected Log getLog() {
+        return log;
+    }
+
+    /**
+     * Gets the parent Context, may be null.
+     *
+     * @return Context The parent Context
+     * @see org.apache.commons.scxml2.Context#getParent()
+     */
+    @Override
+    public Context getParent() {
+        return parent;
+    }
+
+    /**
+     * Gets the SCXMLSystemContext for this Context, should not be null unless this is the root Context
+     *
+     * @return The SCXMLSystemContext in a chained Context environment
+     */
+    @Override
+    public final SCXMLSystemContext getSystemContext() {
+        return systemContext;
+    }
+
+    /**
+     * Gets the Map of all local variables in this Context.
+     *
+     * @return Returns the vars.
+     */
+    @Override
+    public Map<String, Object> getVars() {
+        return vars;
     }
 
     /**
@@ -149,24 +169,23 @@ public class SimpleContext implements Context, Serializable {
     }
 
     /**
-     * Gets the parent Context, may be null.
+     * Assigns a new value to an existing variable or creates a new one.
+     * The method searches the chain of parent Contexts for variable
+     * existence.
      *
-     * @return Context The parent Context
-     * @see org.apache.commons.scxml2.Context#getParent()
+     * @param name The variable name
+     * @param value The variable value
+     * @see org.apache.commons.scxml2.Context#set(String, Object)
      */
     @Override
-    public Context getParent() {
-        return parent;
-    }
-
-    /**
-     * Gets the SCXMLSystemContext for this Context, should not be null unless this is the root Context
-     *
-     * @return The SCXMLSystemContext in a chained Context environment
-     */
-    @Override
-    public final SCXMLSystemContext getSystemContext() {
-        return systemContext;
+    public void set(final String name, final Object value) {
+        if (getVars().containsKey(name)) { //first try to override local
+            setLocal(name, value);
+        } else if (parent != null && parent.has(name)) { //then check for global
+            parent.set(name, value);
+        } else { //otherwise create a new local variable
+            setLocal(name, value);
+        }
     }
 
     /**
@@ -193,25 +212,6 @@ public class SimpleContext implements Context, Serializable {
      */
     protected void setVars(final Map<String, Object> vars) {
         this.vars = vars;
-    }
-
-    /**
-     * Gets the Map of all local variables in this Context.
-     *
-     * @return Returns the vars.
-     */
-    @Override
-    public Map<String, Object> getVars() {
-        return vars;
-    }
-
-    /**
-     * Gets the log used by this <code>Context</code> instance.
-     *
-     * @return Log The log being used.
-     */
-    protected Log getLog() {
-        return log;
     }
 }
 

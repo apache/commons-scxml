@@ -45,24 +45,12 @@ public class State extends TransitionalState {
     }
 
     /**
-     * Gets the initial state.
-     *
-     * @return Initial Returns the initial state.
+     * Adds an EnterableState (State, Final or Parallel) child
+     * @param es the child to add
      */
-    public final Initial getInitial() {
-        return initial;
-    }
-
-    /**
-     * Sets the initial state.
-     *
-     * @param target
-     *            The target to set.
-     */
-    public final void setInitial(final Initial target) {
-        this.first = null;
-        this.initial = target;
-        target.setParent(this);
+    @Override
+    public final void addChild(final EnterableState es) {
+        super.addChild(es);
     }
 
     /**
@@ -75,20 +63,12 @@ public class State extends TransitionalState {
     }
 
     /**
-     * Sets the initial state by its ID string.
+     * Gets the initial state.
      *
-     * @param target
-     *            The initial target's ID to set.
+     * @return Initial Returns the initial state.
      */
-    public final void setFirst(final String target) {
-        this.first = target;
-        final SimpleTransition t = new SimpleTransition();
-        t.setNext(target);
-        final Initial ini = new Initial();
-        ini.setGenerated();
-        ini.setTransition(t);
-        ini.setParent(this);
-        this.initial = ini;
+    public final Initial getInitial() {
+        return initial;
     }
 
     /**
@@ -98,15 +78,6 @@ public class State extends TransitionalState {
     @Override
     public final boolean isAtomicState() {
         return getChildren().isEmpty();
-    }
-
-    /**
-     * Check whether this is a simple (leaf) state (UML terminology).
-     *
-     * @return true if this is a simple state, otherwise false
-     */
-    public final boolean isSimple() {
-        return isAtomicState();
     }
 
     /**
@@ -130,12 +101,41 @@ public class State extends TransitionalState {
     }
 
     /**
-     * Adds an EnterableState (State, Final or Parallel) child
-     * @param es the child to add
+     * Check whether this is a simple (leaf) state (UML terminology).
+     *
+     * @return true if this is a simple state, otherwise false
      */
-    @Override
-    public final void addChild(final EnterableState es) {
-        super.addChild(es);
+    public final boolean isSimple() {
+        return isAtomicState();
+    }
+
+    /**
+     * Sets the initial state by its ID string.
+     *
+     * @param target
+     *            The initial target's ID to set.
+     */
+    public final void setFirst(final String target) {
+        this.first = target;
+        final SimpleTransition t = new SimpleTransition();
+        t.setNext(target);
+        final Initial ini = new Initial();
+        ini.setGenerated();
+        ini.setTransition(t);
+        ini.setParent(this);
+        this.initial = ini;
+    }
+
+    /**
+     * Sets the initial state.
+     *
+     * @param target
+     *            The target to set.
+     */
+    public final void setInitial(final Initial target) {
+        this.first = null;
+        this.initial = target;
+        target.setParent(this);
     }
 }
 

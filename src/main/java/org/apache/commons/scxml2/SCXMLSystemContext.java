@@ -75,24 +75,6 @@ public class SCXMLSystemContext implements Context, Serializable {
     private long nextSessionSequenceId;
 
     /**
-     * Initialize or replace systemContext
-     * @param systemContext the system context to set
-     * @throws NullPointerException if systemContext == null
-     */
-    void setSystemContext(final Context systemContext) {
-        if (this.systemContext != null) {
-            // replace systemContext
-            systemContext.getVars().putAll(this.systemContext.getVars());
-        }
-        else {
-            // create Platform variables map
-            systemContext.setLocal(X_KEY, new HashMap<String, Object>());
-        }
-        this.systemContext = systemContext;
-        this.protectedVars = Collections.unmodifiableMap(systemContext.getVars());
-    }
-
-    /**
      * The unmodifiable wrapped variables map from the wrapped system context
      */
     private Map<String, Object> protectedVars;
@@ -103,6 +85,56 @@ public class SCXMLSystemContext implements Context, Serializable {
 
     public String generateSessionId() {
         return getContext().get(SESSIONID_KEY) + "-" + nextSessionSequenceId++;
+    }
+
+    @Override
+    public Object get(final String name) {
+        return systemContext.get(name);
+    }
+
+    /**
+     * @return Returns the wrapped (modifiable) system context
+     */
+    Context getContext() {
+        return systemContext;
+    }
+
+    @Override
+    public Context getParent() {
+        return systemContext.getParent();
+    }
+
+    /**
+     * @return The Platform specific system variables map stored under the {@link #X_KEY _x} root system variable
+     */
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> getPlatformVariables() {
+        return (Map<String, Object>)get(X_KEY);
+    }
+
+    @Override
+    public SCXMLSystemContext getSystemContext() {
+        return this;
+    }
+
+    @Override
+    public Map<String, Object> getVars() {
+        return protectedVars;
+    }
+
+    @Override
+    public boolean has(final String name) {
+        return systemContext.has(name);
+    }
+
+    @Override
+    public boolean hasLocal(final String name) {
+        return systemContext.hasLocal(name);
+    }
+
+    @Override
+    public void reset() {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -119,53 +151,21 @@ public class SCXMLSystemContext implements Context, Serializable {
         throw new UnsupportedOperationException();
     }
 
-    @Override
-    public Object get(final String name) {
-        return systemContext.get(name);
-    }
-
-    @Override
-    public boolean has(final String name) {
-        return systemContext.has(name);
-    }
-
-    @Override
-    public boolean hasLocal(final String name) {
-        return systemContext.hasLocal(name);
-    }
-
-    @Override
-    public Map<String, Object> getVars() {
-        return protectedVars;
-    }
-
-    @Override
-    public void reset() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Context getParent() {
-        return systemContext.getParent();
-    }
-
-    @Override
-    public SCXMLSystemContext getSystemContext() {
-        return this;
-    }
-
     /**
-     * @return The Platform specific system variables map stored under the {@link #X_KEY _x} root system variable
+     * Initialize or replace systemContext
+     * @param systemContext the system context to set
+     * @throws NullPointerException if systemContext == null
      */
-    @SuppressWarnings("unchecked")
-    public Map<String, Object> getPlatformVariables() {
-        return (Map<String, Object>)get(X_KEY);
-    }
-
-    /**
-     * @return Returns the wrapped (modifiable) system context
-     */
-    Context getContext() {
-        return systemContext;
+    void setSystemContext(final Context systemContext) {
+        if (this.systemContext != null) {
+            // replace systemContext
+            systemContext.getVars().putAll(this.systemContext.getVars());
+        }
+        else {
+            // create Platform variables map
+            systemContext.setLocal(X_KEY, new HashMap<String, Object>());
+        }
+        this.systemContext = systemContext;
+        this.protectedVars = Collections.unmodifiableMap(systemContext.getVars());
     }
 }

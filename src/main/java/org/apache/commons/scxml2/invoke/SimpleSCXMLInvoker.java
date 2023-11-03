@@ -55,25 +55,26 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
      * {@inheritDoc}.
      */
     @Override
-    public String getInvokeId() {
-        return invokeId;
+    public void cancel()
+    throws InvokerException {
+        cancelled = true;
+        executor.getParentSCXMLIOProcessor().close();
+        executor.addEvent(new EventBuilder("cancel.invoke."+ invokeId, TriggerEvent.CANCEL_EVENT).build());
     }
 
-    /**
-     * {@inheritDoc}.
-     */
-    @Override
-    public void setInvokeId(final String invokeId) {
-        this.invokeId = invokeId;
-        this.cancelled = false;
-    }
-
-    /**
-     * {@inheritDoc}.
-     */
-    @Override
-    public void setParentSCXMLExecutor(final SCXMLExecutor parentSCXMLExecutor) {
-        this.parentSCXMLExecutor = parentSCXMLExecutor;
+    protected void execute(final SCXML scxml, final Map<String, Object> params) throws InvokerException {
+        try {
+            executor = new SCXMLExecutor(parentSCXMLExecutor, invokeId, scxml);
+        }
+        catch (final ModelException me) {
+            throw new InvokerException(me);
+        }
+        executor.addListener(scxml, new SimpleSCXMLListener());
+        try {
+            executor.run(params);
+        } catch (final ModelException me) {
+            throw new InvokerException(me.getMessage(), me.getCause());
+        }
     }
 
     /**
@@ -83,6 +84,14 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
     public SCXMLIOProcessor getChildIOProcessor() {
         // not used
         return executor;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public String getInvokeId() {
+        return invokeId;
     }
 
     /**
@@ -115,21 +124,6 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
         execute(scxml, params);
     }
 
-    protected void execute(final SCXML scxml, final Map<String, Object> params) throws InvokerException {
-        try {
-            executor = new SCXMLExecutor(parentSCXMLExecutor, invokeId, scxml);
-        }
-        catch (final ModelException me) {
-            throw new InvokerException(me);
-        }
-        executor.addListener(scxml, new SimpleSCXMLListener());
-        try {
-            executor.run(params);
-        } catch (final ModelException me) {
-            throw new InvokerException(me.getMessage(), me.getCause());
-        }
-    }
-
     /**
      * {@inheritDoc}.
      */
@@ -145,11 +139,17 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
      * {@inheritDoc}.
      */
     @Override
-    public void cancel()
-    throws InvokerException {
-        cancelled = true;
-        executor.getParentSCXMLIOProcessor().close();
-        executor.addEvent(new EventBuilder("cancel.invoke."+ invokeId, TriggerEvent.CANCEL_EVENT).build());
+    public void setInvokeId(final String invokeId) {
+        this.invokeId = invokeId;
+        this.cancelled = false;
+    }
+
+    /**
+     * {@inheritDoc}.
+     */
+    @Override
+    public void setParentSCXMLExecutor(final SCXMLExecutor parentSCXMLExecutor) {
+        this.parentSCXMLExecutor = parentSCXMLExecutor;
     }
 }
 

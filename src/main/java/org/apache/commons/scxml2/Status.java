@@ -40,10 +40,13 @@ public class Status implements Serializable {
     }
 
     /**
-     * @return Whether the state machine terminated AND we reached a top level Final state.
+     * Gets the active states configuration.
+     *
+     * @return active states configuration including simple states and their
+     *         complex ancestors up to the root.
      */
-    public boolean isFinal() {
-        return getFinalState() != null;
+    public Set<EnterableState> getActiveStates() {
+        return configuration.getActiveStates();
     }
 
     /**
@@ -69,13 +72,10 @@ public class Status implements Serializable {
     }
 
     /**
-     * Gets the active states configuration.
-     *
-     * @return active states configuration including simple states and their
-     *         complex ancestors up to the root.
+     * @return Whether the state machine terminated AND we reached a top level Final state.
      */
-    public Set<EnterableState> getActiveStates() {
-        return configuration.getActiveStates();
+    public boolean isFinal() {
+        return getFinalState() != null;
     }
 
     public boolean isInState(final String state) {

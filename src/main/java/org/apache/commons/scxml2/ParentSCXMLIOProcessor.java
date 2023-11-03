@@ -33,12 +33,12 @@ public class ParentSCXMLIOProcessor implements SCXMLIOProcessor {
         }
     }
 
-    public String getInvokeId() {
-        return invokeId;
-    }
-
     public synchronized void close() {
         processor = null;
+    }
+
+    public String getInvokeId() {
+        return invokeId;
     }
 
     public synchronized boolean isClosed() {

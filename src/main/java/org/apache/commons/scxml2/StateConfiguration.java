@@ -45,22 +45,11 @@ public class StateConfiguration implements Serializable {
     private final Set<EnterableState> atomicStatesSet = Collections.unmodifiableSet(atomicStates);
 
     /**
-     * Gets the active states
-     *
-     * @return active states including simple states and their
-     *         complex ancestors up to the root.
+     * Clear the state configuration
      */
-    public Set<EnterableState> getActiveStates() {
-        return  activeStatesSet;
-    }
-
-    /**
-     * Gets the current atomic states (leaf only).
-     *
-     * @return Returns the atomic states - simple (leaf) states only.
-     */
-    public Set<EnterableState> getStates() {
-        return  atomicStatesSet;
+    public void clear() {
+        activeStates.clear();
+        atomicStates.clear();
     }
 
     /**
@@ -92,10 +81,21 @@ public class StateConfiguration implements Serializable {
     }
 
     /**
-     * Clear the state configuration
+     * Gets the active states
+     *
+     * @return active states including simple states and their
+     *         complex ancestors up to the root.
      */
-    public void clear() {
-        activeStates.clear();
-        atomicStates.clear();
+    public Set<EnterableState> getActiveStates() {
+        return  activeStatesSet;
+    }
+
+    /**
+     * Gets the current atomic states (leaf only).
+     *
+     * @return Returns the atomic states - simple (leaf) states only.
+     */
+    public Set<EnterableState> getStates() {
+        return  atomicStatesSet;
     }
 }

@@ -53,51 +53,13 @@ public class CustomActionWrapper extends Action {
      */
     private Map<String, String> attributes;
 
+    @Override
+    public void execute(final ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException, ActionExecutionError {
+        action.execute(exctx);
+    }
+
     public Action getAction() {
         return action;
-    }
-
-    public void setAction(final Action action) {
-        this.action = action;
-    }
-
-    /**
-     * @return the custom action element prefix (might be null)
-     */
-    public String getPrefix() {
-        return prefix;
-    }
-
-    /**
-     * Sets the custom action XML element prefix
-     * @param prefix custom action XML element prefix
-     */
-    public void setPrefix(final String prefix) {
-        this.prefix = prefix;
-    }
-
-    /**
-     * @return the custom action XML element local name
-     */
-    public String getLocalName() {
-        return localName;
-    }
-
-    /**
-     * Sets the custom action XML element local name
-     * @param localName custom action XML element local name
-     */
-    public void setLocalName(final String localName) {
-        this.localName = localName;
-    }
-
-    /**
-     * Gets the custom XML namespaces in effect for this custom action
-     *
-     * @return Returns the map of namespaces.
-     */
-    public final Map<String, String> getNamespaces() {
-        return namespaces;
     }
 
     /**
@@ -110,11 +72,19 @@ public class CustomActionWrapper extends Action {
     }
 
     /**
-     * Sets the attributes defined on the custom action element
-     * @param attributes the attributes to set
+     * @return the custom action XML element local name
      */
-    public void setAttributes(final Map<String, String> attributes) {
-        this.attributes = attributes;
+    public String getLocalName() {
+        return localName;
+    }
+
+    /**
+     * Gets the custom XML namespaces in effect for this custom action
+     *
+     * @return Returns the map of namespaces.
+     */
+    public final Map<String, String> getNamespaces() {
+        return namespaces;
     }
 
     @Override
@@ -123,17 +93,47 @@ public class CustomActionWrapper extends Action {
     }
 
     @Override
-    public void setParent(final Executable parent) {
-        action.setParent(parent);
-    }
-
-    @Override
     public EnterableState getParentEnterableState() throws ModelException {
         return action.getParentEnterableState();
     }
 
+    /**
+     * @return the custom action element prefix (might be null)
+     */
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public void setAction(final Action action) {
+        this.action = action;
+    }
+
+    /**
+     * Sets the attributes defined on the custom action element
+     * @param attributes the attributes to set
+     */
+    public void setAttributes(final Map<String, String> attributes) {
+        this.attributes = attributes;
+    }
+
+    /**
+     * Sets the custom action XML element local name
+     * @param localName custom action XML element local name
+     */
+    public void setLocalName(final String localName) {
+        this.localName = localName;
+    }
+
     @Override
-    public void execute(final ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException, ActionExecutionError {
-        action.execute(exctx);
+    public void setParent(final Executable parent) {
+        action.setParent(parent);
+    }
+
+    /**
+     * Sets the custom action XML element prefix
+     * @param prefix custom action XML element prefix
+     */
+    public void setPrefix(final String prefix) {
+        this.prefix = prefix;
     }
 }

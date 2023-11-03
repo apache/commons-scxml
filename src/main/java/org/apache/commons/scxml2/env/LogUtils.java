@@ -25,6 +25,23 @@ import org.apache.commons.scxml2.model.TransitionTarget;
 public final class LogUtils {
 
     /**
+     * Write out this TransitionTarget location in a XPath style format.
+     *
+     * @param tt The TransitionTarget whose &quot;path&quot; is to needed
+     * @return String The XPath style location of the TransitionTarget within
+     *                the SCXML document
+     */
+    public static String getTTPath(final TransitionTarget tt) {
+        final StringBuilder sb = new StringBuilder("/");
+        for (int i = 0; i < tt.getNumberOfAncestors(); i++) {
+            sb.append(tt.getAncestor(i).getId());
+            sb.append("/");
+        }
+        sb.append(tt.getId());
+        return sb.toString();
+    }
+
+    /**
      * Create a human readable log view of this transition.
      *
      * @param from The source TransitionTarget
@@ -40,23 +57,6 @@ public final class LogUtils {
                 ", from = " + getTTPath(from) +
                 ", to = " + getTTPath(to) +
                 ')';
-    }
-
-    /**
-     * Write out this TransitionTarget location in a XPath style format.
-     *
-     * @param tt The TransitionTarget whose &quot;path&quot; is to needed
-     * @return String The XPath style location of the TransitionTarget within
-     *                the SCXML document
-     */
-    public static String getTTPath(final TransitionTarget tt) {
-        final StringBuilder sb = new StringBuilder("/");
-        for (int i = 0; i < tt.getNumberOfAncestors(); i++) {
-            sb.append(tt.getAncestor(i).getId());
-            sb.append("/");
-        }
-        sb.append(tt.getId());
-        return sb.toString();
     }
 
     /**

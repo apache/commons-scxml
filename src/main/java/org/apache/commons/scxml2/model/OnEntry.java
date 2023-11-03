@@ -41,13 +41,11 @@ public class OnEntry extends Executable {
     }
 
     /**
-     * Sets the EnterableState parent.
-     *
-     * @param parent The parent to set.
+     * @return The indicator whether to raise the non-standard "entry.state.id" internal event after executing
+     *         this OnEntry. When null no event will be raised
      */
-    @Override
-    public final void setParent(final EnterableState parent) {
-        super.setParent(parent);
+    public final Boolean getRaiseEvent() {
+        return raiseEvent;
     }
 
     /**
@@ -58,11 +56,13 @@ public class OnEntry extends Executable {
     }
 
     /**
-     * @return The indicator whether to raise the non-standard "entry.state.id" internal event after executing
-     *         this OnEntry. When null no event will be raised
+     * Sets the EnterableState parent.
+     *
+     * @param parent The parent to set.
      */
-    public final Boolean getRaiseEvent() {
-        return raiseEvent;
+    @Override
+    public final void setParent(final EnterableState parent) {
+        super.setParent(parent);
     }
 
     /**

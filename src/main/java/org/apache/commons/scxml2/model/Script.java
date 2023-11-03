@@ -44,20 +44,14 @@ public class Script extends Action {
     public Script() {
     }
 
-    public boolean isGlobalScript() {
-        return globalScript;
-    }
-
-    public void setGlobalScript(final boolean globalScript) {
-        this.globalScript = globalScript;
-    }
-
-    public String getSrc() {
-        return src;
-    }
-
-    public void setSrc(final String src) {
-        this.src = src;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void execute(final ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
+        final Context ctx = isGlobalScript() ? exctx.getGlobalContext() : exctx.getContext(getParentEnterableState());
+        final Evaluator eval = exctx.getEvaluator();
+        eval.evalScript(ctx, getScript());
     }
 
     /**
@@ -69,18 +63,24 @@ public class Script extends Action {
         return script;
     }
 
+    public String getSrc() {
+        return src;
+    }
+
+    public boolean isGlobalScript() {
+        return globalScript;
+    }
+
+    public void setGlobalScript(final boolean globalScript) {
+        this.globalScript = globalScript;
+    }
+
     public void setScript(final String script) {
         this.script = script;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void execute(final ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
-        final Context ctx = isGlobalScript() ? exctx.getGlobalContext() : exctx.getContext(getParentEnterableState());
-        final Evaluator eval = exctx.getEvaluator();
-        eval.evalScript(ctx, getScript());
+    public void setSrc(final String src) {
+        this.src = src;
     }
 }
 

@@ -31,52 +31,8 @@ public class EventBuilder {
         this.type = type;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public String getSendId() {
-        return sendId;
-    }
-
-    public EventBuilder sendId(final String sendId) {
-        this.sendId = sendId;
-        return this;
-    }
-
-    public String getOrigin() {
-        return origin;
-    }
-
-    public EventBuilder origin(final String origin) {
-        this.origin = origin;
-        return this;
-    }
-
-    public String getOriginType() {
-        return originType;
-    }
-
-    public EventBuilder originType(final String originType) {
-        this.originType = originType;
-        return this;
-    }
-
-    public String getInvokeId() {
-        return invokeId;
-    }
-
-    public EventBuilder invokeId(final String invokeId) {
-        this.invokeId = invokeId;
-        return this;
-    }
-
-    public Object getData() {
-        return data;
+    public TriggerEvent build() {
+        return new TriggerEvent(name, type, sendId, origin, originType, invokeId, data);
     }
 
     public EventBuilder data(final Object data) {
@@ -84,7 +40,51 @@ public class EventBuilder {
         return this;
     }
 
-    public TriggerEvent build() {
-        return new TriggerEvent(name, type, sendId, origin, originType, invokeId, data);
+    public Object getData() {
+        return data;
+    }
+
+    public String getInvokeId() {
+        return invokeId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    public String getOriginType() {
+        return originType;
+    }
+
+    public String getSendId() {
+        return sendId;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public EventBuilder invokeId(final String invokeId) {
+        this.invokeId = invokeId;
+        return this;
+    }
+
+    public EventBuilder origin(final String origin) {
+        this.origin = origin;
+        return this;
+    }
+
+    public EventBuilder originType(final String originType) {
+        this.originType = originType;
+        return this;
+    }
+
+    public EventBuilder sendId(final String sendId) {
+        this.sendId = sendId;
+        return this;
     }
 }

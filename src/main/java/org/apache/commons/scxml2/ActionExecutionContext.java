@@ -40,17 +40,10 @@ public class ActionExecutionContext {
     }
 
     /**
-     * @return Returns the state machine
+     * @return Returns the SCXML Execution Logger for the application
      */
-    public SCXML getStateMachine() {
-        return exctx.getStateMachine();
-    }
-
-    /**
-     * @return Returns the global context
-     */
-    public Context getGlobalContext() {
-        return exctx.getScInstance().getGlobalContext();
+    public Log getAppLog() {
+        return exctx.getAppLog();
     }
 
     /**
@@ -62,17 +55,17 @@ public class ActionExecutionContext {
     }
 
     /**
-     * @return Returns The evaluator.
-     */
-    public Evaluator getEvaluator() {
-        return exctx.getEvaluator();
-    }
-
-    /**
      * @return Returns the error reporter
      */
     public ErrorReporter getErrorReporter() {
         return exctx.getErrorReporter();
+    }
+
+    /**
+     * @return Returns The evaluator.
+     */
+    public Evaluator getEvaluator() {
+        return exctx.getEvaluator();
     }
 
     /**
@@ -83,6 +76,13 @@ public class ActionExecutionContext {
     }
 
     /**
+     * @return Returns the global context
+     */
+    public Context getGlobalContext() {
+        return exctx.getScInstance().getGlobalContext();
+    }
+
+    /**
      * @return Returns the I/O Processor for the internal event queue
      */
     public SCXMLIOProcessor getInternalIOProcessor() {
@@ -90,9 +90,9 @@ public class ActionExecutionContext {
     }
 
     /**
-     * @return Returns the SCXML Execution Logger for the application
+     * @return Returns the state machine
      */
-    public Log getAppLog() {
-        return exctx.getAppLog();
+    public SCXML getStateMachine() {
+        return exctx.getStateMachine();
     }
 }

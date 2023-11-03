@@ -62,24 +62,6 @@ public final class NotificationRegistry {
     }
 
     /**
-     * Deregister this SCXMLListener for this Observable.
-     *
-     * @param source The observable this listener wants to stop listening to
-     * @param lst The listener
-     */
-    synchronized void removeListener(final Observable source, final SCXMLListener lst) {
-        if (source != null && source.getObservableId() != null) {
-            final Set<SCXMLListener> entries = regs.get(source.getObservableId());
-            if (entries != null) {
-                entries.remove(lst);
-                if (entries.isEmpty()) {
-                    regs.remove(source.getObservableId());
-                }
-            }
-        }
-    }
-
-    /**
      * Inform all relevant listeners that a EnterableState has been
      * entered.
      *
@@ -134,6 +116,24 @@ public final class NotificationRegistry {
             if (entries != null) {
                 for (final SCXMLListener lst : entries) {
                     lst.onTransition(from, to, transition, event);
+                }
+            }
+        }
+    }
+
+    /**
+     * Deregister this SCXMLListener for this Observable.
+     *
+     * @param source The observable this listener wants to stop listening to
+     * @param lst The listener
+     */
+    synchronized void removeListener(final Observable source, final SCXMLListener lst) {
+        if (source != null && source.getObservableId() != null) {
+            final Set<SCXMLListener> entries = regs.get(source.getObservableId());
+            if (entries != null) {
+                entries.remove(lst);
+                if (entries.isEmpty()) {
+                    regs.remove(source.getObservableId());
                 }
             }
         }

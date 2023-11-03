@@ -46,10 +46,7 @@ import org.apache.commons.scxml2.model.ActionExecutionError;
  */
 public class SimpleDispatcher implements EventDispatcher, Serializable {
 
-     /** Serial version UID. */
-    private static final long serialVersionUID = 1L;
-
-    /**
+     /**
      * TimerTask implementation.
      */
     class DelayedEventTask extends TimerTask {
@@ -96,6 +93,9 @@ public class SimpleDispatcher implements EventDispatcher, Serializable {
         }
     }
 
+    /** Serial version UID. */
+    private static final long serialVersionUID = 1L;
+
     /** Implementation independent log category. */
      private static final Log log = LogFactory.getLog(EventDispatcher.class);
 
@@ -104,30 +104,6 @@ public class SimpleDispatcher implements EventDispatcher, Serializable {
      * &lt;send&gt; element <code>id</code>s.
      */
     private final Map<String, Timer> timers = Collections.synchronizedMap(new HashMap<String, Timer>());
-
-    /**
-     * Gets the log instance.
-     *
-     * @return The current log instance
-     */
-    protected Log getLog() {
-        return log;
-    }
-
-    /**
-     * Gets the current timers.
-     *
-     * @return The currently scheduled timers
-     */
-    protected Map<String, Timer> getTimers() {
-        return timers;
-    }
-
-
-    @Override
-    public SimpleDispatcher newInstance() {
-        return new SimpleDispatcher();
-    }
 
     /**
      * @see EventDispatcher#cancel(String)
@@ -149,6 +125,30 @@ public class SimpleDispatcher implements EventDispatcher, Serializable {
             }
         }
         timers.remove(sendId);
+    }
+
+    /**
+     * Gets the log instance.
+     *
+     * @return The current log instance
+     */
+    protected Log getLog() {
+        return log;
+    }
+
+
+    /**
+     * Gets the current timers.
+     *
+     * @return The currently scheduled timers
+     */
+    protected Map<String, Timer> getTimers() {
+        return timers;
+    }
+
+    @Override
+    public SimpleDispatcher newInstance() {
+        return new SimpleDispatcher();
     }
 
     /**

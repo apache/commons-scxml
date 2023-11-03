@@ -41,13 +41,11 @@ public class OnExit extends Executable {
     }
 
     /**
-     * Sets the EnterableState parent.
-     *
-     * @param parent The parent to set.
+     * @return Returns the indicator whether to raise the non-standard "exit.state.id" internal event after executing
+     *         this OnExit. When null no event will be raised
      */
-    @Override
-    public final void setParent(final EnterableState parent) {
-        super.setParent(parent);
+    public final Boolean getRaiseEvent() {
+        return raiseEvent;
     }
 
     /**
@@ -58,11 +56,13 @@ public class OnExit extends Executable {
     }
 
     /**
-     * @return Returns the indicator whether to raise the non-standard "exit.state.id" internal event after executing
-     *         this OnExit. When null no event will be raised
+     * Sets the EnterableState parent.
+     *
+     * @param parent The parent to set.
      */
-    public final Boolean getRaiseEvent() {
-        return raiseEvent;
+    @Override
+    public final void setParent(final EnterableState parent) {
+        super.setParent(parent);
     }
 
     /**

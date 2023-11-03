@@ -118,179 +118,6 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
     private String namelist;
 
     /**
-     * Gets the identifier for this invoke (may be null).
-     *
-     * @return Returns the id.
-     */
-    public final String getId() {
-        return id;
-    }
-
-    /**
-     * Sets the identifier for this invoke.
-     *
-     * @param id The id to set.
-     */
-    public final void setId(final String id) {
-        this.id = id;
-    }
-
-    /**
-     * @return the idlocation
-     */
-    public String getIdlocation() {
-        return idlocation;
-    }
-
-    /**
-     * Sets the idlocation expression
-     * @param idlocation The idlocation expression
-     */
-    public void setIdlocation(final String idlocation) {
-        this.idlocation = idlocation;
-    }
-
-    /**
-     * Gets the type for this &lt;invoke&gt; element.
-     *
-     * @return String Returns the type.
-     */
-    public final String getType() {
-        return type;
-    }
-
-    /**
-     * Sets the type for this &lt;invoke&gt; element.
-     *
-     * @param type The type to set.
-     */
-    public final void setType(final String type) {
-        this.type = type;
-    }
-
-    /**
-     * @return The type expression
-     */
-    public String getTypeexpr() {
-        return typeexpr;
-    }
-
-    /**
-     * Sets the type expression
-     * @param typeexpr The type expression to set
-     */
-    public void setTypeexpr(final String typeexpr) {
-        this.typeexpr = typeexpr;
-    }
-
-    /**
-     * Gets the URL for the external service.
-     *
-     * @return String The URL.
-     */
-    public final String getSrc() {
-        return src;
-    }
-
-    /**
-     * Sets the URL for the external service.
-     *
-     * @param src The source URL.
-     */
-    public final void setSrc(final String src) {
-        this.src = src;
-    }
-
-    /**
-     * Gets the expression that evaluates to the source URL for the
-     * external service.
-     *
-     * @return String The source expression.
-     */
-    public final String getSrcexpr() {
-        return srcexpr;
-    }
-
-    /**
-     * Sets the expression that evaluates to the source URL for the
-     * external service.
-     *
-     * @param srcexpr The source expression.
-     */
-    public final void setSrcexpr(final String srcexpr) {
-        this.srcexpr = srcexpr;
-    }
-
-
-    /**
-     * @return Returns true if all external events should be forwarded to the invoked process.
-     */
-    public final boolean isAutoForward() {
-        return autoForward != null && autoForward;
-    }
-
-    /**
-     * @return Returns the flag indicating whether to forward events to the invoked process.
-     */
-    public final Boolean getAutoForward() {
-        return autoForward;
-    }
-
-    /**
-     * Sets the flag indicating whether to forward events to the invoked process.
-     * @param autoForward the flag
-     */
-    public final void setAutoForward(final Boolean autoForward) {
-        this.autoForward = autoForward;
-    }
-
-    /**
-     * Gets the Finalize for this Invoke.
-     *
-     * @return Finalize The Finalize for this Invoke.
-     */
-    public final Finalize getFinalize() {
-        return finalize;
-    }
-
-    /**
-     * Sets the Finalize for this Invoke.
-     *
-     * @param finalize The Finalize for this Invoke.
-     */
-    public final void setFinalize(final Finalize finalize) {
-        this.finalize = finalize;
-    }
-
-    /**
-     * Gets the list of {@link Param}s.
-     *
-     * @return List The params list.
-     */
-    @Override
-    public List<Param> getParams() {
-        return paramsList;
-    }
-
-    /**
-     * Gets the namelist.
-     *
-     * @return String Returns the namelist.
-     */
-    public final String getNamelist() {
-        return namelist;
-    }
-
-    /**
-     * Sets the namelist.
-     *
-     * @param namelist The namelist to set.
-     */
-    public final void setNamelist(final String namelist) {
-        this.namelist = namelist;
-    }
-
-    /**
      * Enforce identity equality only
      * @param other other object to compare with
      * @return this == other
@@ -298,65 +125,6 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
     @Override
     public final boolean equals(final Object other) {
         return this == other;
-    }
-
-    /**
-     * Enforce returning identity based hascode
-     * @return {@link System#identityHashCode(Object) System.identityHashCode(this)}
-     */
-    @Override
-    public final int hashCode() {
-        return System.identityHashCode(this);
-    }
-
-    /**
-     * Returns the content
-     *
-     * @return the content
-     */
-    @Override
-    public Content getContent() {
-        return content;
-    }
-
-    /**
-     * @return The local context variable name under which the current SCXMLExecutionContext is provided to the Invoke
-     */
-    public String getCurrentSCXMLExecutionContextKey() {
-        return CURRENT_EXECUTION_CONTEXT_KEY;
-    }
-
-    /**
-     * Sets the content
-     *
-     * @param content the content to set
-     */
-    @Override
-    public void setContent(final Content content) {
-        this.content = content;
-    }
-
-    /**
-     * Gets the parent EnterableState.
-     *
-     * @return Returns the parent state
-     */
-    @Override
-    public EnterableState getParentEnterableState() {
-        return parent;
-    }
-
-    /**
-     * Sets the parent EnterableState.
-     * @param parent The parent state to set
-     * @param invokeIndex the invoke index in the parent (TransitionalState) defined invokers
-     */
-    public void setParentEnterableState(final EnterableState parent, final int invokeIndex) {
-        if (parent == null) {
-            throw new IllegalArgumentException("Parent parameter cannot be null");
-        }
-        this.parent = parent;
-        this.invokeIndex = invokeIndex;
     }
 
     @Override
@@ -463,5 +231,237 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
                         ? ErrorConstants.EXPRESSION_ERROR : ErrorConstants.EXECUTION_ERROR, e.getMessage(), this);
             }
         }
+    }
+
+    /**
+     * @return Returns the flag indicating whether to forward events to the invoked process.
+     */
+    public final Boolean getAutoForward() {
+        return autoForward;
+    }
+
+    /**
+     * Returns the content
+     *
+     * @return the content
+     */
+    @Override
+    public Content getContent() {
+        return content;
+    }
+
+    /**
+     * @return The local context variable name under which the current SCXMLExecutionContext is provided to the Invoke
+     */
+    public String getCurrentSCXMLExecutionContextKey() {
+        return CURRENT_EXECUTION_CONTEXT_KEY;
+    }
+
+    /**
+     * Gets the Finalize for this Invoke.
+     *
+     * @return Finalize The Finalize for this Invoke.
+     */
+    public final Finalize getFinalize() {
+        return finalize;
+    }
+
+    /**
+     * Gets the identifier for this invoke (may be null).
+     *
+     * @return Returns the id.
+     */
+    public final String getId() {
+        return id;
+    }
+
+    /**
+     * @return the idlocation
+     */
+    public String getIdlocation() {
+        return idlocation;
+    }
+
+    /**
+     * Gets the namelist.
+     *
+     * @return String Returns the namelist.
+     */
+    public final String getNamelist() {
+        return namelist;
+    }
+
+    /**
+     * Gets the list of {@link Param}s.
+     *
+     * @return List The params list.
+     */
+    @Override
+    public List<Param> getParams() {
+        return paramsList;
+    }
+
+    /**
+     * Gets the parent EnterableState.
+     *
+     * @return Returns the parent state
+     */
+    @Override
+    public EnterableState getParentEnterableState() {
+        return parent;
+    }
+
+    /**
+     * Gets the URL for the external service.
+     *
+     * @return String The URL.
+     */
+    public final String getSrc() {
+        return src;
+    }
+
+
+    /**
+     * Gets the expression that evaluates to the source URL for the
+     * external service.
+     *
+     * @return String The source expression.
+     */
+    public final String getSrcexpr() {
+        return srcexpr;
+    }
+
+    /**
+     * Gets the type for this &lt;invoke&gt; element.
+     *
+     * @return String Returns the type.
+     */
+    public final String getType() {
+        return type;
+    }
+
+    /**
+     * @return The type expression
+     */
+    public String getTypeexpr() {
+        return typeexpr;
+    }
+
+    /**
+     * Enforce returning identity based hascode
+     * @return {@link System#identityHashCode(Object) System.identityHashCode(this)}
+     */
+    @Override
+    public final int hashCode() {
+        return System.identityHashCode(this);
+    }
+
+    /**
+     * @return Returns true if all external events should be forwarded to the invoked process.
+     */
+    public final boolean isAutoForward() {
+        return autoForward != null && autoForward;
+    }
+
+    /**
+     * Sets the flag indicating whether to forward events to the invoked process.
+     * @param autoForward the flag
+     */
+    public final void setAutoForward(final Boolean autoForward) {
+        this.autoForward = autoForward;
+    }
+
+    /**
+     * Sets the content
+     *
+     * @param content the content to set
+     */
+    @Override
+    public void setContent(final Content content) {
+        this.content = content;
+    }
+
+    /**
+     * Sets the Finalize for this Invoke.
+     *
+     * @param finalize The Finalize for this Invoke.
+     */
+    public final void setFinalize(final Finalize finalize) {
+        this.finalize = finalize;
+    }
+
+    /**
+     * Sets the identifier for this invoke.
+     *
+     * @param id The id to set.
+     */
+    public final void setId(final String id) {
+        this.id = id;
+    }
+
+    /**
+     * Sets the idlocation expression
+     * @param idlocation The idlocation expression
+     */
+    public void setIdlocation(final String idlocation) {
+        this.idlocation = idlocation;
+    }
+
+    /**
+     * Sets the namelist.
+     *
+     * @param namelist The namelist to set.
+     */
+    public final void setNamelist(final String namelist) {
+        this.namelist = namelist;
+    }
+
+    /**
+     * Sets the parent EnterableState.
+     * @param parent The parent state to set
+     * @param invokeIndex the invoke index in the parent (TransitionalState) defined invokers
+     */
+    public void setParentEnterableState(final EnterableState parent, final int invokeIndex) {
+        if (parent == null) {
+            throw new IllegalArgumentException("Parent parameter cannot be null");
+        }
+        this.parent = parent;
+        this.invokeIndex = invokeIndex;
+    }
+
+    /**
+     * Sets the URL for the external service.
+     *
+     * @param src The source URL.
+     */
+    public final void setSrc(final String src) {
+        this.src = src;
+    }
+
+    /**
+     * Sets the expression that evaluates to the source URL for the
+     * external service.
+     *
+     * @param srcexpr The source expression.
+     */
+    public final void setSrcexpr(final String srcexpr) {
+        this.srcexpr = srcexpr;
+    }
+
+    /**
+     * Sets the type for this &lt;invoke&gt; element.
+     *
+     * @param type The type to set.
+     */
+    public final void setType(final String type) {
+        this.type = type;
+    }
+
+    /**
+     * Sets the type expression
+     * @param typeexpr The type expression to set
+     */
+    public void setTypeexpr(final String typeexpr) {
+        this.typeexpr = typeexpr;
     }
 }

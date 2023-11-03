@@ -29,6 +29,13 @@ import org.apache.commons.scxml2.invoke.Invoker;
 public interface EventDispatcher {
 
     /**
+     * Cancel the specified send message.
+     *
+     * @param sendId The ID of the send message to cancel
+     */
+    void cancel(String sendId);
+
+    /**
      * A EventDispatcher keeps track of outstanding (pending) events to be send on behalf of the statemachine
      * it is 'attached' to.
      * To support easy setup and configuration of an invoked child statemachine (see {@link Invoker})
@@ -37,13 +44,6 @@ public interface EventDispatcher {
      * @return a new EventDispatcher instance for usage in an invoked child statemachine.
      */
     EventDispatcher newInstance();
-
-    /**
-     * Cancel the specified send message.
-     *
-     * @param sendId The ID of the send message to cancel
-     */
-    void cancel(String sendId);
 
     /**
      * Send this message to the target.

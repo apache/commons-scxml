@@ -43,20 +43,20 @@ public class ModelException extends Exception {
     }
 
     /**
-     * @see Exception#Exception(Throwable)
-     * @param cause the cause
-     */
-    public ModelException(final Throwable cause) {
-        super(cause);
-    }
-
-    /**
      * @see Exception#Exception(String, Throwable)
      * @param message the detail message
      * @param cause the cause
      */
     public ModelException(final String message, final Throwable cause) {
         super(message, cause);
+    }
+
+    /**
+     * @see Exception#Exception(Throwable)
+     * @param cause the cause
+     */
+    public ModelException(final Throwable cause) {
+        super(cause);
     }
 
 }

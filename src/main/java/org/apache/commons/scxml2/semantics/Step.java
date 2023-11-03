@@ -94,13 +94,6 @@ public class Step {
     }
 
     /**
-     * @return Returns the entrySet.
-     */
-    public Set<EnterableState> getEntrySet() {
-        return entrySet;
-    }
-
-    /**
      * @return Returns the defaultEntrySet.
      */
     public Set<EnterableState> getDefaultEntrySet() {
@@ -115,10 +108,17 @@ public class Step {
     }
 
     /**
-     * @return Returns the map of new History configurations created as result of exiting states in this step
+     * @return Returns the entrySet.
      */
-    public Map<History, Set<EnterableState>> getNewHistoryConfigurations() {
-        return newHistoryConfigurations;
+    public Set<EnterableState> getEntrySet() {
+        return entrySet;
+    }
+
+    /**
+     * @return Returns the current event.
+     */
+    public TriggerEvent getEvent() {
+        return event;
     }
 
     /**
@@ -129,10 +129,10 @@ public class Step {
     }
 
     /**
-     * @return Returns the current event.
+     * @return Returns the map of new History configurations created as result of exiting states in this step
      */
-    public TriggerEvent getEvent() {
-        return event;
+    public Map<History, Set<EnterableState>> getNewHistoryConfigurations() {
+        return newHistoryConfigurations;
     }
 
     /**

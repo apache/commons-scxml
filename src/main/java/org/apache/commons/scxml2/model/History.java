@@ -46,12 +46,38 @@ public class History extends TransitionTarget {
     }
 
     /**
+     * @return Returns the TransitionalState parent
+     */
+    @Override
+    public TransitionalState getParent() {
+        return (TransitionalState)super.getParent();
+    }
+
+    /**
      * Gets the transition.
      *
      * @return Returns the transition.
      */
     public final SimpleTransition getTransition() {
         return transition;
+    }
+
+    /**
+     * Is this history &quot;deep&quot; (as against &quot;shallow&quot;).
+     *
+     * @return Returns whether this is a &quot;deep&quot; history
+     */
+    public final boolean isDeep() {
+        return isDeep;
+    }
+
+    /**
+     * Sets the TransitionalState parent.
+     *
+     * @param parent The parent to set.
+     */
+    public final void setParent(final TransitionalState parent) {
+        super.setParent(parent);
     }
 
     /**
@@ -68,15 +94,6 @@ public class History extends TransitionTarget {
     }
 
     /**
-     * Is this history &quot;deep&quot; (as against &quot;shallow&quot;).
-     *
-     * @return Returns whether this is a &quot;deep&quot; history
-     */
-    public final boolean isDeep() {
-        return isDeep;
-    }
-
-    /**
      * @param type The history type, which can be &quot;shallow&quot; or
      * &quot;deep&quot;
      */
@@ -85,23 +102,6 @@ public class History extends TransitionTarget {
             isDeep = true;
         }
         //shallow is by default
-    }
-
-    /**
-     * @return Returns the TransitionalState parent
-     */
-    @Override
-    public TransitionalState getParent() {
-        return (TransitionalState)super.getParent();
-    }
-
-    /**
-     * Sets the TransitionalState parent.
-     *
-     * @param parent The parent to set.
-     */
-    public final void setParent(final TransitionalState parent) {
-        super.setParent(parent);
     }
 }
 

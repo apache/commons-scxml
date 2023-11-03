@@ -77,16 +77,16 @@ public class EventVariable implements Serializable {
         this.data = data;
     }
 
+    public Object getData() {
+        return data;
+    }
+
+    public String getInvokeid() {
+        return invokeid;
+    }
+
     public String getName() {
         return name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public String getSendid() {
-        return sendid;
     }
 
     public String getOrigin() {
@@ -97,12 +97,12 @@ public class EventVariable implements Serializable {
         return origintype;
     }
 
-    public String getInvokeid() {
-        return invokeid;
+    public String getSendid() {
+        return sendid;
     }
 
-    public Object getData() {
-        return data;
+    public String getType() {
+        return type;
     }
 
     @Override

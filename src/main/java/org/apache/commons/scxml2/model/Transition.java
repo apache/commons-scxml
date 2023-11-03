@@ -67,39 +67,12 @@ public class Transition extends SimpleTransition implements DocumentOrder {
 
 
     /**
-     * @return the document order of this transition
-     * @see DocumentOrder
-     */
-    @Override
-    public final int getOrder() {
-        return order;
-    }
-
-    /**
-     * Sets the document order of this transition
-     * @param order the document order
-     * @see DocumentOrder
-     */
-    public final void setOrder(final int order) {
-        this.order = order;
-    }
-
-    /**
      * Gets the guard condition (may be null).
      *
      * @return Returns the cond.
      */
     public String getCond() {
         return cond;
-    }
-
-    /**
-     * Sets the guard condition.
-     *
-     * @param cond The cond to set.
-     */
-    public void setCond(final String cond) {
-        this.cond = cond;
     }
 
     /**
@@ -110,6 +83,45 @@ public class Transition extends SimpleTransition implements DocumentOrder {
      */
     public String getEvent() {
         return event;
+    }
+
+    /**
+     * @return The list of this transition event descriptors
+     */
+    public final List<String> getEvents() {
+        return events;
+    }
+
+    /**
+     * @return the document order of this transition
+     * @see DocumentOrder
+     */
+    @Override
+    public final int getOrder() {
+        return order;
+    }
+
+    /**
+     * @return True if this transition matches any events (*)
+     */
+    public final boolean isAllEventsTransition() {
+        return allEvents;
+    }
+
+    /**
+     * @return True if this transition is event-less
+     */
+    public final boolean isNoEventsTransition() {
+        return noEvents;
+    }
+
+    /**
+     * Sets the guard condition.
+     *
+     * @param cond The cond to set.
+     */
+    public void setCond(final String cond) {
+        this.cond = cond;
     }
 
     /**
@@ -150,23 +162,11 @@ public class Transition extends SimpleTransition implements DocumentOrder {
     }
 
     /**
-     * @return The list of this transition event descriptors
+     * Sets the document order of this transition
+     * @param order the document order
+     * @see DocumentOrder
      */
-    public final List<String> getEvents() {
-        return events;
-    }
-
-    /**
-     * @return True if this transition is event-less
-     */
-    public final boolean isNoEventsTransition() {
-        return noEvents;
-    }
-
-    /**
-     * @return True if this transition matches any events (*)
-     */
-    public final boolean isAllEventsTransition() {
-        return allEvents;
+    public final void setOrder(final int order) {
+        this.order = order;
     }
 }

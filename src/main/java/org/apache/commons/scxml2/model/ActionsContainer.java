@@ -24,17 +24,17 @@ import java.util.List;
 public interface ActionsContainer {
 
     /**
-     * Gets the executable actions contained in this &lt;container&gt;.
-     *
-     * @return Returns the actions.
-     */
-    List<Action> getActions();
-
-    /**
      * Add an Action to the list of executable actions contained in
      * this &lt;container&gt;.
      *
      * @param action The action to add.
      */
     void addAction(final Action action);
+
+    /**
+     * Gets the executable actions contained in this &lt;container&gt;.
+     *
+     * @return Returns the actions.
+     */
+    List<Action> getActions();
 }

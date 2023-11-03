@@ -42,17 +42,7 @@ import org.apache.commons.scxml2.model.SCXML;
  */
 public class JexlEvaluator extends AbstractBaseEvaluator {
 
-    /** Serial version UID. */
-    private static final long serialVersionUID = 1L;
-
-    public static final String SUPPORTED_DATA_MODEL = "jexl";
-
     public static class JexlEvaluatorProvider implements EvaluatorProvider {
-
-        @Override
-        public String getSupportedDatamodel() {
-            return SUPPORTED_DATA_MODEL;
-        }
 
         @Override
         public Evaluator getEvaluator() {
@@ -63,7 +53,17 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
         public Evaluator getEvaluator(final SCXML document) {
             return new JexlEvaluator();
         }
+
+        @Override
+        public String getSupportedDatamodel() {
+            return SUPPORTED_DATA_MODEL;
+        }
     }
+
+    /** Serial version UID. */
+    private static final long serialVersionUID = 1L;
+
+    public static final String SUPPORTED_DATA_MODEL = "jexl";
 
     /** Error message if evaluation context is not a JexlContext. */
     private static final String ERR_CTX_TYPE = "Error evaluating JEXL "
@@ -79,14 +79,19 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
         jexlEngine = getJexlEngine();
     }
 
-    @Override
-    public String getSupportedDatamodel() {
-        return SUPPORTED_DATA_MODEL;
-    }
-
-    @Override
-    public boolean requiresGlobalContext() {
-        return false;
+    /**
+     * Create the internal JexlEngine member during the initialization.
+     * This method can be overriden to specify more detailed options
+     * into the JexlEngine.
+     * @return new JexlEngine instance
+     */
+    protected JexlEngine createJexlEngine() {
+        // With null prefix, define top-level user-defined functions.
+        // See javadoc of org.apache.commons.jexl2.JexlEngine#setFunctions(Map<String,Object> funcs) for detail.
+        final Map<String, Object> funcs = new HashMap<>();
+        funcs.put(null, JexlBuiltin.class);
+        JexlPermissions permissions = JexlPermissions.RESTRICTED.compose("org.apache.commons.scxml2.*");
+        return new JexlBuilder().permissions(permissions).namespaces(funcs).cache(256).create();
     }
 
     /**
@@ -163,30 +168,16 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
     }
 
     /**
-     * Create a new child context.
+     * Create a new context which is the summation of contexts from the
+     * current state to document root, child has priority over parent
+     * in scoping rules.
      *
-     * @param parent parent context
-     * @return new child context
-     * @see Evaluator#newContext(Context)
+     * @param nodeCtx The JexlContext for this state.
+     * @return The effective JexlContext for the path leading up to
+     *         document root.
      */
-    @Override
-    public Context newContext(final Context parent) {
-        return new JexlContext(parent);
-    }
-
-    /**
-     * Create the internal JexlEngine member during the initialization.
-     * This method can be overriden to specify more detailed options
-     * into the JexlEngine.
-     * @return new JexlEngine instance
-     */
-    protected JexlEngine createJexlEngine() {
-        // With null prefix, define top-level user-defined functions.
-        // See javadoc of org.apache.commons.jexl2.JexlEngine#setFunctions(Map<String,Object> funcs) for detail.
-        final Map<String, Object> funcs = new HashMap<>();
-        funcs.put(null, JexlBuiltin.class);
-        JexlPermissions permissions = JexlPermissions.RESTRICTED.compose("org.apache.commons.scxml2.*");
-        return new JexlBuilder().permissions(permissions).namespaces(funcs).cache(256).create();
+    protected JexlContext getEffectiveContext(final JexlContext nodeCtx) {
+        return new JexlContext(nodeCtx, new EffectiveContextMap(nodeCtx));
     }
 
     /**
@@ -210,17 +201,26 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
         return engine;
     }
 
+    @Override
+    public String getSupportedDatamodel() {
+        return SUPPORTED_DATA_MODEL;
+    }
+
     /**
-     * Create a new context which is the summation of contexts from the
-     * current state to document root, child has priority over parent
-     * in scoping rules.
+     * Create a new child context.
      *
-     * @param nodeCtx The JexlContext for this state.
-     * @return The effective JexlContext for the path leading up to
-     *         document root.
+     * @param parent parent context
+     * @return new child context
+     * @see Evaluator#newContext(Context)
      */
-    protected JexlContext getEffectiveContext(final JexlContext nodeCtx) {
-        return new JexlContext(nodeCtx, new EffectiveContextMap(nodeCtx));
+    @Override
+    public Context newContext(final Context parent) {
+        return new JexlContext(parent);
+    }
+
+    @Override
+    public boolean requiresGlobalContext() {
+        return false;
     }
 }
 

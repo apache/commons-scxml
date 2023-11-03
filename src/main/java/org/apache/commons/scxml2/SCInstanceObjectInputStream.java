@@ -57,6 +57,14 @@ public class SCInstanceObjectInputStream extends ObjectInputStream {
         super(in);
     }
 
+    @Override
+    protected Class resolveClass(final ObjectStreamClass osc) throws IOException, ClassNotFoundException {
+        if (classResolver != null) {
+            return classResolver.resolveClass(osc);
+        }
+        return super.resolveClass(osc);
+    }
+
     /**
      * Sets custom class resolver callback, or null when no longer needed.
      * <p>
@@ -85,13 +93,5 @@ public class SCInstanceObjectInputStream extends ObjectInputStream {
         final ClassResolver old = this.classResolver;
         this.classResolver = classResolver;
         return old;
-    }
-
-    @Override
-    protected Class resolveClass(final ObjectStreamClass osc) throws IOException, ClassNotFoundException {
-        if (classResolver != null) {
-            return classResolver.resolveClass(osc);
-        }
-        return super.resolveClass(osc);
     }
 }

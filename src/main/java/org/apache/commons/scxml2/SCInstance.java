@@ -146,158 +146,6 @@ public class SCInstance implements Serializable {
     }
 
     /**
-     * (re)Initializes the state machine instance, clearing all variable contexts, histories and current status,
-     * and clones the SCXML root datamodel into the root context.
-     * @throws ModelException if the state machine hasn't been setup for this instance
-     */
-    protected void initialize() throws ModelException {
-        running = false;
-        if (stateMachine == null) {
-            throw new ModelException(ERR_NO_STATE_MACHINE);
-        }
-        if (evaluator == null) {
-            evaluator = EvaluatorFactory.getEvaluator(stateMachine);
-        }
-        if (evaluator.requiresGlobalContext()) {
-            singleContext = true;
-        }
-        if (stateMachine.getDatamodelName() != null && !stateMachine.getDatamodelName().equals(evaluator.getSupportedDatamodel())) {
-            throw new ModelException("Incompatible SCXML document datamodel \""+stateMachine.getDatamodelName()+"\""
-                    + " for evaluator "+evaluator.getClass().getName()+" supported datamodel \""+evaluator.getSupportedDatamodel()+"\"");
-        }
-        if (errorReporter == null) {
-            throw new ModelException(ERR_NO_ERROR_REPORTER);
-        }
-        systemContext = null;
-        globalContext = null;
-        contexts.clear();
-        histories.clear();
-        stateConfiguration.clear();
-
-        initialized = true;
-    }
-
-    protected void initializeDatamodel(final Map<String, Object> data) {
-        if (globalContext == null) {
-            // Clone root datamodel
-            final Datamodel rootdm = stateMachine.getDatamodel();
-            cloneDatamodel(rootdm, getGlobalContext(), evaluator, errorReporter);
-
-            // initialize/override global context data
-            if (data != null) {
-                for (final String key : data.keySet()) {
-                    if (globalContext.has(key)) {
-                        globalContext.set(key, data.get(key));
-                    }
-                }
-            }
-            if (stateMachine.isLateBinding() == null || Boolean.FALSE.equals(stateMachine.isLateBinding())) {
-                // early binding
-                for (final EnterableState es : stateMachine.getChildren()) {
-                    getContext(es);
-                }
-            }
-        }
-    }
-
-    /**
-     * Detach this state machine instance to allow external serialization.
-     * <p>
-     * This clears the internal I/O processor, evaluator and errorReporter members.
-     * </p>
-     */
-    protected void detach() {
-        this.internalIOProcessor = null;
-        this.evaluator = null;
-        this.errorReporter = null;
-    }
-
-    /**
-     * Sets the I/O Processor for the internal event queue
-     * @param internalIOProcessor the I/O Processor
-     */
-    protected void setInternalIOProcessor(final SCXMLIOProcessor internalIOProcessor) {
-        this.internalIOProcessor = internalIOProcessor;
-    }
-
-    /**
-     * Sets or re-attach the evaluator
-     * <p>
-     * If not re-attaching and this state machine instance has been initialized before,
-     * it will be initialized again, destroying all existing state!
-     * </p>
-     * @param evaluator The evaluator for this state machine instance
-     * @param reAttach Flag whether or not re-attaching it
-     * @throws ModelException if {@code evaluator} is null
-     */
-    protected void setEvaluator(final Evaluator evaluator, final boolean reAttach) throws ModelException {
-        this.evaluator = evaluator;
-        if (initialized) {
-            if (!reAttach) {
-                // change of evaluator after initialization: re-initialize
-                initialize();
-            }
-            else if (evaluator == null) {
-                throw new ModelException("SCInstance: re-attached without Evaluator");
-            }
-        }
-    }
-
-    /**
-     * @return Return the current evaluator
-     */
-    protected Evaluator getEvaluator() {
-        return evaluator;
-    }
-
-    /**
-     * Sets or re-attach the error reporter
-     * @param errorReporter The error reporter for this state machine instance.
-     * @throws ModelException if an attempt is made to set a null value for the error reporter
-     */
-    protected void setErrorReporter(final ErrorReporter errorReporter) throws ModelException {
-        if (errorReporter == null) {
-            throw new ModelException(ERR_NO_ERROR_REPORTER);
-        }
-        this.errorReporter = errorReporter;
-    }
-
-    /**
-     * @return Return the state machine for this instance
-     */
-    public SCXML getStateMachine() {
-        return stateMachine;
-    }
-
-    /**
-     * Sets the state machine for this instance.
-     * <p>
-     * If this state machine instance has been initialized before, it will be initialized again, destroying all existing
-     * state!
-     * </p>
-     * @param stateMachine The state machine for this instance
-     * @throws ModelException if an attempt is made to set a null value for the state machine
-     */
-    protected void setStateMachine(final SCXML stateMachine) throws ModelException {
-        if (stateMachine == null) {
-            throw new ModelException(ERR_NO_STATE_MACHINE);
-        }
-        this.stateMachine = stateMachine;
-        initialize();
-    }
-
-    public void setSingleContext(final boolean singleContext) throws ModelException {
-        if (initialized) {
-            throw new ModelException("SCInstance: already initialized");
-        }
-        this.singleContext = singleContext;
-    }
-
-    public boolean isSingleContext() {
-        return singleContext;
-    }
-
-    /**
      * Clone data model.
      *
      * @param ctx The context to clone to.
@@ -378,103 +226,15 @@ public class SCInstance implements Serializable {
     }
 
     /**
-     * @return Returns the state configuration for this instance
+     * Detach this state machine instance to allow external serialization.
+     * <p>
+     * This clears the internal I/O processor, evaluator and errorReporter members.
+     * </p>
      */
-    public StateConfiguration getStateConfiguration() {
-        return stateConfiguration;
-    }
-
-    /**
-     * @return Returns the current status for this instance
-     */
-    public Status getCurrentStatus() {
-        return currentStatus;
-    }
-
-    /**
-     * @return Returns if the state machine is running
-     */
-    public boolean isRunning() {
-        return running;
-    }
-
-    /**
-     * Starts the state machine, {@link #isRunning()} hereafter will return true
-     * @throws IllegalStateException Exception thrown if trying to start the state machine when in a Final state
-     */
-    public void start() throws IllegalStateException {
-        if (!this.running &&  currentStatus.isFinal()) {
-            throw new IllegalStateException("The state machine is in a Final state and cannot be set running again");
-        }
-        this.running = true;
-    }
-
-    /**
-     * Stops the state machine, {@link #isRunning()} hereafter will return false
-     */
-    public void stop() {
-        this.running = false;
-    }
-
-    /**
-     * Gets the root context.
-     *
-     * @return The root context.
-     */
-    public Context getRootContext() {
-        if (rootContext == null) {
-            rootContext = new SimpleContext();
-        }
-        return rootContext;
-    }
-
-    /**
-     * Sets or replace the root context.
-     * @param context The new root context.
-     */
-    protected void setRootContext(final Context context) {
-        this.rootContext = context;
-        // force initialization of rootContext
-        getRootContext();
-        if (systemContext != null) {
-            // re-parent the system context
-            systemContext.setSystemContext(new SimpleContext(rootContext));
-        }
-    }
-
-    /**
-     * Gets the unwrapped (modifiable) system context.
-     *
-     * @return The unwrapped system context.
-     */
-    public Context getSystemContext() {
-        if (systemContext == null) {
-            // force initialization of rootContext
-            getRootContext();
-            if (rootContext != null) {
-                final Context internalContext = new SimpleContext(rootContext);
-                systemContext = new SCXMLSystemContext(internalContext);
-                systemContext.getContext().set(SCXMLSystemContext.SESSIONID_KEY, UUID.randomUUID().toString());
-                final String _name = stateMachine != null && stateMachine.getName() != null ? stateMachine.getName() : "";
-                systemContext.getContext().set(SCXMLSystemContext.SCXML_NAME_KEY, _name);
-                systemContext.getPlatformVariables().put(SCXMLSystemContext.STATUS_KEY, currentStatus);
-            }
-        }
-        return systemContext != null ? systemContext.getContext() : null;
-    }
-
-    /**
-     * @return Returns the global context, which is the top context <em>within</em> the state machine.
-     */
-    public Context getGlobalContext() {
-        if (globalContext == null) {
-            // force initialization of systemContext
-            getSystemContext();
-            if (systemContext != null) {
-                globalContext = evaluator.newContext(systemContext);
-            }
-        }
-        return globalContext;
+    protected void detach() {
+        this.internalIOProcessor = null;
+        this.evaluator = null;
+        this.errorReporter = null;
     }
 
     /**
@@ -508,28 +268,31 @@ public class SCInstance implements Serializable {
     }
 
     /**
-     * Gets the context for an EnterableState if available.
-     *
-     * <p>Note: used for testing purposes only</p>
-     *
-     * @param state The EnterableState
-     * @return The context or null if not created yet.
+     * @return Returns the current status for this instance
      */
-    Context lookupContext(final EnterableState state) {
-        return contexts.get(state);
+    public Status getCurrentStatus() {
+        return currentStatus;
     }
 
     /**
-     * Sets the context for an EnterableState
-     *
-     * <p>Note: used for testing purposes only</p>
-     *
-     * @param state The EnterableState.
-     * @param context The context.
+     * @return Return the current evaluator
      */
-    void setContext(final EnterableState state,
-            final Context context) {
-        contexts.put(state, context);
+    protected Evaluator getEvaluator() {
+        return evaluator;
+    }
+
+    /**
+     * @return Returns the global context, which is the top context <em>within</em> the state machine.
+     */
+    public Context getGlobalContext() {
+        if (globalContext == null) {
+            // force initialization of systemContext
+            getSystemContext();
+            if (systemContext != null) {
+                globalContext = evaluator.newContext(systemContext);
+            }
+        }
+        return globalContext;
     }
 
     /**
@@ -547,14 +310,128 @@ public class SCInstance implements Serializable {
     }
 
     /**
-     * Sets the last configuration for this history.
+     * Gets the root context.
      *
-     * @param history The history.
-     * @param lc The lastConfiguration to set.
+     * @return The root context.
      */
-    public void setLastConfiguration(final History history,
-            final Set<EnterableState> lc) {
-        histories.put(history, new HashSet<>(lc));
+    public Context getRootContext() {
+        if (rootContext == null) {
+            rootContext = new SimpleContext();
+        }
+        return rootContext;
+    }
+
+    /**
+     * @return Returns the state configuration for this instance
+     */
+    public StateConfiguration getStateConfiguration() {
+        return stateConfiguration;
+    }
+
+    /**
+     * @return Return the state machine for this instance
+     */
+    public SCXML getStateMachine() {
+        return stateMachine;
+    }
+
+    /**
+     * Gets the unwrapped (modifiable) system context.
+     *
+     * @return The unwrapped system context.
+     */
+    public Context getSystemContext() {
+        if (systemContext == null) {
+            // force initialization of rootContext
+            getRootContext();
+            if (rootContext != null) {
+                final Context internalContext = new SimpleContext(rootContext);
+                systemContext = new SCXMLSystemContext(internalContext);
+                systemContext.getContext().set(SCXMLSystemContext.SESSIONID_KEY, UUID.randomUUID().toString());
+                final String _name = stateMachine != null && stateMachine.getName() != null ? stateMachine.getName() : "";
+                systemContext.getContext().set(SCXMLSystemContext.SCXML_NAME_KEY, _name);
+                systemContext.getPlatformVariables().put(SCXMLSystemContext.STATUS_KEY, currentStatus);
+            }
+        }
+        return systemContext != null ? systemContext.getContext() : null;
+    }
+
+    /**
+     * (re)Initializes the state machine instance, clearing all variable contexts, histories and current status,
+     * and clones the SCXML root datamodel into the root context.
+     * @throws ModelException if the state machine hasn't been setup for this instance
+     */
+    protected void initialize() throws ModelException {
+        running = false;
+        if (stateMachine == null) {
+            throw new ModelException(ERR_NO_STATE_MACHINE);
+        }
+        if (evaluator == null) {
+            evaluator = EvaluatorFactory.getEvaluator(stateMachine);
+        }
+        if (evaluator.requiresGlobalContext()) {
+            singleContext = true;
+        }
+        if (stateMachine.getDatamodelName() != null && !stateMachine.getDatamodelName().equals(evaluator.getSupportedDatamodel())) {
+            throw new ModelException("Incompatible SCXML document datamodel \""+stateMachine.getDatamodelName()+"\""
+                    + " for evaluator "+evaluator.getClass().getName()+" supported datamodel \""+evaluator.getSupportedDatamodel()+"\"");
+        }
+        if (errorReporter == null) {
+            throw new ModelException(ERR_NO_ERROR_REPORTER);
+        }
+        systemContext = null;
+        globalContext = null;
+        contexts.clear();
+        histories.clear();
+        stateConfiguration.clear();
+
+        initialized = true;
+    }
+
+    protected void initializeDatamodel(final Map<String, Object> data) {
+        if (globalContext == null) {
+            // Clone root datamodel
+            final Datamodel rootdm = stateMachine.getDatamodel();
+            cloneDatamodel(rootdm, getGlobalContext(), evaluator, errorReporter);
+
+            // initialize/override global context data
+            if (data != null) {
+                for (final String key : data.keySet()) {
+                    if (globalContext.has(key)) {
+                        globalContext.set(key, data.get(key));
+                    }
+                }
+            }
+            if (stateMachine.isLateBinding() == null || Boolean.FALSE.equals(stateMachine.isLateBinding())) {
+                // early binding
+                for (final EnterableState es : stateMachine.getChildren()) {
+                    getContext(es);
+                }
+            }
+        }
+    }
+
+    /**
+     * @return Returns if the state machine is running
+     */
+    public boolean isRunning() {
+        return running;
+    }
+
+    public boolean isSingleContext() {
+        return singleContext;
+    }
+
+    /**
+     * Gets the context for an EnterableState if available.
+     *
+     * <p>Note: used for testing purposes only</p>
+     *
+     * @param state The EnterableState
+     * @return The context or null if not created yet.
+     */
+    Context lookupContext(final EnterableState state) {
+        return contexts.get(state);
     }
 
     /**
@@ -566,6 +443,129 @@ public class SCInstance implements Serializable {
      */
     public void resetConfiguration(final History history) {
         histories.remove(history);
+    }
+
+    /**
+     * Sets the context for an EnterableState
+     *
+     * <p>Note: used for testing purposes only</p>
+     *
+     * @param state The EnterableState.
+     * @param context The context.
+     */
+    void setContext(final EnterableState state,
+            final Context context) {
+        contexts.put(state, context);
+    }
+
+    /**
+     * Sets or re-attach the error reporter
+     * @param errorReporter The error reporter for this state machine instance.
+     * @throws ModelException if an attempt is made to set a null value for the error reporter
+     */
+    protected void setErrorReporter(final ErrorReporter errorReporter) throws ModelException {
+        if (errorReporter == null) {
+            throw new ModelException(ERR_NO_ERROR_REPORTER);
+        }
+        this.errorReporter = errorReporter;
+    }
+
+    /**
+     * Sets or re-attach the evaluator
+     * <p>
+     * If not re-attaching and this state machine instance has been initialized before,
+     * it will be initialized again, destroying all existing state!
+     * </p>
+     * @param evaluator The evaluator for this state machine instance
+     * @param reAttach Flag whether or not re-attaching it
+     * @throws ModelException if {@code evaluator} is null
+     */
+    protected void setEvaluator(final Evaluator evaluator, final boolean reAttach) throws ModelException {
+        this.evaluator = evaluator;
+        if (initialized) {
+            if (!reAttach) {
+                // change of evaluator after initialization: re-initialize
+                initialize();
+            }
+            else if (evaluator == null) {
+                throw new ModelException("SCInstance: re-attached without Evaluator");
+            }
+        }
+    }
+
+    /**
+     * Sets the I/O Processor for the internal event queue
+     * @param internalIOProcessor the I/O Processor
+     */
+    protected void setInternalIOProcessor(final SCXMLIOProcessor internalIOProcessor) {
+        this.internalIOProcessor = internalIOProcessor;
+    }
+
+    /**
+     * Sets the last configuration for this history.
+     *
+     * @param history The history.
+     * @param lc The lastConfiguration to set.
+     */
+    public void setLastConfiguration(final History history,
+            final Set<EnterableState> lc) {
+        histories.put(history, new HashSet<>(lc));
+    }
+
+    /**
+     * Sets or replace the root context.
+     * @param context The new root context.
+     */
+    protected void setRootContext(final Context context) {
+        this.rootContext = context;
+        // force initialization of rootContext
+        getRootContext();
+        if (systemContext != null) {
+            // re-parent the system context
+            systemContext.setSystemContext(new SimpleContext(rootContext));
+        }
+    }
+
+    public void setSingleContext(final boolean singleContext) throws ModelException {
+        if (initialized) {
+            throw new ModelException("SCInstance: already initialized");
+        }
+        this.singleContext = singleContext;
+    }
+
+    /**
+     * Sets the state machine for this instance.
+     * <p>
+     * If this state machine instance has been initialized before, it will be initialized again, destroying all existing
+     * state!
+     * </p>
+     * @param stateMachine The state machine for this instance
+     * @throws ModelException if an attempt is made to set a null value for the state machine
+     */
+    protected void setStateMachine(final SCXML stateMachine) throws ModelException {
+        if (stateMachine == null) {
+            throw new ModelException(ERR_NO_STATE_MACHINE);
+        }
+        this.stateMachine = stateMachine;
+        initialize();
+    }
+
+    /**
+     * Starts the state machine, {@link #isRunning()} hereafter will return true
+     * @throws IllegalStateException Exception thrown if trying to start the state machine when in a Final state
+     */
+    public void start() throws IllegalStateException {
+        if (!this.running &&  currentStatus.isFinal()) {
+            throw new IllegalStateException("The state machine is in a Final state and cannot be set running again");
+        }
+        this.running = true;
+    }
+
+    /**
+     * Stops the state machine, {@link #isRunning()} hereafter will return false
+     */
+    public void stop() {
+        this.running = false;
     }
 }
 

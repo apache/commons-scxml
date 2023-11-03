@@ -32,18 +32,6 @@ public interface Evaluator {
     String DEFAULT_DATA_MODEL = "";
 
     /**
-     * Gets the datamodel type supported by this Evaluator
-     * @return The supported datamodel type
-     */
-    String getSupportedDatamodel();
-
-    /**
-     * If this Evaluator only supports a global context.
-     * @return true if this Evaluator only support a global context
-     */
-    boolean requiresGlobalContext();
-
-    /**
      * @param data data to be cloned
      * @return A deep clone of the data
      */
@@ -61,6 +49,17 @@ public interface Evaluator {
     throws SCXMLExpressionException;
 
     /**
+     * Assigns data to a location
+     *
+     * @param ctx variable context
+     * @param location location expression
+     * @param data the data to assign.
+     * @throws SCXMLExpressionException A malformed expression exception
+     */
+    void evalAssign(Context ctx, String location, Object data)
+            throws SCXMLExpressionException;
+
+    /**
      * Evaluate a condition.
      * Manifests as "cond" attributes of &lt;transition&gt;,
      * &lt;if&gt; and &lt;elseif&gt; elements.
@@ -72,17 +71,6 @@ public interface Evaluator {
      */
     Boolean evalCond(Context ctx, String expr)
     throws SCXMLExpressionException;
-
-    /**
-     * Assigns data to a location
-     *
-     * @param ctx variable context
-     * @param location location expression
-     * @param data the data to assign.
-     * @throws SCXMLExpressionException A malformed expression exception
-     */
-    void evalAssign(Context ctx, String location, Object data)
-            throws SCXMLExpressionException;
 
     /**
      * Evaluate a script.
@@ -97,12 +85,24 @@ public interface Evaluator {
     throws SCXMLExpressionException;
 
     /**
+     * Gets the datamodel type supported by this Evaluator
+     * @return The supported datamodel type
+     */
+    String getSupportedDatamodel();
+
+    /**
      * Create a new child context.
      *
      * @param parent parent context
      * @return new child context
      */
     Context newContext(Context parent);
+
+    /**
+     * If this Evaluator only supports a global context.
+     * @return true if this Evaluator only support a global context
+     */
+    boolean requiresGlobalContext();
 
 }
 

@@ -45,16 +45,10 @@ public class JSBindings implements Bindings {
     }
 
     /**
-     * Sets or update the SCXML context delegate
-     *
-     * @param jsContext the SCXML context to use for script variables.
-     * @throws IllegalArgumentException Thrown if <code>jsContext</code> is <code>null</code>.
+     * Does nothing - never invoked anyway
      */
-    public void setContext(final JSContext jsContext) {
-        if (jsContext == null) {
-            throw new IllegalArgumentException("SCXML context is required");
-        }
-        this.context = jsContext;
+    @Override
+    public void clear() {
     }
 
     /**
@@ -63,22 +57,6 @@ public class JSBindings implements Bindings {
     @Override
     public boolean containsKey(final Object key) {
         return context.has(key.toString());
-    }
-
-    /**
-     * Returns the SCXML context key set
-     */
-    @Override
-    public Set<String> keySet() {
-        return context.getVars().keySet();
-    }
-
-    /**
-     * Returns the size of the SCXML context size.
-     */
-    @Override
-    public int size() {
-        return context.getVars().size();
     }
 
     /**
@@ -98,11 +76,11 @@ public class JSBindings implements Bindings {
     }
 
     /**
-     * Returns the SCXML context values.
+     * Returns the value from the SCXML context identified by <code>key</code>.
      */
     @Override
-    public Collection<Object> values() {
-        return context.getVars().values();
+    public Object get(final Object key) {
+        return context.get(key.toString());
     }
 
     /**
@@ -114,11 +92,11 @@ public class JSBindings implements Bindings {
     }
 
     /**
-     * Returns the value from the SCXML context identified by <code>key</code>.
+     * Returns the SCXML context key set
      */
     @Override
-    public Object get(final Object key) {
-        return context.get(key.toString());
+    public Set<String> keySet() {
+        return context.getVars().keySet();
     }
 
     /**
@@ -163,9 +141,31 @@ public class JSBindings implements Bindings {
     }
 
     /**
-     * Does nothing - never invoked anyway
+     * Sets or update the SCXML context delegate
+     *
+     * @param jsContext the SCXML context to use for script variables.
+     * @throws IllegalArgumentException Thrown if <code>jsContext</code> is <code>null</code>.
+     */
+    public void setContext(final JSContext jsContext) {
+        if (jsContext == null) {
+            throw new IllegalArgumentException("SCXML context is required");
+        }
+        this.context = jsContext;
+    }
+
+    /**
+     * Returns the size of the SCXML context size.
      */
     @Override
-    public void clear() {
+    public int size() {
+        return context.getVars().size();
+    }
+
+    /**
+     * Returns the SCXML context values.
+     */
+    @Override
+    public Collection<Object> values() {
+        return context.getVars().values();
     }
 }

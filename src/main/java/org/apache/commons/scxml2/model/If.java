@@ -67,16 +67,6 @@ public class If extends Action implements ActionsContainer {
     }
 
     /**
-     * Gets the executable actions contained in this &lt;if&gt;.
-     *
-     * @return Returns the actions.
-     */
-    @Override
-    public final List<Action> getActions() {
-        return actions;
-    }
-
-    /**
      * Add an Action to the list of executable actions contained in
      * this &lt;if&gt;.
      *
@@ -87,24 +77,6 @@ public class If extends Action implements ActionsContainer {
         if (action != null) {
             this.actions.add(action);
         }
-    }
-
-    /**
-     * Gets the conditional expression.
-     *
-     * @return Returns the cond.
-     */
-    public final String getCond() {
-        return cond;
-    }
-
-    /**
-     * Sets the conditional expression.
-     *
-     * @param cond The cond to set.
-     */
-    public final void setCond(final String cond) {
-        this.cond = cond;
     }
 
     /**
@@ -144,6 +116,34 @@ public class If extends Action implements ActionsContainer {
                 execute = eval.evalCond(ctx, ((ElseIf) aa).getCond());
             }
         }
+    }
+
+    /**
+     * Gets the executable actions contained in this &lt;if&gt;.
+     *
+     * @return Returns the actions.
+     */
+    @Override
+    public final List<Action> getActions() {
+        return actions;
+    }
+
+    /**
+     * Gets the conditional expression.
+     *
+     * @return Returns the cond.
+     */
+    public final String getCond() {
+        return cond;
+    }
+
+    /**
+     * Sets the conditional expression.
+     *
+     * @param cond The cond to set.
+     */
+    public final void setCond(final String cond) {
+        this.cond = cond;
     }
 
 }

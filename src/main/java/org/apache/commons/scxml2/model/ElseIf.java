@@ -42,6 +42,14 @@ public class ElseIf extends Action {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void execute(final ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
+        // nothing to do, the <if> container will take care of this
+    }
+
+    /**
      * Gets the conditional expression.
      *
      * @return Returns the cond.
@@ -57,14 +65,6 @@ public class ElseIf extends Action {
      */
     public final void setCond(final String cond) {
         this.cond = cond;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void execute(final ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
-        // nothing to do, the <if> container will take care of this
     }
 
 }

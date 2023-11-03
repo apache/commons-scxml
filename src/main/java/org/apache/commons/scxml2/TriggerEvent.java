@@ -32,28 +32,6 @@ public class TriggerEvent implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Constructor.
-     *
-     * @param name The event name
-     * @param type The event type
-     * @deprecated use {@link EventBuilder instead}
-     */
-    public TriggerEvent(final String name, final int type) {
-        this(name, type, null, null, null, null, null);
-    }
-
-    TriggerEvent(final String name, final int type, final String sendId, final String origin,
-                        final String originType, final String invokeId, final Object data) {
-        this.name = name != null ? name.trim() : "";
-        this.type = type;
-        this.sendId = sendId;
-        this.origin = origin;
-        this.originType = originType;
-        this.invokeId = invokeId;
-        this.data = data;
-    }
-
-    /**
      * <code>CALL_EVENT</code>.
      */
     public static final int CALL_EVENT = 1;
@@ -120,39 +98,33 @@ public class TriggerEvent implements Serializable {
     public static final String ERROR_PLATFORM = "error.platform";
 
     private final String name;
+
     private final int type;
+
     private final String sendId;
     private final String origin;
     private final String originType;
     private final String invokeId;
     private final Object data;
-
-    public String getName() {
-        return name;
+    /**
+     * Constructor.
+     *
+     * @param name The event name
+     * @param type The event type
+     * @deprecated use {@link EventBuilder instead}
+     */
+    public TriggerEvent(final String name, final int type) {
+        this(name, type, null, null, null, null, null);
     }
-
-    public int getType() {
-        return type;
-    }
-
-    public String getSendId() {
-        return sendId;
-    }
-
-    public String getOrigin() {
-        return origin;
-    }
-
-    public String getOriginType() {
-        return originType;
-    }
-
-    public String getInvokeId() {
-        return invokeId;
-    }
-
-    public Object getData() {
-        return data;
+    TriggerEvent(final String name, final int type, final String sendId, final String origin,
+                        final String originType, final String invokeId, final Object data) {
+        this.name = name != null ? name.trim() : "";
+        this.type = type;
+        this.sendId = sendId;
+        this.origin = origin;
+        this.originType = originType;
+        this.invokeId = invokeId;
+        this.data = data;
     }
 
     /**
@@ -174,6 +146,44 @@ public class TriggerEvent implements Serializable {
             }
         }
         return false;
+    }
+
+    public Object getData() {
+        return data;
+    }
+
+    public String getInvokeId() {
+        return invokeId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    public String getOriginType() {
+        return originType;
+    }
+
+    public String getSendId() {
+        return sendId;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    /**
+     * Returns the hash code for this TriggerEvent object.
+     *
+     * @see Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return String.valueOf(this).hashCode();
     }
 
     /**
@@ -202,16 +212,6 @@ public class TriggerEvent implements Serializable {
         }
         buf.append("}");
         return String.valueOf(buf);
-    }
-
-    /**
-     * Returns the hash code for this TriggerEvent object.
-     *
-     * @see Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        return String.valueOf(this).hashCode();
     }
 
 }

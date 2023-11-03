@@ -37,21 +37,21 @@ public class JexlContext extends SimpleContext
     }
 
     /**
-     * Constructor with initial vars.
-     * @param parent The parent context
-     * @param initialVars The initial set of variables.
-     */
-    public JexlContext(final Context parent, final Map<String, Object> initialVars) {
-        super(parent, initialVars);
-    }
-
-    /**
      * Constructor with parent context.
      *
      * @param parent The parent context.
      */
     public JexlContext(final Context parent) {
         super(parent);
+    }
+
+    /**
+     * Constructor with initial vars.
+     * @param parent The parent context
+     * @param initialVars The initial set of variables.
+     */
+    public JexlContext(final Context parent, final Map<String, Object> initialVars) {
+        super(parent, initialVars);
     }
 }
 

@@ -45,15 +45,6 @@ public class Datamodel implements Serializable {
    }
 
    /**
-    * Gets all the data children of this datamodel.
-    *
-    * @return Returns the data.
-    */
-   public final List<Data> getData() {
-       return data;
-   }
-
-   /**
     * Add a Data.
     *
     * @param datum The data child to be added.
@@ -62,6 +53,15 @@ public class Datamodel implements Serializable {
        if (datum != null) {
            data.add(datum);
        }
+   }
+
+   /**
+    * Gets all the data children of this datamodel.
+    *
+    * @return Returns the data.
+    */
+   public final List<Data> getData() {
+       return data;
    }
 
 }

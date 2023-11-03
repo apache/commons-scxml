@@ -33,17 +33,7 @@ import org.apache.commons.scxml2.model.SCXML;
  */
 public class MinimalEvaluator implements Evaluator, Serializable {
 
-    /** Serial version UID. */
-    private static final long serialVersionUID = 1L;
-
-    public static final String SUPPORTED_DATA_MODEL = Evaluator.NULL_DATA_MODEL;
-
     public static class MinimalEvaluatorProvider implements EvaluatorProvider {
-
-        @Override
-        public String getSupportedDatamodel() {
-            return SUPPORTED_DATA_MODEL;
-        }
 
         @Override
         public Evaluator getEvaluator() {
@@ -54,17 +44,17 @@ public class MinimalEvaluator implements Evaluator, Serializable {
         public Evaluator getEvaluator(final SCXML document) {
             return new MinimalEvaluator();
         }
+
+        @Override
+        public String getSupportedDatamodel() {
+            return SUPPORTED_DATA_MODEL;
+        }
     }
 
-    @Override
-    public String getSupportedDatamodel() {
-        return SUPPORTED_DATA_MODEL;
-    }
+    /** Serial version UID. */
+    private static final long serialVersionUID = 1L;
 
-    @Override
-    public boolean requiresGlobalContext() {
-        return true;
-    }
+    public static final String SUPPORTED_DATA_MODEL = Evaluator.NULL_DATA_MODEL;
 
     @Override
     public Object cloneData(final Object data) {
@@ -74,6 +64,11 @@ public class MinimalEvaluator implements Evaluator, Serializable {
     @Override
     public Object eval(final Context ctx, final String expr) throws SCXMLExpressionException {
         return expr;
+    }
+
+    @Override
+    public void evalAssign(final Context ctx, final String location, final Object data) throws SCXMLExpressionException {
+        throw new UnsupportedOperationException("Assign expressions are not supported by the \"null\" datamodel");
     }
 
     @Override
@@ -88,17 +83,22 @@ public class MinimalEvaluator implements Evaluator, Serializable {
     }
 
     @Override
-    public void evalAssign(final Context ctx, final String location, final Object data) throws SCXMLExpressionException {
-        throw new UnsupportedOperationException("Assign expressions are not supported by the \"null\" datamodel");
-    }
-
-    @Override
     public Object evalScript(final Context ctx, final String script) throws SCXMLExpressionException {
         throw new UnsupportedOperationException("Scripts are not supported by the \"null\" datamodel");
     }
 
     @Override
+    public String getSupportedDatamodel() {
+        return SUPPORTED_DATA_MODEL;
+    }
+
+    @Override
     public Context newContext(final Context parent) {
         return parent instanceof MinimalContext ? parent : new MinimalContext(parent);
+    }
+
+    @Override
+    public boolean requiresGlobalContext() {
+        return true;
     }
 }

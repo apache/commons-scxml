@@ -25,32 +25,35 @@ import java.util.Map;
 public interface Context {
 
     /**
-     * Assigns a new value to an existing variable or creates a new one.
-     * The method searches the chain of parent Contexts for variable
-     * existence.
-     *
-     * @param name The variable name
-     * @param value The variable value
-     */
-    void set(String name, Object value);
-
-    /**
-     * Assigns a new value to an existing variable or creates a new one.
-     * The method allows to shaddow a variable of the same name up the
-     * Context chain.
-     *
-     * @param name The variable name
-     * @param value The variable value
-     */
-    void setLocal(String name, Object value);
-
-    /**
      * Gets the value of this variable; delegating to parent.
      *
      * @param name The name of the variable
      * @return The value (or null)
      */
     Object get(String name);
+
+    /**
+     * Gets the parent Context, may be null.
+     *
+     * @return The parent Context in a chained Context environment
+     */
+    Context getParent();
+
+    /**
+     * Gets the SCXMLSystemContext for this Context, should not be null unless this is the root Context
+     *
+     * @return The SCXMLSystemContext in a chained Context environment
+     */
+    SCXMLSystemContext getSystemContext();
+
+    /**
+     * Gets the Map of all variables in this Context.
+     *
+     * @return Local variable entries Map
+     * To get variables in parent Context, call getParent().getVars().
+     * @see #getParent()
+     */
+    Map<String, Object> getVars();
 
     /**
      * Check if this variable exists, delegating to parent.
@@ -69,31 +72,28 @@ public interface Context {
     boolean hasLocal(String name);
 
     /**
-     * Gets the Map of all variables in this Context.
-     *
-     * @return Local variable entries Map
-     * To get variables in parent Context, call getParent().getVars().
-     * @see #getParent()
-     */
-    Map<String, Object> getVars();
-
-    /**
      * Clear this Context.
      */
     void reset();
 
     /**
-     * Gets the parent Context, may be null.
+     * Assigns a new value to an existing variable or creates a new one.
+     * The method searches the chain of parent Contexts for variable
+     * existence.
      *
-     * @return The parent Context in a chained Context environment
+     * @param name The variable name
+     * @param value The variable value
      */
-    Context getParent();
+    void set(String name, Object value);
 
     /**
-     * Gets the SCXMLSystemContext for this Context, should not be null unless this is the root Context
+     * Assigns a new value to an existing variable or creates a new one.
+     * The method allows to shaddow a variable of the same name up the
+     * Context chain.
      *
-     * @return The SCXMLSystemContext in a chained Context environment
+     * @param name The variable name
+     * @param value The variable value
      */
-    SCXMLSystemContext getSystemContext();
+    void setLocal(String name, Object value);
 
 }

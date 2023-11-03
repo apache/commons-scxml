@@ -47,15 +47,6 @@ public class Content implements ParsedValueContainer {
     }
 
     /**
-     * Sets the expression for this content.
-     *
-     * @param expr The expression for this content.
-     */
-    public final void setExpr(final String expr) {
-        this.expr = expr;
-    }
-
-    /**
      * Gets the content element body
      *
      * @return The content element body.
@@ -63,6 +54,15 @@ public class Content implements ParsedValueContainer {
     @Override
     public final ParsedValue getParsedValue() {
         return contentBody;
+    }
+
+    /**
+     * Sets the expression for this content.
+     *
+     * @param expr The expression for this content.
+     */
+    public final void setExpr(final String expr) {
+        this.expr = expr;
     }
 
     /**

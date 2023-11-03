@@ -125,10 +125,166 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     }
 
     /**
+     * Add a new external event, which may be done concurrently, and even when the current SCInstance is detached.
+     * <p>
+     * No processing of the vent will be done, until the next triggerEvent methods is invoked.
+     * </p>
+     * @param evt an external event
+     */
+    @Override
+    public void addEvent(final TriggerEvent evt) {
+        if (evt != null) {
+            externalEventQueue.add(evt);
+        }
+    }
+
+    /**
+     * Add a listener to the {@link Observable}.
+     *
+     * @param observable The {@link Observable} to attach the listener to.
+     * @param listener The SCXMLListener.
+     */
+    public void addListener(final Observable observable, final SCXMLListener listener) {
+        exctx.getNotificationRegistry().addListener(observable, listener);
+    }
+
+    /**
+     * Re-attach a previously detached SCInstance.
+     * <p>
+     * Note: an already attached instance will get overwritten (and thus lost).
+     * </p>
+     * @param instance An previously detached SCInstance
+     */
+    public void attachInstance(final SCInstance instance) {
+        exctx.attachInstance(instance);
+    }
+
+    /**
+     * Detach the current SCInstance to allow external serialization.
+     * <p>
+     * {@link #attachInstance(SCInstance)} can be used to re-attach a previously detached instance
+     * </p>
+     * <p>
+     * Note: until an instance is re-attached, no operations are allowed (and probably throw exceptions) except
+     * for {@link #addEvent(TriggerEvent)} which might still be used (concurrently) by running Invokers, or
+     * {@link #hasPendingEvents()} to check for possible pending events.
+     * </p>
+     * @return the detached instance
+     */
+    public SCInstance detachInstance() {
+        return exctx.detachInstance();
+    }
+
+    protected void eventStep(final TriggerEvent event) throws ModelException {
+        semantics.nextStep(exctx, event);
+        logState();
+    }
+
+    /**
+     * Gets the environment specific error reporter.
+     *
+     * @return Returns the errorReporter.
+     */
+    public ErrorReporter getErrorReporter() {
+        return exctx.getErrorReporter();
+    }
+
+    /**
+     * Gets the expression evaluator in use.
+     *
+     * @return Evaluator The evaluator in use.
+     */
+    public Evaluator getEvaluator() {
+        return exctx.getEvaluator();
+    }
+
+    /**
+     * Gets the event dispatcher.
+     *
+     * @return Returns the eventdispatcher.
+     */
+    public EventDispatcher getEventdispatcher() {
+        return exctx.getEventDispatcher();
+    }
+
+    /**
+     * @return the (optionally) &lt;final&gt;&lt;donedata/&gt;&lt;/final&gt; produced data after the current statemachine
+     *         completed its execution.
+     */
+    public Object getFinalDoneData() {
+        return getGlobalContext().getSystemContext().getPlatformVariables().get(SCXMLSystemContext.FINAL_DONE_DATA_KEY);
+    }
+
+    /**
+     * Gets the global context for the state machine execution.
+     * <p>
+     * The global context is the top level context within the state machine itself and should be regarded and treated
+     * "read-only" from external usage.
+     * </p>
+     * @return Context The global context.
+     */
+    public Context getGlobalContext() {
+        return exctx.getScInstance().getGlobalContext();
+    }
+
+    /**
+     * Gets the notification registry.
+     *
+     * @return The notification registry.
+     */
+    public NotificationRegistry getNotificationRegistry() {
+        return exctx.getNotificationRegistry();
+    }
+
+    /**
      * @return the parent SCXMLIOProcessor (if any)
      */
     public ParentSCXMLIOProcessor getParentSCXMLIOProcessor() {
         return parentSCXMLIOProcessor;
+    }
+
+    /**
+     * @return Returns the current number of pending external events to be processed.
+     */
+    public int getPendingEvents() {
+        return externalEventQueue.size();
+    }
+
+    /**
+     * Gets the root context for the state machine execution.
+     * <p>
+     * The root context can be used for providing external data to the state machine
+     * </p>
+     *
+     * @return Context The root context.
+     */
+    public Context getRootContext() {
+        return exctx.getScInstance().getRootContext();
+    }
+
+    /**
+     * Gets the state chart instance for this executor.
+     *
+     * @return The SCInstance for this executor.
+     */
+    protected SCInstance getSCInstance() {
+        return exctx.getScInstance();
+    }
+
+    /**
+     * Gets the state machine that is being executed.
+     * <b>NOTE:</b> This is the state machine definition or model used by this
+     * executor instance. It may be shared across multiple executor instances
+     * and should not be altered once in use. Also note that
+     * manipulation of instance data for the executor should happen through
+     * its root context or state contexts only, never through the direct
+     * manipulation of any {@link org.apache.commons.scxml2.model.Datamodel}s associated with this state
+     * machine definition.
+     *
+     * @return Returns the stateMachine.
+     */
+    public SCXML getStateMachine() {
+        return exctx.getStateMachine();
     }
 
     /**
@@ -140,12 +296,122 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
         return exctx.getScInstance().getCurrentStatus();
     }
 
+    public void go() throws ModelException {
+        go(Collections.emptyMap());
+    }
+
     /**
-     * @return the (optionally) &lt;final&gt;&lt;donedata/&gt;&lt;/final&gt; produced data after the current statemachine
-     *         completed its execution.
+     * Clear all state, optionally initialize/override global context data, and begin executing the state machine
+     * @param data optional data to initialize/override data defined (only) in the global context of the state machine
+     * @throws ModelException if the state machine instance failed to initialize
      */
-    public Object getFinalDoneData() {
-        return getGlobalContext().getSystemContext().getPlatformVariables().get(SCXMLSystemContext.FINAL_DONE_DATA_KEY);
+    public void go(final Map<String, Object> data) throws ModelException {
+        // first stop the state machine (flag only, otherwise start may fail hereafter)
+        exctx.stop();
+        // clear any pending external events
+        externalEventQueue.clear();
+
+        // (re)initialize
+        semantics.initialize(exctx, data);
+
+        // begin
+        semantics.firstStep(exctx);
+        logState();
+    }
+
+    /**
+     * @return Returns true if there are pending external events to be processed.
+     */
+    public boolean hasPendingEvents() {
+        return !externalEventQueue.isEmpty();
+    }
+
+    /**
+     * @return if the SCXML configuration will be checked before execution
+     */
+    public boolean isCheckLegalConfiguration() {
+        return exctx.isCheckLegalConfiguration();
+    }
+
+    /**
+     * @return Returns true if the state machine is running
+     */
+    public boolean isRunning() {
+        return exctx.isRunning();
+    }
+
+    public boolean isSingleContext() {
+        return getSCInstance().isSingleContext();
+    }
+
+    /**
+     * Log the current set of active states.
+     */
+    protected void logState() {
+        if (log.isDebugEnabled()) {
+            final StringBuilder sb = new StringBuilder("Current States: [ ");
+            for (final EnterableState es : getStatus().getStates()) {
+                sb.append(es.getId()).append(", ");
+            }
+            final int length = sb.length();
+            sb.delete(length - 2, length).append(" ]");
+            log.debug(sb.toString());
+        }
+    }
+
+    /**
+     * Register an Invoker for this target type.
+     *
+     * @param type The target type (specified by "type" attribute of the invoke element).
+     * @param invokerClass The Invoker class.
+     */
+    public void registerInvokerClass(final String type, final Class<? extends Invoker> invokerClass) {
+        exctx.registerInvokerClass(type, invokerClass);
+    }
+
+    /**
+     * Remove this listener from the {@link Observable}.
+     *
+     * @param observable The {@link Observable}.
+     * @param listener The SCXMLListener to be removed.
+     */
+    public void removeListener(final Observable observable,
+                               final SCXMLListener listener) {
+        exctx.getNotificationRegistry().removeListener(observable, listener);
+    }
+
+    /**
+     * Same as {@link #go}
+     * @throws ModelException if the state machine instance failed to initialize
+     */
+    public void reset() throws ModelException {
+        go();
+    }
+
+    public Thread run() throws ModelException {
+        return run(Collections.emptyMap());
+    }
+
+    public Thread run(final Map<String, Object> data) throws ModelException {
+        go(data);
+        final Thread t = new Thread(() -> {
+            try {
+                while (exctx.isRunning()) {
+                    triggerEvents();
+                }
+            } catch (final ModelException ignored) {
+            }
+        });
+        t.start();
+        return t;
+    }
+
+    /**
+     * Sets if the SCXML configuration should be checked before execution (default = true)
+     * @param checkLegalConfiguration flag to set
+     */
+    public void setCheckLegalConfiguration(final boolean checkLegalConfiguration) {
+        this.exctx.setCheckLegalConfiguration(checkLegalConfiguration);
     }
 
     /**
@@ -184,6 +450,15 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     }
 
     /**
+     * Sets or replace the error reporter
+     *
+     * @param errorReporter The error reporter to set, if null a SimpleErrorReporter instance will be used instead
+     */
+    public void setErrorReporter(final ErrorReporter errorReporter) {
+        exctx.setErrorReporter(errorReporter);
+    }
+
+    /**
      * Sets or replace the expression evaluator
      * <p>
      * If the state machine instance has been initialized before, it will be initialized again, destroying all existing
@@ -200,36 +475,12 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     }
 
     /**
-     * Gets the expression evaluator in use.
+     * Sets or replace the event dispatch
      *
-     * @return Evaluator The evaluator in use.
+     * @param eventdispatcher The event dispatcher to set, if null a SimpleDispatcher instance will be used instead
      */
-    public Evaluator getEvaluator() {
-        return exctx.getEvaluator();
-    }
-
-    /**
-     * Gets the root context for the state machine execution.
-     * <p>
-     * The root context can be used for providing external data to the state machine
-     * </p>
-     *
-     * @return Context The root context.
-     */
-    public Context getRootContext() {
-        return exctx.getScInstance().getRootContext();
-    }
-
-    /**
-     * Gets the global context for the state machine execution.
-     * <p>
-     * The global context is the top level context within the state machine itself and should be regarded and treated
-     * "read-only" from external usage.
-     * </p>
-     * @return Context The global context.
-     */
-    public Context getGlobalContext() {
-        return exctx.getScInstance().getGlobalContext();
+    public void setEventdispatcher(final EventDispatcher eventdispatcher) {
+        exctx.setEventdispatcher(eventdispatcher);
     }
 
     /**
@@ -244,26 +495,6 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
 
     public void setSingleContext(final boolean singleContext) throws ModelException {
         getSCInstance().setSingleContext(singleContext);
-    }
-
-    public boolean isSingleContext() {
-        return getSCInstance().isSingleContext();
-    }
-
-    /**
-     * Gets the state machine that is being executed.
-     * <b>NOTE:</b> This is the state machine definition or model used by this
-     * executor instance. It may be shared across multiple executor instances
-     * and should not be altered once in use. Also note that
-     * manipulation of instance data for the executor should happen through
-     * its root context or state contexts only, never through the direct
-     * manipulation of any {@link org.apache.commons.scxml2.model.Datamodel}s associated with this state
-     * machine definition.
-     *
-     * @return Returns the stateMachine.
-     */
-    public SCXML getStateMachine() {
-        return exctx.getStateMachine();
     }
 
     /**
@@ -284,217 +515,6 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     }
 
     /**
-     * Gets the environment specific error reporter.
-     *
-     * @return Returns the errorReporter.
-     */
-    public ErrorReporter getErrorReporter() {
-        return exctx.getErrorReporter();
-    }
-
-    /**
-     * Sets or replace the error reporter
-     *
-     * @param errorReporter The error reporter to set, if null a SimpleErrorReporter instance will be used instead
-     */
-    public void setErrorReporter(final ErrorReporter errorReporter) {
-        exctx.setErrorReporter(errorReporter);
-    }
-
-    /**
-     * Gets the event dispatcher.
-     *
-     * @return Returns the eventdispatcher.
-     */
-    public EventDispatcher getEventdispatcher() {
-        return exctx.getEventDispatcher();
-    }
-
-    /**
-     * Sets or replace the event dispatch
-     *
-     * @param eventdispatcher The event dispatcher to set, if null a SimpleDispatcher instance will be used instead
-     */
-    public void setEventdispatcher(final EventDispatcher eventdispatcher) {
-        exctx.setEventdispatcher(eventdispatcher);
-    }
-
-    /**
-     * Sets if the SCXML configuration should be checked before execution (default = true)
-     * @param checkLegalConfiguration flag to set
-     */
-    public void setCheckLegalConfiguration(final boolean checkLegalConfiguration) {
-        this.exctx.setCheckLegalConfiguration(checkLegalConfiguration);
-    }
-
-    /**
-     * @return if the SCXML configuration will be checked before execution
-     */
-    public boolean isCheckLegalConfiguration() {
-        return exctx.isCheckLegalConfiguration();
-    }
-
-    /**
-     * Gets the notification registry.
-     *
-     * @return The notification registry.
-     */
-    public NotificationRegistry getNotificationRegistry() {
-        return exctx.getNotificationRegistry();
-    }
-
-    /**
-     * Add a listener to the {@link Observable}.
-     *
-     * @param observable The {@link Observable} to attach the listener to.
-     * @param listener The SCXMLListener.
-     */
-    public void addListener(final Observable observable, final SCXMLListener listener) {
-        exctx.getNotificationRegistry().addListener(observable, listener);
-    }
-
-    /**
-     * Remove this listener from the {@link Observable}.
-     *
-     * @param observable The {@link Observable}.
-     * @param listener The SCXMLListener to be removed.
-     */
-    public void removeListener(final Observable observable,
-                               final SCXMLListener listener) {
-        exctx.getNotificationRegistry().removeListener(observable, listener);
-    }
-
-    /**
-     * Register an Invoker for this target type.
-     *
-     * @param type The target type (specified by "type" attribute of the invoke element).
-     * @param invokerClass The Invoker class.
-     */
-    public void registerInvokerClass(final String type, final Class<? extends Invoker> invokerClass) {
-        exctx.registerInvokerClass(type, invokerClass);
-    }
-
-    /**
-     * Remove the Invoker registered for this target type (if there is one registered).
-     *
-     * @param type The target type (specified by "type" attribute of the invoke element).
-     */
-    public void unregisterInvokerClass(final String type) {
-        exctx.unregisterInvokerClass(type);
-    }
-
-    /**
-     * Detach the current SCInstance to allow external serialization.
-     * <p>
-     * {@link #attachInstance(SCInstance)} can be used to re-attach a previously detached instance
-     * </p>
-     * <p>
-     * Note: until an instance is re-attached, no operations are allowed (and probably throw exceptions) except
-     * for {@link #addEvent(TriggerEvent)} which might still be used (concurrently) by running Invokers, or
-     * {@link #hasPendingEvents()} to check for possible pending events.
-     * </p>
-     * @return the detached instance
-     */
-    public SCInstance detachInstance() {
-        return exctx.detachInstance();
-    }
-
-    /**
-     * Re-attach a previously detached SCInstance.
-     * <p>
-     * Note: an already attached instance will get overwritten (and thus lost).
-     * </p>
-     * @param instance An previously detached SCInstance
-     */
-    public void attachInstance(final SCInstance instance) {
-        exctx.attachInstance(instance);
-    }
-
-    /**
-     * @return Returns true if the state machine is running
-     */
-    public boolean isRunning() {
-        return exctx.isRunning();
-    }
-
-    public void go() throws ModelException {
-        go(Collections.emptyMap());
-    }
-
-    /**
-     * Clear all state, optionally initialize/override global context data, and begin executing the state machine
-     * @param data optional data to initialize/override data defined (only) in the global context of the state machine
-     * @throws ModelException if the state machine instance failed to initialize
-     */
-    public void go(final Map<String, Object> data) throws ModelException {
-        // first stop the state machine (flag only, otherwise start may fail hereafter)
-        exctx.stop();
-        // clear any pending external events
-        externalEventQueue.clear();
-
-        // (re)initialize
-        semantics.initialize(exctx, data);
-
-        // begin
-        semantics.firstStep(exctx);
-        logState();
-    }
-
-    /**
-     * Same as {@link #go}
-     * @throws ModelException if the state machine instance failed to initialize
-     */
-    public void reset() throws ModelException {
-        go();
-    }
-
-    public Thread run() throws ModelException {
-        return run(Collections.emptyMap());
-    }
-
-    public Thread run(final Map<String, Object> data) throws ModelException {
-        go(data);
-        final Thread t = new Thread(() -> {
-            try {
-                while (exctx.isRunning()) {
-                    triggerEvents();
-                }
-            } catch (final ModelException ignored) {
-            }
-        });
-        t.start();
-        return t;
-    }
-
-    /**
-     * Add a new external event, which may be done concurrently, and even when the current SCInstance is detached.
-     * <p>
-     * No processing of the vent will be done, until the next triggerEvent methods is invoked.
-     * </p>
-     * @param evt an external event
-     */
-    @Override
-    public void addEvent(final TriggerEvent evt) {
-        if (evt != null) {
-            externalEventQueue.add(evt);
-        }
-    }
-
-    /**
-     * @return Returns true if there are pending external events to be processed.
-     */
-    public boolean hasPendingEvents() {
-        return !externalEventQueue.isEmpty();
-    }
-
-    /**
-     * @return Returns the current number of pending external events to be processed.
-     */
-    public int getPendingEvents() {
-        return externalEventQueue.size();
-    }
-
-    /**
      * Convenience method when only one event needs to be triggered.
      *
      * @param evt
@@ -507,6 +527,17 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
             throws ModelException {
         addEvent(evt);
         triggerEvents();
+    }
+
+    /**
+     * Trigger all pending and incoming events, until there are no more pending events
+     * @throws ModelException in case there is a fatal SCXML object model problem.
+     */
+    public void triggerEvents() throws ModelException {
+        TriggerEvent evt;
+        while (exctx.isRunning() && (evt = externalEventQueue.poll()) != null) {
+            eventStep(evt);
+        }
     }
 
     /**
@@ -530,42 +561,11 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     }
 
     /**
-     * Trigger all pending and incoming events, until there are no more pending events
-     * @throws ModelException in case there is a fatal SCXML object model problem.
-     */
-    public void triggerEvents() throws ModelException {
-        TriggerEvent evt;
-        while (exctx.isRunning() && (evt = externalEventQueue.poll()) != null) {
-            eventStep(evt);
-        }
-    }
-
-    protected void eventStep(final TriggerEvent event) throws ModelException {
-        semantics.nextStep(exctx, event);
-        logState();
-    }
-
-    /**
-     * Gets the state chart instance for this executor.
+     * Remove the Invoker registered for this target type (if there is one registered).
      *
-     * @return The SCInstance for this executor.
+     * @param type The target type (specified by "type" attribute of the invoke element).
      */
-    protected SCInstance getSCInstance() {
-        return exctx.getScInstance();
-    }
-
-    /**
-     * Log the current set of active states.
-     */
-    protected void logState() {
-        if (log.isDebugEnabled()) {
-            final StringBuilder sb = new StringBuilder("Current States: [ ");
-            for (final EnterableState es : getStatus().getStates()) {
-                sb.append(es.getId()).append(", ");
-            }
-            final int length = sb.length();
-            sb.delete(length - 2, length).append(" ]");
-            log.debug(sb.toString());
-        }
+    public void unregisterInvokerClass(final String type) {
+        exctx.unregisterInvokerClass(type);
     }
 }

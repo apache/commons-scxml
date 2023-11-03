@@ -33,12 +33,6 @@ public class Cancel extends Action {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Constructor.
-     */
-    public Cancel() {
-    }
-
-    /**
      * The ID of the send message that should be cancelled.
      */
     private String sendid;
@@ -49,39 +43,9 @@ public class Cancel extends Action {
     private String sendidexpr;
 
     /**
-     * Gets the ID of the send message that should be cancelled.
-     *
-     * @return Returns the sendid.
+     * Constructor.
      */
-    public String getSendid() {
-        return sendid;
-    }
-
-    /**
-     * Sets the ID of the send message that should be cancelled.
-     *
-     * @param sendid The sendid to set.
-     */
-    public void setSendid(final String sendid) {
-        this.sendid = sendid;
-    }
-
-    /**
-     * Gets the expression that evaluates to the ID of the send message that should be cancelled.
-     *
-     * @return the expression that evaluates to the ID of the send message that should be cancelled.
-     */
-    public String getSendidexpr() {
-        return sendidexpr;
-    }
-
-    /**
-     * Sets the expression that evaluates to the ID of the send message that should be cancelled.
-     *
-     * @param sendidexpr the expression that evaluates to the ID of the send message that should be cancelled.
-     */
-    public void setSendidexpr(final String sendidexpr) {
-        this.sendidexpr = sendidexpr;
+    public Cancel() {
     }
 
     /**
@@ -104,6 +68,42 @@ public class Cancel extends Action {
         }
 
         exctx.getEventDispatcher().cancel(sendidValue);
+    }
+
+    /**
+     * Gets the ID of the send message that should be cancelled.
+     *
+     * @return Returns the sendid.
+     */
+    public String getSendid() {
+        return sendid;
+    }
+
+    /**
+     * Gets the expression that evaluates to the ID of the send message that should be cancelled.
+     *
+     * @return the expression that evaluates to the ID of the send message that should be cancelled.
+     */
+    public String getSendidexpr() {
+        return sendidexpr;
+    }
+
+    /**
+     * Sets the ID of the send message that should be cancelled.
+     *
+     * @param sendid The sendid to set.
+     */
+    public void setSendid(final String sendid) {
+        this.sendid = sendid;
+    }
+
+    /**
+     * Sets the expression that evaluates to the ID of the send message that should be cancelled.
+     *
+     * @param sendidexpr the expression that evaluates to the ID of the send message that should be cancelled.
+     */
+    public void setSendidexpr(final String sendidexpr) {
+        this.sendidexpr = sendidexpr;
     }
 }
 

@@ -48,6 +48,10 @@ public class Final extends EnterableState {
     public Final() {
     }
 
+    public DoneData getDoneData() {
+        return doneData;
+    }
+
     /**
      * @return Returns the State parent
      */
@@ -57,28 +61,12 @@ public class Final extends EnterableState {
     }
 
     /**
-     * Sets the parent State.
-     * @param parent The parent state to set
-     */
-    public final void setParent(final State parent) {
-        super.setParent(parent);
-    }
-
-    /**
      * {@inheritDoc}
      * @return Returns always true (a state of type Final is always atomic)
      */
     @Override
     public final boolean isAtomicState() {
         return true;
-    }
-
-    public DoneData getDoneData() {
-        return doneData;
-    }
-
-    public void setDoneData(final DoneData doneData) {
-        this.doneData = doneData;
     }
 
     public Object processDoneData(final SCXMLExecutionContext exctx) throws ModelException {
@@ -121,6 +109,18 @@ public class Final extends EnterableState {
             }
         }
         return result;
+    }
+
+    public void setDoneData(final DoneData doneData) {
+        this.doneData = doneData;
+    }
+
+    /**
+     * Sets the parent State.
+     * @param parent The parent state to set
+     */
+    public final void setParent(final State parent) {
+        super.setParent(parent);
     }
 }
 

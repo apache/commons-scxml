@@ -53,39 +53,10 @@ public class Foreach extends Action implements ActionsContainer {
     }
 
     @Override
-    public final List<Action> getActions() {
-        return actions;
-    }
-
-    @Override
     public final void addAction(final Action action) {
         if (action != null) {
             this.actions.add(action);
         }
-    }
-
-    public String getArray() {
-        return array;
-    }
-
-    public void setArray(final String array) {
-        this.array = array;
-    }
-
-    public String getItem() {
-        return item;
-    }
-
-    public void setItem(final String item) {
-        this.item = item;
-    }
-
-    public String getIndex() {
-        return index;
-    }
-
-    public void setIndex(final String index) {
-        this.index = index;
     }
 
     /**
@@ -137,5 +108,34 @@ public class Foreach extends Action implements ActionsContainer {
                 currentIndex++;
             }
         }
+    }
+
+    @Override
+    public final List<Action> getActions() {
+        return actions;
+    }
+
+    public String getArray() {
+        return array;
+    }
+
+    public String getIndex() {
+        return index;
+    }
+
+    public String getItem() {
+        return item;
+    }
+
+    public void setArray(final String array) {
+        this.array = array;
+    }
+
+    public void setIndex(final String index) {
+        this.index = index;
+    }
+
+    public void setItem(final String item) {
+        this.item = item;
     }
 }

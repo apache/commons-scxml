@@ -79,8 +79,15 @@ public class SimpleTransition extends Executable implements Observable {
         this.targets = new HashSet<>();
     }
 
-    private boolean isCompoundStateParent(final TransitionalState ts) {
-        return ts instanceof State && ((State)ts).isComposite();
+    /**
+     * Gets the ID of the transition target (may be null, if, for example,
+     * the target is specified inline).
+     *
+     * @return String Returns the transition target ID
+     * @see #getTargets()
+     */
+    public final String getNext() {
+        return next;
     }
 
     /**
@@ -89,14 +96,6 @@ public class SimpleTransition extends Executable implements Observable {
     @Override
     public final Integer getObservableId() {
         return observableId;
-    }
-
-    /**
-     * Sets the observableId for this Observable, which must be unique within the SCXML state machine
-     * @param observableId the observableId
-     */
-    public final void setObservableId(final Integer observableId) {
-        this.observableId = observableId;
     }
 
     /**
@@ -110,65 +109,15 @@ public class SimpleTransition extends Executable implements Observable {
     }
 
     /**
-     * Sets the TransitionalState (State or Parallel) parent
-     * <p>
-     * For transitions of Initial or History elements their TransitionalState parent must be set.
-     * </p>
+     * Gets the set of transition targets (may be an empty list).
      *
-     * @param parent The parent to set.
+     * @return Returns the target(s) as specified in SCXML markup.
+     * <p>Remarks: Is <code>empty</code> for &quot;stay&quot; transitions.
+     *
+     * @since 0.7
      */
-    public final void setParent(final TransitionalState parent) {
-        super.setParent(parent);
-    }
-
-    /**
-     * @return true if Transition type == internal or false if type == external (default)
-     */
-    public final TransitionType getType() {
-        return type;
-    }
-
-    /**
-     * Sets the Transition type
-     * @param type the Transition type
-     */
-    public final void setType(final TransitionType type) {
-        this.type = type;
-    }
-
-    /**
-     * Returns the effective Transition type.
-     * <p>
-     * A transition type is only effectively internal if:
-     * </p>
-     * <ul>
-     *   <li>its {@link #getType()} == {@link TransitionType#internal}</li>
-     *   <li>its source state {@link #getParent()} {@link State#isComposite()}</li>
-     *   <li>all its {@link #getTargets()} are proper descendants of its {@link #getParent()}</li>
-     * </ul>
-     * <p>
-     * Otherwise it is treated (for determining its exit states) as if it is of type {@link TransitionType#external}
-     * </p>
-     * @see <a href="https://www.w3.org/TR/2015/REC-scxml-20150901/#SelectingTransitions">
-     *     https://www.w3.org/TR/2015/REC-scxml-20150901/#SelectingTransitions</a>
-     * @return true if the effective Transition type is {@link TransitionType#internal}
-     */
-    public final boolean isTypeInternal() {
-        if (typeInternal == null) {
-
-            // derive typeInternal
-            typeInternal = TransitionType.internal == type && isCompoundStateParent(getParent());
-
-            if (typeInternal && !targets.isEmpty()) {
-                for (final TransitionTarget tt : targets) {
-                    if (!tt.isDescendantOf(getParent())) {
-                        typeInternal = false;
-                        break;
-                    }
-                }
-            }
-        }
-        return typeInternal;
+    public final Set<TransitionTarget> getTargets() {
+        return targets;
     }
 
     /**
@@ -234,26 +183,49 @@ public class SimpleTransition extends Executable implements Observable {
     }
 
     /**
-     * Gets the set of transition targets (may be an empty list).
-     *
-     * @return Returns the target(s) as specified in SCXML markup.
-     * <p>Remarks: Is <code>empty</code> for &quot;stay&quot; transitions.
-     *
-     * @since 0.7
+     * @return true if Transition type == internal or false if type == external (default)
      */
-    public final Set<TransitionTarget> getTargets() {
-        return targets;
+    public final TransitionType getType() {
+        return type;
+    }
+
+    private boolean isCompoundStateParent(final TransitionalState ts) {
+        return ts instanceof State && ((State)ts).isComposite();
     }
 
     /**
-     * Gets the ID of the transition target (may be null, if, for example,
-     * the target is specified inline).
-     *
-     * @return String Returns the transition target ID
-     * @see #getTargets()
+     * Returns the effective Transition type.
+     * <p>
+     * A transition type is only effectively internal if:
+     * </p>
+     * <ul>
+     *   <li>its {@link #getType()} == {@link TransitionType#internal}</li>
+     *   <li>its source state {@link #getParent()} {@link State#isComposite()}</li>
+     *   <li>all its {@link #getTargets()} are proper descendants of its {@link #getParent()}</li>
+     * </ul>
+     * <p>
+     * Otherwise it is treated (for determining its exit states) as if it is of type {@link TransitionType#external}
+     * </p>
+     * @see <a href="https://www.w3.org/TR/2015/REC-scxml-20150901/#SelectingTransitions">
+     *     https://www.w3.org/TR/2015/REC-scxml-20150901/#SelectingTransitions</a>
+     * @return true if the effective Transition type is {@link TransitionType#internal}
      */
-    public final String getNext() {
-        return next;
+    public final boolean isTypeInternal() {
+        if (typeInternal == null) {
+
+            // derive typeInternal
+            typeInternal = TransitionType.internal == type && isCompoundStateParent(getParent());
+
+            if (typeInternal && !targets.isEmpty()) {
+                for (final TransitionTarget tt : targets) {
+                    if (!tt.isDescendantOf(getParent())) {
+                        typeInternal = false;
+                        break;
+                    }
+                }
+            }
+        }
+        return typeInternal;
     }
 
     /**
@@ -263,5 +235,33 @@ public class SimpleTransition extends Executable implements Observable {
      */
     public final void setNext(final String next) {
         this.next = next;
+    }
+
+    /**
+     * Sets the observableId for this Observable, which must be unique within the SCXML state machine
+     * @param observableId the observableId
+     */
+    public final void setObservableId(final Integer observableId) {
+        this.observableId = observableId;
+    }
+
+    /**
+     * Sets the TransitionalState (State or Parallel) parent
+     * <p>
+     * For transitions of Initial or History elements their TransitionalState parent must be set.
+     * </p>
+     *
+     * @param parent The parent to set.
+     */
+    public final void setParent(final TransitionalState parent) {
+        super.setParent(parent);
+    }
+
+    /**
+     * Sets the Transition type
+     * @param type the Transition type
+     */
+    public final void setType(final TransitionType type) {
+        this.type = type;
     }
 }

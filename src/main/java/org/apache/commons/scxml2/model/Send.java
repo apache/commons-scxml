@@ -68,6 +68,54 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
     private static final long MILLIS_IN_A_MINUTE = 60000L;
 
     /**
+     * Parse delay.
+     *
+     * @param delayString The String value of the delay, in CSS2 format
+     * @param expression indicates if this is for a delayexpr or delay attribute
+     * @param delayStringSource the original delayString source (delayString might be different in case of a delayexpr)
+     * @return The parsed delay in milliseconds
+     * @throws SCXMLExpressionException If the delay cannot be parsed
+     */
+    static long parseDelay(final String delayString, final boolean expression, final String delayStringSource)
+            throws SCXMLExpressionException {
+
+        long wait = 0L;
+        long multiplier = 1L;
+
+        if (delayString != null && !delayString.trim().isEmpty()) {
+
+            try {
+                final String trimDelay = delayString.trim();
+                String numericDelay = trimDelay;
+                if (trimDelay.endsWith(MILLIS)) {
+                    numericDelay = trimDelay.substring(0, trimDelay.length() - 2);
+                } else if (trimDelay.endsWith(SECONDS)) {
+                    multiplier = multiplier*MILLIS_IN_A_SECOND;
+                    numericDelay = trimDelay.substring(0, trimDelay.length() - 1);
+                } else if (trimDelay.endsWith(MINUTES)) { // Not CSS2
+                    multiplier = multiplier*MILLIS_IN_A_MINUTE;
+                    numericDelay = trimDelay.substring(0, trimDelay.length() - 1);
+                }
+                final int fractionIndex = numericDelay.indexOf('.');
+                if (fractionIndex > -1) {
+                    if (fractionIndex > 0) {
+                        wait = Long.parseLong(numericDelay.substring(0, fractionIndex));
+                        wait *= multiplier;
+                    }
+                    numericDelay = numericDelay.substring(fractionIndex+1);
+                    multiplier /= Math.pow(10, numericDelay.length());
+                }
+                if (!numericDelay.isEmpty()) {
+                    wait += Long.parseLong(numericDelay) * multiplier;
+                }
+            } catch (final NumberFormatException nfe) {
+                throw new SCXMLExpressionException("<send>: invalid " + (expression ? "delayexpr=\"" : "delay=\"") + delayStringSource +"\"");
+            }
+        }
+        return wait;
+    }
+
+    /**
      * The ID of the send message.
      */
     private String id;
@@ -77,11 +125,11 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
      */
     private String idlocation;
 
+
     /**
      * The target location of the event.
      */
     private String target;
-
 
     /**
      * An expression specifying the target location of the event.
@@ -142,242 +190,6 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
      * Constructor.
      */
     public Send() {
-    }
-
-    /**
-     * @return the idlocation
-     */
-    public String getIdlocation() {
-        return idlocation;
-    }
-
-    /**
-     * Sets the idlocation expression
-     *
-     * @param idlocation The idlocation expression
-     */
-    public void setIdlocation(final String idlocation) {
-        this.idlocation = idlocation;
-    }
-
-    /**
-     * Gets the delay.
-     *
-     * @return Returns the delay.
-     */
-    public final String getDelay() {
-        return delay;
-    }
-
-    /**
-     * Sets the delay.
-     *
-     * @param delay The delay to set.
-     */
-    public final void setDelay(final String delay) {
-        this.delay = delay;
-    }
-
-    /**
-     * @return The delay expression
-     */
-    public String getDelayexpr() {
-        return delayexpr;
-    }
-
-    /**
-     * Sets the delay expression
-     *
-     * @param delayexpr The delay expression to set
-     */
-    public void setDelayexpr(final String delayexpr) {
-        this.delayexpr = delayexpr;
-    }
-
-    /**
-     * Gets the hints for this &lt;send&gt; element.
-     *
-     * @return String Returns the hints.
-     */
-    public final String getHints() {
-        return hints;
-    }
-
-    /**
-     * Sets the hints for this &lt;send&gt; element.
-     *
-     * @param hints The hints to set.
-     */
-    public final void setHints(final String hints) {
-        this.hints = hints;
-    }
-
-    /**
-     * Gets the identifier for this &lt;send&gt; element.
-     *
-     * @return String Returns the id.
-     */
-    public final String getId() {
-        return id;
-    }
-
-    /**
-     * Sets the identifier for this &lt;send&gt; element.
-     *
-     * @param id The id to set.
-     */
-    public final void setId(final String id) {
-        this.id = id;
-    }
-
-    /**
-     * Gets the target for this &lt;send&gt; element.
-     *
-     * @return String Returns the target.
-     */
-    public final String getTarget() {
-        return target;
-    }
-
-    /**
-     * Sets the target for this &lt;send&gt; element.
-     *
-     * @param target The target to set.
-     */
-    public final void setTarget(final String target) {
-        this.target = target;
-    }
-
-    /**
-     * @return The target expression
-     */
-    public String getTargetexpr() {
-        return targetexpr;
-    }
-
-    /**
-     * Sets the target expression
-     *
-     * @param targetexpr The target expression to set
-     */
-    public void setTargetexpr(final String targetexpr) {
-        this.targetexpr = targetexpr;
-    }
-
-    /**
-     * Gets the type for this &lt;send&gt; element.
-     *
-     * @return String Returns the type.
-     */
-    public final String getType() {
-        return type;
-    }
-
-    /**
-     * Sets the type for this &lt;send&gt; element.
-     *
-     * @param type The type to set.
-     */
-    public final void setType(final String type) {
-        this.type = type;
-    }
-
-    /**
-     * @return The type expression
-     */
-    public String getTypeexpr() {
-        return typeexpr;
-    }
-
-    /**
-     * Sets the type expression
-     *
-     * @param typeexpr The type expression to set
-     */
-    public void setTypeexpr(final String typeexpr) {
-        this.typeexpr = typeexpr;
-    }
-
-    /**
-     * Gets the event to send.
-     *
-     * @param event The event to set.
-     */
-    public final void setEvent(final String event) {
-        this.event = event;
-    }
-
-    /**
-     * Sets the event to send.
-     *
-     * @return String Returns the event.
-     */
-    public final String getEvent() {
-        return event;
-    }
-
-    /**
-     * @return The event expression
-     */
-    public String getEventexpr() {
-        return eventexpr;
-    }
-
-    /**
-     * Sets the event expression
-     *
-     * @param eventexpr The event expression to set
-     */
-    public void setEventexpr(final String eventexpr) {
-        this.eventexpr = eventexpr;
-    }
-
-    /**
-     * Returns the content
-     *
-     * @return the content
-     */
-    @Override
-    public Content getContent() {
-        return content;
-    }
-
-    /**
-     * Sets the content
-     *
-     * @param content the content to set
-     */
-    @Override
-    public void setContent(final Content content) {
-        this.content = content;
-    }
-
-    /**
-     * Gets the list of {@link Param}s.
-     *
-     * @return List The params list.
-     */
-    @Override
-    public List<Param> getParams() {
-        return paramsList;
-    }
-
-    /**
-     * Gets the namelist.
-     *
-     * @return String Returns the namelist.
-     */
-    public final String getNamelist() {
-        return namelist;
-    }
-
-    /**
-     * Sets the namelist.
-     *
-     * @param namelist The namelist to set.
-     */
-    public final void setNamelist(final String namelist) {
-        this.namelist = namelist;
     }
 
     /**
@@ -482,50 +294,238 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
     }
 
     /**
-     * Parse delay.
+     * Returns the content
      *
-     * @param delayString The String value of the delay, in CSS2 format
-     * @param expression indicates if this is for a delayexpr or delay attribute
-     * @param delayStringSource the original delayString source (delayString might be different in case of a delayexpr)
-     * @return The parsed delay in milliseconds
-     * @throws SCXMLExpressionException If the delay cannot be parsed
+     * @return the content
      */
-    static long parseDelay(final String delayString, final boolean expression, final String delayStringSource)
-            throws SCXMLExpressionException {
+    @Override
+    public Content getContent() {
+        return content;
+    }
 
-        long wait = 0L;
-        long multiplier = 1L;
+    /**
+     * Gets the delay.
+     *
+     * @return Returns the delay.
+     */
+    public final String getDelay() {
+        return delay;
+    }
 
-        if (delayString != null && !delayString.trim().isEmpty()) {
+    /**
+     * @return The delay expression
+     */
+    public String getDelayexpr() {
+        return delayexpr;
+    }
 
-            try {
-                final String trimDelay = delayString.trim();
-                String numericDelay = trimDelay;
-                if (trimDelay.endsWith(MILLIS)) {
-                    numericDelay = trimDelay.substring(0, trimDelay.length() - 2);
-                } else if (trimDelay.endsWith(SECONDS)) {
-                    multiplier = multiplier*MILLIS_IN_A_SECOND;
-                    numericDelay = trimDelay.substring(0, trimDelay.length() - 1);
-                } else if (trimDelay.endsWith(MINUTES)) { // Not CSS2
-                    multiplier = multiplier*MILLIS_IN_A_MINUTE;
-                    numericDelay = trimDelay.substring(0, trimDelay.length() - 1);
-                }
-                final int fractionIndex = numericDelay.indexOf('.');
-                if (fractionIndex > -1) {
-                    if (fractionIndex > 0) {
-                        wait = Long.parseLong(numericDelay.substring(0, fractionIndex));
-                        wait *= multiplier;
-                    }
-                    numericDelay = numericDelay.substring(fractionIndex+1);
-                    multiplier /= Math.pow(10, numericDelay.length());
-                }
-                if (!numericDelay.isEmpty()) {
-                    wait += Long.parseLong(numericDelay) * multiplier;
-                }
-            } catch (final NumberFormatException nfe) {
-                throw new SCXMLExpressionException("<send>: invalid " + (expression ? "delayexpr=\"" : "delay=\"") + delayStringSource +"\"");
-            }
-        }
-        return wait;
+    /**
+     * Sets the event to send.
+     *
+     * @return String Returns the event.
+     */
+    public final String getEvent() {
+        return event;
+    }
+
+    /**
+     * @return The event expression
+     */
+    public String getEventexpr() {
+        return eventexpr;
+    }
+
+    /**
+     * Gets the hints for this &lt;send&gt; element.
+     *
+     * @return String Returns the hints.
+     */
+    public final String getHints() {
+        return hints;
+    }
+
+    /**
+     * Gets the identifier for this &lt;send&gt; element.
+     *
+     * @return String Returns the id.
+     */
+    public final String getId() {
+        return id;
+    }
+
+    /**
+     * @return the idlocation
+     */
+    public String getIdlocation() {
+        return idlocation;
+    }
+
+    /**
+     * Gets the namelist.
+     *
+     * @return String Returns the namelist.
+     */
+    public final String getNamelist() {
+        return namelist;
+    }
+
+    /**
+     * Gets the list of {@link Param}s.
+     *
+     * @return List The params list.
+     */
+    @Override
+    public List<Param> getParams() {
+        return paramsList;
+    }
+
+    /**
+     * Gets the target for this &lt;send&gt; element.
+     *
+     * @return String Returns the target.
+     */
+    public final String getTarget() {
+        return target;
+    }
+
+    /**
+     * @return The target expression
+     */
+    public String getTargetexpr() {
+        return targetexpr;
+    }
+
+    /**
+     * Gets the type for this &lt;send&gt; element.
+     *
+     * @return String Returns the type.
+     */
+    public final String getType() {
+        return type;
+    }
+
+    /**
+     * @return The type expression
+     */
+    public String getTypeexpr() {
+        return typeexpr;
+    }
+
+    /**
+     * Sets the content
+     *
+     * @param content the content to set
+     */
+    @Override
+    public void setContent(final Content content) {
+        this.content = content;
+    }
+
+    /**
+     * Sets the delay.
+     *
+     * @param delay The delay to set.
+     */
+    public final void setDelay(final String delay) {
+        this.delay = delay;
+    }
+
+    /**
+     * Sets the delay expression
+     *
+     * @param delayexpr The delay expression to set
+     */
+    public void setDelayexpr(final String delayexpr) {
+        this.delayexpr = delayexpr;
+    }
+
+    /**
+     * Gets the event to send.
+     *
+     * @param event The event to set.
+     */
+    public final void setEvent(final String event) {
+        this.event = event;
+    }
+
+    /**
+     * Sets the event expression
+     *
+     * @param eventexpr The event expression to set
+     */
+    public void setEventexpr(final String eventexpr) {
+        this.eventexpr = eventexpr;
+    }
+
+    /**
+     * Sets the hints for this &lt;send&gt; element.
+     *
+     * @param hints The hints to set.
+     */
+    public final void setHints(final String hints) {
+        this.hints = hints;
+    }
+
+    /**
+     * Sets the identifier for this &lt;send&gt; element.
+     *
+     * @param id The id to set.
+     */
+    public final void setId(final String id) {
+        this.id = id;
+    }
+
+    /**
+     * Sets the idlocation expression
+     *
+     * @param idlocation The idlocation expression
+     */
+    public void setIdlocation(final String idlocation) {
+        this.idlocation = idlocation;
+    }
+
+    /**
+     * Sets the namelist.
+     *
+     * @param namelist The namelist to set.
+     */
+    public final void setNamelist(final String namelist) {
+        this.namelist = namelist;
+    }
+
+    /**
+     * Sets the target for this &lt;send&gt; element.
+     *
+     * @param target The target to set.
+     */
+    public final void setTarget(final String target) {
+        this.target = target;
+    }
+
+    /**
+     * Sets the target expression
+     *
+     * @param targetexpr The target expression to set
+     */
+    public void setTargetexpr(final String targetexpr) {
+        this.targetexpr = targetexpr;
+    }
+
+    /**
+     * Sets the type for this &lt;send&gt; element.
+     *
+     * @param type The type to set.
+     */
+    public final void setType(final String type) {
+        this.type = type;
+    }
+
+    /**
+     * Sets the type expression
+     *
+     * @param typeexpr The type expression to set
+     */
+    public void setTypeexpr(final String typeexpr) {
+        this.typeexpr = typeexpr;
     }
 }

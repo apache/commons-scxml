@@ -44,15 +44,15 @@ public class TextValue implements ParsedValue {
         return ValueType.TEXT;
     }
 
+    @Override
+    public final String getValue() {
+        return text;
+    }
+
     /**
      * @return true if the text requires wrapping in a CDATA section when writing out to XML
      */
     public final boolean isCDATA() {
         return cdata;
-    }
-
-    @Override
-    public final String getValue() {
-        return text;
     }
 }

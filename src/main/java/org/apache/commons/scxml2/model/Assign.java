@@ -60,79 +60,6 @@ public class Assign extends Action implements ParsedValueContainer {
     }
 
     /**
-     * Gets the expr that will evaluate to the new value.
-     *
-     * @return Returns the expr.
-     */
-    public String getExpr() {
-        return expr;
-    }
-
-    /**
-     * Sets the expr that will evaluate to the new value.
-     *
-     * @param expr The expr to set.
-     */
-    public void setExpr(final String expr) {
-        this.expr = expr;
-    }
-
-    /**
-     * Gets the location for a previously defined XML data tree.
-     *
-     * @return Returns the location.
-     */
-    public String getLocation() {
-        return location;
-    }
-
-    /**
-     * Sets the location for a previously defined XML data tree.
-     *
-     * @param location The location.
-     */
-    public void setLocation(final String location) {
-        this.location = location;
-    }
-
-    /**
-     * Gets the source where the new XML instance for this location exists.
-     *
-     * @return Returns the source.
-     */
-    public String getSrc() {
-        return src;
-    }
-
-    /**
-     * Sets the source where the new XML instance for this location exists.
-     *
-     * @param src The source.
-     */
-    public void setSrc(final String src) {
-        this.src = src;
-    }
-
-    /**
-     * Gets the assign value
-     *
-     * @return The assign value
-     */
-    @Override
-    public final ParsedValue getParsedValue() {
-        return assignValue;
-    }
-
-    /**
-     * Sets the assign value
-     *
-     * @param assignValue The assign value
-     */
-    @Override
-    public final void setParsedValue(final ParsedValue assignValue) {
-        this.assignValue = assignValue;
-    }
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -158,5 +85,78 @@ public class Assign extends Action implements ParsedValueContainer {
             TriggerEvent ev = new TriggerEvent(location + ".change", TriggerEvent.CHANGE_EVENT);
             exctx.getInternalIOProcessor().addEvent(ev);
         */
+    }
+
+    /**
+     * Gets the expr that will evaluate to the new value.
+     *
+     * @return Returns the expr.
+     */
+    public String getExpr() {
+        return expr;
+    }
+
+    /**
+     * Gets the location for a previously defined XML data tree.
+     *
+     * @return Returns the location.
+     */
+    public String getLocation() {
+        return location;
+    }
+
+    /**
+     * Gets the assign value
+     *
+     * @return The assign value
+     */
+    @Override
+    public final ParsedValue getParsedValue() {
+        return assignValue;
+    }
+
+    /**
+     * Gets the source where the new XML instance for this location exists.
+     *
+     * @return Returns the source.
+     */
+    public String getSrc() {
+        return src;
+    }
+
+    /**
+     * Sets the expr that will evaluate to the new value.
+     *
+     * @param expr The expr to set.
+     */
+    public void setExpr(final String expr) {
+        this.expr = expr;
+    }
+
+    /**
+     * Sets the location for a previously defined XML data tree.
+     *
+     * @param location The location.
+     */
+    public void setLocation(final String location) {
+        this.location = location;
+    }
+
+    /**
+     * Sets the assign value
+     *
+     * @param assignValue The assign value
+     */
+    @Override
+    public final void setParsedValue(final ParsedValue assignValue) {
+        this.assignValue = assignValue;
+    }
+    /**
+     * Sets the source where the new XML instance for this location exists.
+     *
+     * @param src The source.
+     */
+    public void setSrc(final String src) {
+        this.src = src;
     }
 }

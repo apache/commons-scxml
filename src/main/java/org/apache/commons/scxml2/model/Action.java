@@ -40,21 +40,26 @@ public abstract class Action implements Serializable {
     }
 
     /**
+     * Execute this action instance.
+     *
+     * @param exctx The ActionExecutionContext for this execution instance
+     *
+     * @throws ModelException If the execution causes the model to enter
+     *                        a non-deterministic state.
+     * @throws SCXMLExpressionException If the execution involves trying
+     *                        to evaluate an expression which is malformed.
+     * @throws ActionExecutionError to be thrown if the execution caused an error (event) to be raised,
+     * which then shall stop execution of (possible) following actions within the same executable content block
+     */
+    public abstract void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException, ActionExecutionError;
+
+    /**
      * Gets the Executable parent.
      *
      * @return Returns the parent.
      */
     public Executable getParent() {
         return parent;
-    }
-
-    /**
-     * Sets the Executable parent.
-     *
-     * @param parent The parent to set.
-     */
-    public void setParent(final Executable parent) {
-        this.parent = parent;
     }
 
     /**
@@ -80,17 +85,12 @@ public abstract class Action implements Serializable {
     }
 
     /**
-     * Execute this action instance.
+     * Sets the Executable parent.
      *
-     * @param exctx The ActionExecutionContext for this execution instance
-     *
-     * @throws ModelException If the execution causes the model to enter
-     *                        a non-deterministic state.
-     * @throws SCXMLExpressionException If the execution involves trying
-     *                        to evaluate an expression which is malformed.
-     * @throws ActionExecutionError to be thrown if the execution caused an error (event) to be raised,
-     * which then shall stop execution of (possible) following actions within the same executable content block
+     * @param parent The parent to set.
      */
-    public abstract void execute(ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException, ActionExecutionError;
+    public void setParent(final Executable parent) {
+        this.parent = parent;
+    }
 }
 

@@ -59,15 +59,6 @@ public class Tracer implements ErrorHandler, ErrorReporter,
     }
 
     /**
-     * @see org.xml.sax.ErrorHandler#warning(org.xml.sax.SAXParseException)
-     */
-    @Override
-    public void warning(final SAXParseException exception)
-    throws SAXException {
-        errHandler.warning(exception);
-    }
-
-    /**
      * @see org.xml.sax.ErrorHandler#error(org.xml.sax.SAXParseException)
      */
     @Override
@@ -86,20 +77,20 @@ public class Tracer implements ErrorHandler, ErrorReporter,
     }
 
     /**
+     * @see SCXMLListener#onEntry(EnterableState)
+     */
+    @Override
+    public void onEntry(final EnterableState state) {
+        scxmlListener.onEntry(state);
+    }
+
+    /**
      * @see ErrorReporter#onError(String, String, Object)
      */
     @Override
     public void onError(final String errCode, final String errDetail,
             final Object errCtx) {
         errReporter.onError(errCode, errDetail, errCtx);
-    }
-
-    /**
-     * @see SCXMLListener#onEntry(EnterableState)
-     */
-    @Override
-    public void onEntry(final EnterableState state) {
-        scxmlListener.onEntry(state);
     }
 
     /**
@@ -128,6 +119,15 @@ public class Tracer implements ErrorHandler, ErrorReporter,
 	throws XMLStreamException {
 		xmlReporter.report(message, errorType, relatedInformation, location);
 	}
+
+    /**
+     * @see org.xml.sax.ErrorHandler#warning(org.xml.sax.SAXParseException)
+     */
+    @Override
+    public void warning(final SAXParseException exception)
+    throws SAXException {
+        errHandler.warning(exception);
+    }
 
 }
 

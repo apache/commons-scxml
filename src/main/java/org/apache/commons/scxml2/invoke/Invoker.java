@@ -67,25 +67,13 @@ import org.apache.commons.scxml2.TriggerEvent;
 public interface Invoker {
 
     /**
-     * @return get the invoke ID provided by the parent state machine executor
-     */
-    String getInvokeId();
-
-    /**
-     * Sets the invoke ID provided by the parent state machine executor
-     * Implementations must use this ID for constructing the event name for
-     * the special "done" event (and optionally, for other event names
-     * as well).
+     * Cancel this invocation.
      *
-     * @param invokeId The invoke ID provided by the parent state machine executor.
+     * @throws InvokerException In case there is a fatal problem with
+     *                          canceling this invoke.
      */
-    void setInvokeId(String invokeId);
-
-    /**
-     * Sets the parent SCXMLExecutor through which this Invoker is initiated
-     * @param scxmlExecutor the parent SCXMLExecutor
-     */
-    void setParentSCXMLExecutor(SCXMLExecutor scxmlExecutor);
+    void cancel()
+    throws InvokerException;
 
     /**
      * Gets the child IO Processor to register for communication with
@@ -94,6 +82,11 @@ public interface Invoker {
      * @return Child IO Processor
      */
     SCXMLIOProcessor getChildIOProcessor();
+
+    /**
+     * @return get the invoke ID provided by the parent state machine executor
+     */
+    String getInvokeId();
 
     /**
      * Invoke the SCXML document located at an external URL.
@@ -133,12 +126,19 @@ public interface Invoker {
     throws InvokerException;
 
     /**
-     * Cancel this invocation.
+     * Sets the invoke ID provided by the parent state machine executor
+     * Implementations must use this ID for constructing the event name for
+     * the special "done" event (and optionally, for other event names
+     * as well).
      *
-     * @throws InvokerException In case there is a fatal problem with
-     *                          canceling this invoke.
+     * @param invokeId The invoke ID provided by the parent state machine executor.
      */
-    void cancel()
-    throws InvokerException;
+    void setInvokeId(String invokeId);
+
+    /**
+     * Sets the parent SCXMLExecutor through which this Invoker is initiated
+     * @param scxmlExecutor the parent SCXMLExecutor
+     */
+    void setParentSCXMLExecutor(SCXMLExecutor scxmlExecutor);
 }
 

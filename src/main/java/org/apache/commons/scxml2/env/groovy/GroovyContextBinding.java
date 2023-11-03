@@ -44,6 +44,11 @@ public class GroovyContextBinding extends Binding implements Serializable {
     }
 
     @Override
+    public Object getProperty(final String property) {
+        return getVariable(property);
+    }
+
+    @Override
     public Object getVariable(final String name) {
         final Object result = context.get(name);
         if (result == null && !context.has(name)) {
@@ -53,12 +58,8 @@ public class GroovyContextBinding extends Binding implements Serializable {
     }
 
     @Override
-    public void setVariable(final String name, final Object value) {
-        if (context.has(name)) {
-            context.set(name, value);
-        } else {
-            context.setLocal(name, value);
-        }
+    public Map<String, Object> getVariables() {
+        return new LinkedHashMap<>(context.getVars());
     }
 
     @Override
@@ -67,17 +68,16 @@ public class GroovyContextBinding extends Binding implements Serializable {
     }
 
     @Override
-    public Map<String, Object> getVariables() {
-        return new LinkedHashMap<>(context.getVars());
-    }
-
-    @Override
-    public Object getProperty(final String property) {
-        return getVariable(property);
-    }
-
-    @Override
     public void setProperty(final String property, final Object newValue) {
         setVariable(property, newValue);
+    }
+
+    @Override
+    public void setVariable(final String name, final Object value) {
+        if (context.has(name)) {
+            context.set(name, value);
+        } else {
+            context.setLocal(name, value);
+        }
     }
 }

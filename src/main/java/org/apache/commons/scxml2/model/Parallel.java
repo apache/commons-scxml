@@ -38,19 +38,19 @@ public class Parallel extends TransitionalState {
     }
 
     /**
+     * Add a TransitionalState (State or Parallel) child
+     * @param ts the child to add
+     */
+    public final void addChild(final TransitionalState ts) {
+        super.addChild(ts);
+    }
+    /**
      * {@inheritDoc}
      * @return Returns always false (a state of type Parallel is never atomic)
      */
     @Override
     public final boolean isAtomicState() {
         return false;
-    }
-    /**
-     * Add a TransitionalState (State or Parallel) child
-     * @param ts the child to add
-     */
-    public final void addChild(final TransitionalState ts) {
-        super.addChild(ts);
     }
 }
 

@@ -53,21 +53,12 @@ public class Param implements Serializable {
         expr = null;
     }
     /**
-     * Gets the name for this param.
+     * Gets the expression for this param value.
      *
-     * @return String The param name.
+     * @return String The expression for this param value.
      */
-    public final String getName() {
-        return name;
-    }
-
-    /**
-     * Sets the name for this param.
-     *
-     * @param name The param name.
-     */
-    public final void setName(final String name) {
-        this.name = name;
+    public final String getExpr() {
+        return expr;
     }
 
     /**
@@ -80,21 +71,12 @@ public class Param implements Serializable {
     }
 
     /**
-     * Sets the location for a previously defined XML data tree.
+     * Gets the name for this param.
      *
-     * @param location The location.
+     * @return String The param name.
      */
-    public void setLocation(final String location) {
-        this.location = location;
-    }
-
-    /**
-     * Gets the expression for this param value.
-     *
-     * @return String The expression for this param value.
-     */
-    public final String getExpr() {
-        return expr;
+    public final String getName() {
+        return name;
     }
 
     /**
@@ -104,6 +86,24 @@ public class Param implements Serializable {
      */
     public final void setExpr(final String expr) {
         this.expr = expr;
+    }
+
+    /**
+     * Sets the location for a previously defined XML data tree.
+     *
+     * @param location The location.
+     */
+    public void setLocation(final String location) {
+        this.location = location;
+    }
+
+    /**
+     * Sets the name for this param.
+     *
+     * @param name The param name.
+     */
+    public final void setName(final String name) {
+        this.name = name;
     }
 }
 

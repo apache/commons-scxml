@@ -38,10 +38,30 @@ public abstract class GroovySCXMLScript extends Script {
         super(null);
     }
 
-    @Override
-    public void setBinding(final Binding binding) {
-        super.setBinding(binding);
-        this.context = ((GroovyContextBinding) binding).getContext();
+    /**
+     * The empty function mimics the behavior of the JEXL empty function, in that it returns true if the parameter is:
+     * <ul>
+     *     <li>null, or</li>
+     *     <li>an empty String, or</li>
+     *     <li>an zero length Array, or</li>
+     *     <li>an empty Collection, or</li>
+     *     <li>an empty Map</li>
+     * </ul>
+     * <p>
+     *     Note: one difference with the JEXL language is that Groovy doesn't allow checking for undefined variables.<br>
+     *     Before being able to check, Groovy will already have raised an MissingPropertyException if the variable cannot be found.<br>
+     *     To work around this, the custom {@link #var(String)} function is available.
+     * </p>
+     *
+     * @param obj the object to check if it is empty
+     * @return true if the object is empty, false otherwise
+     */
+    public boolean empty(final Object obj) {
+        return obj == null ||
+                (obj instanceof String && ((String)obj).isEmpty()) ||
+                ((obj.getClass().isArray() && Array.getLength(obj)==0)) ||
+                (obj instanceof Collection && ((Collection)obj).size()==0) ||
+                (obj instanceof Map && ((Map)obj).isEmpty());
     }
 
     /**
@@ -51,6 +71,12 @@ public abstract class GroovySCXMLScript extends Script {
      */
     public boolean In(final String state) {
         return Builtin.isMember(context, state);
+    }
+
+    @Override
+    public void setBinding(final Binding binding) {
+        super.setBinding(binding);
+        this.context = ((GroovyContextBinding) binding).getContext();
     }
 
     /**
@@ -84,31 +110,5 @@ public abstract class GroovySCXMLScript extends Script {
             }
         }
         return true;
-    }
-
-    /**
-     * The empty function mimics the behavior of the JEXL empty function, in that it returns true if the parameter is:
-     * <ul>
-     *     <li>null, or</li>
-     *     <li>an empty String, or</li>
-     *     <li>an zero length Array, or</li>
-     *     <li>an empty Collection, or</li>
-     *     <li>an empty Map</li>
-     * </ul>
-     * <p>
-     *     Note: one difference with the JEXL language is that Groovy doesn't allow checking for undefined variables.<br>
-     *     Before being able to check, Groovy will already have raised an MissingPropertyException if the variable cannot be found.<br>
-     *     To work around this, the custom {@link #var(String)} function is available.
-     * </p>
-     *
-     * @param obj the object to check if it is empty
-     * @return true if the object is empty, false otherwise
-     */
-    public boolean empty(final Object obj) {
-        return obj == null ||
-                (obj instanceof String && ((String)obj).isEmpty()) ||
-                ((obj.getClass().isArray() && Array.getLength(obj)==0)) ||
-                (obj instanceof Collection && ((Collection)obj).size()==0) ||
-                (obj instanceof Map && ((Map)obj).isEmpty());
     }
 }

@@ -50,21 +50,22 @@ public class Log extends Action {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void execute(final ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
+        final Context ctx = exctx.getContext(getParentEnterableState());
+        final Evaluator eval = exctx.getEvaluator();
+        exctx.getAppLog().info(label + ": " + String.valueOf(eval.eval(ctx, expr)));
+    }
+
+    /**
      * Gets the log expression.
      *
      * @return Returns the expression.
      */
     public final String getExpr() {
         return expr;
-    }
-
-    /**
-     * Sets the log expression.
-     *
-     * @param expr The expr to set.
-     */
-    public final void setExpr(final String expr) {
-        this.expr = expr;
     }
 
     /**
@@ -77,22 +78,21 @@ public class Log extends Action {
     }
 
     /**
+     * Sets the log expression.
+     *
+     * @param expr The expr to set.
+     */
+    public final void setExpr(final String expr) {
+        this.expr = expr;
+    }
+
+    /**
      * Sets the log label.
      *
      * @param label The label to set.
      */
     public final void setLabel(final String label) {
         this.label = label;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void execute(final ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
-        final Context ctx = exctx.getContext(getParentEnterableState());
-        final Evaluator eval = exctx.getEvaluator();
-        exctx.getAppLog().info(label + ": " + String.valueOf(eval.eval(ctx, expr)));
     }
 }
 

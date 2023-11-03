@@ -46,16 +46,6 @@ public class DoneData implements ContentContainer, ParamsContainer, Serializable
     }
 
     /**
-     * Sets the content
-     *
-     * @param content the content to set
-     */
-    @Override
-    public void setContent(final Content content) {
-        this.content = content;
-    }
-
-    /**
      * Gets the list of {@link Param}s.
      *
      * @return List The params list.
@@ -63,6 +53,16 @@ public class DoneData implements ContentContainer, ParamsContainer, Serializable
     @Override
     public List<Param> getParams() {
         return paramsList;
+    }
+
+    /**
+     * Sets the content
+     *
+     * @param content the content to set
+     */
+    @Override
+    public void setContent(final Content content) {
+        this.content = content;
     }
 
 }

@@ -43,6 +43,67 @@ public class PayloadBuilder {
     }
 
     /**
+     * Adds data to the payload data map based on the namelist which names are location expressions
+     * (typically data ids or for example XPath variables). The names and the values they 'point' at
+     * are added to the payload data map.
+     * @param parentState the enterable state in which the namelist holder is defined
+     * @param ctx the Context to look up the data
+     * @param evaluator the evaluator to evaluate/lookup the data
+     * @param errorReporter to report errors
+     * @param namelist the namelist
+     * @param payload the payload data map to be updated
+     * @throws SCXMLExpressionException if a malformed or invalid expression is evaluated
+     * @see PayloadBuilder#addToPayload(String, Object, java.util.Map)
+     */
+    public static void addNamelistDataToPayload(final EnterableState parentState, final Context ctx,
+                                                final Evaluator evaluator, final ErrorReporter errorReporter,
+                                                final String namelist, final Map<String, Object> payload)
+            throws SCXMLExpressionException {
+        if (namelist != null) {
+            final StringTokenizer tkn = new StringTokenizer(namelist);
+            while (tkn.hasMoreTokens()) {
+                final String varName = tkn.nextToken();
+                final Object varObj = evaluator.eval(ctx, varName);
+                if (varObj == null) {
+                    //considered as a warning here
+                    errorReporter.onError(ErrorConstants.UNDEFINED_VARIABLE, varName + " = null", parentState);
+                }
+                addToPayload(varName, evaluator.cloneData(varObj), payload);
+            }
+        }
+    }
+
+    /**
+     * Adds data to the payload data map based on the {@link Param}s of this {@link ParamsContainer}
+     * @param ctx The Context to look up the data
+     * @param evaluator the evaluator to evaluate/lookup the data
+     * @param paramsList the list of params
+     * @param payload the payload data map to be updated
+     * @throws SCXMLExpressionException if a malformed or invalid expression is evaluated
+     * @see PayloadBuilder#addToPayload(String, Object, java.util.Map)
+     */
+    public static void addParamsToPayload(final Context ctx, final Evaluator evaluator, final List<Param> paramsList,
+                                          final Map<String, Object> payload)
+            throws SCXMLExpressionException {
+        if (!paramsList.isEmpty()) {
+            Object paramValue;
+            for (final Param p : paramsList) {
+                if (p.getExpr() != null) {
+                    paramValue = evaluator.eval(ctx, p.getExpr());
+                }
+                else if (p.getLocation() != null) {
+                    paramValue = evaluator.eval(ctx, p.getLocation());
+                }
+                else {
+                    // ignore invalid param definition
+                    continue;
+                }
+                addToPayload(p.getName(), evaluator.cloneData(paramValue), payload);
+            }
+        }
+    }
+
+    /**
      * Adds an attribute and value to a payload data map.
      * <p>
      * As the SCXML specification allows for multiple payload attributes with the same name, this
@@ -84,67 +145,6 @@ public class PayloadBuilder {
         }
         else {
             payload.put(attrName, value);
-        }
-    }
-
-    /**
-     * Adds data to the payload data map based on the {@link Param}s of this {@link ParamsContainer}
-     * @param ctx The Context to look up the data
-     * @param evaluator the evaluator to evaluate/lookup the data
-     * @param paramsList the list of params
-     * @param payload the payload data map to be updated
-     * @throws SCXMLExpressionException if a malformed or invalid expression is evaluated
-     * @see PayloadBuilder#addToPayload(String, Object, java.util.Map)
-     */
-    public static void addParamsToPayload(final Context ctx, final Evaluator evaluator, final List<Param> paramsList,
-                                          final Map<String, Object> payload)
-            throws SCXMLExpressionException {
-        if (!paramsList.isEmpty()) {
-            Object paramValue;
-            for (final Param p : paramsList) {
-                if (p.getExpr() != null) {
-                    paramValue = evaluator.eval(ctx, p.getExpr());
-                }
-                else if (p.getLocation() != null) {
-                    paramValue = evaluator.eval(ctx, p.getLocation());
-                }
-                else {
-                    // ignore invalid param definition
-                    continue;
-                }
-                addToPayload(p.getName(), evaluator.cloneData(paramValue), payload);
-            }
-        }
-    }
-
-    /**
-     * Adds data to the payload data map based on the namelist which names are location expressions
-     * (typically data ids or for example XPath variables). The names and the values they 'point' at
-     * are added to the payload data map.
-     * @param parentState the enterable state in which the namelist holder is defined
-     * @param ctx the Context to look up the data
-     * @param evaluator the evaluator to evaluate/lookup the data
-     * @param errorReporter to report errors
-     * @param namelist the namelist
-     * @param payload the payload data map to be updated
-     * @throws SCXMLExpressionException if a malformed or invalid expression is evaluated
-     * @see PayloadBuilder#addToPayload(String, Object, java.util.Map)
-     */
-    public static void addNamelistDataToPayload(final EnterableState parentState, final Context ctx,
-                                                final Evaluator evaluator, final ErrorReporter errorReporter,
-                                                final String namelist, final Map<String, Object> payload)
-            throws SCXMLExpressionException {
-        if (namelist != null) {
-            final StringTokenizer tkn = new StringTokenizer(namelist);
-            while (tkn.hasMoreTokens()) {
-                final String varName = tkn.nextToken();
-                final Object varObj = evaluator.eval(ctx, varName);
-                if (varObj == null) {
-                    //considered as a warning here
-                    errorReporter.onError(ErrorConstants.UNDEFINED_VARIABLE, varName + " = null", parentState);
-                }
-                addToPayload(varName, evaluator.cloneData(varObj), payload);
-            }
         }
     }
 }

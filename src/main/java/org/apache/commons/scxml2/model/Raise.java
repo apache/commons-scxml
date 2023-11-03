@@ -46,6 +46,20 @@ public class Raise extends Action {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void execute(final ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
+
+        if (exctx.getAppLog().isDebugEnabled()) {
+            exctx.getAppLog().debug("<raise>: Adding event '" + event + "' to list of derived events.");
+        }
+        final TriggerEvent ev = new EventBuilder(event, TriggerEvent.SIGNAL_EVENT).build();
+        exctx.getInternalIOProcessor().addEvent(ev);
+
+    }
+
+    /**
      * Gets the event.
      *
      * @return Returns the event.
@@ -61,19 +75,5 @@ public class Raise extends Action {
      */
     public final void setEvent(final String event) {
         this.event = event;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void execute(final ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
-
-        if (exctx.getAppLog().isDebugEnabled()) {
-            exctx.getAppLog().debug("<raise>: Adding event '" + event + "' to list of derived events.");
-        }
-        final TriggerEvent ev = new EventBuilder(event, TriggerEvent.SIGNAL_EVENT).build();
-        exctx.getInternalIOProcessor().addEvent(ev);
-
     }
 }

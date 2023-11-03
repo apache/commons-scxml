@@ -41,17 +41,7 @@ import org.apache.commons.scxml2.model.SCXML;
  */
 public class GroovyEvaluator extends AbstractBaseEvaluator {
 
-    /** Serial version UID. */
-    private static final long serialVersionUID = 1L;
-
-    public static final String SUPPORTED_DATA_MODEL = "groovy";
-
     public static class GroovyEvaluatorProvider implements EvaluatorProvider {
-
-        @Override
-        public String getSupportedDatamodel() {
-            return SUPPORTED_DATA_MODEL;
-        }
 
         @Override
         public Evaluator getEvaluator() {
@@ -62,7 +52,17 @@ public class GroovyEvaluator extends AbstractBaseEvaluator {
         public Evaluator getEvaluator(final SCXML document) {
             return new GroovyEvaluator();
         }
+
+        @Override
+        public String getSupportedDatamodel() {
+            return SUPPORTED_DATA_MODEL;
+        }
     }
+
+    /** Serial version UID. */
+    private static final long serialVersionUID = 1L;
+
+    public static final String SUPPORTED_DATA_MODEL = "groovy";
 
     /** Error message if evaluation context is not a GroovyContext. */
     private static final String ERR_CTX_TYPE = "Error evaluating Groovy "
@@ -117,49 +117,9 @@ public class GroovyEvaluator extends AbstractBaseEvaluator {
         this.scriptCache = newScriptCache();
     }
 
-    /**
-     * Overridable factory method to create the GroovyExtendableScriptCache for this GroovyEvaluator.
-     * <p>
-     * The default implementation configures the scriptCache to use the {@link #scriptPreProcessor GroovyEvaluator scriptPreProcessor}
-     * and the {@link GroovySCXMLScript} as script base class.
-     * </p>
-     *
-     * @return GroovyExtendableScriptCache for this GroovyEvaluator
-     */
-    protected GroovyExtendableScriptCache newScriptCache() {
-        final GroovyExtendableScriptCache scriptCache = new GroovyExtendableScriptCache();
-        scriptCache.setScriptPreProcessor(getScriptPreProcessor());
-        scriptCache.setScriptBaseClass(GroovySCXMLScript.class.getName());
-        return scriptCache;
-    }
-
-    @SuppressWarnings("unchecked")
-    protected Script getScript(final GroovyContext groovyContext, final String scriptBaseClassName, final String scriptSource) {
-        final Script script = scriptCache.getScript(scriptBaseClassName, scriptSource);
-        script.setBinding(groovyContext.getBinding());
-        return script;
-    }
-
     @SuppressWarnings("unused")
     public void clearCache() {
         scriptCache.clearCache();
-    }
-
-    public GroovyExtendableScriptCache.ScriptPreProcessor getScriptPreProcessor() {
-        return scriptPreProcessor;
-    }
-
-    /* SCXMLEvaluator implementation methods */
-
-
-    @Override
-    public String getSupportedDatamodel() {
-        return SUPPORTED_DATA_MODEL;
-    }
-
-    @Override
-    public boolean requiresGlobalContext() {
-        return false;
     }
 
     /**
@@ -252,8 +212,40 @@ public class GroovyEvaluator extends AbstractBaseEvaluator {
         }
     }
 
+    /* SCXMLEvaluator implementation methods */
+
+
+    /**
+     * Create a new context which is the summation of contexts from the
+     * current state to document root, child has priority over parent
+     * in scoping rules.
+     *
+     * @param nodeCtx The GroovyContext for this state.
+     * @return The effective GroovyContext for the path leading up to
+     *         document root.
+     */
+    protected GroovyContext getEffectiveContext(final GroovyContext nodeCtx) {
+        return new GroovyContext(nodeCtx, new EffectiveContextMap(nodeCtx), this);
+    }
+
     protected ClassLoader getGroovyClassLoader() {
         return scriptCache.getGroovyClassLoader();
+    }
+
+    @SuppressWarnings("unchecked")
+    protected Script getScript(final GroovyContext groovyContext, final String scriptBaseClassName, final String scriptSource) {
+        final Script script = scriptCache.getScript(scriptBaseClassName, scriptSource);
+        script.setBinding(groovyContext.getBinding());
+        return script;
+    }
+
+    public GroovyExtendableScriptCache.ScriptPreProcessor getScriptPreProcessor() {
+        return scriptPreProcessor;
+    }
+
+    @Override
+    public String getSupportedDatamodel() {
+        return SUPPORTED_DATA_MODEL;
     }
 
     /**
@@ -269,15 +261,23 @@ public class GroovyEvaluator extends AbstractBaseEvaluator {
     }
 
     /**
-     * Create a new context which is the summation of contexts from the
-     * current state to document root, child has priority over parent
-     * in scoping rules.
+     * Overridable factory method to create the GroovyExtendableScriptCache for this GroovyEvaluator.
+     * <p>
+     * The default implementation configures the scriptCache to use the {@link #scriptPreProcessor GroovyEvaluator scriptPreProcessor}
+     * and the {@link GroovySCXMLScript} as script base class.
+     * </p>
      *
-     * @param nodeCtx The GroovyContext for this state.
-     * @return The effective GroovyContext for the path leading up to
-     *         document root.
+     * @return GroovyExtendableScriptCache for this GroovyEvaluator
      */
-    protected GroovyContext getEffectiveContext(final GroovyContext nodeCtx) {
-        return new GroovyContext(nodeCtx, new EffectiveContextMap(nodeCtx), this);
+    protected GroovyExtendableScriptCache newScriptCache() {
+        final GroovyExtendableScriptCache scriptCache = new GroovyExtendableScriptCache();
+        scriptCache.setScriptPreProcessor(getScriptPreProcessor());
+        scriptCache.setScriptBaseClass(GroovySCXMLScript.class.getName());
+        return scriptCache;
+    }
+
+    @Override
+    public boolean requiresGlobalContext() {
+        return false;
     }
 }

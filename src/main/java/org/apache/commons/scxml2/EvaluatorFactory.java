@@ -56,38 +56,9 @@ public class EvaluatorFactory {
 
     private static final EvaluatorFactory INSTANCE = new EvaluatorFactory();
 
-    private final Map<String, EvaluatorProvider> providers = new ConcurrentHashMap<>();
-
-    private EvaluatorFactory() {
-        providers.put(JSEvaluator.SUPPORTED_DATA_MODEL, new JSEvaluator.JSEvaluatorProvider());
-        providers.put(GroovyEvaluator.SUPPORTED_DATA_MODEL, new GroovyEvaluator.GroovyEvaluatorProvider());
-        providers.put(JexlEvaluator.SUPPORTED_DATA_MODEL, new JexlEvaluator.JexlEvaluatorProvider());
-        providers.put(MinimalEvaluator.SUPPORTED_DATA_MODEL, new MinimalEvaluator.MinimalEvaluatorProvider());
-        providers.put(DEFAULT_DATA_MODEL, providers.get(JexlEvaluator.SUPPORTED_DATA_MODEL));
-    }
-
-    public static void setDefaultProvider(final EvaluatorProvider defaultProvider) {
-        INSTANCE.providers.put(DEFAULT_DATA_MODEL, defaultProvider);
-    }
-
     @SuppressWarnings("unused")
     public static EvaluatorProvider getDefaultProvider() {
         return INSTANCE.providers.get(DEFAULT_DATA_MODEL);
-    }
-
-    @SuppressWarnings("unused")
-    public static EvaluatorProvider getEvaluatorProvider(final String datamodelName) {
-        return INSTANCE.providers.get(datamodelName == null ? DEFAULT_DATA_MODEL : datamodelName);
-    }
-
-    @SuppressWarnings("unused")
-    public static void registerEvaluatorProvider(final EvaluatorProvider provider) {
-        INSTANCE.providers.put(provider.getSupportedDatamodel(), provider);
-    }
-
-    @SuppressWarnings("unused")
-    public static void unregisterEvaluatorProvider(final String datamodelName) {
-        INSTANCE.providers.remove(datamodelName == null ? DEFAULT_DATA_MODEL : datamodelName);
     }
 
     /**
@@ -104,5 +75,34 @@ public class EvaluatorFactory {
             throw new ModelException("Unsupported SCXML document datamodel \""+(datamodelName)+"\"");
         }
         return document != null ? provider.getEvaluator(document) : provider.getEvaluator();
+    }
+
+    @SuppressWarnings("unused")
+    public static EvaluatorProvider getEvaluatorProvider(final String datamodelName) {
+        return INSTANCE.providers.get(datamodelName == null ? DEFAULT_DATA_MODEL : datamodelName);
+    }
+
+    @SuppressWarnings("unused")
+    public static void registerEvaluatorProvider(final EvaluatorProvider provider) {
+        INSTANCE.providers.put(provider.getSupportedDatamodel(), provider);
+    }
+
+    public static void setDefaultProvider(final EvaluatorProvider defaultProvider) {
+        INSTANCE.providers.put(DEFAULT_DATA_MODEL, defaultProvider);
+    }
+
+    @SuppressWarnings("unused")
+    public static void unregisterEvaluatorProvider(final String datamodelName) {
+        INSTANCE.providers.remove(datamodelName == null ? DEFAULT_DATA_MODEL : datamodelName);
+    }
+
+    private final Map<String, EvaluatorProvider> providers = new ConcurrentHashMap<>();
+
+    private EvaluatorFactory() {
+        providers.put(JSEvaluator.SUPPORTED_DATA_MODEL, new JSEvaluator.JSEvaluatorProvider());
+        providers.put(GroovyEvaluator.SUPPORTED_DATA_MODEL, new GroovyEvaluator.GroovyEvaluatorProvider());
+        providers.put(JexlEvaluator.SUPPORTED_DATA_MODEL, new JexlEvaluator.JexlEvaluatorProvider());
+        providers.put(MinimalEvaluator.SUPPORTED_DATA_MODEL, new MinimalEvaluator.MinimalEvaluatorProvider());
+        providers.put(DEFAULT_DATA_MODEL, providers.get(JexlEvaluator.SUPPORTED_DATA_MODEL));
     }
 }

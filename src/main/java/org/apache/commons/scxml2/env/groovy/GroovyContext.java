@@ -44,17 +44,21 @@ public class GroovyContext extends SimpleContext {
     private GroovyContextBinding binding;
     private Map<String, Object> vars;
 
-    GroovyContextBinding getBinding() {
-        if (binding == null) {
-            binding = new GroovyContextBinding(this);
-        }
-        return  binding;
-    }
-
     /**
      * Constructor.
      */
     public GroovyContext() {
+    }
+
+    /**
+     * Constructor with parent context.
+     *
+     * @param parent The parent context.
+     * @param evaluator The groovy evaluator
+     */
+    public GroovyContext(final Context parent, final GroovyEvaluator evaluator) {
+        super(parent);
+        this.evaluator = evaluator;
     }
 
     /**
@@ -69,37 +73,15 @@ public class GroovyContext extends SimpleContext {
         this.evaluator = evaluator;
     }
 
-    /**
-     * Constructor with parent context.
-     *
-     * @param parent The parent context.
-     * @param evaluator The groovy evaluator
-     */
-    public GroovyContext(final Context parent, final GroovyEvaluator evaluator) {
-        super(parent);
-        this.evaluator = evaluator;
+    GroovyContextBinding getBinding() {
+        if (binding == null) {
+            binding = new GroovyContextBinding(this);
+        }
+        return  binding;
     }
 
     protected GroovyEvaluator getGroovyEvaluator() {
         return evaluator;
-    }
-
-    protected void setGroovyEvaluator(final GroovyEvaluator evaluator) {
-        this.evaluator = evaluator;
-    }
-
-    @Override
-    public Map<String, Object> getVars() {
-        return vars;
-    }
-
-    @Override
-    protected void setVars(final Map<String, Object> vars) {
-        this.vars = vars;
-    }
-
-    protected void setScriptBaseClass(final String scriptBaseClass) {
-        this.scriptBaseClass = scriptBaseClass;
     }
 
     protected String getScriptBaseClass() {
@@ -110,6 +92,43 @@ public class GroovyContext extends SimpleContext {
             return ((GroovyContext)getParent()).getScriptBaseClass();
         }
         return null;
+    }
+
+    @Override
+    public Map<String, Object> getVars() {
+        return vars;
+    }
+
+    @SuppressWarnings("unchecked")
+    private void readObject(final ObjectInputStream in) throws IOException,ClassNotFoundException {
+        this.scriptBaseClass = (String)in.readObject();
+        this.evaluator = (GroovyEvaluator)in.readObject();
+        this.binding = (GroovyContextBinding)in.readObject();
+        SCInstanceObjectInputStream.ClassResolver currentResolver = null;
+        try {
+            if (evaluator != null && in instanceof SCInstanceObjectInputStream) {
+                currentResolver = ((SCInstanceObjectInputStream)in).setClassResolver(osc -> Class.forName(osc.getName(), true, evaluator.getGroovyClassLoader()));
+            }
+            this.vars = (Map<String, Object>)in.readObject();
+        }
+        finally {
+            if (in instanceof SCInstanceObjectInputStream) {
+                ((SCInstanceObjectInputStream)in).setClassResolver(currentResolver);
+            }
+        }
+    }
+
+    protected void setGroovyEvaluator(final GroovyEvaluator evaluator) {
+        this.evaluator = evaluator;
+    }
+
+    protected void setScriptBaseClass(final String scriptBaseClass) {
+        this.scriptBaseClass = scriptBaseClass;
+    }
+
+    @Override
+    protected void setVars(final Map<String, Object> vars) {
+        this.vars = vars;
     }
 
     private void writeObject(final ObjectOutputStream out) throws IOException {
@@ -131,24 +150,5 @@ public class GroovyContext extends SimpleContext {
         out.writeObject(this.evaluator);
         out.writeObject(this.binding);
         out.writeObject(this.vars);
-    }
-
-    @SuppressWarnings("unchecked")
-    private void readObject(final ObjectInputStream in) throws IOException,ClassNotFoundException {
-        this.scriptBaseClass = (String)in.readObject();
-        this.evaluator = (GroovyEvaluator)in.readObject();
-        this.binding = (GroovyContextBinding)in.readObject();
-        SCInstanceObjectInputStream.ClassResolver currentResolver = null;
-        try {
-            if (evaluator != null && in instanceof SCInstanceObjectInputStream) {
-                currentResolver = ((SCInstanceObjectInputStream)in).setClassResolver(osc -> Class.forName(osc.getName(), true, evaluator.getGroovyClassLoader()));
-            }
-            this.vars = (Map<String, Object>)in.readObject();
-        }
-        finally {
-            if (in instanceof SCInstanceObjectInputStream) {
-                ((SCInstanceObjectInputStream)in).setClassResolver(currentResolver);
-            }
-        }
     }
 }

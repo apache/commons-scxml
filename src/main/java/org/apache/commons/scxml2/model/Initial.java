@@ -63,34 +63,12 @@ public class Initial implements Serializable {
 
 
     /**
-     * Sets the parent TransitionTarget.
-     *
-     * @param parent The parent state to set
-     */
-    public final void setParent(final State parent) {
-        this.parent = parent;
-        if (transition != null) {
-            transition.setParent(parent);
-        }
-    }
-
-    /**
      * Gets the initial transition.
      *
      * @return Returns the transition.
      */
     public final SimpleTransition getTransition() {
         return transition;
-    }
-
-    /**
-     * Sets the initial transition.
-     *
-     * @param transition The transition to set.
-     */
-    public final void setTransition(final SimpleTransition transition) {
-        this.transition = transition;
-        this.transition.setParent(getParent());
     }
 
     /**
@@ -105,6 +83,28 @@ public class Initial implements Serializable {
      */
     public final void setGenerated() {
         this.generated = true;
+    }
+
+    /**
+     * Sets the parent TransitionTarget.
+     *
+     * @param parent The parent state to set
+     */
+    public final void setParent(final State parent) {
+        this.parent = parent;
+        if (transition != null) {
+            transition.setParent(parent);
+        }
+    }
+
+    /**
+     * Sets the initial transition.
+     *
+     * @param transition The transition to set.
+     */
+    public final void setTransition(final SimpleTransition transition) {
+        this.transition = transition;
+        this.transition.setParent(getParent());
     }
 }
 
