@@ -79,18 +79,142 @@ import org.apache.commons.scxml2.model.SCXML;
 @SuppressWarnings("unused")
 public class W3CTests {
 
-    private static final String SCXML_IRP_BASE_URL = "http://www.w3.org/Voice/2013/scxml-irp/";
-    private static final String SCXML_IRP_MANIFEST_URI = "manifest.xml";
-    private static final String SCXML_IRP_ECMA_XSL_URI = "confEcma.xsl";
+    /**
+     * Assertions model class used for loading the W3C IRP tests manifest.xml file, defining the meta data and
+     * source URIs for all the W3C IRP tests.
+     */
+    @XmlRootElement(name="assertions")
+    @XmlAccessorType(XmlAccessType.FIELD)
+    protected static class Assertions {
 
-    private static final String TESTS_SRC_DIR = "src/w3c/scxml-irp/";
-    private static final String TXML_TESTS_DIR = TESTS_SRC_DIR + "txml/";
-    private static final String PACKAGE_PATH = "/"+W3CTests.class.getPackage().getName().replace('.','/');
-    private static final String TESTS_FILENAME = PACKAGE_PATH + "/tests.xml";
-    private static final String SCXML_IRP_MINIMAL_XSL_FILENAME = PACKAGE_PATH + "/confMinimal.xsl";
-    private static final String SCXML_IRP_JEXL_XSL_FILENAME = PACKAGE_PATH + "/confJexl.xsl";
-    private static final String SCXML_IRP_GROOVY_XSL_FILENAME = PACKAGE_PATH + "/confGroovy.xsl";
+        @XmlAccessorType(XmlAccessType.FIELD)
+        protected static class Assertion {
 
+            @XmlAttribute
+            private String id;
+            @XmlAttribute(name="specnum")
+            private String specnum;
+            @XmlAttribute(name="specid")
+            private String specid;
+            @XmlElement(name="test")
+            private ArrayList<TestCase> testCases;
+
+            public Datamodel getDatamodel() {
+                if ("#minimal-profile".equals(specid)) {
+                    return Datamodel.MINIMAL;
+                }
+                if ("#ecma-profile".equals(specid)) {
+                    return Datamodel.ECMA;
+                }
+                return null;
+            }
+
+            public String getId() {
+                return id;
+            }
+
+            public String getSpecId() {
+                return specid;
+            }
+
+            public String getSpecNum() {
+                return specnum;
+            }
+
+            public List<TestCase> getTestCases() {
+                return testCases != null ? testCases : Collections.emptyList();
+            }
+
+            @Override
+            public String toString() {
+                return id;
+            }
+        }
+
+        @XmlAccessorType(XmlAccessType.FIELD)
+        protected static class Resource {
+
+            @XmlAttribute
+            private String uri;
+
+            public String getFileName() {
+                return uri.substring(uri.indexOf("/")+1);
+            }
+
+            public String getName() {
+                return uri.substring(uri.indexOf("/")+1, uri.indexOf("."));
+            }
+
+            public String getUri() {
+                return uri;
+            }
+        }
+
+        @XmlAccessorType(XmlAccessType.FIELD)
+        protected static class TestCase {
+
+            @XmlAttribute
+            private String id;
+            @XmlAttribute
+            private String manual;
+            @XmlAttribute
+            private String conformance;
+            @XmlElement(name="start")
+            private ArrayList<Resource> scxmlResources;
+            @XmlElement(name="dep")
+            private ArrayList<Resource> depResources;
+
+            private ArrayList<Resource> resources;
+
+            public String getId() {
+                return id;
+            }
+
+            public List<Resource> getResources() {
+                if (resources == null) {
+                    resources = new ArrayList<>();
+                    if (scxmlResources != null) {
+                        resources.addAll(scxmlResources);
+                    }
+                    if (depResources != null) {
+                        resources.addAll(depResources);
+                        // no longer needed
+                        depResources = null;
+                    }
+                }
+                return resources;
+            }
+
+            public List<Resource> getScxmlResources() {
+                return scxmlResources != null ? scxmlResources : Collections.emptyList();
+            }
+
+            public boolean isManual() {
+                return Boolean.parseBoolean(manual);
+            }
+
+            public boolean isOptional() {
+                return "mandatory".equals(conformance);
+            }
+        }
+
+        @XmlElement(name="assert")
+        private ArrayList<Assertion> assertions;
+
+        private LinkedHashMap<String, Assertion> assertionsMap;
+
+        public LinkedHashMap<String, Assertion> getAssertions() {
+            if (assertionsMap == null) {
+                assertionsMap = new LinkedHashMap<>();
+                if (assertions != null) {
+                    for (final Assertion a : assertions) {
+                        assertionsMap.put(a.getId(), a);
+                    }
+                }
+            }
+            return assertionsMap;
+        }
+    }
     /**
      * Datamodel enum representing the datamodel types used and tested with the W3C IRP tests.
      */
@@ -101,18 +225,23 @@ public class W3CTests {
         JEXL("jexl",       "jexl   "),
         GROOVY("groovy",   "groovy ");
 
+        public static Datamodel fromValue(final String value) {
+            for (final Datamodel datamodel : Datamodel.values()) {
+                if (datamodel.value().equals(value)) {
+                    return datamodel;
+                }
+            }
+            return null;
+        }
         private final String value;
         private final String label;
+
         private final String testDir;
 
         Datamodel(final String value, final String label) {
             this.value = value;
             this.label = label;
             this.testDir = TESTS_SRC_DIR + value + "/";
-        }
-
-        public String value() {
-            return value;
         }
 
         public String label() {
@@ -123,13 +252,29 @@ public class W3CTests {
             return testDir;
         }
 
-        public static Datamodel fromValue(final String value) {
-            for (final Datamodel datamodel : Datamodel.values()) {
-                if (datamodel.value().equals(value)) {
-                    return datamodel;
-                }
-            }
-            return null;
+        public String value() {
+            return value;
+        }
+    }
+    /**
+     * Simple TestResult data struct for tracking test results
+     */
+    protected static class TestResults {
+        final Map<Datamodel, Integer> passed = new HashMap<>();
+        final Map<Datamodel, Integer> failed = new HashMap<>();
+        final Map<Datamodel, Integer> skipped = new HashMap<>();
+        final ArrayList<String> changedStatusTests = new ArrayList<>();
+
+        public int failed(final Datamodel dm) {
+            return failed.get(dm) != null ? failed.get(dm) : 0;
+        }
+
+        public int passed(final Datamodel dm) {
+            return passed.get(dm) != null ? passed.get(dm) : 0;
+        }
+
+        public int skipped(final Datamodel dm) {
+            return skipped.get(dm) != null ? skipped.get(dm) : 0;
         }
     }
 
@@ -164,24 +309,16 @@ public class W3CTests {
             @XmlValue
             private String comment;
 
-            public String getId() {
-                return id;
-            }
-
-            public boolean isMandatory() {
-                return mandatory;
-            }
-
-            public boolean isManual() {
-                return manual == null || manual;
+            public String getComment() {
+                return comment;
             }
 
             public String getFinalState() {
                 return finalState;
             }
 
-            public boolean isImplemented() {
-                return implemented == null || implemented;
+            public String getId() {
+                return id;
             }
 
             public Boolean getStatus(final Datamodel dm) {
@@ -196,8 +333,16 @@ public class W3CTests {
                         return minimalStatus;
                 }
             }
-            public String getComment() {
-                return comment;
+
+            public boolean isImplemented() {
+                return implemented == null || implemented;
+            }
+
+            public boolean isMandatory() {
+                return mandatory;
+            }
+            public boolean isManual() {
+                return manual == null || manual;
             }
 
             @Override
@@ -223,187 +368,20 @@ public class W3CTests {
             return testsMap;
         }
     }
+    private static final String SCXML_IRP_BASE_URL = "http://www.w3.org/Voice/2013/scxml-irp/";
+    private static final String SCXML_IRP_MANIFEST_URI = "manifest.xml";
+    private static final String SCXML_IRP_ECMA_XSL_URI = "confEcma.xsl";
+    private static final String TESTS_SRC_DIR = "src/w3c/scxml-irp/";
+    private static final String TXML_TESTS_DIR = TESTS_SRC_DIR + "txml/";
+    private static final String PACKAGE_PATH = "/"+W3CTests.class.getPackage().getName().replace('.','/');
 
-    /**
-     * Loads the tests.xml configuration file into a Tests class configuration model instance.
-     * @return a Tests instance for the tests.xml configuration file.
-     * @throws Exception
-     */
-    protected Tests loadTests() throws Exception {
-        final JAXBContext jaxbContext = JAXBContext.newInstance(Tests.class);
-        final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        return (Tests)jaxbUnmarshaller.unmarshal(getClass().getResource(TESTS_FILENAME));
-    }
+    private static final String TESTS_FILENAME = PACKAGE_PATH + "/tests.xml";
 
-    /**
-     * Assertions model class used for loading the W3C IRP tests manifest.xml file, defining the meta data and
-     * source URIs for all the W3C IRP tests.
-     */
-    @XmlRootElement(name="assertions")
-    @XmlAccessorType(XmlAccessType.FIELD)
-    protected static class Assertions {
+    private static final String SCXML_IRP_MINIMAL_XSL_FILENAME = PACKAGE_PATH + "/confMinimal.xsl";
 
-        @XmlAccessorType(XmlAccessType.FIELD)
-        protected static class Assertion {
+    private static final String SCXML_IRP_JEXL_XSL_FILENAME = PACKAGE_PATH + "/confJexl.xsl";
 
-            @XmlAttribute
-            private String id;
-            @XmlAttribute(name="specnum")
-            private String specnum;
-            @XmlAttribute(name="specid")
-            private String specid;
-            @XmlElement(name="test")
-            private ArrayList<TestCase> testCases;
-
-            public String getId() {
-                return id;
-            }
-
-            public String getSpecNum() {
-                return specnum;
-            }
-
-            public String getSpecId() {
-                return specid;
-            }
-
-            public List<TestCase> getTestCases() {
-                return testCases != null ? testCases : Collections.emptyList();
-            }
-
-            public Datamodel getDatamodel() {
-                if ("#minimal-profile".equals(specid)) {
-                    return Datamodel.MINIMAL;
-                }
-                if ("#ecma-profile".equals(specid)) {
-                    return Datamodel.ECMA;
-                }
-                return null;
-            }
-
-            @Override
-            public String toString() {
-                return id;
-            }
-        }
-
-        @XmlAccessorType(XmlAccessType.FIELD)
-        protected static class TestCase {
-
-            @XmlAttribute
-            private String id;
-            @XmlAttribute
-            private String manual;
-            @XmlAttribute
-            private String conformance;
-            @XmlElement(name="start")
-            private ArrayList<Resource> scxmlResources;
-            @XmlElement(name="dep")
-            private ArrayList<Resource> depResources;
-
-            private ArrayList<Resource> resources;
-
-            public String getId() {
-                return id;
-            }
-
-            public boolean isManual() {
-                return Boolean.parseBoolean(manual);
-            }
-
-            public boolean isOptional() {
-                return "mandatory".equals(conformance);
-            }
-
-            public List<Resource> getScxmlResources() {
-                return scxmlResources != null ? scxmlResources : Collections.emptyList();
-            }
-
-            public List<Resource> getResources() {
-                if (resources == null) {
-                    resources = new ArrayList<>();
-                    if (scxmlResources != null) {
-                        resources.addAll(scxmlResources);
-                    }
-                    if (depResources != null) {
-                        resources.addAll(depResources);
-                        // no longer needed
-                        depResources = null;
-                    }
-                }
-                return resources;
-            }
-        }
-
-        @XmlAccessorType(XmlAccessType.FIELD)
-        protected static class Resource {
-
-            @XmlAttribute
-            private String uri;
-
-            public String getUri() {
-                return uri;
-            }
-
-            public String getName() {
-                return uri.substring(uri.indexOf("/")+1, uri.indexOf("."));
-            }
-
-            public String getFileName() {
-                return uri.substring(uri.indexOf("/")+1);
-            }
-        }
-
-        @XmlElement(name="assert")
-        private ArrayList<Assertion> assertions;
-
-        private LinkedHashMap<String, Assertion> assertionsMap;
-
-        public LinkedHashMap<String, Assertion> getAssertions() {
-            if (assertionsMap == null) {
-                assertionsMap = new LinkedHashMap<>();
-                if (assertions != null) {
-                    for (final Assertion a : assertions) {
-                        assertionsMap.put(a.getId(), a);
-                    }
-                }
-            }
-            return assertionsMap;
-        }
-    }
-
-    /**
-     * Unmarshall and return the W3C IRP tests manifest.xml
-     * @return an Assertions instance reprenting the W3C IRP tests manifest.xml
-     * @throws Exception
-     */
-    protected Assertions loadAssertions() throws Exception {
-        final JAXBContext jaxbContext = JAXBContext.newInstance(Assertions.class);
-        final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        return (Assertions)jaxbUnmarshaller.unmarshal(new File(TESTS_SRC_DIR, SCXML_IRP_MANIFEST_URI));
-    }
-
-    /**
-     * Simple TestResult data struct for tracking test results
-     */
-    protected static class TestResults {
-        final Map<Datamodel, Integer> passed = new HashMap<>();
-        final Map<Datamodel, Integer> failed = new HashMap<>();
-        final Map<Datamodel, Integer> skipped = new HashMap<>();
-        final ArrayList<String> changedStatusTests = new ArrayList<>();
-
-        public int passed(final Datamodel dm) {
-            return passed.get(dm) != null ? passed.get(dm) : 0;
-        }
-
-        public int failed(final Datamodel dm) {
-            return failed.get(dm) != null ? failed.get(dm) : 0;
-        }
-
-        public int skipped(final Datamodel dm) {
-            return skipped.get(dm) != null ? skipped.get(dm) : 0;
-        }
-    }
+    private static final String SCXML_IRP_GROOVY_XSL_FILENAME = PACKAGE_PATH + "/confGroovy.xsl";
 
     /**
      * W3CTests main function, see {@link #usage()} how to use.
@@ -444,6 +422,13 @@ public class W3CTests {
                 "         specify -Denabled=false to only run disabled tests.\n");
     }
 
+    protected void createCleanDirectory(final String path) throws Exception {
+        final File dir = new File(path);
+        if (!dir.mkdirs()) {
+            FileUtils.cleanDirectory(dir);
+        }
+    }
+
     /**
      * Downloads the W3C IRP manifest.xml, the IRP ecma stylesheet to transform the tests, and the
      * actual test templates (.txml) as defined in the manifest.xml
@@ -471,6 +456,28 @@ public class W3CTests {
                 }
             }
         }
+    }
+
+    /**
+     * Unmarshall and return the W3C IRP tests manifest.xml
+     * @return an Assertions instance reprenting the W3C IRP tests manifest.xml
+     * @throws Exception
+     */
+    protected Assertions loadAssertions() throws Exception {
+        final JAXBContext jaxbContext = JAXBContext.newInstance(Assertions.class);
+        final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+        return (Assertions)jaxbUnmarshaller.unmarshal(new File(TESTS_SRC_DIR, SCXML_IRP_MANIFEST_URI));
+    }
+
+    /**
+     * Loads the tests.xml configuration file into a Tests class configuration model instance.
+     * @return a Tests instance for the tests.xml configuration file.
+     * @throws Exception
+     */
+    protected Tests loadTests() throws Exception {
+        final JAXBContext jaxbContext = JAXBContext.newInstance(Tests.class);
+        final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+        return (Tests)jaxbUnmarshaller.unmarshal(getClass().getResource(TESTS_FILENAME));
     }
 
     /**
@@ -526,78 +533,6 @@ public class W3CTests {
                     }
                 }
                 break;
-        }
-    }
-
-    /**
-     * XSL transform a W3C IRP test SCXML resource to a datamodel specific location and format,
-     * or simply copy a non SCXML resource to that location.
-     * @param resource the test resource definition
-     * @param transformer the XSL transformer to use
-     * @param targetDir the target location for the transformed SCXML document, or the non-SCXML resource
-     * @throws Exception
-     */
-    protected void transformResource(final Assertions.Resource resource, final Transformer transformer,
-                                     final String targetDir) throws Exception {
-        if (resource.getFileName().endsWith(".txml")) {
-            final StreamSource txmlSource = new StreamSource(new FileInputStream(new File(TXML_TESTS_DIR, resource.getFileName())));
-            transformer.transform(txmlSource, new StreamResult(new FileOutputStream(new File(targetDir, resource.getName() + ".scxml"))));
-        }
-        else {
-            FileUtils.copyFile(new File(TXML_TESTS_DIR, resource.getFileName()), new File(targetDir, resource.getFileName()));
-        }
-    }
-
-    protected void createCleanDirectory(final String path) throws Exception {
-        final File dir = new File(path);
-        if (!dir.mkdirs()) {
-            FileUtils.cleanDirectory(dir);
-        }
-    }
-
-    /**
-     * Run one or multiple W3C IRP tests
-     * @param testId a W3C IRP test id, or null to specify all tests to run
-     * @param datamodel only tests available for or executable with the specified datamodel will be run (or all if null)
-     * @throws Exception
-     */
-    protected void runTests(final String testId, final Datamodel datamodel) throws Exception {
-        final Assertions assertions = loadAssertions();
-        final Tests tests = loadTests();
-        final TestResults results = new TestResults();
-        final boolean enabled = Boolean.parseBoolean(System.getProperty("enabled", "true"));
-        if (testId != null) {
-            final Assertions.Assertion assertion = assertions.getAssertions().get(testId);
-            if (assertion == null) {
-                throw new IllegalArgumentException("Unknown test with id: "+testId);
-            }
-            runAssert(assertion, tests, datamodel, enabled, true, results);
-        }
-        else {
-            for (final Assertions.Assertion entry : assertions.getAssertions().values()) {
-                runAssert(entry, tests, datamodel, enabled, false, results);
-            }
-        }
-        System.out.println(
-                "\nTest results running " +
-                (testId == null ? "all tests" : "test "+testId) +
-                (datamodel != null ? " for the "+datamodel.value+" datamodel" : "") + (enabled ? " enabled" : " disabled"));
-        for (final Datamodel dm : Datamodel.values()) {
-            if (datamodel == null || datamodel == dm) {
-                System.out.println(
-                        "    "+dm.label()+" datamodel: "+results.passed(dm)+" passed,  " +
-                                results.failed(dm)+" failed, " +
-                                results.skipped(dm)+" skipped ("+
-                                (results.passed(dm)+results.failed(dm)+results.skipped(dm))+" total)");
-            }
-        }
-        System.out.print("\n");
-        if (testId == null && !results.changedStatusTests.isEmpty()) {
-            System.out.println("  "+(enabled? "failed" : "passed")+" tests: ");
-            for (final String filename : results.changedStatusTests) {
-                System.out.println("    "+filename);
-            }
-            System.out.print("\n");
         }
     }
 
@@ -690,6 +625,71 @@ public class W3CTests {
             }
             System.out.println("                FAIL: "+e.getMessage());
             return false;
+        }
+    }
+
+    /**
+     * Run one or multiple W3C IRP tests
+     * @param testId a W3C IRP test id, or null to specify all tests to run
+     * @param datamodel only tests available for or executable with the specified datamodel will be run (or all if null)
+     * @throws Exception
+     */
+    protected void runTests(final String testId, final Datamodel datamodel) throws Exception {
+        final Assertions assertions = loadAssertions();
+        final Tests tests = loadTests();
+        final TestResults results = new TestResults();
+        final boolean enabled = Boolean.parseBoolean(System.getProperty("enabled", "true"));
+        if (testId != null) {
+            final Assertions.Assertion assertion = assertions.getAssertions().get(testId);
+            if (assertion == null) {
+                throw new IllegalArgumentException("Unknown test with id: "+testId);
+            }
+            runAssert(assertion, tests, datamodel, enabled, true, results);
+        }
+        else {
+            for (final Assertions.Assertion entry : assertions.getAssertions().values()) {
+                runAssert(entry, tests, datamodel, enabled, false, results);
+            }
+        }
+        System.out.println(
+                "\nTest results running " +
+                (testId == null ? "all tests" : "test "+testId) +
+                (datamodel != null ? " for the "+datamodel.value+" datamodel" : "") + (enabled ? " enabled" : " disabled"));
+        for (final Datamodel dm : Datamodel.values()) {
+            if (datamodel == null || datamodel == dm) {
+                System.out.println(
+                        "    "+dm.label()+" datamodel: "+results.passed(dm)+" passed,  " +
+                                results.failed(dm)+" failed, " +
+                                results.skipped(dm)+" skipped ("+
+                                (results.passed(dm)+results.failed(dm)+results.skipped(dm))+" total)");
+            }
+        }
+        System.out.print("\n");
+        if (testId == null && !results.changedStatusTests.isEmpty()) {
+            System.out.println("  "+(enabled? "failed" : "passed")+" tests: ");
+            for (final String filename : results.changedStatusTests) {
+                System.out.println("    "+filename);
+            }
+            System.out.print("\n");
+        }
+    }
+
+    /**
+     * XSL transform a W3C IRP test SCXML resource to a datamodel specific location and format,
+     * or simply copy a non SCXML resource to that location.
+     * @param resource the test resource definition
+     * @param transformer the XSL transformer to use
+     * @param targetDir the target location for the transformed SCXML document, or the non-SCXML resource
+     * @throws Exception
+     */
+    protected void transformResource(final Assertions.Resource resource, final Transformer transformer,
+                                     final String targetDir) throws Exception {
+        if (resource.getFileName().endsWith(".txml")) {
+            final StreamSource txmlSource = new StreamSource(new FileInputStream(new File(TXML_TESTS_DIR, resource.getFileName())));
+            transformer.transform(txmlSource, new StreamResult(new FileOutputStream(new File(targetDir, resource.getName() + ".scxml"))));
+        }
+        else {
+            FileUtils.copyFile(new File(TXML_TESTS_DIR, resource.getFileName()), new File(targetDir, resource.getFileName()));
         }
     }
 }

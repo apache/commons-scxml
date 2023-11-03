@@ -38,6 +38,8 @@ public class StopWatch extends AbstractStateMachine {
         EVENT_STOP = "watch.stop", EVENT_SPLIT = "watch.split",
         EVENT_UNSPLIT = "watch.unsplit", EVENT_RESET = "watch.reset";
 
+    /** The display decorations. */
+    private static final String DELIM = ":", DOT = ".", EMPTY = "", ZERO = "0";
     /** The fragments of the elapsed time. */
     private int hr, min, sec, fract;
     /** The fragments of the display time. */
@@ -46,41 +48,15 @@ public class StopWatch extends AbstractStateMachine {
     private boolean split;
     /** The Timer to keep time. */
     private Timer timer;
-    /** The display decorations. */
-    private static final String DELIM = ":", DOT = ".", EMPTY = "", ZERO = "0";
 
     public StopWatch() throws ModelException {
         super(StopWatch.class.getClassLoader().
             getResource("org/apache/commons/scxml2/env/stopwatch.xml"));
     }
 
-    // Each method below is the activity corresponding to a state in the
-    // SCXML document (see class constructor for pointer to the document).
-    public void reset() {
-        hr = min = sec = fract = dhr = dmin = dsec = dfract = 0;
-        split = false;
-    }
-
-    public void running() {
-        split = false;
-        if (timer == null) {
-            timer = new Timer(true);
-            timer.scheduleAtFixedRate(new TimerTask() {
-                @Override
-                public void run() {
-                    increment();
-                }
-            }, 100, 100);
-        }
-    }
-
-    public void paused() {
-        split = true;
-    }
-
-    public void stopped() {
-        timer.cancel();
-        timer = null;
+    // used by the demonstration (see StopWatchDisplay usecase)
+    public String getCurrentState() {
+        return getEngine().getStatus().getStates().iterator().next().getId();
     }
 
     public String getDisplay() {
@@ -88,11 +64,6 @@ public class StopWatch extends AbstractStateMachine {
         final String padmin = dmin > 9 ? EMPTY : ZERO;
         final String padsec = dsec > 9 ? EMPTY : ZERO;
         return padhr + dhr + DELIM + padmin + dmin + DELIM + padsec + dsec + DOT + dfract;
-    }
-
-    // used by the demonstration (see StopWatchDisplay usecase)
-    public String getCurrentState() {
-        return getEngine().getStatus().getStates().iterator().next().getId();
     }
 
     private void increment() {
@@ -122,6 +93,35 @@ public class StopWatch extends AbstractStateMachine {
             dsec = sec;
             dfract = fract;
         }
+    }
+
+    public void paused() {
+        split = true;
+    }
+
+    // Each method below is the activity corresponding to a state in the
+    // SCXML document (see class constructor for pointer to the document).
+    public void reset() {
+        hr = min = sec = fract = dhr = dmin = dsec = dfract = 0;
+        split = false;
+    }
+
+    public void running() {
+        split = false;
+        if (timer == null) {
+            timer = new Timer(true);
+            timer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    increment();
+                }
+            }, 100, 100);
+        }
+    }
+
+    public void stopped() {
+        timer.cancel();
+        timer = null;
     }
 
 }

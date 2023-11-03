@@ -24,14 +24,6 @@ import org.junit.jupiter.api.Test;
 public class LogUtilsTest {
 
     @Test
-    public void testGetTTPathParentNull() {
-        final State target = new State();
-        target.setId("ID");
-
-        Assertions.assertEquals("/ID", LogUtils.getTTPath(target));
-    }
-
-    @Test
     public void testGetTTPathParent() {
         final State target = new State();
         target.setId("ID");
@@ -46,6 +38,14 @@ public class LogUtilsTest {
         target.setParent(parent1);
 
         Assertions.assertEquals("/parent2/parent1/ID", LogUtils.getTTPath(target));
+    }
+
+    @Test
+    public void testGetTTPathParentNull() {
+        final State target = new State();
+        target.setId("ID");
+
+        Assertions.assertEquals("/ID", LogUtils.getTTPath(target));
     }
 
     @Test

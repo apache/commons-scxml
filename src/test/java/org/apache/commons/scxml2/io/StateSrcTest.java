@@ -30,16 +30,13 @@ import org.junit.jupiter.api.Test;
 public class StateSrcTest {
 
     @Test
-    public void testRecursiveSrcInclude() throws Exception {
-        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/io/src-test-1.xml");
-        exec.go();
-        Set<EnterableState> states = exec.getStatus().getStates();
-        Assertions.assertEquals(1, states.size());
-        Assertions.assertEquals("srctest3", states.iterator().next().getId());
-        states = SCXMLTestHelper.fireEvent(exec, "src.test");
-        Assertions.assertEquals(1, states.size());
-        Assertions.assertEquals("srctest1end", states.iterator().next().getId());
-        Assertions.assertTrue(exec.getStatus().isFinal());
+    public void testBadSrcFragmentInclude() {
+        final ModelException me = Assertions.assertThrows(
+                ModelException.class,
+                () -> SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/src-test-5.xml")),
+                "Document with bad <state> src attribute shouldn't be parsed!");
+        Assertions.assertTrue(me.getMessage() != null && me.getMessage().contains("URI Fragment in <state src="),
+                "Unexpected error message for bad <state> 'src' URI fragment");
     }
 
     @Test
@@ -53,13 +50,16 @@ public class StateSrcTest {
     }
 
     @Test
-    public void testBadSrcFragmentInclude() {
-        final ModelException me = Assertions.assertThrows(
-                ModelException.class,
-                () -> SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/src-test-5.xml")),
-                "Document with bad <state> src attribute shouldn't be parsed!");
-        Assertions.assertTrue(me.getMessage() != null && me.getMessage().contains("URI Fragment in <state src="),
-                "Unexpected error message for bad <state> 'src' URI fragment");
+    public void testRecursiveSrcInclude() throws Exception {
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/io/src-test-1.xml");
+        exec.go();
+        Set<EnterableState> states = exec.getStatus().getStates();
+        Assertions.assertEquals(1, states.size());
+        Assertions.assertEquals("srctest3", states.iterator().next().getId());
+        states = SCXMLTestHelper.fireEvent(exec, "src.test");
+        Assertions.assertEquals(1, states.size());
+        Assertions.assertEquals("srctest1end", states.iterator().next().getId());
+        Assertions.assertTrue(exec.getStatus().isFinal());
     }
 }
 

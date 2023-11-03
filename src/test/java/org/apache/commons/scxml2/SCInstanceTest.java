@@ -40,15 +40,6 @@ public class SCInstanceTest {
     }
 
     @Test
-    public void testGetRootContext() {
-        final Context context = new SimpleContext();
-        context.set("name", "value");
-
-        instance.setRootContext(context);
-        Assertions.assertEquals("value", instance.getRootContext().get("name"));
-    }
-
-    @Test
     public void testGetContext() {
         final State target = new State();
         target.setId("1");
@@ -99,15 +90,6 @@ public class SCInstanceTest {
     }
 
     @Test
-    public void testGetLastConfigurationNull() {
-        final History history = new History();
-
-        final Set<EnterableState> returnConfiguration = instance.getLastConfiguration(history);
-
-        Assertions.assertEquals(0, returnConfiguration.size());
-    }
-
-    @Test
     public void testGetLastConfiguration() {
         final History history = new History();
         history.setId("1");
@@ -125,6 +107,24 @@ public class SCInstanceTest {
         Assertions.assertEquals(2, returnConfiguration.size());
         Assertions.assertTrue(returnConfiguration.contains(tt1));
         Assertions.assertTrue(returnConfiguration.contains(tt2));
+    }
+
+    @Test
+    public void testGetLastConfigurationNull() {
+        final History history = new History();
+
+        final Set<EnterableState> returnConfiguration = instance.getLastConfiguration(history);
+
+        Assertions.assertEquals(0, returnConfiguration.size());
+    }
+
+    @Test
+    public void testGetRootContext() {
+        final Context context = new SimpleContext();
+        context.set("name", "value");
+
+        instance.setRootContext(context);
+        Assertions.assertEquals("value", instance.getRootContext().get("name"));
     }
 
     @Test

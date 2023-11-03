@@ -27,16 +27,21 @@ import org.junit.jupiter.api.Test;
  */
 public class AbstractStateMachineTest {
 
-    @Test
-    public void testMoreThanOneScxmlDocument() throws Exception {
-        final URL fooScxmlDocument = getClass().getResource("foo.xml");
-        final URL barScxmlDocument = getClass().getResource("bar.xml");
+    private class Bar extends AbstractStateMachine {
 
-        final Foo f = new Foo(fooScxmlDocument);
-        final Bar b = new Bar(barScxmlDocument);
+        private boolean barCalled;
 
-        Assertions.assertTrue(f.fooCalled());
-        Assertions.assertTrue(b.barCalled());
+        Bar(final URL scxmlDocument) throws ModelException {
+            super(scxmlDocument);
+        }
+
+        public void bar() {
+            barCalled = true;
+        }
+
+        boolean barCalled() {
+            return barCalled;
+        }
     }
 
     private class Foo extends AbstractStateMachine {
@@ -56,20 +61,15 @@ public class AbstractStateMachineTest {
         }
     }
 
-    private class Bar extends AbstractStateMachine {
+    @Test
+    public void testMoreThanOneScxmlDocument() throws Exception {
+        final URL fooScxmlDocument = getClass().getResource("foo.xml");
+        final URL barScxmlDocument = getClass().getResource("bar.xml");
 
-        private boolean barCalled;
+        final Foo f = new Foo(fooScxmlDocument);
+        final Bar b = new Bar(barScxmlDocument);
 
-        Bar(final URL scxmlDocument) throws ModelException {
-            super(scxmlDocument);
-        }
-
-        public void bar() {
-            barCalled = true;
-        }
-
-        boolean barCalled() {
-            return barCalled;
-        }
+        Assertions.assertTrue(f.fooCalled());
+        Assertions.assertTrue(b.barCalled());
     }
 }

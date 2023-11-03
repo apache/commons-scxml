@@ -31,6 +31,16 @@ import org.junit.jupiter.api.Test;
  */
 public class Issue62Test {
 
+    private void fragmenttest(final SCXMLExecutor exec) throws Exception {
+        final Set<EnterableState> currentStates = exec.getStatus().getStates();
+        Assertions.assertEquals(1, currentStates.size());
+        Assertions.assertEquals("s1", currentStates.iterator().next().getId());
+        SCXMLTestHelper.assertPostTriggerState(exec, "foo", "e1.1.1");
+        SCXMLTestHelper.assertPostTriggerState(exec, "bar", "e1.1.2");
+        SCXMLTestHelper.assertPostTriggerState(exec, "baz", "s3");
+        Assertions.assertTrue(exec.getStatus().isFinal());
+    }
+
     @Test
     public void test01issue62() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/issues/issue62-01.xml");
@@ -53,16 +63,6 @@ public class Issue62Test {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/issues/issue62-03.xml");
         exec.go();
         fragmenttest(exec);
-    }
-
-    private void fragmenttest(final SCXMLExecutor exec) throws Exception {
-        final Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("s1", currentStates.iterator().next().getId());
-        SCXMLTestHelper.assertPostTriggerState(exec, "foo", "e1.1.1");
-        SCXMLTestHelper.assertPostTriggerState(exec, "bar", "e1.1.2");
-        SCXMLTestHelper.assertPostTriggerState(exec, "baz", "s3");
-        Assertions.assertTrue(exec.getStatus().isFinal());
     }
 }
 

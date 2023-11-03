@@ -32,10 +32,66 @@ import org.junit.jupiter.api.Test;
 // Tests for 4.3.1 in WD-scxml-20080516
 public class InvokeParamNameTest {
 
-    private SCXMLExecutor exec;
+    public static class DummyInvoker implements Invoker {
+
+        private String invokeId;
+
+        @Override
+        public void cancel() {
+            // Not needed
+        }
+
+        @Override
+        public SCXMLIOProcessor getChildIOProcessor() {
+            // not used
+            return null;
+        }
+
+        @Override
+        public String getInvokeId() {
+            return invokeId;
+        }
+
+        @Override
+        public void invoke(final String url, final Map<String, Object> params) {
+            lastURL = url;
+            lastParams = params;
+        }
+
+        @Override
+        public void invokeContent(final String content, final Map<String, Object> params) {
+            lastURL = null;
+            lastParams = params;
+        }
+
+        public Map<String, Object> lastParams() {
+            return lastParams;
+        }
+
+        public String lastURL() {
+            return lastURL;
+        }
+
+        @Override
+        public void parentEvent(final TriggerEvent evt) {
+            // Not needed
+        }
+
+        @Override
+        public void setInvokeId(final String invokeId) {
+            this.invokeId = invokeId;
+        }
+
+        @Override
+        public void setParentSCXMLExecutor(final SCXMLExecutor parentSCXMLExecutor) {
+            // Not needed
+        }
+    }
 
     private static String lastURL;
     private static Map<String, Object> lastParams;
+
+    private SCXMLExecutor exec;
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -47,12 +103,6 @@ public class InvokeParamNameTest {
     @AfterEach
     public void tearDown() {
         exec.unregisterInvokerClass("x-test");
-    }
-
-    private void trigger() throws ModelException {
-        lastParams = null;
-        lastURL = null;
-        exec.triggerEvent(new EventBuilder("test.trigger", TriggerEvent.SIGNAL_EVENT).build());
     }
 
     // Tests "param" element with "name" and "expr" attribute
@@ -76,60 +126,10 @@ public class InvokeParamNameTest {
         Assertions.assertEquals("foo", m.get("bar"));
     }
 
-    public static class DummyInvoker implements Invoker {
-
-        private String invokeId;
-
-        @Override
-        public void invoke(final String url, final Map<String, Object> params) {
-            lastURL = url;
-            lastParams = params;
-        }
-
-        @Override
-        public void invokeContent(final String content, final Map<String, Object> params) {
-            lastURL = null;
-            lastParams = params;
-        }
-
-        public String lastURL() {
-            return lastURL;
-        }
-
-        public Map<String, Object> lastParams() {
-            return lastParams;
-        }
-
-        @Override
-        public void cancel() {
-            // Not needed
-        }
-
-        @Override
-        public void parentEvent(final TriggerEvent evt) {
-            // Not needed
-        }
-
-        @Override
-        public String getInvokeId() {
-            return invokeId;
-        }
-
-        @Override
-        public void setInvokeId(final String invokeId) {
-            this.invokeId = invokeId;
-        }
-
-        @Override
-        public void setParentSCXMLExecutor(final SCXMLExecutor parentSCXMLExecutor) {
-            // Not needed
-        }
-
-        @Override
-        public SCXMLIOProcessor getChildIOProcessor() {
-            // not used
-            return null;
-        }
+    private void trigger() throws ModelException {
+        lastParams = null;
+        lastURL = null;
+        exec.triggerEvent(new EventBuilder("test.trigger", TriggerEvent.SIGNAL_EVENT).build());
     }
 
 }

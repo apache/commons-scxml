@@ -39,6 +39,16 @@ import org.junit.jupiter.api.Test;
  */
 public class JSExampleTest {
 
+    public static class EventDataMapTest extends Action {
+        @Override
+        public void execute(final ActionExecutionContext exctx) {
+            exctx.getInternalIOProcessor()
+                    .addEvent(new EventBuilder("ok",TriggerEvent.SIGNAL_EVENT).data("and its ok with me to").build());
+        }
+    }
+
+    // INNER CLASSES
+
     // TEST METHODS
     @Test
     public void testExample01Sample() throws Exception {
@@ -52,16 +62,6 @@ public class JSExampleTest {
         final Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assertions.assertEquals(1, currentStates.size());
         Assertions.assertEquals("end", currentStates.iterator().next().getId());
-    }
-
-    // INNER CLASSES
-
-    public static class EventDataMapTest extends Action {
-        @Override
-        public void execute(final ActionExecutionContext exctx) {
-            exctx.getInternalIOProcessor()
-                    .addEvent(new EventBuilder("ok",TriggerEvent.SIGNAL_EVENT).data("and its ok with me to").build());
-        }
     }
 
 }

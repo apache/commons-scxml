@@ -27,21 +27,21 @@ import org.junit.jupiter.api.Test;
  */
 public class JSContextTest {
         /**
-         * Tests implementation of JSContext default constructor.
-         *
-         */
-        @Test
-        public void testDefaultConstructor() {
-            Assertions.assertNotNull(new JSContext(), "Error in JSContext default constructor");
-        }
-
-        /**
          * Tests implementation of JSContext 'child' constructor.
          *
          */
         @Test
         public void testChildConstructor() {
                 Assertions.assertNotNull(new JSContext(new SimpleContext()), "Error in JSContext child constructor");
+        }
+
+        /**
+         * Tests implementation of JSContext default constructor.
+         *
+         */
+        @Test
+        public void testDefaultConstructor() {
+            Assertions.assertNotNull(new JSContext(), "Error in JSContext default constructor");
         }
 }
 

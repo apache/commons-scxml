@@ -29,64 +29,10 @@ import org.junit.jupiter.api.Test;
  */
 public class DatamodelTest {
 
-    /**
-     * Test the stateless model (jexl), simultaneous executions
-     */
-    @Test
-    public void testDatamodelSimultaneousJexl() throws Exception {
-        final SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/datamodel-01.xml");
-        exec01.go();
-        final SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/datamodel-01.xml");
-        exec02.go();
-        Assertions.assertFalse(exec01 == exec02);
-        runtest(exec01, exec02);
-    }
-
-    /**
-     * Test the stateless model (Groovy), simultaneous executions
-     */
-    @Test
-    public void testDatamodelSimultaneousGroovy() throws Exception {
-        final SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/groovy/datamodel-01.xml");
-        exec01.go();
-        final SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/groovy/datamodel-01.xml");
-        exec02.go();
-        Assertions.assertFalse(exec01 == exec02);
-        runtest(exec01, exec02);
-    }
-
-    /**
-     * Test the stateless model (Javascript), simultaneous executions
-     */
-    @Test
-    public void testDatamodelSimultaneousJavascript() throws Exception {
-        final SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/javascript/datamodel-01.xml");
-        exec01.go();
-        final SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/javascript/datamodel-01.xml");
-        exec02.go();
-        Assertions.assertFalse(exec01 == exec02);
-        runtest(exec01, exec02);
-    }
-
-    @Test
-    public void testDatamodel05Jexl() throws Exception {
-        final SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/datamodel-05.xml");
-        exec01.go();
-        SCXMLTestHelper.assertState(exec01, "end");
-    }
-
-    @Test
-    public void testDatamodel05Groovy() throws Exception {
-        final SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/groovy/datamodel-05.xml");
-        exec01.go();
-        SCXMLTestHelper.assertState(exec01, "end");
-    }
-
-    @Test
-    public void testDatamodel05Javascript() throws Exception {
-        final SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/javascript/datamodel-05.xml");
-        exec01.go();
-        SCXMLTestHelper.assertState(exec01, "end");
+    private Set<EnterableState> fireEvent(final String name, final SCXMLExecutor exec) throws Exception {
+        final TriggerEvent[] evts = {new EventBuilder(name, TriggerEvent.SIGNAL_EVENT).build()};
+        exec.triggerEvents(evts);
+        return exec.getStatus().getStates();
     }
 
     private void runtest(SCXMLExecutor exec01, SCXMLExecutor exec02) throws Exception {
@@ -125,10 +71,64 @@ public class DatamodelTest {
         Assertions.assertEquals("forty", currentStates.iterator().next().getId());
     }
 
-    private Set<EnterableState> fireEvent(final String name, final SCXMLExecutor exec) throws Exception {
-        final TriggerEvent[] evts = {new EventBuilder(name, TriggerEvent.SIGNAL_EVENT).build()};
-        exec.triggerEvents(evts);
-        return exec.getStatus().getStates();
+    @Test
+    public void testDatamodel05Groovy() throws Exception {
+        final SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/groovy/datamodel-05.xml");
+        exec01.go();
+        SCXMLTestHelper.assertState(exec01, "end");
+    }
+
+    @Test
+    public void testDatamodel05Javascript() throws Exception {
+        final SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/javascript/datamodel-05.xml");
+        exec01.go();
+        SCXMLTestHelper.assertState(exec01, "end");
+    }
+
+    @Test
+    public void testDatamodel05Jexl() throws Exception {
+        final SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/datamodel-05.xml");
+        exec01.go();
+        SCXMLTestHelper.assertState(exec01, "end");
+    }
+
+    /**
+     * Test the stateless model (Groovy), simultaneous executions
+     */
+    @Test
+    public void testDatamodelSimultaneousGroovy() throws Exception {
+        final SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/groovy/datamodel-01.xml");
+        exec01.go();
+        final SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/groovy/datamodel-01.xml");
+        exec02.go();
+        Assertions.assertFalse(exec01 == exec02);
+        runtest(exec01, exec02);
+    }
+
+    /**
+     * Test the stateless model (Javascript), simultaneous executions
+     */
+    @Test
+    public void testDatamodelSimultaneousJavascript() throws Exception {
+        final SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/javascript/datamodel-01.xml");
+        exec01.go();
+        final SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/javascript/datamodel-01.xml");
+        exec02.go();
+        Assertions.assertFalse(exec01 == exec02);
+        runtest(exec01, exec02);
+    }
+
+    /**
+     * Test the stateless model (jexl), simultaneous executions
+     */
+    @Test
+    public void testDatamodelSimultaneousJexl() throws Exception {
+        final SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/datamodel-01.xml");
+        exec01.go();
+        final SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/datamodel-01.xml");
+        exec02.go();
+        Assertions.assertFalse(exec01 == exec02);
+        runtest(exec01, exec02);
     }
 }
 

@@ -28,31 +28,6 @@ import org.junit.jupiter.api.Test;
 public class ContentParserTest {
 
     @Test
-    public void testTrimContent() {
-        Assertions.assertEquals(null, ContentParser.trimContent(null));
-        Assertions.assertEquals("", ContentParser.trimContent(""));
-        Assertions.assertEquals("", ContentParser.trimContent(" "));
-        Assertions.assertEquals("", ContentParser.trimContent("  "));
-        Assertions.assertEquals("", ContentParser.trimContent("   "));
-        Assertions.assertEquals("", ContentParser.trimContent("\t\n\r"));
-        Assertions.assertEquals("a", ContentParser.trimContent("a"));
-        Assertions.assertEquals("a", ContentParser.trimContent(" a"));
-        Assertions.assertEquals("a", ContentParser.trimContent("a "));
-        Assertions.assertEquals("a", ContentParser.trimContent(" a "));
-    }
-
-    @Test
-    public void testSpaceNormalizeContent() {
-        Assertions.assertEquals(null, ContentParser.spaceNormalizeContent(null));
-        Assertions.assertEquals("", ContentParser.spaceNormalizeContent(""));
-        Assertions.assertEquals("a", ContentParser.spaceNormalizeContent("a"));
-        Assertions.assertEquals("a", ContentParser.spaceNormalizeContent(" a"));
-        Assertions.assertEquals("a", ContentParser.spaceNormalizeContent("a "));
-        Assertions.assertEquals("a", ContentParser.spaceNormalizeContent(" a "));
-        Assertions.assertEquals("a b c", ContentParser.spaceNormalizeContent("  a\tb \n \r c  "));
-    }
-
-    @Test
     public void testParseJson() throws Exception {
         final ObjectMapper jsonObjectMapper = new ObjectMapper();
         jsonObjectMapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
@@ -75,5 +50,30 @@ public class ContentParserTest {
         jsonArray.add(jsonObject);
         jsonArray.add(jsonObject);
         Assertions.assertEquals(jsonArray, contentParser.parseJson(jsonArrayString));
+    }
+
+    @Test
+    public void testSpaceNormalizeContent() {
+        Assertions.assertEquals(null, ContentParser.spaceNormalizeContent(null));
+        Assertions.assertEquals("", ContentParser.spaceNormalizeContent(""));
+        Assertions.assertEquals("a", ContentParser.spaceNormalizeContent("a"));
+        Assertions.assertEquals("a", ContentParser.spaceNormalizeContent(" a"));
+        Assertions.assertEquals("a", ContentParser.spaceNormalizeContent("a "));
+        Assertions.assertEquals("a", ContentParser.spaceNormalizeContent(" a "));
+        Assertions.assertEquals("a b c", ContentParser.spaceNormalizeContent("  a\tb \n \r c  "));
+    }
+
+    @Test
+    public void testTrimContent() {
+        Assertions.assertEquals(null, ContentParser.trimContent(null));
+        Assertions.assertEquals("", ContentParser.trimContent(""));
+        Assertions.assertEquals("", ContentParser.trimContent(" "));
+        Assertions.assertEquals("", ContentParser.trimContent("  "));
+        Assertions.assertEquals("", ContentParser.trimContent("   "));
+        Assertions.assertEquals("", ContentParser.trimContent("\t\n\r"));
+        Assertions.assertEquals("a", ContentParser.trimContent("a"));
+        Assertions.assertEquals("a", ContentParser.trimContent(" a"));
+        Assertions.assertEquals("a", ContentParser.trimContent("a "));
+        Assertions.assertEquals("a", ContentParser.trimContent(" a "));
     }
 }

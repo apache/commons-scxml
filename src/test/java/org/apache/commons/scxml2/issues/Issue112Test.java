@@ -37,6 +37,35 @@ import org.junit.jupiter.api.Test;
  */
 public class Issue112Test {
 
+    // Test external event queue
+    private static final class Application {
+        private static final Queue<String> QUEUE = new LinkedList<>();
+    }
+
+    /**
+     * A custom action that generates external events.
+     */
+    public static class Enqueue extends Action {
+
+        private String event;
+
+        @Override
+        public void execute(final ActionExecutionContext exctx) {
+
+            Application.QUEUE.add(event);
+
+        }
+
+        public String getEvent() {
+            return event;
+        }
+
+        public void setEvent(final String event) {
+            this.event = event;
+        }
+
+    }
+
     /**
      * Tear down instance variables required by this test case.
      */
@@ -74,35 +103,6 @@ public class Issue112Test {
         Assertions.assertEquals("end", exec.getStatus().getStates().
                 iterator().next().getId());
 
-    }
-
-    /**
-     * A custom action that generates external events.
-     */
-    public static class Enqueue extends Action {
-
-        private String event;
-
-        public String getEvent() {
-            return event;
-        }
-
-        public void setEvent(final String event) {
-            this.event = event;
-        }
-
-        @Override
-        public void execute(final ActionExecutionContext exctx) {
-
-            Application.QUEUE.add(event);
-
-        }
-
-    }
-
-    // Test external event queue
-    private static final class Application {
-        private static final Queue<String> QUEUE = new LinkedList<>();
     }
 
 }

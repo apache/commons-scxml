@@ -37,6 +37,38 @@ public class StatusTest {
     }
 
     @Test
+    public void testGetAllStatesContainsParent() {
+        final State parent = new State();
+        parent.setId("0");
+        stateConfiguration.enterState(parent);
+        final State state = new State();
+        state.setId("1");
+        state.setParent(parent);
+        stateConfiguration.enterState(state);
+
+        final Set<EnterableState> returnValue = status.getActiveStates();
+
+        Assertions.assertEquals(2, returnValue.size());
+    }
+
+    @Test
+    public void testGetAllStatesEmptyStatus() {
+
+        final Set<EnterableState> returnValue = status.getActiveStates();
+
+        Assertions.assertEquals(0, returnValue.size());
+    }
+
+    @Test
+    public void testIsFinalState() {
+        final Final state = new Final();
+
+        stateConfiguration.enterState(state);
+
+        Assertions.assertTrue(status.isFinal());
+    }
+
+    @Test
     public void testIsFinalStateFalse() {
         final State state = new State();
 
@@ -53,38 +85,6 @@ public class StatusTest {
         stateConfiguration.enterState(state);
 
         Assertions.assertFalse(status.isFinal());
-    }
-
-    @Test
-    public void testIsFinalState() {
-        final Final state = new Final();
-
-        stateConfiguration.enterState(state);
-
-        Assertions.assertTrue(status.isFinal());
-    }
-
-    @Test
-    public void testGetAllStatesEmptyStatus() {
-
-        final Set<EnterableState> returnValue = status.getActiveStates();
-
-        Assertions.assertEquals(0, returnValue.size());
-    }
-
-    @Test
-    public void testGetAllStatesContainsParent() {
-        final State parent = new State();
-        parent.setId("0");
-        stateConfiguration.enterState(parent);
-        final State state = new State();
-        state.setId("1");
-        state.setParent(parent);
-        stateConfiguration.enterState(state);
-
-        final Set<EnterableState> returnValue = status.getActiveStates();
-
-        Assertions.assertEquals(2, returnValue.size());
     }
 
     @Test

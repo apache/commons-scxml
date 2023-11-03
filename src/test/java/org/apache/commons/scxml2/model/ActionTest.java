@@ -29,41 +29,6 @@ public class ActionTest {
         action = new Assign();
     }
     @Test
-    public void testGetParentStateIsState() throws Exception {
-        final Transition transition = new Transition();
-
-        final State state = new State();
-        state.setId("on");
-
-        transition.setParent(state);
-        action.setParent(transition);
-
-        final TransitionTarget returnValue = action.getParentEnterableState();
-
-        Assertions.assertEquals("on", returnValue.getId());
-    }
-
-    @Test
-    public void testGetParentStateIsParallel() throws Exception {
-        final Transition transition = new Transition();
-
-        final Parallel parallel = new Parallel();
-        parallel.setId("on");
-
-        final State state = new State();
-        state.setId("off");
-
-        parallel.setParent(state);
-
-        transition.setParent(parallel);
-        action.setParent(transition);
-
-        final TransitionTarget returnValue = action.getParentEnterableState();
-
-        Assertions.assertEquals("on", returnValue.getId());
-    }
-
-    @Test
     public void testGetParentStateIsHistory() throws Exception {
         final Transition transition = new Transition();
 
@@ -100,5 +65,40 @@ public class ActionTest {
         final TransitionTarget returnValue = action.getParentEnterableState();
 
         Assertions.assertEquals("off", returnValue.getId());
+    }
+
+    @Test
+    public void testGetParentStateIsParallel() throws Exception {
+        final Transition transition = new Transition();
+
+        final Parallel parallel = new Parallel();
+        parallel.setId("on");
+
+        final State state = new State();
+        state.setId("off");
+
+        parallel.setParent(state);
+
+        transition.setParent(parallel);
+        action.setParent(transition);
+
+        final TransitionTarget returnValue = action.getParentEnterableState();
+
+        Assertions.assertEquals("on", returnValue.getId());
+    }
+
+    @Test
+    public void testGetParentStateIsState() throws Exception {
+        final Transition transition = new Transition();
+
+        final State state = new State();
+        state.setId("on");
+
+        transition.setParent(state);
+        action.setParent(transition);
+
+        final TransitionTarget returnValue = action.getParentEnterableState();
+
+        Assertions.assertEquals("on", returnValue.getId());
     }
 }

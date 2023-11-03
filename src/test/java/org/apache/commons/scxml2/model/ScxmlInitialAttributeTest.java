@@ -53,6 +53,15 @@ public class ScxmlInitialAttributeTest {
             "</scxml>";
 
     @Test
+    public void testIllegalInitial() {
+        // expected because of the non-existing initial state id
+        assertThrows(
+                ModelException.class,
+                () -> SCXMLTestHelper.parse(new StringReader(SCXML_WITH_ILLEGAL_INITIAL), null),
+                "SCXML reading should have failed due to the illegal state ID in SCXML.");
+    }
+
+    @Test
     public void testInitial() throws Exception {
         final SCXML scxml = SCXMLTestHelper.parse(new StringReader(SCXML_WITH_LEGAL_INITIAL), null);
         assertEquals("s1", scxml.getInitial(), "The initial state ID reading was wrong.");
@@ -72,14 +81,5 @@ public class ScxmlInitialAttributeTest {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
         exec.go();
         assertEquals(scxml.getTargets().get("s1"), exec.getStatus().getStates().iterator().next());
-    }
-
-    @Test
-    public void testIllegalInitial() {
-        // expected because of the non-existing initial state id
-        assertThrows(
-                ModelException.class,
-                () -> SCXMLTestHelper.parse(new StringReader(SCXML_WITH_ILLEGAL_INITIAL), null),
-                "SCXML reading should have failed due to the illegal state ID in SCXML.");
     }
 }

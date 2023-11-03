@@ -30,6 +30,42 @@ import org.junit.jupiter.api.Test;
  */
 public class WizardsTest {
 
+    static class TestEventDispatcher extends SimpleDispatcher {
+
+        // If you change this, you must also change testWizard02Sample()
+        int callback = 0;
+
+        @Override
+        public void cancel(final String sendId) {
+            // should never be called
+            Assertions.fail("<cancel> TestEventDispatcher callback unexpected");
+        }
+        @Override
+        @SuppressWarnings("unchecked")
+        public void send(final Map<String, SCXMLIOProcessor> ioProcessors, final String id, final String target, final String type,
+                final String event, final Object data, final Object hints, final long delay) {
+            if ("foo".equals(type)) {
+                final Map<String, Object> params = (Map<String, Object>)data;
+                final int i = ((Integer) params.get("aValue"));
+                switch (callback) {
+                    case 0:
+                        Assertions.assertEquals(2, i); // state2
+                        callback++;
+                        break;
+                    case 1:
+                        Assertions.assertEquals(4, i); // state4
+                        callback++;
+                        break;
+                    default:
+                        Assertions.fail("More than 2 TestEventDispatcher <send> callbacks for type \"foo\"");
+                }
+            }
+            else {
+                super.send(ioProcessors, id, target, type, event, data, hints, delay);
+            }
+        }
+    }
+
     /**
      * Test the wizard style SCXML documents, and send usage
      */
@@ -71,41 +107,5 @@ public class WizardsTest {
         currentStates = SCXMLTestHelper.fireEvent(exec, "event4");
         Assertions.assertEquals(1, currentStates.size());
         Assertions.assertEquals("state4", currentStates.iterator().next().getId());
-    }
-
-    static class TestEventDispatcher extends SimpleDispatcher {
-
-        // If you change this, you must also change testWizard02Sample()
-        int callback = 0;
-
-        @Override
-        @SuppressWarnings("unchecked")
-        public void send(final Map<String, SCXMLIOProcessor> ioProcessors, final String id, final String target, final String type,
-                final String event, final Object data, final Object hints, final long delay) {
-            if ("foo".equals(type)) {
-                final Map<String, Object> params = (Map<String, Object>)data;
-                final int i = ((Integer) params.get("aValue"));
-                switch (callback) {
-                    case 0:
-                        Assertions.assertEquals(2, i); // state2
-                        callback++;
-                        break;
-                    case 1:
-                        Assertions.assertEquals(4, i); // state4
-                        callback++;
-                        break;
-                    default:
-                        Assertions.fail("More than 2 TestEventDispatcher <send> callbacks for type \"foo\"");
-                }
-            }
-            else {
-                super.send(ioProcessors, id, target, type, event, data, hints, delay);
-            }
-        }
-        @Override
-        public void cancel(final String sendId) {
-            // should never be called
-            Assertions.fail("<cancel> TestEventDispatcher callback unexpected");
-        }
     }
 }

@@ -33,9 +33,15 @@ import org.junit.jupiter.api.Test;
  */
 public class ActionsTest {
 
+    private void runTest(final SCXMLExecutor exec) {
+        final Context ctx = SCXMLTestHelper.lookupContext(exec, "actionsTest");
+        Assertions.assertEquals(ctx.get("foo"), "foobar");
+        Assertions.assertEquals(true, ctx.get("eventsent"), "Missed event transition");
+    }
+
     @Test
-    public void testStateActions() throws Exception {
-        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/actions-state-test.xml");
+    public void testInitialActions() throws Exception {
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/actions-initial-test.xml");
         exec.go();
         runTest(exec);
     }
@@ -48,16 +54,10 @@ public class ActionsTest {
     }
 
     @Test
-    public void testInitialActions() throws Exception {
-        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/actions-initial-test.xml");
+    public void testStateActions() throws Exception {
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/actions-state-test.xml");
         exec.go();
         runTest(exec);
-    }
-
-    private void runTest(final SCXMLExecutor exec) {
-        final Context ctx = SCXMLTestHelper.lookupContext(exec, "actionsTest");
-        Assertions.assertEquals(ctx.get("foo"), "foobar");
-        Assertions.assertEquals(true, ctx.get("eventsent"), "Missed event transition");
     }
 }
 

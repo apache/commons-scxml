@@ -30,13 +30,6 @@ import org.junit.jupiter.api.Test;
 public class SCXMLSemanticsImplTest {
 
     @Test
-    public void testIsLegalConfigNoStates() {
-        final Set<EnterableState> states = new HashSet<>();
-
-        Assertions.assertTrue(new SCXMLSemanticsImpl().isLegalConfiguration(states, new SimpleErrorReporter()));
-    }
-
-    @Test
     public void testIsLegalConfigInvalidParallel() {
         final Set<EnterableState> states = new HashSet<>();
         final Parallel parallel = new Parallel();
@@ -64,25 +57,6 @@ public class SCXMLSemanticsImplTest {
     }
 
     @Test
-    public void testIsLegalConfigMultipleTopLevel() {
-        final Set<EnterableState> states = new HashSet<>();
-
-        final State state1 = new State();
-        state1.setId("1");
-        final State state2 = new State();
-        state2.setId("2");
-
-        states.add(state1);
-        states.add(state2);
-
-        final MockErrorReporter errorReporter = new MockErrorReporter();
-
-        Assertions.assertFalse(new SCXMLSemanticsImpl().isLegalConfiguration(states, errorReporter));
-        Assertions.assertEquals(ErrorConstants.ILLEGAL_CONFIG, errorReporter.getErrCode());
-        Assertions.assertEquals("Multiple top-level OR states active!", errorReporter.getErrDetail());
-    }
-
-    @Test
     public void testIsLegalConfigMultipleStatesActive() {
         final Set<EnterableState> states = new HashSet<>();
 
@@ -106,5 +80,31 @@ public class SCXMLSemanticsImplTest {
         Assertions.assertFalse(new SCXMLSemanticsImpl().isLegalConfiguration(states, errorReporter));
         Assertions.assertEquals(ErrorConstants.ILLEGAL_CONFIG, errorReporter.getErrCode());
         Assertions.assertEquals("Multiple OR states active for state parentid", errorReporter.getErrDetail());
+    }
+
+    @Test
+    public void testIsLegalConfigMultipleTopLevel() {
+        final Set<EnterableState> states = new HashSet<>();
+
+        final State state1 = new State();
+        state1.setId("1");
+        final State state2 = new State();
+        state2.setId("2");
+
+        states.add(state1);
+        states.add(state2);
+
+        final MockErrorReporter errorReporter = new MockErrorReporter();
+
+        Assertions.assertFalse(new SCXMLSemanticsImpl().isLegalConfiguration(states, errorReporter));
+        Assertions.assertEquals(ErrorConstants.ILLEGAL_CONFIG, errorReporter.getErrCode());
+        Assertions.assertEquals("Multiple top-level OR states active!", errorReporter.getErrDetail());
+    }
+
+    @Test
+    public void testIsLegalConfigNoStates() {
+        final Set<EnterableState> states = new HashSet<>();
+
+        Assertions.assertTrue(new SCXMLSemanticsImpl().isLegalConfiguration(states, new SimpleErrorReporter()));
     }
 }

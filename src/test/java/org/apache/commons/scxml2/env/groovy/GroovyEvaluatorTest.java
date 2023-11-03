@@ -38,18 +38,6 @@ public class GroovyEvaluatorTest {
     }
 
     @Test
-    public void testEval() throws SCXMLExpressionException {
-        final Evaluator eval = new GroovyEvaluator();
-        Assertions.assertEquals(2, eval.eval(ctx, "1 + 1"));
-    }
-
-    @Test
-    public void testPristine() throws SCXMLExpressionException {
-        final Evaluator eval = new GroovyEvaluator();
-        Assertions.assertTrue(eval.evalCond(ctx, "1 + 1 == 2"));
-    }
-
-    @Test
     public void testBuiltInFunctions() throws SCXMLExpressionException {
         final Evaluator eval = new GroovyEvaluator();
         final StateConfiguration stateConfiguration = new StateConfiguration();
@@ -60,21 +48,6 @@ public class GroovyEvaluatorTest {
         state1.setId("state1");
         stateConfiguration.enterState(state1);
         Assertions.assertTrue(eval.evalCond(ctx, "In('state1')"));
-    }
-
-    @Test
-    public void testScript() throws SCXMLExpressionException {
-        final Evaluator eval = new GroovyEvaluator();
-        ctx.set("x", 3);
-        ctx.set("y", 0);
-        final String script =
-            "if ((x * 2) == 5) {" +
-                "y = 1;\n" +
-            "} else {\n" +
-                "y = 2;\n" +
-            "}";
-        Assertions.assertEquals(2, eval.evalScript(ctx, script));
-        Assertions.assertEquals(2, ctx.get("y"));
     }
 
     @Test
@@ -90,11 +63,38 @@ public class GroovyEvaluatorTest {
     }
 
     @Test
+    public void testEval() throws SCXMLExpressionException {
+        final Evaluator eval = new GroovyEvaluator();
+        Assertions.assertEquals(2, eval.eval(ctx, "1 + 1"));
+    }
+
+    @Test
     public void testPreprocessScript() {
         final GroovyEvaluator evaluator = new GroovyEvaluator();
         Assertions.assertEquals("x &&  x || x  !  x == x <  x <= x != x >  x >= x", evaluator.getScriptPreProcessor().
                 preProcess("x and x or x not x eq x lt x le x ne x gt x ge x"));
         Assertions.assertEquals("and x OR x\n ! \nx\n== x < \nx(le)x ne. xgt x ge", evaluator.getScriptPreProcessor().
                  preProcess("and x OR x\nnot\nx\neq x lt\nx(le)x ne. xgt x ge"));
+    }
+
+    @Test
+    public void testPristine() throws SCXMLExpressionException {
+        final Evaluator eval = new GroovyEvaluator();
+        Assertions.assertTrue(eval.evalCond(ctx, "1 + 1 == 2"));
+    }
+
+    @Test
+    public void testScript() throws SCXMLExpressionException {
+        final Evaluator eval = new GroovyEvaluator();
+        ctx.set("x", 3);
+        ctx.set("y", 0);
+        final String script =
+            "if ((x * 2) == 5) {" +
+                "y = 1;\n" +
+            "} else {\n" +
+                "y = 2;\n" +
+            "}";
+        Assertions.assertEquals(2, eval.evalScript(ctx, script));
+        Assertions.assertEquals(2, ctx.get("y"));
     }
 }

@@ -33,6 +33,32 @@ import org.junit.jupiter.api.Test;
 
 public class SendTest {
 
+    private long parseDelay(final String delayString) throws SCXMLExpressionException {
+        return Send.parseDelay(delayString, true, delayString);
+    }
+
+    @Test
+    public void testDelayExpression() throws Exception {
+        Assertions.assertEquals(0L, parseDelay(".s"));
+        Assertions.assertEquals(0L, parseDelay(".0s"));
+        Assertions.assertEquals(1000L, parseDelay("1.s"));
+        Assertions.assertEquals(1000L, parseDelay("1.0s"));
+        Assertions.assertEquals(1500L, parseDelay("1.5s"));
+        Assertions.assertEquals(500L, parseDelay(".5s"));
+        Assertions.assertEquals(500L, parseDelay("0.5s"));
+        Assertions.assertEquals(50L, parseDelay("0.05s"));
+        Assertions.assertEquals(5L, parseDelay("0.005s"));
+        Assertions.assertEquals(0L, parseDelay("0.0005s"));
+        Assertions.assertEquals(0L, parseDelay(".9ms"));
+        Assertions.assertEquals(1L, parseDelay("1.9ms"));
+        Assertions.assertEquals(60000L, parseDelay("1m"));
+        Assertions.assertEquals(60000L, parseDelay("1.0m"));
+        Assertions.assertEquals(30000L, parseDelay(".5m"));
+        Assertions.assertEquals(6000L, parseDelay(".1m"));
+        Assertions.assertEquals(6000L, parseDelay(".10m"));
+        Assertions.assertEquals(15000L, parseDelay(".25m"));
+    }
+
     @Test
     @SuppressWarnings("unchecked")
     public void testNamelistOrderPreserved() throws Exception {
@@ -63,31 +89,5 @@ public class SendTest {
         final Iterator<String> it = firstPayload.keySet().iterator();
         Assertions.assertEquals("one", it.next(), "The first one in the namelist must be 'one'.");
         Assertions.assertEquals("two", it.next(), "The first one in the namelist must be 'two'.");
-    }
-
-    private long parseDelay(final String delayString) throws SCXMLExpressionException {
-        return Send.parseDelay(delayString, true, delayString);
-    }
-
-    @Test
-    public void testDelayExpression() throws Exception {
-        Assertions.assertEquals(0L, parseDelay(".s"));
-        Assertions.assertEquals(0L, parseDelay(".0s"));
-        Assertions.assertEquals(1000L, parseDelay("1.s"));
-        Assertions.assertEquals(1000L, parseDelay("1.0s"));
-        Assertions.assertEquals(1500L, parseDelay("1.5s"));
-        Assertions.assertEquals(500L, parseDelay(".5s"));
-        Assertions.assertEquals(500L, parseDelay("0.5s"));
-        Assertions.assertEquals(50L, parseDelay("0.05s"));
-        Assertions.assertEquals(5L, parseDelay("0.005s"));
-        Assertions.assertEquals(0L, parseDelay("0.0005s"));
-        Assertions.assertEquals(0L, parseDelay(".9ms"));
-        Assertions.assertEquals(1L, parseDelay("1.9ms"));
-        Assertions.assertEquals(60000L, parseDelay("1m"));
-        Assertions.assertEquals(60000L, parseDelay("1.0m"));
-        Assertions.assertEquals(30000L, parseDelay(".5m"));
-        Assertions.assertEquals(6000L, parseDelay(".1m"));
-        Assertions.assertEquals(6000L, parseDelay(".10m"));
-        Assertions.assertEquals(15000L, parseDelay(".25m"));
     }
 }

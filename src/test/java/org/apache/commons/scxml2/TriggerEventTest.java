@@ -63,6 +63,15 @@ public class TriggerEventTest {
         te1 = te2 = te3 = te4 = te5 = te6 = te7 = null;
     }
 
+    @Test
+    public void testTriggerEventEquals() {
+        Assertions.assertEquals(te1, te2);
+        Assertions.assertEquals(te3, te4);
+        Assertions.assertEquals(te5, te6);
+        Assertions.assertNotEquals(te1, te4);
+        Assertions.assertNotNull(te7);
+    }
+
     /**
      * Test the implementation
      */
@@ -74,12 +83,11 @@ public class TriggerEventTest {
     }
 
     @Test
-    public void testTriggerEventEquals() {
-        Assertions.assertEquals(te1, te2);
-        Assertions.assertEquals(te3, te4);
-        Assertions.assertEquals(te5, te6);
-        Assertions.assertNotEquals(te1, te4);
-        Assertions.assertNotNull(te7);
+    public void testTriggerEventHashCode() {
+        Assertions.assertEquals("TriggerEvent{name=name3, type=4}".hashCode(),
+            te7.hashCode());
+        Assertions.assertEquals("TriggerEvent{name=name3, type=3}".hashCode(),
+            te5.hashCode());
     }
 
     @Test
@@ -87,14 +95,6 @@ public class TriggerEventTest {
         Assertions.assertEquals("TriggerEvent{name=name3, type=4}", te7.toString());
         Assertions.assertEquals("TriggerEvent{name=name1, type=2, data="
             + "{property1=value1}}", te2.toString());
-    }
-
-    @Test
-    public void testTriggerEventHashCode() {
-        Assertions.assertEquals("TriggerEvent{name=name3, type=4}".hashCode(),
-            te7.hashCode());
-        Assertions.assertEquals("TriggerEvent{name=name3, type=3}".hashCode(),
-            te5.hashCode());
     }
 }
 

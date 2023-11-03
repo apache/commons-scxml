@@ -55,82 +55,63 @@ public class SCXMLTestHelper {
     // Generate a unique sequence number for the serialization files
     private static int sequence=0;
 
-    private synchronized static String getSequenceNumber() {
-        return Integer.toString(++sequence);
+    public static void assertPostTriggerState(final SCXMLExecutor exec,
+            final String triggerEventName, final Object data, final String expectedStateId) throws Exception {
+        assertPostTriggerState(exec, new EventBuilder(triggerEventName, TriggerEvent.SIGNAL_EVENT)
+                .data(data).build(), expectedStateId);
     }
 
-    public static URL getResource(final String name) {
-        return SCXMLTestHelper.class.getClassLoader().getResource(name);
+    public static void assertPostTriggerState(final SCXMLExecutor exec,
+            final String triggerEventName, final String expectedStateId) throws Exception {
+        assertPostTriggerState(exec, triggerEventName, null, expectedStateId);
     }
 
-    public static SCXML parse(final String scxmlResource) throws Exception {
-        Assertions.assertNotNull(scxmlResource);
-        return parse(getResource(scxmlResource), null);
+    public static void assertPostTriggerState(final SCXMLExecutor exec,
+            final TriggerEvent triggerEvent, final String expectedStateId) throws Exception {
+        final Set<EnterableState> currentStates = fireEvent(exec, triggerEvent);
+        Assertions.assertEquals(1, currentStates.size(),
+                "Expected 1 simple (leaf) state with id '"
+                        + expectedStateId + "' on firing event " + triggerEvent
+                        + " but found " + currentStates.size() + " states instead.");
+        Assertions.assertEquals(expectedStateId, currentStates.iterator().
+            next().getId());
     }
 
-    public static SCXML parse(final URL url) throws Exception {
-        return parse(url, null);
+    public static void assertPostTriggerStates(final SCXMLExecutor exec,
+            final String triggerEventName, final Object data, final String[] expectedStateIds) throws Exception {
+        assertPostTriggerStates(exec, new EventBuilder(triggerEventName, TriggerEvent.SIGNAL_EVENT)
+                .data(data).build(), expectedStateIds);
     }
 
-    public static SCXML parse(final String scxmlResource, final List<CustomAction> customActions) throws Exception {
-        Assertions.assertNotNull(scxmlResource);
-        return parse(getResource(scxmlResource), customActions);
+    public static void assertPostTriggerStates(final SCXMLExecutor exec,
+            final String triggerEventName, final String[] expectedStateIds) throws Exception {
+        assertPostTriggerStates(exec, triggerEventName, null, expectedStateIds);
     }
 
-    public static SCXML parse(final URL url, final List<CustomAction> customActions) throws Exception {
-        Assertions.assertNotNull(url);
-        final Configuration configuration = new Configuration(null, null, customActions);
-        final SCXML scxml = SCXMLReader.read(url, configuration);
-        Assertions.assertNotNull(scxml);
-        return testModelSerializability(scxml);
-    }
-
-    public static SCXML parse(final Reader scxmlReader, final List<CustomAction> customActions) throws Exception {
-        Assertions.assertNotNull(scxmlReader);
-        final Configuration configuration = new Configuration(null, null, customActions);
-        final SCXML scxml = SCXMLReader.read(scxmlReader, configuration);
-        Assertions.assertNotNull(scxml);
-        return testModelSerializability(scxml);
-    }
-
-    public static SCXMLExecutor getExecutor(final URL url) throws Exception {
-        return getExecutor(parse(url), null);
-    }
-
-    public static SCXMLExecutor getExecutor(final String scxmlResource) throws Exception {
-        return getExecutor(parse(scxmlResource), null);
-    }
-
-    public static SCXMLExecutor getExecutor(final SCXML scxml) throws Exception {
-        return getExecutor(scxml, null);
-    }
-
-    public static SCXMLExecutor getExecutor(final URL url, final Evaluator evaluator) throws Exception {
-        return getExecutor(parse(url), evaluator);
-    }
-
-    public static SCXMLExecutor getExecutor(final SCXML scxml, final Evaluator evaluator) throws Exception {
-        return getExecutor(scxml, evaluator, new SimpleDispatcher());
-    }
-
-    public static SCXMLExecutor getExecutor(final SCXML scxml, final Evaluator evaluator, final EventDispatcher eventDispatcher) throws Exception {
-        final Tracer trc = new Tracer();
-        final SCXMLExecutor exec = new SCXMLExecutor(evaluator, eventDispatcher, trc);
-        exec.setStateMachine(scxml);
-        exec.addListener(scxml, trc);
-        return exec;
-    }
-
-    public static TransitionTarget lookupTransitionTarget(final SCXMLExecutor exec, final String id) {
-        return exec.getStateMachine().getTargets().get(id);
-    }
-
-    public static Context lookupContext(final SCXMLExecutor exec, final String id) {
-        final TransitionTarget tt = lookupTransitionTarget(exec, id);
-        if (tt == null || !(tt instanceof EnterableState)) {
-            return null;
+    public static void assertPostTriggerStates(final SCXMLExecutor exec,
+            final TriggerEvent triggerEvent, final String[] expectedStateIds) throws Exception {
+        if (expectedStateIds == null || expectedStateIds.length == 0) {
+            Assertions.fail("Must specify an array of one or more "
+                + "expected state IDs");
         }
-        return exec.getSCInstance().lookupContext((EnterableState)tt);
+        final Set<EnterableState> currentStates = fireEvent(exec, triggerEvent);
+        final int n = expectedStateIds.length;
+        Assertions.assertEquals(n, currentStates.size(),
+                "Expected " + n + " simple (leaf) state(s) "
+                        + " on firing event " + triggerEvent + " but found "
+                        + currentStates.size() + " states instead.");
+        final List<String> expectedStateIdList = new ArrayList<>(Arrays.asList(expectedStateIds));
+        for (final TransitionTarget tt : currentStates) {
+            final String stateId = tt.getId();
+            if(!expectedStateIdList.remove(stateId)) {
+                Assertions.fail("Expected state with id '" + stateId
+                    + "' in current states on firing event "
+                    + triggerEvent);
+            }
+        }
+        Assertions.assertEquals(0, expectedStateIdList.size(),
+                "More states in current configuration than those"
+                        + "specified in the expected state ids '" + Arrays.toString(expectedStateIds) + "'");
     }
 
     public static void assertState(final SCXMLExecutor exec, final String expectedStateId) {
@@ -162,63 +143,100 @@ public class SCXMLTestHelper {
         return exec.getStatus().getStates();
     }
 
-    public static void assertPostTriggerState(final SCXMLExecutor exec,
-            final String triggerEventName, final String expectedStateId) throws Exception {
-        assertPostTriggerState(exec, triggerEventName, null, expectedStateId);
+    public static SCXMLExecutor getExecutor(final SCXML scxml) throws Exception {
+        return getExecutor(scxml, null);
     }
 
-    public static void assertPostTriggerState(final SCXMLExecutor exec,
-            final String triggerEventName, final Object data, final String expectedStateId) throws Exception {
-        assertPostTriggerState(exec, new EventBuilder(triggerEventName, TriggerEvent.SIGNAL_EVENT)
-                .data(data).build(), expectedStateId);
+    public static SCXMLExecutor getExecutor(final SCXML scxml, final Evaluator evaluator) throws Exception {
+        return getExecutor(scxml, evaluator, new SimpleDispatcher());
     }
 
-    public static void assertPostTriggerStates(final SCXMLExecutor exec,
-            final String triggerEventName, final String[] expectedStateIds) throws Exception {
-        assertPostTriggerStates(exec, triggerEventName, null, expectedStateIds);
+    public static SCXMLExecutor getExecutor(final SCXML scxml, final Evaluator evaluator, final EventDispatcher eventDispatcher) throws Exception {
+        final Tracer trc = new Tracer();
+        final SCXMLExecutor exec = new SCXMLExecutor(evaluator, eventDispatcher, trc);
+        exec.setStateMachine(scxml);
+        exec.addListener(scxml, trc);
+        return exec;
     }
 
-    public static void assertPostTriggerStates(final SCXMLExecutor exec,
-            final String triggerEventName, final Object data, final String[] expectedStateIds) throws Exception {
-        assertPostTriggerStates(exec, new EventBuilder(triggerEventName, TriggerEvent.SIGNAL_EVENT)
-                .data(data).build(), expectedStateIds);
+    public static SCXMLExecutor getExecutor(final String scxmlResource) throws Exception {
+        return getExecutor(parse(scxmlResource), null);
     }
 
-    public static void assertPostTriggerState(final SCXMLExecutor exec,
-            final TriggerEvent triggerEvent, final String expectedStateId) throws Exception {
-        final Set<EnterableState> currentStates = fireEvent(exec, triggerEvent);
-        Assertions.assertEquals(1, currentStates.size(),
-                "Expected 1 simple (leaf) state with id '"
-                        + expectedStateId + "' on firing event " + triggerEvent
-                        + " but found " + currentStates.size() + " states instead.");
-        Assertions.assertEquals(expectedStateId, currentStates.iterator().
-            next().getId());
+    public static SCXMLExecutor getExecutor(final URL url) throws Exception {
+        return getExecutor(parse(url), null);
     }
 
-    public static void assertPostTriggerStates(final SCXMLExecutor exec,
-            final TriggerEvent triggerEvent, final String[] expectedStateIds) throws Exception {
-        if (expectedStateIds == null || expectedStateIds.length == 0) {
-            Assertions.fail("Must specify an array of one or more "
-                + "expected state IDs");
+    public static SCXMLExecutor getExecutor(final URL url, final Evaluator evaluator) throws Exception {
+        return getExecutor(parse(url), evaluator);
+    }
+
+    public static URL getResource(final String name) {
+        return SCXMLTestHelper.class.getClassLoader().getResource(name);
+    }
+
+    private synchronized static String getSequenceNumber() {
+        return Integer.toString(++sequence);
+    }
+
+    public static Context lookupContext(final SCXMLExecutor exec, final String id) {
+        final TransitionTarget tt = lookupTransitionTarget(exec, id);
+        if (tt == null || !(tt instanceof EnterableState)) {
+            return null;
         }
-        final Set<EnterableState> currentStates = fireEvent(exec, triggerEvent);
-        final int n = expectedStateIds.length;
-        Assertions.assertEquals(n, currentStates.size(),
-                "Expected " + n + " simple (leaf) state(s) "
-                        + " on firing event " + triggerEvent + " but found "
-                        + currentStates.size() + " states instead.");
-        final List<String> expectedStateIdList = new ArrayList<>(Arrays.asList(expectedStateIds));
-        for (final TransitionTarget tt : currentStates) {
-            final String stateId = tt.getId();
-            if(!expectedStateIdList.remove(stateId)) {
-                Assertions.fail("Expected state with id '" + stateId
-                    + "' in current states on firing event "
-                    + triggerEvent);
-            }
+        return exec.getSCInstance().lookupContext((EnterableState)tt);
+    }
+
+    public static TransitionTarget lookupTransitionTarget(final SCXMLExecutor exec, final String id) {
+        return exec.getStateMachine().getTargets().get(id);
+    }
+
+    public static SCXML parse(final Reader scxmlReader, final List<CustomAction> customActions) throws Exception {
+        Assertions.assertNotNull(scxmlReader);
+        final Configuration configuration = new Configuration(null, null, customActions);
+        final SCXML scxml = SCXMLReader.read(scxmlReader, configuration);
+        Assertions.assertNotNull(scxml);
+        return testModelSerializability(scxml);
+    }
+
+    public static SCXML parse(final String scxmlResource) throws Exception {
+        Assertions.assertNotNull(scxmlResource);
+        return parse(getResource(scxmlResource), null);
+    }
+
+    public static SCXML parse(final String scxmlResource, final List<CustomAction> customActions) throws Exception {
+        Assertions.assertNotNull(scxmlResource);
+        return parse(getResource(scxmlResource), customActions);
+    }
+
+    public static SCXML parse(final URL url) throws Exception {
+        return parse(url, null);
+    }
+
+    public static SCXML parse(final URL url, final List<CustomAction> customActions) throws Exception {
+        Assertions.assertNotNull(url);
+        final Configuration configuration = new Configuration(null, null, customActions);
+        final SCXML scxml = SCXMLReader.read(url, configuration);
+        Assertions.assertNotNull(scxml);
+        return testModelSerializability(scxml);
+    }
+
+    public static SCXMLExecutor testInstanceSerializability(final SCXMLExecutor exec) throws Exception {
+        final File fileDir = new File(SERIALIZATION_DIR);
+        if (!fileDir.exists()) {
+            fileDir.mkdirs();
         }
-        Assertions.assertEquals(0, expectedStateIdList.size(),
-                "More states in current configuration than those"
-                        + "specified in the expected state ids '" + Arrays.toString(expectedStateIds) + "'");
+        final String filename = SERIALIZATION_FILE_PREFIX
+            + getSequenceNumber() + SERIALIZATION_FILE_SUFFIX;
+        final ObjectOutputStream out =
+            new ObjectOutputStream(new FileOutputStream(filename));
+        out.writeObject(exec.detachInstance());
+        out.close();
+        final ObjectInputStream in =
+            new SCInstanceObjectInputStream(new FileInputStream(filename));
+        exec.attachInstance((SCInstance) in.readObject());
+        in.close();
+        return exec;
     }
 
     public static SCXML testModelSerializability(final SCXML scxml) throws Exception {
@@ -238,24 +256,6 @@ public class SCXMLTestHelper {
         roundtrip = (SCXML) in.readObject();
         in.close();
         return roundtrip;
-    }
-
-    public static SCXMLExecutor testInstanceSerializability(final SCXMLExecutor exec) throws Exception {
-        final File fileDir = new File(SERIALIZATION_DIR);
-        if (!fileDir.exists()) {
-            fileDir.mkdirs();
-        }
-        final String filename = SERIALIZATION_FILE_PREFIX
-            + getSequenceNumber() + SERIALIZATION_FILE_SUFFIX;
-        final ObjectOutputStream out =
-            new ObjectOutputStream(new FileOutputStream(filename));
-        out.writeObject(exec.detachInstance());
-        out.close();
-        final ObjectInputStream in =
-            new SCInstanceObjectInputStream(new FileInputStream(filename));
-        exec.attachInstance((SCInstance) in.readObject());
-        in.close();
-        return exec;
     }
 
     /**

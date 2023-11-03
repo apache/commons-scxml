@@ -32,33 +32,15 @@ import javax.xml.stream.XMLStreamException;
 public class SCXMLWriterTest {
 
     @Test
-    public void testSerializeSCXMLNoStates() throws IOException, XMLStreamException {
-        final SCXML scxml = new CommonsSCXML();
-        // ensure namespaces are stored in insertion order for write->read comparision below
-        final LinkedHashMap<String, String> namespaces = new LinkedHashMap<>(scxml.getNamespaces());
-        namespaces.put("foo", "http://f.o.o");
-        namespaces.put("bar", "http://b.a.r");
-        scxml.setNamespaces(namespaces);
-        scxml.setVersion("version1");
-        scxml.setInitial("off");
-        final State s = new State();
-        s.setId(scxml.generateTransitionTargetId());
-        scxml.addChild(s);
-
-        final String assertValue = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-            + "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" xmlns:cs=\"https://commons.apache.org/scxml\" "
-            + "xmlns:foo=\"http://f.o.o\" xmlns:bar=\"http://b.a.r\" "
-            + "version=\"version1\" initial=\"off\"><!--https://commons.apache.org/scxml--><state></state>"
-            + "</scxml>";
-
-        Assertions.assertEquals(assertValue, SCXMLWriter.write(scxml, new SCXMLWriter.Configuration(true, false)));
-    }
-
-    @Test
-    public void testSerializeSCXMLState() throws IOException, XMLStreamException {
+    public void testSerializeGlobalScript() throws IOException, XMLStreamException {
         final SCXML scxml = new CommonsSCXML();
         scxml.setVersion("1.0");
         scxml.setInitial("S1");
+
+        final Script script = new Script();
+        script.setGlobalScript(true);
+        script.setScript("foo=\"abc\"");
+        scxml.setGlobalScript(script);
 
         final State s1 = new State();
         s1.setId("S1");
@@ -66,9 +48,9 @@ public class SCXMLWriterTest {
         scxml.addChild(s1);
 
         final String assertValue = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-            + "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" "
-            + "xmlns:cs=\"https://commons.apache.org/scxml\" version=\"1.0\" initial=\"S1\">"
-            + "<!--https://commons.apache.org/scxml--><state id=\"S1\"></state></scxml>";
+                + "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" "
+                + "xmlns:cs=\"https://commons.apache.org/scxml\" version=\"1.0\" initial=\"S1\">"
+                + "<!--https://commons.apache.org/scxml--><script><![CDATA[foo=\"abc\"]]></script><state id=\"S1\"></state></scxml>";
 
         Assertions.assertEquals(assertValue, SCXMLWriter.write(scxml, new SCXMLWriter.Configuration(true, false)));
     }
@@ -122,15 +104,33 @@ public class SCXMLWriterTest {
      }
 
     @Test
-    public void testSerializeGlobalScript() throws IOException, XMLStreamException {
+    public void testSerializeSCXMLNoStates() throws IOException, XMLStreamException {
+        final SCXML scxml = new CommonsSCXML();
+        // ensure namespaces are stored in insertion order for write->read comparision below
+        final LinkedHashMap<String, String> namespaces = new LinkedHashMap<>(scxml.getNamespaces());
+        namespaces.put("foo", "http://f.o.o");
+        namespaces.put("bar", "http://b.a.r");
+        scxml.setNamespaces(namespaces);
+        scxml.setVersion("version1");
+        scxml.setInitial("off");
+        final State s = new State();
+        s.setId(scxml.generateTransitionTargetId());
+        scxml.addChild(s);
+
+        final String assertValue = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+            + "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" xmlns:cs=\"https://commons.apache.org/scxml\" "
+            + "xmlns:foo=\"http://f.o.o\" xmlns:bar=\"http://b.a.r\" "
+            + "version=\"version1\" initial=\"off\"><!--https://commons.apache.org/scxml--><state></state>"
+            + "</scxml>";
+
+        Assertions.assertEquals(assertValue, SCXMLWriter.write(scxml, new SCXMLWriter.Configuration(true, false)));
+    }
+
+    @Test
+    public void testSerializeSCXMLState() throws IOException, XMLStreamException {
         final SCXML scxml = new CommonsSCXML();
         scxml.setVersion("1.0");
         scxml.setInitial("S1");
-
-        final Script script = new Script();
-        script.setGlobalScript(true);
-        script.setScript("foo=\"abc\"");
-        scxml.setGlobalScript(script);
 
         final State s1 = new State();
         s1.setId("S1");
@@ -138,9 +138,9 @@ public class SCXMLWriterTest {
         scxml.addChild(s1);
 
         final String assertValue = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                + "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" "
-                + "xmlns:cs=\"https://commons.apache.org/scxml\" version=\"1.0\" initial=\"S1\">"
-                + "<!--https://commons.apache.org/scxml--><script><![CDATA[foo=\"abc\"]]></script><state id=\"S1\"></state></scxml>";
+            + "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" "
+            + "xmlns:cs=\"https://commons.apache.org/scxml\" version=\"1.0\" initial=\"S1\">"
+            + "<!--https://commons.apache.org/scxml--><state id=\"S1\"></state></scxml>";
 
         Assertions.assertEquals(assertValue, SCXMLWriter.write(scxml, new SCXMLWriter.Configuration(true, false)));
     }

@@ -28,6 +28,18 @@ public class JexlEvaluatorTest {
     private final Context ctx = new JexlContext();
 
     @Test
+    public void testErrorMessage() {
+        final Evaluator eval = new JexlEvaluator();
+        Assertions.assertNotNull(eval);
+        final SCXMLExpressionException e = Assertions.assertThrows(
+                SCXMLExpressionException.class,
+                () -> eval.eval(ctx, BAD_EXPRESSION),
+                "JexlEvaluator should throw SCXMLExpressionException");
+        Assertions.assertTrue(e.getMessage().startsWith("eval('" + BAD_EXPRESSION + "'):"),
+                "JexlEvaluator: Incorrect error message");
+    }
+
+    @Test
     public void testPristine() throws SCXMLExpressionException {
         final Evaluator eval = new JexlEvaluator();
         Assertions.assertTrue((Boolean) eval.eval(ctx, "1+1 eq 2"));
@@ -46,18 +58,6 @@ public class JexlEvaluatorTest {
             "}";
         Assertions.assertEquals(2, eval.evalScript(ctx, script));
         Assertions.assertEquals(2, ctx.get("y"));
-    }
-
-    @Test
-    public void testErrorMessage() {
-        final Evaluator eval = new JexlEvaluator();
-        Assertions.assertNotNull(eval);
-        final SCXMLExpressionException e = Assertions.assertThrows(
-                SCXMLExpressionException.class,
-                () -> eval.eval(ctx, BAD_EXPRESSION),
-                "JexlEvaluator should throw SCXMLExpressionException");
-        Assertions.assertTrue(e.getMessage().startsWith("eval('" + BAD_EXPRESSION + "'):"),
-                "JexlEvaluator: Incorrect error message");
     }
 
 }

@@ -48,8 +48,34 @@ import org.apache.commons.scxml2.model.ModelException;
 public class StopWatchDisplay extends JFrame
         implements ActionListener {
 
+    class WatchPanel extends JPanel {
+        @Override
+        public void paintComponent(final Graphics g) {
+            if (watchImage != null) {
+                g.drawImage(watchImage, 0, 0, this.getWidth(), this.getHeight(), this);
+            }
+        }
+    }
+    // spaces :: GridBagConstraints ;-)
+    private static final String
+        DISPLAY_PREFIX = "<html><font face=\"Courier\" color=\"maroon\"" +
+            " size=\"10\"><b>&nbsp;&nbsp;&nbsp;",
+        DISPLAY_SUFFIX = "</b></font></html>",
+        STATE_PREFIX = "<html><font color=\"blue\" size=\"4\"" +
+            ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
+        STATE_SUFFIX = "</font></html>";
+
+    public static void main(final String[] args) throws Exception {
+        new StopWatchDisplay();
+    }
+
     private final StopWatch stopWatch;
+
     private Image watchImage;
+
+    private JLabel display, state;
+
+    private JButton start, split;
 
     public StopWatchDisplay() throws ModelException {
         super("SCXML stopwatch");
@@ -84,7 +110,15 @@ public class StopWatchDisplay extends JFrame
             }
         }
     }
-
+    private JButton makeButton(final String actionCommand,
+            final String toolTipText, final String altText) {
+        final JButton button = new JButton(altText);
+        button.setActionCommand(actionCommand);
+        button.setToolTipText(toolTipText);
+        button.addActionListener(this);
+        button.setOpaque(false);
+        return button;
+    }
     private void setupUI() {
         final URL imageURL = this.getClass().getClassLoader().getResource("org/apache/commons/scxml2/env/stopwatch.gif");
         final URL iconURL = this.getClass().getClassLoader().getResource("org/apache/commons/scxml2/env/stopwatchicon.gif");
@@ -119,40 +153,6 @@ public class StopWatchDisplay extends JFrame
             }
         }, 100, 100);
     }
-
-    private JButton makeButton(final String actionCommand,
-            final String toolTipText, final String altText) {
-        final JButton button = new JButton(altText);
-        button.setActionCommand(actionCommand);
-        button.setToolTipText(toolTipText);
-        button.addActionListener(this);
-        button.setOpaque(false);
-        return button;
-    }
-
-    class WatchPanel extends JPanel {
-        @Override
-        public void paintComponent(final Graphics g) {
-            if (watchImage != null) {
-                g.drawImage(watchImage, 0, 0, this.getWidth(), this.getHeight(), this);
-            }
-        }
-    }
-
-    public static void main(final String[] args) throws Exception {
-        new StopWatchDisplay();
-    }
-
-    private JLabel display, state;
-    private JButton start, split;
-    // spaces :: GridBagConstraints ;-)
-    private static final String
-        DISPLAY_PREFIX = "<html><font face=\"Courier\" color=\"maroon\"" +
-            " size=\"10\"><b>&nbsp;&nbsp;&nbsp;",
-        DISPLAY_SUFFIX = "</b></font></html>",
-        STATE_PREFIX = "<html><font color=\"blue\" size=\"4\"" +
-            ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
-        STATE_SUFFIX = "</font></html>";
 
 }
 

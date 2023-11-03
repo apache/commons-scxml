@@ -30,47 +30,40 @@ import org.junit.jupiter.api.Test;
  */
 public class SCXMLExecutorTest {
 
+    private void checkMicrowave01Sample(final SCXMLExecutor exec) throws Exception {
+        final Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "turn_on");
+        Assertions.assertEquals(1, currentStates.size());
+        Assertions.assertEquals("cooking", currentStates.iterator().next().getId());
+    }
+
+    private void checkMicrowave02Sample(final SCXMLExecutor exec) throws Exception {
+        final Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "turn_on");
+        Assertions.assertEquals(2, currentStates.size());
+        final String id = (currentStates.iterator().next()).getId();
+        Assertions.assertTrue(id.equals("closed") || id.equals("cooking"));
+    }
+
+    @Test
+    public void testSCXMLExecutorFinalDoneData() throws Exception {
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/final-donedata.xml");
+        Assertions.assertNull(exec.getFinalDoneData());
+        exec.go();
+        Assertions.assertEquals("done", exec.getFinalDoneData());
+    }
+
+    @Test
+    public void testSCXMLExecutorMicrowave01grvSample() throws Exception {
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/groovy/microwave-01.xml");
+        exec.go();
+        checkMicrowave01Sample(exec);
+    }
+
     /**
      * Test the implementation
      */
     @Test
     public void testSCXMLExecutorMicrowave01JexlSample() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/microwave-01.xml");
-        exec.go();
-        checkMicrowave01Sample(exec);
-    }
-
-    @Test
-    public void testSCXMLExecutorMicrowave02JexlSample() throws Exception {
-        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/microwave-02.xml");
-        exec.go();
-        checkMicrowave02Sample(exec);
-    }
-
-    @Test
-    public void testSCXMLExecutorMicrowave03JexlSample() throws Exception {
-        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/microwave-03.xml");
-        exec.go();
-        checkMicrowave01Sample(exec);
-    }
-
-    @Test
-    public void testSCXMLExecutorMicrowave04JexlSample() throws Exception {
-        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/microwave-04.xml");
-        exec.go();
-        checkMicrowave02Sample(exec);
-    }
-
-    @Test
-    public void testSCXMLExecutorMicrowave05JexlSample() throws Exception {
-        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/microwave-05.xml");
-        exec.go();
-        checkMicrowave02Sample(exec);
-    }
-
-    @Test
-    public void testSCXMLExecutorMicrowave01grvSample() throws Exception {
-        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/groovy/microwave-01.xml");
         exec.go();
         checkMicrowave01Sample(exec);
     }
@@ -83,8 +76,22 @@ public class SCXMLExecutorTest {
     }
 
     @Test
+    public void testSCXMLExecutorMicrowave02JexlSample() throws Exception {
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/microwave-02.xml");
+        exec.go();
+        checkMicrowave02Sample(exec);
+    }
+
+    @Test
     public void testSCXMLExecutorMicrowave03grvSample() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/groovy/microwave-03.xml");
+        exec.go();
+        checkMicrowave01Sample(exec);
+    }
+
+    @Test
+    public void testSCXMLExecutorMicrowave03JexlSample() throws Exception {
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/microwave-03.xml");
         exec.go();
         checkMicrowave01Sample(exec);
     }
@@ -97,8 +104,22 @@ public class SCXMLExecutorTest {
     }
 
     @Test
+    public void testSCXMLExecutorMicrowave04JexlSample() throws Exception {
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/microwave-04.xml");
+        exec.go();
+        checkMicrowave02Sample(exec);
+    }
+
+    @Test
     public void testSCXMLExecutorMicrowave05grvSample() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/groovy/microwave-05.xml");
+        exec.go();
+        checkMicrowave02Sample(exec);
+    }
+
+    @Test
+    public void testSCXMLExecutorMicrowave05JexlSample() throws Exception {
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/microwave-05.xml");
         exec.go();
         checkMicrowave02Sample(exec);
     }
@@ -113,6 +134,34 @@ public class SCXMLExecutorTest {
         currentStates = SCXMLTestHelper.fireEvent(exec, "done.state.ten");
         Assertions.assertEquals(1, currentStates.size());
         Assertions.assertEquals("twenty", currentStates.iterator().next().getId());
+    }
+
+    @Test
+    public void testSCXMLExecutorSetConfiguration() throws Exception {
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/transitions-01.xml");
+        exec.go();
+        Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "done.state.ten");
+        Assertions.assertEquals(1, currentStates.size());
+        Assertions.assertEquals("twenty_one", currentStates.iterator().next().getId());
+        currentStates = SCXMLTestHelper.fireEvent(exec, "done.state.twenty_one");
+        Assertions.assertEquals(1, currentStates.size());
+        Assertions.assertEquals("twenty_two", currentStates.iterator().next().getId());
+        final Set<String> stateIds = new HashSet<>();
+        stateIds.add("twenty_one");
+        exec.setConfiguration(stateIds);
+        Assertions.assertEquals(1, exec.getStatus().getStates().size());
+        SCXMLTestHelper.fireEvent(exec, "done.state.twenty_one");
+        Assertions.assertEquals(1, currentStates.size());
+        Assertions.assertEquals("twenty_two", currentStates.iterator().next().getId());
+    }
+
+    @Test
+    public void testSCXMLExecutorSystemEventVariable() throws Exception {
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/transitions-event-variable.xml");
+        exec.go();
+        final Map<String, Object> payload = new HashMap<>();
+        payload.put("keyed", Boolean.TRUE);
+        SCXMLTestHelper.assertPostTriggerState(exec, "open", payload, "opened");
     }
 
     @Test
@@ -203,28 +252,6 @@ public class SCXMLExecutorTest {
     }
 
     @Test
-    public void testSend01Sample() throws Exception {
-        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/send-01.xml");
-        exec.go();
-        Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("ten", currentStates.iterator().next().getId());
-        currentStates = SCXMLTestHelper.fireEvent(exec, "done.state.ten");
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("twenty", currentStates.iterator().next().getId());
-    }
-
-    @Test
-    public void testSend02TypeSCXMLSample() throws Exception {
-        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/send-02.xml");
-        exec.go();
-        final Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("ninety", currentStates.iterator().next().getId());
-        Assertions.assertTrue(exec.getStatus().isFinal());
-    }
-
-    @Test
     public void testSCXMLExecutorTransitionsWithCond01Sample() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/transitions-with-cond-01.xml");
         exec.go();
@@ -254,51 +281,24 @@ public class SCXMLExecutorTest {
     }
 
     @Test
-    public void testSCXMLExecutorSystemEventVariable() throws Exception {
-        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/transitions-event-variable.xml");
+    public void testSend01Sample() throws Exception {
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/send-01.xml");
         exec.go();
-        final Map<String, Object> payload = new HashMap<>();
-        payload.put("keyed", Boolean.TRUE);
-        SCXMLTestHelper.assertPostTriggerState(exec, "open", payload, "opened");
+        Set<EnterableState> currentStates = exec.getStatus().getStates();
+        Assertions.assertEquals(1, currentStates.size());
+        Assertions.assertEquals("ten", currentStates.iterator().next().getId());
+        currentStates = SCXMLTestHelper.fireEvent(exec, "done.state.ten");
+        Assertions.assertEquals(1, currentStates.size());
+        Assertions.assertEquals("twenty", currentStates.iterator().next().getId());
     }
 
     @Test
-    public void testSCXMLExecutorSetConfiguration() throws Exception {
-        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/transitions-01.xml");
+    public void testSend02TypeSCXMLSample() throws Exception {
+        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/send-02.xml");
         exec.go();
-        Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "done.state.ten");
+        final Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("twenty_one", currentStates.iterator().next().getId());
-        currentStates = SCXMLTestHelper.fireEvent(exec, "done.state.twenty_one");
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("twenty_two", currentStates.iterator().next().getId());
-        final Set<String> stateIds = new HashSet<>();
-        stateIds.add("twenty_one");
-        exec.setConfiguration(stateIds);
-        Assertions.assertEquals(1, exec.getStatus().getStates().size());
-        SCXMLTestHelper.fireEvent(exec, "done.state.twenty_one");
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("twenty_two", currentStates.iterator().next().getId());
-    }
-
-    @Test
-    public void testSCXMLExecutorFinalDoneData() throws Exception {
-        final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/final-donedata.xml");
-        Assertions.assertNull(exec.getFinalDoneData());
-        exec.go();
-        Assertions.assertEquals("done", exec.getFinalDoneData());
-    }
-
-    private void checkMicrowave01Sample(final SCXMLExecutor exec) throws Exception {
-        final Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "turn_on");
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("cooking", currentStates.iterator().next().getId());
-    }
-
-    private void checkMicrowave02Sample(final SCXMLExecutor exec) throws Exception {
-        final Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "turn_on");
-        Assertions.assertEquals(2, currentStates.size());
-        final String id = (currentStates.iterator().next()).getId();
-        Assertions.assertTrue(id.equals("closed") || id.equals("cooking"));
+        Assertions.assertEquals("ninety", currentStates.iterator().next().getId());
+        Assertions.assertTrue(exec.getStatus().isFinal());
     }
 }

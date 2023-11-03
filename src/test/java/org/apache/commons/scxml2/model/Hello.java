@@ -25,13 +25,24 @@ import org.apache.commons.scxml2.EventBuilder;
  */
 public class Hello extends Action {
 
-    /** This is who we say hello to. */
-    private String name;
     /** We count callbacks to execute() as part of the test suite. */
     public static int callbacks;
+    /** This is who we say hello to. */
+    private String name;
 
     /** Public constructor is needed for the I in SCXML IO. */
     public Hello() {
+    }
+
+    @Override
+    public void execute(final ActionExecutionContext exctx) {
+        if (exctx.getAppLog().isInfoEnabled()) {
+            exctx.getAppLog().info("Hello " + name);
+        }
+        // For derived events payload testing
+        final TriggerEvent event = new EventBuilder("helloevent", TriggerEvent.SIGNAL_EVENT).data(name).build();
+        exctx.getInternalIOProcessor().addEvent(event);
+        callbacks++;
     }
 
     /**
@@ -50,17 +61,6 @@ public class Hello extends Action {
      */
     public void setName(final String name) {
         this.name = name;
-    }
-
-    @Override
-    public void execute(final ActionExecutionContext exctx) {
-        if (exctx.getAppLog().isInfoEnabled()) {
-            exctx.getAppLog().info("Hello " + name);
-        }
-        // For derived events payload testing
-        final TriggerEvent event = new EventBuilder("helloevent", TriggerEvent.SIGNAL_EVENT).data(name).build();
-        exctx.getInternalIOProcessor().addEvent(event);
-        callbacks++;
     }
 }
 

@@ -29,6 +29,21 @@ import org.junit.jupiter.api.Test;
  */
 public class EventDataTest {
 
+    public static class ConnectionAlertingPayload {
+        private int line;
+        ConnectionAlertingPayload(final int line) {
+            this.line = line;
+        }
+        @SuppressWarnings("unsed")
+        public int getLine() {
+            return line;
+        }
+        @SuppressWarnings("unsed")
+        public void setLine(final int line) {
+            this.line = line;
+        }
+    }
+
     /**
      * Test the SCXML documents, usage of "_event.data"
      */
@@ -94,20 +109,5 @@ public class EventDataTest {
         exec.setStateMachine(scxml);
         exec.go();
         Thread.sleep(200); // let the 100 delay lapse
-    }
-
-    public static class ConnectionAlertingPayload {
-        private int line;
-        ConnectionAlertingPayload(final int line) {
-            this.line = line;
-        }
-        @SuppressWarnings("unsed")
-        public void setLine(final int line) {
-            this.line = line;
-        }
-        @SuppressWarnings("unsed")
-        public int getLine() {
-            return line;
-        }
     }
 }

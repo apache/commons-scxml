@@ -50,8 +50,26 @@ public class JavaScriptEngineTest {
     }
 
     @Test
+    public void testCopyJavscriptGlobalsToScxmlContext() throws Exception {
+        assertFalse(context.has("x"));
+        evaluator.eval(context, ("x=3"));
+        assertEquals(3, context.get("x"));
+    }
+
+    @Test
     public void testInitScxmlSystemContext() throws Exception {
         assertEquals("test", evaluator.eval(context, "_name"));
+    }
+
+    @Test
+    public void testJavscriptGlobalsNotRetainedAcrossEvaluatorInstances() throws Exception {
+        assertFalse(context.has("x"));
+        evaluator.eval(context, ("x=3"));
+        assertEquals(3, context.get("x"));
+        context.getVars().remove("x");
+        assertFalse(context.has("x"));
+        evaluator = new JSEvaluator();
+        assertTrue(evaluator.evalCond(context, "typeof x=='undefined'"));
     }
 
     @Test
@@ -76,29 +94,11 @@ public class JavaScriptEngineTest {
     }
 
     @Test
-    public void testCopyJavscriptGlobalsToScxmlContext() throws Exception {
-        assertFalse(context.has("x"));
-        evaluator.eval(context, ("x=3"));
-        assertEquals(3, context.get("x"));
-    }
-
-    @Test
     public void testSharedJavscriptGlobalsRetainedAcrossInvocation() throws Exception {
         assertFalse(context.has("x"));
         evaluator.eval(context, ("x=3"));
         context.getVars().remove("x");
         assertFalse(context.has("x"));
         assertTrue(evaluator.evalCond(context, "x===3"));
-    }
-
-    @Test
-    public void testJavscriptGlobalsNotRetainedAcrossEvaluatorInstances() throws Exception {
-        assertFalse(context.has("x"));
-        evaluator.eval(context, ("x=3"));
-        assertEquals(3, context.get("x"));
-        context.getVars().remove("x");
-        assertFalse(context.has("x"));
-        evaluator = new JSEvaluator();
-        assertTrue(evaluator.evalCond(context, "typeof x=='undefined'"));
     }
 }
