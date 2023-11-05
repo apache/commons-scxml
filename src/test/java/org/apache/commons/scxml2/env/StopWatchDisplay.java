@@ -48,7 +48,7 @@ import org.apache.commons.scxml2.model.ModelException;
 public class StopWatchDisplay extends JFrame
         implements ActionListener {
 
-    class WatchPanel extends JPanel {
+    final class WatchPanel extends JPanel {
         @Override
         public void paintComponent(final Graphics g) {
             if (watchImage != null) {

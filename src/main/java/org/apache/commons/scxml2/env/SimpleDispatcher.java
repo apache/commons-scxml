@@ -49,7 +49,7 @@ public class SimpleDispatcher implements EventDispatcher, Serializable {
      /**
      * TimerTask implementation.
      */
-    class DelayedEventTask extends TimerTask {
+    final class DelayedEventTask extends TimerTask {
 
         /**
          * The ID of the &lt;send&gt; element.
