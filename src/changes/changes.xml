@@ -19,320 +19,240 @@
 <document xmlns="http://maven.apache.org/changes/1.0.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
-
   <properties>
     <title>Apache Commons SCXML Changes</title>
   </properties>
-
   <body>
-
     <release version="2.0" date="In Git master"
       description="Latest unreleased code">
-
       <action dev="ate" type="fix" issue="SCXML-285">
         [18-10-2018] Before executing invoke handlers after a macrostep all internal events must have been processed
       </action>
-
       <action dev="woonsan" type="update" issue="SCXML-284" due-to="Allon Mureinik">
         [10-10-2018] Clear up exception handling in tests
       </action>
-
       <action dev="woonsan" type="update" issue="SCXML-283" due-to="Allon Mureinik">
         [08-10-2018] Upgrade testing framework to JUnit Jupiter
       </action>
-
       <action dev="ate" type="add" issue="SCXML-279">
         [21-01-2018] Only use default Jexl3 setting for silent and strict, cleanup APIs accordingly
       </action>
-
       <action dev="ate" type="add" issue="SCXML-278">
         [07-01-2018] Code cleanup and Java8 alignment
       </action>
-
       <action dev="ate" type="add" issue="SCXML-271">
         [12-11-2017] Support Groovy for running the SCXML IRP tests
       </action>
-
       <action dev="ate" type="update" issue="SCXML-269">
         [12-10-2017] Add custom handling for injecting data in the Javascript engine (Nashorn)
       </action>
-
       <action dev="ate" type="add" issue="SCXML-268">
         [12-10-2017] Support &lt;donedata&gt; and complete the handling of &lt;final&gt; and &lt;finalize&gt;
       </action>
-
       <action dev="ate" type="add" issue="SCXML-267">
         [12-10-2017] Support &lt;data&gt; src attribute and &lt;assign&gt; inline data
       </action>
-
       <action dev="ate" type="fix" issue="SCXML-266">
         [12-10-2017] SCXMLSemantics#matchTransition - code flow bug
       </action>
-
       <action dev="ate" type="add" issue="SCXML-265">
         [12-10-2017] Support &lt;invoke&gt; namelist attribute
       </action>
-
       <action dev="ate" type="add" issue="SCXML-264">
         [12-10-2017] Support &lt;invoke&gt; with inline (&lt;content&gt; body) SCXML statemachine definition
       </action>
-
       <action dev="ate" type="fix" issue="SCXML-263">
         [12-10-2017] Javascript engine (Nashorn) cannot be shared between multiple SCXML instance executions
       </action>
-
       <action dev="ate" type="update" issue="SCXML-262">
         [12-10-2017] Support &lt;script&gt; loaded from external src
       </action>
-
       <action dev="ate" type="update" issue="SCXML-261">
         [12-10-2017] Support ".*" besides "*" as 'any' wildcard event descriptor
       </action>
-
       <action dev="ate" type="fix" issue="SCXML-260">
         [12-10-2017] &lt;foreach&gt; must fail on using illegal item definition
       </action>
-
       <action dev="ate" type="add" issue="SCXML-259">
         [12-10-2017] Complete implementation and handling of system variables _event and _ioprocessors
       </action>
-
       <action dev="ate" type="add" issue="SCXML-258">
         [12-10-2017] Add Evaluator strict mode (boolean) needed for Jexl to properly fail on incorrect expressions
       </action>
-
       <action dev="ate" type="update" issue="SCXML-257">
         [12-10-2017] &lt;send&gt; delay must support decimal values
       </action>
-
       <action dev="ate" type="add" issue="SCXML-256">
         [12-10-2017] Add SCXMLExecutor.run() ans SCXMLSemantics.initialize(...) methods and SCXML early/late binding
       </action>
-
       <action dev="ate" type="update" issue="SCXML-255">
         [12-09-2017] Use jexl for SCXML specification IRP test verification
       </action>
-
       <action dev="ate" type="update" issue="SCXML-254">
         [12-09-2017] Update to current dependencies for groovy, commons-jexl, commons-io, jackson
       </action>
-
       <action dev="woonsan" type="fix" issue="SCXML-251" due-to="Tobias Lippert">
         [08-02-2016] src attribute is not available for data elements.
       </action>
-
       <action dev="ate" type="update" issue="SCXML-246">
         [01-02-2016] Javascript engine requires global context execution.
       </action>
-
       <action dev="ate" type="update" issue="SCXML-245">
         [01-02-2016] Reimplement Nashorn Javascript Evaluator.
       </action>
-
       <action dev="ate" type="add" issue="SCXML-242">
         [12-26-2015] Provide JSON based datamodel as replacement for XML/XPath.
       </action>
-
       <action dev="ate" type="update" issue="SCXML-241">
         [12-23-2015] Move to Java 8 as minimum.
       </action>
-
       <action dev="woonsan" type="fix" issue="SCXML-233">
         [07-12-2015] SCInstance becomes not serialzable after triggering event.
       </action>
-
       <action dev="woonsan" type="fix" issue="SCXML-234">
         [07-12-2015] Unit test (ScriptTest) fails on Java 1.8 due to new JS Engine.
       </action>
-
       <action dev="ate" type="fix" issue="SCXML-194">
         [03-01-2014] Drop outdated, incomplete, broken or no longer supported features for SCXML 2.0.
       </action>
-
       <action dev="ate" type="fix" issue="SCXML-206">
         [09-07-2014] Specification mismatch: event-less transitions are triggered by named events.
       </action>
-
       <action dev="ate" type="add" issue="SCXML-187">
         [01-27-2014] Add support for initial SCXML script (SCXML spec 3.2.2: &lt;scxml&gt; children).
       </action>
-
       <action dev="ate" type="add" issue="SCXML-191">
         [01-27-2014] Support foreach element.
       </action>
-
       <action dev="ate" type="add" issue="SCXML-190">
         [01-27-2014] Check and enforce required scxml element attributes as defined by the specification.
       </action>
-
       <action dev="ate" type="add" issue="SCXML-186">
         [04-03-2014] Groovy expression evaluator.
       </action>
-
       <action dev="ate" type="add" issue="SCXML-200">
         [04-03-2014] Normalize and complete the SCXML object model and parsing.
       </action>
-
       <action dev="ate" type="add" issue="SCXML-199">
         [03-17-2014] Map the &lt;scxml&gt; initial attribute to an initial Transition instead of a (single) TransitionTarget.
       </action>
-
       <action dev="ate" type="add" issue="SCXML-198">
         [03-17-2014] &lt;history&gt; elements (now) requires a &lt;transition&gt; child element with a default target configuration.
       </action>
-
       <action dev="ate" type="add" issue="SCXML-197">
         [04-03-2014] Better separation of concern between SCXMLExecutor and SCInstance and introducing a new SCXMLExecutionContext.
       </action>
-
       <action dev="ate" type="add" issue="SCXML-196">
         [04-03-2014] Redefine SCXMLSemantics to align with the Algorithm for SCXML Interpretation as described in the SCXML specification.
       </action>
-
       <action dev="ate" type="add" issue="SCXML-182">
         [04-03-2014] Support error event raising to comply the spec "3.12.2 Errors".
       </action>
-
       <action dev="woonsan" type="fix" issue="SCXML-178">
         [11-28-2013] Initial state ID attribute in SCXML element shouldn't be mandatory.
       </action>
-
       <action dev="woonsan" type="fix" issue="SCXML-180">
         [12-04-2013] Prevent NPEs for possible null value returned from Evaluator.eval* methods.
       </action>
-
       <action dev="ate" type="add" issue="SCXML-183">
         [12-05-2013] Expose JexlEngine strict/silent mode settings through the JexlEvaluator for easier customization.
       </action>
-
       <action dev="ate" type="add" issue="SCXML-170">
         [10-15-2013] Move to new package and artifact org.apache.commons.scxml2 and version 2.0.
       </action>
-
       <action dev="ate" type="fix" issue="SCXML-168">
         [10-14-2013] Test failure in SCXMLWriterTest using Java 7.
       </action>
-
       <action dev="dbrosius" type="fix" issue="SCXML-171">
         [10-16-2013] Upgrade JUnit dependency to 4.11.
       </action>
-
       <action dev="woonsan" type="fix" issue="SCXML-167" due-to="Maikel Linke">
         [11-28-2013] SimpleScheduler removes wrong Timer.
       </action>
-
       <action dev="rahul" type="fix" issue="SCXML-161">
         [06-06-2011] transition leaving a child state of parallel.
       </action>
-
       <action dev="ate" type="add" issue="SCXML-224">
         [01-02-2015] Improve SCXML state configuration handling and optional validation.
       </action>
-
       <action dev="ate" type="add" issue="SCXML-222">
         [11-14-2014] Add support for executing the SCXML IRP test cases.
       </action>
-
       <action dev="ate" type="add" issue="SCXML-214">
         [11-14-2014] Replace JAXP xpath expression evaluation with Commons JXPath.
       </action>
-
       <action dev="ate" type="add" issue="SCXML-213">
         [11-14-2014] Fixing the datamodel handling - reimplement xpath processing, the Data() function and the &lt;assign&gt; action.
       </action>
-
       <action dev="ate" type="add" issue="SCXML-210">
         [10-10-2014] Align &lt;send&gt; action attributes support with the latest SCXML specification.
       </action>
-
       <action dev="ate" type="fix" issue="SCXML-209">
         [10-08-2014] Incomplete legal state configuration validation in ModelUpdater.
       </action>
-
       <action dev="ate" type="add" issue="SCXML-212">
         [10-11-2014] Add support for SCXML datamodel type and default Evaluator instantiation.
       </action>
-
       <action dev="ate" type="fix" issue="SCXML-211">
         [10-11-2014] Bug in current SCXML specification for addDescendantStatesToEnter algorithm can lead to illegal configurations.
       </action>
-
       <action dev="ate" type="add" issue="SCXML-72">
         [10-17-2013] Rewrite the IO package for version 2.0.
       </action>
-
       <action dev="ate" type="fix" issue="SCXML-99">
         [03-30-2014] Support read-only system variables.
       </action>
-
       <action dev="woonsan" type="fix" issue="SCXML-100">
         [01-02-2014] Support _event variable.
       </action>
-
       <action dev="sebb" type="fix" issue="SCXML-91">
         [01-07-2009] Test case bugs.
       </action>
-
       <action dev="woonsan" type="fix" issue="SCXML-227" due-to="Michael Goerlich">
         [04-08-2015] Cancel doesn't work.
       </action>
-
       <action dev="rahul" type="add" issue="SCXML-109">
         [07-16-2009] Attribute targettype of send and invoke elements changed to type in SCXML Working Draft (7 May 2009).
       </action>
-
       <action dev="ate" type="fix" issue="SCXML-203">
         [04-21-2014] Calculation of states to be entered can be depending on states to be exited and thereby also their possible history.
       </action>
-
       <action dev="ate" type="fix" issue="SCXML-202">
         [04-18-2014] State machine running status must be kept and maintained by SCInstance across serialization and deserialization.
       </action>
-
       <action dev="woonsan" type="add" issue="SCXML-179">
         [12-03-2013] Leave more context (location) information when failing to execute JEXL scripts.
       </action>
-
       <action dev="woonsan" type="add" issue="SCXML-172">
         [10-16-2013] Improve CustomActionTest not to depend on test method execution order.
       </action>
-
       <action dev="woonsan" type="fix" issue="SCXML-160">
         [11-08-2013] Cast to State in TransitionTargetComparator.
       </action>
-
       <action dev="woonsan" type="add" issue="SCXML-225" due-to="Franck Foutou">
         [02-13-2015] Preserve order in &lt;send&gt; namelist attribute values.
       </action>
-
       <action dev="ate" type="add" issue="SCXML-221">
         [11-15-2014] Add "null" datamodel support as required by the SCXML specification.
       </action>
-
       <action dev="rahul" type="fix" issue="SCXML-104" due-to="Jorge Vila Forcén">
         [01-09-2009] AbstractStateMachine log error.
       </action>
-
       <action dev="sebb" type="fix" issue="SCXML-103">
         [01-06-2009] Remove any catch (Throwable t) occurrences.
       </action>
-
       <action dev="ate" type="fix" issue="SCXML-193">
         [02-15-2014] Drop non-functional exit element.
       </action>
-
       <action dev="woonsan" type="fix" issue="SCXML-177">
         [12-05-2013] Correct error/warning messages in SCXML reading to be up-to-date.
       </action>
-
       <action dev="woonsan" type="add" issue="SCXML-114" due-to="Henri Biestro">
         [11-01-2013] Support for JEXL2 Evaluator.
       </action>
-
       <action type="fix" dev="ggregory" due-to="step-security-bot, Gary Gregory">
         [StepSecurity] ci: Harden GitHub Actions #133.
       </action>
-
       <action type="update" dev="henrib">Bump commons-jexl3 from 3.2.1 to 3.3</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump actions/cache from 2.1.4 to current #31, #47, #50, #78.</action>
       <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump actions/checkout from 2 to current #34, #75.</action>
@@ -351,7 +271,6 @@
       <action type="update" dev="ggregory" due-to="Dependabot">Bump junit-jupiter-api from 5.4.2 to 5.9.1 #32, #70.</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump junit-jupiter-engine from 5.4.2 to 5.9.1 #40, #68.</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump nashorn-core from 15.3 to 15.4 #52.</action>
-
     </release>
 
     <release version="1.0" date="In SVN branch"
