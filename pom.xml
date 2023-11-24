@@ -276,7 +276,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
-        <version>3.1.0</version>
+        <version>3.1.1</version>
         <configuration>
           <mainClass>org.apache.commons.scxml2.test.StandaloneJexlExpressions</mainClass>
           <classpathScope>test</classpathScope>
@@ -489,7 +489,7 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
-            <version>3.1.0</version>
+            <version>3.1.1</version>
             <executions>
               <execution>
                 <phase>test</phase>
@@ -545,7 +545,7 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
-            <version>3.1.0</version>
+            <version>3.1.1</version>
             <executions>
               <execution>
                 <phase>test</phase>
@@ -596,7 +596,7 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
-            <version>3.1.0</version>
+            <version>3.1.1</version>
             <executions>
               <execution>
                 <phase>test</phase>
