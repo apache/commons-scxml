@@ -34,7 +34,6 @@ public class Status implements Serializable {
 
     private final StateConfiguration configuration;
 
-
     public Status(final StateConfiguration configuration) {
         this.configuration = configuration;
     }

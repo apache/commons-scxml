@@ -65,7 +65,6 @@ public class Transition extends SimpleTransition implements DocumentOrder {
     public Transition() {
     }
 
-
     /**
      * Gets the guard condition (may be null).
      *

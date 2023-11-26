@@ -504,7 +504,6 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
         initializeIOProcessors();
     }
 
-
     /**
      * (re)start the state machine.
      */

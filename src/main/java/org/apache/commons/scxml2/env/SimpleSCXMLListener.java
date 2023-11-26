@@ -25,7 +25,6 @@ import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.Transition;
 import org.apache.commons.scxml2.model.TransitionTarget;
 
-
 /**
  * Simple SCXML Listener that logs execution.
  */
@@ -35,7 +34,6 @@ public class SimpleSCXMLListener implements SCXMLListener, Serializable {
     private static final long serialVersionUID = 1L;
     /** Log. */
     private static final Log log = LogFactory.getLog(SimpleSCXMLListener.class);
-
 
     /**
      * @see SCXMLListener#onEntry(EnterableState)

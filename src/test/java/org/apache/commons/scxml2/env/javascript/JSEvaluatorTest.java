@@ -263,7 +263,6 @@ public class JSEvaluatorTest {
         }
     }
 
-
     // INNER CLASSES
 
     /**

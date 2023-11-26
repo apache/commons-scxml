@@ -61,7 +61,6 @@ public class Initial implements Serializable {
         return parent;
     }
 
-
     /**
      * Gets the initial transition.
      *

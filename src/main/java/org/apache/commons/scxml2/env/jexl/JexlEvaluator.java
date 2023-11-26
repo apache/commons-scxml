@@ -69,8 +69,6 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
     private static final String ERR_CTX_TYPE = "Error evaluating JEXL "
         + "expression, Context must be a org.apache.commons.scxml2.env.jexl.JexlContext";
 
-
-
     /** The internal JexlEngine instance to use. */
     private transient volatile JexlEngine jexlEngine;
 

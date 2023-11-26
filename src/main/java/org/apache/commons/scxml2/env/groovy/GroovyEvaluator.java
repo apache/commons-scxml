@@ -214,7 +214,6 @@ public class GroovyEvaluator extends AbstractBaseEvaluator {
 
     /* SCXMLEvaluator implementation methods */
 
-
     /**
      * Create a new context which is the summation of contexts from the
      * current state to document root, child has priority over parent

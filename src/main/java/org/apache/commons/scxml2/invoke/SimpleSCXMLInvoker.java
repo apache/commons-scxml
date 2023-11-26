@@ -50,7 +50,6 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
     /** Cancellation status. */
     private boolean cancelled;
 
-
     /**
      * {@inheritDoc}.
      */

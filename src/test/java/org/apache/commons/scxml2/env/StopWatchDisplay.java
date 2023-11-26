@@ -33,7 +33,6 @@ import javax.swing.JPanel;
 
 import org.apache.commons.scxml2.model.ModelException;
 
-
 /**
  * Quick GUI to demonstrate the SCXML driven stopwatch.
  *

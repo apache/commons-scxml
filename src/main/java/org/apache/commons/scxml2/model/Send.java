@@ -125,7 +125,6 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
      */
     private String idlocation;
 
-
     /**
      * The target location of the event.
      */

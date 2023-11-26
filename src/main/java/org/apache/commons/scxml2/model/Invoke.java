@@ -320,7 +320,6 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
         return src;
     }
 
-
     /**
      * Gets the expression that evaluates to the source URL for the
      * external service.

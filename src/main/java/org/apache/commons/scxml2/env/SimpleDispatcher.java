@@ -136,7 +136,6 @@ public class SimpleDispatcher implements EventDispatcher, Serializable {
         return log;
     }
 
-
     /**
      * Gets the current timers.
      *
