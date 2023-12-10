@@ -80,7 +80,7 @@ public class SimpleErrorReporter implements ErrorReporter, Serializable {
         //Note: the if-then-else below is based on the actual usage
         // (codebase search), it has to be kept up-to-date as the code changes
         final String errCode = errorCode.intern();
-        final StringBuffer msg = new StringBuffer();
+        final StringBuilder msg = new StringBuilder();
         msg.append(errCode).append(" (");
         msg.append(errDetail).append("): ");
         if (errCode == ErrorConstants.NO_INITIAL) {
