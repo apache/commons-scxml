@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,10 +68,6 @@ import org.apache.commons.scxml2.model.Else;
 import org.apache.commons.scxml2.model.ElseIf;
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.Executable;
-import org.apache.commons.scxml2.model.JsonValue;
-import org.apache.commons.scxml2.model.NodeListValue;
-import org.apache.commons.scxml2.model.NodeValue;
-import org.apache.commons.scxml2.model.ParsedValueContainer;
 import org.apache.commons.scxml2.model.Final;
 import org.apache.commons.scxml2.model.Finalize;
 import org.apache.commons.scxml2.model.Foreach;
@@ -78,13 +75,18 @@ import org.apache.commons.scxml2.model.History;
 import org.apache.commons.scxml2.model.If;
 import org.apache.commons.scxml2.model.Initial;
 import org.apache.commons.scxml2.model.Invoke;
+import org.apache.commons.scxml2.model.JsonValue;
 import org.apache.commons.scxml2.model.Log;
 import org.apache.commons.scxml2.model.ModelException;
+import org.apache.commons.scxml2.model.NodeListValue;
+import org.apache.commons.scxml2.model.NodeTextValue;
+import org.apache.commons.scxml2.model.NodeValue;
 import org.apache.commons.scxml2.model.OnEntry;
 import org.apache.commons.scxml2.model.OnExit;
 import org.apache.commons.scxml2.model.Parallel;
 import org.apache.commons.scxml2.model.Param;
 import org.apache.commons.scxml2.model.ParamsContainer;
+import org.apache.commons.scxml2.model.ParsedValueContainer;
 import org.apache.commons.scxml2.model.Raise;
 import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.Script;
@@ -96,7 +98,6 @@ import org.apache.commons.scxml2.model.Transition;
 import org.apache.commons.scxml2.model.TransitionType;
 import org.apache.commons.scxml2.model.TransitionalState;
 import org.apache.commons.scxml2.model.Var;
-import org.apache.commons.scxml2.model.NodeTextValue;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -2312,7 +2313,7 @@ public final class SCXMLReader {
                 resolvedSrc = configuration.pathResolver.resolvePath(resolvedSrc);
             }
             try (InputStream in = new URL(resolvedSrc).openStream()){
-                script.setScript(IOUtils.toString(in, "UTF-8"));
+                script.setScript(IOUtils.toString(in, StandardCharsets.UTF_8));
             }
             catch (final IOException e) {
                 throw new ModelException(e);

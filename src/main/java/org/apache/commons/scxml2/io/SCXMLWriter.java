@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -664,7 +665,7 @@ public class SCXMLWriter {
                                       final SCXML scxml)
             throws XMLStreamException {
 
-        String encoding = "UTF-8";
+        String encoding = StandardCharsets.UTF_8.name();
         if (configuration.encoding != null) {
             encoding = configuration.encoding;
         }
