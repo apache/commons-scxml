@@ -41,7 +41,7 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
-    /** invokeId ID. */
+    /** InvokeId ID. */
     private String invokeId;
     /** Invoking parent SCXMLExecutor */
     private SCXMLExecutor parentSCXMLExecutor;
