@@ -54,7 +54,7 @@ public class Assign extends Action implements ParsedValueContainer {
     private ParsedValue assignValue;
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      */
     public Assign() {
     }

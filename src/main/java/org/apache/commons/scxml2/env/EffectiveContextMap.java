@@ -37,7 +37,7 @@ public final class EffectiveContextMap extends AbstractMap<String, Object> imple
     private final Context leaf;
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      * @param ctx context of the current leave state node
      */
     public EffectiveContextMap(final Context ctx) {

@@ -186,7 +186,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
     private String namelist;
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      */
     public Send() {
     }

@@ -35,7 +35,7 @@ public class OnExit extends Executable {
     private Boolean raiseEvent;
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      */
     public OnExit() {
     }

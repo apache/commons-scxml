@@ -38,7 +38,7 @@ public abstract class Executable implements Serializable {
     private EnterableState parent;
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      */
     public Executable() {
         this.actions = new ArrayList<>();

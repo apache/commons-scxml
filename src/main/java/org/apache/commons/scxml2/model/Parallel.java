@@ -32,7 +32,7 @@ public class Parallel extends TransitionalState {
     private static final long serialVersionUID = 2L;
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      */
     public Parallel() {
     }

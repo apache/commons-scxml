@@ -45,7 +45,7 @@ public class GroovyContext extends SimpleContext {
     private Map<String, Object> vars;
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      */
     public GroovyContext() {
     }

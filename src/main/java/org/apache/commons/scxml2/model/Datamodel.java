@@ -38,7 +38,7 @@ public class Datamodel implements Serializable {
    private final List<Data> data;
 
    /**
-    * Constructor.
+    * Constructs a new instance.
     */
    public Datamodel() {
        this.data = new ArrayList<>();

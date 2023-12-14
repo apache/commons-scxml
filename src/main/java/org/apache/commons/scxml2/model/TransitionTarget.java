@@ -46,7 +46,7 @@ public abstract class TransitionTarget implements Serializable, Observable {
     private EnterableState[] ancestors = ZERO_ANCESTORS;
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      */
     public TransitionTarget() {
         parent = null;

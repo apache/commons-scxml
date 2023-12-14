@@ -33,7 +33,7 @@ public abstract class Action implements Serializable {
     private Executable parent;
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      */
     public Action() {
         this.parent = null;

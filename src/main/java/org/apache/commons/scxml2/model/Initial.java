@@ -47,7 +47,7 @@ public class Initial implements Serializable {
     private boolean generated;
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      */
     public Initial() {
     }

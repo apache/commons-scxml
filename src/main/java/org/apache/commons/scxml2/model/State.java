@@ -39,7 +39,7 @@ public class State extends TransitionalState {
     private Initial initial;
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      */
     public State() {
     }

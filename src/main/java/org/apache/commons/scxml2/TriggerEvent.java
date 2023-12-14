@@ -107,7 +107,7 @@ public class TriggerEvent implements Serializable {
     private final String invokeId;
     private final Object data;
     /**
-     * Constructor.
+     * Constructs a new instance.
      *
      * @param name The event name
      * @param type The event type

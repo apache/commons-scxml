@@ -40,7 +40,7 @@ public class SimpleErrorHandler implements ErrorHandler, Serializable {
     private static final Log log = LogFactory.getLog(SimpleErrorHandler.class);
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      */
     public SimpleErrorHandler() {
     }

@@ -40,7 +40,7 @@ public class Raise extends Action {
     private String event;
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      */
     public Raise() {
     }

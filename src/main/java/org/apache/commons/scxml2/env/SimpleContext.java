@@ -42,7 +42,7 @@ public class SimpleContext implements Context, Serializable {
     protected final SCXMLSystemContext systemContext;
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      *
      */
     public SimpleContext() {
@@ -50,7 +50,7 @@ public class SimpleContext implements Context, Serializable {
     }
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      *
      * @param parent A parent Context, can be null
      */
@@ -59,7 +59,7 @@ public class SimpleContext implements Context, Serializable {
     }
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      *
      * @param parent A parent Context, can be null
      * @param initialVars A pre-populated initial variables map

@@ -73,7 +73,7 @@ public class SimpleTransition extends Executable implements Observable {
     private String next;
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      */
     public SimpleTransition() {
         this.targets = new HashSet<>();

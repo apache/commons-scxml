@@ -36,7 +36,7 @@ public class ElseIf extends Action {
     private String cond;
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      */
     public ElseIf() {
     }

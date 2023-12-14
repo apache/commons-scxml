@@ -44,7 +44,7 @@ public class Log extends Action {
     private String label;
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      */
     public Log() {
     }

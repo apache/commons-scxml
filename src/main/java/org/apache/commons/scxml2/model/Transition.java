@@ -60,7 +60,7 @@ public class Transition extends SimpleTransition implements DocumentOrder {
     private String cond;
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      */
     public Transition() {
     }

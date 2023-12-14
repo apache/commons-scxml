@@ -81,7 +81,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     }
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      *
      * @param expEvaluator The expression evaluator
      * @param evtDisp The event dispatcher
@@ -93,7 +93,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     }
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      *
      * @param expEvaluator The expression evaluator
      * @param evtDisp The event dispatcher

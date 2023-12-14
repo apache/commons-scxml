@@ -59,7 +59,7 @@ public class If extends Action implements ActionsContainer {
     private boolean execute;
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      */
     public If() {
         this.actions = new ArrayList<>();

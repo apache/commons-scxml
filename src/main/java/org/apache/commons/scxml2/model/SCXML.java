@@ -127,7 +127,7 @@ public class SCXML implements Serializable, Observable {
     private long ttNextId;
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      */
     public SCXML() {
         this.children = new ArrayList<>();

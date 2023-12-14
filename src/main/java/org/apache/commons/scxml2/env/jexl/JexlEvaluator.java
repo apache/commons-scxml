@@ -72,7 +72,7 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
     /** The internal JexlEngine instance to use. */
     private transient volatile JexlEngine jexlEngine;
 
-    /** Constructor. */
+    /** Constructs a new instance. */
     public JexlEvaluator() {
         jexlEngine = getJexlEngine();
     }

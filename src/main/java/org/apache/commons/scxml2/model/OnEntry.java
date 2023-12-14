@@ -35,7 +35,7 @@ public class OnEntry extends Executable {
     private Boolean raiseEvent;
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      */
     public OnEntry() {
     }

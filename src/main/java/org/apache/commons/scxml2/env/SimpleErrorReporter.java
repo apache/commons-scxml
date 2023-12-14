@@ -43,7 +43,7 @@ public class SimpleErrorReporter implements ErrorReporter, Serializable {
     private static final Log log = LogFactory.getLog(SimpleErrorReporter.class);
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      */
     public SimpleErrorReporter() {
     }

@@ -39,7 +39,7 @@ public class Script extends Action {
     private String src;
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      */
     public Script() {
     }

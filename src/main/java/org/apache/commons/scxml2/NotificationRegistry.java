@@ -42,7 +42,7 @@ public final class NotificationRegistry {
     private final Map<Integer, Set<SCXMLListener>> regs;
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      */
     public NotificationRegistry() {
         this.regs = new HashMap<>();

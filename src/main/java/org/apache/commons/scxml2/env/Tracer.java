@@ -49,7 +49,7 @@ public class Tracer implements ErrorHandler, ErrorReporter,
     private final XMLReporter xmlReporter;
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      */
     public Tracer() {
         errHandler = new SimpleErrorHandler();

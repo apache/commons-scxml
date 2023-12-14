@@ -43,7 +43,7 @@ public class Cancel extends Action {
     private String sendidexpr;
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      */
     public Cancel() {
     }

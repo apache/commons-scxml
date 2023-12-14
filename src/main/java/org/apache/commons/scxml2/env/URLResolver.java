@@ -41,7 +41,7 @@ public class URLResolver implements PathResolver, Serializable {
     private URL baseURL;
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      *
      * @param baseURL The base URL to resolve against
      */

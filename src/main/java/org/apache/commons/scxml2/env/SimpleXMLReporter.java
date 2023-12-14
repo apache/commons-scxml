@@ -40,7 +40,7 @@ public class SimpleXMLReporter implements XMLReporter, Serializable {
     private static final Log log = LogFactory.getLog(SimpleXMLReporter.class);
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      */
     public SimpleXMLReporter() {
     }

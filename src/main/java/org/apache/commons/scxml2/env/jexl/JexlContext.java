@@ -31,7 +31,7 @@ public class JexlContext extends SimpleContext
     private static final long serialVersionUID = 1L;
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      */
     public JexlContext() {
     }
