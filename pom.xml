@@ -204,7 +204,7 @@
     <commons.jira.pid>12310492</commons.jira.pid>
     <commons.scmPubUrl>https://svn.apache.org/repos/infra/websites/production/commons/content/proper/commons-scxml</commons.scmPubUrl>
     <commons.scmPubCheckoutDirectory>site-content</commons.scmPubCheckoutDirectory>
-    <commons.jackson.version>2.16.0</commons.jackson.version>
+    <commons.jackson.version>2.16.1</commons.jackson.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <!-- Allow override of the logging level -->
