@@ -95,7 +95,7 @@ public abstract class GroovySCXMLScript extends Script {
      * Note: this function doesn't support object navigation, like <code>var('name.property')</code>.<br>
      * Instead, once you established a variable 'name' exists, you <em>thereafter</em> can use the standard Groovy
      * Safe Navigation operator (?.), like so: <code>name?.property</code>.<br>
-     * See for more information: <a href="http://docs.codehaus.org/display/GROOVY/Operators#Operators-SafeNavigationOperator(?.)">Groovy SafeNavigationOperator</a>
+     * See for more information: <a href="https://docs.codehaus.org/display/GROOVY/Operators#Operators-SafeNavigationOperator(?.)">Groovy SafeNavigationOperator</a>
      * </p>
      *
      * @param property the name of variable to check if it exists
