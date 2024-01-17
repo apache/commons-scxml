@@ -249,10 +249,10 @@ public class SCXML implements Serializable, Observable {
 
     /**
      * Gets the namespace definitions specified on the SCXML element.
-     * May be <code>null</code>.
+     * May be {@code null}.
      *
      * @return The namespace definitions specified on the SCXML element,
-     *         may be <code>null</code>.
+     *         may be {@code null}.
      */
     public final Map<String, String> getNamespaces() {
         return namespaces;

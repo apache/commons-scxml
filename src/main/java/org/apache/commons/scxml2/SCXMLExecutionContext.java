@@ -281,7 +281,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
 
     /**
      * Gets the {@link Invoker} for this {@link Invoke}.
-     * May return <code>null</code>. A non-null {@link Invoker} will be
+     * May return {@code null}. A non-null {@link Invoker} will be
      * returned if and only if the {@link Invoke} parent TransitionalState is
      * currently active and contains the &lt;invoke&gt; child.
      *
@@ -380,7 +380,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
      * @param type The type of the target being invoked.
      * @return An {@link Invoker} for the specified type, if an
      *         invoker class is registered against that type,
-     *         <code>null</code> otherwise.
+     *         {@code null} otherwise.
      * @throws InvokerException When a suitable {@link Invoker} cannot be instantiated.
      */
     public Invoker newInvoker(final String type) throws InvokerException {

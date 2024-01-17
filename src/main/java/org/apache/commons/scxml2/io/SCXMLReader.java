@@ -253,7 +253,7 @@ public final class SCXMLReader {
         }
 
         /**
-         * All purpose constructor. Any of the parameters passed in can be <code>null</code> (booleans should default
+         * All purpose constructor. Any of the parameters passed in can be {@code null} (booleans should default
          * to <code>false</code>).
          *
          * @param factoryId The <code>factoryId</code> to use.

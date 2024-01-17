@@ -37,7 +37,7 @@ public class JSBindings implements Bindings {
      *
      * @param jsContext initial SCXML Context to use for script variables.
      *
-     * @throws IllegalArgumentException Thrown if <code>jsContext</code> is <code>null</code>.
+     * @throws IllegalArgumentException Thrown if <code>jsContext</code> is {@code null}.
      *
      */
     public JSBindings(final JSContext jsContext) {
@@ -144,7 +144,7 @@ public class JSBindings implements Bindings {
      * Sets or update the SCXML context delegate
      *
      * @param jsContext the SCXML context to use for script variables.
-     * @throws IllegalArgumentException Thrown if <code>jsContext</code> is <code>null</code>.
+     * @throws IllegalArgumentException Thrown if <code>jsContext</code> is {@code null}.
      */
     public void setContext(final JSContext jsContext) {
         if (jsContext == null) {

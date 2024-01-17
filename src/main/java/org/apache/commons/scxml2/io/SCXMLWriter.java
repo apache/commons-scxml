@@ -202,7 +202,7 @@ public class SCXMLWriter {
         }
 
         /**
-         * All-purpose constructor. Any of the parameters passed in can be <code>null</code> (booleans should default
+         * All-purpose constructor. Any of the parameters passed in can be {@code null} (booleans should default
          * to <code>false</code>). At the moment, the <code>factoryId</code> and <code>factoryClassLoader</code>
          * arguments are effectively ignored due to a bug in the underlying StAX {@link XMLOutputFactory} API.
          *
@@ -574,7 +574,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out this attribute, if the value is not <code>null</code>.
+     * Write out this attribute, if the value is not {@code null}.
      *
      * @param writer The {@link XMLStreamWriter} in use for the serialization.
      * @param localName The local name of the attribute.
@@ -590,7 +590,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out this attribute, if the value is not <code>null</code>.
+     * Write out this attribute, if the value is not {@code null}.
      *
      * @param writer The {@link XMLStreamWriter} in use for the serialization.
      * @param localName The local name of the attribute.

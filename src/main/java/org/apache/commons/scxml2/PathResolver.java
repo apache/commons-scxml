@@ -34,7 +34,7 @@ public interface PathResolver {
      * Resolve this context sensitive path to an absolute URL.
      *
      * @param ctxPath Context sensitive path, can be a relative URL
-     * @return Resolved path (an absolute URL) or <code>null</code>
+     * @return Resolved path (an absolute URL) or {@code null}
      */
     String resolvePath(String ctxPath);
 
