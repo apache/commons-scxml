@@ -292,7 +292,6 @@ public class JSEvaluator extends AbstractBaseEvaluator {
      * Creates a child context.
      *
      * @return Returns a new child JSContext.
-     *
      */
     @Override
     public Context newContext(final Context parent) {

@@ -114,7 +114,6 @@ public class JSEvaluatorTest {
 
     /**
      * Creates and initializes an SCXML data model in the context.
-     *
      */
     @BeforeEach
     public void setUp() throws Exception {
@@ -127,7 +126,6 @@ public class JSEvaluatorTest {
     /**
      * Ensures implementation of JSEvaluator default constructor and test basic
      * expression evaluation.
-     *
      */
     @Test
     public void testBasic() throws SCXMLExpressionException {
@@ -139,7 +137,6 @@ public class JSEvaluatorTest {
 
     /**
      * Tests evaluation with SCXML data model expressions.
-     *
      */
     @Test
     public void testDataModelExpressions() throws Exception {
@@ -150,7 +147,6 @@ public class JSEvaluatorTest {
 
     /**
      * Tests evaluation of SCXML data model locations.
-     *
      */
     @Test
     public void testDataModelLocations() throws Exception {
@@ -163,7 +159,6 @@ public class JSEvaluatorTest {
 
     /**
      * Tests handling of illegal expressions.
-     *
      */
     @Test
     public void testIllegalExpresssion() {
@@ -180,7 +175,6 @@ public class JSEvaluatorTest {
 
     /**
      * Tests evaluation with invalid SCXML data model expressions.
-     *
      */
     @Test
     public void testInvalidDataModelExpressions() {
@@ -193,7 +187,6 @@ public class JSEvaluatorTest {
 
     /**
      * Tests evaluation of invalid SCXML data model locations.
-     *
      */
     @Test
     public void testInvalidDataModelLocations() throws Exception {
@@ -204,7 +197,6 @@ public class JSEvaluatorTest {
 
     /**
      * Tests evaluation with invalid SCXML context variables.
-     *
      */
     @Test
     public void testInvalidVarExpressions() {
@@ -234,7 +226,6 @@ public class JSEvaluatorTest {
 
     /**
      * Tests evaluation of Javascript functions with variables from SCXML context.
-     *
      */
     @Test
     public void testScriptFunctions() throws Exception {
@@ -245,7 +236,6 @@ public class JSEvaluatorTest {
 
     /**
      * Tests evaluation with simple standard expressions.
-     *
      */
     @Test
     public void testStandardExpressions() throws Exception {
@@ -267,7 +257,6 @@ public class JSEvaluatorTest {
 
     /**
      * Tests evaluation with SCXML context variables.
-     *
      */
     @Test
     public void testVarExpressions() throws Exception {

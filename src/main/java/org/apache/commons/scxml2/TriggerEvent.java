@@ -38,31 +38,26 @@ public class TriggerEvent implements Serializable {
 
     /**
      * <code>CHANGE_EVENT</code>.
-     *
      */
     public static final int CHANGE_EVENT = 2;
 
     /**
      * <code>SIGNAL_EVENT</code>.
-     *
      */
     public static final int SIGNAL_EVENT = 3;
 
     /**
      * <code>TIME_EVENT</code>.
-     *
      */
     public static final int TIME_EVENT = 4;
 
     /**
      * <code>ERROR_EVENT</code>.
-     *
      */
     public static final int ERROR_EVENT = 5;
 
     /**
      * <code>CANCEL_EVENT</code>.
-     *
      */
     public static final int CANCEL_EVENT = 6;
 

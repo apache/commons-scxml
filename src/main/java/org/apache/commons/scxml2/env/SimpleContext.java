@@ -43,7 +43,6 @@ public class SimpleContext implements Context, Serializable {
 
     /**
      * Constructs a new instance.
-     *
      */
     public SimpleContext() {
         this(null, null);

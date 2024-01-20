@@ -28,7 +28,6 @@ import org.junit.jupiter.api.Test;
 public class JSContextTest {
         /**
          * Tests implementation of JSContext 'child' constructor.
-         *
          */
         @Test
         public void testChildConstructor() {
@@ -37,7 +36,6 @@ public class JSContextTest {
 
         /**
          * Tests implementation of JSContext default constructor.
-         *
          */
         @Test
         public void testDefaultConstructor() {

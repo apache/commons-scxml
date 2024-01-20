@@ -38,7 +38,6 @@ public class JSBindings implements Bindings {
      * @param jsContext initial SCXML Context to use for script variables.
      *
      * @throws IllegalArgumentException Thrown if <code>jsContext</code> is {@code null}.
-     *
      */
     public JSBindings(final JSContext jsContext) {
         setContext(jsContext);
