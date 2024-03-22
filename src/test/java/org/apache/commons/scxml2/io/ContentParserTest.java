@@ -54,7 +54,7 @@ public class ContentParserTest {
 
     @Test
     public void testSpaceNormalizeContent() {
-        Assertions.assertEquals(null, ContentParser.spaceNormalizeContent(null));
+        Assertions.assertNull(ContentParser.spaceNormalizeContent(null));
         Assertions.assertEquals("", ContentParser.spaceNormalizeContent(""));
         Assertions.assertEquals("a", ContentParser.spaceNormalizeContent("a"));
         Assertions.assertEquals("a", ContentParser.spaceNormalizeContent(" a"));
@@ -65,7 +65,7 @@ public class ContentParserTest {
 
     @Test
     public void testTrimContent() {
-        Assertions.assertEquals(null, ContentParser.trimContent(null));
+        Assertions.assertNull(ContentParser.trimContent(null));
         Assertions.assertEquals("", ContentParser.trimContent(""));
         Assertions.assertEquals("", ContentParser.trimContent(" "));
         Assertions.assertEquals("", ContentParser.trimContent("  "));
