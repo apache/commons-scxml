@@ -19,7 +19,7 @@ package org.apache.commons.scxml2;
 import java.io.Serializable;
 
 /**
- * Implementation of the SCXML specification required In() builtin predicate.
+ * Implements the SCXML specification required In() builtin predicate.
  */
 public class Builtin implements Serializable {
 
