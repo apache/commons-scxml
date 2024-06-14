@@ -254,7 +254,7 @@
         [StepSecurity] ci: Harden GitHub Actions #133.
       </action>
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Replace internal StringBuffer with StringBuilder.</action>
-      <action type="update" dev="henrib, Dependabot, Gary Gregory">Bump org.apache.commons:commons-jexl3 from 3.2.1 to 3.4.0 #235.</action>
+      <action type="update" dev="henrib, Dependabot, Gary Gregory">Bump org.apache.commons:commons-jexl3 from 3.1 to 3.4.0 #36, #235.</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump actions/cache from 2.1.4 to current #31, #47, #50, #78.</action>
       <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump actions/checkout from 2 to current #34, #75.</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump actions/setup-java from 1.4.0 to current #49, #79.</action>
@@ -265,7 +265,6 @@
       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump exec-maven-plugin from 1.3.2 to 3.2.0 #13, #63, #168, #192.</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump groovy from 2.4.13 to 3.0.21 #38, #62, #67, #97, #110, #116, #122, #134, #145, #176, #197.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Bump commons-io:commons-io from 2.6 to 2.16.1 #37, #210, #213.</action>
-      <action type="update" dev="ggregory">Bump commons-jexl3 from 3.1 to 3.2.1 #36.</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump Saxon-HE from 9.6.0-1 to 12.4 #42, #43, #64, #104, #117, #127, #137, #170.</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump jackson-core from 2.9.3 to 2.17.1 #39, #59, #84, #85, #106, #126, #129, #130, #166, #177, #225.</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump jackson-databind from 2.9.3 to 2.17.0 #35, #46, #60, #83, #86, #107, #125, #128, #130, #159, #166, #177, #200, #225.</action>
