@@ -44,7 +44,6 @@ Apache Commons SCXML
 ===================
 
 [![Java CI](https://github.com/apache/commons-scxml/actions/workflows/maven.yml/badge.svg)](https://github.com/apache/commons-scxml/actions/workflows/maven.yml)
-[![Coverage Status](https://coveralls.io/repos/apache/commons-scxml2/badge.svg)](https://coveralls.io/r/apache/commons-scxml2)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/commons-scxml/commons-scxml/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-scxml/)
 [![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-scxml2/2.0-alpha-1.svg)](https://javadoc.io/doc/org.apache.commons/commons-scxml2/2.0-alpha-1)
 
