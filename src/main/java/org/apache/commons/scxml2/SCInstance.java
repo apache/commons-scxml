@@ -348,8 +348,8 @@ public class SCInstance implements Serializable {
                 final Context internalContext = new SimpleContext(rootContext);
                 systemContext = new SCXMLSystemContext(internalContext);
                 systemContext.getContext().set(SCXMLSystemContext.SESSIONID_KEY, UUID.randomUUID().toString());
-                final String _name = stateMachine != null && stateMachine.getName() != null ? stateMachine.getName() : "";
-                systemContext.getContext().set(SCXMLSystemContext.SCXML_NAME_KEY, _name);
+                final String name = stateMachine != null && stateMachine.getName() != null ? stateMachine.getName() : "";
+                systemContext.getContext().set(SCXMLSystemContext.SCXML_NAME_KEY, name);
                 systemContext.getPlatformVariables().put(SCXMLSystemContext.STATUS_KEY, currentStatus);
             }
         }
