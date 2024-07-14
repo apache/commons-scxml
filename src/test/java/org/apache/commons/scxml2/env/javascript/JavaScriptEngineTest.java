@@ -34,19 +34,19 @@ public class JavaScriptEngineTest {
 
     private JSEvaluator evaluator;
     private StateConfiguration stateConfiguration;
-    private JSContext _systemContext;
+    private JSContext systemContext;
     private JSContext context;
 
     @BeforeEach
     public void before() {
         evaluator = new JSEvaluator();
-        _systemContext = new JSContext();
-        final SCXMLSystemContext systemContext = new SCXMLSystemContext(_systemContext);
-        _systemContext.set(SCXMLSystemContext.SESSIONID_KEY, UUID.randomUUID().toString());
-        _systemContext.set(SCXMLSystemContext.SCXML_NAME_KEY, "test");
+        systemContext = new JSContext();
+        final SCXMLSystemContext localSystemContext = new SCXMLSystemContext(systemContext);
+        systemContext.set(SCXMLSystemContext.SESSIONID_KEY, UUID.randomUUID().toString());
+        systemContext.set(SCXMLSystemContext.SCXML_NAME_KEY, "test");
         stateConfiguration = new StateConfiguration();
-        systemContext.getPlatformVariables().put(SCXMLSystemContext.STATUS_KEY, new Status(stateConfiguration));
-        context = new JSContext(systemContext);
+        localSystemContext.getPlatformVariables().put(SCXMLSystemContext.STATUS_KEY, new Status(stateConfiguration));
+        context = new JSContext(localSystemContext);
     }
 
     @Test
@@ -76,7 +76,7 @@ public class JavaScriptEngineTest {
     public void testScxmlEvent() throws Exception {
         assertTrue(evaluator.evalCond(context, "_event === undefined"));
         final EventVariable event = new EventVariable("myEvent", EventVariable.TYPE_INTERNAL, null, null, null, null,"myData");
-        _systemContext.setLocal(SCXMLSystemContext.EVENT_KEY, event);
+        systemContext.setLocal(SCXMLSystemContext.EVENT_KEY, event);
         assertFalse(evaluator.evalCond(context, "_event === undefined"));
         assertTrue(evaluator.evalCond(context, "_event.name == 'myEvent'"));
         assertTrue(evaluator.evalCond(context, "_event.type == 'internal'"));
