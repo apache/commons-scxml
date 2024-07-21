@@ -93,10 +93,10 @@ import org.w3c.dom.Node;
  * original SCXML document(s) parsed to create the object model:
  * <ul>
  *  <li>The default document namespace is the SCXML namespace:
- *      <i>http://www.w3.org/2005/07/scxml</i></li>
+ *      <em>http://www.w3.org/2005/07/scxml</em></li>
  *  <li>The Commons SCXML namespace
- *      ( <i>https://commons.apache.org/scxml</i> ), if needed, uses the
- *      &quot;<i>cs</i>&quot; prefix</li>
+ *      ( <em>https://commons.apache.org/scxml</em> ), if needed, uses the
+ *      &quot;<em>cs</em>&quot; prefix</li>
  *  <li>All namespace prefixes needed throughout the document are
  *      declared on the document root element (&lt;scxml&gt;)</li>
  * </ul>
