@@ -40,7 +40,7 @@ public interface EventDispatcher {
      * it is 'attached' to.
      * To support easy setup and configuration of an invoked child statemachine (see {@link Invoker})
      * the EventDispatcher provides this newInstnace method to allow creating a new instance without sharing its
-     * internal state..
+     * internal state.
      * @return a new EventDispatcher instance for usage in an invoked child statemachine.
      */
     EventDispatcher newInstance();
