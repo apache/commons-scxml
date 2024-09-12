@@ -51,7 +51,7 @@ public class StopWatchDisplay extends JFrame
         @Override
         public void paintComponent(final Graphics g) {
             if (watchImage != null) {
-                g.drawImage(watchImage, 0, 0, this.getWidth(), this.getHeight(), this);
+                g.drawImage(watchImage, 0, 0, getWidth(), getHeight(), this);
             }
         }
     }
