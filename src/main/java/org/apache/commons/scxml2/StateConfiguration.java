@@ -61,10 +61,8 @@ public class StateConfiguration implements Serializable {
         if (!activeStates.add(state)) {
             throw new IllegalStateException("State "+state.getId()+" already added.");
         }
-        if (state.isAtomicState()) {
-            if (!atomicStates.add(state)) {
-                throw new IllegalStateException("Atomic state "+state.getId()+" already added.");
-            }
+        if (state.isAtomicState() && !atomicStates.add(state)) {
+            throw new IllegalStateException("Atomic state "+state.getId()+" already added.");
         }
     }
 
