@@ -67,7 +67,7 @@ public class Foreach extends Action implements ActionsContainer {
         final Context ctx = exctx.getContext(getParentEnterableState());
         final Evaluator eval = exctx.getEvaluator();
         final Object arrayObject = eval.eval(ctx,array);
-        if ((arrayObject == null) || (!arrayObject.getClass().isArray() && !(arrayObject instanceof Iterable) && !(arrayObject instanceof Map))) {
+        if (arrayObject == null || !arrayObject.getClass().isArray() && !(arrayObject instanceof Iterable) && !(arrayObject instanceof Map)) {
             throw new ActionExecutionError("<foreach> in state " + getParentEnterableState().getId()+": invalid array value '"+array+"'");
         }
         if (arrayObject.getClass().isArray()) {
