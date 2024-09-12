@@ -197,13 +197,10 @@ public class SCInstance implements Serializable {
                     }
                     errorReporter.onError(ErrorConstants.EXPRESSION_ERROR, see.getMessage(), datum);
                 }
-            }
-            else if (datum.getParsedValue() != null) {
-                value = evaluator.cloneData(datum.getParsedValue().getValue());
-                setValue = true;
-            }
-            else {
-                // initialize data value with null
+            } else {
+                if (datum.getParsedValue() != null) {
+                    value = evaluator.cloneData(datum.getParsedValue().getValue());
+                }
                 setValue = true;
             }
             if (setValue) {
