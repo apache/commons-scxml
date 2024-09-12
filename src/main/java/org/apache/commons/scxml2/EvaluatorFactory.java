@@ -72,7 +72,7 @@ public class EvaluatorFactory {
         final String datamodelName = document != null ? document.getDatamodelName() : null;
         final EvaluatorProvider provider = INSTANCE.providers.get(datamodelName == null ? DEFAULT_DATA_MODEL : datamodelName);
         if (provider == null) {
-            throw new ModelException("Unsupported SCXML document datamodel \""+(datamodelName)+"\"");
+            throw new ModelException("Unsupported SCXML document datamodel \""+datamodelName+"\"");
         }
         return document != null ? provider.getEvaluator(document) : provider.getEvaluator();
     }
