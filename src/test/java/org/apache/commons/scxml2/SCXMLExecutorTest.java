@@ -39,7 +39,7 @@ public class SCXMLExecutorTest {
     private void checkMicrowave02Sample(final SCXMLExecutor exec) throws Exception {
         final Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "turn_on");
         Assertions.assertEquals(2, currentStates.size());
-        final String id = (currentStates.iterator().next()).getId();
+        final String id = currentStates.iterator().next().getId();
         Assertions.assertTrue(id.equals("closed") || id.equals("cooking"));
     }
 
@@ -230,8 +230,8 @@ public class SCXMLExecutorTest {
         }
         currentStates = SCXMLTestHelper.fireEvent(exec, "bar");
         Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("thirty", (currentStates.iterator().
-            next()).getId());
+        Assertions.assertEquals("thirty", currentStates.iterator().
+            next().getId());
     }
 
     @Test
