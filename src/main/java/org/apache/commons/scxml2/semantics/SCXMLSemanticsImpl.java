@@ -331,11 +331,9 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                 else {
                     final Object donedata = ((Final)es).processDoneData(exctx);
                     exctx.getInternalIOProcessor().addEvent(new EventBuilder("done.state."+parent.getId(),TriggerEvent.CHANGE_EVENT).data(donedata).build());
-                    if (parent.isRegion()) {
-                        if (isInFinalState(parent.getParent(), exctx.getScInstance().getStateConfiguration().getActiveStates())) {
-                            exctx.getInternalIOProcessor().addEvent(new EventBuilder("done.state."+parent.getParent().getId()
-                                    , TriggerEvent.CHANGE_EVENT).build());
-                        }
+                    if (parent.isRegion() && isInFinalState(parent.getParent(), exctx.getScInstance().getStateConfiguration().getActiveStates())) {
+                        exctx.getInternalIOProcessor().addEvent(new EventBuilder("done.state."+parent.getParent().getId()
+                                , TriggerEvent.CHANGE_EVENT).build());
                     }
                 }
             }
@@ -589,7 +587,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * @return true if this event is of type {@link TriggerEvent#CANCEL_EVENT}.
      */
     public boolean isCancelEvent(final TriggerEvent event) {
-        return (event.getType() == TriggerEvent.CANCEL_EVENT);
+        return event.getType() == TriggerEvent.CANCEL_EVENT;
     }
 
     /**
@@ -666,11 +664,9 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                         errRep.onError(ErrorConstants.ILLEGAL_CONFIG, "Not all AND states active for parallel " + p.getId(), entry);
                         legalConfig = false;
                     }
-                } else {
-                    if (count.size() > 1) {
-                        errRep.onError(ErrorConstants.ILLEGAL_CONFIG, "Multiple OR states active for state " + es.getId(), entry);
-                        legalConfig = false;
-                    }
+                } else if (count.size() > 1) {
+                    errRep.onError(ErrorConstants.ILLEGAL_CONFIG, "Multiple OR states active for state " + es.getId(), entry);
+                    legalConfig = false;
                 }
                 count.clear(); //cleanup
             }
@@ -739,11 +735,9 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
             if (!(transition.isNoEventsTransition() || transition.isAllEventsTransition())) {
                 boolean eventMatch = false;
                 for (final String event : transition.getEvents()) {
-                    if (eventName.startsWith(event)) {
-                        if (eventName.length() == event.length() || eventName.charAt(event.length())=='.') {
-                            eventMatch = true;
-                            break;
-                        }
+                    if (eventName.startsWith(event) && (eventName.length() == event.length() || eventName.charAt(event.length())=='.')) {
+                        eventMatch = true;
+                        break;
                     }
                 }
                 if (!eventMatch) {
@@ -1073,7 +1067,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
                             break;
                         }
                     }
-                    current = (!transitionMatched && ancestorIndex > -1) ? state.getAncestor(ancestorIndex--) : null;
+                    current = !transitionMatched && ancestorIndex > -1 ? state.getAncestor(ancestorIndex--) : null;
                 } while (!transitionMatched && current != null && visited.add(current));
             }
         }
