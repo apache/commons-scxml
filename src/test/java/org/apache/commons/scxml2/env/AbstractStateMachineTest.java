@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
  */
 public class AbstractStateMachineTest {
 
-    private class Bar extends AbstractStateMachine {
+    private static class Bar extends AbstractStateMachine {
 
         private boolean barCalled;
 
@@ -44,7 +44,7 @@ public class AbstractStateMachineTest {
         }
     }
 
-    private class Foo extends AbstractStateMachine {
+    private static class Foo extends AbstractStateMachine {
 
         private boolean fooCalled;
 
