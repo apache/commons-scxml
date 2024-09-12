@@ -110,21 +110,20 @@ public final class StandaloneUtils {
                     rootCtx.setLocal(name, value);
                     System.out.println("Set variable " + name + " to "
                         + value);
-                } else if (event.trim().isEmpty()
-                           || event.equalsIgnoreCase("null")) {
-                    final TriggerEvent[] evts = {new EventBuilder(null,TriggerEvent.SIGNAL_EVENT).build()};
-                    exec.triggerEvents(evts);
-                    if (exec.getStatus().isFinal()) {
-                        System.out.println("A final configuration reached.");
-                    }
                 } else {
-                    final StringTokenizer st = new StringTokenizer(event);
-                    final int tkns = st.countTokens();
-                    final TriggerEvent[] evts = new TriggerEvent[tkns];
-                    for (int i = 0; i < tkns; i++) {
-                        evts[i] = new EventBuilder(st.nextToken(), TriggerEvent.SIGNAL_EVENT).build();
+                    if (event.trim().isEmpty()
+                               || event.equalsIgnoreCase("null")) {
+                        final TriggerEvent[] evts = {new EventBuilder(null,TriggerEvent.SIGNAL_EVENT).build()};
+                        exec.triggerEvents(evts);
+                    } else {
+                        final StringTokenizer st = new StringTokenizer(event);
+                        final int tkns = st.countTokens();
+                        final TriggerEvent[] evts = new TriggerEvent[tkns];
+                        for (int i = 0; i < tkns; i++) {
+                            evts[i] = new EventBuilder(st.nextToken(), TriggerEvent.SIGNAL_EVENT).build();
+                        }
+                        exec.triggerEvents(evts);
                     }
-                    exec.triggerEvents(evts);
                     if (exec.getStatus().isFinal()) {
                         System.out.println("A final configuration reached.");
                     }
