@@ -121,7 +121,7 @@ public class SCXMLReaderTest {
 
         @Override
         protected boolean isLevelEnabled(final int logLevel) {
-            return (logLevel >= LOG_LEVEL_INFO);
+            return logLevel >= LOG_LEVEL_INFO;
         }
 
         @Override
