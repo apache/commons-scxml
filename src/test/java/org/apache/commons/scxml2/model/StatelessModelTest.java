@@ -63,9 +63,7 @@ public class StatelessModelTest {
             Assertions.assertTrue(i.hasNext(), "Not enough states, found one state: " + cs1);
             cs2 = i.next().getId();
             Assertions.assertFalse(i.hasNext(), "Too many states");
-            if (s2.equals(cs2)) {
-                cs2 = null;
-            } else if (s1.equals(cs2)) {
+            if (s2.equals(cs2) || s1.equals(cs2)) {
                 cs2 = null;
             } else {
                 Assertions.fail(label + " in unexpected state " + cs2);
@@ -91,16 +89,16 @@ public class StatelessModelTest {
     private void runSequentialTest(final SCXMLExecutor exec) throws Exception {
         Set<EnterableState> currentStates = exec.getStatus().getStates();
         Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("ten", (currentStates.iterator().
-            next()).getId());
+        Assertions.assertEquals("ten", currentStates.iterator().
+            next().getId());
         currentStates = fireEvent("done.state.ten", exec);
         Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("twenty", (currentStates.iterator().
-            next()).getId());
+        Assertions.assertEquals("twenty", currentStates.iterator().
+            next().getId());
         currentStates = fireEvent("done.state.twenty", exec);
         Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("thirty", (currentStates.iterator().
-            next()).getId());
+        Assertions.assertEquals("thirty", currentStates.iterator().
+            next().getId());
     }
 
     private void runSimultaneousTest(final SCXMLExecutor exec01, final SCXMLExecutor exec02) throws Exception {
