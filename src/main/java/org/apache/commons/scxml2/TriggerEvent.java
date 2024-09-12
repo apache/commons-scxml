@@ -108,6 +108,7 @@ public class TriggerEvent implements Serializable {
      * @param type The event type
      * @deprecated use {@link EventBuilder instead}
      */
+    @Deprecated
     public TriggerEvent(final String name, final int type) {
         this(name, type, null, null, null, null, null);
     }
