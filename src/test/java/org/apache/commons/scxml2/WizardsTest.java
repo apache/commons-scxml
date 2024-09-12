@@ -46,7 +46,7 @@ public class WizardsTest {
                 final String event, final Object data, final Object hints, final long delay) {
             if ("foo".equals(type)) {
                 final Map<String, Object> params = (Map<String, Object>)data;
-                final int i = ((Integer) params.get("aValue"));
+                final int i = (Integer) params.get("aValue");
                 switch (callback) {
                     case 0:
                         Assertions.assertEquals(2, i); // state2
