@@ -115,7 +115,7 @@ public abstract class AbstractStateMachine {
      * The method parameters for the activities corresponding to each
      * state in the SCXML document.
      */
-    private static final Object[] PARAMETERS = new Object[0];
+    private static final Object[] PARAMETERS = {};
 
     /**
      * The state machine that will drive the instances of this class.
