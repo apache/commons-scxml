@@ -350,7 +350,7 @@ public final class SCXMLReader {
             this.factoryId = factoryId;
             this.factoryClassLoader = factoryClassLoader;
             this.allocator = allocator;
-            this.properties = (properties == null ? new HashMap<>() : properties);
+            this.properties = properties == null ? new HashMap<>() : properties;
             this.resolver = resolver;
             this.reporter = reporter;
             this.encoding = encoding;
@@ -358,7 +358,7 @@ public final class SCXMLReader {
             this.validate = validate;
             this.pathResolver = pathResolver;
             this.parent = parent;
-            this.customActions = (customActions == null ? new ArrayList<>() : customActions);
+            this.customActions = customActions == null ? new ArrayList<>() : customActions;
             this.customActionClassLoader = customActionClassLoader;
             this.useContextClassLoaderForCustomActions = useContextClassLoaderForCustomActions;
             this.silent = silent;
@@ -614,7 +614,7 @@ public final class SCXMLReader {
         // Consolidate InputStream options
         InputStream urlStream = null;
         if (url != null || path != null) {
-            final URL scxml = (url != null ? url : new URL(path));
+            final URL scxml = url != null ? url : new URL(path);
             final URLConnection conn = scxml.openConnection();
             conn.setUseCaches(false);
             urlStream = conn.getInputStream();
@@ -664,28 +664,23 @@ public final class SCXMLReader {
                 throw new XMLStreamException("Failed to create apply SCXML Validator", se);
             }
 
-        } else {
-            // We can use the more direct XMLInputFactory API if validation isn't needed
-
-            if (urlStream != null) {
-                // systemId gets preference, then encoding if either are present
-                if (configuration.systemId != null) {
-                    xsr = factory.createXMLStreamReader(configuration.systemId, urlStream);
-                } else if (configuration.encoding != null) {
-                    xsr = factory.createXMLStreamReader(urlStream, configuration.encoding);
-                } else {
-                    xsr = factory.createXMLStreamReader(urlStream);
-                }
-            } else if (reader != null) {
-                if (configuration.systemId != null) {
-                    xsr = factory.createXMLStreamReader(configuration.systemId, reader);
-                } else {
-                    xsr = factory.createXMLStreamReader(reader);
-                }
-            } else if (source != null) {
-                xsr = factory.createXMLStreamReader(source);
+        } else if (urlStream != null) {
+            // systemId gets preference, then encoding if either are present
+            if (configuration.systemId != null) {
+                xsr = factory.createXMLStreamReader(configuration.systemId, urlStream);
+            } else if (configuration.encoding != null) {
+                xsr = factory.createXMLStreamReader(urlStream, configuration.encoding);
+            } else {
+                xsr = factory.createXMLStreamReader(urlStream);
             }
-
+        } else if (reader != null) {
+            if (configuration.systemId != null) {
+                xsr = factory.createXMLStreamReader(configuration.systemId, reader);
+            } else {
+                xsr = factory.createXMLStreamReader(reader);
+            }
+        } else if (source != null) {
+            xsr = factory.createXMLStreamReader(source);
         }
 
         return xsr;
@@ -1259,15 +1254,11 @@ public final class SCXMLReader {
                 case XMLStreamConstants.START_ELEMENT:
                     nsURI = reader.getNamespaceURI();
                     name = reader.getLocalName();
-                    if (SCXMLConstants.XMLNS_SCXML.equals(nsURI)) {
-                        if (SCXMLConstants.ELEM_DATA.equals(name)) {
-                            readData(reader, configuration, dm);
-                        } else {
-                            reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_DATAMODEL, nsURI, name);
-                        }
-                    } else {
-                        reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_DATAMODEL, nsURI, name);
-                    }
+                if (SCXMLConstants.XMLNS_SCXML.equals(nsURI) && SCXMLConstants.ELEM_DATA.equals(name)) {
+                    readData(reader, configuration, dm);
+                } else {
+                    reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_DATAMODEL, nsURI, name);
+                }
                     break;
                 case XMLStreamConstants.END_ELEMENT:
                     break loop;
@@ -1310,15 +1301,11 @@ public final class SCXMLReader {
                 case XMLStreamConstants.START_ELEMENT:
                     nsURI = reader.getNamespaceURI();
                     name = reader.getLocalName();
-                    if (SCXMLConstants.XMLNS_SCXML.equals(nsURI)) {
-                        if (SCXMLConstants.ELEM_SCXML.equals(name)) {
-                            readSCXML(reader, configuration, scxml);
-                        } else {
-                            reportIgnoredElement(reader, configuration, "DOCUMENT_ROOT", nsURI, name);
-                        }
-                    } else {
-                        reportIgnoredElement(reader, configuration, "DOCUMENT_ROOT", nsURI, name);
-                    }
+                if (SCXMLConstants.XMLNS_SCXML.equals(nsURI) && SCXMLConstants.ELEM_SCXML.equals(name)) {
+                    readSCXML(reader, configuration, scxml);
+                } else {
+                    reportIgnoredElement(reader, configuration, "DOCUMENT_ROOT", nsURI, name);
+                }
                     break;
                 case XMLStreamConstants.NAMESPACE:
                     System.err.println(reader.getNamespaceCount());
@@ -1360,14 +1347,10 @@ public final class SCXMLReader {
                             else {
                                 reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_DONEDATA, nsURI, name);
                             }
-                        } else if (SCXMLConstants.ELEM_CONTENT.equals(name)) {
-                            if (doneData.getParams().isEmpty()) {
-                                readContent(reader, configuration, doneData);
-                            }
-                            else {
-                                reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_DONEDATA, nsURI, name);
-                            }
-                        } else {
+                        } else if (SCXMLConstants.ELEM_CONTENT.equals(name) && doneData.getParams().isEmpty()) {
+                            readContent(reader, configuration, doneData);
+                        }
+                        else {
                             reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_DONEDATA, nsURI, name);
                         }
                     } else {
@@ -1539,36 +1522,48 @@ public final class SCXMLReader {
                     nsURI = reader.getNamespaceURI();
                     name = reader.getLocalName();
                     if (SCXMLConstants.XMLNS_SCXML.equals(nsURI)) {
-                        if (SCXMLConstants.ELEM_RAISE.equals(name)) {
+                        switch (name) {
+                        case SCXMLConstants.ELEM_RAISE:
                             if (executable instanceof Finalize) {
                                 reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_FINALIZE, nsURI, name);
                             } else {
                                 readRaise(reader, configuration, executable, parent);
                             }
-                        } else if (SCXMLConstants.ELEM_FOREACH.equals(name)) {
+                            break;
+                        case SCXMLConstants.ELEM_FOREACH:
                             readForeach(reader, configuration, executable, parent);
-                        } else if (SCXMLConstants.ELEM_IF.equals(name)) {
+                            break;
+                        case SCXMLConstants.ELEM_IF:
                             readIf(reader, configuration, executable, parent);
-                        } else if (SCXMLConstants.ELEM_LOG.equals(name)) {
+                            break;
+                        case SCXMLConstants.ELEM_LOG:
                             readLog(reader, executable, parent);
-                        } else if (SCXMLConstants.ELEM_ASSIGN.equals(name)) {
+                            break;
+                        case SCXMLConstants.ELEM_ASSIGN:
                             readAssign(reader, configuration, executable, parent);
-                        } else if (SCXMLConstants.ELEM_SEND.equals(name)) {
+                            break;
+                        case SCXMLConstants.ELEM_SEND:
                             if (executable instanceof Finalize) {
                                 reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_FINALIZE, nsURI, name);
                             } else {
                                 readSend(reader, configuration, executable, parent);
                             }
-                        } else if (SCXMLConstants.ELEM_CANCEL.equals(name)) {
+                            break;
+                        case SCXMLConstants.ELEM_CANCEL:
                             readCancel(reader, configuration, executable, parent);
-                        } else if (SCXMLConstants.ELEM_SCRIPT.equals(name)) {
+                            break;
+                        case SCXMLConstants.ELEM_SCRIPT:
                             readScript(reader, configuration, executable, parent);
-                        } else if (SCXMLConstants.ELEM_IF.equals(end) && SCXMLConstants.ELEM_ELSEIF.equals(name)) {
-                            readElseIf(reader, executable, (If) parent);
-                        } else if (SCXMLConstants.ELEM_IF.equals(end) && SCXMLConstants.ELEM_ELSE.equals(name)) {
-                            readElse(reader, executable, (If)parent);
-                        } else {
-                            reportIgnoredElement(reader, configuration, end, nsURI, name);
+                            break;
+                        default:
+                            if (SCXMLConstants.ELEM_IF.equals(end) && SCXMLConstants.ELEM_ELSEIF.equals(name)) {
+                                readElseIf(reader, executable, (If) parent);
+                            } else if (SCXMLConstants.ELEM_IF.equals(end) && SCXMLConstants.ELEM_ELSE.equals(name)) {
+                                readElse(reader, executable, (If)parent);
+                            } else {
+                                reportIgnoredElement(reader, configuration, end, nsURI, name);
+                            }
+                            break;
                         }
                     } else if (SCXMLConstants.XMLNS_COMMONS_SCXML.equals(nsURI)) {
                         if (SCXMLConstants.ELEM_VAR.equals(name)) {
@@ -1758,15 +1753,11 @@ public final class SCXMLReader {
                 case XMLStreamConstants.START_ELEMENT:
                     nsURI = reader.getNamespaceURI();
                     name = reader.getLocalName();
-                    if (SCXMLConstants.XMLNS_SCXML.equals(nsURI)) {
-                        if (SCXMLConstants.ELEM_TRANSITION.equals(name)) {
-                            history.setTransition(readTransition(reader, configuration));
-                        } else {
-                            reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_HISTORY, nsURI, name);
-                        }
-                    } else {
-                        reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_HISTORY, nsURI, name);
-                    }
+                if (SCXMLConstants.XMLNS_SCXML.equals(nsURI) && SCXMLConstants.ELEM_TRANSITION.equals(name)) {
+                    history.setTransition(readTransition(reader, configuration));
+                } else {
+                    reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_HISTORY, nsURI, name);
+                }
                     break;
                 case XMLStreamConstants.END_ELEMENT:
                     break loop;
@@ -1843,15 +1834,11 @@ public final class SCXMLReader {
                 case XMLStreamConstants.START_ELEMENT:
                     nsURI = reader.getNamespaceURI();
                     name = reader.getLocalName();
-                    if (SCXMLConstants.XMLNS_SCXML.equals(nsURI)) {
-                        if (SCXMLConstants.ELEM_TRANSITION.equals(name)) {
-                            initial.setTransition(readSimpleTransition(reader, configuration));
-                        } else {
-                            reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_INITIAL, nsURI, name);
-                        }
-                    } else {
-                        reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_INITIAL, nsURI, name);
-                    }
+                if (SCXMLConstants.XMLNS_SCXML.equals(nsURI) && SCXMLConstants.ELEM_TRANSITION.equals(name)) {
+                    initial.setTransition(readSimpleTransition(reader, configuration));
+                } else {
+                    reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_INITIAL, nsURI, name);
+                }
                     break;
                 case XMLStreamConstants.END_ELEMENT:
                     break loop;
@@ -1931,14 +1918,19 @@ public final class SCXMLReader {
                     nsURI = reader.getNamespaceURI();
                     name = reader.getLocalName();
                     if (SCXMLConstants.XMLNS_SCXML.equals(nsURI)) {
-                        if (SCXMLConstants.ELEM_PARAM.equals(name)) {
+                        switch (name) {
+                        case SCXMLConstants.ELEM_PARAM:
                             readParam(reader, configuration, invoke);
-                        } else if (SCXMLConstants.ELEM_FINALIZE.equals(name)) {
+                            break;
+                        case SCXMLConstants.ELEM_FINALIZE:
                             readFinalize(reader, configuration, parent, invoke);
-                        } else if (SCXMLConstants.ELEM_CONTENT.equals(name)) {
+                            break;
+                        case SCXMLConstants.ELEM_CONTENT:
                             readContent(reader, configuration, invoke);
-                        } else {
+                            break;
+                        default:
                             reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_INVOKE, nsURI, name);
+                            break;
                         }
                     } else {
                         reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_INVOKE, nsURI, name);
@@ -2104,24 +2096,34 @@ public final class SCXMLReader {
                     nsURI = reader.getNamespaceURI();
                     name = reader.getLocalName();
                     if (SCXMLConstants.XMLNS_SCXML.equals(nsURI)) {
-                        if (SCXMLConstants.ELEM_TRANSITION.equals(name)) {
+                        switch (name) {
+                        case SCXMLConstants.ELEM_TRANSITION:
                             parallel.addTransition(readTransition(reader, configuration));
-                        } else if (SCXMLConstants.ELEM_STATE.equals(name)) {
+                            break;
+                        case SCXMLConstants.ELEM_STATE:
                             readState(reader, configuration, scxml, parallel);
-                        } else if (SCXMLConstants.ELEM_PARALLEL.equals(name)) {
+                            break;
+                        case SCXMLConstants.ELEM_PARALLEL:
                             readParallel(reader, configuration, scxml, parallel);
-                        } else if (SCXMLConstants.ELEM_ONENTRY.equals(name)) {
+                            break;
+                        case SCXMLConstants.ELEM_ONENTRY:
                             readOnEntry(reader, configuration, parallel);
-                        } else if (SCXMLConstants.ELEM_ONEXIT.equals(name)) {
+                            break;
+                        case SCXMLConstants.ELEM_ONEXIT:
                             readOnExit(reader, configuration, parallel);
-                        } else if (SCXMLConstants.ELEM_DATAMODEL.equals(name)) {
+                            break;
+                        case SCXMLConstants.ELEM_DATAMODEL:
                             readDatamodel(reader, configuration, null, parallel);
-                        } else if (SCXMLConstants.ELEM_INVOKE.equals(name)) {
+                            break;
+                        case SCXMLConstants.ELEM_INVOKE:
                             readInvoke(reader, configuration, parallel);
-                        } else if (SCXMLConstants.ELEM_HISTORY.equals(name)) {
+                            break;
+                        case SCXMLConstants.ELEM_HISTORY:
                             readHistory(reader, configuration, scxml, parallel);
-                        } else {
+                            break;
+                        default:
                             reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_PARALLEL, nsURI, name);
+                            break;
                         }
                     } else {
                         reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_PARALLEL, nsURI, name);
@@ -2199,15 +2201,13 @@ public final class SCXMLReader {
                         }
                     }
                 }
-                if (child.getNodeType() == Node.ELEMENT_NODE) {
-                    if (SCXMLConstants.ELEM_SCXML.equals(child.getLocalName()) &&
-                            SCXMLConstants.XMLNS_SCXML.equals(child.getNamespaceURI())) {
-                        // transform <invoke><content><scxml> back to text
-                        try {
-                            valueContainer.setParsedValue(new NodeTextValue(ContentParser.DEFAULT_PARSER.toXml(child)));
-                        } catch (final IOException e) {
-                            throw new XMLStreamException(e);
-                        }
+                if (child.getNodeType() == Node.ELEMENT_NODE && SCXMLConstants.ELEM_SCXML.equals(child.getLocalName()) &&
+                        SCXMLConstants.XMLNS_SCXML.equals(child.getNamespaceURI())) {
+                    // transform <invoke><content><scxml> back to text
+                    try {
+                        valueContainer.setParsedValue(new NodeTextValue(ContentParser.DEFAULT_PARSER.toXml(child)));
+                    } catch (final IOException e) {
+                        throw new XMLStreamException(e);
                     }
                 }
                 if (valueContainer.getParsedValue() == null) {
@@ -2394,19 +2394,27 @@ public final class SCXMLReader {
                     nsURI = reader.getNamespaceURI();
                     name = reader.getLocalName();
                     if (SCXMLConstants.XMLNS_SCXML.equals(nsURI)) {
-                        if (SCXMLConstants.ELEM_STATE.equals(name)) {
+                        switch (name) {
+                        case SCXMLConstants.ELEM_STATE:
                             readState(reader, configuration, scxml, null);
-                        } else if (SCXMLConstants.ELEM_PARALLEL.equals(name)) {
+                            break;
+                        case SCXMLConstants.ELEM_PARALLEL:
                             readParallel(reader, configuration, scxml, null);
-                        } else if (SCXMLConstants.ELEM_FINAL.equals(name)) {
+                            break;
+                        case SCXMLConstants.ELEM_FINAL:
                             readFinal(reader, configuration, scxml, null);
-                        } else if (SCXMLConstants.ELEM_DATAMODEL.equals(name)) {
+                            break;
+                        case SCXMLConstants.ELEM_DATAMODEL:
                             readDatamodel(reader, configuration, scxml, null);
-                        } else if (SCXMLConstants.ELEM_SCRIPT.equals(name) && !hasGlobalScript) {
-                            readGlobalScript(reader, configuration, scxml);
-                            hasGlobalScript = true;
-                        } else {
-                            reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_SCXML, nsURI, name);
+                            break;
+                        default:
+                            if (SCXMLConstants.ELEM_SCRIPT.equals(name) && !hasGlobalScript) {
+                                readGlobalScript(reader, configuration, scxml);
+                                hasGlobalScript = true;
+                            } else {
+                                reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_SCXML, nsURI, name);
+                            }
+                            break;
                         }
                     } else {
                         reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_SCXML, nsURI, name);
@@ -2511,14 +2519,10 @@ public final class SCXMLReader {
                             else {
                                 reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_SEND, nsURI, name);
                             }
-                        } else if (SCXMLConstants.ELEM_CONTENT.equals(name)) {
-                            if (send.getNamelist() == null && send.getParams().isEmpty()) {
-                                readContent(reader, configuration, send);
-                            }
-                            else {
-                                reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_SEND, nsURI, name);
-                            }
-                        } else {
+                        } else if (SCXMLConstants.ELEM_CONTENT.equals(name) && send.getNamelist() == null && send.getParams().isEmpty()) {
+                            readContent(reader, configuration, send);
+                        }
+                        else {
                             reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_SEND, nsURI, name);
                         }
                     } else {
@@ -2628,28 +2632,40 @@ public final class SCXMLReader {
                     nsURI = reader.getNamespaceURI();
                     name = reader.getLocalName();
                     if (SCXMLConstants.XMLNS_SCXML.equals(nsURI)) {
-                        if (SCXMLConstants.ELEM_TRANSITION.equals(name)) {
+                        switch (name) {
+                        case SCXMLConstants.ELEM_TRANSITION:
                             state.addTransition(readTransition(reader, configuration));
-                        } else if (SCXMLConstants.ELEM_STATE.equals(name)) {
+                            break;
+                        case SCXMLConstants.ELEM_STATE:
                             readState(reader, configuration, scxml, state);
-                        } else if (SCXMLConstants.ELEM_INITIAL.equals(name)) {
+                            break;
+                        case SCXMLConstants.ELEM_INITIAL:
                             readInitial(reader, configuration, state);
-                        } else if (SCXMLConstants.ELEM_FINAL.equals(name)) {
+                            break;
+                        case SCXMLConstants.ELEM_FINAL:
                             readFinal(reader, configuration, scxml, state);
-                        } else if (SCXMLConstants.ELEM_ONENTRY.equals(name)) {
+                            break;
+                        case SCXMLConstants.ELEM_ONENTRY:
                             readOnEntry(reader, configuration, state);
-                        } else if (SCXMLConstants.ELEM_ONEXIT.equals(name)) {
+                            break;
+                        case SCXMLConstants.ELEM_ONEXIT:
                             readOnExit(reader, configuration, state);
-                        } else if (SCXMLConstants.ELEM_PARALLEL.equals(name)) {
+                            break;
+                        case SCXMLConstants.ELEM_PARALLEL:
                             readParallel(reader, configuration, scxml, state);
-                        } else if (SCXMLConstants.ELEM_DATAMODEL.equals(name)) {
+                            break;
+                        case SCXMLConstants.ELEM_DATAMODEL:
                             readDatamodel(reader, configuration, null, state);
-                        } else if (SCXMLConstants.ELEM_INVOKE.equals(name)) {
+                            break;
+                        case SCXMLConstants.ELEM_INVOKE:
                             readInvoke(reader, configuration, state);
-                        } else if (SCXMLConstants.ELEM_HISTORY.equals(name)) {
+                            break;
+                        case SCXMLConstants.ELEM_HISTORY:
                             readHistory(reader, configuration, scxml, state);
-                        } else {
+                            break;
+                        default:
                             reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_STATE, nsURI, name);
+                            break;
                         }
                     } else {
                         reportIgnoredElement(reader, configuration, SCXMLConstants.ELEM_STATE, nsURI, name);
