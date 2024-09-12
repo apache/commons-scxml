@@ -390,7 +390,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
         }
         try {
             return invokerClass.getConstructor().newInstance();
-        } catch (ReflectiveOperationException ie) {
+        } catch (final ReflectiveOperationException ie) {
             throw new InvokerException(ie.getMessage(), ie.getCause());
         }
     }
