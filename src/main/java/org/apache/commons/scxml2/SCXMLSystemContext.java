@@ -163,7 +163,7 @@ public class SCXMLSystemContext implements Context, Serializable {
         }
         else {
             // create Platform variables map
-            systemContext.setLocal(X_KEY, new HashMap<String, Object>());
+            systemContext.setLocal(X_KEY, new HashMap<>());
         }
         this.systemContext = systemContext;
         this.protectedVars = Collections.unmodifiableMap(systemContext.getVars());
