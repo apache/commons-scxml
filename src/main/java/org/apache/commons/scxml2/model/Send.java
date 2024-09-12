@@ -231,10 +231,8 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
                         + "\" evaluated to null or empty String");
             }
         }
-        if (typeValue == null) {
+        if (typeValue == null || !SCXMLIOProcessor.DEFAULT_EVENT_PROCESSOR.equals(typeValue) && typeValue.trim().equalsIgnoreCase(SCXMLIOProcessor.SCXML_EVENT_PROCESSOR)) {
             // must default to 'scxml' when unspecified
-            typeValue = SCXMLIOProcessor.DEFAULT_EVENT_PROCESSOR;
-        } else if (!SCXMLIOProcessor.DEFAULT_EVENT_PROCESSOR.equals(typeValue) && typeValue.trim().equalsIgnoreCase(SCXMLIOProcessor.SCXML_EVENT_PROCESSOR)) {
             typeValue = SCXMLIOProcessor.DEFAULT_EVENT_PROCESSOR;
         }
         Object payload = null;
@@ -276,7 +274,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
         String eventValue = event;
         if (eventValue == null && eventexpr != null) {
             eventValue = (String)eval.eval(ctx, eventexpr);
-            if ((eventValue == null)) {
+            if (eventValue == null) {
                 throw new SCXMLExpressionException("<send>: event expression \"" + eventexpr
                         + "\" evaluated to null");
             }
