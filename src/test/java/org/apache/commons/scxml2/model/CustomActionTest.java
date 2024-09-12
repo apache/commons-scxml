@@ -139,8 +139,8 @@ public class CustomActionTest {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
         exec.go();
         // (4) Single, final state
-        Assertions.assertEquals("custom", (exec.getStatus().getStates().
-            iterator().next()).getId());
+        Assertions.assertEquals("custom", exec.getStatus().getStates().
+            iterator().next().getId());
 
         // The custom action defined by Hello.class should be called
         // to execute() exactly twice at this point (one by <my:hello/> and the other by <my:hello/> in external).
@@ -169,8 +169,8 @@ public class CustomActionTest {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
         exec.go();
         // (4) Single, final state
-        Assertions.assertEquals("custom", (exec.getStatus().getStates().
-                iterator().next()).getId());
+        Assertions.assertEquals("custom", exec.getStatus().getStates().
+                iterator().next().getId());
         Assertions.assertTrue(exec.getStatus().isFinal());
 
         // The custom action defined by Hello.class should be called
@@ -194,8 +194,8 @@ public class CustomActionTest {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
         exec.go();
         // (4) Single, final state
-        Assertions.assertEquals("custom", (exec.getStatus().getStates().
-            iterator().next()).getId());
+        Assertions.assertEquals("custom", exec.getStatus().getStates().
+            iterator().next().getId());
 
         // The custom action defined by Hello.class should be called
         // to execute() exactly once at this point (by <my:send/>).
@@ -209,8 +209,8 @@ public class CustomActionTest {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/hello-world.xml");
         exec.go();
         // (2) Single, final state
-        Assertions.assertEquals("hello", (exec.getStatus().getStates().
-                iterator().next()).getId());
+        Assertions.assertEquals("hello", exec.getStatus().getStates().
+                iterator().next().getId());
         Assertions.assertTrue(exec.getStatus().isFinal());
     }
 }
