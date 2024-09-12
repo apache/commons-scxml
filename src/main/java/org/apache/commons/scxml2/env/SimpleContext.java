@@ -142,7 +142,7 @@ public class SimpleContext implements Context, Serializable {
      */
     @Override
     public boolean has(final String name) {
-        return (hasLocal(name) || (parent != null && parent.has(name)));
+        return hasLocal(name) || parent != null && parent.has(name);
     }
 
     /**
@@ -154,7 +154,7 @@ public class SimpleContext implements Context, Serializable {
      */
     @Override
     public boolean hasLocal(final String name) {
-        return (getVars().containsKey(name));
+        return getVars().containsKey(name);
     }
 
     /**
@@ -178,12 +178,10 @@ public class SimpleContext implements Context, Serializable {
      */
     @Override
     public void set(final String name, final Object value) {
-        if (getVars().containsKey(name)) { //first try to override local
+        if (getVars().containsKey(name) || parent == null || !parent.has(name)) { //first try to override local
             setLocal(name, value);
-        } else if (parent != null && parent.has(name)) { //then check for global
+        } else { //then check for global
             parent.set(name, value);
-        } else { //otherwise create a new local variable
-            setLocal(name, value);
         }
     }
 
