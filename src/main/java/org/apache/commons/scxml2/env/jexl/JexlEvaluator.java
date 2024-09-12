@@ -88,7 +88,7 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
         // See Javadoc of org.apache.commons.jexl2.JexlEngine#setFunctions(Map<String,Object> funcs) for detail.
         final Map<String, Object> funcs = new HashMap<>();
         funcs.put(null, JexlBuiltin.class);
-        JexlPermissions permissions = JexlPermissions.RESTRICTED.compose("org.apache.commons.scxml2.*");
+        final JexlPermissions permissions = JexlPermissions.RESTRICTED.compose("org.apache.commons.scxml2.*");
         return new JexlBuilder().permissions(permissions).namespaces(funcs).cache(256).create();
     }
 
