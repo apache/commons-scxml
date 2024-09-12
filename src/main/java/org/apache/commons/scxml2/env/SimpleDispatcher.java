@@ -171,7 +171,7 @@ public class SimpleDispatcher implements EventDispatcher, Serializable {
 
         // We only handle the "scxml" type (which is the default too) and optionally the #_internal target
 
-        if ((type != null) && !type.equalsIgnoreCase(SCXMLIOProcessor.SCXML_EVENT_PROCESSOR) && !type.equals(SCXMLIOProcessor.DEFAULT_EVENT_PROCESSOR)) {
+        if (type != null && !type.equalsIgnoreCase(SCXMLIOProcessor.SCXML_EVENT_PROCESSOR) && !type.equals(SCXMLIOProcessor.DEFAULT_EVENT_PROCESSOR)) {
             ioProcessors.get(SCXMLIOProcessor.INTERNAL_EVENT_PROCESSOR)
                     .addEvent(new EventBuilder(TriggerEvent.ERROR_EXECUTION, TriggerEvent.ERROR_EVENT).sendId(id).build());
             throw new ActionExecutionError(true, "<send>: Unsupported type - " + type);
