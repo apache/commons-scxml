@@ -136,10 +136,8 @@ final class ModelUpdater {
             if (tt.getId() != null) {
                 name = "parallel with ID \"" + tt.getId() + "\"";
             }
-        } else {
-            if (tt.getId() != null) {
-                name = "transition target with ID \"" + tt.getId() + "\"";
-            }
+        } else if (tt.getId() != null) {
+            name = "transition target with ID \"" + tt.getId() + "\"";
         }
         return name;
     }
@@ -265,12 +263,10 @@ final class ModelUpdater {
                         logAndThrowModelError(ERR_STATE_BAD_SHALLOW_HIST,
                                 new Object[] {getName(parent)});
                     }
-                } else {
-                    // Deep history
-                    if (!historyState.isDescendantOf(parent)) {
-                        logAndThrowModelError(ERR_STATE_BAD_DEEP_HIST,
-                                new Object[] {getName(parent)});
-                    }
+                } else // Deep history
+                if (!historyState.isDescendantOf(parent)) {
+                    logAndThrowModelError(ERR_STATE_BAD_DEEP_HIST,
+                            new Object[] {getName(parent)});
                 }
             }
         }
@@ -461,7 +457,9 @@ final class ModelUpdater {
                 continue;
             }
             // find least common ancestor
-            for (i = Math.min(i, tt.getNumberOfAncestors()); i > 0 && first.getAncestor(i-1) != tt.getAncestor(i-1); i--) ;
+            for (i = Math.min(i, tt.getNumberOfAncestors()); i > 0 && first.getAncestor(i-1) != tt.getAncestor(i-1); i--) {
+
+            }
             if (i == 0) {
                 // no common ancestor
                 return false;
