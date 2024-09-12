@@ -245,7 +245,7 @@ public class SCXMLWriter {
 
             this.factoryId = factoryId;
             this.factoryClassLoader = factoryClassLoader;
-            this.properties = (properties == null ? new HashMap<>() : properties);
+            this.properties = properties == null ? new HashMap<>() : properties;
             this.encoding = encoding;
             this.usePrettyPrint = usePrettyPrint;
             this.closeUnderlyingWhenDone = closeUnderlyingWhenDone;
@@ -941,7 +941,7 @@ public class SCXMLWriter {
             configuration.internalWriter.flush();
         }
         if (configuration.usePrettyPrint) {
-            final Writer prettyPrintWriter = (scxmlWriter != null ? scxmlWriter : new StringWriter());
+            final Writer prettyPrintWriter = scxmlWriter != null ? scxmlWriter : new StringWriter();
             writePretty(configuration, scxmlStream, prettyPrintWriter, scxmlResult);
             if (configuration.writeToString) {
                 prettyPrintWriter.flush();
