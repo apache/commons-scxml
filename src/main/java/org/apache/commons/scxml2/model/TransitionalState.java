@@ -187,8 +187,8 @@ public abstract class TransitionalState extends EnterableState {
     public final List<Transition> getTransitionsList(final String event) {
         List<Transition> matchingTransitions = null; // since we returned null upto v0.6
         for (final Transition t : transitions) {
-            if ((event == null && t.getEvent() == null)
-                    || (event != null && event.equals(t.getEvent()))) {
+            if (event == null && t.getEvent() == null
+                    || event != null && event.equals(t.getEvent())) {
                 if (matchingTransitions == null) {
                     matchingTransitions = new ArrayList<>();
                 }
@@ -207,7 +207,7 @@ public abstract class TransitionalState extends EnterableState {
      * @since 0.7
      */
     public final boolean hasHistory() {
-        return (!history.isEmpty());
+        return !history.isEmpty();
     }
 
     /**
