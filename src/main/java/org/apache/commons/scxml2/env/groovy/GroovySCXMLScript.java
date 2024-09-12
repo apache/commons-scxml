@@ -58,10 +58,10 @@ public abstract class GroovySCXMLScript extends Script {
      */
     public boolean empty(final Object obj) {
         return obj == null ||
-                (obj instanceof String && ((String)obj).isEmpty()) ||
-                ((obj.getClass().isArray() && Array.getLength(obj)==0)) ||
-                (obj instanceof Collection && ((Collection)obj).size()==0) ||
-                (obj instanceof Map && ((Map)obj).isEmpty());
+                obj instanceof String && ((String)obj).isEmpty() ||
+                obj.getClass().isArray() && Array.getLength(obj)==0 ||
+                obj instanceof Collection && ((Collection)obj).size()==0 ||
+                obj instanceof Map && ((Map)obj).isEmpty();
     }
 
     /**
