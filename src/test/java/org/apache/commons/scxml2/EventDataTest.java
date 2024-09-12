@@ -58,7 +58,7 @@ public class EventDataTest {
         currentStates = SCXMLTestHelper.fireEvent(exec, te);
         Assertions.assertEquals(1, currentStates.size());
         Assertions.assertEquals("state3", currentStates.iterator().next().getId());
-        final TriggerEvent[] evts = new TriggerEvent[] { te,
+        final TriggerEvent[] evts = { te,
             new EventBuilder("event.bar", TriggerEvent.SIGNAL_EVENT).data(6).build()};
         currentStates = SCXMLTestHelper.fireEvents(exec, evts);
         Assertions.assertEquals(1, currentStates.size());
