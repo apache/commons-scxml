@@ -44,7 +44,7 @@ Apache Commons SCXML
 ===================
 
 [![Java CI](https://github.com/apache/commons-scxml/actions/workflows/maven.yml/badge.svg)](https://github.com/apache/commons-scxml/actions/workflows/maven.yml)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/commons-scxml/commons-scxml/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-scxml/)
+[![Maven Central](https://img.shields.io/maven-central/v/commons-scxml/commons-scxml?label=Maven%20Central)](https://search.maven.org/artifact/commons-scxml/commons-scxml)
 [![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-scxml2/2.0-alpha-1.svg)](https://javadoc.io/doc/org.apache.commons/commons-scxml2/2.0-alpha-1)
 
 A Java Implementation of a State Chart XML Engine
