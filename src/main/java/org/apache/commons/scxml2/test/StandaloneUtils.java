@@ -76,7 +76,7 @@ public final class StandaloneUtils {
             final SCXML doc = SCXMLReader.read(new URL(documentURI));
             if (doc == null) {
                 System.err.println("The SCXML document " + uri
-                        + " can not be parsed!");
+                        + " cannot be parsed!");
                 System.exit(-1);
             }
             System.out.println(SCXMLWriter.write(doc));
@@ -137,7 +137,7 @@ public final class StandaloneUtils {
     /**
      * @param uri an absolute or relative URL
      * @return java.lang.String canonical URL (absolute)
-     * @throws IOException if a relative URL can not be resolved
+     * @throws IOException if a relative URL cannot be resolved
      *         to a local file
      */
     private static String getCanonicalURI(final String uri)

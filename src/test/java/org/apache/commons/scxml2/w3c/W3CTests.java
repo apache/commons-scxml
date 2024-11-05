@@ -597,7 +597,7 @@ public class W3CTests {
             final SCXML doc = SCXMLReader.read(new FileReader(scxmlFile), configuration);
             if (doc == null) {
                 System.out.println("                FAIL: the SCXML file " +
-                        scxmlFile.getCanonicalPath() + " can not be parsed!");
+                        scxmlFile.getCanonicalPath() + " cannot be parsed!");
                 return false;
             }
             final SCXMLExecutor exec = new SCXMLExecutor(null, null, trc);
