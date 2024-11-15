@@ -89,7 +89,7 @@ import org.w3c.dom.Node;
  * object heirarchy. Used primarily for testing, debugging and
  * visual verification.</p>
  *
- * <b>NOTE:</b> This writer makes the following assumptions about the
+ * <strong>NOTE:</strong> This writer makes the following assumptions about the
  * original SCXML document(s) parsed to create the object model:
  * <ul>
  *  <li>The default document namespace is the SCXML namespace:

@@ -23,7 +23,7 @@ import java.util.Objects;
  * A class representing an event. Specific event types have been
  * defined in reference to SCXML.
  *
- * <b>NOTE:</b> Instances are {@link Serializable} as long as the associated
+ * <strong>NOTE:</strong> Instances are {@link Serializable} as long as the associated
  * data, if any, is {@link Serializable}.
  */
 public class TriggerEvent implements Serializable {

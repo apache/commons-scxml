@@ -273,7 +273,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
 
     /**
      * Gets the state machine that is being executed.
-     * <b>NOTE:</b> This is the state machine definition or model used by this
+     * <strong>NOTE:</strong> This is the state machine definition or model used by this
      * executor instance. It may be shared across multiple executor instances
      * and should not be altered once in use. Also note that
      * manipulation of instance data for the executor should happen through
@@ -485,7 +485,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
 
     /**
      * Sets the root context for the state machine execution.
-     * <b>NOTE:</b> Should only be used before the executor is set in motion.
+     * <strong>NOTE:</strong> Should only be used before the executor is set in motion.
      *
      * @param rootContext The Context that ties to the host environment.
      */

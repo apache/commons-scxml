@@ -46,8 +46,8 @@ import org.apache.commons.scxml2.model.SCXML;
  * </ul>
  * <p>After a state machine has been terminated you can re-initialize the execution context, and start again.</p>
  * <p>
- * The first two methods represent the <b>interpret</b> entry point specified in the Algorithm for SCXML Interpretation.
- * The third and fourth method represent the <b>mainEventLoop</b> and <b>exitInterpreter</b> entry points.
+ * The first two methods represent the <strong>interpret</strong> entry point specified in the Algorithm for SCXML Interpretation.
+ * The third and fourth method represent the <strong>mainEventLoop</strong> and <strong>exitInterpreter</strong> entry points.
  * These have been more practically and logically broken into four different methods so that the blocking wait for
  * external events can be handled externally.</p>
  * <p>

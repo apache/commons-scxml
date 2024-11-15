@@ -58,7 +58,7 @@ import org.apache.commons.scxml2.TriggerEvent;
  *  <li>Either completion or cancellation.</li>
  * </ol>
  *
- * <p><b>Note:</b> The semantics of &lt;invoke&gt; are necessarily
+ * <p><strong>Note:</strong> The semantics of &lt;invoke&gt; are necessarily
  * asynchronous, tending towards long(er) running interactions with external
  * processes. Implementations cannot communicate with the parent state
  * machine executor in a synchronous manner. For synchronous

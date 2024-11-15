@@ -18,7 +18,7 @@ package org.apache.commons.scxml2;
 
 /**
  * The ExternalSCXMLIOProcessor is registered in the _ioprocessors system variable under the
- * {@link #DEFAULT_EVENT_PROCESSOR} key <b>and</b> maintains a {@link #getLocation() location} field
+ * {@link #DEFAULT_EVENT_PROCESSOR} key <strong>and</strong> maintains a {@link #getLocation() location} field
  * <pre>
  *     <em>whose value holds an address that external entities can use to communicate with this SCXML session using the SCXML Event I/O Processor.</em></pre>
  * @see <a href="https://www.w3.org/TR/scxml/#SCXMLEventProcessor">SCXML specification C.1.1 _ioprocessors Value</a>

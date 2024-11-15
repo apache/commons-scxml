@@ -54,24 +54,24 @@ import org.apache.commons.scxml2.model.SCXML;
 /**
  * W3C SCXML 1.0 IRP tests: <a href="http://www.w3.org/Voice/2013/scxml-irp/">http://www.w3.org/Voice/2013/scxml-irp/</a>.
  * <p>
- * The <b>W3CTests</b> class is standalone and can download and transform the IRP tests locally using respectively
- * commandline parameter <b>get</b> or <b>make</b>.
+ * The <strong>W3CTests</strong> class is standalone and can download and transform the IRP tests locally using respectively
+ * commandline parameter <strong>get</strong> or <strong>make</strong>.
  * </p>
  * <p>
- * To execute one or multiple IRP tests the commandline parameter <b>run</b> must be specified.
+ * To execute one or multiple IRP tests the commandline parameter <strong>run</strong> must be specified.
  * </p>
  * <p>
- * Optional environment parameter <b>-Ddatamodel=&lt;minimal|ecma|jexl|groovy&gt;</b> can be specified to limit the
+ * Optional environment parameter <strong>-Ddatamodel=&lt;minimal|ecma|jexl|groovy&gt;</strong> can be specified to limit the
  * execution of the tests for and using only the specified datamodel language.
  * </p>
  * <p>
- * Optional environment parameter <b>-Dtest=&lt;testId&gt;</b> can be specified to only execute a single test, which
- * also can be combined with the <b>-Ddatamodel</b> parameter.
+ * Optional environment parameter <strong>-Dtest=&lt;testId&gt;</strong> can be specified to only execute a single test, which
+ * also can be combined with the <strong>-Ddatamodel</strong> parameter.
  * </p>
  * <p>
- * The W3CTests also uses a separate <b><code>tests.xml</code></b> configuration file, located in the
- * <b><code>src/test/resources/w3c</code></b> directory, which is manually maintained to enable|disable execution
- * of tests (when <em>not</em> using the <b>-Dtest</b> parameter, which will always execute the specified test).<br/>
+ * The W3CTests also uses a separate <strong><code>tests.xml</code></strong> configuration file, located in the
+ * <strong><code>src/test/resources/w3c</code></strong> directory, which is manually maintained to enable|disable execution
+ * of tests (when <em>not</em> using the <strong>-Dtest</strong> parameter, which will always execute the specified test).<br/>
  * Furthermore, in this configuration file the current <em>success</em> or <em>failure</em> status, and even more
  * meta data per test is maintained.
  * </p>
@@ -279,7 +279,7 @@ public class W3CTests {
     }
 
     /**
-     * Tests model class used for loading the <b>tests.xml</b> configuration file
+     * Tests model class used for loading the <strong>tests.xml</strong> configuration file
      */
     @XmlRootElement(name="tests")
     @XmlAccessorType(XmlAccessType.FIELD)
