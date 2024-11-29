@@ -138,7 +138,6 @@ public class SCXML implements Serializable, Observable {
      * Add an immediate child of the SCXML root.
      *
      * @param es The child to be added.
-     *
      * @since 0.7
      */
     public final void addChild(final EnterableState es) {
@@ -166,7 +165,6 @@ public class SCXML implements Serializable, Observable {
      * Gets the immediate child targets of the SCXML root.
      *
      * @return List Returns list of the child targets.
-     *
      * @since 0.7
      */
     public final List<EnterableState> getChildren() {
@@ -203,7 +201,6 @@ public class SCXML implements Serializable, Observable {
      * Gets the first immediate child of the SCXML root. Return null if there's no child.
      *
      * @return Returns the first immediate child of the SCXML root. Return null if there's no child.
-     *
      * @since 2.0
      */
     public final EnterableState getFirstChild() {
@@ -231,7 +228,6 @@ public class SCXML implements Serializable, Observable {
      * Gets the initial Transition.
      *
      * @return Returns the initial transition for this state machine.
-     *
      * @since 2.0
      */
     public final SimpleTransition getInitialTransition() {
@@ -352,7 +348,6 @@ public class SCXML implements Serializable, Observable {
      * <p>Note: the initial transition can/may not have executable content!</p>
      *
      * @param initialTransition The initial transition to set.
-     *
      * @since 2.0
      */
     public final void setInitialTransition(final SimpleTransition initialTransition) {

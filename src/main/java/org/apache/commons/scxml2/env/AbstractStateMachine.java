@@ -157,7 +157,6 @@ public abstract class AbstractStateMachine {
      * @throws ModelException in case there is a fatal SCXML object model problem
      * @see Context
      * @see Evaluator
-     *
      * @since 0.7
      */
     public AbstractStateMachine(final SCXML stateMachine,
@@ -188,7 +187,6 @@ public abstract class AbstractStateMachine {
      * @param rootCtx The root context for this instance.
      * @param evaluator The expression evaluator for this instance.
      * @throws ModelException in case there is a fatal SCXML object model problem
-     *
      * @see Context
      * @see Evaluator
      */

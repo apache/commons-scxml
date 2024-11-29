@@ -148,9 +148,7 @@ public class JSEvaluator extends AbstractBaseEvaluator {
      *
      * @param context    SCXML context.
      * @param expression Expression to evaluate.
-     *
      * @return Boolean casted result.
-     *
      * @throws SCXMLExpressionException Thrown if the expression was invalid.
      */
     @Override
@@ -163,9 +161,7 @@ public class JSEvaluator extends AbstractBaseEvaluator {
      *
      * @param ctx    SCXML context.
      * @param script Script to execute.
-     *
      * @return Result of script execution or {@code null}.
-     *
      * @throws SCXMLExpressionException Thrown if the script was invalid.
      */
     @Override

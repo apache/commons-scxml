@@ -65,7 +65,6 @@ public abstract class TransitionalState extends EnterableState {
      * Add a child.
      *
      * @param es A child enterable state.
-     *
      * @since 0.7
      */
     protected void addChild(final EnterableState es) {
@@ -75,7 +74,6 @@ public abstract class TransitionalState extends EnterableState {
 
     /**
      * @param h History pseudo state
-     *
      * @since 0.7
      */
     public final void addHistory(final History h) {
@@ -120,7 +118,6 @@ public abstract class TransitionalState extends EnterableState {
      * Gets the set of child transition targets (may be empty).
      *
      * @return Returns the children.
-     *
      * @since 0.7
      */
     public final List<EnterableState> getChildren() {
@@ -142,7 +139,6 @@ public abstract class TransitionalState extends EnterableState {
      * @return a list of all history pseudo states contained by a given state
      *         (can be empty)
      * @see #hasHistory()
-     *
      * @since 0.7
      */
     public final List<History> getHistory() {

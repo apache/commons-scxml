@@ -43,7 +43,6 @@ public abstract class Action implements Serializable {
      * Execute this action instance.
      *
      * @param exctx The ActionExecutionContext for this execution instance
-     *
      * @throws ModelException If the execution causes the model to enter
      *                        a non-deterministic state.
      * @throws SCXMLExpressionException If the execution involves trying
@@ -68,7 +67,6 @@ public abstract class Action implements Serializable {
      *
      * @return The parent {@link EnterableState}
      * @throws ModelException For an unknown EnterableState subclass
-     *
      * @since 0.9
      */
     public EnterableState getParentEnterableState()

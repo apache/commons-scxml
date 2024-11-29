@@ -880,7 +880,6 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      *
      * @param exctx provides the execution context
      * @param event The events to be forwarded
-     *
      * @throws ModelException in case there is a fatal SCXML object model problem.
      */
     public void processInvokes(final SCXMLExecutionContext exctx, final TriggerEvent event) throws ModelException {
