@@ -16,9 +16,9 @@
  * limitations under the License.
 -->
 
-<document xmlns="http://maven.apache.org/changes/1.0.0"
+<document xmlns="http://maven.apache.org/changes/2.0.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
+          xsi:schemaLocation="http://maven.apache.org/changes/2.0.0 https://maven.apache.org/xsd/changes-2.0.0.xsd">
   <properties>
     <title>Apache Commons SCXML Changes</title>
   </properties>
@@ -862,11 +862,9 @@
        [03-03-2006] Added a Maven2 POM.
       </action>
 
-      <action dev="rahul" type="add" issue="SCXML-7">
+      <action dev="rahul" type="add" issue="SCXML-7" due-to="Stephen Colebourne, Tim O'Brien">
        [03-01-2006] A new usecase for a stand-alone application
        modeling a stopwatch.
-       <dueto name="Stephen Colebourne"/>
-       <dueto name="Tim O'Brien"/>
       </action>
 
       <action dev="rahul" type="add">
@@ -918,15 +916,16 @@
 
       <action dev="rahul" type="update">
        [02-05-2006] Contexts are now created per State, but only as and
-       when needed. The
+       when needed. The <![CDATA[
        <a href="http://svn.apache.org/viewcvs?rev=374981&amp;view=rev">
-       commit message for r374981</a> has the details.
+       commit message for r374981</a> has the details.]]>
       </action>
 
       <action dev="rahul" type="update" issue="SCXML-6" due-to="Tim O'Brien">
        [02-05-2006] The Commons SCXML object model is now decoupled from
        the SCXML execution engine instance. The Commons SCXML object model
        is now stateless. For example (incomplete list):
+       <![CDATA[
         <ol>
           <li>A "SCXML" object no longer contains a root "Context"</li>
           <li>A "State" no longer contains a "Context"</li>
@@ -935,6 +934,7 @@
           <li>A "History" no longer contains the last known configuration.
               </li>
         </ol>
+        ]]>
         The advantage of this decoupling is that the SCXML document can be
         parsed once and reused across multiple execution instances,
         concurrently or otherwise.
@@ -943,6 +943,7 @@
       <action dev="rahul" type="update">
        [01-22-2006] Package reorganization. Mostly out of discussions on
        the dev list, three new packages were introduced:
+       <![CDATA[
         <ol>
           <li>A "test" package for the command line testing utility
               classes</li>
@@ -952,6 +953,7 @@
               depend on the servlet API for Commons SCXML usecases in
               servlet containers.</li>
         </ol>
+        ]]>
       </action>
 
       <action dev="rahul" type="update">
@@ -1004,14 +1006,17 @@
 
       <action dev="rahul" type="add">
        [10-14-2005] Added documentation on usecases to website:
+       <![CDATA[
        <ol>
         <li>Usecase 1: To configure instances of the RDC group container.</li>
         <li>Usecase 2: To describe Shale dialogs.</li>
        </ol>
+       ]]>
       </action>
 
       <action dev="rahul" type="add">
        [10-14-2005] Added API notes to website:
+       <![CDATA[
        <ol>
         <li>SCXML digester</li>
         <li>SCXML engine</li>
@@ -1019,6 +1024,7 @@
         <li>Standalone testing</li>
         <li>Fun with EL</li>
        </ol>
+       ]]>
       </action>
 
       <action dev="rahul" type="add">
@@ -1046,11 +1052,13 @@
 
       <action dev="rahul" type="add">
        [10-08-2005] Out of the box "simple" interface implementations.
+       <![CDATA[
        <ol>
         <li>Added simple loggers that implement ErrorHandler, ErrorReporter
         and SCXMLListener.</li>
         <li>Added a SimpleContext that wraps a variables (name to value) Map.</li>
        </ol>
+       ]]>
       </action>
 
       <action dev="rahul" type="fix">
@@ -1066,10 +1074,12 @@
 
       <action dev="rahul" type="update">
         [09-29-2005] Enhanced the Standalone testing functionality to enable:
+        <![CDATA[
         <ol>
           <li>Value change events on the current Context.</li>
           <li>Dummy events to re-evaluate conditionals on event-less transitions.</li>
         </ol>
+        ]]>
       </action>
 
       <action dev="rahul" type="update" due-to="Jaroslav Gergic">
@@ -1093,11 +1103,13 @@
       <action dev="rahul" type="update">
         [08-27-2005] Use a customized set of checkstyle rules. These are the Sun checks
         with three changes as discussed on the dev list:
+        <![CDATA[
         <ol>
           <li>Use a regexp header check for ASL</li>
           <li>Disable 'hide a field' check (lot of noise from setters)</li>
           <li>Disable 'method design for extension' check</li>
         </ol>
+        ]]>
       </action>
 
       <action dev="rahul" type="fix">
