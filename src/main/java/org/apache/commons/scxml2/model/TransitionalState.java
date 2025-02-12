@@ -117,7 +117,7 @@ public abstract class TransitionalState extends EnterableState {
     /**
      * Gets the set of child transition targets (may be empty).
      *
-     * @return Returns the children.
+     * @return the children.
      * @since 0.7
      */
     public final List<EnterableState> getChildren() {
@@ -127,7 +127,7 @@ public abstract class TransitionalState extends EnterableState {
     /**
      * Gets the data model for this transition target.
      *
-     * @return Returns the data model.
+     * @return the data model.
      */
     public final Datamodel getDatamodel() {
         return datamodel;
@@ -157,7 +157,7 @@ public abstract class TransitionalState extends EnterableState {
     /**
      * Gets the TransitionalState (State or Parallel) parent.
      *
-     * @return Returns the parent.
+     * @return the parent.
      */
     @Override
     public TransitionalState getParent() {

@@ -62,7 +62,7 @@ public class Raise extends Action {
     /**
      * Gets the event.
      *
-     * @return Returns the event.
+     * @return the event.
      */
     public final String getEvent() {
         return event;

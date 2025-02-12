@@ -303,7 +303,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
     /**
      * Gets the delay.
      *
-     * @return Returns the delay.
+     * @return the delay.
      */
     public final String getDelay() {
         return delay;

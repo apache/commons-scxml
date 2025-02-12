@@ -58,7 +58,7 @@ public class Datamodel implements Serializable {
    /**
     * Gets all the data children of this datamodel.
     *
-    * @return Returns the data.
+    * @return the data.
     */
    public final List<Data> getData() {
        return data;

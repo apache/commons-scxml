@@ -91,7 +91,7 @@ public class StateConfiguration implements Serializable {
     /**
      * Gets the current atomic states (leaf only).
      *
-     * @return Returns the atomic states - simple (leaf) states only.
+     * @return the atomic states - simple (leaf) states only.
      */
     public Set<EnterableState> getStates() {
         return  atomicStatesSet;

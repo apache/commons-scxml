@@ -183,7 +183,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     /**
      * Gets the environment specific error reporter.
      *
-     * @return Returns the errorReporter.
+     * @return the errorReporter.
      */
     public ErrorReporter getErrorReporter() {
         return exctx.getErrorReporter();
@@ -201,7 +201,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     /**
      * Gets the event dispatcher.
      *
-     * @return Returns the eventdispatcher.
+     * @return the eventdispatcher.
      */
     public EventDispatcher getEventdispatcher() {
         return exctx.getEventDispatcher();
@@ -244,7 +244,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     }
 
     /**
-     * @return Returns the current number of pending external events to be processed.
+     * @return the current number of pending external events to be processed.
      */
     public int getPendingEvents() {
         return externalEventQueue.size();
@@ -281,7 +281,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
      * manipulation of any {@link org.apache.commons.scxml2.model.Datamodel}s associated with this state
      * machine definition.
      *
-     * @return Returns the stateMachine.
+     * @return the stateMachine.
      */
     public SCXML getStateMachine() {
         return exctx.getStateMachine();
@@ -320,7 +320,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     }
 
     /**
-     * @return Returns true if there are pending external events to be processed.
+     * @return true if there are pending external events to be processed.
      */
     public boolean hasPendingEvents() {
         return !externalEventQueue.isEmpty();
@@ -334,7 +334,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     }
 
     /**
-     * @return Returns true if the state machine is running
+     * @return true if the state machine is running
      */
     public boolean isRunning() {
         return exctx.isRunning();

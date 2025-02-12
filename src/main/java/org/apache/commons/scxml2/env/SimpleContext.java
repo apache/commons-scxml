@@ -126,7 +126,7 @@ public class SimpleContext implements Context, Serializable {
     /**
      * Gets the Map of all local variables in this Context.
      *
-     * @return Returns the vars.
+     * @return the vars.
      */
     @Override
     public Map<String, Object> getVars() {

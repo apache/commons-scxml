@@ -34,7 +34,7 @@ public interface ActionsContainer {
     /**
      * Gets the executable actions contained in this &lt;container&gt;.
      *
-     * @return Returns the actions.
+     * @return the actions.
      */
     List<Action> getActions();
 }

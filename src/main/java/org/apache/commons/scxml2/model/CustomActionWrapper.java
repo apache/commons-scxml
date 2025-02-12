@@ -65,7 +65,7 @@ public class CustomActionWrapper extends Action {
     /**
      * Gets the attributes defined on the custom action element
      *
-     * @return Returns the map of attributes.
+     * @return the map of attributes.
      */
     public final Map<String, String> getAttributes() {
         return attributes;
@@ -81,7 +81,7 @@ public class CustomActionWrapper extends Action {
     /**
      * Gets the custom XML namespaces in effect for this custom action
      *
-     * @return Returns the map of namespaces.
+     * @return the map of namespaces.
      */
     public final Map<String, String> getNamespaces() {
         return namespaces;

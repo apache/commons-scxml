@@ -48,7 +48,7 @@ public class Hello extends Action {
     /**
      * Gets the name.
      *
-     * @return Returns the name.
+     * @return the name.
      */
     public String getName() {
         return name;

@@ -231,34 +231,34 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     }
 
     /**
-     * @return Returns the restricted execution context for actions
+     * @return the restricted execution context for actions
      */
     public ActionExecutionContext getActionExecutionContext() {
         return actionExecutionContext;
     }
 
     /**
-     * @return Returns the SCXML Execution Logger for the application
+     * @return the SCXML Execution Logger for the application
      */
     public Log getAppLog() {
         return appLog;
     }
 
     /**
-     * @return Returns the error reporter
+     * @return the error reporter
      */
     public ErrorReporter getErrorReporter() {
         return errorReporter;
     }
     /**
-     * @return Returns The evaluator.
+     * @return The evaluator.
      */
     public Evaluator getEvaluator() {
         return evaluator;
     }
 
     /**
-     * @return Returns the event dispatcher
+     * @return the event dispatcher
      */
     public EventDispatcher getEventDispatcher() {
         return eventdispatcher;
@@ -273,7 +273,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     }
 
     /**
-     * @return Returns the map of current active Invokes and their invokeId
+     * @return the map of current active Invokes and their invokeId
      */
     public Map<Invoke, String> getInvokeIds() {
         return invokeIds;
@@ -293,14 +293,14 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     }
 
     /**
-     * @return Returns the notification registry
+     * @return the notification registry
      */
     public NotificationRegistry getNotificationRegistry() {
         return notificationRegistry;
     }
 
     /**
-     * @return Returns the SCInstance
+     * @return the SCInstance
      */
     public SCInstance getScInstance() {
         return scInstance;
@@ -311,14 +311,14 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     }
 
     /**
-     * @return Returns the state machine
+     * @return the state machine
      */
     public SCXML getStateMachine() {
         return scInstance.getStateMachine();
     }
 
     /**
-     * @return Returns true if the internal event queue isn't empty
+     * @return true if the internal event queue isn't empty
      */
     public boolean hasPendingInternalEvent() {
         return !internalEventQueue.isEmpty();
@@ -368,7 +368,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     }
 
     /**
-     * @return Returns true if this state machine is running
+     * @return true if this state machine is running
      */
     public boolean isRunning() {
         return scInstance.isRunning();
@@ -396,7 +396,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     }
 
     /**
-     * @return Returns the next event from the internal event queue, if available
+     * @return the next event from the internal event queue, if available
      */
     public TriggerEvent nextInternalEvent() {
         return internalEventQueue.poll();

@@ -62,7 +62,7 @@ public class Log extends Action {
     /**
      * Gets the log expression.
      *
-     * @return Returns the expression.
+     * @return the expression.
      */
     public final String getExpr() {
         return expr;
@@ -71,7 +71,7 @@ public class Log extends Action {
     /**
      * Gets the log label.
      *
-     * @return Returns the label.
+     * @return the label.
      */
     public final String getLabel() {
         return label;

@@ -49,7 +49,7 @@ public class Status implements Serializable {
     }
 
     /**
-     * @return Returns the single top level final state in which the state machine terminated, or null otherwise
+     * @return the single top level final state in which the state machine terminated, or null otherwise
      */
     public Final getFinalState() {
         if (configuration.getStates().size() == 1) {
@@ -64,7 +64,7 @@ public class Status implements Serializable {
     /**
      * Gets the atomic states configuration (leaf only).
      *
-     * @return Returns the atomic states configuration - simple (leaf) states only.
+     * @return the atomic states configuration - simple (leaf) states only.
      */
     public Set<EnterableState> getStates() {
         return configuration.getStates();

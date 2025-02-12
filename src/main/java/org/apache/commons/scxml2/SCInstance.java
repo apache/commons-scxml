@@ -265,7 +265,7 @@ public class SCInstance implements Serializable {
     }
 
     /**
-     * @return Returns the current status for this instance
+     * @return the current status for this instance
      */
     public Status getCurrentStatus() {
         return currentStatus;
@@ -279,7 +279,7 @@ public class SCInstance implements Serializable {
     }
 
     /**
-     * @return Returns the global context, which is the top context <em>within</em> the state machine.
+     * @return the global context, which is the top context <em>within</em> the state machine.
      */
     public Context getGlobalContext() {
         if (globalContext == null) {
@@ -296,7 +296,7 @@ public class SCInstance implements Serializable {
      * Gets the last configuration for this history.
      *
      * @param history The history.
-     * @return Returns the lastConfiguration.
+     * @return the lastConfiguration.
      */
     public Set<EnterableState> getLastConfiguration(final History history) {
         Set<EnterableState> lastConfiguration = histories.get(history);
@@ -319,7 +319,7 @@ public class SCInstance implements Serializable {
     }
 
     /**
-     * @return Returns the state configuration for this instance
+     * @return the state configuration for this instance
      */
     public StateConfiguration getStateConfiguration() {
         return stateConfiguration;
@@ -409,7 +409,7 @@ public class SCInstance implements Serializable {
     }
 
     /**
-     * @return Returns if the state machine is running
+     * @return if the state machine is running
      */
     public boolean isRunning() {
         return running;

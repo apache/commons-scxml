@@ -263,7 +263,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
     }
 
     /**
-     * @return Returns true if no member of the provided states set is a descendant of the provided state.
+     * @return true if no member of the provided states set is a descendant of the provided state.
      * @param states the set of states to check for descendants
      * @param state the state to check with
      */
@@ -727,7 +727,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * @param exctx The execution context for this step
      * @param transition The transition
      * @param eventName The (optional) event name to match against
-     * @return Returns true if the transition matches against the provided eventName, or is event-less when no eventName
+     * @return true if the transition matches against the provided eventName, or is event-less when no eventName
      *         is provided, <em>AND</em> its (optional) condition guard evaluates to true.
      */
     public boolean matchTransition(final SCXMLExecutionContext exctx, final Transition transition, final String eventName) {

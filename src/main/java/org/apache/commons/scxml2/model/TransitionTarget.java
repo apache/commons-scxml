@@ -74,7 +74,7 @@ public abstract class TransitionTarget implements Serializable, Observable {
     /**
      * Gets the identifier for this transition target (may be null).
      *
-     * @return Returns the id.
+     * @return the id.
      */
     public final String getId() {
         return id;
@@ -98,7 +98,7 @@ public abstract class TransitionTarget implements Serializable, Observable {
     /**
      * Gets the parent TransitionTarget.
      *
-     * @return Returns the parent state
+     * @return the parent state
      * (null if parent is &lt;scxml&gt; element)
      */
     public EnterableState getParent() {

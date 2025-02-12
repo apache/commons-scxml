@@ -53,7 +53,7 @@ public class Final extends EnterableState {
     }
 
     /**
-     * @return Returns the State parent
+     * @return the State parent
      */
     @Override
     public State getParent() {
@@ -62,7 +62,7 @@ public class Final extends EnterableState {
 
     /**
      * {@inheritDoc}
-     * @return Returns always true (a state of type Final is always atomic)
+     * @return always true (a state of type Final is always atomic)
      */
     @Override
     public final boolean isAtomicState() {

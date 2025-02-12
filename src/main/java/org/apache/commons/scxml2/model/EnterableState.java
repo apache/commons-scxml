@@ -69,7 +69,7 @@ public abstract class EnterableState extends TransitionTarget implements Documen
     /**
      * Gets the OnEntry elements.
      *
-     * @return Returns the onEntry elements
+     * @return the onEntry elements
      */
     public final List<OnEntry> getOnEntries() {
         return onEntries;
@@ -78,7 +78,7 @@ public abstract class EnterableState extends TransitionTarget implements Documen
     /**
      * Gets the OnExit elements
      *
-     * @return Returns the onExit elements
+     * @return the onExit elements
      */
     public final List<OnExit> getOnExits() {
         return onExits;
@@ -98,7 +98,7 @@ public abstract class EnterableState extends TransitionTarget implements Documen
      * <p>
      * An atomic state is a state of type Final or of type State without children,
      * </p>
-     * @return Returns true if this is an atomic state.
+     * @return true if this is an atomic state.
      */
     public abstract boolean isAtomicState();
 

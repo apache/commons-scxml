@@ -46,7 +46,7 @@ public class History extends TransitionTarget {
     }
 
     /**
-     * @return Returns the TransitionalState parent
+     * @return the TransitionalState parent
      */
     @Override
     public TransitionalState getParent() {
@@ -56,7 +56,7 @@ public class History extends TransitionTarget {
     /**
      * Gets the transition.
      *
-     * @return Returns the transition.
+     * @return the transition.
      */
     public final SimpleTransition getTransition() {
         return transition;
@@ -65,7 +65,7 @@ public class History extends TransitionTarget {
     /**
      * Is this history &quot;deep&quot; (as against &quot;shallow&quot;).
      *
-     * @return Returns whether this is a &quot;deep&quot; history
+     * @return whether this is a &quot;deep&quot; history
      */
     public final boolean isDeep() {
         return isDeep;

@@ -41,7 +41,7 @@ public class OnExit extends Executable {
     }
 
     /**
-     * @return Returns the indicator whether to raise the non-standard "exit.state.id" internal event after executing
+     * @return the indicator whether to raise the non-standard "exit.state.id" internal event after executing
      *         this OnExit. When null no event will be raised
      */
     public final Boolean getRaiseEvent() {
@@ -49,7 +49,7 @@ public class OnExit extends Executable {
     }
 
     /**
-     * @return Returns true if the non-standard internal "exit.state.id" event will be raised after executing this OnExit
+     * @return true if the non-standard internal "exit.state.id" event will be raised after executing this OnExit
      */
     public final boolean isRaiseEvent() {
         return raiseEvent != null && raiseEvent;

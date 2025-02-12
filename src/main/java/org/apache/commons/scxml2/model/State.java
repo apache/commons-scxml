@@ -73,7 +73,7 @@ public class State extends TransitionalState {
 
     /**
      * {@inheritDoc}
-     * @return Returns true if this State has no children
+     * @return true if this State has no children
      */
     @Override
     public final boolean isAtomicState() {

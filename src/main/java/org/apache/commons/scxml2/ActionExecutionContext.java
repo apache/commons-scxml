@@ -40,7 +40,7 @@ public class ActionExecutionContext {
     }
 
     /**
-     * @return Returns the SCXML Execution Logger for the application
+     * @return the SCXML Execution Logger for the application
      */
     public Log getAppLog() {
         return exctx.getAppLog();
@@ -48,49 +48,49 @@ public class ActionExecutionContext {
 
     /**
      * @param state an EnterableState
-     * @return Returns the context for an EnterableState
+     * @return the context for an EnterableState
      */
     public Context getContext(final EnterableState state) {
         return exctx.getScInstance().getContext(state);
     }
 
     /**
-     * @return Returns the error reporter
+     * @return the error reporter
      */
     public ErrorReporter getErrorReporter() {
         return exctx.getErrorReporter();
     }
 
     /**
-     * @return Returns The evaluator.
+     * @return The evaluator.
      */
     public Evaluator getEvaluator() {
         return exctx.getEvaluator();
     }
 
     /**
-     * @return Returns the event dispatcher
+     * @return the event dispatcher
      */
     public EventDispatcher getEventDispatcher() {
         return exctx.getEventDispatcher();
     }
 
     /**
-     * @return Returns the global context
+     * @return the global context
      */
     public Context getGlobalContext() {
         return exctx.getScInstance().getGlobalContext();
     }
 
     /**
-     * @return Returns the I/O Processor for the internal event queue
+     * @return the I/O Processor for the internal event queue
      */
     public SCXMLIOProcessor getInternalIOProcessor() {
         return exctx;
     }
 
     /**
-     * @return Returns the state machine
+     * @return the state machine
      */
     public SCXML getStateMachine() {
         return exctx.getStateMachine();
