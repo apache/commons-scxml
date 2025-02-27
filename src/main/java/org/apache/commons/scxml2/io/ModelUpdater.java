@@ -59,7 +59,7 @@ final class ModelUpdater {
 
     /**
      * Error message when a state element specifies an initial state which
-     * is not a direct descendent.
+     * is not a direct descendant.
      */
     private static final String ERR_STATE_BAD_INIT = "Initial state "
             + "null or not a descendant of {0}";
@@ -77,7 +77,7 @@ final class ModelUpdater {
             + " for shallow history is not child for {0}";
 
     /**
-     * Error message when a deep history state is not a descendent state.
+     * Error message when a deep history state is not a descendant state.
      */
     private static final String ERR_STATE_BAD_DEEP_HIST = "History state"
             + " for deep history is not descendant for {0}";

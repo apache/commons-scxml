@@ -2701,7 +2701,7 @@ public final class SCXMLReader {
                 // TODO src attribute for <parallel>
             }
         } else {
-            // Need to pull in only descendent targets
+            // Need to pull in only descendant targets
             final Object source = externalSCXML.getTargets().get(fragment);
             if (source == null) {
                 final MessageFormat msgFormat = new MessageFormat(ERR_STATE_SRC_FRAGMENT);
