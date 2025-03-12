@@ -55,10 +55,10 @@ import org.apache.commons.scxml2.model.SCXML;
  * W3C SCXML 1.0 IRP tests: <a href="http://www.w3.org/Voice/2013/scxml-irp/">http://www.w3.org/Voice/2013/scxml-irp/</a>.
  * <p>
  * The <strong>W3CTests</strong> class is standalone and can download and transform the IRP tests locally using respectively
- * commandline parameter <strong>get</strong> or <strong>make</strong>.
+ * command-line parameter <strong>get</strong> or <strong>make</strong>.
  * </p>
  * <p>
- * To execute one or multiple IRP tests the commandline parameter <strong>run</strong> must be specified.
+ * To execute one or multiple IRP tests the command-line parameter <strong>run</strong> must be specified.
  * </p>
  * <p>
  * Optional environment parameter <strong>-Ddatamodel=&lt;minimal|ecma|jexl|groovy&gt;</strong> can be specified to limit the
@@ -409,7 +409,7 @@ public class W3CTests {
     }
 
     /**
-     * Usage prints the 'commandline' usage options.
+     * Usage prints the 'command-line' usage options.
      */
     protected static void usage() {
         System.out.println("Usage: W3CTests <get|run>\n" +
