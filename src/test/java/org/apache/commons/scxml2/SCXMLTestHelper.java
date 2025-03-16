@@ -16,13 +16,13 @@
  */
 package org.apache.commons.scxml2;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Reader;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -48,9 +48,9 @@ public class SCXMLTestHelper {
      * Assumes the default build artifacts are generated in the
      * "target" directory (so it can be removed via a clean build).
      */
-    public static final String SERIALIZATION_DIR = "target/serialization";
-    public static final String SERIALIZATION_FILE_PREFIX = SERIALIZATION_DIR + "/scxml";
-    public static final String SERIALIZATION_FILE_SUFFIX = ".ser";
+    private static final Path SERIALIZATION_DIR = Paths.get("target/serialization");
+    private static final String SERIALIZATION_FILE_PREFIX = "scxml";
+    private static final String SERIALIZATION_FILE_SUFFIX = ".ser";
 
     // Generate a unique sequence number for the serialization files
     private static int sequence=0;
@@ -222,39 +222,27 @@ public class SCXMLTestHelper {
     }
 
     public static SCXMLExecutor testInstanceSerializability(final SCXMLExecutor exec) throws Exception {
-        final File fileDir = new File(SERIALIZATION_DIR);
-        if (!fileDir.exists()) {
-            fileDir.mkdirs();
+        Files.createDirectories(SERIALIZATION_DIR);
+        final Path file = SERIALIZATION_DIR.resolve(SERIALIZATION_FILE_PREFIX + getSequenceNumber() + SERIALIZATION_FILE_SUFFIX);
+        try (ObjectOutputStream out = new ObjectOutputStream(Files.newOutputStream(file))) {
+            out.writeObject(exec.detachInstance());
         }
-        final String filename = SERIALIZATION_FILE_PREFIX
-            + getSequenceNumber() + SERIALIZATION_FILE_SUFFIX;
-        final ObjectOutputStream out =
-            new ObjectOutputStream(new FileOutputStream(filename));
-        out.writeObject(exec.detachInstance());
-        out.close();
-        final ObjectInputStream in =
-            new SCInstanceObjectInputStream(new FileInputStream(filename));
-        exec.attachInstance((SCInstance) in.readObject());
-        in.close();
+        try (ObjectInputStream in = new SCInstanceObjectInputStream(Files.newInputStream(file))) {
+            exec.attachInstance((SCInstance) in.readObject());
+        }
         return exec;
     }
 
     public static SCXML testModelSerializability(final SCXML scxml) throws Exception {
-        final File fileDir = new File(SERIALIZATION_DIR);
-        if (!fileDir.exists()) {
-            fileDir.mkdirs();
-        }
-        final String filename = SERIALIZATION_FILE_PREFIX
-            + getSequenceNumber() + SERIALIZATION_FILE_SUFFIX;
+        Files.createDirectories(SERIALIZATION_DIR);
+        final Path file = SERIALIZATION_DIR.resolve(SERIALIZATION_FILE_PREFIX + getSequenceNumber() + SERIALIZATION_FILE_SUFFIX);
         SCXML roundtrip;
-        final ObjectOutputStream out =
-            new ObjectOutputStream(new FileOutputStream(filename));
-        out.writeObject(scxml);
-        out.close();
-        final ObjectInputStream in =
-            new ObjectInputStream(new FileInputStream(filename));
-        roundtrip = (SCXML) in.readObject();
-        in.close();
+        try (ObjectOutputStream out = new ObjectOutputStream(Files.newOutputStream(file))) {
+            out.writeObject(scxml);
+        }
+        try (ObjectInputStream in = new ObjectInputStream(Files.newInputStream(file))) {
+            roundtrip = (SCXML) in.readObject();
+        }
         return roundtrip;
     }
 

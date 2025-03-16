@@ -20,7 +20,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -42,6 +46,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.file.PathUtils;
 import org.apache.commons.scxml2.PathResolver;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.env.Tracer;
@@ -241,7 +246,7 @@ public class W3CTests {
         Datamodel(final String value, final String label) {
             this.value = value;
             this.label = label;
-            this.testDir = TESTS_SRC_DIR + value + "/";
+            this.testDir = TESTS_SRC_DIR_STR + value + "/";
         }
 
         public String label() {
@@ -371,9 +376,10 @@ public class W3CTests {
     private static final String SCXML_IRP_BASE_URL = "http://www.w3.org/Voice/2013/scxml-irp/";
     private static final String SCXML_IRP_MANIFEST_URI = "manifest.xml";
     private static final String SCXML_IRP_ECMA_XSL_URI = "confEcma.xsl";
-    private static final String TESTS_SRC_DIR = "src/w3c/scxml-irp/";
-    private static final String TXML_TESTS_DIR = TESTS_SRC_DIR + "txml/";
-    private static final String PACKAGE_PATH = "/"+W3CTests.class.getPackage().getName().replace('.','/');
+    private static final String TESTS_SRC_DIR_STR = "src/w3c/scxml-irp/";
+    private static final Path TESTS_SRC_DIR = Paths.get(TESTS_SRC_DIR_STR);
+    private static final Path TXML_TESTS_DIR = TESTS_SRC_DIR.resolve("txml/");
+    private static final String PACKAGE_PATH = "/" + W3CTests.class.getPackage().getName().replace('.', '/');
 
     private static final String TESTS_FILENAME = PACKAGE_PATH + "/tests.xml";
 
@@ -430,29 +436,29 @@ public class W3CTests {
     }
 
     /**
-     * Downloads the W3C IRP manifest.xml, the IRP ecma stylesheet to transform the tests, and the
-     * actual test templates (.txml) as defined in the manifest.xml
+     * Downloads the W3C IRP manifest.xml, the IRP ecma stylesheet to transform the tests, and the actual test templates (.txml) as defined in the manifest.xml
+     * 
      * @throws Exception
      */
     protected void getTests() throws Exception {
-        final File testsSrcDir = new File(TESTS_SRC_DIR);
+        final File testsSrcDir = new File(TESTS_SRC_DIR_STR);
         if (!testsSrcDir.mkdirs()) {
             FileUtils.cleanDirectory(testsSrcDir);
         }
-        new File(TXML_TESTS_DIR).mkdirs();
+        Files.createDirectories(TESTS_SRC_DIR);
         for (final Datamodel dm : Datamodel.values()) {
             new File(dm.testDir()).mkdirs();
         }
         System.out.println("Downloading IRP manifest: " + SCXML_IRP_BASE_URL + SCXML_IRP_MANIFEST_URI);
-        FileUtils.copyURLToFile(new URL(SCXML_IRP_BASE_URL + SCXML_IRP_MANIFEST_URI), new File(testsSrcDir, SCXML_IRP_MANIFEST_URI));
+        PathUtils.copyFile(new URL(SCXML_IRP_BASE_URL + SCXML_IRP_MANIFEST_URI), TESTS_SRC_DIR.resolve(SCXML_IRP_MANIFEST_URI));
         System.out.println("Downloading ecma stylesheet: " + SCXML_IRP_BASE_URL + SCXML_IRP_ECMA_XSL_URI);
-        FileUtils.copyURLToFile(new URL(SCXML_IRP_BASE_URL + SCXML_IRP_ECMA_XSL_URI), new File(testsSrcDir, SCXML_IRP_ECMA_XSL_URI));
+        PathUtils.copyFile(new URL(SCXML_IRP_BASE_URL + SCXML_IRP_ECMA_XSL_URI), TESTS_SRC_DIR.resolve(SCXML_IRP_ECMA_XSL_URI));
         final Assertions assertions = loadAssertions();
         for (final Assertions.Assertion entry : assertions.getAssertions().values()) {
             for (final Assertions.TestCase test : entry.getTestCases()) {
                 for (final Assertions.Resource resource : test.getResources()) {
                     System.out.println("Downloading IRP test file: " + SCXML_IRP_BASE_URL + resource.getUri());
-                    FileUtils.copyURLToFile(new URL(SCXML_IRP_BASE_URL + resource.getUri()), new File(TXML_TESTS_DIR + resource.getFileName()));
+                    PathUtils.copyFile(new URL(SCXML_IRP_BASE_URL + resource.getUri()), TXML_TESTS_DIR.resolve(resource.getFileName()));
                 }
             }
         }
@@ -466,7 +472,7 @@ public class W3CTests {
     protected Assertions loadAssertions() throws Exception {
         final JAXBContext jaxbContext = JAXBContext.newInstance(Assertions.class);
         final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        return (Assertions)jaxbUnmarshaller.unmarshal(new File(TESTS_SRC_DIR, SCXML_IRP_MANIFEST_URI));
+        return (Assertions)jaxbUnmarshaller.unmarshal(TESTS_SRC_DIR.resolve(SCXML_IRP_MANIFEST_URI).toFile());
     }
 
     /**
@@ -488,12 +494,10 @@ public class W3CTests {
      * @throws Exception
      */
     protected void makeTests() throws Exception {
-        final File testsSrcDir = new File(TESTS_SRC_DIR);
-
         final TransformerFactory factory = TransformerFactory.newInstance("net.sf.saxon.TransformerFactoryImpl",null);
         factory.setFeature("http://saxon.sf.net/feature/suppressXsltNamespaceCheck", true);
         final Map<Datamodel, Transformer> transformers = new HashMap<>();
-        transformers.put(Datamodel.ECMA, factory.newTransformer(new StreamSource(new FileInputStream(new File(testsSrcDir, SCXML_IRP_ECMA_XSL_URI)))));
+        transformers.put(Datamodel.ECMA, factory.newTransformer(new StreamSource(Files.newInputStream(TESTS_SRC_DIR.resolve(SCXML_IRP_ECMA_XSL_URI)))));
         transformers.put(Datamodel.MINIMAL, factory.newTransformer(new StreamSource(getClass().getResourceAsStream(SCXML_IRP_MINIMAL_XSL_FILENAME))));
         transformers.put(Datamodel.JEXL, factory.newTransformer(new StreamSource(getClass().getResourceAsStream(SCXML_IRP_JEXL_XSL_FILENAME))));
         transformers.put(Datamodel.GROOVY, factory.newTransformer(new StreamSource(getClass().getResourceAsStream(SCXML_IRP_GROOVY_XSL_FILENAME))));
@@ -509,30 +513,30 @@ public class W3CTests {
 
     /**
      * Download and transform a W3C IRP test resource file
-     * @param specid the SCXML 1.0 spec id (anchor) for the current assertion,
-     *               which is used to determine if, how and where the resource should be transformed.
-     * @param resource The test resource definition
+     * 
+     * @param specid       the SCXML 1.0 spec id (anchor) for the current assertion, which is used to determine if, how and where the resource should be
+     *                     transformed.
+     * @param resource     The test resource definition
      * @param transformers map of datamodel transformers to produce a datamodel specific SCXML document from the txml resource
      * @throws Exception
      */
-    protected void processResource(final String specid, final Assertions.Resource resource, final Map<Datamodel, Transformer> transformers)
-            throws Exception {
+    protected void processResource(final String specid, final Assertions.Resource resource, final Map<Datamodel, Transformer> transformers) throws Exception {
         System.out.println("processing IRP test file " + resource.getFileName());
-        FileUtils.copyURLToFile(new URL(SCXML_IRP_BASE_URL + resource.getUri()), new File(TXML_TESTS_DIR + resource.getFileName()));
+        PathUtils.copyFile(new URL(SCXML_IRP_BASE_URL + resource.getUri()), TXML_TESTS_DIR.resolve(resource.getFileName()));
         switch (specid) {
-            case "#minimal-profile":
-                transformResource(resource, transformers.get(Datamodel.MINIMAL), Datamodel.MINIMAL.testDir());
-                break;
-            case "#ecma-profile":
-                transformResource(resource, transformers.get(Datamodel.ECMA), Datamodel.ECMA.testDir());
-                break;
-            default:
-                for (final Datamodel dm : transformers.keySet()) {
-                    if (dm != Datamodel.MINIMAL) {
-                        transformResource(resource, transformers.get(dm), dm.testDir());
-                    }
+        case "#minimal-profile":
+            transformResource(resource, transformers.get(Datamodel.MINIMAL), Datamodel.MINIMAL.testDir());
+            break;
+        case "#ecma-profile":
+            transformResource(resource, transformers.get(Datamodel.ECMA), Datamodel.ECMA.testDir());
+            break;
+        default:
+            for (final Datamodel dm : transformers.keySet()) {
+                if (dm != Datamodel.MINIMAL) {
+                    transformResource(resource, transformers.get(dm), dm.testDir());
                 }
-                break;
+            }
+            break;
         }
     }
 
@@ -675,21 +679,21 @@ public class W3CTests {
     }
 
     /**
-     * XSL transform a W3C IRP test SCXML resource to a datamodel specific location and format,
-     * or simply copy a non SCXML resource to that location.
-     * @param resource the test resource definition
+     * XSL transform a W3C IRP test SCXML resource to a datamodel specific location and format, or simply copy a non SCXML resource to that location.
+     *
+     * @param resource    the test resource definition
      * @param transformer the XSL transformer to use
-     * @param targetDir the target location for the transformed SCXML document, or the non-SCXML resource
+     * @param targetDir   the target location for the transformed SCXML document, or the non-SCXML resource
      * @throws Exception
      */
-    protected void transformResource(final Assertions.Resource resource, final Transformer transformer,
-                                     final String targetDir) throws Exception {
+    protected void transformResource(final Assertions.Resource resource, final Transformer transformer, final String targetDir) throws Exception {
         if (resource.getFileName().endsWith(".txml")) {
-            final StreamSource txmlSource = new StreamSource(new FileInputStream(new File(TXML_TESTS_DIR, resource.getFileName())));
-            transformer.transform(txmlSource, new StreamResult(new FileOutputStream(new File(targetDir, resource.getName() + ".scxml"))));
-        }
-        else {
-            FileUtils.copyFile(new File(TXML_TESTS_DIR, resource.getFileName()), new File(targetDir, resource.getFileName()));
+            try (InputStream source = Files.newInputStream(TXML_TESTS_DIR.resolve(resource.getFileName()));
+                    FileOutputStream result = new FileOutputStream(new File(targetDir, resource.getName() + ".scxml"))) {
+                transformer.transform(new StreamSource(source), new StreamResult(result));
+            }
+        } else {
+            Files.copy(TXML_TESTS_DIR.resolve(resource.getFileName()), Paths.get(targetDir, resource.getFileName()));
         }
     }
 }
