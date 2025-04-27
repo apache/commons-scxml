@@ -897,7 +897,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the contents of this &lt;assign&gt; element.
+     * Reads the contents of this &lt;assign&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
@@ -960,7 +960,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the following body contents into a String.
+     * Reads the following body contents into a String.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @return The body content read into a String.
@@ -1018,7 +1018,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the contents of this &lt;cancel&gt; element.
+     * Reads the contents of this &lt;cancel&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
@@ -1051,7 +1051,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the contents of this &lt;content&gt; element.
+     * Reads the contents of this &lt;content&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
@@ -1074,7 +1074,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the contents of this custom action.
+     * Reads the contents of this custom action.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
@@ -1169,7 +1169,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the contents of this &lt;data&gt; element.
+     * Reads the contents of this &lt;data&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
@@ -1200,7 +1200,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the contents of this &lt;datamodel&gt; element.
+     * Reads the contents of this &lt;datamodel&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
@@ -1245,7 +1245,7 @@ public final class SCXMLReader {
      * Private utility functions for reading the SCXML document.
      */
     /**
-     * Read the SCXML document through the {@link XMLStreamReader}.
+     * Reads the SCXML document through the {@link XMLStreamReader}.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
@@ -1284,7 +1284,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the contents of this &lt;donedata&gt; element.
+     * Reads the contents of this &lt;donedata&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
@@ -1331,7 +1331,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the current element into a DOM {@link Element}.
+     * Reads the current element into a DOM {@link Element}.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @return The parsed content as a DOM {@link Element}.
@@ -1414,7 +1414,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the contents of this &lt;else&gt; element.
+     * Reads the contents of this &lt;else&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param executable The parent {@link Executable} for this action.
@@ -1431,7 +1431,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the contents of this &lt;elseif&gt; element.
+     * Reads the contents of this &lt;elseif&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param executable The parent {@link Executable} for this action.
@@ -1449,7 +1449,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read this set of executable content elements.
+     * Reads this set of executable content elements.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
@@ -1557,7 +1557,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the contents of this &lt;final&gt; element.
+     * Reads the contents of this &lt;final&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
@@ -1614,7 +1614,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the contents of this &lt;finalize&gt; element.
+     * Reads the contents of this &lt;finalize&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
@@ -1635,7 +1635,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the contents of this &lt;foreach&gt; element.
+     * Reads the contents of this &lt;foreach&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
@@ -1663,7 +1663,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the contents of the initial &lt;script&gt; element.
+     * Reads the contents of the initial &lt;script&gt; element.
      * @see <a href="https://www.w3.org/TR/2015/REC-scxml-20150901/#scxml">
      *     https://www.w3.org/TR/2015/REC-scxml-20150901/#scxml<a> section 3.2.2
      *
@@ -1682,7 +1682,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the contents of this &lt;history&gt; element.
+     * Reads the contents of this &lt;history&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
@@ -1723,7 +1723,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the contents of this &lt;if&gt; element.
+     * Reads the contents of this &lt;if&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
@@ -1767,7 +1767,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the contents of this &lt;initial&gt; element.
+     * Reads the contents of this &lt;initial&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
@@ -1841,7 +1841,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the contents of this &lt;invoke&gt; element.
+     * Reads the contents of this &lt;invoke&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
@@ -1898,7 +1898,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the contents of this &lt;log&gt; element.
+     * Reads the contents of this &lt;log&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param executable The parent {@link Executable} for this action.
@@ -1921,7 +1921,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the current active namespace declarations.
+     * Reads the current active namespace declarations.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @return the map of active namespace declarations, null if none defined
@@ -1938,7 +1938,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the contents of this &lt;onentry&gt; element.
+     * Reads the contents of this &lt;onentry&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
@@ -1958,7 +1958,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the contents of this &lt;onexit&gt; element.
+     * Reads the contents of this &lt;onexit&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
@@ -1993,7 +1993,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the contents of this &lt;parallel&gt; element.
+     * Reads the contents of this &lt;parallel&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
@@ -2085,7 +2085,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the contents of this &lt;param&gt; element.
+     * Reads the contents of this &lt;param&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
@@ -2120,7 +2120,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read and parse the body of a {@link ParsedValueContainer} element.
+     * Reads and parse the body of a {@link ParsedValueContainer} element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
@@ -2188,7 +2188,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the contents of this &lt;raise&gt; element.
+     * Reads the contents of this &lt;raise&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
@@ -2240,7 +2240,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the contents of this &lt;script&gt; element.
+     * Reads the contents of this &lt;script&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
@@ -2271,7 +2271,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the contents of this &lt;script&gt; element.
+     * Reads the contents of this &lt;script&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
@@ -2293,7 +2293,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the contents of this &lt;scxml&gt; element.
+     * Reads the contents of this &lt;scxml&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
@@ -2370,7 +2370,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the contents of this &lt;send&gt; element.
+     * Reads the contents of this &lt;send&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
@@ -2485,7 +2485,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the contents of this simple &lt;transition&gt; element.
+     * Reads the contents of this simple &lt;transition&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
@@ -2516,7 +2516,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the contents of this &lt;state&gt; element.
+     * Reads the contents of this &lt;state&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
@@ -2618,7 +2618,7 @@ public final class SCXMLReader {
     }
 
     /**
-     * Read the contents of this &lt;transition&gt; element.
+     * Reads the contents of this &lt;transition&gt; element.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
      * @param configuration The {@link Configuration} to use while parsing.
