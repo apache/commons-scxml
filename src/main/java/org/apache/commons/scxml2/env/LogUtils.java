@@ -25,7 +25,7 @@ import org.apache.commons.scxml2.model.TransitionTarget;
 public final class LogUtils {
 
     /**
-     * Write out this TransitionTarget location in a XPath style format.
+     * Writes out this TransitionTarget location in a XPath style format.
      *
      * @param tt The TransitionTarget whose &quot;path&quot; is to needed
      * @return String The XPath style location of the TransitionTarget within

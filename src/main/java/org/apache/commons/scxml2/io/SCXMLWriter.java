@@ -410,7 +410,7 @@ public class SCXMLWriter {
 
     //------------------------- PUBLIC API METHODS -------------------------//
     /**
-     * Write out the Commons SCXML object model as an SCXML document (used
+     * Writes out the Commons SCXML object model as an SCXML document (used
      * primarily for testing, debugging and visual verification), returned as
      * a string.
      *
@@ -426,7 +426,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out the Commons SCXML object model as an SCXML document (used
+     * Writes out the Commons SCXML object model as an SCXML document (used
      * primarily for testing, debugging and visual verification) using the
      * supplied {@link Configuration}, and return as a string.
      *
@@ -450,7 +450,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out the Commons SCXML object model as an SCXML document to the
+     * Writes out the Commons SCXML object model as an SCXML document to the
      * supplied {@link OutputStream}.
      *
      * @param scxml The object model to write out.
@@ -467,7 +467,7 @@ public class SCXMLWriter {
     //---------------------- PRIVATE UTILITY METHODS ----------------------//
 
     /**
-     * Write out the Commons SCXML object model as an SCXML document to the
+     * Writes out the Commons SCXML object model as an SCXML document to the
      * supplied {@link OutputStream} using the given {@link Configuration}.
      *
      * @param scxml The object model to write out.
@@ -490,7 +490,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out the Commons SCXML object model as an SCXML document to the
+     * Writes out the Commons SCXML object model as an SCXML document to the
      * supplied {@link Result}.
      *
      * @param scxml The object model to write out.
@@ -505,7 +505,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out the Commons SCXML object model as an SCXML document to the
+     * Writes out the Commons SCXML object model as an SCXML document to the
      * supplied {@link Result} using the given {@link Configuration}.
      *
      * @param scxml The object model to write out.
@@ -524,7 +524,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out the Commons SCXML object model as an SCXML document to the
+     * Writes out the Commons SCXML object model as an SCXML document to the
      * supplied {@link Writer}.
      *
      * @param scxml The object model to write out.
@@ -539,7 +539,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out the Commons SCXML object model as an SCXML document to the
+     * Writes out the Commons SCXML object model as an SCXML document to the
      * supplied {@link Writer} using the given {@link Configuration}.
      *
      * @param scxml The object model to write out.
@@ -562,7 +562,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out this attribute, if the value is not {@code null}.
+     * Writes out this attribute, if the value is not {@code null}.
      *
      * @param writer The {@link XMLStreamWriter} in use for the serialization.
      * @param localName The local name of the attribute.
@@ -577,7 +577,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out this attribute, if the value is not {@code null}.
+     * Writes out this attribute, if the value is not {@code null}.
      *
      * @param writer The {@link XMLStreamWriter} in use for the serialization.
      * @param localName The local name of the attribute.
@@ -592,7 +592,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write the {@link Content} element.
+     * Writes the {@link Content} element.
      *
      * @param writer The {@link XMLStreamWriter} in use for the serialization.
      * @param content The content element to write.
@@ -610,7 +610,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out this {@link Datamodel} object into its serialization as the corresponding &lt;datamodel&gt; element.
+     * Writes out this {@link Datamodel} object into its serialization as the corresponding &lt;datamodel&gt; element.
      *
      * @param writer The {@link XMLStreamWriter} in use for the serialization.
      * @param datamodel The {@link Datamodel} to serialize.
@@ -636,7 +636,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out the Commons SCXML object model as an SCXML document using the supplied {@link Configuration}.
+     * Writes out the Commons SCXML object model as an SCXML document using the supplied {@link Configuration}.
      * This method tackles the XML document level concerns.
      *
      * @param writer The {@link XMLStreamWriter} in use for the serialization.
@@ -658,7 +658,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out the {@link EnterableState} objects into its serialization.
+     * Writes out the {@link EnterableState} objects into its serialization.
      *
      * @param writer The {@link XMLStreamWriter} in use for the serialization.
      * @param states The {@link EnterableState}s to serialize.
@@ -678,7 +678,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out this executable content (list of actions) into its serialization as the corresponding set of action
+     * Writes out this executable content (list of actions) into its serialization as the corresponding set of action
      * elements.
      *
      * @param writer The {@link XMLStreamWriter} in use for the serialization.
@@ -767,7 +767,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out this {@link Final} object into its serialization as the corresponding &lt;final&gt; element.
+     * Writes out this {@link Final} object into its serialization as the corresponding &lt;final&gt; element.
      *
      * @param writer The {@link XMLStreamWriter} in use for the serialization.
      * @param end The {@link Final} to serialize.
@@ -794,7 +794,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out this {@link Finalize} object into its serialization as the corresponding &lt;finalize&gt; element.
+     * Writes out this {@link Finalize} object into its serialization as the corresponding &lt;finalize&gt; element.
      *
      * @param writer The {@link XMLStreamWriter} in use for the serialization.
      * @param finalize The {@link Finalize} to serialize.
@@ -811,7 +811,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out this {@link Foreach} object into its serialization as the corresponding &lt;foreach&gt; element.
+     * Writes out this {@link Foreach} object into its serialization as the corresponding &lt;foreach&gt; element.
      *
      * @param writer The {@link XMLStreamWriter} in use for the serialization.
      * @param foreach The {@link If} to serialize.
@@ -829,7 +829,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out this {@link History} list into its serialization as the corresponding set of &lt;history&gt;
+     * Writes out this {@link History} list into its serialization as the corresponding set of &lt;history&gt;
      * elements.
      *
      * @param writer The {@link XMLStreamWriter} in use for the serialization.
@@ -857,7 +857,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out this {@link If} object into its serialization as the corresponding &lt;if&gt; element.
+     * Writes out this {@link If} object into its serialization as the corresponding &lt;if&gt; element.
      *
      * @param writer The {@link XMLStreamWriter} in use for the serialization.
      * @param iff The {@link If} to serialize.
@@ -873,7 +873,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out this {@link Initial} object into its serialization as the corresponding &lt;initial&gt; element.
+     * Writes out this {@link Initial} object into its serialization as the corresponding &lt;initial&gt; element.
      *
      * @param writer The {@link XMLStreamWriter} in use for the serialization.
      * @param initial The {@link Initial} to serialize.
@@ -892,7 +892,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out the Commons SCXML object model using the supplied {@link Configuration}.
+     * Writes out the Commons SCXML object model using the supplied {@link Configuration}.
      * Exactly one of the stream, writer or result parameters must be provided.
      *
      * @param scxml The object model to write out.
@@ -925,7 +925,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out this {@link Invoke} object into its serialization as the corresponding &lt;invoke&gt; element.
+     * Writes out this {@link Invoke} object into its serialization as the corresponding &lt;invoke&gt; element.
      *
      * @param writer The {@link XMLStreamWriter} in use for the serialization.
      * @param invoke The {@link Invoke} to serialize.
@@ -951,7 +951,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out this {@link Node} object into its serialization.
+     * Writes out this {@link Node} object into its serialization.
      *
      * @param writer The {@link XMLStreamWriter} in use for the serialization.
      * @param node The {@link Node} to serialize.
@@ -974,7 +974,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out this {@link OnEntry} object into its serialization as the corresponding &lt;onentry&gt; element.
+     * Writes out this {@link OnEntry} object into its serialization as the corresponding &lt;onentry&gt; element.
      *
      * @param writer The {@link XMLStreamWriter} in use for the serialization.
      * @param onentry The {@link OnEntry} to serialize.
@@ -992,7 +992,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out this {@link OnExit} object into its serialization as the corresponding &lt;onexit&gt; element.
+     * Writes out this {@link OnExit} object into its serialization as the corresponding &lt;onexit&gt; element.
      *
      * @param writer The {@link XMLStreamWriter} in use for the serialization.
      * @param onexit The {@link OnExit} to serialize.
@@ -1010,7 +1010,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out this {@link Parallel} object into its serialization as the corresponding &lt;parallel&gt; element.
+     * Writes out this {@link Parallel} object into its serialization as the corresponding &lt;parallel&gt; element.
      *
      * @param writer The {@link XMLStreamWriter} in use for the serialization.
      * @param parallel The {@link Parallel} to serialize.
@@ -1045,7 +1045,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out the {@link Param} objects into its serialization.
+     * Writes out the {@link Param} objects into its serialization.
      *
      * @param writer The {@link XMLStreamWriter} in use for the serialization.
      * @param params The {@link Param}s to serialize.
@@ -1063,7 +1063,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out this {@link ParsedValue} object as body of its containing {@link ParsedValueContainer} element.
+     * Writes out this {@link ParsedValue} object as body of its containing {@link ParsedValueContainer} element.
      *
      * @param writer The {@link XMLStreamWriter} in use for the serialization.
      * @param parsedValue The {@link ParsedValue} to serialize.
@@ -1118,7 +1118,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write the serialized SCXML document while making attempts to make the serialization human readable. This
+     * Writes the serialized SCXML document while making attempts to make the serialization human readable. This
      * includes using new-lines and indentation as appropriate, where possible. Exactly one of the stream, writer
      * or result parameters must be provided.
      *
@@ -1159,7 +1159,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out this {@link SCXML} object into its serialization as the corresponding &lt;scxml&gt; element.
+     * Writes out this {@link SCXML} object into its serialization as the corresponding &lt;scxml&gt; element.
      *
      * @param writer The {@link XMLStreamWriter} in use for the serialization.
      * @param scxml The root of the object model to write out.
@@ -1218,7 +1218,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out this {@link Send} object into its serialization as the corresponding &lt;send&gt; element.
+     * Writes out this {@link Send} object into its serialization as the corresponding &lt;send&gt; element.
      *
      * @param writer The {@link XMLStreamWriter} in use for the serialization.
      * @param send The {@link Send} to serialize.
@@ -1248,7 +1248,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out this {@link State} object into its serialization as the corresponding &lt;state&gt; element.
+     * Writes out this {@link State} object into its serialization as the corresponding &lt;state&gt; element.
      *
      * @param writer The {@link XMLStreamWriter} in use for the serialization.
      * @param state The {@link State} to serialize.
@@ -1284,7 +1284,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out this {@link Transition} object into its serialization as the corresponding &lt;transition&gt; element.
+     * Writes out this {@link Transition} object into its serialization as the corresponding &lt;transition&gt; element.
      *
      * @param writer The {@link XMLStreamWriter} in use for the serialization.
      * @param transition The {@link Transition} to serialize.
@@ -1308,7 +1308,7 @@ public class SCXMLWriter {
     }
 
     /**
-     * Write out the TransitionTarget id attribute unless it was auto-generated
+     * Writes out the TransitionTarget id attribute unless it was auto-generated
      * @param writer The {@link XMLStreamWriter} in use for the serialization.
      * @param tt The {@link TransitionTarget} for which to write the id attribute.
      * @throws XMLStreamException
