@@ -272,7 +272,7 @@
       <action type="update" dev="ggregory" due-to="Dependabot">Bump junit-jupiter-api from 5.4.2 to 5.9.1 #32, #70.</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump junit-jupiter-engine from 5.4.2 to 5.9.1 #40, #68.</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump nashorn-core from 15.3 to 15.6 #52, #296.</action>
-      <action type="update" dev="ggregory" due-to="Dependabot">Replace Codehaus Groovy 3.0.24 with Apache Groovy 4.0.26.</action>
+      <action type="update" dev="ggregory" due-to="Dependabot">Replace Codehaus Groovy 3.0.24 with Apache Groovy 4.0.27 #329.</action>
     </release>
 
     <release version="1.0" date="In SVN branch"
