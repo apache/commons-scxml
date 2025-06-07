@@ -37,7 +37,7 @@ public class StatusTest {
     }
 
     @Test
-    public void testGetAllStatesContainsParent() {
+    void testGetAllStatesContainsParent() {
         final State parent = new State();
         parent.setId("0");
         stateConfiguration.enterState(parent);
@@ -52,7 +52,7 @@ public class StatusTest {
     }
 
     @Test
-    public void testGetAllStatesEmptyStatus() {
+    void testGetAllStatesEmptyStatus() {
 
         final Set<EnterableState> returnValue = status.getActiveStates();
 
@@ -60,7 +60,7 @@ public class StatusTest {
     }
 
     @Test
-    public void testIsFinalState() {
+    void testIsFinalState() {
         final Final state = new Final();
 
         stateConfiguration.enterState(state);
@@ -69,7 +69,7 @@ public class StatusTest {
     }
 
     @Test
-    public void testIsFinalStateFalse() {
+    void testIsFinalStateFalse() {
         final State state = new State();
 
         stateConfiguration.enterState(state);
@@ -78,7 +78,7 @@ public class StatusTest {
     }
 
     @Test
-    public void testIsFinalStateHasParent() {
+    void testIsFinalStateHasParent() {
         final Final state = new Final();
         state.setParent(new State());
 
@@ -88,7 +88,7 @@ public class StatusTest {
     }
 
     @Test
-    public void testIsInState() {
+    void testIsInState() {
         final State parent = new State();
         parent.setId("0");
         stateConfiguration.enterState(parent);

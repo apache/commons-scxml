@@ -42,7 +42,7 @@ public class Issue62Test {
     }
 
     @Test
-    public void test01issue62() throws Exception {
+    void test01issue62() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/issues/issue62-01.xml");
         exec.go();
         final Set<EnterableState> currentStates = exec.getStatus().getStates();
@@ -52,14 +52,14 @@ public class Issue62Test {
     }
 
     @Test
-    public void test02issue62() throws Exception {
+    void test02issue62() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/issues/issue62-02.xml");
         exec.go();
         fragmenttest(exec);
     }
 
     @Test
-    public void test03issue62() throws Exception {
+    void test03issue62() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/issues/issue62-03.xml");
         exec.go();
         fragmenttest(exec);

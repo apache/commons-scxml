@@ -28,7 +28,7 @@ public class JexlEvaluatorTest {
     private final Context ctx = new JexlContext();
 
     @Test
-    public void testErrorMessage() {
+    void testErrorMessage() {
         final Evaluator eval = new JexlEvaluator();
         Assertions.assertNotNull(eval);
         final SCXMLExpressionException e = Assertions.assertThrows(
@@ -40,13 +40,13 @@ public class JexlEvaluatorTest {
     }
 
     @Test
-    public void testPristine() throws SCXMLExpressionException {
+    void testPristine() throws SCXMLExpressionException {
         final Evaluator eval = new JexlEvaluator();
         Assertions.assertTrue((Boolean) eval.eval(ctx, "1+1 eq 2"));
     }
 
     @Test
-    public void testScript() throws SCXMLExpressionException {
+    void testScript() throws SCXMLExpressionException {
         final Evaluator eval = new JexlEvaluator();
         ctx.set("x", 3);
         ctx.set("y", 0);

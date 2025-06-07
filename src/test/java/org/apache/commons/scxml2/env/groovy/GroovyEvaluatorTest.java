@@ -38,7 +38,7 @@ public class GroovyEvaluatorTest {
     }
 
     @Test
-    public void testBuiltInFunctions() throws SCXMLExpressionException {
+    void testBuiltInFunctions() throws SCXMLExpressionException {
         final Evaluator eval = new GroovyEvaluator();
         final StateConfiguration stateConfiguration = new StateConfiguration();
         final Status status = new Status(stateConfiguration);
@@ -51,7 +51,7 @@ public class GroovyEvaluatorTest {
     }
 
     @Test
-    public void testErrorMessage() {
+    void testErrorMessage() {
         final Evaluator eval = new GroovyEvaluator();
         Assertions.assertNotNull(eval);
         final SCXMLExpressionException e = Assertions.assertThrows(
@@ -63,13 +63,13 @@ public class GroovyEvaluatorTest {
     }
 
     @Test
-    public void testEval() throws SCXMLExpressionException {
+    void testEval() throws SCXMLExpressionException {
         final Evaluator eval = new GroovyEvaluator();
         Assertions.assertEquals(2, eval.eval(ctx, "1 + 1"));
     }
 
     @Test
-    public void testPreprocessScript() {
+    void testPreprocessScript() {
         final GroovyEvaluator evaluator = new GroovyEvaluator();
         Assertions.assertEquals("x &&  x || x  !  x == x <  x <= x != x >  x >= x", evaluator.getScriptPreProcessor().
                 preProcess("x and x or x not x eq x lt x le x ne x gt x ge x"));
@@ -78,13 +78,13 @@ public class GroovyEvaluatorTest {
     }
 
     @Test
-    public void testPristine() throws SCXMLExpressionException {
+    void testPristine() throws SCXMLExpressionException {
         final Evaluator eval = new GroovyEvaluator();
         Assertions.assertTrue(eval.evalCond(ctx, "1 + 1 == 2"));
     }
 
     @Test
-    public void testScript() throws SCXMLExpressionException {
+    void testScript() throws SCXMLExpressionException {
         final Evaluator eval = new GroovyEvaluator();
         ctx.set("x", 3);
         ctx.set("y", 0);

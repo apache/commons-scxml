@@ -31,7 +31,7 @@ public class WildcardTest {
      * Test the SCXML documents, usage of "_event.data"
      */
     @Test
-    public void testWildcard01Sample() throws Exception {
+    void testWildcard01Sample() throws Exception {
     	SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/wildcard-01.xml");
         exec.go();
         Set<EnterableState> currentStates = exec.getStatus().getStates();
@@ -44,7 +44,7 @@ public class WildcardTest {
     }
 
     @Test
-    public void testWildcard02Sample() throws Exception {
+    void testWildcard02Sample() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/wildcard-02.xml");
         exec.go();
         final Set<EnterableState> currentStates = exec.getStatus().getStates();

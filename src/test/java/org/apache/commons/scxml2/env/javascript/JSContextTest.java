@@ -30,7 +30,7 @@ public class JSContextTest {
          * Tests implementation of JSContext 'child' constructor.
          */
         @Test
-        public void testChildConstructor() {
+        void testChildConstructor() {
                 Assertions.assertNotNull(new JSContext(new SimpleContext()), "Error in JSContext child constructor");
         }
 
@@ -38,7 +38,7 @@ public class JSContextTest {
          * Tests implementation of JSContext default constructor.
          */
         @Test
-        public void testDefaultConstructor() {
+        void testDefaultConstructor() {
             Assertions.assertNotNull(new JSContext(), "Error in JSContext default constructor");
         }
 }

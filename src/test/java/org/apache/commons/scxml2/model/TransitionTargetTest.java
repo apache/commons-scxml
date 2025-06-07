@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 public class TransitionTargetTest {
 
     @Test
-    public void testIsDescendantEqual() {
+    void testIsDescendantEqual() {
         final State state = new State();
         final State context = new State();
         state.setParent(context);
@@ -31,7 +31,7 @@ public class TransitionTargetTest {
     }
 
     @Test
-    public void testIsDescendantNotEqual() {
+    void testIsDescendantNotEqual() {
         final State state = new State();
         state.setParent(new State());
         final State context = new State();
@@ -40,7 +40,7 @@ public class TransitionTargetTest {
     }
 
     @Test
-    public void testIsDescendantNullParent() {
+    void testIsDescendantNullParent() {
         final State state = new State();
         final State context = new State();
 
@@ -48,7 +48,7 @@ public class TransitionTargetTest {
     }
 
     @Test
-    public void testIsDescendantParentEqual() {
+    void testIsDescendantParentEqual() {
         final State state = new State();
         final State context = new State();
         final State parent = new State();

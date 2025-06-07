@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 public class StateSrcTest {
 
     @Test
-    public void testBadSrcFragmentInclude() {
+    void testBadSrcFragmentInclude() {
         final ModelException me = Assertions.assertThrows(
                 ModelException.class,
                 () -> SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/src-test-5.xml")),
@@ -40,7 +40,7 @@ public class StateSrcTest {
     }
 
     @Test
-    public void testBadSrcInclude() {
+    void testBadSrcInclude() {
         final ModelException me = Assertions.assertThrows(
                 ModelException.class,
                 () -> SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/io/src-test-4.xml")),
@@ -50,7 +50,7 @@ public class StateSrcTest {
     }
 
     @Test
-    public void testRecursiveSrcInclude() throws Exception {
+    void testRecursiveSrcInclude() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/io/src-test-1.xml");
         exec.go();
         Set<EnterableState> states = exec.getStatus().getStates();

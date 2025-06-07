@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 public class AssignTest {
 
     @Test
-    public void testAssignDeep() throws Exception {
+    void testAssignDeep() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/assign-test-02.xml");
         exec.go();
         final Set<EnterableState> currentStates = exec.getStatus().getStates();
@@ -38,7 +38,7 @@ public class AssignTest {
     }
 
     @Test
-    public void testAssignSrc() throws Exception {
+    void testAssignSrc() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/assign-test-01.xml");
         exec.go();
         final Set<EnterableState> currentStates = exec.getStatus().getStates();

@@ -64,7 +64,7 @@ public class TriggerEventTest {
     }
 
     @Test
-    public void testTriggerEventEquals() {
+    void testTriggerEventEquals() {
         Assertions.assertEquals(te1, te2);
         Assertions.assertEquals(te3, te4);
         Assertions.assertEquals(te5, te6);
@@ -76,14 +76,14 @@ public class TriggerEventTest {
      * Test the implementation
      */
     @Test
-    public void testTriggerEventGetters() {
+    void testTriggerEventGetters() {
         Assertions.assertEquals("name1", te1.getName());
         Assertions.assertEquals(2, te2.getType());
         Assertions.assertNull(te7.getData());
     }
 
     @Test
-    public void testTriggerEventHashCode() {
+    void testTriggerEventHashCode() {
         Assertions.assertEquals("TriggerEvent{name=name3, type=4}".hashCode(),
             te7.hashCode());
         Assertions.assertEquals("TriggerEvent{name=name3, type=3}".hashCode(),
@@ -91,7 +91,7 @@ public class TriggerEventTest {
     }
 
     @Test
-    public void testTriggerEventToString() {
+    void testTriggerEventToString() {
         Assertions.assertEquals("TriggerEvent{name=name3, type=4}", te7.toString());
         Assertions.assertEquals("TriggerEvent{name=name1, type=2, data="
             + "{property1=value1}}", te2.toString());

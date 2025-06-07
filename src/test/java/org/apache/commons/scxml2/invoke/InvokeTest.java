@@ -35,7 +35,7 @@ import org.junit.jupiter.api.Test;
 public class InvokeTest {
 
     @Test
-    public void testExecuteInvokeAfterAllInternalEventsAreProcessed() throws Exception {
+    void testExecuteInvokeAfterAllInternalEventsAreProcessed() throws Exception {
         final SCXML scxml = SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/invoke/invoker-05.xml"));
         final SCXMLExecutor exec = new SCXMLExecutor(null, new SimpleDispatcher(), new SimpleErrorReporter());
         exec.setStateMachine(scxml);
@@ -51,7 +51,7 @@ public class InvokeTest {
      * Test the SCXML documents, usage of &lt;invoke&gt;
      */
     @Test
-    public void testInvoke01Sample() throws Exception {
+    void testInvoke01Sample() throws Exception {
         final SCXML scxml = SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/invoke/invoker-01.xml"));
         final SCXMLExecutor exec = new SCXMLExecutor(null, new SimpleDispatcher(), new SimpleErrorReporter());
         exec.setStateMachine(scxml);
@@ -63,7 +63,7 @@ public class InvokeTest {
     }
 
     @Test
-    public void testInvoke02Sample() throws Exception {
+    void testInvoke02Sample() throws Exception {
         final SCXML scxml = SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/invoke/invoker-02.xml"));
         final SCXMLExecutor exec = new SCXMLExecutor(null, new SimpleDispatcher(), new SimpleErrorReporter());
         exec.setStateMachine(scxml);
@@ -74,7 +74,7 @@ public class InvokeTest {
     }
 
     @Test
-    public void testInvoke03Sample() throws Exception {
+    void testInvoke03Sample() throws Exception {
         final SCXML scxml = SCXMLReader.read(SCXMLTestHelper.getResource("org/apache/commons/scxml2/invoke/invoker-03.xml"));
         final SCXMLExecutor exec = new SCXMLExecutor(null, new SimpleDispatcher(), new SimpleErrorReporter());
         exec.setStateMachine(scxml);

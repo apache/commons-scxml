@@ -38,7 +38,7 @@ public class SendTest {
     }
 
     @Test
-    public void testDelayExpression() throws Exception {
+    void testDelayExpression() throws Exception {
         Assertions.assertEquals(0L, parseDelay(".s"));
         Assertions.assertEquals(0L, parseDelay(".0s"));
         Assertions.assertEquals(1000L, parseDelay("1.s"));
@@ -61,7 +61,7 @@ public class SendTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void testNamelistOrderPreserved() throws Exception {
+    void testNamelistOrderPreserved() throws Exception {
         final List<Object> payloads = new ArrayList<>();
         final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/model/send-test-01.xml");
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml, null, new SimpleDispatcher() {

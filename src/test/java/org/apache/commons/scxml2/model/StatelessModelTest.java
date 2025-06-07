@@ -34,7 +34,7 @@ public class StatelessModelTest {
      * TODO: Test sharing two SCXML objects between one executor (not recommended)
      *
     @Test
-    public void testStatelessModelParallelSwapSCXML() throws Exception {
+    void testStatelessModelParallelSwapSCXML() throws Exception {
         SCXML scxml01par = SCXMLTestHelper.parse("org/apache/commons/scxml2/model/stateless-parallel-01.xml");
         SCXML scxml02par = SCXMLTestHelper.parse("org/apache/commons/scxml2/model/stateless-parallel-01.xml");
         SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor(scxml01par);
@@ -131,7 +131,7 @@ public class StatelessModelTest {
      * Test sharing a single SCXML object between two executors
      */
     @Test
-    public void testStatelessModelParallelSharedSCXML() throws Exception {
+    void testStatelessModelParallelSharedSCXML() throws Exception {
         final SCXML scxml01par = SCXMLTestHelper.parse("org/apache/commons/scxml2/model/stateless-parallel-01.xml");
         final SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor(scxml01par);
         exec01.go();
@@ -162,7 +162,7 @@ public class StatelessModelTest {
      * Test the stateless model, sequential executions, JEXL expressions
      */
     @Test
-    public void testStatelessModelSequentialJexl() throws Exception {
+    void testStatelessModelSequentialJexl() throws Exception {
         // rinse and repeat
         final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/env/jexl/stateless-01.xml");
         for (int i = 0; i < 3; i++) {
@@ -176,7 +176,7 @@ public class StatelessModelTest {
      * Test the stateless model, simultaneous executions, JEXL expressions
      */
     @Test
-    public void testStatelessModelSimultaneousJexl() throws Exception {
+    void testStatelessModelSimultaneousJexl() throws Exception {
     	// parse once, use many times
         final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/env/jexl/stateless-01.xml");
         final SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor(scxml);

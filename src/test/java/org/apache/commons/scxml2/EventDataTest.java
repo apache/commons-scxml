@@ -48,7 +48,7 @@ public class EventDataTest {
      * Test the SCXML documents, usage of "_event.data"
      */
     @Test
-    public void testEventdata01Sample() throws Exception {
+    void testEventdata01Sample() throws Exception {
     	final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/eventdata-01.xml");
         exec.go();
         Set<EnterableState> currentStates = exec.getStatus().getStates();
@@ -70,7 +70,7 @@ public class EventDataTest {
     }
 
     @Test
-    public void testEventdata02Sample() throws Exception {
+    void testEventdata02Sample() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/eventdata-02.xml");
         exec.go();
         Set<EnterableState> currentStates = exec.getStatus().getStates();
@@ -88,7 +88,7 @@ public class EventDataTest {
     }
 
     @Test
-    public void testEventdata03Sample() throws Exception {
+    void testEventdata03Sample() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/eventdata-03.xml");
         exec.go();
         Set<EnterableState> currentStates = exec.getStatus().getStates();
@@ -101,7 +101,7 @@ public class EventDataTest {
     }
 
     @Test
-    public void testEventdata04Sample() throws Exception {
+    void testEventdata04Sample() throws Exception {
         final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/env/jexl/eventdata-03.xml");
         final Tracer trc = new Tracer();
         final SCXMLExecutor exec = new SCXMLExecutor(null, null, trc);

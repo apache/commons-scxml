@@ -40,7 +40,7 @@ public class SCInstanceTest {
     }
 
     @Test
-    public void testGetContext() {
+    void testGetContext() {
         final State target = new State();
         target.setId("1");
 
@@ -53,7 +53,7 @@ public class SCInstanceTest {
     }
 
     @Test
-    public void testGetContextNullParent() throws Exception {
+    void testGetContextNullParent() throws Exception {
         final State target = new State();
         target.setId("1");
 
@@ -69,7 +69,7 @@ public class SCInstanceTest {
     }
 
     @Test
-    public void testGetContextParent() throws Exception {
+    void testGetContextParent() throws Exception {
         final State target = new State();
         target.setId("1");
 
@@ -90,7 +90,7 @@ public class SCInstanceTest {
     }
 
     @Test
-    public void testGetLastConfiguration() {
+    void testGetLastConfiguration() {
         final History history = new History();
         history.setId("1");
 
@@ -110,7 +110,7 @@ public class SCInstanceTest {
     }
 
     @Test
-    public void testGetLastConfigurationNull() {
+    void testGetLastConfigurationNull() {
         final History history = new History();
 
         final Set<EnterableState> returnConfiguration = instance.getLastConfiguration(history);
@@ -119,7 +119,7 @@ public class SCInstanceTest {
     }
 
     @Test
-    public void testGetRootContext() {
+    void testGetRootContext() {
         final Context context = new SimpleContext();
         context.set("name", "value");
 
@@ -128,12 +128,12 @@ public class SCInstanceTest {
     }
 
     @Test
-    public void testIsEmpty() {
+    void testIsEmpty() {
         Assertions.assertTrue(instance.getLastConfiguration(new History()).isEmpty());
     }
 
     @Test
-    public void testIsEmptyFalse() {
+    void testIsEmptyFalse() {
         final History history = new History();
         history.setId("1");
 
@@ -147,7 +147,7 @@ public class SCInstanceTest {
     }
 
     @Test
-    public void testReset() {
+    void testReset() {
         final History history = new History();
         history.setId("1");
 

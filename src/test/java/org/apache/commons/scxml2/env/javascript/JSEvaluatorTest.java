@@ -128,7 +128,7 @@ public class JSEvaluatorTest {
      * expression evaluation.
      */
     @Test
-    public void testBasic() throws SCXMLExpressionException {
+    void testBasic() throws SCXMLExpressionException {
         final Evaluator evaluator = new JSEvaluator();
 
         Assertions.assertNotNull(evaluator);
@@ -139,7 +139,7 @@ public class JSEvaluatorTest {
      * Tests evaluation with SCXML data model expressions.
      */
     @Test
-    public void testDataModelExpressions() throws Exception {
+    void testDataModelExpressions() throws Exception {
         Assertions.assertEquals("leaf",
                      evaluator.eval(context,"forest.tree.branch.twig"),
                 "Invalid result: " + "forest.tree.branch.twig");
@@ -149,7 +149,7 @@ public class JSEvaluatorTest {
      * Tests evaluation of SCXML data model locations.
      */
     @Test
-    public void testDataModelLocations() throws Exception {
+    void testDataModelLocations() throws Exception {
         Assertions.assertTrue(evaluator.eval(context, "forest") instanceof Map,
                 "Invalid result: forest instanceof Map");
 
@@ -161,7 +161,7 @@ public class JSEvaluatorTest {
      * Tests handling of illegal expressions.
      */
     @Test
-    public void testIllegalExpresssion() {
+    void testIllegalExpresssion() {
         final Evaluator evaluator = new JSEvaluator();
 
         Assertions.assertNotNull(evaluator);
@@ -177,7 +177,7 @@ public class JSEvaluatorTest {
      * Tests evaluation with invalid SCXML data model expressions.
      */
     @Test
-    public void testInvalidDataModelExpressions() {
+    void testInvalidDataModelExpressions() {
         Assertions.assertNull(context.get("forestx"));
         Assertions.assertThrows(
                 SCXMLExpressionException.class,
@@ -189,7 +189,7 @@ public class JSEvaluatorTest {
      * Tests evaluation of invalid SCXML data model locations.
      */
     @Test
-    public void testInvalidDataModelLocations() throws Exception {
+    void testInvalidDataModelLocations() throws Exception {
             Assertions.assertNotNull(context.get("forest"));
             Assertions.assertNull(evaluator.eval(context,"forest.tree.branch.twigx"),
                     "Invalid result: " + "forest.tree.branch.twigx");
@@ -199,7 +199,7 @@ public class JSEvaluatorTest {
      * Tests evaluation with invalid SCXML context variables.
      */
     @Test
-    public void testInvalidVarExpressions() {
+    void testInvalidVarExpressions() {
         for (final TestItem item: VAR_EXPRESSIONS) {
             Assertions.assertNull(context.get("fibonacci"));
             Assertions.assertThrows(
@@ -210,7 +210,7 @@ public class JSEvaluatorTest {
     }
 
     @Test
-    public void testScript() throws SCXMLExpressionException {
+    void testScript() throws SCXMLExpressionException {
         final Evaluator evaluator = new JSEvaluator();
         context.set("x", 3);
         context.set("y", 0);
@@ -228,7 +228,7 @@ public class JSEvaluatorTest {
      * Tests evaluation of Javascript functions with variables from SCXML context.
      */
     @Test
-    public void testScriptFunctions() throws Exception {
+    void testScriptFunctions() throws Exception {
         context.set("FIVE", 5);
         Assertions.assertEquals(5,context.get("FIVE"));
         Assertions.assertEquals(120.0, evaluator.eval(context,FUNCTION), "Invalid function result");
@@ -238,7 +238,7 @@ public class JSEvaluatorTest {
      * Tests evaluation with simple standard expressions.
      */
     @Test
-    public void testStandardExpressions() throws Exception {
+    void testStandardExpressions() throws Exception {
         for (final TestItem item: SIMPLE_EXPRESSIONS) {
             final Object eval = evaluator.eval(context,item.expression);
             if (item.result instanceof Integer && eval instanceof Number) {
@@ -259,7 +259,7 @@ public class JSEvaluatorTest {
      * Tests evaluation with SCXML context variables.
      */
     @Test
-    public void testVarExpressions() throws Exception {
+    void testVarExpressions() throws Exception {
         context.set("fibonacci", 12.0);
 
         for (final TestItem item: VAR_EXPRESSIONS) {

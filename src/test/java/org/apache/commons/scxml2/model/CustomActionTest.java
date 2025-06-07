@@ -36,7 +36,7 @@ public class CustomActionTest {
     }
 
     @Test
-    public void testAddBadCustomAction01() {
+    void testAddBadCustomAction01() {
         Assertions.assertThrows(
                 IllegalArgumentException.class,
                 () -> new CustomAction(null, "hello", Hello.class),
@@ -44,7 +44,7 @@ public class CustomActionTest {
     }
 
     @Test
-    public void testAddBadCustomAction02() {
+    void testAddBadCustomAction02() {
         Assertions.assertThrows(
                 IllegalArgumentException.class,
                 () -> new CustomAction("  ", "hello", Hello.class),
@@ -52,7 +52,7 @@ public class CustomActionTest {
     }
 
     @Test
-    public void testAddBadCustomAction03() {
+    void testAddBadCustomAction03() {
         Assertions.assertThrows(
                 IllegalArgumentException.class,
                 () -> new CustomAction("http://my.actions.domain/CUSTOM", "", Hello.class),
@@ -60,7 +60,7 @@ public class CustomActionTest {
     }
 
     @Test
-    public void testAddBadCustomAction04() {
+    void testAddBadCustomAction04() {
         Assertions.assertThrows(
                 IllegalArgumentException.class,
                 () -> new CustomAction("http://my.actions.domain/CUSTOM", "  ", Hello.class),
@@ -68,7 +68,7 @@ public class CustomActionTest {
     }
 
     @Test
-    public void testAddBadCustomAction05() {
+    void testAddBadCustomAction05() {
         Assertions.assertThrows(
                 IllegalArgumentException.class,
                 () -> new CustomAction("http://www.w3.org/2005/07/scxml", "foo", Hello.class),
@@ -76,7 +76,7 @@ public class CustomActionTest {
     }
 
     @Test
-    public void testAddGoodCustomAction01() {
+    void testAddGoodCustomAction01() {
         new CustomAction("http://my.actions.domain/CUSTOM", "hello",
             Hello.class);
     }
@@ -84,7 +84,7 @@ public class CustomActionTest {
     // Hello World example using custom <my:hello> action that generates an
     // event which has the payload examined with JEXL expressions
     @Test
-    public void testCustomActionEventPayloadHelloWorldJexl() throws Exception {
+    void testCustomActionEventPayloadHelloWorldJexl() throws Exception {
         // (1) Form a list of custom actions defined in the SCXML
         //     document (and any included documents via "src" attributes)
         final CustomAction ca =
@@ -125,7 +125,7 @@ public class CustomActionTest {
     // Hello World example using custom <my:hello> action
     // as part of an external state source (src attribute)
     @Test
-    public void testCustomActionExternalSrcHelloWorld() throws Exception {
+    void testCustomActionExternalSrcHelloWorld() throws Exception {
         // (1) Form a list of custom actions defined in the SCXML
         //     document (and any included documents via "src" attributes)
         final CustomAction ca =
@@ -149,7 +149,7 @@ public class CustomActionTest {
 
     // Hello World example using a custom <hello> action
     @Test
-    public void testCustomActionHelloWorld() throws Exception {
+    void testCustomActionHelloWorld() throws Exception {
         // (1) Form a list of custom actions defined in the SCXML
         //     document (and any included documents via "src" attributes)
         final CustomAction ca1 =
@@ -181,7 +181,7 @@ public class CustomActionTest {
     // Hello World example using custom <my:send> action
     // (overriding SCXML local name "send")
     @Test
-    public void testCustomActionOverrideLocalName() throws Exception {
+    void testCustomActionOverrideLocalName() throws Exception {
         // (1) List of custom actions, use same local name as SCXML action
         final CustomAction ca =
             new CustomAction("http://my.custom-actions.domain/CUSTOM",
@@ -204,7 +204,7 @@ public class CustomActionTest {
 
     // Hello World example using the SCXML <log> action
     @Test
-    public void testHelloWorld() throws Exception {
+    void testHelloWorld() throws Exception {
         // (1) Get a SCXMLExecutor
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/hello-world.xml");
         exec.go();

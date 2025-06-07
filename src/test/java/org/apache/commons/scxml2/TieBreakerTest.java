@@ -37,7 +37,7 @@ import org.junit.jupiter.api.Test;
 public class TieBreakerTest {
 
     @Test
-    public void testTieBreaker01() throws Exception {
+    void testTieBreaker01() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/tie-breaker-01.xml");
         exec.go();
         Set<EnterableState> currentStates = exec.getStatus().getStates();
@@ -49,7 +49,7 @@ public class TieBreakerTest {
     }
 
     @Test
-    public void testTieBreaker02() throws Exception {
+    void testTieBreaker02() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/tie-breaker-02.xml");
         exec.go();
         Set<EnterableState> currentStates = exec.getStatus().getStates();
@@ -61,7 +61,7 @@ public class TieBreakerTest {
     }
 
     @Test
-    public void testTieBreaker03() throws Exception {
+    void testTieBreaker03() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/tie-breaker-03.xml");
         exec.go();
         Set<EnterableState> currentStates = exec.getStatus().getStates();
@@ -73,7 +73,7 @@ public class TieBreakerTest {
     }
 
     @Test
-    public void testTieBreaker04() throws Exception {
+    void testTieBreaker04() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/tie-breaker-04.xml");
         exec.go();
         Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "event_2");
@@ -83,7 +83,7 @@ public class TieBreakerTest {
     }
 
     @Test
-    public void testTieBreaker05() throws Exception {
+    void testTieBreaker05() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/tie-breaker-05.xml");
         exec.go();
         Set<EnterableState> currentStates = exec.getStatus().getStates();
@@ -103,7 +103,7 @@ public class TieBreakerTest {
     }
 
     @Test
-    public void testTieBreaker06() throws Exception {
+    void testTieBreaker06() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/tie-breaker-06.xml");
         exec.go();
         final Set<EnterableState> currentStates = exec.getStatus().getStates();

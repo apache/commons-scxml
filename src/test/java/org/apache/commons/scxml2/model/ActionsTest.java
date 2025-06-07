@@ -40,21 +40,21 @@ public class ActionsTest {
     }
 
     @Test
-    public void testInitialActions() throws Exception {
+    void testInitialActions() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/actions-initial-test.xml");
         exec.go();
         runTest(exec);
     }
 
     @Test
-    public void testParallelActions() throws Exception {
+    void testParallelActions() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/actions-parallel-test.xml");
         exec.go();
         runTest(exec);
     }
 
     @Test
-    public void testStateActions() throws Exception {
+    void testStateActions() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/actions-state-test.xml");
         exec.go();
         runTest(exec);

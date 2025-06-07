@@ -146,7 +146,7 @@ public class SCXMLRequiredAttributesTest {
                     "</scxml>";
 
     @Test
-    public void testSCXMLInvalidVersion() {
+    void testSCXMLInvalidVersion() {
         final ModelException e = assertThrows(
                 ModelException.class,
                 () -> SCXMLTestHelper.parse(new StringReader(SCXML_WITH_INVALID_VERSION), null),
@@ -155,7 +155,7 @@ public class SCXMLRequiredAttributesTest {
     }
 
     @Test
-    public void testSCXMLMissingAssignLocation() {
+    void testSCXMLMissingAssignLocation() {
         final ModelException e = assertThrows(
                 ModelException.class,
                 () -> SCXMLTestHelper.parse(new StringReader(SCXML_WITH_MISSING_ASSIGN_LOCATION), null),
@@ -164,7 +164,7 @@ public class SCXMLRequiredAttributesTest {
     }
 
     @Test
-    public void testSCXMLMissingDataId() {
+    void testSCXMLMissingDataId() {
         final ModelException e = assertThrows(
                 ModelException.class,
                 () -> SCXMLTestHelper.parse(new StringReader(SCXML_WITH_MISSING_DATA_ID), null),
@@ -173,7 +173,7 @@ public class SCXMLRequiredAttributesTest {
     }
 
     @Test
-    public void testSCXMLMissingElseIfCond() {
+    void testSCXMLMissingElseIfCond() {
         final ModelException e = assertThrows(
                 ModelException.class,
                 () -> SCXMLTestHelper.parse(new StringReader(SCXML_WITH_MISSING_ELSEIF_COND), null),
@@ -182,7 +182,7 @@ public class SCXMLRequiredAttributesTest {
     }
 
     @Test
-    public void testSCXMLMissingForeachArray() {
+    void testSCXMLMissingForeachArray() {
         final ModelException e = assertThrows(
                 ModelException.class,
                 () -> SCXMLTestHelper.parse(new StringReader(SCXML_WITH_MISSING_FOREACH_ARRAY), null),
@@ -191,7 +191,7 @@ public class SCXMLRequiredAttributesTest {
     }
 
     @Test
-    public void testSCXMLMissingForeachItem() {
+    void testSCXMLMissingForeachItem() {
         final ModelException e = assertThrows(
                 ModelException.class,
                 () -> SCXMLTestHelper.parse(new StringReader(SCXML_WITH_MISSING_FOREACH_ITEM), null),
@@ -200,7 +200,7 @@ public class SCXMLRequiredAttributesTest {
     }
 
     @Test
-    public void testSCXMLMissingIfCond() {
+    void testSCXMLMissingIfCond() {
         final ModelException e = assertThrows(
                 ModelException.class,
                 () -> SCXMLTestHelper.parse(new StringReader(SCXML_WITH_MISSING_IF_COND), null),
@@ -209,7 +209,7 @@ public class SCXMLRequiredAttributesTest {
     }
 
     @Test
-    public void testSCXMLMissingParamName() {
+    void testSCXMLMissingParamName() {
         final ModelException e = assertThrows(
                 ModelException.class,
                 () -> SCXMLTestHelper.parse(new StringReader(SCXML_WITH_MISSING_PARAM_NAME), null),
@@ -218,7 +218,7 @@ public class SCXMLRequiredAttributesTest {
     }
 
     @Test
-    public void testSCXMLMissingVersion() {
+    void testSCXMLMissingVersion() {
         final ModelException e = assertThrows(
                 ModelException.class,
                 () -> SCXMLTestHelper.parse(new StringReader(SCXML_WITH_MISSING_VERSION), null),
@@ -227,13 +227,13 @@ public class SCXMLRequiredAttributesTest {
     }
 
     @Test
-    public void testSCXMLParamWithName() throws Exception {
+    void testSCXMLParamWithName() throws Exception {
         SCXMLTestHelper.parse(new StringReader(SCXML_WITH_PARAM_AND_NAME), null);
         // Note: cannot execute this instance without providing proper <invoke> src attribute
     }
 
     @Test
-    public void testSCXMLWithForEach() throws Exception {
+    void testSCXMLWithForEach() throws Exception {
         final SCXML scxml = SCXMLTestHelper.parse(new StringReader(SCXML_WITH_FOREACH), null);
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
         exec.go();
@@ -241,7 +241,7 @@ public class SCXMLRequiredAttributesTest {
     }
 
     @Test
-    public void testValidSCXML() throws Exception {
+    void testValidSCXML() throws Exception {
         final SCXML scxml = SCXMLTestHelper.parse(new StringReader(VALID_SCXML), null);
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
         exec.go();

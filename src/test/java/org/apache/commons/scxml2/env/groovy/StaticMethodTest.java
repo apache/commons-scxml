@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 public class StaticMethodTest {
 
     @Test
-    public void testGroovyStaticMethodInvocation() throws Exception {
+    void testGroovyStaticMethodInvocation() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/groovy/static-method.xml");
         exec.getRootContext().set("System", System.class);
         exec.go();

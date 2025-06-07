@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
 public class StateTest {
 
     @Test
-    public void testAddTransitionContainKey() {
+    void testAddTransitionContainKey() {
         final Transition transition1 = new Transition();
         transition1.setEvent("event");
 
@@ -43,7 +43,7 @@ public class StateTest {
     }
 
     @Test
-    public void testAddTransitionDoesNotContainKey() {
+    void testAddTransitionDoesNotContainKey() {
         final Transition transition = new Transition();
         transition.setEvent("event");
 
@@ -57,7 +57,7 @@ public class StateTest {
     }
 
     @Test
-    public void testGetTransitionList() {
+    void testGetTransitionList() {
         final Transition transition1 = new Transition();
         transition1.setEvent("event");
 
@@ -74,20 +74,20 @@ public class StateTest {
     }
 
     @Test
-    public void testGetTransitionsList() {
+    void testGetTransitionsList() {
         final State state = new State();
         state.getTransitionsList().add(new Transition());
         Assertions.assertNotNull(state.getTransitionsList(null));
     }
 
     @Test
-    public void testGetTransitionsListNull() {
+    void testGetTransitionsListNull() {
         final State state = new State();
         Assertions.assertNull(state.getTransitionsList("event"));
     }
 
     @Test
-    public void testHasHistory() {
+    void testHasHistory() {
         final History history = new History();
 
         final State state = new State();
@@ -97,26 +97,26 @@ public class StateTest {
     }
 
     @Test
-    public void testHasHistoryEmpty() {
+    void testHasHistoryEmpty() {
         final State state = new State();
         Assertions.assertFalse(state.hasHistory());
     }
 
     @Test
-    public void testInitialAttribute() throws Exception {
+    void testInitialAttribute() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/state-01.xml");
         exec.go();
         Assertions.assertEquals("s11", exec.getStatus().getStates().iterator().next().getId());
     }
 
     @Test
-    public void testIsCompositeFalse() {
+    void testIsCompositeFalse() {
         final State state = new State();
         Assertions.assertFalse(state.isComposite());
     }
 
     @Test
-    public void testIsCompositeHasChildren() {
+    void testIsCompositeHasChildren() {
         final State state1 = new State();
 
         final State state = new State();
@@ -126,7 +126,7 @@ public class StateTest {
     }
 
     @Test
-    public void testIsCompositeParallel() {
+    void testIsCompositeParallel() {
         final State child = new State();
 
         final State state = new State();
@@ -136,7 +136,7 @@ public class StateTest {
     }
 
     @Test
-    public void testIsRegion() {
+    void testIsRegion() {
         final State state = new State();
         state.setParent(new Parallel());
 
@@ -144,7 +144,7 @@ public class StateTest {
     }
 
     @Test
-    public void testIsRegionNotParallel() {
+    void testIsRegionNotParallel() {
         final State state = new State();
         state.setParent(new State());
 
@@ -152,13 +152,13 @@ public class StateTest {
     }
 
     @Test
-    public void testIsSimple() {
+    void testIsSimple() {
         final State state = new State();
         Assertions.assertTrue(state.isSimple());
     }
 
     @Test
-    public void testIsSimpleHasChildren() {
+    void testIsSimpleHasChildren() {
         final State state1 = new State();
 
         final State state = new State();

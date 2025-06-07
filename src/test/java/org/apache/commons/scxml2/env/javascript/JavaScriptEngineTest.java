@@ -50,19 +50,19 @@ public class JavaScriptEngineTest {
     }
 
     @Test
-    public void testCopyJavscriptGlobalsToScxmlContext() throws Exception {
+    void testCopyJavscriptGlobalsToScxmlContext() throws Exception {
         assertFalse(context.has("x"));
         evaluator.eval(context, "x=3");
         assertEquals(3, context.get("x"));
     }
 
     @Test
-    public void testInitScxmlSystemContext() throws Exception {
+    void testInitScxmlSystemContext() throws Exception {
         assertEquals("test", evaluator.eval(context, "_name"));
     }
 
     @Test
-    public void testJavscriptGlobalsNotRetainedAcrossEvaluatorInstances() throws Exception {
+    void testJavscriptGlobalsNotRetainedAcrossEvaluatorInstances() throws Exception {
         assertFalse(context.has("x"));
         evaluator.eval(context, "x=3");
         assertEquals(3, context.get("x"));
@@ -73,7 +73,7 @@ public class JavaScriptEngineTest {
     }
 
     @Test
-    public void testScxmlEvent() throws Exception {
+    void testScxmlEvent() throws Exception {
         assertTrue(evaluator.evalCond(context, "_event === undefined"));
         final EventVariable event = new EventVariable("myEvent", EventVariable.TYPE_INTERNAL, null, null, null, null,"myData");
         systemContext.setLocal(SCXMLSystemContext.EVENT_KEY, event);
@@ -85,7 +85,7 @@ public class JavaScriptEngineTest {
     }
 
     @Test
-    public void testScxmlInPredicate() throws Exception {
+    void testScxmlInPredicate() throws Exception {
         assertFalse(evaluator.evalCond(context, "In('foo')"));
         final Final foo = new Final();
         foo.setId("foo");
@@ -94,7 +94,7 @@ public class JavaScriptEngineTest {
     }
 
     @Test
-    public void testSharedJavscriptGlobalsRetainedAcrossInvocation() throws Exception {
+    void testSharedJavscriptGlobalsRetainedAcrossInvocation() throws Exception {
         assertFalse(context.has("x"));
         evaluator.eval(context, "x=3");
         context.getVars().remove("x");

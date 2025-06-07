@@ -42,7 +42,7 @@ public class StopWatchTest {
     }
 
     @Test
-    public void testStopWatch() {
+    void testStopWatch() {
         Assertions.assertEquals("reset", stopWatch.getCurrentState());
         stopWatch.fireEvent(StopWatch.EVENT_START);
         Assertions.assertEquals("running", stopWatch.getCurrentState());

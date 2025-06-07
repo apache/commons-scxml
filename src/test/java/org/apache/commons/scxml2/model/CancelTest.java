@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
 public class CancelTest {
 
     @Test
-    public void testCancelBySendId() throws Exception {
+    void testCancelBySendId() throws Exception {
         final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/model/cancel-test-01.xml");
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml, null, new SimpleDispatcher());
         exec.go();
@@ -38,7 +38,7 @@ public class CancelTest {
     }
 
     @Test
-    public void testCancelBySendIdExpr() throws Exception {
+    void testCancelBySendIdExpr() throws Exception {
         final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/model/cancel-test-02.xml");
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml, null, new SimpleDispatcher());
         exec.go();

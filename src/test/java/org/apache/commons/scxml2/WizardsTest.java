@@ -70,7 +70,7 @@ public class WizardsTest {
      * Test the wizard style SCXML documents, and send usage
      */
     @Test
-    public void testWizard01Sample() throws Exception {
+    void testWizard01Sample() throws Exception {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/wizard-01.xml");
         exec.go();
         Assertions.assertNotNull(exec);
@@ -94,7 +94,7 @@ public class WizardsTest {
     }
 
     @Test
-    public void testWizard02Sample() throws Exception {
+    void testWizard02Sample() throws Exception {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/wizard-02.xml");
         exec.setEventdispatcher(new TestEventDispatcher());
         exec.go();

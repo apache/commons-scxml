@@ -30,7 +30,7 @@ public class TransitionTest {
     }
 
     @Test
-    public void testGetTargets() {
+    void testGetTargets() {
         Assertions.assertEquals(0, transition.getTargets().size());
 
         final State state = new State();

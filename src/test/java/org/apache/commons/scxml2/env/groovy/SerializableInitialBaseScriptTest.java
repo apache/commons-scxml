@@ -35,7 +35,7 @@ public class SerializableInitialBaseScriptTest {
      * Testing Groovy initial base script usage and validating serializable
      */
     @Test
-    public void testSerializableInitialBaseScriptSample() throws Exception {
+    void testSerializableInitialBaseScriptSample() throws Exception {
         final URL scxml = SCXMLTestHelper.getResource("org/apache/commons/scxml2/env/groovy/serializable-initial-base-script.xml");
     	SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml, new GroovyEvaluator(true));
         exec.go();

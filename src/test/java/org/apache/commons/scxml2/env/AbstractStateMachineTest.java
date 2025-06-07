@@ -62,7 +62,7 @@ public class AbstractStateMachineTest {
     }
 
     @Test
-    public void testMoreThanOneScxmlDocument() throws Exception {
+    void testMoreThanOneScxmlDocument() throws Exception {
         final URL fooScxmlDocument = getClass().getResource("foo.xml");
         final URL barScxmlDocument = getClass().getResource("bar.xml");
 

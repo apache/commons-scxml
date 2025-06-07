@@ -51,7 +51,7 @@ public class JSExampleTest {
 
     // TEST METHODS
     @Test
-    public void testExample01Sample() throws Exception {
+    void testExample01Sample() throws Exception {
 
         final List<CustomAction> actions  = new ArrayList<>();
         actions.add(new CustomAction("http://my.custom-actions.domain", "eventdatamaptest", EventDataMapTest.class));

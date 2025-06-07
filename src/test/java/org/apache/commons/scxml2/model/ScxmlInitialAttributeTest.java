@@ -53,7 +53,7 @@ public class ScxmlInitialAttributeTest {
             "</scxml>";
 
     @Test
-    public void testIllegalInitial() {
+    void testIllegalInitial() {
         // expected because of the non-existing initial state id
         assertThrows(
                 ModelException.class,
@@ -62,7 +62,7 @@ public class ScxmlInitialAttributeTest {
     }
 
     @Test
-    public void testInitial() throws Exception {
+    void testInitial() throws Exception {
         final SCXML scxml = SCXMLTestHelper.parse(new StringReader(SCXML_WITH_LEGAL_INITIAL), null);
         assertEquals("s1", scxml.getInitial(), "The initial state ID reading was wrong.");
         final TransitionTarget tt = scxml.getInitialTransition().getTargets().iterator().next();
@@ -73,7 +73,7 @@ public class ScxmlInitialAttributeTest {
     }
 
     @Test
-    public void testNoInitial() throws Exception {
+    void testNoInitial() throws Exception {
         final SCXML scxml = SCXMLTestHelper.parse(new StringReader(SCXML_WITH_NO_INITIAL), null);
         assertNull(scxml.getInitial());
         final TransitionTarget tt = scxml.getInitialTransition().getTargets().iterator().next();

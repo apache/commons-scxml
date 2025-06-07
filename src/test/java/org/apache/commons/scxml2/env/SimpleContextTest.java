@@ -33,7 +33,7 @@ public class SimpleContextTest {
     }
 
     @Test
-    public void testEffectiveContextMapMergeStragegy() {
+    void testEffectiveContextMapMergeStragegy() {
         final SimpleContext rootContext = new SimpleContext();
         rootContext.set("key", "root");
         final SimpleContext parentContext = new SimpleContext(rootContext);
@@ -49,14 +49,14 @@ public class SimpleContextTest {
     }
 
     @Test
-    public void testGetNull() {
+    void testGetNull() {
         final Object value = context.get("key");
 
         Assertions.assertNull(value);
     }
 
     @Test
-    public void testGetParentNull() {
+    void testGetParentNull() {
         final Map<String, Object> vars = new HashMap<>();
         vars.put("key", "value");
 
@@ -66,7 +66,7 @@ public class SimpleContextTest {
     }
 
     @Test
-    public void testGetParentValue() {
+    void testGetParentValue() {
         final Map<String, Object> parentVars = new HashMap<>();
         parentVars.put("differentKey", "differentValue");
 
@@ -82,7 +82,7 @@ public class SimpleContextTest {
     }
 
     @Test
-    public void testGetParentWrongValue() {
+    void testGetParentWrongValue() {
         final Map<String, Object> parentVars = new HashMap<>();
         parentVars.put("differentKey", "differentValue");
 
@@ -98,7 +98,7 @@ public class SimpleContextTest {
     }
 
     @Test
-    public void testGetValue() {
+    void testGetValue() {
         final Map<String, Object> vars = new HashMap<>();
         vars.put("key", "value");
 
@@ -108,7 +108,7 @@ public class SimpleContextTest {
     }
 
     @Test
-    public void testHasNullParent() {
+    void testHasNullParent() {
         final Map<String, Object> vars = new HashMap<>();
         vars.put("key", "value");
 
@@ -118,7 +118,7 @@ public class SimpleContextTest {
     }
 
     @Test
-    public void testHasParentCorrectKey() {
+    void testHasParentCorrectKey() {
         final Map<String, Object> parentVars = new HashMap<>();
         parentVars.put("differentKey", "value");
 
@@ -134,7 +134,7 @@ public class SimpleContextTest {
     }
 
     @Test
-    public void testHasParentWrongKey() {
+    void testHasParentWrongKey() {
         final Map<String, Object> parentVars = new HashMap<>();
         parentVars.put("key", "value");
 
@@ -150,7 +150,7 @@ public class SimpleContextTest {
     }
 
     @Test
-    public void testHasTrue() {
+    void testHasTrue() {
         final Map<String, Object> vars = new HashMap<>();
         vars.put("key", "value");
 
@@ -160,7 +160,7 @@ public class SimpleContextTest {
     }
 
     @Test
-    public void testNestedEffectiveContextMapWrappingFails() {
+    void testNestedEffectiveContextMapWrappingFails() {
         final SimpleContext rootContext = new SimpleContext();
         rootContext.set("key", "root");
         final SimpleContext rootEffectiveContext = new SimpleContext(rootContext, new EffectiveContextMap(rootContext));
@@ -173,7 +173,7 @@ public class SimpleContextTest {
     }
 
     @Test
-    public void testSetVarsChangeValue() {
+    void testSetVarsChangeValue() {
         final Map<String, Object> vars = new HashMap<>();
         vars.put("key", "value");
 
@@ -185,7 +185,7 @@ public class SimpleContextTest {
     }
 
     @Test
-    public void testSetVarsEmpty() {
+    void testSetVarsEmpty() {
         final Map<String, Object> vars = new HashMap<>();
         context.setVars(vars);
 
@@ -195,7 +195,7 @@ public class SimpleContextTest {
     }
 
     @Test
-    public void testSetVarsParent() {
+    void testSetVarsParent() {
         final Map<String, Object> parentVars = new HashMap<>();
         parentVars.put("differentKey", "differentValue");
 

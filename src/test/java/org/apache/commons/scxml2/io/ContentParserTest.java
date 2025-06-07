@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 public class ContentParserTest {
 
     @Test
-    public void testParseJson() throws Exception {
+    void testParseJson() throws Exception {
         final ObjectMapper jsonObjectMapper = new ObjectMapper();
         jsonObjectMapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
         jsonObjectMapper.configure(JsonParser.Feature.ALLOW_YAML_COMMENTS, true);
@@ -53,7 +53,7 @@ public class ContentParserTest {
     }
 
     @Test
-    public void testSpaceNormalizeContent() {
+    void testSpaceNormalizeContent() {
         Assertions.assertNull(ContentParser.spaceNormalizeContent(null));
         Assertions.assertEquals("", ContentParser.spaceNormalizeContent(""));
         Assertions.assertEquals("a", ContentParser.spaceNormalizeContent("a"));
@@ -64,7 +64,7 @@ public class ContentParserTest {
     }
 
     @Test
-    public void testTrimContent() {
+    void testTrimContent() {
         Assertions.assertNull(ContentParser.trimContent(null));
         Assertions.assertEquals("", ContentParser.trimContent(""));
         Assertions.assertEquals("", ContentParser.trimContent(" "));

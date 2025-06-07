@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 public class StaticMethodTest {
 
     @Test
-    public void testJexlStaticMethodInvocation() throws Exception {
+    void testJexlStaticMethodInvocation() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/static-method.xml");
         exec.getRootContext().set("System", System.class);
         exec.go();

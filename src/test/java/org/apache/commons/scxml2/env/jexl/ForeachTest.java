@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 public class ForeachTest {
 
     @Test
-    public void testForeach() throws Exception {
+    void testForeach() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/foreach.xml");
         exec.go();
         Assertions.assertTrue(exec.getStatus().isFinal());

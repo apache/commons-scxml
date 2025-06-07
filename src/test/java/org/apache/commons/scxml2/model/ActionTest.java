@@ -29,7 +29,7 @@ public class ActionTest {
         action = new Assign();
     }
     @Test
-    public void testGetParentStateIsHistory() throws Exception {
+    void testGetParentStateIsHistory() throws Exception {
         final Transition transition = new Transition();
 
         final History history = new History();
@@ -49,7 +49,7 @@ public class ActionTest {
     }
 
     @Test
-    public void testGetParentStateIsInitial() throws Exception {
+    void testGetParentStateIsInitial() throws Exception {
         final SimpleTransition transition = new SimpleTransition();
 
         final Initial initial = new Initial();
@@ -68,7 +68,7 @@ public class ActionTest {
     }
 
     @Test
-    public void testGetParentStateIsParallel() throws Exception {
+    void testGetParentStateIsParallel() throws Exception {
         final Transition transition = new Transition();
 
         final Parallel parallel = new Parallel();
@@ -88,7 +88,7 @@ public class ActionTest {
     }
 
     @Test
-    public void testGetParentStateIsState() throws Exception {
+    void testGetParentStateIsState() throws Exception {
         final Transition transition = new Transition();
 
         final State state = new State();

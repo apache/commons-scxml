@@ -25,13 +25,13 @@ import org.junit.jupiter.api.Test;
 public class GroovyContextTest {
 
     @Test
-    public void testNew() {
+    void testNew() {
         final GroovyContext ctx = new GroovyContext();
         Assertions.assertNotNull(ctx);
     }
 
     @Test
-    public void testPrepopulated() {
+    void testPrepopulated() {
         final Map<String, Object> m = new HashMap<>();
         m.put("foo", "bar");
         final GroovyContext ctx = new GroovyContext(null, m, null);
@@ -42,7 +42,7 @@ public class GroovyContextTest {
     }
 
     @Test
-    public void testSetVars() {
+    void testSetVars() {
         final GroovyContext ctx = new GroovyContext();
         Assertions.assertNotNull(ctx);
         ctx.set("foo", "bar");

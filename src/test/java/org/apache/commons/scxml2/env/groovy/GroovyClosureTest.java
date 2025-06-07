@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 public class GroovyClosureTest {
 
     @Test
-    public void testGroovyClosure() throws Exception {
+    void testGroovyClosure() throws Exception {
         final URL groovyClosure = SCXMLTestHelper.getResource("org/apache/commons/scxml2/env/groovy/groovy-closure.xml");
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor(groovyClosure, new GroovyEvaluator(true));
         exec.go();

@@ -77,7 +77,7 @@ public class Issue112Test {
     // Example using a custom <my:enqueue> action that generates more events during event processing.
     // An external event queue is used by <my:enqueue> instead of SCXMLExecutor#triggerEvent(TriggerEvent)
     @Test
-    public void test01issue112() throws Exception {
+    void test01issue112() throws Exception {
 
         final CustomAction ca1 =
             new CustomAction("http://my.custom-actions.domain/CUSTOM", "enqueue", Enqueue.class);

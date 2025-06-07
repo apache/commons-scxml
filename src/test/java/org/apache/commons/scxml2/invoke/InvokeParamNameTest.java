@@ -107,7 +107,7 @@ public class InvokeParamNameTest {
 
     // Tests "param" element with "name" and "expr" attribute
     @Test
-    public void testNameAndExpr() throws Exception {
+    void testNameAndExpr() throws Exception {
         trigger();
         Assertions.assertTrue(lastURL.endsWith("TestSrc"));
         final Map.Entry<String, Object> e =
@@ -118,7 +118,7 @@ public class InvokeParamNameTest {
 
     // Tests "param" element with a "name" attribute and "expr" attribute locating a data id
     @Test
-    public void testSoleNameLocation() throws Exception {
+    void testSoleNameLocation() throws Exception {
         trigger(); trigger();
         final Map m = (Map)lastParams.values().iterator().next();
         Assertions.assertNotNull(m);

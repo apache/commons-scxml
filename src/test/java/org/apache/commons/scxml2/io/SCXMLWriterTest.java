@@ -32,7 +32,7 @@ import javax.xml.stream.XMLStreamException;
 public class SCXMLWriterTest {
 
     @Test
-    public void testSerializeGlobalScript() throws IOException, XMLStreamException {
+    void testSerializeGlobalScript() throws IOException, XMLStreamException {
         final SCXML scxml = new CommonsSCXML();
         scxml.setVersion("1.0");
         scxml.setInitial("S1");
@@ -56,7 +56,7 @@ public class SCXMLWriterTest {
     }
 
     @Test
-    public void testSerializeParallel() throws IOException, XMLStreamException {
+    void testSerializeParallel() throws IOException, XMLStreamException {
 
         final SCXML scxml = new CommonsSCXML();
         scxml.setVersion("1.0");
@@ -104,7 +104,7 @@ public class SCXMLWriterTest {
      }
 
     @Test
-    public void testSerializeSCXMLNoStates() throws IOException, XMLStreamException {
+    void testSerializeSCXMLNoStates() throws IOException, XMLStreamException {
         final SCXML scxml = new CommonsSCXML();
         // ensure namespaces are stored in insertion order for write->read comparision below
         final LinkedHashMap<String, String> namespaces = new LinkedHashMap<>(scxml.getNamespaces());
@@ -127,7 +127,7 @@ public class SCXMLWriterTest {
     }
 
     @Test
-    public void testSerializeSCXMLState() throws IOException, XMLStreamException {
+    void testSerializeSCXMLState() throws IOException, XMLStreamException {
         final SCXML scxml = new CommonsSCXML();
         scxml.setVersion("1.0");
         scxml.setInitial("S1");

@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 public class SCXMLSemanticsImplTest {
 
     @Test
-    public void testIsLegalConfigInvalidParallel() {
+    void testIsLegalConfigInvalidParallel() {
         final Set<EnterableState> states = new HashSet<>();
         final Parallel parallel = new Parallel();
 
@@ -57,7 +57,7 @@ public class SCXMLSemanticsImplTest {
     }
 
     @Test
-    public void testIsLegalConfigMultipleStatesActive() {
+    void testIsLegalConfigMultipleStatesActive() {
         final Set<EnterableState> states = new HashSet<>();
 
         final State state1 = new State();
@@ -83,7 +83,7 @@ public class SCXMLSemanticsImplTest {
     }
 
     @Test
-    public void testIsLegalConfigMultipleTopLevel() {
+    void testIsLegalConfigMultipleTopLevel() {
         final Set<EnterableState> states = new HashSet<>();
 
         final State state1 = new State();
@@ -102,7 +102,7 @@ public class SCXMLSemanticsImplTest {
     }
 
     @Test
-    public void testIsLegalConfigNoStates() {
+    void testIsLegalConfigNoStates() {
         final Set<EnterableState> states = new HashSet<>();
 
         Assertions.assertTrue(new SCXMLSemanticsImpl().isLegalConfiguration(states, new SimpleErrorReporter()));

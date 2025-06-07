@@ -25,13 +25,13 @@ import org.junit.jupiter.api.Test;
 public class JexlContextTest {
 
     @Test
-    public void testNew() {
+    void testNew() {
         final JexlContext ctx = new JexlContext();
         Assertions.assertNotNull(ctx);
     }
 
     @Test
-    public void testPrepopulated() {
+    void testPrepopulated() {
         final Map<String, Object> m = new HashMap<>();
         m.put("foo", "bar");
         final JexlContext ctx = new JexlContext(null, m);

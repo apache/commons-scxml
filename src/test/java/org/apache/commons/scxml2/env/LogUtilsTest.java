@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 public class LogUtilsTest {
 
     @Test
-    public void testGetTTPathParent() {
+    void testGetTTPathParent() {
         final State target = new State();
         target.setId("ID");
 
@@ -41,7 +41,7 @@ public class LogUtilsTest {
     }
 
     @Test
-    public void testGetTTPathParentNull() {
+    void testGetTTPathParentNull() {
         final State target = new State();
         target.setId("ID");
 
@@ -49,7 +49,7 @@ public class LogUtilsTest {
     }
 
     @Test
-    public void testTransToString() {
+    void testTransToString() {
         final State targetTo = new State();
         targetTo.setId("TO");
 
