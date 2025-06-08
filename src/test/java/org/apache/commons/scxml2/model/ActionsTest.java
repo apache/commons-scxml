@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
  * Unit tests {@link org.apache.commons.scxml2.model.Send}.
  * Unit tests {@link org.apache.commons.scxml2.model.Var}.
  */
-public class ActionsTest {
+class ActionsTest {
 
     private void runTest(final SCXMLExecutor exec) {
         final Context ctx = SCXMLTestHelper.lookupContext(exec, "actionsTest");

@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.xml.stream.XMLStreamException;
 
-public class SCXMLWriterTest {
+class SCXMLWriterTest {
 
     @Test
     void testSerializeGlobalScript() throws IOException, XMLStreamException {

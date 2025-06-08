@@ -25,7 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class ContentParserTest {
+class ContentParserTest {
 
     @Test
     void testParseJson() throws Exception {

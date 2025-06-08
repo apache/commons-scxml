@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests {@link org.apache.commons.scxml2.env.AbstractStateMachine}.
  */
-public class AbstractStateMachineTest {
+class AbstractStateMachineTest {
 
     private static class Bar extends AbstractStateMachine {
 

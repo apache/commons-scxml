@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
  * Unit tests {@link org.apache.commons.scxml2.SCXMLExecutor}.
  * Testing Groovy initial base script usage and validating serializable
  */
-public class SerializableInitialBaseScriptTest {
+class SerializableInitialBaseScriptTest {
 
     /**
      * Testing Groovy initial base script usage and validating serializable

@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
  * Test cases for issue 64.
  * WONTFIX
  */
-public class Issue64Test {
+class Issue64Test {
 
     @Test
     void test01issue64() throws Exception {

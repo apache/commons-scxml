@@ -21,7 +21,7 @@ import org.apache.commons.scxml2.model.Transition;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class LogUtilsTest {
+class LogUtilsTest {
 
     @Test
     void testGetTTPathParent() {

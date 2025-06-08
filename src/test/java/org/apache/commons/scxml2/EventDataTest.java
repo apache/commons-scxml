@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
  * Unit tests {@link org.apache.commons.scxml2.SCXMLExecutor}.
  * Testing special variable "_event.data"
  */
-public class EventDataTest {
+class EventDataTest {
 
     public static class ConnectionAlertingPayload {
         private int line;

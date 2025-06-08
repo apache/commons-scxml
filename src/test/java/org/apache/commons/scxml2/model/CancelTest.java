@@ -23,7 +23,7 @@ import org.apache.commons.scxml2.EventBuilder;
 import org.apache.commons.scxml2.env.SimpleDispatcher;
 import org.junit.jupiter.api.Test;
 
-public class CancelTest {
+class CancelTest {
 
     @Test
     void testCancelBySendId() throws Exception {

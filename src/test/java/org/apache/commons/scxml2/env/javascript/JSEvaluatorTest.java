@@ -42,7 +42,7 @@ import org.junit.jupiter.api.Test;
  *  </ul>
  */
 
-public class JSEvaluatorTest {
+class JSEvaluatorTest {
     // TEST CONSTANTS
 
     private static class TestItem {

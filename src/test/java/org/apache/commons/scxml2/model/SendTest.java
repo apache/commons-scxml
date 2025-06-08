@@ -31,7 +31,7 @@ import org.apache.commons.scxml2.env.SimpleDispatcher;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class SendTest {
+class SendTest {
 
     private long parseDelay(final String delayString) throws SCXMLExpressionException {
         return Send.parseDelay(delayString, true, delayString);

@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests {@link org.apache.commons.scxml2.env.AbstractSCXMLListener}.
  */
-public class AbstractSCXMLListenerTest {
+class AbstractSCXMLListenerTest {
 
     // Test data
     private State to;

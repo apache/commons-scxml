@@ -21,7 +21,7 @@ import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class ParallelTest {
+class ParallelTest {
 
     @Test
     void testParallel01() throws Exception {

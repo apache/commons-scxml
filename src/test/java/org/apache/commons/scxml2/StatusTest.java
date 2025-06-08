@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class StatusTest {
+class StatusTest {
 
     private StateConfiguration stateConfiguration;
     private Status status;

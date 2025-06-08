@@ -23,7 +23,7 @@ import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class ScriptTest {
+class ScriptTest {
 
     /**
      * Test JS script execution.

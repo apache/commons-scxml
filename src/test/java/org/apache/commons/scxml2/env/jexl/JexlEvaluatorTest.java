@@ -22,7 +22,7 @@ import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class JexlEvaluatorTest {
+class JexlEvaluatorTest {
 
     private static final String BAD_EXPRESSION = ">";
     private final Context ctx = new JexlContext();

@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests {@link org.apache.commons.scxml2.TriggerEvent}.
  */
-public class TriggerEventTest {
+class TriggerEventTest {
 
     // Test data
     private Map<String, String> payloadData;

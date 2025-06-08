@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class CustomActionTest {
+class CustomActionTest {
 
     /**
      * Sets up instance variables required by this test case.

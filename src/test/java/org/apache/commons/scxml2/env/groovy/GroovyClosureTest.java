@@ -26,7 +26,7 @@ import org.apache.commons.scxml2.model.EnterableState;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class GroovyClosureTest {
+class GroovyClosureTest {
 
     @Test
     void testGroovyClosure() throws Exception {

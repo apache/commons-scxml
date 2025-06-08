@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
  * Test cases for issue 62.
  * FIXED
  */
-public class Issue62Test {
+class Issue62Test {
 
     private void fragmenttest(final SCXMLExecutor exec) throws Exception {
         final Set<EnterableState> currentStates = exec.getStatus().getStates();

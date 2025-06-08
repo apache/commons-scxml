@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Test white box nature of <state> element "src" attribute.
  */
-public class StateSrcTest {
+class StateSrcTest {
 
     @Test
     void testBadSrcFragmentInclude() {

@@ -27,7 +27,7 @@ import org.apache.commons.scxml2.model.State;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class SCXMLSemanticsImplTest {
+class SCXMLSemanticsImplTest {
 
     @Test
     void testIsLegalConfigInvalidParallel() {

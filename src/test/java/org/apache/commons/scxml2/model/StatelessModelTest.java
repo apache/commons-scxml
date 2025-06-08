@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests {@link org.apache.commons.scxml2.SCXMLExecutor}.
  */
-public class StatelessModelTest {
+class StatelessModelTest {
 
     /**
      * TODO: Test sharing two SCXML objects between one executor (not recommended)

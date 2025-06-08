@@ -26,7 +26,7 @@ import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.junit.jupiter.api.Test;
 
-public class ScxmlInitialAttributeTest {
+class ScxmlInitialAttributeTest {
 
     private static final String SCXML_WITH_LEGAL_INITIAL =
             "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" version=\"1.0\" initial=\"s1\">\n" +

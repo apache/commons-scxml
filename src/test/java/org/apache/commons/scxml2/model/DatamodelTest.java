@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests {@link org.apache.commons.scxml2.SCXMLExecutor}.
  */
-public class DatamodelTest {
+class DatamodelTest {
 
     private Set<EnterableState> fireEvent(final String name, final SCXMLExecutor exec) throws Exception {
         final TriggerEvent[] evts = {new EventBuilder(name, TriggerEvent.SIGNAL_EVENT).build()};

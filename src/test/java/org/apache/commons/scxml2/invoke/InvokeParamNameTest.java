@@ -30,7 +30,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 // Tests for 4.3.1 in WD-scxml-20080516
-public class InvokeParamNameTest {
+class InvokeParamNameTest {
 
     public static class DummyInvoker implements Invoker {
 

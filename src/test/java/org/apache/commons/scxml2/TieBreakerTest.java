@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
  * transition exists at a particular point, and tie-breaking rules are used
  * to make progress, rather than resulting in error conditions.
  */
-public class TieBreakerTest {
+class TieBreakerTest {
 
     @Test
     void testTieBreaker01() throws Exception {

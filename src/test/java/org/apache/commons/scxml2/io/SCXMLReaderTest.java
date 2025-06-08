@@ -55,7 +55,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests {@link org.apache.commons.scxml2.io.SCXMLReader}.
  */
-public class SCXMLReaderTest {
+class SCXMLReaderTest {
 
     public static class MyAction extends Action implements ParsedValueContainer {
 

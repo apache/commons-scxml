@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * </ul>
  * </p>
  */
-public class SCXMLRequiredAttributesTest {
+class SCXMLRequiredAttributesTest {
 
     private static final String VALID_SCXML =
             "<scxml xmlns=\"http://www.w3.org/2005/07/scxml\" datamodel=\"jexl\" version=\"1.0\">\n" +

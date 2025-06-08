@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
  * Unit tests {@link org.apache.commons.scxml2.SCXMLExecutor}.
  * Testing <invoke>
  */
-public class InvokeTest {
+class InvokeTest {
 
     @Test
     void testExecuteInvokeAfterAllInternalEventsAreProcessed() throws Exception {

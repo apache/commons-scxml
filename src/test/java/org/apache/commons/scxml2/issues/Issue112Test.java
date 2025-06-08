@@ -35,7 +35,7 @@ import org.junit.jupiter.api.Test;
  * Test cases for issue 112.
  * OPEN
  */
-public class Issue112Test {
+class Issue112Test {
 
     // Test external event queue
     private static final class Application {

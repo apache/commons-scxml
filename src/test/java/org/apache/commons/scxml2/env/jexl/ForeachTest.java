@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Simple test for SCXML <foreach/>
  */
-public class ForeachTest {
+class ForeachTest {
 
     @Test
     void testForeach() throws Exception {

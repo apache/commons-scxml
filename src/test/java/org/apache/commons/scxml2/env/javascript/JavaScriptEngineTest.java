@@ -30,7 +30,7 @@ import org.apache.commons.scxml2.system.EventVariable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class JavaScriptEngineTest {
+class JavaScriptEngineTest {
 
     private JSEvaluator evaluator;
     private StateConfiguration stateConfiguration;

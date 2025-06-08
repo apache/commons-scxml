@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests for &lt;assign&gt; element, particular the "src" attribute.
  */
-public class AssignTest {
+class AssignTest {
 
     @Test
     void testAssignDeep() throws Exception {

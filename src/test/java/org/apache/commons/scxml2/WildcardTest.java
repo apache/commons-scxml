@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
  * Unit tests {@link org.apache.commons.scxml2.SCXMLExecutor}.
  * Testing wildcard event matching (*)
  */
-public class WildcardTest {
+class WildcardTest {
 
     /**
      * Test the SCXML documents, usage of "_event.data"

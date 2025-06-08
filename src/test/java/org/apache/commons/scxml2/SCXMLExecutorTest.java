@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests {@link org.apache.commons.scxml2.SCXMLExecutor}.
  */
-public class SCXMLExecutorTest {
+class SCXMLExecutorTest {
 
     private void checkMicrowave01Sample(final SCXMLExecutor exec) throws Exception {
         final Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "turn_on");

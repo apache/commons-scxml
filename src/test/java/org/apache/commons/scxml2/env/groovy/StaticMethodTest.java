@@ -24,7 +24,7 @@ import org.apache.commons.scxml2.model.EnterableState;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class StaticMethodTest {
+class StaticMethodTest {
 
     @Test
     void testGroovyStaticMethodInvocation() throws Exception {

@@ -19,7 +19,7 @@ package org.apache.commons.scxml2.model;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class TransitionTargetTest {
+class TransitionTargetTest {
 
     @Test
     void testIsDescendantEqual() {

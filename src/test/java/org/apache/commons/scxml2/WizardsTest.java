@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests
  */
-public class WizardsTest {
+class WizardsTest {
 
     static class TestEventDispatcher extends SimpleDispatcher {
 

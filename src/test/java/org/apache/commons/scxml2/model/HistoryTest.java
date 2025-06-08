@@ -23,7 +23,7 @@ import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class HistoryTest {
+class HistoryTest {
 
     private String nextPhase(final SCXMLExecutor exec) throws Exception {
         final Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "done.state.phase");
