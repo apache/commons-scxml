@@ -17,7 +17,6 @@
 package org.apache.commons.scxml2.w3c;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.InputStream;
@@ -437,7 +436,7 @@ public class W3CTests {
 
     /**
      * Downloads the W3C IRP manifest.xml, the IRP ecma stylesheet to transform the tests, and the actual test templates (.txml) as defined in the manifest.xml
-     * 
+     *
      * @throws Exception
      */
     protected void getTests() throws Exception {
@@ -513,7 +512,7 @@ public class W3CTests {
 
     /**
      * Download and transform a W3C IRP test resource file
-     * 
+     *
      * @param specid       the SCXML 1.0 spec id (anchor) for the current assertion, which is used to determine if, how and where the resource should be
      *                     transformed.
      * @param resource     The test resource definition
