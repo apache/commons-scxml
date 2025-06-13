@@ -39,7 +39,6 @@ public class Builtin implements Serializable {
      * @param state The State ID to compare with
      * @return Whether this State is current active
      */
-    @SuppressWarnings("unchecked")
     public static boolean isMember(final Context ctx, final String state) {
         return ((Status)ctx.getSystemContext().getPlatformVariables().get(SCXMLSystemContext.STATUS_KEY)).isInState(state);
     }
