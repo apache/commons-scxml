@@ -16,12 +16,12 @@
  */
 package org.apache.commons.scxml2.env.groovy;
 
-import groovy.lang.Binding;
-import groovy.lang.MissingPropertyException;
-
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import groovy.lang.Binding;
+import groovy.lang.MissingPropertyException;
 
 /**
  * Delegating Groovy Binding class which delegates all variables access to its GroovyContext

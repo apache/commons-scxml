@@ -19,11 +19,11 @@ package org.apache.commons.scxml2.io;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 class ContentParserTest {
 

@@ -16,6 +16,8 @@
  */
 package org.apache.commons.scxml2;
 
+import static org.apache.commons.scxml2.Evaluator.DEFAULT_DATA_MODEL;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -25,7 +27,6 @@ import org.apache.commons.scxml2.env.jexl.JexlEvaluator;
 import org.apache.commons.scxml2.env.minimal.MinimalEvaluator;
 import org.apache.commons.scxml2.model.ModelException;
 import org.apache.commons.scxml2.model.SCXML;
-import static org.apache.commons.scxml2.Evaluator.DEFAULT_DATA_MODEL;
 
 /**
  * A static singleton factory for {@link EvaluatorProvider}s by supported SCXML datamodel type.

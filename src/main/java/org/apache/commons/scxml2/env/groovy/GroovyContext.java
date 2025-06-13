@@ -16,8 +16,6 @@
  */
 package org.apache.commons.scxml2.env.groovy;
 
-import groovy.lang.Closure;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -29,6 +27,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.SCInstanceObjectInputStream;
 import org.apache.commons.scxml2.env.SimpleContext;
+
+import groovy.lang.Closure;
 
 /**
  * Groovy Context implementation for Commons SCXML.
