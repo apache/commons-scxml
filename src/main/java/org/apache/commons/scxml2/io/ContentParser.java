@@ -32,9 +32,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.scxml2.model.JsonValue;
 import org.apache.commons.scxml2.model.NodeValue;
@@ -43,6 +40,9 @@ import org.apache.commons.scxml2.model.TextValue;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
+
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * The ContentParser provides utility methods for cleaning content strings and parsing them into "raw" content model Objects
