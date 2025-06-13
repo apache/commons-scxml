@@ -16,8 +16,6 @@
  */
 package org.apache.commons.scxml2.env.groovy;
 
-import groovy.lang.Script;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +30,8 @@ import org.apache.commons.scxml2.SCXMLSystemContext;
 import org.apache.commons.scxml2.env.AbstractBaseEvaluator;
 import org.apache.commons.scxml2.env.EffectiveContextMap;
 import org.apache.commons.scxml2.model.SCXML;
+
+import groovy.lang.Script;
 
 /**
  * Evaluator implementation enabling use of Groovy expressions in SCXML documents.
@@ -231,7 +231,6 @@ public class GroovyEvaluator extends AbstractBaseEvaluator {
         return scriptCache.getGroovyClassLoader();
     }
 
-    @SuppressWarnings("unchecked")
     protected Script getScript(final GroovyContext groovyContext, final String scriptBaseClassName, final String scriptSource) {
         final Script script = scriptCache.getScript(scriptBaseClassName, scriptSource);
         script.setBinding(groovyContext.getBinding());
