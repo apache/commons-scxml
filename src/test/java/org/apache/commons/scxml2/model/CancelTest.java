@@ -16,10 +16,10 @@
  */
 package org.apache.commons.scxml2.model;
 
+import org.apache.commons.scxml2.EventBuilder;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.TriggerEvent;
-import org.apache.commons.scxml2.EventBuilder;
 import org.apache.commons.scxml2.env.SimpleDispatcher;
 import org.junit.jupiter.api.Test;
 
