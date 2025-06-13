@@ -18,11 +18,11 @@ package org.apache.commons.scxml2.invoke;
 
 import java.util.Map;
 
+import org.apache.commons.scxml2.EventBuilder;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLIOProcessor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.TriggerEvent;
-import org.apache.commons.scxml2.EventBuilder;
 import org.apache.commons.scxml2.model.ModelException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;

@@ -16,11 +16,6 @@
  */
 package org.apache.commons.scxml2.env.groovy;
 
-import groovy.lang.GroovyClassLoader;
-import groovy.lang.GroovyCodeSource;
-import groovy.lang.GroovyRuntimeException;
-import groovy.lang.Script;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -29,6 +24,11 @@ import java.security.PrivilegedAction;
 import java.util.LinkedHashMap;
 
 import org.codehaus.groovy.control.CompilerConfiguration;
+
+import groovy.lang.GroovyClassLoader;
+import groovy.lang.GroovyCodeSource;
+import groovy.lang.GroovyRuntimeException;
+import groovy.lang.Script;
 
 /**
  * GroovyExtendableScriptCache is a general purpose and <em>{@link Serializable}</em> Groovy Script cache.

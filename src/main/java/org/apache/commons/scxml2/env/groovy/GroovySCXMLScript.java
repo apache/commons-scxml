@@ -16,15 +16,15 @@
  */
 package org.apache.commons.scxml2.env.groovy;
 
-import groovy.lang.Binding;
-import groovy.lang.MissingPropertyException;
-import groovy.lang.Script;
-
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Map;
 
 import org.apache.commons.scxml2.Builtin;
+
+import groovy.lang.Binding;
+import groovy.lang.MissingPropertyException;
+import groovy.lang.Script;
 
 /**
  * Groovy {@link Script} base class for SCXML, providing the standard 'builtin' function {@link #In(String)},

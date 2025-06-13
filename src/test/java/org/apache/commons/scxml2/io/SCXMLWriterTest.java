@@ -19,6 +19,8 @@ package org.apache.commons.scxml2.io;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.apache.commons.scxml2.model.CommonsSCXML;
 import org.apache.commons.scxml2.model.Parallel;
 import org.apache.commons.scxml2.model.SCXML;
@@ -26,8 +28,6 @@ import org.apache.commons.scxml2.model.Script;
 import org.apache.commons.scxml2.model.State;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import javax.xml.stream.XMLStreamException;
 
 class SCXMLWriterTest {
 

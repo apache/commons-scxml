@@ -16,11 +16,11 @@
  */
 package org.apache.commons.scxml2.env.javascript;
 
-import java.util.UUID;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.UUID;
 
 import org.apache.commons.scxml2.SCXMLSystemContext;
 import org.apache.commons.scxml2.StateConfiguration;

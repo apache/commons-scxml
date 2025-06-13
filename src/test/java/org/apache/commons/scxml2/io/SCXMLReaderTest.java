@@ -38,18 +38,18 @@ import org.apache.commons.scxml2.model.CustomActionWrapper;
 import org.apache.commons.scxml2.model.Data;
 import org.apache.commons.scxml2.model.Datamodel;
 import org.apache.commons.scxml2.model.EnterableState;
-import org.apache.commons.scxml2.model.ParsedValue;
-import org.apache.commons.scxml2.model.ParsedValueContainer;
 import org.apache.commons.scxml2.model.Final;
 import org.apache.commons.scxml2.model.ModelException;
+import org.apache.commons.scxml2.model.ParsedValue;
+import org.apache.commons.scxml2.model.ParsedValueContainer;
 import org.apache.commons.scxml2.model.SCXML;
 import org.apache.commons.scxml2.model.Send;
 import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.Transition;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**

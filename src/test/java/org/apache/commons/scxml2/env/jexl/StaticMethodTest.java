@@ -21,7 +21,6 @@ import java.util.Set;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.model.EnterableState;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

@@ -17,8 +17,8 @@
 package org.apache.commons.scxml2.model;
 
 import org.apache.commons.scxml2.ActionExecutionContext;
-import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.EventBuilder;
+import org.apache.commons.scxml2.TriggerEvent;
 
 /**
  * Our custom &quot;hello world&quot; action.

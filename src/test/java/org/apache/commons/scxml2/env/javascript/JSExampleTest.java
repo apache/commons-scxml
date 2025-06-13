@@ -21,16 +21,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.scxml2.ActionExecutionContext;
+import org.apache.commons.scxml2.EventBuilder;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.TriggerEvent;
-import org.apache.commons.scxml2.EventBuilder;
 import org.apache.commons.scxml2.model.Action;
-import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.model.CustomAction;
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.SCXML;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

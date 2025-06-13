@@ -22,9 +22,9 @@ import java.util.List;
 import org.apache.commons.scxml2.ActionExecutionContext;
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
+import org.apache.commons.scxml2.EventBuilder;
 import org.apache.commons.scxml2.SCXMLExpressionException;
 import org.apache.commons.scxml2.TriggerEvent;
-import org.apache.commons.scxml2.EventBuilder;
 import org.apache.commons.scxml2.semantics.ErrorConstants;
 
 /**
