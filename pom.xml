@@ -43,7 +43,10 @@
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/commons-scxml.git</developerConnection>
     <url>https://gitbox.apache.org/repos/asf?p=commons-scxml.git</url>
   </scm>
-
+  <ciManagement>
+    <system>GitHub</system>
+    <url>https://github.com/apache/commons-scxml/actions</url>
+  </ciManagement>
   <developers>
     <developer>
       <name>Rahul Akolkar</name>
