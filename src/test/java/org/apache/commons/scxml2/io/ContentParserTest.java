@@ -45,7 +45,7 @@ class ContentParserTest {
         jsonObject.put("null", null);
         Assertions.assertEquals(jsonObject, contentParser.parseJson(jsonObjectString));
 
-        final String jsonArrayString = "[" + jsonObjectString + "," + "# yaml comment\n" + jsonObjectString+"]";
+        final String jsonArrayString = "[" + jsonObjectString + ",# yaml comment\n" + jsonObjectString+"]";
         final ArrayList<Object> jsonArray = new ArrayList<>(2);
         jsonArray.add(jsonObject);
         jsonArray.add(jsonObject);

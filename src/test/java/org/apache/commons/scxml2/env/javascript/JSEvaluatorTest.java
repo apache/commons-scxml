@@ -142,7 +142,7 @@ class JSEvaluatorTest {
     void testDataModelExpressions() throws Exception {
         Assertions.assertEquals("leaf",
                      evaluator.eval(context,"forest.tree.branch.twig"),
-                "Invalid result: " + "forest.tree.branch.twig");
+                "Invalid result: forest.tree.branch.twig");
     }
 
     /**
@@ -182,7 +182,7 @@ class JSEvaluatorTest {
         Assertions.assertThrows(
                 SCXMLExpressionException.class,
                 () -> evaluator.eval(context,"forestx.tree.branch.twig"),
-                "Evaluated invalid DataModel expression: " + "forestx.tree.branch.twig");
+                "Evaluated invalid DataModel expression: forestx.tree.branch.twig");
     }
 
     /**
@@ -192,7 +192,7 @@ class JSEvaluatorTest {
     void testInvalidDataModelLocations() throws Exception {
             Assertions.assertNotNull(context.get("forest"));
             Assertions.assertNull(evaluator.eval(context,"forest.tree.branch.twigx"),
-                    "Invalid result: " + "forest.tree.branch.twigx");
+                    "Invalid result: forest.tree.branch.twigx");
     }
 
     /**

@@ -52,7 +52,7 @@ public final class LogUtils {
      */
     public static String transToString(final TransitionTarget from,
             final TransitionTarget to, final Transition transition, final String event) {
-        return "(" + "event = " + event +
+        return "(event = " + event +
                 ", cond = " + transition.getCond() +
                 ", from = " + getTTPath(from) +
                 ", to = " + getTTPath(to) +
