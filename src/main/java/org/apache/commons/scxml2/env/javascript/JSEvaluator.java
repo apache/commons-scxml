@@ -46,7 +46,7 @@ import org.apache.commons.scxml2.model.SCXML;
  * </p>
  * <p>Sharing and reusing JSEvaluator instances for multiple SCXML instances therefore should <em>not</em> be done.</p>
  * <p>
- * As the JDK Script Engine state is <em>not</em> serializable, and neither are Javascript <code>native</code> Objects,
+ * As the JDK Script Engine state is <em>not</em> serializable, and neither are Javascript {@code native} Objects,
  * the {@link ScriptContext} state is <em>not</em> retained during serialization (transient).
  * </p>
  * <p>
@@ -82,7 +82,7 @@ public class JSEvaluator extends AbstractBaseEvaluator {
     private static final String ERR_CTX_TYPE = "Error evaluating JavaScript "
             + "expression, Context must be a org.apache.commons.scxml2.env.javascript.JSContext";
 
-    /** Nashorn Global initialization script, loaded from <code>init_global.js</code> classpath resource */
+    /** Nashorn Global initialization script, loaded from {@code init_global.js} classpath resource */
     private static String initGlobalsScript;
 
     /** Nashorn ScriptEngine **/
@@ -95,7 +95,7 @@ public class JSEvaluator extends AbstractBaseEvaluator {
      * Copy the Javscript global context (i.e. nashorn Global instance) variables to SCXML {@code jsContext}
      * in order to make sure all the new global variables set by the JavaScript engine after evaluation are
      * available from {@link JSContext} instance as well.
-     * <p>Note: the internal <code>"_scxmlSystemContext</code> variable is always skipped.</p>
+     * <p>Note: the internal {@code "_scxmlSystemContext} variable is always skipped.</p>
      * @param global The Javascript Bindings holding the Javascript Global context variables
      * @param jsContext The SCXML context to copy/merge the variables into
      */
@@ -143,7 +143,7 @@ public class JSEvaluator extends AbstractBaseEvaluator {
     }
 
     /**
-     * Evaluates a conditional expression using the <code>eval()</code> method and
+     * Evaluates a conditional expression using the {@code eval()} method and
      * casting the result to a Boolean.
      *
      * @param context    SCXML context.
@@ -157,7 +157,7 @@ public class JSEvaluator extends AbstractBaseEvaluator {
     }
 
     /**
-     * Executes the Javascript script using the <code>eval()</code> method
+     * Executes the Javascript script using the {@code eval()} method
      *
      * @param ctx    SCXML context.
      * @param script Script to execute.
@@ -205,10 +205,10 @@ public class JSEvaluator extends AbstractBaseEvaluator {
      * </p>
      * <p>For a newly created ScriptContext (and thus a new Javascript global context), the Javascript global context is
      * initialized with the required and protected SCXML system variables and builtin In() operator via the
-     * <code>init_global.js</code> script, loaded as classpath resource.</p>
+     * {@code init_global.js} script, loaded as classpath resource.</p>
      * <p>
-     * The SCXML system variables are bound as <code>"_scxmlSystemContext"</code> variable in the ENGINE_SCOPE
-     * as needed for the <code>init_global.js</code> script in the global context.
+     * The SCXML system variables are bound as {@code "_scxmlSystemContext"} variable in the ENGINE_SCOPE
+     * as needed for the {@code init_global.js} script in the global context.
      * This variable is bound to the ENGINE_SCOPE to ensure it cannot be 'shadowed' by an overriding variable assignment.
      * </p>
      * <p>
@@ -218,7 +218,7 @@ public class JSEvaluator extends AbstractBaseEvaluator {
      * <p>
      * As the GLOBAL_SCOPE SCXML context variables <em>can</em> be overridden, which will result in new 'shadow'
      * variables in the ENGINE_SCOPE, as well as new variables can be added to the ENGINE_SCOPE during script evaluation,
-     * after script execution all ENGINE_SCOPE variables (except the <code>"_scxmlSystemContext"</code> variable) must be
+     * after script execution all ENGINE_SCOPE variables (except the {@code "_scxmlSystemContext"} variable) must be
      * copied/merged into the SCXML context to synchronize the SCXML context.
      * </p>
      * @param jsContext The current SCXML context
@@ -251,7 +251,7 @@ public class JSEvaluator extends AbstractBaseEvaluator {
      * not sharing their global scope, see {@link #getScriptContext(JSContext)}.
      * <p>
      * The SCXML required protected system variables and (possible) other Javascript global initializations are defined
-     * in a <code>init_global.js</code> script which is pre-loaded as (classpath) resource, to be executed once during
+     * in a {@code init_global.js} script which is pre-loaded as (classpath) resource, to be executed once during
      * initialization of a new Javascript (Nashorn) Global.
      * </p>
      */

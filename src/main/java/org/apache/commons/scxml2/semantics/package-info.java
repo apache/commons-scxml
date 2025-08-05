@@ -16,7 +16,7 @@
  */
 
 /**
- * A collection of classes responsible for implementations of the <code>org.apache.commons.scxml2.SCXMLSemantics</code> interface.
+ * A collection of classes responsible for implementations of the {@code org.apache.commons.scxml2.SCXMLSemantics} interface.
  * <p>
  * Some possible semantic interpretations are, for example:
  * </p>
@@ -28,7 +28,7 @@
  * <li>UML 2.0
  * </ul>
  * <p>
- * Specific semantics can be created by subclassing <code>org.apache.commons.scxml2.semantics.SCXMLSemanticsImpl</code>, which is the default implementation
+ * Specific semantics can be created by subclassing {@code org.apache.commons.scxml2.semantics.SCXMLSemanticsImpl}, which is the default implementation
  * used.
  * </p>
  */

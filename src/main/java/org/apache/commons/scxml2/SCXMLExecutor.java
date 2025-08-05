@@ -39,7 +39,7 @@ import org.apache.commons.scxml2.semantics.SCXMLSemanticsImpl;
  * encapsulated in the SCXMLSemantics implementation that it uses.</p>
  *
  * <p>The default implementation is
- * <code>org.apache.commons.scxml2.semantics.SCXMLSemanticsImpl</code></p>
+ * {@code org.apache.commons.scxml2.semantics.SCXMLSemanticsImpl}</p>
  *
  * <p>The executor uses SCXMLExecutionContext to manage the state and
  * provide all the services to the SCXMLSemantics implementation.</p>

@@ -17,7 +17,7 @@
 package org.apache.commons.scxml2.model;
 
 /**
- * A <code>ContentContainer</code> represents an element in the SCXML
+ * A {@code ContentContainer} represents an element in the SCXML
  * document that may have a (single) child &lt;content/&gt; element
  */
 

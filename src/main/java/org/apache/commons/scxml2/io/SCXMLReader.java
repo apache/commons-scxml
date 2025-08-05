@@ -129,7 +129,7 @@ public final class SCXMLReader {
      * <ul>
      *   <li>{@link XMLInputFactory} configuration properties such as {@link XMLReporter}, {@link XMLResolver} and
      *   {@link XMLEventAllocator}</li>
-     *   <li>{@link XMLStreamReader} configuration properties such as <code>systemId</code> and <code>encoding</code>
+     *   <li>{@link XMLStreamReader} configuration properties such as {@code systemId} and {@code encoding}
      *   </li>
      *   <li>Commons SCXML object model configuration properties such as the list of custom actions and the
      *   {@link PathResolver} to use.</li>
@@ -142,7 +142,7 @@ public final class SCXMLReader {
          */
         // XMLInputFactory configuration properties.
         /**
-         * The <code>factoryId</code> to use for the {@link XMLInputFactory}.
+         * The {@code factoryId} to use for the {@link XMLInputFactory}.
          */
         final String factoryId;
 
@@ -174,12 +174,12 @@ public final class SCXMLReader {
 
         // XMLStreamReader configuration properties.
         /**
-         * The <code>encoding</code> to use for the {@link XMLStreamReader}.
+         * The {@code encoding} to use for the {@link XMLStreamReader}.
          */
         final String encoding;
 
         /**
-         * The <code>systemId</code> to use for the {@link XMLStreamReader}.
+         * The {@code systemId} to use for the {@link XMLStreamReader}.
          */
         final String systemId;
 
@@ -254,17 +254,17 @@ public final class SCXMLReader {
 
         /**
          * All purpose constructor. Any of the parameters passed in can be {@code null} (booleans should default
-         * to <code>false</code>).
+         * to {@code false}).
          *
-         * @param factoryId The <code>factoryId</code> to use.
+         * @param factoryId The {@code factoryId} to use.
          * @param classLoader The {@link ClassLoader} to use for the {@link XMLInputFactory} instance to create.
          * @param allocator The {@link XMLEventAllocator} for the {@link XMLInputFactory}.
          * @param properties The map of properties (keys are property name strings, values are object property values)
          *                   for the {@link XMLInputFactory}.
          * @param resolver The {@link XMLResolver} for the {@link XMLInputFactory}.
          * @param reporter The {@link XMLReporter} for the {@link XMLInputFactory}.
-         * @param encoding The <code>encoding</code> to use for the {@link XMLStreamReader}
-         * @param systemId The <code>systemId</code> to use for the {@link XMLStreamReader}
+         * @param encoding The {@code encoding} to use for the {@link XMLStreamReader}
+         * @param systemId The {@code systemId} to use for the {@link XMLStreamReader}
          * @param validate Whether to validate the input with the XML Schema for SCXML.
          * @param pathResolver The Commons SCXML {@link PathResolver} to use for this document.
          * @param customActions The list of Commons SCXML custom actions that will be available for this document.
@@ -286,7 +286,7 @@ public final class SCXMLReader {
         /**
          * All-purpose package access constructor.
          *
-         * @param factoryId The <code>factoryId</code> to use.
+         * @param factoryId The {@code factoryId} to use.
          * @param factoryClassLoader The {@link ClassLoader} to use for the {@link XMLInputFactory} instance to
          *                           create.
          * @param allocator The {@link XMLEventAllocator} for the {@link XMLInputFactory}.
@@ -294,8 +294,8 @@ public final class SCXMLReader {
          *                   for the {@link XMLInputFactory}.
          * @param resolver The {@link XMLResolver} for the {@link XMLInputFactory}.
          * @param reporter The {@link XMLReporter} for the {@link XMLInputFactory}.
-         * @param encoding The <code>encoding</code> to use for the {@link XMLStreamReader}
-         * @param systemId The <code>systemId</code> to use for the {@link XMLStreamReader}
+         * @param encoding The {@code encoding} to use for the {@link XMLStreamReader}
+         * @param systemId The {@code systemId} to use for the {@link XMLStreamReader}
          * @param validate Whether to validate the input with the XML Schema for SCXML.
          * @param pathResolver The Commons SCXML {@link PathResolver} to use for this document.
          * @param parent The parent SCXML document if this document is src'ed in via the &lt;state&gt; or
@@ -319,7 +319,7 @@ public final class SCXMLReader {
         /**
          * All-purpose package access constructor.
          *
-         * @param factoryId The <code>factoryId</code> to use.
+         * @param factoryId The {@code factoryId} to use.
          * @param factoryClassLoader The {@link ClassLoader} to use for the {@link XMLInputFactory} instance to
          *                           create.
          * @param allocator The {@link XMLEventAllocator} for the {@link XMLInputFactory}.
@@ -327,8 +327,8 @@ public final class SCXMLReader {
          *                   for the {@link XMLInputFactory}.
          * @param resolver The {@link XMLResolver} for the {@link XMLInputFactory}.
          * @param reporter The {@link XMLReporter} for the {@link XMLInputFactory}.
-         * @param encoding The <code>encoding</code> to use for the {@link XMLStreamReader}
-         * @param systemId The <code>systemId</code> to use for the {@link XMLStreamReader}
+         * @param encoding The {@code encoding} to use for the {@link XMLStreamReader}
+         * @param systemId The {@code systemId} to use for the {@link XMLStreamReader}
          * @param validate Whether to validate the input with the XML Schema for SCXML.
          * @param pathResolver The Commons SCXML {@link PathResolver} to use for this document.
          * @param parent The parent SCXML document if this document is src'ed in via the &lt;state&gt; or

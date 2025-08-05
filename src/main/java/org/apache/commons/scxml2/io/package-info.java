@@ -18,8 +18,8 @@
 /**
  * A collection of classes for reading in and writing out SCXML documents, to and from the Commons SCXML Java object model.
  * <ul>
- * <li><code>SCXMLReader</code> is based on StAX based pull parsing and has no external dependencies.</li>
- * <li><code>SCXMLWriter</code> is based on StAX XML stream writer.</li>
+ * <li>{@code SCXMLReader} is based on StAX based pull parsing and has no external dependencies.</li>
+ * <li>{@code SCXMLWriter} is based on StAX XML stream writer.</li>
  * </ul>
  */
 package org.apache.commons.scxml2.io;

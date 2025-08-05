@@ -39,9 +39,9 @@ import org.apache.commons.scxml2.model.TransitionalState;
 import org.apache.commons.scxml2.semantics.ErrorConstants;
 
 /**
- * The <code>SCInstance</code> performs book-keeping functions for
+ * The {@code SCInstance} performs book-keeping functions for
  * a particular execution of a state chart represented by a
- * <code>SCXML</code> object.
+ * {@code SCXML} object.
  */
 public class SCInstance implements Serializable {
 

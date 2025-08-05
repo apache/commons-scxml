@@ -33,16 +33,16 @@ import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.model.ActionExecutionError;
 
 /**
- * <p>EventDispatcher implementation that can schedule <code>delay</code>ed
- * &lt;send&gt; events for the &quot;scxml&quot; <code>type</code>
+ * <p>EventDispatcher implementation that can schedule {@code delay}ed
+ * &lt;send&gt; events for the &quot;scxml&quot; {@code type}
  * attribute value (which is also the default). This implementation uses
- * J2SE <code>Timer</code>s.</p>
+ * J2SE {@code Timer}s.</p>
  *
- * <p>No other <code>type</code>s are processed. Subclasses may support
- * additional <code>type</code>s by overriding the
- * <code>send(...)</code> and <code>cancel(...)</code> methods and
- * delegating to their <code>super</code> counterparts for the
- * &quot;scxml&quot; <code>type</code>.</p>
+ * <p>No other {@code type}s are processed. Subclasses may support
+ * additional {@code type}s by overriding the
+ * {@code send(...)} and {@code cancel(...)} methods and
+ * delegating to their {@code super} counterparts for the
+ * &quot;scxml&quot; {@code type}.</p>
  */
 public class SimpleDispatcher implements EventDispatcher, Serializable {
 
@@ -100,8 +100,8 @@ public class SimpleDispatcher implements EventDispatcher, Serializable {
      private static final Log log = LogFactory.getLog(EventDispatcher.class);
 
     /**
-     * The <code>Map</code> of active <code>Timer</code>s, keyed by
-     * &lt;send&gt; element <code>id</code>s.
+     * The {@code Map} of active {@code Timer}s, keyed by
+     * &lt;send&gt; element {@code id}s.
      */
     private final Map<String, Timer> timers = Collections.synchronizedMap(new HashMap<String, Timer>());
 

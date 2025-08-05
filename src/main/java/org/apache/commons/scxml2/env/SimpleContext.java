@@ -94,7 +94,7 @@ public class SimpleContext implements Context, Serializable {
     }
 
     /**
-     * Gets the log used by this <code>Context</code> instance.
+     * Gets the log used by this {@code Context} instance.
      *
      * @return Log The log being used.
      */

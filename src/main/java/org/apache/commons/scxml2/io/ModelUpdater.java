@@ -121,7 +121,7 @@ final class ModelUpdater {
      * only called to produce an appropriate log message in some error
      * conditions.
      *
-     * @param tt The <code>TransitionTarget</code> object
+     * @param tt The {@code TransitionTarget} object
      * @return The transition target identifier for the error message
      */
     private static String getName(final TransitionTarget tt) {

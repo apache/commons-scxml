@@ -19,7 +19,7 @@ package org.apache.commons.scxml2.model;
 import java.io.Serializable;
 
 /**
- * A <code>ParsedValue</code> holds the parsed content of the body of a {@link ParsedValueContainer},
+ * A {@code ParsedValue} holds the parsed content of the body of a {@link ParsedValueContainer},
  * or from an external src for &lt;data&gt; or &lt;assign&gt;.
  * <p>Supported types are defined by enum {@link ValueType}, each of which have a specific implementation:
  * <ul>

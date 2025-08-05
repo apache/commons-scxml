@@ -60,8 +60,8 @@ import org.apache.commons.scxml2.model.TransitionTarget;
  * <p>This class swallows all exceptions only to log them. Developers of
  * subclasses should think of themselves as &quot;component developers&quot;
  * catering to other end users, and therefore ensure that the subclasses
- * are free of <code>ModelException</code>s and the like. Most methods
- * are <code>protected</code> for ease of subclassing.</p>
+ * are free of {@code ModelException}s and the like. Most methods
+ * are {@code protected} for ease of subclassing.</p>
  */
 public abstract class AbstractStateMachine {
 

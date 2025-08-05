@@ -19,7 +19,7 @@ package org.apache.commons.scxml2.model;
 import java.util.List;
 
 /**
- * An <code>ActionsContainer</code> is an entity that holds a list of <code>Action</code> elements.
+ * An {@code ActionsContainer} is an entity that holds a list of {@code Action} elements.
  */
 public interface ActionsContainer {
 

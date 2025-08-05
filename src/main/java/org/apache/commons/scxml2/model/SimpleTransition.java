@@ -112,7 +112,7 @@ public class SimpleTransition extends Executable implements Observable {
      * Gets the set of transition targets (may be an empty list).
      *
      * @return the target(s) as specified in SCXML markup.
-     * <p>Remarks: Is <code>empty</code> for &quot;stay&quot; transitions.
+     * <p>Remarks: Is {@code empty} for &quot;stay&quot; transitions.
      *
      * @since 0.7
      */

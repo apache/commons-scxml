@@ -19,7 +19,7 @@ package org.apache.commons.scxml2.model;
 import java.util.List;
 
 /**
- * A <code>ParamsContainer</code> is used for elements in the SCXML
+ * A {@code ParamsContainer} is used for elements in the SCXML
  * document that may have one or more &lt;param/&gt; children which are used to
  * produce payload for events or external communication.
  */

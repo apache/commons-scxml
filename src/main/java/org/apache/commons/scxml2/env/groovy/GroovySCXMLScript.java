@@ -89,12 +89,12 @@ public abstract class GroovySCXMLScript extends Script {
      * The var function works around this by indirectly looking up the variable, which you therefore have to specify as a String.
      * </p>
      * <p>
-     * So, use <code>var('name')</code>, not <code>var(name)</code>
+     * So, use {@code var('name')}, not {@code var(name)}
      * </p>
      * <p>
-     * Note: this function doesn't support object navigation, like <code>var('name.property')</code>.<br>
+     * Note: this function doesn't support object navigation, like {@code var('name.property')}.<br>
      * Instead, once you established a variable 'name' exists, you <em>thereafter</em> can use the standard Groovy
-     * Safe Navigation operator (?.), like so: <code>name?.property</code>.<br>
+     * Safe Navigation operator (?.), like so: {@code name?.property}.<br>
      * See for more information: <a href="https://docs.codehaus.org/display/GROOVY/Operators#Operators-SafeNavigationOperator(?.)">Groovy SafeNavigationOperator</a>
      * </p>
      *

@@ -285,7 +285,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
      * returned if and only if the {@link Invoke} parent TransitionalState is
      * currently active and contains the &lt;invoke&gt; child.
      *
-     * @param invoke The <code>Invoke</code>.
+     * @param invoke The {@code Invoke}.
      * @return The Invoker.
      */
     public Invoker getInvoker(final Invoke invoke) {

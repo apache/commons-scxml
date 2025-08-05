@@ -36,7 +36,7 @@ public class JSBindings implements Bindings {
      * Initialize the Bindings
      *
      * @param jsContext initial SCXML Context to use for script variables.
-     * @throws IllegalArgumentException Thrown if <code>jsContext</code> is {@code null}.
+     * @throws IllegalArgumentException Thrown if {@code jsContext} is {@code null}.
      */
     public JSBindings(final JSContext jsContext) {
         setContext(jsContext);
@@ -50,7 +50,7 @@ public class JSBindings implements Bindings {
     }
 
     /**
-     * Returns <code>true</code> if the SCXML context contains a variable identified by <code>key</code>.
+     * Returns {@code true} if the SCXML context contains a variable identified by {@code key}.
      */
     @Override
     public boolean containsKey(final Object key) {
@@ -58,7 +58,7 @@ public class JSBindings implements Bindings {
     }
 
     /**
-     * Returns <code>true</code> if the SCXML context contains <code>value</code>.
+     * Returns {@code true} if the SCXML context contains {@code value}.
      */
     @Override
     public boolean containsValue(final Object value) {
@@ -74,7 +74,7 @@ public class JSBindings implements Bindings {
     }
 
     /**
-     * Returns the value from the SCXML context identified by <code>key</code>.
+     * Returns the value from the SCXML context identified by {@code key}.
      */
     @Override
     public Object get(final Object key) {
@@ -82,7 +82,7 @@ public class JSBindings implements Bindings {
     }
 
     /**
-     * Returns <code>true</code> if the SCXML context is empty.
+     * Returns {@code true} if the SCXML context is empty.
      */
     @Override
     public boolean isEmpty() {
@@ -142,7 +142,7 @@ public class JSBindings implements Bindings {
      * Sets or update the SCXML context delegate
      *
      * @param jsContext the SCXML context to use for script variables.
-     * @throws IllegalArgumentException Thrown if <code>jsContext</code> is {@code null}.
+     * @throws IllegalArgumentException Thrown if {@code jsContext} is {@code null}.
      */
     public void setContext(final JSContext jsContext) {
         if (jsContext == null) {

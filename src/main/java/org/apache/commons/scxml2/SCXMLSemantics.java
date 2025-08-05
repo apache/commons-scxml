@@ -27,7 +27,7 @@ import org.apache.commons.scxml2.model.SCXML;
  * <p>The purpose of this interface is to separate the
  * <a href="https://www.w3.org/TR/2015/REC-scxml-20150901/#AlgorithmforSCXMLInterpretation">
  *     W3C SCXML Algorithm for SCXML Interpretation</a>
- * from the <code>SCXMLExecutor</code> and therefore make it pluggable.</p>
+ * from the {@code SCXMLExecutor} and therefore make it pluggable.</p>
  * <p>
  * From an SCXML execution POV, there are only four entry points needed into the Algorithm, namely:
  * </p>
@@ -66,7 +66,7 @@ import org.apache.commons.scxml2.model.SCXML;
  * </p>
  *
  * <p>Specific semantics can be created by subclassing
- * <code>org.apache.commons.scxml2.semantics.SCXMLSemanticsImpl</code>.</p>
+ * {@code org.apache.commons.scxml2.semantics.SCXMLSemanticsImpl}.</p>
  */
 public interface SCXMLSemantics {
 

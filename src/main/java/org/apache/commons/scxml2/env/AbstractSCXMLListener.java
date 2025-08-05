@@ -22,7 +22,7 @@ import org.apache.commons.scxml2.model.Transition;
 import org.apache.commons.scxml2.model.TransitionTarget;
 
 /**
- * An abstract adapter class for the <code>SXCMLListener</code> interface.
+ * An abstract adapter class for the {@code SXCMLListener} interface.
  * This class exists as a convenience for creating listener objects, and as
  * such all the methods in this class are empty.
  *

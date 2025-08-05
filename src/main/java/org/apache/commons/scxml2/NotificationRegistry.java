@@ -28,10 +28,10 @@ import org.apache.commons.scxml2.model.TransitionTarget;
 
 /**
  * The registry where SCXML listeners are recorded for nodes of
- * interest such as the <code>SCXML</code> root,
- * <code>EnterableState</code>s and <code>Transition</code>s.
+ * interest such as the {@code SCXML} root,
+ * {@code EnterableState}s and {@code Transition}s.
  * The notification registry keeps track of all
- * <code>SCXMLListener</code>s attached and notifies relevant
+ * {@code SCXMLListener}s attached and notifies relevant
  * listeners of the events that interest them.
  */
 public final class NotificationRegistry {

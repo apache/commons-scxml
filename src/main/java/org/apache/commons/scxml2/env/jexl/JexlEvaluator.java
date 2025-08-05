@@ -37,7 +37,7 @@ import org.apache.commons.scxml2.model.SCXML;
  * SCXML documents.
  * <P>
  * This implementation itself is thread-safe, so you can keep singleton
- * for efficiency of the internal <code>JexlEngine</code> member.
+ * for efficiency of the internal {@code JexlEngine} member.
  * </P>
  */
 public class JexlEvaluator extends AbstractBaseEvaluator {

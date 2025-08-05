@@ -29,7 +29,7 @@ import org.apache.commons.scxml2.TriggerEvent;
  *
  * <p>Invocable activities must first register an Invoker implementation class
  * for the appropriate "target" (attribute of &lt;invoke&gt;) with the
- * parent <code>SCXMLParentIOProcessor</code>.</p>
+ * parent {@code SCXMLParentIOProcessor}.</p>
  *
  * <p>The communication link between the parent state machine executor and
  * the invoked activity is a asynchronous bi-directional events pipe.</p>

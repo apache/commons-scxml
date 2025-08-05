@@ -19,7 +19,7 @@ package org.apache.commons.scxml2.model;
 import java.io.Serializable;
 
 /**
- * A <code>ParsedValueContainer</code> represents an element in the SCXML document that may contain
+ * A {@code ParsedValueContainer} represents an element in the SCXML document that may contain
  * &quot;body content&quot;, or content from an external source, which will be captured in a {@link ParsedValue} instance.
  */
 public interface ParsedValueContainer extends Serializable {

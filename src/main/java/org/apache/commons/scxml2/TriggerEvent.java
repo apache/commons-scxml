@@ -32,32 +32,32 @@ public class TriggerEvent implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * <code>CALL_EVENT</code>.
+     * {@code CALL_EVENT}.
      */
     public static final int CALL_EVENT = 1;
 
     /**
-     * <code>CHANGE_EVENT</code>.
+     * {@code CHANGE_EVENT}.
      */
     public static final int CHANGE_EVENT = 2;
 
     /**
-     * <code>SIGNAL_EVENT</code>.
+     * {@code SIGNAL_EVENT}.
      */
     public static final int SIGNAL_EVENT = 3;
 
     /**
-     * <code>TIME_EVENT</code>.
+     * {@code TIME_EVENT}.
      */
     public static final int TIME_EVENT = 4;
 
     /**
-     * <code>ERROR_EVENT</code>.
+     * {@code ERROR_EVENT}.
      */
     public static final int ERROR_EVENT = 5;
 
     /**
-     * <code>CANCEL_EVENT</code>.
+     * {@code CANCEL_EVENT}.
      */
     public static final int CANCEL_EVENT = 6;
 

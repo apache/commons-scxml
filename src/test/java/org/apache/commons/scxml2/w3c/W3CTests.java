@@ -73,8 +73,8 @@ import org.apache.commons.scxml2.model.SCXML;
  * also can be combined with the <strong>-Ddatamodel</strong> parameter.
  * </p>
  * <p>
- * The W3CTests also uses a separate <strong><code>tests.xml</code></strong> configuration file, located in the
- * <strong><code>src/test/resources/w3c</code></strong> directory, which is manually maintained to enable|disable execution
+ * The W3CTests also uses a separate <strong>{@code tests.xml}</strong> configuration file, located in the
+ * <strong>{@code src/test/resources/w3c}</strong> directory, which is manually maintained to enable|disable execution
  * of tests (when <em>not</em> using the <strong>-Dtest</strong> parameter, which will always execute the specified test).<br/>
  * Furthermore, in this configuration file the current <em>success</em> or <em>failure</em> status, and even more
  * meta data per test is maintained.

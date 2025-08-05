@@ -16,6 +16,6 @@
  */
 
 /**
- * A collection of classes that allow JavaScript to be used in expressions within SCXML documents via the <code>javax.script</code> API.
+ * A collection of classes that allow JavaScript to be used in expressions within SCXML documents via the {@code javax.script} API.
  */
 package org.apache.commons.scxml2.env.javascript;

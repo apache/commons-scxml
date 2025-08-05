@@ -115,9 +115,9 @@ public class SCXMLWriter {
      * </p>
      *
      * <ul>
-     *   <li>{@link XMLOutputFactory} configuration properties such as <code>factoryId</code> or any properties</li>
+     *   <li>{@link XMLOutputFactory} configuration properties such as {@code factoryId} or any properties</li>
      *   <li>{@link XMLStreamWriter} configuration properties such as target {@link Writer} or {@link OutputStream}
-     *   and the <code>encoding</code></li>
+     *   and the {@code encoding}</li>
      * </ul>
      */
     public static class Configuration {
@@ -127,7 +127,7 @@ public class SCXMLWriter {
          */
         // XMLOutputFactory configuration properties.
         /**
-         * The <code>factoryId</code> to use for the {@link XMLOutputFactory}.
+         * The {@code factoryId} to use for the {@link XMLOutputFactory}.
          */
         final String factoryId;
 
@@ -144,7 +144,7 @@ public class SCXMLWriter {
 
         // XMLStreamWriter configuration properties.
         /**
-         * The <code>encoding</code> to use for the {@link XMLStreamWriter}.
+         * The {@code encoding} to use for the {@link XMLStreamWriter}.
          */
         final String encoding;
 
@@ -203,15 +203,15 @@ public class SCXMLWriter {
 
         /**
          * All-purpose constructor. Any of the parameters passed in can be {@code null} (booleans should default
-         * to <code>false</code>). At the moment, the <code>factoryId</code> and <code>factoryClassLoader</code>
+         * to {@code false}). At the moment, the {@code factoryId} and {@code factoryClassLoader}
          * arguments are effectively ignored due to a bug in the underlying StAX {@link XMLOutputFactory} API.
          *
-         * @param factoryId The <code>factoryId</code> to use.
+         * @param factoryId The {@code factoryId} to use.
          * @param factoryClassLoader The {@link ClassLoader} to use for the {@link XMLOutputFactory} instance to
          *                           create.
          * @param properties The map of properties (keys are property name strings, values are object property values)
          *                   for the {@link XMLOutputFactory}.
-         * @param encoding The <code>encoding</code> to use for the {@link XMLStreamWriter}
+         * @param encoding The {@code encoding} to use for the {@link XMLStreamWriter}
          * @param usePrettyPrint Whether to make the output human readable as far as possible. Since StAX does not
          *                       provide a portable way to do this in JDK 1.6, choosing the pretty print option
          *                       is currently not very efficient.
@@ -227,12 +227,12 @@ public class SCXMLWriter {
         /**
          * All-purpose package access constructor.
          *
-         * @param factoryId The <code>factoryId</code> to use.
+         * @param factoryId The {@code factoryId} to use.
          * @param factoryClassLoader The {@link ClassLoader} to use for the {@link XMLOutputFactory} instance to
          *                           create.
          * @param properties The map of properties (keys are property name strings, values are object property values)
          *                   for the {@link XMLOutputFactory}.
-         * @param encoding The <code>encoding</code> to use for the {@link XMLStreamWriter}
+         * @param encoding The {@code encoding} to use for the {@link XMLStreamWriter}
          * @param usePrettyPrint Whether to make the output human readable as far as possible. Since StAX does not
          *                       provide a portable way to do this in JDK 1.6, choosing the pretty print option
          *                       is currently not very efficient.
