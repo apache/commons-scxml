@@ -136,7 +136,7 @@ public final class StandaloneUtils {
 
     /**
      * @param uri an absolute or relative URL
-     * @return java.lang.String canonical URL (absolute)
+     * @return {@link String} canonical URL (absolute)
      * @throws IOException if a relative URL cannot be resolved
      *         to a local file
      */
