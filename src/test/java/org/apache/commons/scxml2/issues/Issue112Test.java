@@ -93,8 +93,8 @@ class Issue112Test {
         // Add an event, other external events could be added to the queue at any time (this test only adds one).
         Application.QUEUE.add("next");
 
-        // Rest of the events in this test are added by custom action invocation during processing of the one above.
-        // Same concept applies to adding events in listeners, invokes and WRT AbstractStateMachine, state handlers.
+        // The rest of the events in this test are added by custom action invocation during processing of the one above.
+        // The same concept applies to adding events in listeners, invokes and with regard to AbstractStateMachine, state handlers.
         while (!Application.QUEUE.isEmpty()) {
             SCXMLTestHelper.fireEvent(exec, Application.QUEUE.remove());
         }
