@@ -32,7 +32,7 @@
       within &lt;onentry&gt;, &lt;onexit&gt; and &lt;transition&gt;
       elements.</p>
 
-   <p>The <a href="http://www.w3.org/TR/scxml/">SCXML specification</a>
+   <p>The <a href="https://www.w3.org/TR/scxml/">SCXML specification</a>
       (currently a Working Draft) defines a set of "standard actions".
       These include &lt;var&gt;, &lt;assign&gt;, &lt;log&gt;, &lt;send&gt;,
       &lt;cancel&gt;, &lt;if&gt;, &lt;elseif&gt; and &lt;else&gt;.</p>
@@ -102,7 +102,7 @@
       value of the name attribute when it executes.</p>
 
     <p>A simple example is
-      <a href="http://svn.apache.org/repos/asf/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml2/custom-hello-world-01.xml">here</a>
+      <a href="https://svn.apache.org/repos/asf/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml2/custom-hello-world-01.xml">here</a>
       .</p>
 
    </subsection>

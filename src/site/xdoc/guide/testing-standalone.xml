@@ -56,7 +56,7 @@
 
     <a href="../xref/org/apache/commons/scxml2/test/StandaloneJexlExpressions.html">org.apache.commons.scxml2.test.StandaloneJexlExpressions</a>
 
-    <a href="http://svn.apache.org/repos/asf/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml2/env/jexl/microwave-01.xml">microwave01.xml</a>
+    <a href="https://svn.apache.org/repos/asf/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml2/env/jexl/microwave-01.xml">microwave01.xml</a>
     </pre>
 
    </subsection>
@@ -69,7 +69,7 @@
    </p>
 
    <p>A few examples are available as part of the 
-   <a href="http://svn.apache.org/repos/asf/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml2/">
+   <a href="https://svn.apache.org/repos/asf/commons/proper/scxml/trunk/src/test/java/org/apache/commons/scxml2/">
    Commons SCXML test suite</a> (look in env.* child packages as well).</p>
 
   </section> 

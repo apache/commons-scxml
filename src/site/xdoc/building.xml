@@ -24,9 +24,9 @@
 <!-- ================================================== -->
 <section name="Overview">
 <p>
-  Commons SCXML uses <a href="http://maven.apache.org">Maven 2 or higher</a> as
+  Commons SCXML uses <a href="https://maven.apache.org">Maven 2 or higher</a> as
   a build system. The source is
-  <a href="http://svn.apache.org/repos/asf/commons/proper/scxml/trunk/">here</a>.
+  <a href="https://svn.apache.org/repos/asf/commons/proper/scxml/trunk/">here</a>.
 </p>
 </section>
 <!-- ================================================== -->

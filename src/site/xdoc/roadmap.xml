@@ -24,7 +24,7 @@
     <section name="Commons SCXML 2.0 Roadmap">
       <p>
         The last SCXML release 0.9 has been quite some time ago (2008) and since then the
-        <a href="http://www.w3.org/TR/scxml/" target="_blank">W3C SCXML specification</a> has progressed and changed
+        <a href="https://www.w3.org/TR/scxml/" target="_blank">W3C SCXML specification</a> has progressed and changed
         quite a lot, and almost ready to move to Candidate Recommendation status.
       </p>
       <p>
@@ -70,7 +70,7 @@
           The high-level plan is to:
           <ul>
             <li>Redefine SCXMLSemantics to align with the
-              <a href="http://www.w3.org/TR/scxml/#AlgorithmforSCXMLInterpretation" target="_blank">
+              <a href="https://www.w3.org/TR/scxml/#AlgorithmforSCXMLInterpretation" target="_blank">
                 SCXML Algorithm for SCXML Interpretation</a>
               <p>
                 The current SCXMLSemantics interface and its implementation is so much different from
@@ -100,7 +100,7 @@
               </p>
               <p>
                 And finally, SCXMLExecutor currently doesn't yet provide a good abstraction or implementation of the
-                <a href="http://www.w3.org/TR/scxml/#SCXMLEventProcessor" target="_blank">
+                <a href="https://www.w3.org/TR/scxml/#SCXMLEventProcessor" target="_blank">
                   SCXML Event I/O Processor</a> functionally.
                 The internal and external event I/O management is a critical requirement and many features of the
                 specification rely on it fulfilling this contract.<br/>
@@ -150,7 +150,7 @@
           provide this as custom extension, no longer as default.
         </p>
         <p>The additional target is to be able to now <em>run</em> a substantial number of the
-          <a href="http://www.w3.org/Voice/2013/scxml-irp/" target="_blank">SCXML IPR tests</a>. Currently almost
+          <a href="https://www.w3.org/Voice/2013/scxml-irp/" target="_blank">SCXML IPR tests</a>. Currently almost
           all still fail because of (simple) expression language issues, so fixing and improving the language support
           is an important goal as well.</p>
       </subsection>
@@ -168,7 +168,7 @@
         </p>
         <p>
           As part of validation the implementation, the
-          <a href="http://www.w3.org/Voice/2013/scxml-irp/" target="_blank">SCXML 1.0 Implementation Report Plan</a>
+          <a href="https://www.w3.org/Voice/2013/scxml-irp/" target="_blank">SCXML 1.0 Implementation Report Plan</a>
           will be used to test against.
         </p>
         <p>

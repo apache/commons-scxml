@@ -56,7 +56,7 @@ import org.apache.commons.scxml2.model.Final;
 import org.apache.commons.scxml2.model.SCXML;
 
 /**
- * W3C SCXML 1.0 IRP tests: <a href="http://www.w3.org/Voice/2013/scxml-irp/">http://www.w3.org/Voice/2013/scxml-irp/</a>.
+ * W3C SCXML 1.0 IRP tests: <a href="https://www.w3.org/Voice/2013/scxml-irp/">http://www.w3.org/Voice/2013/scxml-irp/</a>.
  * <p>
  * The <strong>W3CTests</strong> class is standalone and can download and transform the IRP tests locally using respectively
  * command-line parameter <strong>get</strong> or <strong>make</strong>.

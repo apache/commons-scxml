@@ -29,7 +29,7 @@
 
    <p>Commons SCXML provides a generic event-driven state machine based
    execution environment, borrowing the semantics defined by
-   <a href="http://www.w3.org/TR/scxml">SCXML</a>. Most things that can be
+   <a href="https://www.w3.org/TR/scxml">SCXML</a>. Most things that can be
    represented as a UML state chart -- business process flows, view
    navigation bits, interaction or dialog management, and too many more
    to list here -- can leverage the Commons SCXML library. The library can

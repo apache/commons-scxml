@@ -28,7 +28,7 @@
  <section name="Commons SCXML">
 
   <p>
-  <a href="http://www.w3.org/TR/scxml/" target="_blank">State Chart XML (SCXML)</a> is currently a
+  <a href="https://www.w3.org/TR/scxml/" target="_blank">State Chart XML (SCXML)</a> is currently a
   Working Draft specification published by the World Wide Web Consortium (W3C).
   SCXML provides a generic state-machine based execution environment based on Harel
   State Tables. SCXML is a candidate for the control language within 
@@ -69,7 +69,7 @@
     <ul>
       <li>The latest <a href="apidocs/index.html">Javadoc</a>.</li>
       <li>The latest <a href="xref/index.html">source</a>.</li>
-      <li>The <a href="http://wiki.apache.org/commons/SCXML">wiki</a>.</li>
+      <li>The <a href="https://wiki.apache.org/commons/SCXML">wiki</a>.</li>
       <li>Commons SCXML <a href="usecases.html">usecases</a> (case studies).</li>
       <li>A <a href="guide.html">user guide</a> containing assorted API notes and tutorials.</li>
     </ul>
@@ -83,7 +83,7 @@
  <section name="Releases">
   <p>
   The latest release is v0.9. Read
-  <a href="http://svn.apache.org/viewvc/commons/proper/scxml/tags/SCXML_0_9/RELEASE-NOTES.txt?view=markup">v0.9
+  <a href="https://svn.apache.org/viewvc/commons/proper/scxml/tags/SCXML_0_9/RELEASE-NOTES.txt?view=markup">v0.9
   release notes</a> before upgrading.
   <a href="https://commons.apache.org/scxml/download_scxml.cgi">Download v0.9!</a>
   </p>
@@ -126,7 +126,7 @@
    Related projects providing some SCXML-related functionality (based on Commons SCXML 0.9):
    <ul>
     <li>
-     <a href="http://svn.apache.org/repos/asf/commons/sandbox/gsoc/2010/scxml-eclipse/">Commons SCXML - Eclipse</a> -
+     <a href="https://svn.apache.org/repos/asf/commons/sandbox/gsoc/2010/scxml-eclipse/">Commons SCXML - Eclipse</a> -
      This project aims to provide an Eclipse and GMF based visual editor and debugger for SCXML, which can
      also be used to generate SCXML documents and code from a state chart.
     </li>
@@ -141,7 +141,7 @@
        SCION-Java provides lightweight bindings to the SCION library for Java.
      </li>
     <li>
-     <a href="http://code.google.com/p/scxmlgui/">scxmlgui</a> -
+     <a href="https://code.google.com/p/scxmlgui/">scxmlgui</a> -
      This project aims to provide a simple GUI to edit SCXML state charts.
     </li>
    </ul>

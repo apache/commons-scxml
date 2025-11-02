@@ -29,7 +29,7 @@
     State Chart XML (SCXML) is a general-purpose event-based state
     machine language that can be used in many ways. It is currently
     a W3C Working Draft, available
-    <a href="http://www.w3.org/TR/scxml/">here</a>.
+    <a href="https://www.w3.org/TR/scxml/">here</a>.
    </answer>
   </faq>
 
@@ -81,7 +81,7 @@
    <answer>
     Commons SCXML currently supports
     <a href="https://commons.apache.org/jexl/">Commons JEXL</a>, Javascript, XPath and
-    <a href="http://groovy.codehaus.org/">Groovy</a>. For details,
+    <a href="https://groovy.codehaus.org/">Groovy</a>. For details,
     see the <a href="guide/testing-standalone.html">trying out</a> and
     <a href="guide/contexts-evaluators.html">contexts and evaluators</a>
     pages of the user guide.

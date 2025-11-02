@@ -28,7 +28,7 @@ import java.util.Set;
  * The SCXMLSystemContext is used as a read only Context wrapper
  * and provides the SCXML (read only) system variables which are injected via the unwrapped {@link #getContext()}.
  *
- * @see <a href="http://www.w3.org/TR/scxml/#SystemVariables">http://www.w3.org/TR/scxml/#SystemVariables</a>
+ * @see <a href="https://www.w3.org/TR/scxml/#SystemVariables">http://www.w3.org/TR/scxml/#SystemVariables</a>
  */
 public class SCXMLSystemContext implements Context, Serializable {
 
@@ -39,7 +39,7 @@ public class SCXMLSystemContext implements Context, Serializable {
 
     /**
      * The protected system variables names as defined in the SCXML specification
-     * @see <a href="http://www.w3.org/TR/scxml/#SystemVariables">http://www.w3.org/TR/scxml/#SystemVariables</a>
+     * @see <a href="https://www.w3.org/TR/scxml/#SystemVariables">http://www.w3.org/TR/scxml/#SystemVariables</a>
      */
     public static final String EVENT_KEY = "_event";
     public static final String SESSIONID_KEY = "_sessionid";

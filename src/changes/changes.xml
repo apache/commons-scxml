@@ -919,7 +919,7 @@
       <action dev="rahul" type="update">
        [02-05-2006] Contexts are now created per State, but only as and
        when needed. The <![CDATA[
-       <a href="http://svn.apache.org/viewcvs?rev=374981&amp;view=rev">
+       <a href="https://svn.apache.org/viewcvs?rev=374981&amp;view=rev">
        commit message for r374981</a> has the details.]]>
       </action>
 
