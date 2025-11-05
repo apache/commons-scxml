@@ -35,10 +35,10 @@ import org.apache.commons.scxml2.model.SCXML;
 /**
  * Evaluator implementation enabling use of JEXL expressions in
  * SCXML documents.
- * <P>
+ * <p>
  * This implementation itself is thread-safe, so you can keep singleton
  * for efficiency of the internal {@code JexlEngine} member.
- * </P>
+ * </p>
  */
 public class JexlEvaluator extends AbstractBaseEvaluator {
 
@@ -181,9 +181,9 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
     /**
      * Returns the internal JexlEngine if existing.
      * Otherwise, it creates a new engine by invoking {@link #createJexlEngine()}.
-     * <P>
-     * <EM>NOTE: The internal JexlEngine instance can be null when this is deserialized.</EM>
-     * </P>
+     * <p>
+     * <em>NOTE: The internal JexlEngine instance can be null when this is deserialized.</em>
+     * </p>
      * @return the current JexlEngine
      */
     private JexlEngine getJexlEngine() {

@@ -35,9 +35,9 @@ import groovy.lang.Script;
 
 /**
  * Evaluator implementation enabling use of Groovy expressions in SCXML documents.
- * <P>
+ * <p>
  * This implementation itself is thread-safe, so you can keep singleton for efficiency.
- * </P>
+ * </p>
  */
 public class GroovyEvaluator extends AbstractBaseEvaluator {
 
