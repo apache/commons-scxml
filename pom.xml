@@ -298,13 +298,13 @@
         <artifactId>apache-rat-plugin</artifactId>
         <!-- Should agree with config in reporting section -->
         <configuration>
-          <excludes combine.children="append">
+          <inputExcludes combine.children="append">
             <!--exclude stylesheet adapted from http://www.w3.org/Voice/2013/scxml-irp/confXPath.xsl -->
-            <exclude>src/test/java/org/apache/commons/scxml2/w3c/confMinimal.xsl</exclude>
+            <inputExclude>src/test/java/org/apache/commons/scxml2/w3c/confMinimal.xsl</inputExclude>
             <!--exclude stylesheets adapted from http://www.w3.org/Voice/2013/scxml-irp/confEcma.xsl -->
-            <exclude>src/test/java/org/apache/commons/scxml2/w3c/confJexl.xsl</exclude>
-            <exclude>src/test/java/org/apache/commons/scxml2/w3c/confGroovy.xsl</exclude>
-          </excludes>
+            <inputExclude>src/test/java/org/apache/commons/scxml2/w3c/confJexl.xsl</inputExclude>
+            <inputExclude>src/test/java/org/apache/commons/scxml2/w3c/confGroovy.xsl</inputExclude>
+          </inputExcludes>
         </configuration>
       </plugin>
       <plugin>
@@ -366,10 +366,13 @@
         <artifactId>apache-rat-plugin</artifactId>
         <!-- Should agree with config in build section -->
         <configuration>
-          <excludes combine.children="append">
+          <inputExcludes combine.children="append">
             <!--exclude stylesheet adapted from http://www.w3.org/Voice/2013/scxml-irp/confXPath.xsl -->
-            <exclude>src/test/java/org/apache/commons/scxml2/w3c/confMinimal.xsl</exclude>
-          </excludes>
+            <inputExclude>src/test/java/org/apache/commons/scxml2/w3c/confMinimal.xsl</inputExclude>
+            <!--exclude stylesheets adapted from http://www.w3.org/Voice/2013/scxml-irp/confEcma.xsl -->
+            <inputExclude>src/test/java/org/apache/commons/scxml2/w3c/confJexl.xsl</inputExclude>
+            <inputExclude>src/test/java/org/apache/commons/scxml2/w3c/confGroovy.xsl</inputExclude>
+          </inputExcludes>
         </configuration>
       </plugin>
     </plugins>

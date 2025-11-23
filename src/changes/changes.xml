@@ -25,15 +25,19 @@
   <body>
     <release version="2.0" date="In Git master"
       description="Latest unreleased code">
+      <!-- FIX -->
       <action dev="ate" type="fix" issue="SCXML-285">
         [18-10-2018] Before executing invoke handlers after a macrostep all internal events must have been processed
       </action>
+      <action type="fix" dev="ggregory" due-to="Gary Gregory">Fix Apache RAT plugin console warnings.</action>
+      <!-- UPDATE -->
       <action dev="woonsan" type="update" issue="SCXML-284" due-to="Allon Mureinik">
         [10-10-2018] Clear up exception handling in tests
       </action>
       <action dev="woonsan" type="update" issue="SCXML-283" due-to="Allon Mureinik">
         [08-10-2018] Upgrade testing framework to JUnit Jupiter
       </action>
+      <!-- ADD -->
       <action dev="ate" type="add" issue="SCXML-279">
         [21-01-2018] Only use default Jexl3 setting for silent and strict, cleanup APIs accordingly
       </action>
