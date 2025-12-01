@@ -22,15 +22,19 @@
        initial="state1">
      <state id="state1">
            <onentry>
-               <cs:var name="switch" expr="4" />
+               <!-- since JEXL 3.6, 'switch' is a keyword, so we use 'swtch' instead -->
+               <cs:var name="swtch" expr="4" />
            </onentry>
            <!-- We'll trigger 'foo.bar.baz' event,
                 and therefore, must end up in state4 -->
-           <transition event="*" cond="switch eq 2" target="state2"/>
-           <transition event="foo.*" cond="switch eq 3" target="state3"/>
-           <transition event="foo.bar.*" cond="switch eq 4" target="state4"/>
+           <transition event="*" cond="swtch eq 2" target="state2"/>
+           <transition event="foo.*" cond="swtch eq 3" target="state3"/>
+           <transition event="foo.bar.*" cond="swtch eq 4" target="state4"/>
+           <!-- If something goes wrong, ensure we end up in the error state and not loop forever -->
+           <transition event="error.execution" target="error" />
      </state>
      <final id="state2"/>
      <final id="state3"/>
      <final id="state4"/>
+     <final id="error"/>
 </scxml>
