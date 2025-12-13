@@ -21,11 +21,11 @@
  * Some possible semantic interpretations are, for example:
  * </p>
  * <ul>
- * <li>STATEMATE
- * <li>RHAPSODY
- * <li>ROOMCharts
- * <li>UML 1.5
- * <li>UML 2.0
+ * <li>STATEMATE</li>
+ * <li>RHAPSODY</li>
+ * <li>ROOMCharts</li>
+ * <li>UML 1.5</li>
+ * <li>UML 2.0</li>
  * </ul>
  * <p>
  * Specific semantics can be created by subclassing {@code org.apache.commons.scxml2.semantics.SCXMLSemanticsImpl}, which is the default implementation
