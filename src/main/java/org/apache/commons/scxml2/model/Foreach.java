@@ -66,7 +66,7 @@ public class Foreach extends Action implements ActionsContainer {
     public void execute(final ActionExecutionContext exctx) throws ModelException, SCXMLExpressionException {
         final Context ctx = exctx.getContext(getParentEnterableState());
         final Evaluator eval = exctx.getEvaluator();
-        final Object arrayObject = eval.eval(ctx,array);
+        final Object arrayObject = eval.eval(ctx, array);
         if (arrayObject == null || !arrayObject.getClass().isArray() && !(arrayObject instanceof Iterable) && !(arrayObject instanceof Map)) {
             throw new ActionExecutionError("<foreach> in state " + getParentEnterableState().getId()+": invalid array value '"+array+"'");
         }

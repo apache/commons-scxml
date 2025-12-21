@@ -167,7 +167,7 @@ class JSEvaluatorTest {
         Assertions.assertNotNull(evaluator);
         final SCXMLExpressionException x= Assertions.assertThrows(
                 SCXMLExpressionException.class,
-                () ->  evaluator.eval(context,BAD_EXPRESSION),
+                () ->  evaluator.eval(context, BAD_EXPRESSION),
                 "JSEvaluator should throw SCXMLExpressionException");
         Assertions.assertTrue(x.getMessage().startsWith("eval('" + BAD_EXPRESSION + "')"),
                 "JSEvaluator: Incorrect error message");
@@ -231,7 +231,7 @@ class JSEvaluatorTest {
     void testScriptFunctions() throws Exception {
         context.set("FIVE", 5);
         Assertions.assertEquals(5,context.get("FIVE"));
-        Assertions.assertEquals(120.0, evaluator.eval(context,FUNCTION), "Invalid function result");
+        Assertions.assertEquals(120.0, evaluator.eval(context, FUNCTION), "Invalid function result");
     }
 
     /**
