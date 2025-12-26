@@ -48,7 +48,7 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
     /** The invoked state machine executor. */
     private SCXMLExecutor executor;
     /** Cancellation status. */
-    private boolean cancelled;
+    private boolean canceled;
 
     /**
      * {@inheritDoc}.
@@ -56,7 +56,7 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
     @Override
     public void cancel()
     throws InvokerException {
-        cancelled = true;
+        canceled = true;
         executor.getParentSCXMLIOProcessor().close();
         executor.addEvent(new EventBuilder("cancel.invoke."+ invokeId, TriggerEvent.CANCEL_EVENT).build());
     }
@@ -129,7 +129,7 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
     @Override
     public void parentEvent(final TriggerEvent evt)
     throws InvokerException {
-        if (!cancelled) {
+        if (!canceled) {
             executor.addEvent(evt);
         }
     }
@@ -140,7 +140,7 @@ public class SimpleSCXMLInvoker implements Invoker, Serializable {
     @Override
     public void setInvokeId(final String invokeId) {
         this.invokeId = invokeId;
-        this.cancelled = false;
+        this.canceled = false;
     }
 
     /**
