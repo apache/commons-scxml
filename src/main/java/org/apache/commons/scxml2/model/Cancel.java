@@ -33,12 +33,12 @@ public class Cancel extends Action {
     private static final long serialVersionUID = 1L;
 
     /**
-     * The ID of the send message that should be cancelled.
+     * The ID of the send message that should be canceled.
      */
     private String sendid;
 
     /**
-     * The expression that evaluates to the ID of the send message that should be cancelled.
+     * The expression that evaluates to the ID of the send message that should be canceled.
      */
     private String sendidexpr;
 
@@ -71,7 +71,7 @@ public class Cancel extends Action {
     }
 
     /**
-     * Gets the ID of the send message that should be cancelled.
+     * Gets the ID of the send message that should be canceled.
      *
      * @return the sendid.
      */
@@ -80,16 +80,16 @@ public class Cancel extends Action {
     }
 
     /**
-     * Gets the expression that evaluates to the ID of the send message that should be cancelled.
+     * Gets the expression that evaluates to the ID of the send message that should be canceled.
      *
-     * @return the expression that evaluates to the ID of the send message that should be cancelled.
+     * @return the expression that evaluates to the ID of the send message that should be canceled.
      */
     public String getSendidexpr() {
         return sendidexpr;
     }
 
     /**
-     * Sets the ID of the send message that should be cancelled.
+     * Sets the ID of the send message that should be canceled.
      *
      * @param sendid The sendid to set.
      */
@@ -98,9 +98,9 @@ public class Cancel extends Action {
     }
 
     /**
-     * Sets the expression that evaluates to the ID of the send message that should be cancelled.
+     * Sets the expression that evaluates to the ID of the send message that should be canceled.
      *
-     * @param sendidexpr the expression that evaluates to the ID of the send message that should be cancelled.
+     * @param sendidexpr the expression that evaluates to the ID of the send message that should be canceled.
      */
     public void setSendidexpr(final String sendidexpr) {
         this.sendidexpr = sendidexpr;

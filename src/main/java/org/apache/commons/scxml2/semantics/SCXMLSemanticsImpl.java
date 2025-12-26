@@ -581,7 +581,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
     }
 
     /**
-     * Check if an external event indicates the state machine execution must be cancelled.
+     * Check if an external event indicates the state machine execution must be canceled.
      *
      * @param event received external event
      * @return true if this event is of type {@link TriggerEvent#CANCEL_EVENT}.
