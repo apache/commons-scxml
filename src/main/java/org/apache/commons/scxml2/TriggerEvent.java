@@ -67,6 +67,7 @@ public class TriggerEvent implements Serializable {
      * Indicates that an error internal to the execution of the document has occurred, such as one arising from
      * expression evaluation.
      * </p>
+     *
      * @see <a href="https://www.w3.org/TR/scxml/#errorsAndEvents">
      *      http://www.w3.org/TR/scxml/#errorsAndEvents</a>
      */
@@ -77,6 +78,7 @@ public class TriggerEvent implements Serializable {
      * <p>
      * Indicates that an error has occurred while trying to communicate with an external entity.
      * </p>
+     *
      * @see <a href="https://www.w3.org/TR/scxml/#errorsAndEvents">
      *      http://www.w3.org/TR/scxml/#errorsAndEvents</a>
      */
@@ -87,6 +89,7 @@ public class TriggerEvent implements Serializable {
      * <p>
      * Indicates that a platform- or application-specific error has occurred.
      * </p>
+     *
      * @see <a href="https://www.w3.org/TR/scxml/#errorsAndEvents">
      *      http://www.w3.org/TR/scxml/#errorsAndEvents</a>
      */

@@ -188,6 +188,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * <p>
      * This method corresponds to the Algorithm for SCXML processing computeEntrySet() procedure.
      * </p>
+     *
      * @param exctx The execution context for this step
      * @param step The step containing the list of transitions to be taken
      */
@@ -224,6 +225,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * <p>
      * This method corresponds to the Algorithm for SCXML processing computeExitSet() procedure.
      * </p>
+     *
      * @param transition The transition to compute the states to exit from
      * @param exitSet The set for adding the states to exit to
      * @param activeStates The current active states of the state machine ({@link StateConfiguration#getActiveStates()}).
@@ -250,6 +252,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * <p>
      * This method corresponds to the Algorithm for SCXML processing computeExitSet() procedure.
      * </p>
+     *
      * @param step The step containing the list of transitions to be taken
      * @param stateConfiguration The current configuration of the state machine ({@link SCInstance#getStateConfiguration()}).
      */
@@ -469,6 +472,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * <p>
      * This final step will exit all remaining active states and cancel any active invokers.
      * </p>
+     *
      * @param exctx The execution context for this step
      * @throws ModelException if a SCXML model error occurred during the execution.
      */
@@ -527,6 +531,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * If the state machine no longer is running after all this, first the {@link #finalStep(SCXMLExecutionContext)}
      * will be called for cleanup before returning.
      * </p>
+     *
      * @param exctx The execution context for this step
      * @throws ModelException if the state machine instance failed to initialize or a SCXML model error occurred during
      * the execution.
@@ -684,6 +689,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * sub-flow, which are the first <em>3</em> steps of the described <em>4</em>, so everything up to the blocking
      * wait for an external event.
      * </p>
+     *
      * @param exctx The execution context for this step
      * @param statesToInvoke the set of activated states which invokes need to be invoked at the end of the current
      *                       macro step
@@ -778,6 +784,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * <p>
      * This micro step is corresponding to the Algorithm for SCXML processing microstep() procedure.
      * </p>
+     *
      * @param exctx The execution context for this step
      * @param step The current micro step
      * @param statesToInvoke the set of activated states which invokes need to be invoked at the end of the current
@@ -816,6 +823,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * If the state machine no longer is running after all this, first the {@link #finalStep(SCXMLExecutionContext)}
      * will be called for cleanup before returning.
      * </p>
+     *
      * @param exctx The execution context for this step
      * @param event The event to process
      * @throws ModelException if a SCXML model error occurred during the execution.
@@ -929,6 +937,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * history configurations will be persisted during the actual {@link #exitStates(SCXMLExecutionContext, Step, Set)}
      * processing.
      * </p>
+     *
      * @param step The step containing the list of states to exit, and the map to record the new history configurations
      * @param atomicStates The current set of active atomic states in the state machine
      * @param activeStates The current set of all active states in the state machine
@@ -1079,6 +1088,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * For the event a EventVariable is instantiated and the provided event its type is mapped to the one of the
      * SCXML specification predefined types.
      * </p>
+     *
      * @param scInstance the state machine instance holding the system context
      * @param event The event being stored
      * @param internal Flag indicating the event was received internally or externally

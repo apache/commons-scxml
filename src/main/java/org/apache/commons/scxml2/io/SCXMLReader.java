@@ -410,6 +410,7 @@ public final class SCXMLReader {
 
         /**
          * Returns true if it is set to read models silently without any model error warning logs.
+         *
          * @return true if it is set to read models silently without any model error warning logs
          * @see #silent
          */
@@ -419,6 +420,7 @@ public final class SCXMLReader {
 
         /**
          * Returns true if it is set to check model strictly with throwing exceptions on any model error.
+         *
          * @return true if it is set to check model strictly with throwing exceptions on any model error
          * @see #strict
          */
@@ -428,6 +430,7 @@ public final class SCXMLReader {
 
         /**
          * Turn on/off silent mode (whether to read models silently without any model error warning logs)
+         *
          * @param silent silent mode (whether to read models silently without any model error warning logs)
          * @see #silent
          */
@@ -437,6 +440,7 @@ public final class SCXMLReader {
 
         /**
          * Turn on/off strict model (whether to check model strictly with throwing exception on any model error)
+         *
          * @param strict strict model (whether to check model strictly with throwing exception on any model error)
          * @see #strict
          */
@@ -1664,6 +1668,7 @@ public final class SCXMLReader {
 
     /**
      * Reads the contents of the initial &lt;script&gt; element.
+     *
      * @see <a href="https://www.w3.org/TR/2015/REC-scxml-20150901/#scxml">
      *     https://www.w3.org/TR/2015/REC-scxml-20150901/#scxml<a> section 3.2.2
      *
@@ -2866,6 +2871,7 @@ public final class SCXMLReader {
 
     /**
      * Advances the XMLStreamReader until after the end of the current element: all children will be skipped as well
+     *
      * @param reader the reader
      * @throws XMLStreamException
      */

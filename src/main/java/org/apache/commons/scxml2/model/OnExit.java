@@ -67,6 +67,7 @@ public class OnExit extends Executable {
 
     /**
      * Sets the indicator whether to raise the non-standard "exit.state.id" internal event after executing this OnExit.
+     *
      * @param raiseEvent The indicator, when null no event will be raised
      */
     public final void setRaiseEvent(final Boolean raiseEvent) {

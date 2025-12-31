@@ -40,6 +40,7 @@ public class JSContext extends SimpleContext {
 
     /**
      * Child constructor - Just invokes the identical SimpleContext constructor.
+     *
      * @param parent Parent context for this context.
      */
     public JSContext(final Context parent) {
@@ -48,6 +49,7 @@ public class JSContext extends SimpleContext {
 
     /**
      * Constructor with initial vars - Just invokes the identical SimpleContext constructor.
+     *
      * @param parent The parent context
      * @param initialVars The initial set of variables.
      */

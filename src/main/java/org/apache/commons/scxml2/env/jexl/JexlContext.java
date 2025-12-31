@@ -47,6 +47,7 @@ public class JexlContext extends SimpleContext
 
     /**
      * Constructor with initial vars.
+     *
      * @param parent The parent context
      * @param initialVars The initial set of variables.
      */

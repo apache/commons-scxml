@@ -32,6 +32,7 @@ public interface ContentContainer {
 
     /**
      * Sets the content
+     *
      * @param content the content to set
      */
     void setContent(Content content);

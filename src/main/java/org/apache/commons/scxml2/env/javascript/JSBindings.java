@@ -103,6 +103,7 @@ public class JSBindings implements Bindings {
      *   <li>Delegates to {@link Context#set(String,Object)} if the Context contains the key (name), else</li>
      *   <li>Delegates to {@link Context#setLocal(String, Object)}</li>
      * </ol>
+     *
      * @param name The variable name
      * @param value The variable value
      */
@@ -120,6 +121,7 @@ public class JSBindings implements Bindings {
 
     /**
      * Sets all entries in the provided map via {@link #put(String, Object)}
+     *
      * @param toMerge the map of variables to merge
      */
     @Override
@@ -131,6 +133,7 @@ public class JSBindings implements Bindings {
 
     /**
      * Removes the named variable from the contained SCXML context.
+     *
      * @param name the variable name
      */
     @Override

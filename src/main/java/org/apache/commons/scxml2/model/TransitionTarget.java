@@ -54,6 +54,7 @@ public abstract class TransitionTarget implements Serializable, Observable {
 
     /**
      * Enforce identity equality only
+     *
      * @param other other object to compare with
      * @return this == other
      */
@@ -64,6 +65,7 @@ public abstract class TransitionTarget implements Serializable, Observable {
 
     /**
      * Gets the ancestor of this TransitionTarget at specified level
+     *
      * @param level the level of the ancestor to return, zero being top
      * @return the ancestor at specified level
      */
@@ -107,6 +109,7 @@ public abstract class TransitionTarget implements Serializable, Observable {
 
     /**
      * Enforce returning identity based hascode
+     *
      * @return {@link System#identityHashCode(Object) System.identityHashCode(this)}
      */
     @Override
@@ -138,6 +141,7 @@ public abstract class TransitionTarget implements Serializable, Observable {
 
     /**
      * Sets the observableId for this Observable, which must be unique within the SCXML state machine
+     *
      * @param observableId the observableId
      */
     public final void setObservableId(final Integer observableId) {

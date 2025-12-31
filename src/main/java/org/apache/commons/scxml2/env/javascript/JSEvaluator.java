@@ -96,6 +96,7 @@ public class JSEvaluator extends AbstractBaseEvaluator {
      * in order to make sure all the new global variables set by the JavaScript engine after evaluation are
      * available from {@link JSContext} instance as well.
      * <p>Note: the internal {@code "_scxmlSystemContext} variable is always skipped.</p>
+     *
      * @param global The Javascript Bindings holding the Javascript Global context variables
      * @param jsContext The SCXML context to copy/merge the variables into
      */
@@ -115,6 +116,7 @@ public class JSEvaluator extends AbstractBaseEvaluator {
      * After evaluation all the resulting Javascript Global context (in {@link ScriptContext#ENGINE_SCOPE} are first
      * copied/merged back into the SCXML context, before the evaluation result (if any) is returned.
      * </p>
+     *
      * @param context    SCXML context.
      * @param expression Expression to evaluate.
      * @return Result of expression evaluation or {@code null}.
@@ -184,6 +186,7 @@ public class JSEvaluator extends AbstractBaseEvaluator {
 
     /**
      * Gets the singleton ScriptEngine, initializing it on first access
+     *
      * @return The ScriptEngine
      */
     protected ScriptEngine getEngine() {
@@ -221,6 +224,7 @@ public class JSEvaluator extends AbstractBaseEvaluator {
      * after script execution all ENGINE_SCOPE variables (except the {@code "_scxmlSystemContext"} variable) must be
      * copied/merged into the SCXML context to synchronize the SCXML context.
      * </p>
+     *
      * @param jsContext The current SCXML context
      * @return The SCXML instance shared ScriptContext
      * @throws ScriptException Thrown if the initialization of the Global Javascript engine itself failed
@@ -271,6 +275,7 @@ public class JSEvaluator extends AbstractBaseEvaluator {
     /**
      * When directly injecting data in the local context, wrap Java array and List objects with a native Javascript
      * Array
+     *
      * @param ctx SCXML context
      * @param id context id of the data
      * @param data data to inject
@@ -296,6 +301,7 @@ public class JSEvaluator extends AbstractBaseEvaluator {
 
     /**
      * Javascript engine semantics, using a retained global state, requires global SCXML context execution
+     *
      * @return true
      */
     @Override

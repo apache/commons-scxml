@@ -66,6 +66,7 @@ public abstract class GroovySCXMLScript extends Script {
 
     /**
      * Implements the In() predicate for SCXML documents ( see Builtin#isMember )
+     *
      * @param state The State ID to compare with
      * @return Whether this State belongs to this Set
      */

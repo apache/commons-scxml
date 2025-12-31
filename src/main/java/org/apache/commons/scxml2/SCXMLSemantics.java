@@ -87,6 +87,7 @@ public interface SCXMLSemantics {
      * <p>
      *  <em>NOTE: the current implementation does not yet provide final donedata handling.</em>
      * </p>
+     *
      * @param exctx The execution context for this step
      * @throws ModelException if a SCXML model error occurred during the execution.
      */
@@ -110,6 +111,7 @@ public interface SCXMLSemantics {
      * If the state machine no longer is running after all this, first the {@link #finalStep(SCXMLExecutionContext)}
      * should be called for cleanup before returning.
      * </p>
+     *
      * @param exctx The execution context for this step
      * @throws ModelException if the state machine instance failed to initialize or a SCXML model error occurred during
      * the execution.
@@ -119,6 +121,7 @@ public interface SCXMLSemantics {
     /**
      * Initialize the SCXML state machine, optionally initializing (overriding) root &lt;datamodel&gt;&lt;data&gt; elements
      * with external values provided through a data map.
+     *
      * @param data A data map to initialize/override &lt;data&gt; elements in the root (global) &lt;datamodel&gt; with
      *             ids matching the keys in the map (other data map entries will be ignored)
      * @param exctx The execution context to initialize
@@ -139,6 +142,7 @@ public interface SCXMLSemantics {
      * This method is also first invoked when manually initializing the status of a state machine through
      * {@link SCXMLExecutor#setConfiguration(java.util.Set)}.
      * </p>
+     *
      * @param states a set of states
      * @param errRep ErrorReporter to report detailed error info if needed
      * @return true if a given state configuration is legal, false otherwise
@@ -166,6 +170,7 @@ public interface SCXMLSemantics {
      * If the state machine no longer is running after all this, first the {@link #finalStep(SCXMLExecutionContext)}
      * should be called for cleanup before returning.
      * </p>
+     *
      * @param exctx The execution context for this step
      * @param event The event to process
      * @throws ModelException if a SCXML model error occurred during the execution.

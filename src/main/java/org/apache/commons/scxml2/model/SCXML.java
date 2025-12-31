@@ -122,6 +122,7 @@ public class SCXML implements Serializable, Observable {
 
     /**
      * The next auto-generated transition target unique id value
+     *
      * @see #generateTransitionTargetId()
      */
     private long ttNextId;
@@ -155,6 +156,7 @@ public class SCXML implements Serializable, Observable {
 
     /**
      * Simple unique TransitionTarget id value generation
+     *
      * @return a unique TransitionTarget id for this SCXML instance
      */
     public final String generateTransitionTargetId() {
@@ -182,6 +184,7 @@ public class SCXML implements Serializable, Observable {
 
     /**
      * Gets the datamodel name as specified as attribute on this document
+     *
      * @return The datamodel name of this document
      */
     public String getDatamodelName() {
@@ -314,6 +317,7 @@ public class SCXML implements Serializable, Observable {
 
     /**
      * Sets the datamodel name as specified as attribute on this document
+     *
      * @param datamodelName The datamodel name
      */
     public void setDatamodelName(final String datamodelName) {

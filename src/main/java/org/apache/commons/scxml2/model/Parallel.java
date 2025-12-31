@@ -39,6 +39,7 @@ public class Parallel extends TransitionalState {
 
     /**
      * Add a TransitionalState (State or Parallel) child
+     *
      * @param ts the child to add
      */
     public final void addChild(final TransitionalState ts) {
@@ -46,6 +47,7 @@ public class Parallel extends TransitionalState {
     }
     /**
      * {@inheritDoc}
+     *
      * @return always false (a state of type Parallel is never atomic)
      */
     @Override

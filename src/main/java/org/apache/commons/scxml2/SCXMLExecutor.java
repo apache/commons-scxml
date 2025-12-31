@@ -129,6 +129,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
      * <p>
      * No processing of the vent will be done, until the next triggerEvent methods is invoked.
      * </p>
+     *
      * @param evt an external event
      */
     @Override
@@ -153,6 +154,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
      * <p>
      * Note: an already attached instance will get overwritten (and thus lost).
      * </p>
+     *
      * @param instance An previously detached SCInstance
      */
     public void attachInstance(final SCInstance instance) {
@@ -169,6 +171,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
      * for {@link #addEvent(TriggerEvent)} which might still be used (concurrently) by running Invokers, or
      * {@link #hasPendingEvents()} to check for possible pending events.
      * </p>
+     *
      * @return the detached instance
      */
     public SCInstance detachInstance() {
@@ -221,6 +224,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
      * The global context is the top level context within the state machine itself and should be regarded and treated
      * "read-only" from external usage.
      * </p>
+     *
      * @return Context The global context.
      */
     public Context getGlobalContext() {
@@ -302,6 +306,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
 
     /**
      * Clear all state, optionally initialize/override global context data, and begin executing the state machine
+     *
      * @param data optional data to initialize/override data defined (only) in the global context of the state machine
      * @throws ModelException if the state machine instance failed to initialize
      */
@@ -382,6 +387,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
 
     /**
      * Same as {@link #go}
+     *
      * @throws ModelException if the state machine instance failed to initialize
      */
     public void reset() throws ModelException {
@@ -408,6 +414,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
 
     /**
      * Sets if the SCXML configuration should be checked before execution (default = true)
+     *
      * @param checkLegalConfiguration flag to set
      */
     public void setCheckLegalConfiguration(final boolean checkLegalConfiguration) {
@@ -420,6 +427,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
      * This will first (re)initialize the current state machine: clearing all variable contexts, histories and current
      * status, and clones the SCXML root datamodel into the root context.
      * </p>
+     *
      * @param atomicStateIds The set of atomic state ids for the state machine
      * @throws ModelException when the state machine hasn't been properly configured yet, when an unknown or illegal
      * stateId is specified, or when the specified active configuration does not represent a legal configuration.
@@ -467,6 +475,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
      * <p>
      * Also the external event queue will be cleared.
      * </p>
+     *
      * @param evaluator The evaluator to set
      * @throws ModelException if attempting to set a null value or the state machine instance failed to re-initialize
      */
@@ -506,6 +515,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
      * <p>
      * Also the external event queue will be cleared.
      * </p>
+     *
      * @param stateMachine The state machine to set
      * @throws ModelException if attempting to set a null value or the state machine instance failed to re-initialize
      */
@@ -531,6 +541,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
 
     /**
      * Trigger all pending and incoming events, until there are no more pending events
+     *
      * @throws ModelException in case there is a fatal SCXML object model problem.
      */
     public void triggerEvents() throws ModelException {

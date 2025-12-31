@@ -110,6 +110,7 @@ public class CustomActionWrapper extends Action {
 
     /**
      * Sets the attributes defined on the custom action element
+     *
      * @param attributes the attributes to set
      */
     public void setAttributes(final Map<String, String> attributes) {
@@ -118,6 +119,7 @@ public class CustomActionWrapper extends Action {
 
     /**
      * Sets the custom action XML element local name
+     *
      * @param localName custom action XML element local name
      */
     public void setLocalName(final String localName) {
@@ -131,6 +133,7 @@ public class CustomActionWrapper extends Action {
 
     /**
      * Sets the custom action XML element prefix
+     *
      * @param prefix custom action XML element prefix
      */
     public void setPrefix(final String prefix) {

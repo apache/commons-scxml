@@ -145,6 +145,7 @@ final class ModelUpdater {
     /**
      * Initialize all {@link org.apache.commons.scxml2.model.DocumentOrder} instances (EnterableState or Transition)
      * by iterating them in document order setting their document order value.
+     *
      * @param states The list of children states of a parent TransitionalState or the SCXML document itself
      * @param nextOrder The next to be used order value
      * @return the next to be used order value
@@ -166,6 +167,7 @@ final class ModelUpdater {
     /**
      * Initialize all {@link org.apache.commons.scxml2.model.Observable} instances in the SCXML document
      * by iterating them in document order and seeding them with a unique obeservable id.
+     *
      * @param states The list of children states of a parent TransitionalState or the SCXML document itself
      * @param nextObservableId The next observable id sequence value to be used
      * @return the next to be used observable id sequence value

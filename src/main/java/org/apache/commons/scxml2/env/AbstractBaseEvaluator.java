@@ -79,6 +79,7 @@ public abstract class AbstractBaseEvaluator implements Evaluator, Serializable {
 
     /**
      * Returns cloned value of data of unknown type, to be overridden as desired by specialized Evaluators
+     *
      * @param data data object of unknown type (not of type String, Number, Boolean, Node, NodeList, List or Map)
      * @return toString() value of data of unknown type
      */

@@ -137,6 +137,7 @@ public interface Invoker {
 
     /**
      * Sets the parent SCXMLExecutor through which this Invoker is initiated
+     *
      * @param scxmlExecutor the parent SCXMLExecutor
      */
     void setParentSCXMLExecutor(SCXMLExecutor scxmlExecutor);

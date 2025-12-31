@@ -35,6 +35,7 @@ public class SCInstanceObjectInputStream extends ObjectInputStream {
 
         /**
          * Callback method invoked from {@link SCInstanceObjectInputStream#resolveClass(ObjectStreamClass)}
+         *
          * @param osc an instance of class ObjectStreamClass
          * @return a Class object corresponding to osc
          * @throws IOException if an I/O error occurs while reading the instance of class ObjectStreamClass
@@ -50,6 +51,7 @@ public class SCInstanceObjectInputStream extends ObjectInputStream {
 
     /**
      * Default constructor
+     *
      * @param in Inputstream to use
      * @throws IOException if an I/O error occurs while reading the stream
      */
@@ -85,6 +87,7 @@ public class SCInstanceObjectInputStream extends ObjectInputStream {
      *     }
      * }
      * </code></pre>
+     *
      * @see org.apache.commons.scxml2.env.groovy.GroovyContext#readObject(ObjectInputStream)
      * @param classResolver custom class resolver
      * @return the old classResolver replaced by the new {@code classResolver}

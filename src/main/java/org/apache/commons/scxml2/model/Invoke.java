@@ -119,6 +119,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
 
     /**
      * Enforce identity equality only
+     *
      * @param other other object to compare with
      * @return this == other
      */
@@ -348,6 +349,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
 
     /**
      * Enforce returning identity based hascode
+     *
      * @return {@link System#identityHashCode(Object) System.identityHashCode(this)}
      */
     @Override
@@ -364,6 +366,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
 
     /**
      * Sets the flag indicating whether to forward events to the invoked process.
+     *
      * @param autoForward the flag
      */
     public final void setAutoForward(final Boolean autoForward) {
@@ -400,6 +403,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
 
     /**
      * Sets the idlocation expression
+     *
      * @param idlocation The idlocation expression
      */
     public void setIdlocation(final String idlocation) {
@@ -417,6 +421,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
 
     /**
      * Sets the parent EnterableState.
+     *
      * @param parent The parent state to set
      * @param invokeIndex the invoke index in the parent (TransitionalState) defined invokers
      */
@@ -458,6 +463,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
 
     /**
      * Sets the type expression
+     *
      * @param typeexpr The type expression to set
      */
     public void setTypeexpr(final String typeexpr) {

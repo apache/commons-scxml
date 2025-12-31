@@ -162,6 +162,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
 
     /**
      * Add an event to the internal event queue
+     *
      * @param event The event
      */
     @Override
@@ -174,6 +175,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
      * <p>
      * Note: an already attached instance will get overwritten (and thus lost).
      * </p>
+     *
      * @param instance An previously detached SCInstance
      */
     protected void attachInstance(final SCInstance instance) {
@@ -218,6 +220,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
      * <p>
      * {@link #attachInstance(SCInstance)} can be used to re-attach a previously detached instance
      * </p>
+     *
      * @return the detached instance
      */
     protected SCInstance detachInstance() {
@@ -326,6 +329,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
 
     /**
      * Initialize will cancel all current active Invokers, clear the internal event queue and (re)initialize the state machine
+     *
      * @param data input model map to initialize the data model with
      * @throws ModelException if the state machine hasn't been setup for the internal SCXML instance
      */
@@ -432,6 +436,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
 
     /**
      * Remove a previously active Invoker, which must already have been canceled
+     *
      * @param invoke The Invoke for the Invoker to remove
      */
     public void removeInvoker(final Invoke invoke) {
@@ -442,6 +447,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
 
     /**
      * Sets if the SCXML configuration should be checked before execution (default = true)
+     *
      * @param checkLegalConfiguration flag to set
      */
     public void setCheckLegalConfiguration(final boolean checkLegalConfiguration) {
@@ -469,6 +475,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
      * If the state machine instance has been initialized before, it will be initialized again, destroying all existing
      * state!
      * </p>
+     *
      * @param evaluator The evaluator to set
      * @throws ModelException if attempting to set a null value or the state machine instance failed to re-initialize
      */
@@ -494,6 +501,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
      * If the state machine instance has been initialized before, it will be initialized again, destroying all existing
      * state!
      * </p>
+     *
      * @param stateMachine The state machine to set
      * @throws ModelException if attempting to set a null value or the state machine instance failed to re-initialize
      */
@@ -527,6 +535,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     /**
      * Trivial utility method needed for SCXML IRP test 216 which (IMO incorrectly uses http://www.w3.org/TR/scxml
      * (no trailing /) while the SCXML spec explicitly states http://www.w3.org/TR/scxml/ should be used (supported)
+     *
      * @param uri
      * @return
      */

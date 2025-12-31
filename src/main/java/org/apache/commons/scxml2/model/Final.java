@@ -62,6 +62,7 @@ public class Final extends EnterableState {
 
     /**
      * {@inheritDoc}
+     *
      * @return always true (a state of type Final is always atomic)
      */
     @Override
@@ -117,6 +118,7 @@ public class Final extends EnterableState {
 
     /**
      * Sets the parent State.
+     *
      * @param parent The parent state to set
      */
     public final void setParent(final State parent) {

@@ -38,12 +38,14 @@ public class SimpleTransition extends Executable implements Observable {
 
     /**
      * The Transition type: internal or external (default)
+     *
      * @see #isTypeInternal()
      */
     private TransitionType type;
 
     /**
      * The transition domain for this transition.
+     *
      * @see #getTransitionDomain()
      */
     private TransitionalState transitionDomain;
@@ -55,6 +57,7 @@ public class SimpleTransition extends Executable implements Observable {
 
     /**
      * Derived effective Transition type.
+     *
      * @see #isTypeInternal()
      */
     private Boolean typeInternal;
@@ -206,6 +209,7 @@ public class SimpleTransition extends Executable implements Observable {
      * <p>
      * Otherwise it is treated (for determining its exit states) as if it is of type {@link TransitionType#external}
      * </p>
+     *
      * @see <a href="https://www.w3.org/TR/2015/REC-scxml-20150901/#SelectingTransitions">
      *     https://www.w3.org/TR/2015/REC-scxml-20150901/#SelectingTransitions</a>
      * @return true if the effective Transition type is {@link TransitionType#internal}
@@ -239,6 +243,7 @@ public class SimpleTransition extends Executable implements Observable {
 
     /**
      * Sets the observableId for this Observable, which must be unique within the SCXML state machine
+     *
      * @param observableId the observableId
      */
     public final void setObservableId(final Integer observableId) {
@@ -259,6 +264,7 @@ public class SimpleTransition extends Executable implements Observable {
 
     /**
      * Sets the Transition type
+     *
      * @param type the Transition type
      */
     public final void setType(final TransitionType type) {

@@ -86,6 +86,7 @@ public interface Evaluator {
 
     /**
      * Gets the datamodel type supported by this Evaluator
+     *
      * @return The supported datamodel type
      */
     String getSupportedDatamodel();
@@ -100,6 +101,7 @@ public interface Evaluator {
 
     /**
      * If this Evaluator only supports a global context.
+     *
      * @return true if this Evaluator only support a global context
      */
     boolean requiresGlobalContext();

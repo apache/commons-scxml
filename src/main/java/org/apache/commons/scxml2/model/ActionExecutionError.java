@@ -28,6 +28,7 @@ import org.apache.commons.scxml2.TriggerEvent;
  *     <li>if not yet {@link #isEventRaised()} raise the internal error event {@link TriggerEvent#ERROR_EXECUTION}</li>
  *     <li>if a non-null error message is provided with the exception, report an error message with {@link ErrorReporter}</li>
  * </ul>
+ *
  * @see <a href="https://www.w3.org/TR/2015/REC-scxml-20150901/#EvaluationofExecutableContent">SCXML spec 4.9 Evaluation of Executable Content</a>
  */
 public final class ActionExecutionError extends RuntimeException {

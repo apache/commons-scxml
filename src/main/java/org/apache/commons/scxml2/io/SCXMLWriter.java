@@ -1309,6 +1309,7 @@ public class SCXMLWriter {
 
     /**
      * Writes out the TransitionTarget id attribute unless it was auto-generated
+     *
      * @param writer The {@link XMLStreamWriter} in use for the serialization.
      * @param tt The {@link TransitionTarget} for which to write the id attribute.
      * @throws XMLStreamException

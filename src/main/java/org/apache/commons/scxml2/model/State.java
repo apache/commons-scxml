@@ -46,6 +46,7 @@ public class State extends TransitionalState {
 
     /**
      * Adds an EnterableState (State, Final or Parallel) child
+     *
      * @param es the child to add
      */
     @Override
@@ -73,6 +74,7 @@ public class State extends TransitionalState {
 
     /**
      * {@inheritDoc}
+     *
      * @return true if this State has no children
      */
     @Override

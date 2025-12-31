@@ -132,6 +132,7 @@ public class SCInstance implements Serializable {
 
     /**
      * Constructs a new instance.
+     *
      * @param internalIOProcessor The I/O Processor for the internal event queue
      * @param evaluator The evaluator
      * @param errorReporter The error reporter
@@ -356,6 +357,7 @@ public class SCInstance implements Serializable {
     /**
      * (re)Initializes the state machine instance, clearing all variable contexts, histories and current status,
      * and clones the SCXML root datamodel into the root context.
+     *
      * @throws ModelException if the state machine hasn't been setup for this instance
      */
     protected void initialize() throws ModelException {
@@ -457,6 +459,7 @@ public class SCInstance implements Serializable {
 
     /**
      * Sets or re-attach the error reporter
+     *
      * @param errorReporter The error reporter for this state machine instance.
      * @throws ModelException if an attempt is made to set a null value for the error reporter
      */
@@ -473,6 +476,7 @@ public class SCInstance implements Serializable {
      * If not re-attaching and this state machine instance has been initialized before,
      * it will be initialized again, destroying all existing state!
      * </p>
+     *
      * @param evaluator The evaluator for this state machine instance
      * @param reAttach Flag whether or not re-attaching it
      * @throws ModelException if {@code evaluator} is null
@@ -492,6 +496,7 @@ public class SCInstance implements Serializable {
 
     /**
      * Sets the I/O Processor for the internal event queue
+     *
      * @param internalIOProcessor the I/O Processor
      */
     protected void setInternalIOProcessor(final SCXMLIOProcessor internalIOProcessor) {
@@ -511,6 +516,7 @@ public class SCInstance implements Serializable {
 
     /**
      * Sets or replace the root context.
+     *
      * @param context The new root context.
      */
     protected void setRootContext(final Context context) {
@@ -536,6 +542,7 @@ public class SCInstance implements Serializable {
      * If this state machine instance has been initialized before, it will be initialized again, destroying all existing
      * state!
      * </p>
+     *
      * @param stateMachine The state machine for this instance
      * @throws ModelException if an attempt is made to set a null value for the state machine
      */
@@ -549,6 +556,7 @@ public class SCInstance implements Serializable {
 
     /**
      * Starts the state machine, {@link #isRunning()} hereafter will return true
+     *
      * @throws IllegalStateException Exception thrown if trying to start the state machine when in a Final state
      */
     public void start() throws IllegalStateException {

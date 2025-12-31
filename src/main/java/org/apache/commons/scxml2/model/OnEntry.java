@@ -67,6 +67,7 @@ public class OnEntry extends Executable {
 
     /**
      * Sets the indicator whether to raise the non-standard "entry.state.id" internal event after executing this OnEntry.
+     *
      * @param raiseEvent The indicator, when null no event will be raised
      */
     public final void setRaiseEvent(final Boolean raiseEvent) {

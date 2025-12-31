@@ -98,12 +98,14 @@ public abstract class EnterableState extends TransitionTarget implements Documen
      * <p>
      * An atomic state is a state of type Final or of type State without children,
      * </p>
+     *
      * @return true if this is an atomic state.
      */
     public abstract boolean isAtomicState();
 
     /**
      * Sets the document order of this state
+     *
      * @param order the document order
      * @see DocumentOrder
      */

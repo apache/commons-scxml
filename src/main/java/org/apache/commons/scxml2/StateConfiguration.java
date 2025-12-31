@@ -55,6 +55,7 @@ public class StateConfiguration implements Serializable {
     /**
      * Enter an active state
      * If the state is atomic also record it add it to the current states
+     *
      * @param state state to enter
      */
     public void enterState(final EnterableState state) {
@@ -69,6 +70,7 @@ public class StateConfiguration implements Serializable {
     /**
      * Exit an active state
      * If the state is atomic also remove it from current states
+     *
      * @param state state to exit
      */
     public void exitState(final EnterableState state) {

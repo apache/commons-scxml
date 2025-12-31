@@ -53,6 +53,7 @@ public class ContentParser {
 
     /**
      * Check if content starts with JSON object '{' or array '[' marker
+     *
      * @param content text to check
      * @return true if content start with '{' or '[' character
      */
@@ -63,6 +64,7 @@ public class ContentParser {
 
     /**
      * Check if content indicates its an XML document
+     *
      * @param content content to check
      * @return true if content indicates its an XML document
      */
@@ -72,6 +74,7 @@ public class ContentParser {
 
     /**
      * Check if a character is whitespace (space, tab, newline, cr) or not
+     *
      * @param c character to check
      * @return true if character is whitespace
      */
@@ -82,6 +85,7 @@ public class ContentParser {
     /**
      * Space normalize content string, trimming pre/post-fixed whitespace and collapsing embedded whitespaces to
      * single space.
+     *
      * @param content content to space-normalize
      * @return space-normalized content
      */
@@ -114,6 +118,7 @@ public class ContentParser {
 
     /**
      * Trim pre/post-fixed whitespace from content string
+     *
      * @param content content to trim
      * @return trimmed content
      */
@@ -151,6 +156,7 @@ public class ContentParser {
 
     /**
      * Constructor with a custom configured Jackson ObjectMapper
+     *
      * @param jsonObjectMapper custom configured Jackson ObjectMapper
      */
     public ContentParser(final ObjectMapper jsonObjectMapper) {
@@ -164,6 +170,7 @@ public class ContentParser {
      *   <li>if the content can be interpreted as XML, it will be parsed into a XML DOM element</li>
      *   <li>otherwise the content will be treated (cleaned) as a space-normalized string literal</li>
      * </ul>
+     *
      * @param content the content to parse
      * @return the parsed content object
      * @throws IOException In case of parsing exceptions
@@ -184,6 +191,7 @@ public class ContentParser {
 
     /**
      * Parse and map JSON string to 'raw' Java Objects: object -&gt; LinkedHashMap, array -&gt; ArrayList
+     *
      * @param jsonString JSON string to parse
      * @return 'raw' mapped Java Object for JSON string
      * @throws IOException In case of parsing exceptions
@@ -194,6 +202,7 @@ public class ContentParser {
 
     /**
      * Load a resource (URL) as an UTF-8 encoded content string to be parsed into a ParsedValue content object through {@link #parseContent(String)}
+     *
      * @param resourceURL Resource URL to load content from
      * @return the parsed content object
      * @throws IOException In case of loading or parsing exceptions
@@ -207,6 +216,7 @@ public class ContentParser {
 
     /**
      * Parse an XML String and return the document element
+     *
      * @param xmlString XML String to parse
      * @return document element
      * @throws IOException if IO error occurs while parsing XML
@@ -223,6 +233,7 @@ public class ContentParser {
 
     /**
      * Transforms a jsonObject to a json String
+     *
      * @param jsonObject object to transform
      * @return json string
      * @throws IOException if IO error occurs while serializing it to JSON
@@ -233,6 +244,7 @@ public class ContentParser {
 
     /**
      * Transforms a XML Node to XML
+     *
      * @param node node to transform
      * @return XML string
      * @throws IOException if IO error occurs while serializing node to XML

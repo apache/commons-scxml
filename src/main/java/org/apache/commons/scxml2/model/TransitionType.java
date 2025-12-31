@@ -22,6 +22,7 @@ package org.apache.commons.scxml2.model;
  * The Transition type determines whether the source state is exited in transitions
  * whose target state is a descendant of the source state.
  * </p>
+ *
  * @see <a href="https://www.w3.org/TR/2015/REC-scxml-20150901/#transition">
  *     https://www.w3.org/TR/2015/REC-scxml-20150901/#transition</a>
  */

@@ -39,6 +39,7 @@ public class SCXMLSystemContext implements Context, Serializable {
 
     /**
      * The protected system variables names as defined in the SCXML specification
+     *
      * @see <a href="https://www.w3.org/TR/scxml/#SystemVariables">http://www.w3.org/TR/scxml/#SystemVariables</a>
      */
     public static final String EVENT_KEY = "_event";
@@ -70,6 +71,7 @@ public class SCXMLSystemContext implements Context, Serializable {
 
     /**
      * The auto-generated next sessionId prefixed ID
+     *
      * @see #generateSessionId()
      */
     private long nextSessionSequenceId;
@@ -153,6 +155,7 @@ public class SCXMLSystemContext implements Context, Serializable {
 
     /**
      * Initialize or replace systemContext
+     *
      * @param systemContext the system context to set
      * @throws NullPointerException if systemContext == null
      */

@@ -81,6 +81,7 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
      * Create the internal JexlEngine member during the initialization.
      * This method can be overriden to specify more detailed options
      * into the JexlEngine.
+     *
      * @return new JexlEngine instance
      */
     protected JexlEngine createJexlEngine() {
@@ -184,6 +185,7 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
      * <p>
      * <em>NOTE: The internal JexlEngine instance can be null when this is deserialized.</em>
      * </p>
+     *
      * @return the current JexlEngine
      */
     private JexlEngine getJexlEngine() {

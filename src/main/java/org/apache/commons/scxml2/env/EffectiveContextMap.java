@@ -38,6 +38,7 @@ public final class EffectiveContextMap extends AbstractMap<String, Object> imple
 
     /**
      * Constructs a new instance.
+     *
      * @param ctx context of the current leave state node
      */
     public EffectiveContextMap(final Context ctx) {
@@ -80,6 +81,7 @@ public final class EffectiveContextMap extends AbstractMap<String, Object> imple
 
     /**
      * Parent Context first merging of all Context vars, to ensure same named 'local' vars shadows parent var
+     *
      * @param leaf current leaf Context
      * @param map Map to merge vars into
      */

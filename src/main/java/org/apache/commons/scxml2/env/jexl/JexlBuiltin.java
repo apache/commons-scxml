@@ -29,6 +29,7 @@ public final class JexlBuiltin {
 
     /**
      * Creates a new instance, wraps the context.
+     *
      * @param ctxt the context in use
      */
     public JexlBuiltin(final JexlContext ctxt) {
@@ -37,6 +38,7 @@ public final class JexlBuiltin {
 
     /**
      * Provides the SCXML standard In() predicate for SCXML documents.
+     *
      * @param state The State ID to compare with
      * @return true if this state is currently active
      */
