@@ -131,7 +131,7 @@ public class SCInstance implements Serializable {
     private boolean singleContext;
 
     /**
-     * Constructor
+     * Constructs a new instance.
      * @param internalIOProcessor The I/O Processor for the internal event queue
      * @param evaluator The evaluator
      * @param errorReporter The error reporter

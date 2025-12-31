@@ -130,7 +130,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     private String sessionId;
 
     /**
-     * Constructor
+     * Constructs a new instance.
      *
      * @param scxmlExecutor The SCXMLExecutor of this SCXMLExecutionContext
      * @param evaluator The evaluator
