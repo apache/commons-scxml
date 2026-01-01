@@ -23,7 +23,7 @@
     <title>Apache Commons SCXML Changes</title>
   </properties>
   <body>
-    <release version="2.0" date="In Git master"
+    <release version="2.0" date="YYYY-MM-DD"
       description="Latest unreleased code">
       <!-- FIX -->
       <action dev="ate" type="fix" issue="SCXML-285">
@@ -261,7 +261,7 @@
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Remove -nouses directive from maven-bundle-plugin. OSGi package imports now state 'uses' definitions for package imports, this doesn't affect JPMS (from org.apache.commons:commons-parent:80).</action>
       <!-- UDPATE -->
       <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump commons-parent from 48 to 93 #211, #227, #236, #254, #257, #261, #266, #270, #276, #322, #345, #353, #371, #374.</action>
-      <action type="update" dev="henrib, Dependabot, Gary Gregory">Bump org.apache.commons:commons-jexl3 from 3.1 to 3.6.0 #36, #235, #319, #375.</action>
+      <action type="update" dev="henrib, Dependabot, Gary Gregory">Bump org.apache.commons:commons-jexl3 from 3.1 to 3.6.1 #36, #235, #319, #375, #377.</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump actions/cache from 2.1.4 to current #31, #47, #50, #78.</action>
       <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump actions/checkout from 2 to current #34, #75.</action>
       <action type="update" dev="ggregory" due-to="Dependabot">Bump actions/setup-java from 1.4.0 to current #49, #79.</action>
