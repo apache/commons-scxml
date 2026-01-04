@@ -105,9 +105,6 @@ import org.w3c.dom.Node;
  */
 public class SCXMLWriter {
 
-    //---------------------- PRIVATE CONSTANTS ----------------------//
-
-    //------------------------- CONFIGURATION CLASS -------------------------//
     /**
      * <p>
      * Configuration for the {@link SCXMLWriter}. The configuration properties necessary for the following are
@@ -125,7 +122,6 @@ public class SCXMLWriter {
         /*
          * Configuration properties for this {@link SCXMLWriter}.
          */
-        // XMLOutputFactory configuration properties.
         /**
          * The {@code factoryId} to use for the {@link XMLOutputFactory}.
          */
@@ -142,7 +138,6 @@ public class SCXMLWriter {
          */
         final Map<String, Object> properties;
 
-        // XMLStreamWriter configuration properties.
         /**
          * The {@code encoding} to use for the {@link XMLStreamWriter}.
          */
@@ -160,7 +155,6 @@ public class SCXMLWriter {
          */
         final Writer internalWriter;
 
-        // Underlying stream or writer close
         /**
          * Whether to close the underlying stream or writer passed by the caller.
          */
@@ -176,9 +170,6 @@ public class SCXMLWriter {
          */
         String prettyPrintOutput;
 
-        /*
-         * Public constructors
-         */
         /**
          * Default constructor.
          */
@@ -187,9 +178,6 @@ public class SCXMLWriter {
             this(null, null, null, null, false, false, false);
         }
 
-        /*
-         * Package access constructors
-         */
         /**
          * Convenience package access constructor.
          *
@@ -258,7 +246,6 @@ public class SCXMLWriter {
         }
     }
 
-    //---- ERROR MESSAGES ----//
     /**
      * Null OutputStream passed as argument.
      */
@@ -274,7 +261,6 @@ public class SCXMLWriter {
      */
     private static final String ERR_NULL_RES = "Cannot parse null Result";
 
-    //------------------------- STATIC MEMBERS -------------------------//
     /**
      * The JAXP transformer.
      */
@@ -408,7 +394,6 @@ public class SCXMLWriter {
         return xsw;
     }
 
-    //------------------------- PUBLIC API METHODS -------------------------//
     /**
      * Writes out the Commons SCXML object model as an SCXML document (used
      * primarily for testing, debugging and visual verification), returned as

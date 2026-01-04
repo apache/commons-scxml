@@ -119,7 +119,6 @@ import org.xml.sax.SAXException;
  */
 public final class SCXMLReader {
 
-    //------------------------- CONFIGURATION CLASS -------------------------//
     /**
      * <p>
      * Configuration for the {@link SCXMLReader}. The configuration properties necessary for the following are
@@ -137,10 +136,6 @@ public final class SCXMLReader {
      */
     public static class Configuration {
 
-        /*
-         * Configuration properties for this {@link SCXMLReader}.
-         */
-        // XMLInputFactory configuration properties.
         /**
          * The {@code factoryId} to use for the {@link XMLInputFactory}.
          */
@@ -172,7 +167,6 @@ public final class SCXMLReader {
          */
         final XMLReporter reporter;
 
-        // XMLStreamReader configuration properties.
         /**
          * The {@code encoding} to use for the {@link XMLStreamReader}.
          */
@@ -188,7 +182,6 @@ public final class SCXMLReader {
          */
         final boolean validate;
 
-        // Commons SCXML object model configuration properties.
         /**
          * The list of Commons SCXML custom actions that will be available for this document.
          */
@@ -204,7 +197,6 @@ public final class SCXMLReader {
          */
         final boolean useContextClassLoaderForCustomActions;
 
-        // Mutable Commons SCXML object model configuration properties.
         /**
          * The parent SCXML document if this document is src'ed in via the &lt;state&gt; or &lt;parallel&gt; element's
          * "src" attribute.
@@ -456,7 +448,6 @@ public final class SCXMLReader {
      * This can be turned on (as needed by SCXMLReader) by setting this property TRUE
      */
     public final static String XMLInputFactory_JDK_PROP_REPORT_CDATA = "http://java.sun.com/xml/stream/properties/report-cdata-event";
-    //---------------------- PRIVATE CONSTANTS ----------------------//
     /**
      * The version attribute value the SCXML element <em>must</em> have as stated by the spec: 3.2.1
      */
@@ -467,7 +458,6 @@ public final class SCXMLReader {
      */
     private static final String XMLNS_DEFAULT = null;
 
-    //---- ERROR MESSAGES ----//
     /**
      * Null URL passed as argument.
      */
@@ -1808,7 +1798,6 @@ public final class SCXMLReader {
         state.setInitial(initial);
     }
 
-    //---------------------- PRIVATE UTILITY METHODS ----------------------//
     /**
      * Parse the SCXML document at the supplied {@link URL} using the supplied {@link Configuration}, but do not
      * wire up the object model to be usable just yet. Exactly one of the url, path, stream, reader or source

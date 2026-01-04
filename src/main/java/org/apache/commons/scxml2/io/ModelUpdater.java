@@ -44,7 +44,6 @@ import org.apache.commons.scxml2.model.TransitionalState;
  */
 final class ModelUpdater {
 
-    //// Error messages
     /**
      * Error message when SCXML document specifies an illegal initial state.
      */
