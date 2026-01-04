@@ -40,12 +40,16 @@ public class StopWatch extends AbstractStateMachine {
 
     /** The display decorations. */
     private static final String DELIM = ":", DOT = ".", EMPTY = "", ZERO = "0";
+
     /** The fragments of the elapsed time. */
     private int hr, min, sec, fract;
+
     /** The fragments of the display time. */
     private int dhr, dmin, dsec, dfract;
+
     /** The stopwatch "split" (display freeze). */
     private boolean split;
+
     /** The Timer to keep time. */
     private Timer timer;
 

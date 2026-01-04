@@ -22,6 +22,7 @@ import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.TransitionTarget;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
 /**
  * Unit tests for testing conflict resolution amongst multiple transitions
  * within the {@link org.apache.commons.scxml2.SCXMLExecutor}'s default

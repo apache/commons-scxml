@@ -21,6 +21,7 @@ import java.util.Set;
 import org.apache.commons.scxml2.model.EnterableState;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
 /**
  * Unit tests {@link org.apache.commons.scxml2.SCXMLExecutor}.
  * Testing wildcard event matching (*)

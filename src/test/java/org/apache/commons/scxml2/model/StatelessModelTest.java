@@ -25,6 +25,7 @@ import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.TriggerEvent;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
 /**
  * Unit tests {@link org.apache.commons.scxml2.SCXMLExecutor}.
  */

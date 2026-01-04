@@ -65,6 +65,7 @@ class AbstractSCXMLListenerTest {
     @Test
     void testAbstractSCXMLListener0() {
         final SCXMLListener listener0 = new AbstractSCXMLListener() {
+
                 /**
                  * @see SCXMLListener#onEntry(EnterableState)
                  */
@@ -105,6 +106,7 @@ class AbstractSCXMLListenerTest {
     @Test
     void testAbstractSCXMLListener1() {
         final SCXMLListener listener1 = new AbstractSCXMLListener() {
+
                 /**
                  * @see SCXMLListener#onEntry(EnterableState)
                  */
@@ -136,6 +138,7 @@ class AbstractSCXMLListenerTest {
     @Test
     void testAbstractSCXMLListener2() {
         final SCXMLListener listener2 = new AbstractSCXMLListener() {
+
                 /**
                  * @see SCXMLListener#onEntry(EnterableState)
                  */

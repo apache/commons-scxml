@@ -219,6 +219,7 @@ public class W3CTests {
             return assertionsMap;
         }
     }
+
     /**
      * Datamodel enum representing the datamodel types used and tested with the W3C IRP tests.
      */
@@ -260,6 +261,7 @@ public class W3CTests {
             return value;
         }
     }
+
     /**
      * Simple TestResult data struct for tracking test results
      */

@@ -24,6 +24,7 @@ import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.ModelException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
 /**
  * Test white box nature of <state> element "src" attribute.
  */

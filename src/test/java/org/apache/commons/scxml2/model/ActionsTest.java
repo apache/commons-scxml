@@ -21,6 +21,7 @@ import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
 /**
  * Unit tests {@link org.apache.commons.scxml2.model.Assign}.
  * Unit tests {@link org.apache.commons.scxml2.model.Cancel}.

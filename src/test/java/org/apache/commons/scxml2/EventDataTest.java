@@ -23,6 +23,7 @@ import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.SCXML;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
 /**
  * Unit tests {@link org.apache.commons.scxml2.SCXMLExecutor}.
  * Testing special variable "_event.data"

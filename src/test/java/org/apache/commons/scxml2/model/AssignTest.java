@@ -22,6 +22,7 @@ import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
 /**
  * Unit tests for &lt;assign&gt; element, particular the "src" attribute.
  */
