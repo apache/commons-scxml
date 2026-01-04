@@ -22,6 +22,7 @@ import org.apache.commons.scxml2.Builtin;
  * Global JEXL namespace functor, providing the standard SCXML In() predicate.
  */
 public final class JexlBuiltin {
+
     /**
      * The context currently in use for evaluation.
      */

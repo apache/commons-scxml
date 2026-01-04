@@ -104,6 +104,7 @@ public class TriggerEvent implements Serializable {
     private final String originType;
     private final String invokeId;
     private final Object data;
+
     /**
      * Constructs a new instance.
      *

@@ -27,6 +27,7 @@ import org.apache.commons.scxml2.model.EnterableState;
  * The current active states of a state machine
  */
 public class StateConfiguration implements Serializable {
+
     /**
      * Serial version UID.
      */

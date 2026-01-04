@@ -44,6 +44,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
      * Default and required supported SCXML Processor Invoker service URI
      */
     public static final String SCXML_INVOKER_TYPE_URI = "http://www.w3.org/TR/scxml/";
+
     /**
      * Alias for {@link #SCXML_INVOKER_TYPE_URI}
      */
@@ -253,6 +254,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     public ErrorReporter getErrorReporter() {
         return errorReporter;
     }
+
     /**
      * @return The evaluator.
      */

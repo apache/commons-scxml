@@ -225,6 +225,7 @@ public final class SCXMLReader {
         /*
          * Public constructors
          */
+
         /**
          * Default constructor.
          */
@@ -384,6 +385,7 @@ public final class SCXMLReader {
         /*
          * Package access constructors
          */
+
         /**
          * Convenience package access constructor.
          *
@@ -810,6 +812,7 @@ public final class SCXMLReader {
     /*
      * Public methods
      */
+
     /**
      * Parse the SCXML document at the supplied path.
      *
@@ -1238,6 +1241,7 @@ public final class SCXMLReader {
     /*
      * Private utility functions for reading the SCXML document.
      */
+
     /**
      * Reads the SCXML document through the {@link XMLStreamReader}.
      *

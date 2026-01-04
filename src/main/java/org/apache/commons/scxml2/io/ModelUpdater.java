@@ -296,6 +296,7 @@ final class ModelUpdater {
     /*
      * Post-processing methods to make the SCXML object SCXMLExecutor ready.
      */
+
     /**
      * <p>Update the SCXML object model and make it SCXMLExecutor ready.
      * This is part of post-read processing, and sets up the necessary

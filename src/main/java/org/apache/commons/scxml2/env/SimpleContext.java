@@ -32,10 +32,13 @@ public class SimpleContext implements Context, Serializable {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
+
     /** Implementation independent log category. */
     private static final Log log = LogFactory.getLog(Context.class);
+
     /** The parent Context to this Context. */
     private final Context parent;
+
     /** The Map of variables and their values in this Context. */
     private Map<String, Object> vars;
 

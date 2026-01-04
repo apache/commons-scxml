@@ -151,6 +151,7 @@ public class Assign extends Action implements ParsedValueContainer {
     public final void setParsedValue(final ParsedValue assignValue) {
         this.assignValue = assignValue;
     }
+
     /**
      * Sets the source where the new XML instance for this location exists.
      *

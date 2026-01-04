@@ -45,6 +45,7 @@ public class Parallel extends TransitionalState {
     public final void addChild(final TransitionalState ts) {
         super.addChild(ts);
     }
+
     /**
      * {@inheritDoc}
      *

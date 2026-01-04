@@ -31,8 +31,10 @@ public class SimpleErrorHandler implements ErrorHandler, Serializable {
 
     /** Serial version UID. */
     private static final long serialVersionUID = 1L;
+
     /** Message prefix. */
     private static final String MSG_PREFIX = "SCXML SAX Parsing: ";
+
     /** Message postfix. */
     private static final String MSG_POSTFIX = " Correct the SCXML document.";
 
