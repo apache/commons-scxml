@@ -17,7 +17,7 @@
 package org.apache.commons.scxml2.model;
 
 /**
- * Defines the allowable Transition type attribute values,
+ * Enumerates the allowable Transition type attribute values,
  * <p>
  * The Transition type determines whether the source state is exited in transitions
  * whose target state is a descendant of the source state.
