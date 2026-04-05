@@ -16,6 +16,11 @@
  */
 package org.apache.commons.scxml2.env.groovy;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.SCXMLExpressionException;
@@ -23,7 +28,6 @@ import org.apache.commons.scxml2.SCXMLSystemContext;
 import org.apache.commons.scxml2.StateConfiguration;
 import org.apache.commons.scxml2.Status;
 import org.apache.commons.scxml2.model.State;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -47,40 +51,40 @@ class GroovyEvaluatorTest {
         final State state1 = new State();
         state1.setId("state1");
         stateConfiguration.enterState(state1);
-        Assertions.assertTrue(eval.evalCond(ctx, "In('state1')"));
+        assertTrue(eval.evalCond(ctx, "In('state1')"));
     }
 
     @Test
     void testErrorMessage() {
         final Evaluator eval = new GroovyEvaluator();
-        Assertions.assertNotNull(eval);
-        final SCXMLExpressionException e = Assertions.assertThrows(
+        assertNotNull(eval);
+        final SCXMLExpressionException e = assertThrows(
                 SCXMLExpressionException.class,
                 () -> eval.eval(ctx, BAD_EXPRESSION),
                 "GroovyEvaluator should throw SCXMLExpressionException");
-        Assertions.assertTrue(e.getMessage().startsWith("eval('" + BAD_EXPRESSION + "'):"),
+        assertTrue(e.getMessage().startsWith("eval('" + BAD_EXPRESSION + "'):"),
                 "GroovyEvaluator: Incorrect error message");
     }
 
     @Test
     void testEval() throws SCXMLExpressionException {
         final Evaluator eval = new GroovyEvaluator();
-        Assertions.assertEquals(2, eval.eval(ctx, "1 + 1"));
+        assertEquals(2, eval.eval(ctx, "1 + 1"));
     }
 
     @Test
     void testPreprocessScript() {
         final GroovyEvaluator evaluator = new GroovyEvaluator();
-        Assertions.assertEquals("x &&  x || x  !  x == x <  x <= x != x >  x >= x", evaluator.getScriptPreProcessor().
+        assertEquals("x &&  x || x  !  x == x <  x <= x != x >  x >= x", evaluator.getScriptPreProcessor().
                 preProcess("x and x or x not x eq x lt x le x ne x gt x ge x"));
-        Assertions.assertEquals("and x OR x\n ! \nx\n== x < \nx(le)x ne. xgt x ge", evaluator.getScriptPreProcessor().
+        assertEquals("and x OR x\n ! \nx\n== x < \nx(le)x ne. xgt x ge", evaluator.getScriptPreProcessor().
                  preProcess("and x OR x\nnot\nx\neq x lt\nx(le)x ne. xgt x ge"));
     }
 
     @Test
     void testPristine() throws SCXMLExpressionException {
         final Evaluator eval = new GroovyEvaluator();
-        Assertions.assertTrue(eval.evalCond(ctx, "1 + 1 == 2"));
+        assertTrue(eval.evalCond(ctx, "1 + 1 == 2"));
     }
 
     @Test
@@ -94,7 +98,7 @@ class GroovyEvaluatorTest {
             "} else {\n" +
                 "y = 2;\n" +
             "}";
-        Assertions.assertEquals(2, eval.evalScript(ctx, script));
-        Assertions.assertEquals(2, ctx.get("y"));
+        assertEquals(2, eval.evalScript(ctx, script));
+        assertEquals(2, ctx.get("y"));
     }
 }

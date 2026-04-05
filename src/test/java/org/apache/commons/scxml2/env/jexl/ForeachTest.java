@@ -16,9 +16,10 @@
  */
 package org.apache.commons.scxml2.env.jexl;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -30,6 +31,6 @@ class ForeachTest {
     void testForeach() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/foreach.xml");
         exec.go();
-        Assertions.assertTrue(exec.getStatus().isFinal());
+        assertTrue(exec.getStatus().isFinal());
     }
 }

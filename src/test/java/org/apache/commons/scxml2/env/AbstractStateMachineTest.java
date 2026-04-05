@@ -16,10 +16,11 @@
  */
 package org.apache.commons.scxml2.env;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.net.URL;
 
 import org.apache.commons.scxml2.model.ModelException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -69,7 +70,7 @@ class AbstractStateMachineTest {
         final Foo f = new Foo(fooScxmlDocument);
         final Bar b = new Bar(barScxmlDocument);
 
-        Assertions.assertTrue(f.fooCalled());
-        Assertions.assertTrue(b.barCalled());
+        assertTrue(f.fooCalled());
+        assertTrue(b.barCalled());
     }
 }

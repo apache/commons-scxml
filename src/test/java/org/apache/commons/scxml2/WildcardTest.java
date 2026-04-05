@@ -16,10 +16,11 @@
  */
 package org.apache.commons.scxml2;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Set;
 
 import org.apache.commons.scxml2.model.EnterableState;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -36,12 +37,12 @@ class WildcardTest {
     	SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/wildcard-01.xml");
         exec.go();
         Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("state1", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("state1", currentStates.iterator().next().getId());
         exec = SCXMLTestHelper.testInstanceSerializability(exec);
         currentStates = SCXMLTestHelper.fireEvent(exec, "foo.bar.baz");
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("state4", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("state4", currentStates.iterator().next().getId());
     }
 
     @Test
@@ -49,7 +50,7 @@ class WildcardTest {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/wildcard-02.xml");
         exec.go();
         final Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("state2", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("state2", currentStates.iterator().next().getId());
     }
 }

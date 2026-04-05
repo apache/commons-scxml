@@ -16,12 +16,15 @@
  */
 package org.apache.commons.scxml2.model;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -37,7 +40,7 @@ class CustomActionTest {
 
     @Test
     void testAddBadCustomAction01() {
-        Assertions.assertThrows(
+        assertThrows(
                 IllegalArgumentException.class,
                 () -> new CustomAction(null, "hello", Hello.class),
                 "Added custom action with illegal namespace");
@@ -45,7 +48,7 @@ class CustomActionTest {
 
     @Test
     void testAddBadCustomAction02() {
-        Assertions.assertThrows(
+        assertThrows(
                 IllegalArgumentException.class,
                 () -> new CustomAction("  ", "hello", Hello.class),
                 "Added custom action with illegal namespace");
@@ -53,7 +56,7 @@ class CustomActionTest {
 
     @Test
     void testAddBadCustomAction03() {
-        Assertions.assertThrows(
+        assertThrows(
                 IllegalArgumentException.class,
                 () -> new CustomAction("http://my.actions.domain/CUSTOM", "", Hello.class),
                 "Added custom action with illegal local name");
@@ -61,7 +64,7 @@ class CustomActionTest {
 
     @Test
     void testAddBadCustomAction04() {
-        Assertions.assertThrows(
+        assertThrows(
                 IllegalArgumentException.class,
                 () -> new CustomAction("http://my.actions.domain/CUSTOM", "  ", Hello.class),
                 "Added custom action with illegal local name");
@@ -69,7 +72,7 @@ class CustomActionTest {
 
     @Test
     void testAddBadCustomAction05() {
-        Assertions.assertThrows(
+        assertThrows(
                 IllegalArgumentException.class,
                 () -> new CustomAction("http://www.w3.org/2005/07/scxml", "foo", Hello.class),
                 "Added custom action in the SCXML namespace");
@@ -98,28 +101,28 @@ class CustomActionTest {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
         exec.go();
         // (4) Single, final state
-        Assertions.assertEquals("custom1", exec.getStatus().getStates().iterator().next().getId(),
+        assertEquals("custom1", exec.getStatus().getStates().iterator().next().getId(),
                 "Invalid intermediate state");
         // (5) Verify datamodel variable is correct
-        Assertions.assertEquals("custom04a", exec.getGlobalContext().get("helloName1"),
+        assertEquals("custom04a", exec.getGlobalContext().get("helloName1"),
                 "Missing helloName1 in root context");
 
         // The custom action defined by Hello.class should be called
         // to execute() exactly once at this point (by onentry in init state).
-        Assertions.assertEquals(1, Hello.callbacks);
+        assertEquals(1, Hello.callbacks);
 
         // (6) Check use of payload in non-initial state
         SCXMLTestHelper.fireEvent(exec, "custom.next");
         // (7) Verify correct end state
-        Assertions.assertEquals("custom04b", exec.getGlobalContext().get("helloName1"),
+        assertEquals("custom04b", exec.getGlobalContext().get("helloName1"),
                 "Missing helloName1 in root context");
-        Assertions.assertEquals("end", exec.getStatus().getStates().iterator().next().getId(),
+        assertEquals("end", exec.getStatus().getStates().iterator().next().getId(),
                 "Invalid final state");
-        Assertions.assertTrue(exec.getStatus().isFinal());
+        assertTrue(exec.getStatus().isFinal());
 
         // The custom action defined by Hello.class should be called
         // to execute() exactly two times at this point (by onentry in custom2 state).
-        Assertions.assertEquals(2, Hello.callbacks);
+        assertEquals(2, Hello.callbacks);
     }
 
     // Hello World example using custom <my:hello> action
@@ -139,12 +142,12 @@ class CustomActionTest {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
         exec.go();
         // (4) Single, final state
-        Assertions.assertEquals("custom", exec.getStatus().getStates().
+        assertEquals("custom", exec.getStatus().getStates().
             iterator().next().getId());
 
         // The custom action defined by Hello.class should be called
         // to execute() exactly twice at this point (one by <my:hello/> and the other by <my:hello/> in external).
-        Assertions.assertEquals(2, Hello.callbacks);
+        assertEquals(2, Hello.callbacks);
     }
 
     // Hello World example using a custom <hello> action
@@ -169,13 +172,13 @@ class CustomActionTest {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
         exec.go();
         // (4) Single, final state
-        Assertions.assertEquals("custom", exec.getStatus().getStates().
+        assertEquals("custom", exec.getStatus().getStates().
                 iterator().next().getId());
-        Assertions.assertTrue(exec.getStatus().isFinal());
+        assertTrue(exec.getStatus().isFinal());
 
         // The custom action defined by Hello.class should be called
         // to execute() exactly twice at this point (one by <my:hello/> and the other by <foo:bar/>).
-        Assertions.assertEquals(2, Hello.callbacks);
+        assertEquals(2, Hello.callbacks);
     }
 
     // Hello World example using custom <my:send> action
@@ -194,12 +197,12 @@ class CustomActionTest {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
         exec.go();
         // (4) Single, final state
-        Assertions.assertEquals("custom", exec.getStatus().getStates().
+        assertEquals("custom", exec.getStatus().getStates().
             iterator().next().getId());
 
         // The custom action defined by Hello.class should be called
         // to execute() exactly once at this point (by <my:send/>).
-        Assertions.assertEquals(1, Hello.callbacks);
+        assertEquals(1, Hello.callbacks);
     }
 
     // Hello World example using the SCXML <log> action
@@ -209,9 +212,9 @@ class CustomActionTest {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/hello-world.xml");
         exec.go();
         // (2) Single, final state
-        Assertions.assertEquals("hello", exec.getStatus().getStates().
+        assertEquals("hello", exec.getStatus().getStates().
                 iterator().next().getId());
-        Assertions.assertTrue(exec.getStatus().isFinal());
+        assertTrue(exec.getStatus().isFinal());
     }
 }
 

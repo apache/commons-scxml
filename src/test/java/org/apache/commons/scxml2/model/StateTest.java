@@ -16,11 +16,16 @@
  */
 package org.apache.commons.scxml2.model;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.List;
 
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class StateTest {
@@ -39,7 +44,7 @@ class StateTest {
 
         final List<Transition> events = state.getTransitionsList("event");
 
-        Assertions.assertEquals(2, events.size());
+        assertEquals(2, events.size());
     }
 
     @Test
@@ -52,8 +57,8 @@ class StateTest {
 
         final List<Transition> events = state.getTransitionsList("event");
 
-        Assertions.assertEquals(1, events.size());
-        Assertions.assertEquals("event", events.get(0).getEvent());
+        assertEquals(1, events.size());
+        assertEquals("event", events.get(0).getEvent());
     }
 
     @Test
@@ -70,20 +75,20 @@ class StateTest {
 
         final List<Transition> events = state.getTransitionsList();
 
-        Assertions.assertEquals(2, events.size());
+        assertEquals(2, events.size());
     }
 
     @Test
     void testGetTransitionsList() {
         final State state = new State();
         state.getTransitionsList().add(new Transition());
-        Assertions.assertNotNull(state.getTransitionsList(null));
+        assertNotNull(state.getTransitionsList(null));
     }
 
     @Test
     void testGetTransitionsListNull() {
         final State state = new State();
-        Assertions.assertNull(state.getTransitionsList("event"));
+        assertNull(state.getTransitionsList("event"));
     }
 
     @Test
@@ -93,26 +98,26 @@ class StateTest {
         final State state = new State();
         state.addHistory(history);
 
-        Assertions.assertTrue(state.hasHistory());
+        assertTrue(state.hasHistory());
     }
 
     @Test
     void testHasHistoryEmpty() {
         final State state = new State();
-        Assertions.assertFalse(state.hasHistory());
+        assertFalse(state.hasHistory());
     }
 
     @Test
     void testInitialAttribute() throws Exception {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/model/state-01.xml");
         exec.go();
-        Assertions.assertEquals("s11", exec.getStatus().getStates().iterator().next().getId());
+        assertEquals("s11", exec.getStatus().getStates().iterator().next().getId());
     }
 
     @Test
     void testIsCompositeFalse() {
         final State state = new State();
-        Assertions.assertFalse(state.isComposite());
+        assertFalse(state.isComposite());
     }
 
     @Test
@@ -122,7 +127,7 @@ class StateTest {
         final State state = new State();
         state.addChild(state1);
 
-        Assertions.assertTrue(state.isComposite());
+        assertTrue(state.isComposite());
     }
 
     @Test
@@ -132,7 +137,7 @@ class StateTest {
         final State state = new State();
         state.addChild(child);
 
-        Assertions.assertTrue(state.isComposite());
+        assertTrue(state.isComposite());
     }
 
     @Test
@@ -140,7 +145,7 @@ class StateTest {
         final State state = new State();
         state.setParent(new Parallel());
 
-        Assertions.assertTrue(state.isRegion());
+        assertTrue(state.isRegion());
     }
 
     @Test
@@ -148,13 +153,13 @@ class StateTest {
         final State state = new State();
         state.setParent(new State());
 
-        Assertions.assertFalse(state.isRegion());
+        assertFalse(state.isRegion());
     }
 
     @Test
     void testIsSimple() {
         final State state = new State();
-        Assertions.assertTrue(state.isSimple());
+        assertTrue(state.isSimple());
     }
 
     @Test
@@ -164,6 +169,6 @@ class StateTest {
         final State state = new State();
         state.addChild(state1);
 
-        Assertions.assertFalse(state.isSimple());
+        assertFalse(state.isSimple());
     }
 }

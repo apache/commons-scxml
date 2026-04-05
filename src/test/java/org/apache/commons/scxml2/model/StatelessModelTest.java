@@ -16,6 +16,11 @@
  */
 package org.apache.commons.scxml2.model;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.Iterator;
 import java.util.Set;
 
@@ -23,7 +28,6 @@ import org.apache.commons.scxml2.EventBuilder;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.TriggerEvent;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -40,7 +44,7 @@ class StatelessModelTest {
         SCXML scxml02par = SCXMLTestHelper.parse("org/apache/commons/scxml2/model/stateless-parallel-01.xml");
         SCXMLExecutor exec01 = SCXMLTestHelper.getExecutor(scxml01par);
         exec01.go();
-        Assertions.assertTrue(scxml01par != scxml02par);
+        assertTrue(scxml01par != scxml02par);
 
         Set<EnterableState> currentStates = exec01.getStatus().getStates();
         checkParallelStates(currentStates, "state1.init", "state2.init", "exec01");
@@ -57,20 +61,20 @@ class StatelessModelTest {
     private void checkParallelStates(final Set<EnterableState> currentStates,
             final String s1, final String s2, final String label) {
         final Iterator<EnterableState> i = currentStates.iterator();
-        Assertions.assertTrue(i.hasNext(), "Not enough states");
+        assertTrue(i.hasNext(), "Not enough states");
         final String cs1 = i.next().getId();
         String cs2;
         if (s2 != null) {
-            Assertions.assertTrue(i.hasNext(), "Not enough states, found one state: " + cs1);
+            assertTrue(i.hasNext(), "Not enough states, found one state: " + cs1);
             cs2 = i.next().getId();
-            Assertions.assertFalse(i.hasNext(), "Too many states");
+            assertFalse(i.hasNext(), "Too many states");
             if (s2.equals(cs2) || s1.equals(cs2)) {
                 cs2 = null;
             } else {
-                Assertions.fail(label + " in unexpected state " + cs2);
+                fail(label + " in unexpected state " + cs2);
             }
         } else {
-            Assertions.assertFalse(i.hasNext(), "Too many states");
+            assertFalse(i.hasNext(), "Too many states");
         }
         if (s1 != null && s1.equals(cs1)) {
             return;
@@ -78,7 +82,7 @@ class StatelessModelTest {
         if (s2 != null && s2.equals(cs1)) {
             return;
         }
-        Assertions.fail(label + " in unexpected state " + cs1);
+        fail(label + " in unexpected state " + cs1);
     }
 
     private Set<EnterableState> fireEvent(final String name, final SCXMLExecutor exec) throws Exception {
@@ -89,16 +93,16 @@ class StatelessModelTest {
 
     private void runSequentialTest(final SCXMLExecutor exec) throws Exception {
         Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("ten", currentStates.iterator().
+        assertEquals(1, currentStates.size());
+        assertEquals("ten", currentStates.iterator().
             next().getId());
         currentStates = fireEvent("done.state.ten", exec);
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("twenty", currentStates.iterator().
+        assertEquals(1, currentStates.size());
+        assertEquals("twenty", currentStates.iterator().
             next().getId());
         currentStates = fireEvent("done.state.twenty", exec);
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("thirty", currentStates.iterator().
+        assertEquals(1, currentStates.size());
+        assertEquals("thirty", currentStates.iterator().
             next().getId());
     }
 
@@ -106,26 +110,26 @@ class StatelessModelTest {
         //// Interleaved
         // exec01
         Set<EnterableState> currentStates = exec01.getStatus().getStates();
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("ten", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("ten", currentStates.iterator().next().getId());
         currentStates = fireEvent("done.state.ten", exec01);
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("twenty", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("twenty", currentStates.iterator().next().getId());
         // exec02
         currentStates = exec02.getStatus().getStates();
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("ten", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("ten", currentStates.iterator().next().getId());
         // exec01
         currentStates = fireEvent("done.state.twenty", exec01);
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("thirty", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("thirty", currentStates.iterator().next().getId());
         // exec02
         currentStates = fireEvent("done.state.ten", exec02);
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("twenty", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("twenty", currentStates.iterator().next().getId());
         currentStates = fireEvent("done.state.twenty", exec02);
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("thirty", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("thirty", currentStates.iterator().next().getId());
     }
 
     /**
@@ -138,7 +142,7 @@ class StatelessModelTest {
         exec01.go();
         final SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor(scxml01par);
         exec02.go();
-        Assertions.assertFalse(exec01 == exec02);
+        assertFalse(exec01 == exec02);
 
         Set<EnterableState> currentStates = exec01.getStatus().getStates();
         checkParallelStates(currentStates, "state1.init", "state2.init", "exec01");
@@ -184,7 +188,7 @@ class StatelessModelTest {
         exec01.go();
         final SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor(scxml);
         exec02.go();
-        Assertions.assertFalse(exec01 == exec02);
+        assertFalse(exec01 == exec02);
         runSimultaneousTest(exec01, exec02);
     }
 }

@@ -16,11 +16,12 @@
  */
 package org.apache.commons.scxml2.model;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Set;
 
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class ScriptTest {
@@ -33,8 +34,8 @@ class ScriptTest {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/javascript/script-01.xml");
         exec.go();
         final Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("end", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("end", currentStates.iterator().next().getId());
     }
 
     /**
@@ -45,8 +46,8 @@ class ScriptTest {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/script-01.xml");
         exec.go();
         final Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("end", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("end", currentStates.iterator().next().getId());
     }
 
 }

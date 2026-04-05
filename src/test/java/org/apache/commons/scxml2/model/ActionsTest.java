@@ -16,10 +16,11 @@
  */
 package org.apache.commons.scxml2.model;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -36,8 +37,8 @@ class ActionsTest {
 
     private void runTest(final SCXMLExecutor exec) {
         final Context ctx = SCXMLTestHelper.lookupContext(exec, "actionsTest");
-        Assertions.assertEquals(ctx.get("foo"), "foobar");
-        Assertions.assertEquals(true, ctx.get("eventsent"), "Missed event transition");
+        assertEquals(ctx.get("foo"), "foobar");
+        assertEquals(true, ctx.get("eventsent"), "Missed event transition");
     }
 
     @Test

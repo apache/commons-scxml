@@ -16,10 +16,14 @@
  */
 package org.apache.commons.scxml2.env.jexl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
 import org.apache.commons.scxml2.SCXMLExpressionException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class JexlEvaluatorTest {
@@ -30,19 +34,19 @@ class JexlEvaluatorTest {
     @Test
     void testErrorMessage() {
         final Evaluator eval = new JexlEvaluator();
-        Assertions.assertNotNull(eval);
-        final SCXMLExpressionException e = Assertions.assertThrows(
+        assertNotNull(eval);
+        final SCXMLExpressionException e = assertThrows(
                 SCXMLExpressionException.class,
                 () -> eval.eval(ctx, BAD_EXPRESSION),
                 "JexlEvaluator should throw SCXMLExpressionException");
-        Assertions.assertTrue(e.getMessage().startsWith("eval('" + BAD_EXPRESSION + "'):"),
+        assertTrue(e.getMessage().startsWith("eval('" + BAD_EXPRESSION + "'):"),
                 "JexlEvaluator: Incorrect error message");
     }
 
     @Test
     void testPristine() throws SCXMLExpressionException {
         final Evaluator eval = new JexlEvaluator();
-        Assertions.assertTrue((Boolean) eval.eval(ctx, "1+1 eq 2"));
+        assertTrue((Boolean) eval.eval(ctx, "1+1 eq 2"));
     }
 
     @Test
@@ -56,8 +60,8 @@ class JexlEvaluatorTest {
             "} else {\n" +
                 "y = 2;\n" +
             "}";
-        Assertions.assertEquals(2, eval.evalScript(ctx, script));
-        Assertions.assertEquals(2, ctx.get("y"));
+        assertEquals(2, eval.evalScript(ctx, script));
+        assertEquals(2, ctx.get("y"));
     }
 
 }

@@ -16,13 +16,14 @@
  */
 package org.apache.commons.scxml2.env.groovy;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.net.URL;
 import java.util.Set;
 
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.model.EnterableState;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -40,11 +41,11 @@ class SerializableInitialBaseScriptTest {
     	SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml, new GroovyEvaluator(true));
         exec.go();
         Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("state1", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("state1", currentStates.iterator().next().getId());
         exec = SCXMLTestHelper.testInstanceSerializability(exec);
         currentStates = SCXMLTestHelper.fireEvent(exec, "foo.bar.baz");
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("state4", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("state4", currentStates.iterator().next().getId());
     }
 }

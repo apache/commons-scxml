@@ -16,6 +16,8 @@
  */
 package org.apache.commons.scxml2.invoke;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Set;
 
 import org.apache.commons.scxml2.SCXMLExecutor;
@@ -25,7 +27,6 @@ import org.apache.commons.scxml2.env.SimpleErrorReporter;
 import org.apache.commons.scxml2.io.SCXMLReader;
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.SCXML;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -44,7 +45,7 @@ class InvokeTest {
         while (exec.isRunning()) {
             exec.triggerEvents();
         }
-        Assertions.assertEquals("success", exec.getStatus().getStates().iterator().next().getId());
+        assertEquals("success", exec.getStatus().getStates().iterator().next().getId());
     }
 
     /**
@@ -58,8 +59,8 @@ class InvokeTest {
         exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
         exec.go();
         final Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("invoker", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("invoker", currentStates.iterator().next().getId());
     }
 
     @Test
@@ -70,7 +71,7 @@ class InvokeTest {
         exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
         exec.go();
         final Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assertions.assertEquals(1, currentStates.size());
+        assertEquals(1, currentStates.size());
     }
 
     @Test
@@ -81,7 +82,7 @@ class InvokeTest {
         exec.registerInvokerClass("scxml", SimpleSCXMLInvoker.class);
         exec.go();
         final Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assertions.assertEquals(1, currentStates.size());
+        assertEquals(1, currentStates.size());
         SCXMLTestHelper.fireEvent(exec, "s1.next");
         SCXMLTestHelper.fireEvent(exec, "state1.next");
     }

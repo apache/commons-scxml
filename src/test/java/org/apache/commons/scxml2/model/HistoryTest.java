@@ -16,47 +16,50 @@
  */
 package org.apache.commons.scxml2.model;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Set;
 
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class HistoryTest {
 
     private String nextPhase(final SCXMLExecutor exec) throws Exception {
         final Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "done.state.phase");
-        Assertions.assertEquals(1, currentStates.size());
+        assertEquals(1, currentStates.size());
         return currentStates.iterator().next().getId();
     }
 
     private String pauseAndResume(SCXMLExecutor exec) throws Exception {
         Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "flow.pause");
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("interrupted", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("interrupted", currentStates.iterator().next().getId());
         exec = SCXMLTestHelper.testInstanceSerializability(exec);
         currentStates = SCXMLTestHelper.fireEvent(exec, "flow.resume");
-        Assertions.assertEquals(1, currentStates.size());
+        assertEquals(1, currentStates.size());
         SCXMLTestHelper.testInstanceSerializability(exec);
         return currentStates.iterator().next().getId();
     }
 
     private void runHistoryFlow(final SCXMLExecutor exec) throws Exception {
         Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("phase1", currentStates.iterator().next().getId());
-        Assertions.assertEquals("phase1", pauseAndResume(exec));
-        Assertions.assertEquals("phase2", nextPhase(exec));
+        assertEquals(1, currentStates.size());
+        assertEquals("phase1", currentStates.iterator().next().getId());
+        assertEquals("phase1", pauseAndResume(exec));
+        assertEquals("phase2", nextPhase(exec));
         // pause and resume couple of times for good measure
-        Assertions.assertEquals("phase2", pauseAndResume(exec));
-        Assertions.assertEquals("phase2", pauseAndResume(exec));
-        Assertions.assertEquals("phase3", nextPhase(exec));
-        Assertions.assertEquals("phase3", pauseAndResume(exec));
+        assertEquals("phase2", pauseAndResume(exec));
+        assertEquals("phase2", pauseAndResume(exec));
+        assertEquals("phase3", nextPhase(exec));
+        assertEquals("phase3", pauseAndResume(exec));
         exec.reset();
         currentStates = exec.getStatus().getStates();
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("phase1", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("phase1", currentStates.iterator().next().getId());
     }
 
     @Test
@@ -71,14 +74,14 @@ class HistoryTest {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/history-default-01.xml");
         exec.go();
         Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("state11", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("state11", currentStates.iterator().next().getId());
         currentStates = SCXMLTestHelper.fireEvent(exec, "state.next");
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("state211", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("state211", currentStates.iterator().next().getId());
         currentStates = SCXMLTestHelper.fireEvent(exec, "state.next");
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("state31", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("state31", currentStates.iterator().next().getId());
     }
 
     @Test
@@ -86,7 +89,7 @@ class HistoryTest {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/history-parallel-01.xml");
         exec.go();
         final Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assertions.assertEquals(1, currentStates.size());
+        assertEquals(1, currentStates.size());
         SCXMLTestHelper.assertState(exec, "off_call");
         SCXMLTestHelper.assertPostTriggerStates(exec, "dial", new String[] { "talking", "on_call" });
         SCXMLTestHelper.assertPostTriggerStates(exec, "consult", new String[] { "consult_talking", "on_consult" });
@@ -104,7 +107,7 @@ class HistoryTest {
         final History history = new History();
         history.setType("deep");
 
-        Assertions.assertTrue(history.isDeep());
+        assertTrue(history.isDeep());
     }
 
     @Test
@@ -112,7 +115,7 @@ class HistoryTest {
         final History history = new History();
         history.setType("shallow");
 
-        Assertions.assertFalse(history.isDeep());
+        assertFalse(history.isDeep());
     }
 
     @Test

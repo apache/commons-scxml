@@ -16,6 +16,10 @@
  */
 package org.apache.commons.scxml2;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,7 +28,6 @@ import org.apache.commons.scxml2.env.jexl.JexlEvaluator;
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.History;
 import org.apache.commons.scxml2.model.State;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -49,7 +52,7 @@ class SCInstanceTest {
 
         instance.setContext(target, context);
 
-        Assertions.assertEquals("value", instance.getContext(target).get("name"));
+        assertEquals("value", instance.getContext(target).get("name"));
     }
 
     @Test
@@ -64,8 +67,8 @@ class SCInstanceTest {
         final Evaluator evaluator = new JexlEvaluator();
         executor.setEvaluator(evaluator);
 
-        Assertions.assertEquals("value", instance.getContext(target).get("name"));
-        Assertions.assertEquals("value", instance.lookupContext(target).get("name"));
+        assertEquals("value", instance.getContext(target).get("name"));
+        assertEquals("value", instance.lookupContext(target).get("name"));
     }
 
     @Test
@@ -85,8 +88,8 @@ class SCInstanceTest {
         final Evaluator evaluator = new JexlEvaluator();
         executor.setEvaluator(evaluator);
 
-        Assertions.assertEquals("value", instance.getContext(target).get("name"));
-        Assertions.assertEquals("value", instance.lookupContext(target).get("name"));
+        assertEquals("value", instance.getContext(target).get("name"));
+        assertEquals("value", instance.lookupContext(target).get("name"));
     }
 
     @Test
@@ -104,9 +107,9 @@ class SCInstanceTest {
 
         final Set<EnterableState> returnConfiguration = instance.getLastConfiguration(history);
 
-        Assertions.assertEquals(2, returnConfiguration.size());
-        Assertions.assertTrue(returnConfiguration.contains(tt1));
-        Assertions.assertTrue(returnConfiguration.contains(tt2));
+        assertEquals(2, returnConfiguration.size());
+        assertTrue(returnConfiguration.contains(tt1));
+        assertTrue(returnConfiguration.contains(tt2));
     }
 
     @Test
@@ -115,7 +118,7 @@ class SCInstanceTest {
 
         final Set<EnterableState> returnConfiguration = instance.getLastConfiguration(history);
 
-        Assertions.assertEquals(0, returnConfiguration.size());
+        assertEquals(0, returnConfiguration.size());
     }
 
     @Test
@@ -124,12 +127,12 @@ class SCInstanceTest {
         context.set("name", "value");
 
         instance.setRootContext(context);
-        Assertions.assertEquals("value", instance.getRootContext().get("name"));
+        assertEquals("value", instance.getRootContext().get("name"));
     }
 
     @Test
     void testIsEmpty() {
-        Assertions.assertTrue(instance.getLastConfiguration(new History()).isEmpty());
+        assertTrue(instance.getLastConfiguration(new History()).isEmpty());
     }
 
     @Test
@@ -143,7 +146,7 @@ class SCInstanceTest {
 
         instance.setLastConfiguration(history, configuration);
 
-        Assertions.assertFalse(instance.getLastConfiguration(history).isEmpty());
+        assertFalse(instance.getLastConfiguration(history).isEmpty());
     }
 
     @Test
@@ -159,7 +162,7 @@ class SCInstanceTest {
 
         instance.resetConfiguration(history);
 
-        Assertions.assertTrue(instance.getLastConfiguration(history).isEmpty());
+        assertTrue(instance.getLastConfiguration(history).isEmpty());
     }
 
 }

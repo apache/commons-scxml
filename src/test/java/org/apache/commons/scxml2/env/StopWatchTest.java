@@ -16,8 +16,9 @@
  */
 package org.apache.commons.scxml2.env;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -43,17 +44,17 @@ class StopWatchTest {
 
     @Test
     void testStopWatch() {
-        Assertions.assertEquals("reset", stopWatch.getCurrentState());
+        assertEquals("reset", stopWatch.getCurrentState());
         stopWatch.fireEvent(StopWatch.EVENT_START);
-        Assertions.assertEquals("running", stopWatch.getCurrentState());
+        assertEquals("running", stopWatch.getCurrentState());
         stopWatch.fireEvent(StopWatch.EVENT_SPLIT);
-        Assertions.assertEquals("paused", stopWatch.getCurrentState());
+        assertEquals("paused", stopWatch.getCurrentState());
         stopWatch.fireEvent(StopWatch.EVENT_UNSPLIT);
-        Assertions.assertEquals("running", stopWatch.getCurrentState());
+        assertEquals("running", stopWatch.getCurrentState());
         stopWatch.fireEvent(StopWatch.EVENT_STOP);
-        Assertions.assertEquals("stopped", stopWatch.getCurrentState());
+        assertEquals("stopped", stopWatch.getCurrentState());
         stopWatch.fireEvent(StopWatch.EVENT_RESET);
-        Assertions.assertEquals("reset", stopWatch.getCurrentState());
+        assertEquals("reset", stopWatch.getCurrentState());
     }
 
 }

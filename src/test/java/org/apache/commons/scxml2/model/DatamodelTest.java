@@ -16,13 +16,15 @@
  */
 package org.apache.commons.scxml2.model;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import java.util.Set;
 
 import org.apache.commons.scxml2.EventBuilder;
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.TriggerEvent;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -40,36 +42,36 @@ class DatamodelTest {
         //// Interleaved
         // exec01
         Set<EnterableState> currentStates = exec01.getStatus().getStates();
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("ten", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("ten", currentStates.iterator().next().getId());
         exec01 = SCXMLTestHelper.testInstanceSerializability(exec01);
         currentStates = fireEvent("done.state.ten", exec01);
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("twenty", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("twenty", currentStates.iterator().next().getId());
         // exec02
         currentStates = exec02.getStatus().getStates();
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("ten", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("ten", currentStates.iterator().next().getId());
         // exec01
         currentStates = fireEvent("done.state.twenty", exec01);
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("thirty", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("thirty", currentStates.iterator().next().getId());
         exec01 = SCXMLTestHelper.testInstanceSerializability(exec01);
         // exec02
         currentStates = fireEvent("done.state.ten", exec02);
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("twenty", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("twenty", currentStates.iterator().next().getId());
         exec02 = SCXMLTestHelper.testInstanceSerializability(exec02);
         currentStates = fireEvent("done.state.twenty", exec02);
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("thirty", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("thirty", currentStates.iterator().next().getId());
         currentStates = fireEvent("done.state.thirty", exec02);
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("forty", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("forty", currentStates.iterator().next().getId());
         // exec01
         currentStates = fireEvent("done.state.thirty", exec01);
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("forty", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("forty", currentStates.iterator().next().getId());
     }
 
     @Test
@@ -102,7 +104,7 @@ class DatamodelTest {
         exec01.go();
         final SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/groovy/datamodel-01.xml");
         exec02.go();
-        Assertions.assertFalse(exec01 == exec02);
+        assertFalse(exec01 == exec02);
         runtest(exec01, exec02);
     }
 
@@ -115,7 +117,7 @@ class DatamodelTest {
         exec01.go();
         final SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/javascript/datamodel-01.xml");
         exec02.go();
-        Assertions.assertFalse(exec01 == exec02);
+        assertFalse(exec01 == exec02);
         runtest(exec01, exec02);
     }
 
@@ -128,7 +130,7 @@ class DatamodelTest {
         exec01.go();
         final SCXMLExecutor exec02 = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/datamodel-01.xml");
         exec02.go();
-        Assertions.assertFalse(exec01 == exec02);
+        assertFalse(exec01 == exec02);
         runtest(exec01, exec02);
     }
 }

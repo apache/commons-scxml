@@ -16,6 +16,9 @@
  */
 package org.apache.commons.scxml2.issues;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,7 +31,6 @@ import org.apache.commons.scxml2.model.Action;
 import org.apache.commons.scxml2.model.CustomAction;
 import org.apache.commons.scxml2.model.SCXML;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -87,7 +89,7 @@ class Issue112Test {
         final SCXML scxml = SCXMLTestHelper.parse("org/apache/commons/scxml2/issues/queue-01.xml", customActions);
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
         exec.go();
-        Assertions.assertEquals("init", exec.getStatus().getStates().
+        assertEquals("init", exec.getStatus().getStates().
                 iterator().next().getId());
 
         // Add an event, other external events could be added to the queue at any time (this test only adds one).
@@ -99,8 +101,8 @@ class Issue112Test {
             SCXMLTestHelper.fireEvent(exec, Application.QUEUE.remove());
         }
 
-        Assertions.assertTrue(exec.getStatus().isFinal());
-        Assertions.assertEquals("end", exec.getStatus().getStates().
+        assertTrue(exec.getStatus().isFinal());
+        assertEquals("end", exec.getStatus().getStates().
                 iterator().next().getId());
 
     }

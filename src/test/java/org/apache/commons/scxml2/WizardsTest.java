@@ -16,12 +16,15 @@
  */
 package org.apache.commons.scxml2;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.scxml2.env.SimpleDispatcher;
 import org.apache.commons.scxml2.model.EnterableState;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -37,7 +40,7 @@ class WizardsTest {
         @Override
         public void cancel(final String sendId) {
             // should never be called
-            Assertions.fail("<cancel> TestEventDispatcher callback unexpected");
+            fail("<cancel> TestEventDispatcher callback unexpected");
         }
         @Override
         @SuppressWarnings("unchecked")
@@ -48,15 +51,15 @@ class WizardsTest {
                 final int i = (Integer) params.get("aValue");
                 switch (callback) {
                     case 0:
-                        Assertions.assertEquals(2, i); // state2
+                        assertEquals(2, i); // state2
                         callback++;
                         break;
                     case 1:
-                        Assertions.assertEquals(4, i); // state4
+                        assertEquals(4, i); // state4
                         callback++;
                         break;
                     default:
-                        Assertions.fail("More than 2 TestEventDispatcher <send> callbacks for type \"foo\"");
+                        fail("More than 2 TestEventDispatcher <send> callbacks for type \"foo\"");
                 }
             }
             else {
@@ -72,24 +75,24 @@ class WizardsTest {
     void testWizard01Sample() throws Exception {
         SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/env/jexl/wizard-01.xml");
         exec.go();
-        Assertions.assertNotNull(exec);
+        assertNotNull(exec);
         Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("state1", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("state1", currentStates.iterator().next().getId());
         exec = SCXMLTestHelper.testInstanceSerializability(exec);
         currentStates = SCXMLTestHelper.fireEvent(exec, "event2");
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("state2", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("state2", currentStates.iterator().next().getId());
         currentStates = SCXMLTestHelper.fireEvent(exec, "event4");
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("state4", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("state4", currentStates.iterator().next().getId());
         currentStates = SCXMLTestHelper.fireEvent(exec, "event3");
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("state3", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("state3", currentStates.iterator().next().getId());
         exec = SCXMLTestHelper.testInstanceSerializability(exec);
         currentStates = SCXMLTestHelper.fireEvent(exec, "event3"); // ensure we stay put
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("state3", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("state3", currentStates.iterator().next().getId());
     }
 
     @Test
@@ -100,11 +103,11 @@ class WizardsTest {
         // If you change this, you must also change
         // the TestEventDispatcher
         Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("state2", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("state2", currentStates.iterator().next().getId());
         exec = SCXMLTestHelper.testInstanceSerializability(exec);
         currentStates = SCXMLTestHelper.fireEvent(exec, "event4");
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("state4", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("state4", currentStates.iterator().next().getId());
     }
 }

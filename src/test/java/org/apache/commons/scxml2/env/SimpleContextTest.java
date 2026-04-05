@@ -16,10 +16,15 @@
  */
 package org.apache.commons.scxml2.env;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -39,11 +44,11 @@ class SimpleContextTest {
         final SimpleContext parentContext = new SimpleContext(rootContext);
         parentContext.setLocal("key", "parent");
         final SimpleContext effectiveContext = new SimpleContext(parentContext, new EffectiveContextMap(parentContext));
-        Assertions.assertEquals("parent", effectiveContext.get("key"));
+        assertEquals("parent", effectiveContext.get("key"));
         // ensure EffectiveContextMap provides complete local variable shadowing
         for (final Map.Entry<String,Object> entry : effectiveContext.getVars().entrySet()) {
             if (entry.getKey().equals("key")) {
-                Assertions.assertEquals("parent", entry.getValue());
+                assertEquals("parent", entry.getValue());
             }
         }
     }
@@ -52,7 +57,7 @@ class SimpleContextTest {
     void testGetNull() {
         final Object value = context.get("key");
 
-        Assertions.assertNull(value);
+        assertNull(value);
     }
 
     @Test
@@ -62,7 +67,7 @@ class SimpleContextTest {
 
         context.setVars(vars);
 
-        Assertions.assertNull(context.get("differentKey"));
+        assertNull(context.get("differentKey"));
     }
 
     @Test
@@ -78,7 +83,7 @@ class SimpleContextTest {
         context.setVars(vars);
         context = new SimpleContext(parentContext, parentVars);
 
-        Assertions.assertEquals("differentValue", context.get("differentKey"));
+        assertEquals("differentValue", context.get("differentKey"));
     }
 
     @Test
@@ -94,7 +99,7 @@ class SimpleContextTest {
         context.setVars(vars);
         context = new SimpleContext(parentContext, parentVars);
 
-        Assertions.assertNull(context.get("reallyDifferentKey"));
+        assertNull(context.get("reallyDifferentKey"));
     }
 
     @Test
@@ -104,7 +109,7 @@ class SimpleContextTest {
 
         context.setVars(vars);
 
-        Assertions.assertEquals("value", context.get("key"));
+        assertEquals("value", context.get("key"));
     }
 
     @Test
@@ -114,7 +119,7 @@ class SimpleContextTest {
 
         context.setVars(vars);
 
-        Assertions.assertFalse(context.has("differentKey"));
+        assertFalse(context.has("differentKey"));
     }
 
     @Test
@@ -130,7 +135,7 @@ class SimpleContextTest {
         context.setVars(vars);
         context = new SimpleContext(parentContext, parentVars);
 
-        Assertions.assertTrue(context.has("differentKey"));
+        assertTrue(context.has("differentKey"));
     }
 
     @Test
@@ -146,7 +151,7 @@ class SimpleContextTest {
         context.setVars(vars);
         context = new SimpleContext(parentContext, parentVars);
 
-        Assertions.assertFalse(context.has("differentKey"));
+        assertFalse(context.has("differentKey"));
     }
 
     @Test
@@ -156,7 +161,7 @@ class SimpleContextTest {
 
         context.setVars(vars);
 
-        Assertions.assertTrue(context.has("key"));
+        assertTrue(context.has("key"));
     }
 
     @Test
@@ -165,7 +170,7 @@ class SimpleContextTest {
         rootContext.set("key", "root");
         final SimpleContext rootEffectiveContext = new SimpleContext(rootContext, new EffectiveContextMap(rootContext));
         final SimpleContext parentContext = new SimpleContext(rootEffectiveContext);
-        Assertions.assertThrows(
+        assertThrows(
                 IllegalArgumentException.class,
                 () -> new EffectiveContextMap(parentContext),
                 "Nested EffectiveContextMap wrapping should fail"
@@ -181,7 +186,7 @@ class SimpleContextTest {
 
         context.set("key", "newValue");
 
-        Assertions.assertEquals("newValue", context.get("key"));
+        assertEquals("newValue", context.get("key"));
     }
 
     @Test
@@ -191,7 +196,7 @@ class SimpleContextTest {
 
         context.set("key", "newValue");
 
-        Assertions.assertEquals("newValue", context.get("key"));
+        assertEquals("newValue", context.get("key"));
     }
 
     @Test
@@ -209,6 +214,6 @@ class SimpleContextTest {
 
         context.set("differentKey", "newValue");
 
-        Assertions.assertEquals("newValue", context.get("differentKey"));
+        assertEquals("newValue", context.get("differentKey"));
     }
 }

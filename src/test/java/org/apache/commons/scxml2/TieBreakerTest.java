@@ -16,11 +16,13 @@
  */
 package org.apache.commons.scxml2;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Set;
 
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.TransitionTarget;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -42,11 +44,11 @@ class TieBreakerTest {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/tie-breaker-01.xml");
         exec.go();
         Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("ten", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("ten", currentStates.iterator().next().getId());
         currentStates = SCXMLTestHelper.fireEvent(exec, "done.state.ten");
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("twenty", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("twenty", currentStates.iterator().next().getId());
     }
 
     @Test
@@ -54,11 +56,11 @@ class TieBreakerTest {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/tie-breaker-02.xml");
         exec.go();
         Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("eleven", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("eleven", currentStates.iterator().next().getId());
         currentStates = SCXMLTestHelper.fireEvent(exec, "done.state.ten");
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("thirty", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("thirty", currentStates.iterator().next().getId());
     }
 
     @Test
@@ -66,11 +68,11 @@ class TieBreakerTest {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/tie-breaker-03.xml");
         exec.go();
         Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("eleven", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("eleven", currentStates.iterator().next().getId());
         currentStates = SCXMLTestHelper.fireEvent(exec, "done.state.ten");
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("forty", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("forty", currentStates.iterator().next().getId());
     }
 
     @Test
@@ -78,9 +80,9 @@ class TieBreakerTest {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/tie-breaker-04.xml");
         exec.go();
         Set<EnterableState> currentStates = SCXMLTestHelper.fireEvent(exec, "event_2");
-        Assertions.assertEquals(1, currentStates.size());
+        assertEquals(1, currentStates.size());
         currentStates = SCXMLTestHelper.fireEvent(exec, "event_1");
-        Assertions.assertEquals(1, currentStates.size());
+        assertEquals(1, currentStates.size());
     }
 
     @Test
@@ -88,17 +90,17 @@ class TieBreakerTest {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/tie-breaker-05.xml");
         exec.go();
         Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assertions.assertEquals(3, currentStates.size());
+        assertEquals(3, currentStates.size());
         for (final TransitionTarget tt : currentStates) {
             final String id = tt.getId();
-            Assertions.assertTrue(id.equals("s11") || id.equals("s212")
+            assertTrue(id.equals("s11") || id.equals("s212")
                 || id.equals("s2111"));
         }
         currentStates = SCXMLTestHelper.fireEvent(exec, "event1");
-        Assertions.assertEquals(3, currentStates.size());
+        assertEquals(3, currentStates.size());
         for (final TransitionTarget tt : currentStates) {
             final String id = tt.getId();
-            Assertions.assertTrue(id.equals("s12") || id.equals("s212")
+            assertTrue(id.equals("s12") || id.equals("s212")
                 || id.equals("s2112"));
         }
     }
@@ -108,6 +110,6 @@ class TieBreakerTest {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor("org/apache/commons/scxml2/tie-breaker-06.xml");
         exec.go();
         final Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assertions.assertEquals(1, currentStates.size());
+        assertEquals(1, currentStates.size());
     }
 }

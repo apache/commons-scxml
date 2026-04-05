@@ -16,7 +16,9 @@
  */
 package org.apache.commons.scxml2.model;
 
-import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
 
 class TransitionTargetTest {
@@ -27,7 +29,7 @@ class TransitionTargetTest {
         final State context = new State();
         state.setParent(context);
 
-        Assertions.assertTrue(state.isDescendantOf(context));
+        assertTrue(state.isDescendantOf(context));
     }
 
     @Test
@@ -36,7 +38,7 @@ class TransitionTargetTest {
         state.setParent(new State());
         final State context = new State();
 
-        Assertions.assertFalse(state.isDescendantOf(context));
+        assertFalse(state.isDescendantOf(context));
     }
 
     @Test
@@ -44,7 +46,7 @@ class TransitionTargetTest {
         final State state = new State();
         final State context = new State();
 
-        Assertions.assertFalse(state.isDescendantOf(context));
+        assertFalse(state.isDescendantOf(context));
     }
 
     @Test
@@ -56,6 +58,6 @@ class TransitionTargetTest {
         parent.setParent(context);
         state.setParent(parent);
 
-        Assertions.assertTrue(state.isDescendantOf(context));
+        assertTrue(state.isDescendantOf(context));
     }
 }

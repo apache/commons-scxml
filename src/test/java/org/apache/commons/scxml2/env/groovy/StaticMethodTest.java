@@ -16,12 +16,13 @@
  */
 package org.apache.commons.scxml2.env.groovy;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Set;
 
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.model.EnterableState;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class StaticMethodTest {
@@ -32,7 +33,7 @@ class StaticMethodTest {
         exec.getRootContext().set("System", System.class);
         exec.go();
         final Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("static", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("static", currentStates.iterator().next().getId());
     }
 }

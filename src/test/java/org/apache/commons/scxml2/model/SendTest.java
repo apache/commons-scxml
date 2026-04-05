@@ -16,6 +16,10 @@
  */
 package org.apache.commons.scxml2.model;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -28,7 +32,6 @@ import org.apache.commons.scxml2.SCXMLIOProcessor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.env.SimpleDispatcher;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class SendTest {
@@ -39,24 +42,24 @@ class SendTest {
 
     @Test
     void testDelayExpression() throws Exception {
-        Assertions.assertEquals(0L, parseDelay(".s"));
-        Assertions.assertEquals(0L, parseDelay(".0s"));
-        Assertions.assertEquals(1000L, parseDelay("1.s"));
-        Assertions.assertEquals(1000L, parseDelay("1.0s"));
-        Assertions.assertEquals(1500L, parseDelay("1.5s"));
-        Assertions.assertEquals(500L, parseDelay(".5s"));
-        Assertions.assertEquals(500L, parseDelay("0.5s"));
-        Assertions.assertEquals(50L, parseDelay("0.05s"));
-        Assertions.assertEquals(5L, parseDelay("0.005s"));
-        Assertions.assertEquals(0L, parseDelay("0.0005s"));
-        Assertions.assertEquals(0L, parseDelay(".9ms"));
-        Assertions.assertEquals(1L, parseDelay("1.9ms"));
-        Assertions.assertEquals(60000L, parseDelay("1m"));
-        Assertions.assertEquals(60000L, parseDelay("1.0m"));
-        Assertions.assertEquals(30000L, parseDelay(".5m"));
-        Assertions.assertEquals(6000L, parseDelay(".1m"));
-        Assertions.assertEquals(6000L, parseDelay(".10m"));
-        Assertions.assertEquals(15000L, parseDelay(".25m"));
+        assertEquals(0L, parseDelay(".s"));
+        assertEquals(0L, parseDelay(".0s"));
+        assertEquals(1000L, parseDelay("1.s"));
+        assertEquals(1000L, parseDelay("1.0s"));
+        assertEquals(1500L, parseDelay("1.5s"));
+        assertEquals(500L, parseDelay(".5s"));
+        assertEquals(500L, parseDelay("0.5s"));
+        assertEquals(50L, parseDelay("0.05s"));
+        assertEquals(5L, parseDelay("0.005s"));
+        assertEquals(0L, parseDelay("0.0005s"));
+        assertEquals(0L, parseDelay(".9ms"));
+        assertEquals(1L, parseDelay("1.9ms"));
+        assertEquals(60000L, parseDelay("1m"));
+        assertEquals(60000L, parseDelay("1.0m"));
+        assertEquals(30000L, parseDelay(".5m"));
+        assertEquals(6000L, parseDelay(".1m"));
+        assertEquals(6000L, parseDelay(".10m"));
+        assertEquals(15000L, parseDelay(".25m"));
     }
 
     @Test
@@ -76,18 +79,18 @@ class SendTest {
         final TriggerEvent te = new EventBuilder("event.foo", TriggerEvent.SIGNAL_EVENT).data(3).build();
         SCXMLTestHelper.fireEvent(exec, te);
 
-        Assertions.assertFalse(payloads.isEmpty(), "Payloads empty.");
-        Assertions.assertTrue(payloads.get(0) instanceof Map, "Payload is not a map.");
+        assertFalse(payloads.isEmpty(), "Payloads empty.");
+        assertTrue(payloads.get(0) instanceof Map, "Payload is not a map.");
         final Map<String, Object> firstPayload = (Map<String, Object>) payloads.get(0);
-        Assertions.assertEquals(2, firstPayload.size(), "Only two in the namelist data expected.");
+        assertEquals(2, firstPayload.size(), "Only two in the namelist data expected.");
 
-        Assertions.assertEquals(1, firstPayload.get("one"), "Unexpected value for 'one'.");
-        Assertions.assertEquals(2, firstPayload.get("two"), "Unexpected value for 'two'.");
+        assertEquals(1, firstPayload.get("one"), "Unexpected value for 'one'.");
+        assertEquals(2, firstPayload.get("two"), "Unexpected value for 'two'.");
 
         // Note: the standard allows specifying the value of the namelist attribute of the <send> element
         // as space-separated list of values, which implies an ordered sequence of items.
         final Iterator<String> it = firstPayload.keySet().iterator();
-        Assertions.assertEquals("one", it.next(), "The first one in the namelist must be 'one'.");
-        Assertions.assertEquals("two", it.next(), "The first one in the namelist must be 'two'.");
+        assertEquals("one", it.next(), "The first one in the namelist must be 'one'.");
+        assertEquals("two", it.next(), "The first one in the namelist must be 'two'.");
     }
 }

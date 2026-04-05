@@ -16,12 +16,15 @@
  */
 package org.apache.commons.scxml2;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Set;
 
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.Final;
 import org.apache.commons.scxml2.model.State;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -48,7 +51,7 @@ class StatusTest {
 
         final Set<EnterableState> returnValue = status.getActiveStates();
 
-        Assertions.assertEquals(2, returnValue.size());
+        assertEquals(2, returnValue.size());
     }
 
     @Test
@@ -56,7 +59,7 @@ class StatusTest {
 
         final Set<EnterableState> returnValue = status.getActiveStates();
 
-        Assertions.assertEquals(0, returnValue.size());
+        assertEquals(0, returnValue.size());
     }
 
     @Test
@@ -65,7 +68,7 @@ class StatusTest {
 
         stateConfiguration.enterState(state);
 
-        Assertions.assertTrue(status.isFinal());
+        assertTrue(status.isFinal());
     }
 
     @Test
@@ -74,7 +77,7 @@ class StatusTest {
 
         stateConfiguration.enterState(state);
 
-        Assertions.assertFalse(status.isFinal());
+        assertFalse(status.isFinal());
     }
 
     @Test
@@ -84,7 +87,7 @@ class StatusTest {
 
         stateConfiguration.enterState(state);
 
-        Assertions.assertFalse(status.isFinal());
+        assertFalse(status.isFinal());
     }
 
     @Test
@@ -96,8 +99,8 @@ class StatusTest {
         state.setId("1");
         state.setParent(parent);
         stateConfiguration.enterState(state);
-        Assertions.assertTrue(status.isInState("0"));
-        Assertions.assertTrue(status.isInState("1"));
-        Assertions.assertFalse(status.isInState("2"));
+        assertTrue(status.isInState("0"));
+        assertTrue(status.isInState("1"));
+        assertFalse(status.isInState("2"));
     }
 }

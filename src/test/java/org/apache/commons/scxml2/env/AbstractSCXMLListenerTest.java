@@ -16,13 +16,15 @@
  */
 package org.apache.commons.scxml2.env;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.commons.scxml2.SCXMLListener;
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.Transition;
 import org.apache.commons.scxml2.model.TransitionTarget;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -92,15 +94,15 @@ class AbstractSCXMLListenerTest {
                 }
             };
 
-        Assertions.assertFalse(heardOnEntry, "heardOnEntry == false");
-        Assertions.assertFalse(heardOnExit, "heardOnExit == false");
-        Assertions.assertFalse(heardOnTransition, "heardOnTransition == false");
+        assertFalse(heardOnEntry, "heardOnEntry == false");
+        assertFalse(heardOnExit, "heardOnExit == false");
+        assertFalse(heardOnTransition, "heardOnTransition == false");
         listener0.onEntry(to);
         listener0.onExit(to);
         listener0.onTransition(from, to, transition, null);
-        Assertions.assertTrue(heardOnEntry, "heardOnEntry");
-        Assertions.assertTrue(heardOnExit, "heardOnExit");
-        Assertions.assertTrue(heardOnTransition, "heardOnTransition");
+        assertTrue(heardOnEntry, "heardOnEntry");
+        assertTrue(heardOnExit, "heardOnExit");
+        assertTrue(heardOnTransition, "heardOnTransition");
     }
 
     @Test
@@ -124,15 +126,15 @@ class AbstractSCXMLListenerTest {
                 }
             };
 
-        Assertions.assertFalse(heardOnEntry, "heardOnEntry == false");
-        Assertions.assertFalse(heardOnExit, "heardOnExit == false");
-        Assertions.assertFalse(heardOnTransition, "heardOnTransition == false");
+        assertFalse(heardOnEntry, "heardOnEntry == false");
+        assertFalse(heardOnExit, "heardOnExit == false");
+        assertFalse(heardOnTransition, "heardOnTransition == false");
         listener1.onEntry(to);
         listener1.onExit(to);
         listener1.onTransition(from, to, transition, null);
-        Assertions.assertTrue(heardOnEntry, "heardOnEntry");
-        Assertions.assertTrue(heardOnExit, "heardOnExit");
-        Assertions.assertFalse(heardOnTransition, "heardOnTransition == false");
+        assertTrue(heardOnEntry, "heardOnEntry");
+        assertTrue(heardOnExit, "heardOnExit");
+        assertFalse(heardOnTransition, "heardOnTransition == false");
     }
 
     @Test
@@ -148,15 +150,15 @@ class AbstractSCXMLListenerTest {
                 }
             };
 
-            Assertions.assertFalse(heardOnEntry, "heardOnEntry == false");
-            Assertions.assertFalse(heardOnExit, "heardOnExit == false");
-            Assertions.assertFalse(heardOnTransition, "heardOnTransition == false");
+            assertFalse(heardOnEntry, "heardOnEntry == false");
+            assertFalse(heardOnExit, "heardOnExit == false");
+            assertFalse(heardOnTransition, "heardOnTransition == false");
         listener2.onEntry(to);
         listener2.onExit(to);
         listener2.onTransition(from, to, transition, null);
-        Assertions.assertTrue(heardOnEntry, "heardOnEntry");
-        Assertions.assertFalse(heardOnExit, "heardOnExit == false");
-        Assertions.assertFalse(heardOnTransition, "heardOnTransition == false");
+        assertTrue(heardOnEntry, "heardOnEntry");
+        assertFalse(heardOnExit, "heardOnExit == false");
+        assertFalse(heardOnTransition, "heardOnTransition == false");
     }
 
     @Test
@@ -165,14 +167,14 @@ class AbstractSCXMLListenerTest {
                 // empty
             };
 
-            Assertions.assertFalse(heardOnEntry, "heardOnEntry == false");
-            Assertions.assertFalse(heardOnExit, "heardOnExit == false");
-            Assertions.assertFalse(heardOnTransition, "heardOnTransition == false");
+            assertFalse(heardOnEntry, "heardOnEntry == false");
+            assertFalse(heardOnExit, "heardOnExit == false");
+            assertFalse(heardOnTransition, "heardOnTransition == false");
         listener3.onEntry(to);
         listener3.onExit(to);
         listener3.onTransition(from, to, transition, null);
-        Assertions.assertFalse(heardOnEntry, "heardOnEntry == false");
-        Assertions.assertFalse(heardOnExit, "heardOnExit == false");
-        Assertions.assertFalse(heardOnTransition, "heardOnTransition == false");
+        assertFalse(heardOnEntry, "heardOnEntry == false");
+        assertFalse(heardOnExit, "heardOnExit == false");
+        assertFalse(heardOnTransition, "heardOnTransition == false");
     }
 }

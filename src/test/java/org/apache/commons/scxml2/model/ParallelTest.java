@@ -16,9 +16,10 @@
  */
 package org.apache.commons.scxml2.model;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.commons.scxml2.SCXMLExecutor;
 import org.apache.commons.scxml2.SCXMLTestHelper;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class ParallelTest {
@@ -44,12 +45,12 @@ class ParallelTest {
         exec.go();
         SCXMLTestHelper.assertPostTriggerStates(exec, "dummy.event", new String[] { "para11", "para21" });
         Object count = exec.getEvaluator().eval(exec.getGlobalContext(),"root.root.count");
-        Assertions.assertEquals(5, count);
+        assertEquals(5, count);
         SCXMLTestHelper.assertPostTriggerStates(exec, "foo", new String[]{"para12", "para21"});
         count = exec.getEvaluator().eval(exec.getGlobalContext(),"root.root.count");
-        Assertions.assertEquals(7, count);
+        assertEquals(7, count);
         SCXMLTestHelper.assertPostTriggerState(exec, "bar", "end");
         count = exec.getEvaluator().eval(exec.getGlobalContext(),"root.root.count");
-        Assertions.assertEquals(14, count);
+        assertEquals(14, count);
     }
 }

@@ -17,8 +17,9 @@
 
 package org.apache.commons.scxml2.env.javascript;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.apache.commons.scxml2.env.SimpleContext;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -32,7 +33,7 @@ class JSContextTest {
          */
         @Test
         void testChildConstructor() {
-                Assertions.assertNotNull(new JSContext(new SimpleContext()), "Error in JSContext child constructor");
+                assertNotNull(new JSContext(new SimpleContext()), "Error in JSContext child constructor");
         }
 
         /**
@@ -40,7 +41,7 @@ class JSContextTest {
          */
         @Test
         void testDefaultConstructor() {
-            Assertions.assertNotNull(new JSContext(), "Error in JSContext default constructor");
+            assertNotNull(new JSContext(), "Error in JSContext default constructor");
         }
 }
 

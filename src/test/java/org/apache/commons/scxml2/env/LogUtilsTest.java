@@ -16,9 +16,10 @@
  */
 package org.apache.commons.scxml2.env;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.commons.scxml2.model.State;
 import org.apache.commons.scxml2.model.Transition;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class LogUtilsTest {
@@ -37,7 +38,7 @@ class LogUtilsTest {
         parent1.setParent(parent2);
         target.setParent(parent1);
 
-        Assertions.assertEquals("/parent2/parent1/ID", LogUtils.getTTPath(target));
+        assertEquals("/parent2/parent1/ID", LogUtils.getTTPath(target));
     }
 
     @Test
@@ -45,7 +46,7 @@ class LogUtilsTest {
         final State target = new State();
         target.setId("ID");
 
-        Assertions.assertEquals("/ID", LogUtils.getTTPath(target));
+        assertEquals("/ID", LogUtils.getTTPath(target));
     }
 
     @Test
@@ -60,7 +61,7 @@ class LogUtilsTest {
         transition.setCond("condition");
         transition.setEvent("event happened");
 
-        Assertions.assertEquals( "(event = event happened, cond = condition, from = /FROM, to = /TO)",
+        assertEquals( "(event = event happened, cond = condition, from = /FROM, to = /TO)",
                                         LogUtils.transToString(targetFrom, targetTo, transition, transition.getEvent()));
     }
 

@@ -16,10 +16,12 @@
  */
 package org.apache.commons.scxml2.env.groovy;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class GroovyContextTest {
@@ -27,7 +29,7 @@ class GroovyContextTest {
     @Test
     void testNew() {
         final GroovyContext ctx = new GroovyContext();
-        Assertions.assertNotNull(ctx);
+        assertNotNull(ctx);
     }
 
     @Test
@@ -35,20 +37,20 @@ class GroovyContextTest {
         final Map<String, Object> m = new HashMap<>();
         m.put("foo", "bar");
         final GroovyContext ctx = new GroovyContext(null, m, null);
-        Assertions.assertNotNull(ctx);
-        Assertions.assertEquals(1, ctx.getVars().size());
+        assertNotNull(ctx);
+        assertEquals(1, ctx.getVars().size());
         final String fooValue = (String) ctx.get("foo");
-        Assertions.assertEquals("bar", fooValue);
+        assertEquals("bar", fooValue);
     }
 
     @Test
     void testSetVars() {
         final GroovyContext ctx = new GroovyContext();
-        Assertions.assertNotNull(ctx);
+        assertNotNull(ctx);
         ctx.set("foo", "bar");
-        Assertions.assertEquals(1, ctx.getVars().size());
+        assertEquals(1, ctx.getVars().size());
         final String fooValue = (String) ctx.get("foo");
-        Assertions.assertEquals("bar", fooValue);
+        assertEquals("bar", fooValue);
     }
 
 }

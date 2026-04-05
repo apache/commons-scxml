@@ -16,7 +16,8 @@
  */
 package org.apache.commons.scxml2.model;
 
-import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -45,7 +46,7 @@ class ActionTest {
 
         final TransitionTarget returnValue = action.getParentEnterableState();
 
-        Assertions.assertEquals("off", returnValue.getId());
+        assertEquals("off", returnValue.getId());
     }
 
     @Test
@@ -64,7 +65,7 @@ class ActionTest {
 
         final TransitionTarget returnValue = action.getParentEnterableState();
 
-        Assertions.assertEquals("off", returnValue.getId());
+        assertEquals("off", returnValue.getId());
     }
 
     @Test
@@ -84,7 +85,7 @@ class ActionTest {
 
         final TransitionTarget returnValue = action.getParentEnterableState();
 
-        Assertions.assertEquals("on", returnValue.getId());
+        assertEquals("on", returnValue.getId());
     }
 
     @Test
@@ -99,6 +100,6 @@ class ActionTest {
 
         final TransitionTarget returnValue = action.getParentEnterableState();
 
-        Assertions.assertEquals("on", returnValue.getId());
+        assertEquals("on", returnValue.getId());
     }
 }

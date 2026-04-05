@@ -16,6 +16,10 @@
  */
 package org.apache.commons.scxml2.invoke;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Map;
 
 import org.apache.commons.scxml2.EventBuilder;
@@ -25,7 +29,6 @@ import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.apache.commons.scxml2.TriggerEvent;
 import org.apache.commons.scxml2.model.ModelException;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -109,11 +112,11 @@ class InvokeParamNameTest {
     @Test
     void testNameAndExpr() throws Exception {
         trigger();
-        Assertions.assertTrue(lastURL.endsWith("TestSrc"));
+        assertTrue(lastURL.endsWith("TestSrc"));
         final Map.Entry<String, Object> e =
             lastParams.entrySet().iterator().next();
-        Assertions.assertEquals("ding", e.getKey());
-        Assertions.assertEquals("foo", e.getValue());
+        assertEquals("ding", e.getKey());
+        assertEquals("foo", e.getValue());
     }
 
     // Tests "param" element with a "name" attribute and "expr" attribute locating a data id
@@ -121,9 +124,9 @@ class InvokeParamNameTest {
     void testSoleNameLocation() throws Exception {
         trigger(); trigger();
         final Map m = (Map)lastParams.values().iterator().next();
-        Assertions.assertNotNull(m);
-        Assertions.assertEquals("bar", m.keySet().iterator().next());
-        Assertions.assertEquals("foo", m.get("bar"));
+        assertNotNull(m);
+        assertEquals("bar", m.keySet().iterator().next());
+        assertEquals("foo", m.get("bar"));
     }
 
     private void trigger() throws ModelException {

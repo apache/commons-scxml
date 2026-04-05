@@ -16,10 +16,12 @@
  */
 package org.apache.commons.scxml2.env.jexl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class JexlContextTest {
@@ -27,7 +29,7 @@ class JexlContextTest {
     @Test
     void testNew() {
         final JexlContext ctx = new JexlContext();
-        Assertions.assertNotNull(ctx);
+        assertNotNull(ctx);
     }
 
     @Test
@@ -35,10 +37,10 @@ class JexlContextTest {
         final Map<String, Object> m = new HashMap<>();
         m.put("foo", "bar");
         final JexlContext ctx = new JexlContext(null, m);
-        Assertions.assertNotNull(ctx);
-        Assertions.assertEquals(1, ctx.getVars().size());
+        assertNotNull(ctx);
+        assertEquals(1, ctx.getVars().size());
         final String fooValue = (String) ctx.get("foo");
-        Assertions.assertEquals("bar", fooValue);
+        assertEquals("bar", fooValue);
     }
 
 }

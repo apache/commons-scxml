@@ -16,11 +16,15 @@
  */
 package org.apache.commons.scxml2;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -65,11 +69,11 @@ class TriggerEventTest {
 
     @Test
     void testTriggerEventEquals() {
-        Assertions.assertEquals(te1, te2);
-        Assertions.assertEquals(te3, te4);
-        Assertions.assertEquals(te5, te6);
-        Assertions.assertNotEquals(te1, te4);
-        Assertions.assertNotNull(te7);
+        assertEquals(te1, te2);
+        assertEquals(te3, te4);
+        assertEquals(te5, te6);
+        assertNotEquals(te1, te4);
+        assertNotNull(te7);
     }
 
     /**
@@ -77,23 +81,23 @@ class TriggerEventTest {
      */
     @Test
     void testTriggerEventGetters() {
-        Assertions.assertEquals("name1", te1.getName());
-        Assertions.assertEquals(2, te2.getType());
-        Assertions.assertNull(te7.getData());
+        assertEquals("name1", te1.getName());
+        assertEquals(2, te2.getType());
+        assertNull(te7.getData());
     }
 
     @Test
     void testTriggerEventHashCode() {
-        Assertions.assertEquals("TriggerEvent{name=name3, type=4}".hashCode(),
+        assertEquals("TriggerEvent{name=name3, type=4}".hashCode(),
             te7.hashCode());
-        Assertions.assertEquals("TriggerEvent{name=name3, type=3}".hashCode(),
+        assertEquals("TriggerEvent{name=name3, type=3}".hashCode(),
             te5.hashCode());
     }
 
     @Test
     void testTriggerEventToString() {
-        Assertions.assertEquals("TriggerEvent{name=name3, type=4}", te7.toString());
-        Assertions.assertEquals("TriggerEvent{name=name1, type=2, data="
+        assertEquals("TriggerEvent{name=name3, type=4}", te7.toString());
+        assertEquals("TriggerEvent{name=name1, type=2, data="
             + "{property1=value1}}", te2.toString());
     }
 }

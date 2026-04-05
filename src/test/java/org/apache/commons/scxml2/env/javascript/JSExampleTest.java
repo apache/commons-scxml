@@ -17,6 +17,8 @@
 
 package org.apache.commons.scxml2.env.javascript;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -30,7 +32,6 @@ import org.apache.commons.scxml2.model.Action;
 import org.apache.commons.scxml2.model.CustomAction;
 import org.apache.commons.scxml2.model.EnterableState;
 import org.apache.commons.scxml2.model.SCXML;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -59,8 +60,8 @@ class JSExampleTest {
         final SCXMLExecutor exec = SCXMLTestHelper.getExecutor(scxml);
         exec.go();
         final Set<EnterableState> currentStates = exec.getStatus().getStates();
-        Assertions.assertEquals(1, currentStates.size());
-        Assertions.assertEquals("end", currentStates.iterator().next().getId());
+        assertEquals(1, currentStates.size());
+        assertEquals("end", currentStates.iterator().next().getId());
     }
 
 }
