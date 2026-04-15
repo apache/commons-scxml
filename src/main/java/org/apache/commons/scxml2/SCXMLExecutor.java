@@ -448,7 +448,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
             }
         }
         if (!semantics.isLegalConfiguration(states, getErrorReporter())) {
-            throw new ModelException("Illegal state machine configuration!");
+            throw new ModelException("Illegal state machine configuration.");
         }
         for (final EnterableState es : states) {
             exctx.getScInstance().getStateConfiguration().enterState(es);

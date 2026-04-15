@@ -179,7 +179,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
         }
         // validate the result states represent a legal configuration
         if (exctx.isCheckLegalConfiguration() && !isLegalConfiguration(states, exctx.getErrorReporter())) {
-            throw new ModelException("Illegal state machine configuration!");
+            throw new ModelException("Illegal state machine configuration.");
         }
     }
 
