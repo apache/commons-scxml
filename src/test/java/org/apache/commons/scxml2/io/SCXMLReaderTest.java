@@ -58,7 +58,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit tests {@link org.apache.commons.scxml2.io.SCXMLReader}.
+ * Unit tests {@link SCXMLReader}.
  */
 class SCXMLReaderTest {
 

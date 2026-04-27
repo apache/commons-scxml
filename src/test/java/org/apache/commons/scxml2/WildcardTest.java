@@ -24,7 +24,7 @@ import org.apache.commons.scxml2.model.EnterableState;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit tests {@link org.apache.commons.scxml2.SCXMLExecutor}.
+ * Unit tests {@link SCXMLExecutor}.
  * Testing wildcard event matching (*)
  */
 class WildcardTest {

@@ -26,7 +26,7 @@ import org.apache.commons.scxml2.model.SCXML;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit tests {@link org.apache.commons.scxml2.SCXMLExecutor}.
+ * Unit tests {@link SCXMLExecutor}.
  * Testing special variable "_event.data"
  */
 class EventDataTest {

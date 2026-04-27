@@ -24,14 +24,14 @@ import org.apache.commons.scxml2.SCXMLTestHelper;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit tests {@link org.apache.commons.scxml2.model.Assign}.
- * Unit tests {@link org.apache.commons.scxml2.model.Cancel}.
- * Unit tests {@link org.apache.commons.scxml2.model.Else}.
- * Unit tests {@link org.apache.commons.scxml2.model.ElseIf}.
- * Unit tests {@link org.apache.commons.scxml2.model.If}.
- * Unit tests {@link org.apache.commons.scxml2.model.Log}.
- * Unit tests {@link org.apache.commons.scxml2.model.Send}.
- * Unit tests {@link org.apache.commons.scxml2.model.Var}.
+ * Unit tests {@link Assign}.
+ * Unit tests {@link Cancel}.
+ * Unit tests {@link Else}.
+ * Unit tests {@link ElseIf}.
+ * Unit tests {@link If}.
+ * Unit tests {@link Log}.
+ * Unit tests {@link Send}.
+ * Unit tests {@link Var}.
  */
 class ActionsTest {
 

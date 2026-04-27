@@ -29,7 +29,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit tests {@link org.apache.commons.scxml2.TriggerEvent}.
+ * Unit tests {@link TriggerEvent}.
  */
 class TriggerEventTest {
 
