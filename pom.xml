@@ -460,7 +460,7 @@
                   <goal>run</goal>
                 </goals>
                 <configuration>
-                  <tasks>
+                  <target>
                     <exec executable="svn">
                       <arg line="checkout --depth immediates ${commons.scmPubUrl} ${commons.scmPubCheckoutDirectory}" />
                     </exec>
@@ -475,7 +475,7 @@
                     <exec executable="svn">
                       <arg line="update --set-depth infinity ${dirs}" />
                     </exec>
-                  </tasks>
+                  </target>
                 </configuration>
               </execution>
             </executions>

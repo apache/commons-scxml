@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+<document>
+ <properties>
+  <title>Commons SCXML Security</title>
+  <author email="dev@commons.apache.org">Apache Commons Team</author>
+ </properties>
+<body>
+<!-- ================================================== -->
+<section name="Commons SCXML Security">
+<p> 
+In general, the <a href="https://commons.apache.org/security.html#Security_Model">Apache Commons Security Model</a>
+specifies you should not assume Apache Commons methods to be safe
+to be used with untrusted input unless otherwise specified.
+This is especially true for Apache Commons SCXML: since the
+purpose of Commons SCXML is to execute code defined in SCXML
+scripts, we assume anyone who can provide SCXML scripts is to be
+fully trusted, including with the ability to execute arbitrary
+code.
+</p> 
+<p> 
+This does not leave much attack surface: Commons SCXML is meant
+mainly for use in internal applications dealing with trusted input.
+If, after reviewing this model, you still believe you have found
+a possible vulnerability in Commons SCXML, please report this
+privately as documented on the <a href="https://commons.apache.org/security.html">Apache Commons Security page</a>.
+</p> 
+</section>
+</body>
+</document>
