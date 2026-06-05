@@ -102,6 +102,9 @@
       <item       name="Download"
                   href="/download_scxml.cgi"/>
 
+      <item       name="Security"
+                  href="/security.html"/>
+
     </menu>
 
     <menu         name="Releases">
