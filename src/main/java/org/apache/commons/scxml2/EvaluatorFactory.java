@@ -67,7 +67,7 @@ public class EvaluatorFactory {
      * <p>If no SCXML document is provided a default Evaluator will be returned.</p>
      *
      * @param document The document to return a dedicated Evaluator for. May be null to retrieve the default Evaluator.
-     * @return a new and not sharable Evaluator instance for the provided document, or a default Evaluator otherwise
+     * @return A new and not sharable Evaluator instance for the provided document, or a default Evaluator otherwise
      * @throws ModelException If the SCXML document datamodel is not supported.
      */
     public static Evaluator getEvaluator(final SCXML document) throws ModelException {

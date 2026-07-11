@@ -127,7 +127,7 @@ public class GroovyEvaluator extends AbstractBaseEvaluator {
      *
      * @param ctx variable context
      * @param expr expression
-     * @return a result of the evaluation
+     * @return A result of the evaluation
      * @throws SCXMLExpressionException For a malformed expression
      * @see Evaluator#eval(Context, String)
      */

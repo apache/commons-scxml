@@ -467,7 +467,7 @@ public class W3CTests {
 
     /**
      * Unmarshall and return the W3C IRP tests manifest.xml
-     * @return an Assertions instance reprenting the W3C IRP tests manifest.xml
+     * @return An Assertions instance reprenting the W3C IRP tests manifest.xml
      * @throws Exception
      */
     protected Assertions loadAssertions() throws Exception {
@@ -478,7 +478,7 @@ public class W3CTests {
 
     /**
      * Loads the tests.xml configuration file into a Tests class configuration model instance.
-     * @return a Tests instance for the tests.xml configuration file.
+     * @return A Tests instance for the tests.xml configuration file.
      * @throws Exception
      */
     protected Tests loadTests() throws Exception {

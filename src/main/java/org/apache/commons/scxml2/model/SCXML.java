@@ -157,7 +157,7 @@ public class SCXML implements Serializable, Observable {
     /**
      * Simple unique TransitionTarget id value generation
      *
-     * @return a unique TransitionTarget id for this SCXML instance
+     * @return A unique TransitionTarget id for this SCXML instance
      */
     public final String generateTransitionTargetId() {
         return GENERATED_TT_ID_PREFIX +ttNextId++;

@@ -42,7 +42,7 @@ public interface EventDispatcher {
      * the EventDispatcher provides this newInstnace method to allow creating a new instance without sharing its
      * internal state.
      *
-     * @return a new EventDispatcher instance for usage in an invoked child statemachine.
+     * @return A new EventDispatcher instance for usage in an invoked child statemachine.
      */
     EventDispatcher newInstance();
 

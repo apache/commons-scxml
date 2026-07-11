@@ -24,7 +24,7 @@ import org.apache.commons.scxml2.model.SCXML;
 public interface EvaluatorProvider {
 
     /**
-     * @return a default or generic {@link Evaluator} supporting the {@link #getSupportedDatamodel()}
+     * @return A default or generic {@link Evaluator} supporting the {@link #getSupportedDatamodel()}
      */
     Evaluator getEvaluator();
 
@@ -36,7 +36,7 @@ public interface EvaluatorProvider {
      * </p>
      *
      * @param document the SCXML document
-     * @return a new and not sharable Evaluator instance
+     * @return A new and not sharable Evaluator instance
      */
     Evaluator getEvaluator(SCXML document);
 

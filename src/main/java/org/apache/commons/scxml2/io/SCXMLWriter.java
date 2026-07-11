@@ -269,7 +269,7 @@ public class SCXMLWriter {
     /**
      * @param prefix prefix
      * @param localName localName
-     * @return a qualified name from a prefix and localName
+     * @return A qualified name from a prefix and localName
      */
     private static String createQualifiedName(final String prefix, final String localName) {
         return (prefix != null && !prefix.isEmpty() ? prefix + ":" : "") + localName;

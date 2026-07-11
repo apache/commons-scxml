@@ -26,7 +26,7 @@ public interface PathResolver {
      * Gets a PathResolver rooted at this context sensitive path.
      *
      * @param ctxPath Context sensitive path, can be a relative URL
-     * @return a new resolver rooted at ctxPath
+     * @return A new resolver rooted at ctxPath
      */
     PathResolver getResolver(String ctxPath);
 

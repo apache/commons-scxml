@@ -137,7 +137,7 @@ public abstract class TransitionalState extends EnterableState {
     /**
      * Gets the list of history pseudo states for this state.
      *
-     * @return a list of all history pseudo states contained by a given state
+     * @return A list of all history pseudo states contained by a given state
      *         (can be empty)
      * @see #hasHistory()
      * @since 0.7
