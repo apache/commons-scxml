@@ -235,7 +235,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
     }
 
     /**
-     * @return the flag indicating whether to forward events to the invoked process.
+     * @return The flag indicating whether to forward events to the invoked process.
      */
     public final Boolean getAutoForward() {
         return autoForward;
@@ -244,7 +244,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
     /**
      * Returns the content
      *
-     * @return the content
+     * @return The content
      */
     @Override
     public Content getContent() {
@@ -270,14 +270,14 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
     /**
      * Gets the identifier for this invoke (may be null).
      *
-     * @return the id.
+     * @return The id.
      */
     public final String getId() {
         return id;
     }
 
     /**
-     * @return the idlocation
+     * @return The idlocation
      */
     public String getIdlocation() {
         return idlocation;
@@ -305,7 +305,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
     /**
      * Gets the parent EnterableState.
      *
-     * @return the parent state
+     * @return The parent state
      */
     @Override
     public EnterableState getParentEnterableState() {

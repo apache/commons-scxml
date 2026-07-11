@@ -293,7 +293,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
     /**
      * Returns the content
      *
-     * @return the content
+     * @return The content
      */
     @Override
     public Content getContent() {
@@ -303,7 +303,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
     /**
      * Gets the delay.
      *
-     * @return the delay.
+     * @return The delay.
      */
     public final String getDelay() {
         return delay;
@@ -351,7 +351,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
     }
 
     /**
-     * @return the idlocation
+     * @return The idlocation
      */
     public String getIdlocation() {
         return idlocation;

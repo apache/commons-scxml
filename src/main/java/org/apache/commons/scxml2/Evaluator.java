@@ -42,7 +42,7 @@ public interface Evaluator {
      *
      * @param ctx variable context
      * @param expr expression
-     * @return the result of the evaluation
+     * @return The result of the evaluation
      * @throws SCXMLExpressionException A malformed expression exception
      */
     Object eval(Context ctx, String expr)

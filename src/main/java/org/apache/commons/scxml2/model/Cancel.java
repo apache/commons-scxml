@@ -73,7 +73,7 @@ public class Cancel extends Action {
     /**
      * Gets the ID of the send message that should be canceled.
      *
-     * @return the sendid.
+     * @return The sendid.
      */
     public String getSendid() {
         return sendid;
@@ -82,7 +82,7 @@ public class Cancel extends Action {
     /**
      * Gets the expression that evaluates to the ID of the send message that should be canceled.
      *
-     * @return the expression that evaluates to the ID of the send message that should be canceled.
+     * @return The expression that evaluates to the ID of the send message that should be canceled.
      */
     public String getSendidexpr() {
         return sendidexpr;

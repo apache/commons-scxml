@@ -108,7 +108,7 @@ public abstract class TransitionalState extends EnterableState {
      * Gets the ancestor of this TransitionalState at specified level
      *
      * @param level the level of the ancestor to return, zero being top
-     * @return the ancestor at specified level
+     * @return The ancestor at specified level
      */
     @Override
     public TransitionalState getAncestor(final int level) {
@@ -118,7 +118,7 @@ public abstract class TransitionalState extends EnterableState {
     /**
      * Gets the set of child transition targets (may be empty).
      *
-     * @return the children.
+     * @return The children.
      * @since 0.7
      */
     public final List<EnterableState> getChildren() {
@@ -128,7 +128,7 @@ public abstract class TransitionalState extends EnterableState {
     /**
      * Gets the data model for this transition target.
      *
-     * @return the data model.
+     * @return The data model.
      */
     public final Datamodel getDatamodel() {
         return datamodel;
@@ -158,7 +158,7 @@ public abstract class TransitionalState extends EnterableState {
     /**
      * Gets the TransitionalState (State or Parallel) parent.
      *
-     * @return the parent.
+     * @return The parent.
      */
     @Override
     public TransitionalState getParent() {

@@ -53,7 +53,7 @@ public class Final extends EnterableState {
     }
 
     /**
-     * @return the State parent
+     * @return The State parent
      */
     @Override
     public State getParent() {

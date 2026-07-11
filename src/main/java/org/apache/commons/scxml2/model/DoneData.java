@@ -38,7 +38,7 @@ public class DoneData implements ContentContainer, ParamsContainer, Serializable
     /**
      * Returns the content
      *
-     * @return the content
+     * @return The content
      */
     @Override
     public Content getContent() {

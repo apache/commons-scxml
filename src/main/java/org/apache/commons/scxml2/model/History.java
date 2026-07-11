@@ -46,7 +46,7 @@ public class History extends TransitionTarget {
     }
 
     /**
-     * @return the TransitionalState parent
+     * @return The TransitionalState parent
      */
     @Override
     public TransitionalState getParent() {
@@ -56,7 +56,7 @@ public class History extends TransitionTarget {
     /**
      * Gets the transition.
      *
-     * @return the transition.
+     * @return The transition.
      */
     public final SimpleTransition getTransition() {
         return transition;

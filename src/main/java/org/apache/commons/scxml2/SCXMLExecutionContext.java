@@ -222,7 +222,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
      * {@link #attachInstance(SCInstance)} can be used to re-attach a previously detached instance
      * </p>
      *
-     * @return the detached instance
+     * @return The detached instance
      */
     protected SCInstance detachInstance() {
         final SCInstance instance = scInstance;
@@ -235,21 +235,21 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     }
 
     /**
-     * @return the restricted execution context for actions
+     * @return The restricted execution context for actions
      */
     public ActionExecutionContext getActionExecutionContext() {
         return actionExecutionContext;
     }
 
     /**
-     * @return the SCXML Execution Logger for the application
+     * @return The SCXML Execution Logger for the application
      */
     public Log getAppLog() {
         return appLog;
     }
 
     /**
-     * @return the error reporter
+     * @return The error reporter
      */
     public ErrorReporter getErrorReporter() {
         return errorReporter;
@@ -263,7 +263,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     }
 
     /**
-     * @return the event dispatcher
+     * @return The event dispatcher
      */
     public EventDispatcher getEventDispatcher() {
         return eventdispatcher;
@@ -278,7 +278,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     }
 
     /**
-     * @return the map of current active Invokes and their invokeId
+     * @return The map of current active Invokes and their invokeId
      */
     public Map<Invoke, String> getInvokeIds() {
         return invokeIds;
@@ -298,14 +298,14 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     }
 
     /**
-     * @return the notification registry
+     * @return The notification registry
      */
     public NotificationRegistry getNotificationRegistry() {
         return notificationRegistry;
     }
 
     /**
-     * @return the SCInstance
+     * @return The SCInstance
      */
     public SCInstance getScInstance() {
         return scInstance;
@@ -316,7 +316,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     }
 
     /**
-     * @return the state machine
+     * @return The state machine
      */
     public SCXML getStateMachine() {
         return scInstance.getStateMachine();
@@ -402,7 +402,7 @@ public class SCXMLExecutionContext implements SCXMLIOProcessor {
     }
 
     /**
-     * @return the next event from the internal event queue, if available
+     * @return The next event from the internal event queue, if available
      */
     public TriggerEvent nextInternalEvent() {
         return internalEventQueue.poll();

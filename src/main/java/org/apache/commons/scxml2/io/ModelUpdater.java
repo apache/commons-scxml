@@ -147,7 +147,7 @@ final class ModelUpdater {
      *
      * @param states The list of children states of a parent TransitionalState or the SCXML document itself
      * @param nextOrder The next to be used order value
-     * @return the next to be used order value
+     * @return The next to be used order value
      */
     private static int initDocumentOrder(final List<EnterableState> states, int nextOrder) {
         for (final EnterableState state : states) {
@@ -169,7 +169,7 @@ final class ModelUpdater {
      *
      * @param states The list of children states of a parent TransitionalState or the SCXML document itself
      * @param nextObservableId The next observable id sequence value to be used
-     * @return the next to be used observable id sequence value
+     * @return The next to be used observable id sequence value
      */
     private static int initObservables(final List<EnterableState>states, int nextObservableId) {
         for (final EnterableState es : states) {

@@ -90,7 +90,7 @@ public class Assign extends Action implements ParsedValueContainer {
     /**
      * Gets the expr that will evaluate to the new value.
      *
-     * @return the expr.
+     * @return The expr.
      */
     public String getExpr() {
         return expr;
@@ -99,7 +99,7 @@ public class Assign extends Action implements ParsedValueContainer {
     /**
      * Gets the location for a previously defined XML data tree.
      *
-     * @return the location.
+     * @return The location.
      */
     public String getLocation() {
         return location;
@@ -118,7 +118,7 @@ public class Assign extends Action implements ParsedValueContainer {
     /**
      * Gets the source where the new XML instance for this location exists.
      *
-     * @return the source.
+     * @return The source.
      */
     public String getSrc() {
         return src;

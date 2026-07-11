@@ -65,14 +65,14 @@ public class CustomActionWrapper extends Action {
     /**
      * Gets the attributes defined on the custom action element
      *
-     * @return the map of attributes.
+     * @return The map of attributes.
      */
     public final Map<String, String> getAttributes() {
         return attributes;
     }
 
     /**
-     * @return the custom action XML element local name
+     * @return The custom action XML element local name
      */
     public String getLocalName() {
         return localName;
@@ -81,7 +81,7 @@ public class CustomActionWrapper extends Action {
     /**
      * Gets the custom XML namespaces in effect for this custom action
      *
-     * @return the map of namespaces.
+     * @return The map of namespaces.
      */
     public final Map<String, String> getNamespaces() {
         return namespaces;
@@ -98,7 +98,7 @@ public class CustomActionWrapper extends Action {
     }
 
     /**
-     * @return the custom action element prefix (might be null)
+     * @return The custom action element prefix (might be null)
      */
     public String getPrefix() {
         return prefix;

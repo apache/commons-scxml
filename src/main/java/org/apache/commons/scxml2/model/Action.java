@@ -55,7 +55,7 @@ public abstract class Action implements Serializable {
     /**
      * Gets the Executable parent.
      *
-     * @return the parent.
+     * @return The parent.
      */
     public Executable getParent() {
         return parent;

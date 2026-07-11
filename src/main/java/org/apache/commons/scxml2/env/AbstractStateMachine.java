@@ -222,7 +222,7 @@ public abstract class AbstractStateMachine {
      * Gets the SCXML engine driving the &quot;lifecycle&quot; of the
      * instances of this class.
      *
-     * @return the engine.
+     * @return The engine.
      */
     public SCXMLExecutor getEngine() {
         return engine;
@@ -231,7 +231,7 @@ public abstract class AbstractStateMachine {
     /**
      * Gets the log for this class.
      *
-     * @return the log.
+     * @return The log.
      */
     public Log getLog() {
         return log;

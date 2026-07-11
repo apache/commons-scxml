@@ -176,7 +176,7 @@ public class SCXML implements Serializable, Observable {
     /**
      * Gets the data model placed at document root.
      *
-     * @return the data model.
+     * @return The data model.
      */
     public final Datamodel getDatamodel() {
         return datamodel;
@@ -203,7 +203,7 @@ public class SCXML implements Serializable, Observable {
     /**
      * Gets the first immediate child of the SCXML root. Return null if there's no child.
      *
-     * @return the first immediate child of the SCXML root. Return null if there's no child.
+     * @return The first immediate child of the SCXML root. Return null if there's no child.
      * @since 2.0
      */
     public final EnterableState getFirstChild() {
@@ -230,7 +230,7 @@ public class SCXML implements Serializable, Observable {
     /**
      * Gets the initial Transition.
      *
-     * @return the initial transition for this state machine.
+     * @return The initial transition for this state machine.
      * @since 2.0
      */
     public final SimpleTransition getInitialTransition() {
@@ -268,7 +268,7 @@ public class SCXML implements Serializable, Observable {
     /**
      * Gets the {@link PathResolver}.
      *
-     * @return the pathResolver.
+     * @return The pathResolver.
      */
     public PathResolver getPathResolver() {
         return pathResolver;
@@ -296,7 +296,7 @@ public class SCXML implements Serializable, Observable {
     /**
      * Gets the SCXML document version.
      *
-     * @return the version.
+     * @return The version.
      */
     public final String getVersion() {
         return version;

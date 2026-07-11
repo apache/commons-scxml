@@ -27,7 +27,7 @@ package org.apache.commons.scxml2.model;
 public interface Observable {
 
     /**
-     * @return the id for this Observable which is unique within the SCXML state machine
+     * @return The id for this Observable which is unique within the SCXML state machine
      */
     Integer getObservableId();
 }

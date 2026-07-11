@@ -188,7 +188,7 @@ public class JexlEvaluator extends AbstractBaseEvaluator {
      * <em>NOTE: The internal JexlEngine instance can be null when this is deserialized.</em>
      * </p>
      *
-     * @return the current JexlEngine
+     * @return The current JexlEngine
      */
     private JexlEngine getJexlEngine() {
         JexlEngine engine = jexlEngine;

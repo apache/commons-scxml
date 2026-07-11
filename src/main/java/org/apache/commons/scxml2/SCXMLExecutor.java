@@ -172,7 +172,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
      * {@link #hasPendingEvents()} to check for possible pending events.
      * </p>
      *
-     * @return the detached instance
+     * @return The detached instance
      */
     public SCInstance detachInstance() {
         return exctx.detachInstance();
@@ -186,7 +186,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     /**
      * Gets the environment specific error reporter.
      *
-     * @return the errorReporter.
+     * @return The errorReporter.
      */
     public ErrorReporter getErrorReporter() {
         return exctx.getErrorReporter();
@@ -204,14 +204,14 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     /**
      * Gets the event dispatcher.
      *
-     * @return the eventdispatcher.
+     * @return The eventdispatcher.
      */
     public EventDispatcher getEventdispatcher() {
         return exctx.getEventDispatcher();
     }
 
     /**
-     * @return the (optionally) &lt;final&gt;&lt;donedata/&gt;&lt;/final&gt; produced data after the current statemachine
+     * @return The (optionally) &lt;final&gt;&lt;donedata/&gt;&lt;/final&gt; produced data after the current statemachine
      *         completed its execution.
      */
     public Object getFinalDoneData() {
@@ -241,14 +241,14 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     }
 
     /**
-     * @return the parent SCXMLIOProcessor (if any)
+     * @return The parent SCXMLIOProcessor (if any)
      */
     public ParentSCXMLIOProcessor getParentSCXMLIOProcessor() {
         return parentSCXMLIOProcessor;
     }
 
     /**
-     * @return the current number of pending external events to be processed.
+     * @return The current number of pending external events to be processed.
      */
     public int getPendingEvents() {
         return externalEventQueue.size();
@@ -285,7 +285,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
      * manipulation of any {@link org.apache.commons.scxml2.model.Datamodel}s associated with this state
      * machine definition.
      *
-     * @return the stateMachine.
+     * @return The stateMachine.
      */
     public SCXML getStateMachine() {
         return exctx.getStateMachine();

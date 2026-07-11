@@ -113,7 +113,7 @@ public class CustomAction {
     /**
      * Gets this custom action's implementation.
      *
-     * @return the action class.
+     * @return The action class.
      */
     public Class<? extends Action> getActionClass() {
         return actionClass;
@@ -122,7 +122,7 @@ public class CustomAction {
     /**
      * Gets the local name for this custom action.
      *
-     * @return the local name.
+     * @return The local name.
      */
     public String getLocalName() {
         return localName;
@@ -131,7 +131,7 @@ public class CustomAction {
     /**
      * Gets the namespace URI for this custom action.
      *
-     * @return the namespace URI.
+     * @return The namespace URI.
      */
     public String getNamespaceURI() {
         return namespaceURI;

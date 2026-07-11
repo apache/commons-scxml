@@ -95,7 +95,7 @@ public class SCXMLSystemContext implements Context, Serializable {
     }
 
     /**
-     * @return the wrapped (modifiable) system context
+     * @return The wrapped (modifiable) system context
      */
     Context getContext() {
         return systemContext;

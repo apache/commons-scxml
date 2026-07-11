@@ -121,7 +121,7 @@ public class If extends Action implements ActionsContainer {
     /**
      * Gets the executable actions contained in this &lt;if&gt;.
      *
-     * @return the actions.
+     * @return The actions.
      */
     @Override
     public final List<Action> getActions() {
@@ -131,7 +131,7 @@ public class If extends Action implements ActionsContainer {
     /**
      * Gets the conditional expression.
      *
-     * @return the cond.
+     * @return The cond.
      */
     public final String getCond() {
         return cond;

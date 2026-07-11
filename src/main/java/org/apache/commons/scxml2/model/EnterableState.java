@@ -69,7 +69,7 @@ public abstract class EnterableState extends TransitionTarget implements Documen
     /**
      * Gets the OnEntry elements.
      *
-     * @return the onEntry elements
+     * @return The onEntry elements
      */
     public final List<OnEntry> getOnEntries() {
         return onEntries;
@@ -78,14 +78,14 @@ public abstract class EnterableState extends TransitionTarget implements Documen
     /**
      * Gets the OnExit elements
      *
-     * @return the onExit elements
+     * @return The onExit elements
      */
     public final List<OnExit> getOnExits() {
         return onExits;
     }
 
     /**
-     * @return the document order of this state
+     * @return The document order of this state
      * @see DocumentOrder
      */
     @Override

@@ -26,7 +26,7 @@ public interface ContentContainer {
     /**
      * Returns the content
      *
-     * @return the content
+     * @return The content
      */
     Content getContent();
 

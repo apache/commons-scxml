@@ -1922,7 +1922,7 @@ public final class SCXMLReader {
      * Reads the current active namespace declarations.
      *
      * @param reader The {@link XMLStreamReader} providing the SCXML document to parse.
-     * @return the map of active namespace declarations, null if none defined
+     * @return The map of active namespace declarations, null if none defined
      */
     private static Map<String, String> readNamespaces(final XMLStreamReader reader) {
         Map<String, String> namespaces = null;

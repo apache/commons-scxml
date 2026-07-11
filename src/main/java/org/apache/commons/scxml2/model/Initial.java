@@ -55,7 +55,7 @@ public class Initial implements Serializable {
     /**
      * Gets the parent State.
      *
-     * @return the parent state
+     * @return The parent state
      */
     public final State getParent() {
         return parent;
@@ -64,7 +64,7 @@ public class Initial implements Serializable {
     /**
      * Gets the initial transition.
      *
-     * @return the transition.
+     * @return The transition.
      */
     public final SimpleTransition getTransition() {
         return transition;

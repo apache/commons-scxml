@@ -34,7 +34,7 @@ public interface DocumentOrder {
     Comparator<DocumentOrder> reverseDocumentOrderComparator = (o1, o2) -> o2.getOrder() - o1.getOrder();
 
     /**
-     * @return the relative document order within the SCXML document of this element
+     * @return The relative document order within the SCXML document of this element
      */
     int getOrder();
 }

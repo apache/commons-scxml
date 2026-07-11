@@ -90,7 +90,7 @@ public class SCInstanceObjectInputStream extends ObjectInputStream {
      *
      * @see org.apache.commons.scxml2.env.groovy.GroovyContext#readObject(ObjectInputStream)
      * @param classResolver custom class resolver
-     * @return the old classResolver replaced by the new {@code classResolver}
+     * @return The old classResolver replaced by the new {@code classResolver}
      */
     public ClassResolver setClassResolver(final ClassResolver classResolver) {
         final ClassResolver old = this.classResolver;

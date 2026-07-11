@@ -47,12 +47,12 @@ public interface ParsedValue extends Serializable {
     }
 
     /**
-     * @return the parsed value type
+     * @return The parsed value type
      */
     ValueType getType();
 
     /**
-     * @return the parsed value
+     * @return The parsed value
      */
     Object getValue();
 }

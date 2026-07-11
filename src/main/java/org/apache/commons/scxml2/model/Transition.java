@@ -68,7 +68,7 @@ public class Transition extends SimpleTransition implements DocumentOrder {
     /**
      * Gets the guard condition (may be null).
      *
-     * @return the cond.
+     * @return The cond.
      */
     public String getCond() {
         return cond;
@@ -78,7 +78,7 @@ public class Transition extends SimpleTransition implements DocumentOrder {
      * Gets the event that will trigger this transition (pending
      * evaluation of the guard condition in favor).
      *
-     * @return the event.
+     * @return The event.
      */
     public String getEvent() {
         return event;
@@ -92,7 +92,7 @@ public class Transition extends SimpleTransition implements DocumentOrder {
     }
 
     /**
-     * @return the document order of this transition
+     * @return The document order of this transition
      * @see DocumentOrder
      */
     @Override

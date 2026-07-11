@@ -52,7 +52,7 @@ public class ElseIf extends Action {
     /**
      * Gets the conditional expression.
      *
-     * @return the cond.
+     * @return The cond.
      */
     public final String getCond() {
         return cond;

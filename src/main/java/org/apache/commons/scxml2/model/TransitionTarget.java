@@ -67,7 +67,7 @@ public abstract class TransitionTarget implements Serializable, Observable {
      * Gets the ancestor of this TransitionTarget at specified level
      *
      * @param level the level of the ancestor to return, zero being top
-     * @return the ancestor at specified level
+     * @return The ancestor at specified level
      */
     public EnterableState getAncestor(final int level) {
         return ancestors[level];
@@ -76,14 +76,14 @@ public abstract class TransitionTarget implements Serializable, Observable {
     /**
      * Gets the identifier for this transition target (may be null).
      *
-     * @return the id.
+     * @return The id.
      */
     public final String getId() {
         return id;
     }
 
     /**
-     * @return the number of TransitionTarget ancestors
+     * @return The number of TransitionTarget ancestors
      */
     public int getNumberOfAncestors() {
         return ancestors.length;
@@ -100,7 +100,7 @@ public abstract class TransitionTarget implements Serializable, Observable {
     /**
      * Gets the parent TransitionTarget.
      *
-     * @return the parent state
+     * @return The parent state
      * (null if parent is &lt;scxml&gt; element)
      */
     public EnterableState getParent() {

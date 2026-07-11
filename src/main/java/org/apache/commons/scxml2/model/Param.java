@@ -65,7 +65,7 @@ public class Param implements Serializable {
     /**
      * Gets the location for a previously defined XML data tree.
      *
-     * @return the location.
+     * @return The location.
      */
     public String getLocation() {
         return location;

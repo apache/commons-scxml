@@ -172,7 +172,7 @@ public class ContentParser {
      * </ul>
      *
      * @param content the content to parse
-     * @return the parsed content object
+     * @return The parsed content object
      * @throws IOException In case of parsing exceptions
      */
     public ParsedValue parseContent(final String content) throws IOException {
@@ -204,7 +204,7 @@ public class ContentParser {
      * Load a resource (URL) as an UTF-8 encoded content string to be parsed into a ParsedValue content object through {@link #parseContent(String)}
      *
      * @param resourceURL Resource URL to load content from
-     * @return the parsed content object
+     * @return The parsed content object
      * @throws IOException In case of loading or parsing exceptions
      */
     public ParsedValue parseResource(final String resourceURL) throws IOException {

@@ -94,49 +94,49 @@ public class Step {
     }
 
     /**
-     * @return the defaultEntrySet.
+     * @return The defaultEntrySet.
      */
     public Set<EnterableState> getDefaultEntrySet() {
         return defaultEntrySet;
     }
 
     /**
-     * @return the map of default History transitions to be executed as result of entering states in this step
+     * @return The map of default History transitions to be executed as result of entering states in this step
      */
     public Map<TransitionalState, SimpleTransition> getDefaultHistoryTransitions() {
         return defaultHistoryTransitions;
     }
 
     /**
-     * @return the entrySet.
+     * @return The entrySet.
      */
     public Set<EnterableState> getEntrySet() {
         return entrySet;
     }
 
     /**
-     * @return the current event.
+     * @return The current event.
      */
     public TriggerEvent getEvent() {
         return event;
     }
 
     /**
-     * @return the exitSet.
+     * @return The exitSet.
      */
     public Set<EnterableState> getExitSet() {
         return exitSet;
     }
 
     /**
-     * @return the map of new History configurations created as result of exiting states in this step
+     * @return The map of new History configurations created as result of exiting states in this step
      */
     public Map<History, Set<EnterableState>> getNewHistoryConfigurations() {
         return newHistoryConfigurations;
     }
 
     /**
-     * @return the transitList.
+     * @return The transitList.
      */
     public List<SimpleTransition> getTransitList() {
         return transitList;

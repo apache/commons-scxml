@@ -34,7 +34,7 @@ public class Finalize extends Executable {
     }
 
     /**
-     * @return the TransitionalState parent
+     * @return The TransitionalState parent
      */
     @Override
     public TransitionalState getParent() {
