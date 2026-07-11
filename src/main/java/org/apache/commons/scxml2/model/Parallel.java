@@ -40,7 +40,7 @@ public class Parallel extends TransitionalState {
     /**
      * Add a TransitionalState (State or Parallel) child
      *
-     * @param ts the child to add
+     * @param ts The child to add
      */
     public final void addChild(final TransitionalState ts) {
         super.addChild(ts);

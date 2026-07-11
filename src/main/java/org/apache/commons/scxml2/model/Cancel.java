@@ -100,7 +100,7 @@ public class Cancel extends Action {
     /**
      * Sets the expression that evaluates to the ID of the send message that should be canceled.
      *
-     * @param sendidexpr the expression that evaluates to the ID of the send message that should be canceled.
+     * @param sendidexpr The expression that evaluates to the ID of the send message that should be canceled.
      */
     public void setSendidexpr(final String sendidexpr) {
         this.sendidexpr = sendidexpr;

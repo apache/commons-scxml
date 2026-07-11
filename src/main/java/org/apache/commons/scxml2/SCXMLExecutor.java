@@ -110,7 +110,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
     /**
      * Constructor using a parent SCXMLExecutor
      *
-     * @param parentSCXMLExecutor the parent SCXMLExecutor
+     * @param parentSCXMLExecutor The parent SCXMLExecutor
      * @param invokeId SCXML invoke id
      * @param scxml {@link SCXML} instance
      * @throws ModelException if the internal {@link SCInstance} is already initialized
@@ -130,7 +130,7 @@ public class SCXMLExecutor implements SCXMLIOProcessor {
      * No processing of the vent will be done, until the next triggerEvent methods is invoked.
      * </p>
      *
-     * @param evt an external event
+     * @param evt An external event
      */
     @Override
     public void addEvent(final TriggerEvent evt) {

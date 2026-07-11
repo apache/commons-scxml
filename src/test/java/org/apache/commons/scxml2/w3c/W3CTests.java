@@ -515,7 +515,7 @@ public class W3CTests {
     /**
      * Download and transform a W3C IRP test resource file
      *
-     * @param specid       the SCXML 1.0 spec id (anchor) for the current assertion, which is used to determine if, how and where the resource should be
+     * @param specid       The SCXML 1.0 spec id (anchor) for the current assertion, which is used to determine if, how and where the resource should be
      *                     transformed.
      * @param resource     The test resource definition
      * @param transformers map of datamodel transformers to produce a datamodel specific SCXML document from the txml resource
@@ -544,8 +544,8 @@ public class W3CTests {
     /**
      * Run a single W3C IRP assert test
      * @param assertion The W3C IRP assert, defining one or more {@link Assertions.TestCase}s
-     * @param tests the tests configurations
-     * @param datamodel the datamodel to limit and restrict the execution of the test
+     * @param tests The tests configurations
+     * @param datamodel The datamodel to limit and restrict the execution of the test
      * @param status true to run the test with status true for the (or any) datamodel, false to do so for status false
      * @param singleTest if true a single test id was specified which will be executed even if disabled in the configuration.
      * @throws Exception
@@ -589,9 +589,9 @@ public class W3CTests {
 
     /**
      * Run a single W3C IRP SCXML test
-     * @param testCase the W3C IRP test definition
-     * @param test the test configuration
-     * @param scxmlFile the file handle for the SCXML document
+     * @param testCase The W3C IRP test definition
+     * @param test The test configuration
+     * @param scxmlFile The file handle for the SCXML document
      */
     protected boolean runTest(final Assertions.TestCase testCase, final Tests.Test test, final File scxmlFile) {
         try {
@@ -635,7 +635,7 @@ public class W3CTests {
 
     /**
      * Run one or multiple W3C IRP tests
-     * @param testId a W3C IRP test id, or null to specify all tests to run
+     * @param testId A W3C IRP test id, or null to specify all tests to run
      * @param datamodel only tests available for or executable with the specified datamodel will be run (or all if null)
      * @throws Exception
      */
@@ -682,9 +682,9 @@ public class W3CTests {
     /**
      * XSL transform a W3C IRP test SCXML resource to a datamodel specific location and format, or simply copy a non SCXML resource to that location.
      *
-     * @param resource    the test resource definition
-     * @param transformer the XSL transformer to use
-     * @param targetDir   the target location for the transformed SCXML document, or the non-SCXML resource
+     * @param resource    The test resource definition
+     * @param transformer The XSL transformer to use
+     * @param targetDir   The target location for the transformed SCXML document, or the non-SCXML resource
      * @throws Exception
      */
     protected void transformResource(final Assertions.Resource resource, final Transformer transformer, final String targetDir) throws Exception {

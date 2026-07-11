@@ -53,7 +53,7 @@ public interface Evaluator {
      *
      * @param ctx variable context
      * @param location location expression
-     * @param data the data to assign.
+     * @param data The data to assign.
      * @throws SCXMLExpressionException A malformed expression exception
      */
     void evalAssign(Context ctx, String location, Object data)

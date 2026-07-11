@@ -171,7 +171,7 @@ public class ContentParser {
      *   <li>otherwise the content will be treated (cleaned) as a space-normalized string literal</li>
      * </ul>
      *
-     * @param content the content to parse
+     * @param content The content to parse
      * @return The parsed content object
      * @throws IOException In case of parsing exceptions
      */

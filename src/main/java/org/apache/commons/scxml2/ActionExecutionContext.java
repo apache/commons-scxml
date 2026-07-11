@@ -48,7 +48,7 @@ public class ActionExecutionContext {
     }
 
     /**
-     * @param state an EnterableState
+     * @param state An EnterableState
      * @return The context for an EnterableState
      */
     public Context getContext(final EnterableState state) {

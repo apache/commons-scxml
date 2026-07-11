@@ -122,7 +122,7 @@ public class JSBindings implements Bindings {
     /**
      * Sets all entries in the provided map via {@link #put(String, Object)}
      *
-     * @param toMerge the map of variables to merge
+     * @param toMerge The map of variables to merge
      */
     @Override
     public void putAll(final Map<? extends String, ?> toMerge) {
@@ -134,7 +134,7 @@ public class JSBindings implements Bindings {
     /**
      * Removes the named variable from the contained SCXML context.
      *
-     * @param name the variable name
+     * @param name The variable name
      */
     @Override
     public Object remove(final Object name) {
@@ -144,7 +144,7 @@ public class JSBindings implements Bindings {
     /**
      * Sets or update the SCXML context delegate
      *
-     * @param jsContext the SCXML context to use for script variables.
+     * @param jsContext The SCXML context to use for script variables.
      * @throws IllegalArgumentException Thrown if {@code jsContext} is {@code null}.
      */
     public void setContext(final JSContext jsContext) {

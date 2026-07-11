@@ -163,7 +163,7 @@ public class Transition extends SimpleTransition implements DocumentOrder {
     /**
      * Sets the document order of this transition
      *
-     * @param order the document order
+     * @param order The document order
      * @see DocumentOrder
      */
     public final void setOrder(final int order) {

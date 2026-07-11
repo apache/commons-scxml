@@ -31,7 +31,7 @@ public final class JexlBuiltin {
     /**
      * Creates a new instance, wraps the context.
      *
-     * @param ctxt the context in use
+     * @param ctxt The context in use
      */
     public JexlBuiltin(final JexlContext ctxt) {
         context = ctxt;

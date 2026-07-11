@@ -47,7 +47,7 @@ public class State extends TransitionalState {
     /**
      * Adds an EnterableState (State, Final or Parallel) child
      *
-     * @param es the child to add
+     * @param es The child to add
      */
     @Override
     public final void addChild(final EnterableState es) {

@@ -53,7 +53,7 @@ public abstract class GroovySCXMLScript extends Script {
      *     To work around this, the custom {@link #var(String)} function is available.
      * </p>
      *
-     * @param obj the object to check if it is empty
+     * @param obj The object to check if it is empty
      * @return true if the object is empty, false otherwise
      */
     public boolean empty(final Object obj) {
@@ -99,7 +99,7 @@ public abstract class GroovySCXMLScript extends Script {
      * See for more information: <a href="https://docs.codehaus.org/display/GROOVY/Operators#Operators-SafeNavigationOperator(?.)">Groovy SafeNavigationOperator</a>
      * </p>
      *
-     * @param property the name of variable to check if it exists
+     * @param property The name of variable to check if it exists
      * @return true if the variable exists, false otherwise
      */
     public boolean var(final String property) {

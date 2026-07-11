@@ -36,7 +36,7 @@ public class ModelException extends Exception {
 
     /**
      * @see Exception#Exception(String)
-     * @param message the detail message
+     * @param message The detail message
      */
     public ModelException(final String message) {
         super(message);
@@ -44,8 +44,8 @@ public class ModelException extends Exception {
 
     /**
      * @see Exception#Exception(String, Throwable)
-     * @param message the detail message
-     * @param cause the cause
+     * @param message The detail message
+     * @param cause The cause
      */
     public ModelException(final String message, final Throwable cause) {
         super(message, cause);
@@ -53,7 +53,7 @@ public class ModelException extends Exception {
 
     /**
      * @see Exception#Exception(Throwable)
-     * @param cause the cause
+     * @param cause The cause
      */
     public ModelException(final Throwable cause) {
         super(cause);

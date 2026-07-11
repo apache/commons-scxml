@@ -267,8 +267,8 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
 
     /**
      * @return true if no member of the provided states set is a descendant of the provided state.
-     * @param states the set of states to check for descendants
-     * @param state the state to check with
+     * @param states The set of states to check for descendants
+     * @param state The state to check with
      */
     public boolean containsNoDescendant(final Set<EnterableState> states, final EnterableState state) {
         for (final EnterableState es : states) {
@@ -284,8 +284,8 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * already have been pre-computed in {@link #microStep(SCXMLExecutionContext, Step, java.util.Set)}.
      *
      * @param exctx The execution context for this micro step
-     * @param step the step
-     * @param statesToInvoke the set of activated states which invokes need to be invoked at the end of the current
+     * @param step The step
+     * @param statesToInvoke The set of activated states which invokes need to be invoked at the end of the current
      *                       macro step
      * @throws ModelException if a SCXML model error occurred during the execution.
      */
@@ -347,7 +347,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * Executes the executable content for a specific executable in the micro step
      *
      * @param exctx The execution context for this micro step
-     * @param exec the executable providing the execution content
+     * @param exec The executable providing the execution content
      * @throws ModelException if a SCXML model error occurred during the execution.
      */
     public void executeContent(final SCXMLExecutionContext exctx, final Executable exec) throws ModelException {
@@ -401,7 +401,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * Executes the executable content for all transitions in the micro step
      *
      * @param exctx The execution context for this micro step
-     * @param step the step
+     * @param step The step
      * @throws ModelException if a SCXML model error occurred during the execution.
      */
     public void executeTransitionContent(final SCXMLExecutionContext exctx, final Step step) throws ModelException {
@@ -415,8 +415,8 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * already have been pre-computed in {@link #microStep(SCXMLExecutionContext, Step, java.util.Set)}.
      *
      * @param exctx The execution context for this micro step
-     * @param step the step
-     * @param statesToInvoke the set of activated states which invokes need to be invoked at the end of the current
+     * @param step The step
+     * @param statesToInvoke The set of activated states which invokes need to be invoked at the end of the current
      *                       macro step
      * @throws ModelException if a SCXML model error occurred during the execution.
      */
@@ -568,7 +568,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * Initiate any new invoked activities.
      *
      * @param exctx provides the execution context
-     * @param statesToInvoke the set of activated states which invokes need to be invoked
+     * @param statesToInvoke The set of activated states which invokes need to be invoked
      * @throws ModelException if there is a fatal SCXML state error
      */
     public void initiateInvokes(final SCXMLExecutionContext exctx,
@@ -598,8 +598,8 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
     /**
      * This method corresponds to the Algorithm for SCXML processing isFinalState() function.
      *
-     * @param es the enterable state to check
-     * @param configuration the current state machine configuration
+     * @param es The enterable state to check
+     * @param configuration The current state machine configuration
      * @return Return true if s is a compound state and one of its children is an active final state (i.e. is a member
      *         of the current configuration), or if s is a parallel state and isInFinalState is true of all its children.
      */
@@ -627,7 +627,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * configuration (with the respect to the definition of the OR and AND
      * states).
      *
-     * @param states a set of states
+     * @param states A set of states
      * @param errRep ErrorReporter to report detailed error info if needed
      * @return true if a given state configuration is legal, false otherwise
      */
@@ -691,7 +691,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * </p>
      *
      * @param exctx The execution context for this step
-     * @param statesToInvoke the set of activated states which invokes need to be invoked at the end of the current
+     * @param statesToInvoke The set of activated states which invokes need to be invoked at the end of the current
      *                       macro step
      * @throws ModelException if a SCXML model error occurred during the execution.
      */
@@ -787,7 +787,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      *
      * @param exctx The execution context for this step
      * @param step The current micro step
-     * @param statesToInvoke the set of activated states which invokes need to be invoked at the end of the current
+     * @param statesToInvoke The set of activated states which invokes need to be invoked at the end of the current
      *                       macro step
      * @throws ModelException if a SCXML model error occurred during the execution.
      */
@@ -1089,7 +1089,7 @@ public class SCXMLSemanticsImpl implements SCXMLSemantics {
      * SCXML specification predefined types.
      * </p>
      *
-     * @param scInstance the state machine instance holding the system context
+     * @param scInstance The state machine instance holding the system context
      * @param event The event being stored
      * @param internal Flag indicating the event was received internally or externally
      */

@@ -106,7 +106,7 @@ public abstract class EnterableState extends TransitionTarget implements Documen
     /**
      * Sets the document order of this state
      *
-     * @param order the document order
+     * @param order The document order
      * @see DocumentOrder
      */
     public final void setOrder(final int order) {

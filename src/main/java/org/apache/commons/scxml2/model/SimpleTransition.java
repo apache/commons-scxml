@@ -244,7 +244,7 @@ public class SimpleTransition extends Executable implements Observable {
     /**
      * Sets the observableId for this Observable, which must be unique within the SCXML state machine
      *
-     * @param observableId the observableId
+     * @param observableId The observableId
      */
     public final void setObservableId(final Integer observableId) {
         this.observableId = observableId;
@@ -265,7 +265,7 @@ public class SimpleTransition extends Executable implements Observable {
     /**
      * Sets the Transition type
      *
-     * @param type the Transition type
+     * @param type The Transition type
      */
     public final void setType(final TransitionType type) {
         this.type = type;

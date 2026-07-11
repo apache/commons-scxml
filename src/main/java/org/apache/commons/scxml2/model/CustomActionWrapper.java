@@ -111,7 +111,7 @@ public class CustomActionWrapper extends Action {
     /**
      * Sets the attributes defined on the custom action element
      *
-     * @param attributes the attributes to set
+     * @param attributes The attributes to set
      */
     public void setAttributes(final Map<String, String> attributes) {
         this.attributes = attributes;

@@ -47,12 +47,12 @@ public class PayloadBuilder {
      * (typically data ids or for example XPath variables). The names and the values they 'point' at
      * are added to the payload data map.
      *
-     * @param parentState the enterable state in which the namelist holder is defined
-     * @param ctx the Context to look up the data
-     * @param evaluator the evaluator to evaluate/lookup the data
+     * @param parentState The enterable state in which the namelist holder is defined
+     * @param ctx The Context to look up the data
+     * @param evaluator The evaluator to evaluate/lookup the data
      * @param errorReporter to report errors
-     * @param namelist the namelist
-     * @param payload the payload data map to be updated
+     * @param namelist The namelist
+     * @param payload The payload data map to be updated
      * @throws SCXMLExpressionException if a malformed or invalid expression is evaluated
      * @see PayloadBuilder#addToPayload(String, Object, java.util.Map)
      */
@@ -78,9 +78,9 @@ public class PayloadBuilder {
      * Adds data to the payload data map based on the {@link Param}s of this {@link ParamsContainer}
      *
      * @param ctx The Context to look up the data
-     * @param evaluator the evaluator to evaluate/lookup the data
-     * @param paramsList the list of params
-     * @param payload the payload data map to be updated
+     * @param evaluator The evaluator to evaluate/lookup the data
+     * @param paramsList The list of params
+     * @param payload The payload data map to be updated
      * @throws SCXMLExpressionException if a malformed or invalid expression is evaluated
      * @see PayloadBuilder#addToPayload(String, Object, java.util.Map)
      */
@@ -117,9 +117,9 @@ public class PayloadBuilder {
      * to the payload data map. This includes 'nested' values within a {@link NodeList}, {@link List} or {@link Map}.
      * </p>
      *
-     * @param attrName the name of the attribute to add
-     * @param attrValue the value of the attribute to add
-     * @param payload the payload data map to be updated
+     * @param attrName The name of the attribute to add
+     * @param attrValue The value of the attribute to add
+     * @param payload The payload data map to be updated
      */
     @SuppressWarnings("unchecked")
     public static void addToPayload(final String attrName, final Object attrValue, final Map<String, Object> payload) {

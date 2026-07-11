@@ -107,7 +107,7 @@ public abstract class TransitionalState extends EnterableState {
     /**
      * Gets the ancestor of this TransitionalState at specified level
      *
-     * @param level the level of the ancestor to return, zero being top
+     * @param level The level of the ancestor to return, zero being top
      * @return The ancestor at specified level
      */
     @Override

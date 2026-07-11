@@ -2865,7 +2865,7 @@ public final class SCXMLReader {
     /**
      * Advances the XMLStreamReader until after the end of the current element: all children will be skipped as well
      *
-     * @param reader the reader
+     * @param reader The reader
      * @throws XMLStreamException
      */
     private static void skipToEndElement(final XMLStreamReader reader) throws XMLStreamException {

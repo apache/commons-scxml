@@ -497,7 +497,7 @@ public class SCInstance implements Serializable {
     /**
      * Sets the I/O Processor for the internal event queue
      *
-     * @param internalIOProcessor the I/O Processor
+     * @param internalIOProcessor The I/O Processor
      */
     protected void setInternalIOProcessor(final SCXMLIOProcessor internalIOProcessor) {
         this.internalIOProcessor = internalIOProcessor;

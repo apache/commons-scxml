@@ -367,7 +367,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
     /**
      * Sets the flag indicating whether to forward events to the invoked process.
      *
-     * @param autoForward the flag
+     * @param autoForward The flag
      */
     public final void setAutoForward(final Boolean autoForward) {
         this.autoForward = autoForward;
@@ -376,7 +376,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
     /**
      * Sets the content
      *
-     * @param content the content to set
+     * @param content The content to set
      */
     @Override
     public void setContent(final Content content) {
@@ -423,7 +423,7 @@ public class Invoke extends Action implements ContentContainer, ParamsContainer 
      * Sets the parent EnterableState.
      *
      * @param parent The parent state to set
-     * @param invokeIndex the invoke index in the parent (TransitionalState) defined invokers
+     * @param invokeIndex The invoke index in the parent (TransitionalState) defined invokers
      */
     public void setParentEnterableState(final EnterableState parent, final int invokeIndex) {
         if (parent == null) {

@@ -66,7 +66,7 @@ public abstract class TransitionTarget implements Serializable, Observable {
     /**
      * Gets the ancestor of this TransitionTarget at specified level
      *
-     * @param level the level of the ancestor to return, zero being top
+     * @param level The level of the ancestor to return, zero being top
      * @return The ancestor at specified level
      */
     public EnterableState getAncestor(final int level) {
@@ -142,7 +142,7 @@ public abstract class TransitionTarget implements Serializable, Observable {
     /**
      * Sets the observableId for this Observable, which must be unique within the SCXML state machine
      *
-     * @param observableId the observableId
+     * @param observableId The observableId
      */
     public final void setObservableId(final Integer observableId) {
         this.observableId = observableId;

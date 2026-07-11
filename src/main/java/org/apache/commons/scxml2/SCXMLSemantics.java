@@ -143,7 +143,7 @@ public interface SCXMLSemantics {
      * {@link SCXMLExecutor#setConfiguration(java.util.Set)}.
      * </p>
      *
-     * @param states a set of states
+     * @param states A set of states
      * @param errRep ErrorReporter to report detailed error info if needed
      * @return true if a given state configuration is legal, false otherwise
      */

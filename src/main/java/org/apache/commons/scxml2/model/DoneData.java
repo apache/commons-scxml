@@ -58,7 +58,7 @@ public class DoneData implements ContentContainer, ParamsContainer, Serializable
     /**
      * Sets the content
      *
-     * @param content the content to set
+     * @param content The content to set
      */
     @Override
     public void setContent(final Content content) {

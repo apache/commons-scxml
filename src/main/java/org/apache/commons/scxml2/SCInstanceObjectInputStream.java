@@ -36,7 +36,7 @@ public class SCInstanceObjectInputStream extends ObjectInputStream {
         /**
          * Callback method invoked from {@link SCInstanceObjectInputStream#resolveClass(ObjectStreamClass)}
          *
-         * @param osc an instance of class ObjectStreamClass
+         * @param osc An instance of class ObjectStreamClass
          * @return A Class object corresponding to osc
          * @throws IOException if an I/O error occurs while reading the instance of class ObjectStreamClass
          * @throws ClassNotFoundException if the class is not found while reading the instance of class ObjectStreamClass

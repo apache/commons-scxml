@@ -72,7 +72,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
      *
      * @param delayString The String value of the delay, in CSS2 format
      * @param expression indicates if this is for a delayexpr or delay attribute
-     * @param delayStringSource the original delayString source (delayString might be different in case of a delayexpr)
+     * @param delayStringSource The original delayString source (delayString might be different in case of a delayexpr)
      * @return The parsed delay in milliseconds
      * @throws SCXMLExpressionException If the delay cannot be parsed
      */
@@ -411,7 +411,7 @@ public class Send extends Action implements ContentContainer, ParamsContainer {
     /**
      * Sets the content
      *
-     * @param content the content to set
+     * @param content The content to set
      */
     @Override
     public void setContent(final Content content) {

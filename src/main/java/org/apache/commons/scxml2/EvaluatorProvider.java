@@ -35,7 +35,7 @@ public interface EvaluatorProvider {
      * Evaluator may not be shareable and reusable for other SCXML documents.
      * </p>
      *
-     * @param document the SCXML document
+     * @param document The SCXML document
      * @return A new and not sharable Evaluator instance
      */
     Evaluator getEvaluator(SCXML document);
