@@ -38,7 +38,7 @@ public class SCInstanceObjectInputStream extends ObjectInputStream {
          *
          * @param osc An instance of class ObjectStreamClass
          * @return A Class object corresponding to osc
-         * @throws IOException if an I/O error occurs while reading the instance of class ObjectStreamClass
+         * @throws IOException Thrown if an I/O error occurs while reading the instance of class ObjectStreamClass
          * @throws ClassNotFoundException if the class is not found while reading the instance of class ObjectStreamClass
          */
         Class resolveClass(ObjectStreamClass osc) throws IOException, ClassNotFoundException;
@@ -53,7 +53,7 @@ public class SCInstanceObjectInputStream extends ObjectInputStream {
      * Default constructor
      *
      * @param in Inputstream to use
-     * @throws IOException if an I/O error occurs while reading the stream
+     * @throws IOException Thrown if an I/O error occurs while reading the stream
      */
     public SCInstanceObjectInputStream(final InputStream in) throws IOException {
         super(in);

@@ -219,7 +219,7 @@ public class ContentParser {
      *
      * @param xmlString XML String to parse
      * @return document element
-     * @throws IOException if IO error occurs while parsing XML
+     * @throws IOException Thrown if IO error occurs while parsing XML
      */
     public Node parseXml(final String xmlString) throws IOException {
         Document doc;
@@ -236,7 +236,7 @@ public class ContentParser {
      *
      * @param jsonObject object to transform
      * @return json string
-     * @throws IOException if IO error occurs while serializing it to JSON
+     * @throws IOException Thrown if IO error occurs while serializing it to JSON
      */
     public String toJson(final Object jsonObject) throws IOException {
         return jsonObjectMapper.writeValueAsString(jsonObject);
@@ -247,7 +247,7 @@ public class ContentParser {
      *
      * @param node node to transform
      * @return XML string
-     * @throws IOException if IO error occurs while serializing node to XML
+     * @throws IOException Thrown if IO error occurs while serializing node to XML
      */
     public String toXml(final Node node) throws IOException {
         try {
