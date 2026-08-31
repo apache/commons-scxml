@@ -81,6 +81,7 @@ import org.apache.commons.scxml2.model.TextValue;
 import org.apache.commons.scxml2.model.Transition;
 import org.apache.commons.scxml2.model.TransitionTarget;
 import org.apache.commons.scxml2.model.Var;
+import org.apache.commons.xml.secure.SecureTransformerFactory;
 import org.w3c.dom.Node;
 
 /**
@@ -339,7 +340,7 @@ public class SCXMLWriter {
         outputProps.put(OutputKeys.STANDALONE, "no");
         outputProps.put(OutputKeys.INDENT, "yes");
         try {
-            final TransformerFactory tfFactory = TransformerFactory.newInstance();
+            final TransformerFactory tfFactory = SecureTransformerFactory.newInstance();
             transformer = tfFactory.newTransformer();
             transformer.setOutputProperties(outputProps);
         } catch (TransformerFactoryConfigurationError | TransformerConfigurationException t) {
@@ -1130,7 +1131,7 @@ public class SCXMLWriter {
             prettyPrintResult = scxmlResult;
         }
 
-        final TransformerFactory factory = TransformerFactory.newInstance();
+        final TransformerFactory factory = SecureTransformerFactory.newInstance();
         try {
             final Transformer transformer = factory.newTransformer();
             if (configuration.encoding != null) {

@@ -31,7 +31,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.Location;
 import javax.xml.stream.XMLInputFactory;
@@ -98,6 +97,9 @@ import org.apache.commons.scxml2.model.Transition;
 import org.apache.commons.scxml2.model.TransitionType;
 import org.apache.commons.scxml2.model.TransitionalState;
 import org.apache.commons.scxml2.model.Var;
+import org.apache.commons.xml.secure.SecureDocumentBuilderFactory;
+import org.apache.commons.xml.secure.SecureSchemaFactory;
+import org.apache.commons.xml.secure.SecureXMLInputFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -589,9 +591,9 @@ public final class SCXMLReader {
             throws IOException, XMLStreamException {
 
         // Instantiate the XMLInputFactory
-        XMLInputFactory factory = XMLInputFactory.newInstance();
+        XMLInputFactory factory = SecureXMLInputFactory.newInstance();
         if (configuration.factoryId != null && configuration.factoryClassLoader != null) {
-            factory = XMLInputFactory.newFactory(configuration.factoryId, configuration.factoryClassLoader);
+            factory = SecureXMLInputFactory.newFactory(configuration.factoryId, configuration.factoryClassLoader);
         }
         factory.setEventAllocator(configuration.allocator);
         if (factory.isPropertySupported(XMLInputFactory_JDK_PROP_REPORT_CDATA)) {
@@ -623,7 +625,7 @@ public final class SCXMLReader {
             // Validation requires us to use a Source
 
             final URL scxmlSchema = new URL("TODO"); // TODO, point to appropriate location
-            final SchemaFactory schemaFactory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
+            final SchemaFactory schemaFactory = SecureSchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
             Schema schema;
             try {
                 schema = schemaFactory.newSchema(scxmlSchema);
@@ -1341,7 +1343,7 @@ public final class SCXMLReader {
         // Create a document in which to build the DOM node
         Document document;
         try {
-            document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+            document = SecureDocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
         } catch (final ParserConfigurationException pce) {
             throw new XMLStreamException(ERR_PARSER_CFG);
         }

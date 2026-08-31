@@ -18,17 +18,16 @@ package org.apache.commons.scxml2.io;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -37,8 +36,11 @@ import org.apache.commons.scxml2.model.JsonValue;
 import org.apache.commons.scxml2.model.NodeValue;
 import org.apache.commons.scxml2.model.ParsedValue;
 import org.apache.commons.scxml2.model.TextValue;
+import org.apache.commons.xml.secure.SecureDocumentBuilderFactory;
+import org.apache.commons.xml.secure.SecureTransformerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.fasterxml.jackson.core.JsonParser;
@@ -224,7 +226,8 @@ public class ContentParser {
     public Node parseXml(final String xmlString) throws IOException {
         Document doc;
         try {
-            doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(xmlString);
+            // Wrap in an InputSource: DocumentBuilder.parse(String) would interpret the content as a URI.
+            doc = SecureDocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(xmlString)));
         } catch (SAXException | ParserConfigurationException e) {
             throw new IOException(e);
         }
@@ -252,7 +255,7 @@ public class ContentParser {
     public String toXml(final Node node) throws IOException {
         try {
             final StringWriter writer = new StringWriter();
-            final Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            final Transformer transformer = SecureTransformerFactory.newInstance().newTransformer();
             final Properties outputProps = new Properties();
             outputProps.put(OutputKeys.OMIT_XML_DECLARATION, "no");
             outputProps.put(OutputKeys.STANDALONE, "no");
