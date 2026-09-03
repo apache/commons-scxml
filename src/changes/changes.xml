@@ -30,6 +30,8 @@
         [18-10-2018] Before executing invoke handlers after a macrostep all internal events must have been processed
       </action>
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Fix Apache RAT plugin console warnings.</action>
+      <action type="fix" dev="pkarwasz">Create XML parsers, stream readers and transformers through org.apache.commons:commons-secure-xml, so external entities and DTDs are no longer fetched by default.</action>
+      <action type="fix" dev="pkarwasz">ContentParser.parseXml now parses its argument as XML content instead of interpreting it as a URI.</action>
       <!-- UPDATE -->
       <action dev="woonsan" type="update" issue="SCXML-284" due-to="Allon Mureinik">
         [10-10-2018] Clear up exception handling in tests
