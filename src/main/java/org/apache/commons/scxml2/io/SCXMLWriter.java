@@ -330,25 +330,34 @@ public class SCXMLWriter {
 
     /**
      * Gets a {@link Transformer} instance that pretty prints the output.
+     * <p>
+     * A failure here can only be caused by the TrAX implementation available on the class path: either no
+     * {@link TransformerFactory} can be instantiated at all, or the one that is instantiated rejects the
+     * output properties this writer requires.
+     * </p>
      *
      * @return Transformer The indenting {@link Transformer} instance.
+     * @throws IllegalStateException if no suitable {@link Transformer} can be created.
      */
     private static Transformer getTransformer() {
-        Transformer transformer;
         final Properties outputProps = new Properties();
         outputProps.put(OutputKeys.OMIT_XML_DECLARATION, "yes");
         outputProps.put(OutputKeys.STANDALONE, "no");
         outputProps.put(OutputKeys.INDENT, "yes");
+        TransformerFactory factory = null;
         try {
-            final TransformerFactory tfFactory = SecureTransformerFactory.newInstance();
-            transformer = tfFactory.newTransformer();
+            factory = SecureTransformerFactory.newInstance();
+            final Transformer transformer = factory.newTransformer();
             transformer.setOutputProperties(outputProps);
-        } catch (TransformerFactoryConfigurationError | TransformerConfigurationException t) {
-            final org.apache.commons.logging.Log log = LogFactory.getLog(SCXMLWriter.class);
-            log.error(t.getMessage(), t);
-            return null;
+            return transformer;
+        } catch (final IllegalArgumentException | TransformerConfigurationException | TransformerFactoryConfigurationError t) {
+            final String message = "Unable to create the XML transformer used to pretty print SCXML documents: " +
+                    (factory != null
+                            ? "the TrAX implementation " + factory.getClass().getName() + " does not support the required output properties."
+                            : "no TrAX implementation is available on the class path.");
+            LogFactory.getLog(SCXMLWriter.class).error(message, t);
+            throw new IllegalStateException(message, t);
         }
-        return transformer;
     }
 
     /**
