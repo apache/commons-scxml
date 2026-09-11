@@ -19,6 +19,10 @@ updates:
     directory: "/"
     schedule:
       interval: "quarterly"
+    ignore:
+      # Groovy 5.x requires Java 11, while Commons SCXML 2.0 targets Java 8.
+      - dependency-name: "org.apache.groovy:groovy"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
