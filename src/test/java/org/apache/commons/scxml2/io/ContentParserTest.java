@@ -17,12 +17,20 @@
 package org.apache.commons.scxml2.io;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
+import javax.xml.parsers.DocumentBuilder;
+
+import org.apache.commons.scxml2.model.NodeValue;
+import org.apache.commons.scxml2.model.ParsedValue;
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -52,6 +60,31 @@ class ContentParserTest {
         jsonArray.add(jsonObject);
         jsonArray.add(jsonObject);
         assertEquals(jsonArray, contentParser.parseJson(jsonArrayString));
+    }
+
+    /**
+     * The XML string must be parsed as content.
+     *
+     * <p>{@link DocumentBuilder#parse(String)}, previously used, interpreted it as a URI.</p>
+     */
+    @Test
+    void testParseXml() throws Exception {
+        final ContentParser contentParser = new ContentParser();
+
+        final Node node = contentParser.parseXml("<?xml version=\"1.0\"?><root attr=\"value\">text</root>");
+        assertInstanceOf(Element.class, node);
+        assertEquals("root", node.getNodeName());
+        assertEquals("value", ((Element) node).getAttribute("attr"));
+        assertEquals("text", node.getTextContent());
+
+        final ParsedValue parsedValue = contentParser.parseContent("<?xml version=\"1.0\"?><root attr=\"value\">text</root>");
+        assertInstanceOf(NodeValue.class, parsedValue);
+        assertEquals("root", ((Node) parsedValue.getValue()).getNodeName());
+
+        // Round trip: the serialized node parses back into an equivalent node
+        final String xml = contentParser.toXml(node);
+        assertTrue(xml.contains("<root attr=\"value\">text</root>"), xml);
+        assertEquals("text", contentParser.parseXml(xml).getTextContent());
     }
 
     @Test
