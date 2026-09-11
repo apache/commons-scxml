@@ -591,9 +591,11 @@ public final class SCXMLReader {
             throws IOException, XMLStreamException {
 
         // Instantiate the XMLInputFactory
-        XMLInputFactory factory = SecureXMLInputFactory.newInstance();
+        final XMLInputFactory factory;
         if (configuration.factoryId != null && configuration.factoryClassLoader != null) {
             factory = SecureXMLInputFactory.newFactory(configuration.factoryId, configuration.factoryClassLoader);
+        } else {
+            factory = SecureXMLInputFactory.newInstance();
         }
         factory.setEventAllocator(configuration.allocator);
         if (factory.isPropertySupported(XMLInputFactory_JDK_PROP_REPORT_CDATA)) {
