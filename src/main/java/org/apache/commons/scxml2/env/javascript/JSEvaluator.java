@@ -83,7 +83,7 @@ public class JSEvaluator extends AbstractBaseEvaluator {
             + "expression, Context must be a org.apache.commons.scxml2.env.javascript.JSContext";
 
     /** Nashorn Global initialization script, loaded from {@code init_global.js} classpath resource */
-    private static String initGlobalsScript;
+    private static volatile String initGlobalsScript;
 
     /** Nashorn ScriptEngine **/
     private transient ScriptEngine engine;
