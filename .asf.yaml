@@ -16,6 +16,8 @@
 github:
   description: "Apache Commons SCXML"
   homepage: https://commons.apache.org/scxml/
+  autolink_jira:
+    - SCXML
   
   pull_requests:
     # allow auto-merge
