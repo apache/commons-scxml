@@ -210,10 +210,8 @@ class SCXMLExecutorTest {
         expected.add("twenty_two_2");
         expected.add("twenty_three_2");
         for (final TransitionTarget tt : currentStates) {
-            if (!expected.remove(tt.getId())) {
-                fail("'" + tt.getId()
-                    + "' is not an expected current state ID");
-            }
+            assertTrue(expected.remove(tt.getId()),
+                () -> "'" + tt.getId() + "' is not an expected current state ID");
         }
     }
 
@@ -228,10 +226,8 @@ class SCXMLExecutorTest {
         expected.add("twenty_two_1");
         expected.add("twenty_three_1");
         for (final TransitionTarget tt : currentStates) {
-            if (!expected.remove(tt.getId())) {
-                fail("'" + tt.getId()
-                    + "' is not an expected current state ID");
-            }
+            assertTrue(expected.remove(tt.getId()),
+                () -> "'" + tt.getId() + "' is not an expected current state ID");
         }
         currentStates = SCXMLTestHelper.fireEvent(exec, "bar");
         assertEquals(1, currentStates.size());
