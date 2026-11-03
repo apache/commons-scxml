@@ -24,7 +24,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.StringReader;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.scxml2.Context;
 import org.apache.commons.scxml2.Evaluator;
@@ -138,6 +144,49 @@ class JSEvaluatorTest {
 
         assertNotNull(evaluator);
         assertTrue((Boolean) evaluator.eval(context, "1+1 == 2"));
+    }
+
+    /**
+     * SCXML-290: {@code JSEvaluator#initGlobalsScript} is a static field that is only ever written
+     * inside the per-instance {@code synchronized initEngine()} method, but was read without any
+     * synchronization elsewhere. Since the write and the read do not share a common monitor, the Java
+     * Memory Model does not guarantee that a thread constructing/using a fresh {@link JSEvaluator}
+     * instance will observe the value published by another instance's {@code initEngine()} call.
+     * <p>
+     * This test exercises many {@link JSEvaluator} instances concurrently performing their first
+     * (lazy) engine initialization and evaluation. It cannot deterministically force the JMM
+     * visibility gap to manifest in a single JVM run, but it does exercise the previously-racy
+     * code path under real concurrency and fails loudly (instead of silently passing) if
+     * initialization throws or produces an incorrect result on any thread.
+     * </p>
+     */
+    @Test
+    void testConcurrentEvaluatorInitialization() throws Exception {
+        final int threadCount = 32;
+        final ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+        final CountDownLatch ready = new CountDownLatch(threadCount);
+        final CountDownLatch start = new CountDownLatch(1);
+        final List<Throwable> failures = new CopyOnWriteArrayList<>();
+        try {
+            for (int i = 0; i < threadCount; i++) {
+                executor.submit(() -> {
+                    ready.countDown();
+                    try {
+                        start.await();
+                        final Evaluator concurrentEvaluator = new JSEvaluator();
+                        assertTrue((Boolean) concurrentEvaluator.eval(context, "1+1 == 2"));
+                    } catch (final Throwable t) {
+                        failures.add(t);
+                    }
+                });
+            }
+            assertTrue(ready.await(5, TimeUnit.SECONDS), "Threads failed to start in time");
+            start.countDown();
+        } finally {
+            executor.shutdown();
+            assertTrue(executor.awaitTermination(10, TimeUnit.SECONDS), "Executor did not terminate in time");
+        }
+        assertTrue(failures.isEmpty(), "Concurrent JSEvaluator initialization failed: " + failures);
     }
 
     /**
